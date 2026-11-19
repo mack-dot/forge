@@ -1,0 +1,29 @@
+# owner=h-gate start=2026-11-19T15:35:58Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/A18-runtime-exhaustion
+# power: Now drawing from 'Battery Power'
+# swap free MiB: 1721
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/A18-runtime-exhaustion/model
+# note: on battery power; run allowed by the POWER AMENDMENT
+# memory free percent: 32
+
+Dafny program verifier did not attempt verification
+        0.95 real         0.60 user         0.11 sys
+           108150784  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7726  page reclaims
+                1454  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  50  voluntary context switches
+                4372  involuntary context switches
+          4591929123  instructions retired
+          2086519206  cycles elapsed
+            76006624  peak memory footprint
+# end=2026-11-19T15:36:00Z
+exit 0

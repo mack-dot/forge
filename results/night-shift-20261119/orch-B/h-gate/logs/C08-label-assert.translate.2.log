@@ -1,0 +1,28 @@
+# owner=h-gate start=2026-11-19T14:42:29Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/C08-label-assert
+# power: Now drawing from 'AC Power'
+# swap free MiB: 400
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/C08-label-assert/model
+# memory free percent: 33
+
+Dafny program verifier did not attempt verification
+        1.57 real         0.68 user         0.13 sys
+            85278720  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8287  page reclaims
+                1095  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  37  voluntary context switches
+                6756  involuntary context switches
+          4530204154  instructions retired
+          2390933815  cycles elapsed
+            74532088  peak memory footprint
+# end=2026-11-19T14:42:31Z
+exit 0

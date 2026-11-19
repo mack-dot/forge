@@ -1,0 +1,36 @@
+# judge=<SCRATCH>/redteam-C/fix-f08a21c1/tests/refund-finality/regress/run.ts
+# sink=<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/sink.ts sha256=bd3f6de8b6b1c15e624531742b133071bc820dcee60cd25126a970376f8caecd
+# dispatcher=<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/e_exit0/dispatcher.ts sha256=e2fcc4a132ea9b80053370159a308cd27296f84aec79ab0036bce90506b37867
+# trusted encoding=<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=-
+FAIL C1-honest-refund: regression threw: child exited (code 0, signal null)
+FAIL C2-zero-amount-refund: regression threw: child exited (code 0, signal null)
+FAIL C3-two-zero-refunds: regression threw: child exited (code 0, signal null)
+FAIL C4-replay-rejected: regression threw: child exited (code 0, signal null)
+FAIL C5-largest-refund: regression threw: child exited (code 0, signal null)
+FAIL X1-reqid-mismatch: regression threw: child exited (code 0, signal null)
+FAIL X2-cross-charge: regression threw: child exited (code 0, signal null)
+FAIL X2b-foreign-post-locks-store: regression threw: child exited (code 0, signal null)
+FAIL X3-upgrade-legacy-gap: regression threw: child exited (code 0, signal null)
+FAIL X4-signed-unauthorized: regression threw: child exited (code 0, signal null)
+FAIL X5a-hostile-balance-reset: regression threw: child exited (code 0, signal null)
+FAIL X5b-hostile-outbox-rewrite: regression threw: child exited (code 0, signal null)
+FAIL X6-Z1-zero-row-deleted-recommitted: regression threw: child exited (code 0, signal null)
+FAIL X6-P1-prefix-rollback: regression threw: child exited (code 0, signal null)
+FAIL K1-foreign-key-signature: regression threw: child exited (code 0, signal null)
+FAIL K2-noncanonical-text: regression threw: child exited (code 0, signal null)
+FAIL K3-stale-prestate: regression threw: child exited (code 0, signal null)
+FAIL K4-replay-status: regression threw: child exited (code 0, signal null)
+FAIL K5-long-and-unicode-ids: regression threw: child exited (code 0, signal null)
+FAIL K6-long-run-one-store: regression threw: child exited (code 0, signal null)
+FAIL K7-store-survives-reopen: regression threw: child exited (code 0, signal null)
+FAIL D1-dispatcher-bad-signature-row: regression threw: child exited (code 0, signal null)
+FAIL D2-dispatcher-chain-break-row: regression threw: child exited (code 0, signal null)
+FAIL D3-dispatcher-ledger-before-emit: regression threw: child exited (code 0, signal null)
+PASS E0-encoding-identity: same SHA-256 f96086b1838163e3
+FAIL E1-signed-bytes-cover-post-intent: regression threw: child exited (code 0, signal null)
+# verdicts=26/26 PASS=1 KNOWN-LIMIT=0 FAIL=25 [C1-honest-refund,C2-zero-amount-refund,C3-two-zero-refunds,C4-replay-rejected,C5-largest-refund,X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X3-upgrade-legacy-gap,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-Z1-zero-row-deleted-recommitted,X6-P1-prefix-rollback,K1-foreign-key-signature,K2-noncanonical-text,K3-stale-prestate,K4-replay-status,K5-long-and-unicode-ids,K6-long-run-one-store,K7-store-survives-reopen,D1-dispatcher-bad-signature-row,D2-dispatcher-chain-break-row,D3-dispatcher-ledger-before-emit,E1-signed-bytes-cover-post-intent]
+# unexpected FAIL=[C1-honest-refund,C2-zero-amount-refund,C3-two-zero-refunds,C4-replay-rejected,C5-largest-refund,X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X3-upgrade-legacy-gap,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-Z1-zero-row-deleted-recommitted,X6-P1-prefix-rollback,K1-foreign-key-signature,K2-noncanonical-text,K3-stale-prestate,K4-replay-status,K5-long-and-unicode-ids,K6-long-run-one-store,K7-store-survives-reopen,D1-dispatcher-bad-signature-row,D2-dispatcher-chain-break-row,D3-dispatcher-ledger-before-emit,E1-signed-bytes-cover-post-intent] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]
+# JUDGE RESULT NOT OK (exit 1)
+exit 1

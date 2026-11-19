@@ -79,7 +79,7 @@ export function isToken(x: unknown): x is Token {
 export const tokenText = (token: Token): string => canon(token);
 // The signed bytes: the whole body, by value.
 export const signedBytes = (body: TokenBody): Buffer => Buffer.from(canon(body), "utf8");
-export const reducedBytes = (body: TokenBody): Buffer => Buffer.from(canon({ ...body, post: undefined, intent: undefined } as any), "utf8");
+export const reducedBytes = (body: TokenBody): Buffer => Buffer.from(canon((({ post, intent, ...rest }) => rest)(body as any) as any), "utf8");
 export const stateSha256 = (state: ChargeState): string => sha256hex(canon(state));
 // Identity of the token issuer: the compiled core module and the two glue files of the minter process.
 export function checkerSha256Of(coreModule: Buffer, encodingSource: Buffer, minterSource: Buffer): string {

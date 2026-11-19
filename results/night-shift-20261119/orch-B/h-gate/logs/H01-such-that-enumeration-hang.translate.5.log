@@ -1,0 +1,28 @@
+# owner=h-gate start=2026-11-19T15:41:41Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/H01-such-that-enumeration-hang
+# power: Now drawing from 'AC Power'
+# swap free MiB: 995
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/H01-such-that-enumeration-hang/model
+# memory free percent: 45
+
+Dafny program verifier did not attempt verification
+        0.89 real         0.62 user         0.09 sys
+           110067712  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7641  page reclaims
+                1404  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  30  voluntary context switches
+                3519  involuntary context switches
+          4571316601  instructions retired
+          2116422327  cycles elapsed
+            75433208  peak memory footprint
+# end=2026-11-19T15:41:42Z
+exit 0

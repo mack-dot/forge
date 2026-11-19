@@ -312,3 +312,13 @@ Entries below: target = B's gate rule 3 (orch-B/e-subset3/subset_rule3.py). C's 
 ## C-NEG-15 (15:56:19Z) gate, verified source vs compiled JavaScript — NO admitted submission halts or answers wrongly (worker: 23 single-file Dafny runs, none refused by the lock script; NOT re-run by C)
 - Lone CR in a verbatim string: verifier and compiler both read it as LF (same scanner); answers the open question at unsure line 18267. 29-predicate probe: verify exit 0, Node 0 differences. Covers astral chars, U+2028/2029, 2^53±1, 10^19-1, Euclidean / and %, set cardinality with run-time duplicates, comparison chains.
 - Input conversion exact (9007199254740993, MaxMoney, 2^53+1). Match flattening linear (scrutinee evaluated once). Worst admitted arithmetic 0.74 s / 10 MB. Name mangling injective. The rule refuses assume, {:axiom}, {:verify false}, {:only}, {:fuel}, {:extern}, opaque/reveal, decreases *; the gate refuses print and expect and treats a timeout as Rejected.
+
+## RE-TEST BY C ITSELF (16:12:50Z) of B's newest dispatcher at 88ae6cbf70c5 (branch nightshift/B-trust) — C-ATT-17 and C-ATT-18
+Overlay <SCRATCH>/redteam-C/fix-88ae6cbf (committed tree). Issuer module orch-B/h-minter/build/issueonce.cjs. Command form (cwd = overlay, scrubbed env): node --no-warnings --import tsx tests/refund-finality/regress/<test>.ts <overlay> <issueonce.cjs>. Logs orch-C/refix/88ae6cbf/B-*.log. These are B's regression files; each reproduces my attack scenario faithfully (I read d_att17_lock_theft.ts: it is my l1 "three" mode: A blocks in emit(r1), a person removes the lock, r2 and r3 commit, B blocks in emit(r2), A ends, C starts with NO operator step, B resumes). I ran them and inspected the recorded effects.
+| Item | Command (test) | Exit | Recorded outcome | Verdict |
+|---|---|---|---|---|
+| C-ATT-17 lock has no owner | d_att17_lock_theft.ts | 0 | A emitted r1; run C STOPPED ("dispatcher lock is held ... pid ... alive"); B emitted r2, r3, refused r1. Effects A:r1 B:r2 B:r3; no duplicate; total 900 <= 1000 | PASS (closed) |
+| C-ATT-17 claim race | d_att17_claim_race.ts | 0 | PASS line | PASS |
+| C-ATT-18 lost emit | d_att18_throwing_emit.ts | 0 | run1 threw (nothing sent); run2 refused r1, already=0 (NOT counted as dispatched); run3 refused r1 | PASS (closed: the loss is now visible as refused/in-doubt) |
+| positive controls | d_positive_controls.ts | 0 | PASS | honest flows work |
+- Limit of this re-test: I ran B's regression files (which encode my scenarios) and inspected effects; an independent re-attack with fresh scripts (lock-owner race under SIGSTOP, non-atomic release window, APPEND-ATOMIC) is with worker c21-sink2. C-ATT-17 and C-ATT-18 are CLOSED for the tested scenarios on 88ae6cbf.

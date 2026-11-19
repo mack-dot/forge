@@ -1,0 +1,28 @@
+# owner=h-gate start=2026-11-19T14:43:44Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/C16-reason-string-concat-log
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1033
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/C16-reason-string-concat-log/model
+# memory free percent: 54
+
+Dafny program verifier did not attempt verification
+        0.97 real         0.59 user         0.08 sys
+           110198784  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                9048  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  29  voluntary context switches
+                2204  involuntary context switches
+          4462231694  instructions retired
+          1957017405  cycles elapsed
+            75498696  peak memory footprint
+# end=2026-11-19T14:43:45Z
+exit 0

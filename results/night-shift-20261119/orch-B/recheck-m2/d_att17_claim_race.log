@@ -1,0 +1,6 @@
+(node:25976) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":null,"execArgv":["--import","tsx"],"codeEnv":["TMPDIR"],"closedLaunch":null,"rule":"IssueAuth","mode":"NoStore","store":null}}
+{"effects":["r1","r2"],"total":800,"B":"{\"emitted\":[{\"requestId\":\"r2\",\"intent\":\"{\\\"amount\\\":\\\"400\\\",\\\"chargeId\\\":\\\"ch_d17b\\\",\\\"reason\\\":\\\"duplicate_charge\\\",\\\"requestId\\\":\\\"r2\\\"}\"}],\"refused\":[{\"seq\":1,\"requestId\":\"r1\",\"reason\":\"in doubt: claimed by run 125a7c5ecbedddd71c1b46406c0214ac (pid 25976) without a done line; not counted as dispa","A":"A stopped: dispatcher alarm: another run claimed row 2 (r2) first; this run stops and does not send it"}
+PASS
+exit 0

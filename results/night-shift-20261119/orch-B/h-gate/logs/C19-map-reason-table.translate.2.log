@@ -1,0 +1,28 @@
+# owner=h-gate start=2026-11-19T14:45:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/C19-map-reason-table
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1537
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/C19-map-reason-table/model
+# memory free percent: 44
+
+Dafny program verifier did not attempt verification
+        4.30 real         0.78 user         0.15 sys
+            84525056  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10231  page reclaims
+                1008  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  43  voluntary context switches
+                7521  involuntary context switches
+          4738521375  instructions retired
+          2692832521  cycles elapsed
+            76514456  peak memory footprint
+# end=2026-11-19T14:45:26Z
+exit 0

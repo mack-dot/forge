@@ -1,0 +1,20 @@
+
+node:internal/modules/run_main:105
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/a2_lock_race deadpid.ts' imported from <REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795104553267:2:3744)
+    at resolveDirectory (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795104553267:2:4243)
+    at resolveTsPaths (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795104553267:2:4984)
+    at resolve (file://<REPO>/node_modules/tsx/dist/esm/index.mjs?1795104553267:2:5361)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file://<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/a2_lock_race%20deadpid.ts'
+}
+
+Node.js v24.3.0

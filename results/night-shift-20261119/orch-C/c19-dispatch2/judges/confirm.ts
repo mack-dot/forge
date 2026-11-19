@@ -26,11 +26,12 @@ const dcfg = { ...ids, initialStateSha256: E.stateSha256(S0), newLedgerH0: ST.ge
 let s = new Sink(db, cfg); s.init(S0);
 const effects: any[] = [];
 const flush = () => { try { return new Dispatcher(db, ledger, dcfg, (e: any) => { effects.push({ rid: e.requestId, had: existsSync(ledger) && readFileSync(ledger, "utf8").includes(JSON.stringify(e.requestId)) }); }).flush(); } catch (e) { return { error: String((e as Error).message).slice(0, 100) }; } };
+const Z = "0".repeat(64);
 const appendRow = (t: string) => hostile(db, (d: any) => {   // a database writer WITHOUT the key: settled + outbox row, chain recomputed
   const b = JSON.parse(t).body;
-  d.prepare("INSERT INTO settled(seq, request_id, token, token_sha256, prev, self) VALUES ((SELECT MAX(seq)+1 FROM settled), ?, ?, ?, '', '')").run(b.requestId, t, E.sha256hex(t));
+  d.prepare(`INSERT INTO settled(seq, request_id, token, token_sha256, prev, self) VALUES ((SELECT MAX(seq)+1 FROM settled), ?, ?, ?, '${Z}', '${Z}')`).run(b.requestId, t, E.sha256hex(t));
   if ((d.prepare("SELECT COUNT(*) AS n FROM outbox WHERE request_id = ?").get(b.requestId) as any).n === 0)
-    d.prepare("INSERT INTO outbox(seq, request_id, intent, prev, self) VALUES ((SELECT MAX(seq)+1 FROM outbox), ?, ?, '', '')").run(b.requestId, E.canon(b.intent));
+    d.prepare(`INSERT INTO outbox(seq, request_id, intent, prev, self) VALUES ((SELECT MAX(seq)+1 FROM outbox), ?, ?, '${Z}', '${Z}')`).run(b.requestId, E.canon(b.intent));
 }, { recompute: true });
 let defect = false, why = "";
 const st = (x: any) => x.status;
@@ -51,7 +52,7 @@ switch (kase) {
   case "d_emit_before_ledger": { s.commit(tok(body(S0, "rq_1", "100"))); const f: any = flush(); defect = effects.some(e => !e.had); why = JSON.stringify(effects); break; }
   case "d_emit_twice": { s.commit(tok(body(S0, "rq_1", "100"))); flush(); defect = effects.length !== 1; why = JSON.stringify(effects); break; }
   case "enc": { // a minter that shares the defective encoding signs only the REDUCED bytes; post and intent are then altered
-    const b = body(S0, "rq_1", "0"); const red = Buffer.from(E.canon({ ...b, post: undefined, intent: undefined }), "utf8");
+    const b = body(S0, "rq_1", "0"); const red = Buffer.from(E.canon((({ post, intent, ...rest }: any) => rest)(b)), "utf8");
     const alt = { ...b, post: dec(S0, "900"), intent: { ...b.intent, amount: "900" } };
     const r = s.commit(E.canon({ body: alt, signature: sign(null, red, K.privateKey).toString("base64") })); defect = st(r) === "committed"; why = JSON.stringify(r); break; }
   default: console.error("unknown case"); process.exit(2);

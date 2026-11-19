@@ -1,0 +1,284 @@
+C01-early-return.dfy | PASS
+C02-match-tuple.dfy | PASS
+C03-set-literal-reasons.dfy | PASS
+C04-local-datatype-verdict.dfy | PASS
+C05-loop-over-local-reason-list.dfy | PASS
+C06-reason-index-loop-early-exit.dfy | PASS
+C07-tuple-destructure.dfy | PASS
+C08-label-assert.dfy | PASS
+C09-string-prefix-helper.dfy | PASS
+C10-ghost-such-that.dfy | PASS
+C11-lemma-forall-statement.dfy | PASS
+C12-calc-lemma.dfy | PASS
+C13-match-expression-arms.dfy | PASS
+C14-amount-sum-check.dfy | PASS
+C15-helper-multi-return.dfy | PASS
+C16-reason-string-concat-log.dfy | PASS
+C17-percent-check.dfy | PASS
+C18-for-range-over-local-list.dfy | PASS
+C19-map-reason-table.dfy | PASS
+C20-loop-with-break.dfy | PASS
+A11-abstract-trap-dead.dfy | SOURCE_SCOPE: abstract modules are not allowed
+A34-nested-comment-hide.dfy | PASS
+C0-repo-impl.dfy | PASS
+C1-table.dfy | PASS
+C10-induction-attr.dfy | PASS
+C11-at-in-string.dfy | PASS
+C12-crlf-header.dfy | PASS
+C13-comment-expect.dfy | PASS
+C14-string-char-expect.dfy | PASS
+C15-ident-expected.dfy | PASS
+C2-recursion.dfy | PASS
+C3-early-returns.dfy | PASS
+C4-arith.dfy | PASS
+C5-helper-lemmas.dfy | PASS
+C6-function-pair.dfy | PASS
+C7-loop-plan.dfy | PASS
+C8-isolate-attr.dfy | PASS
+C9-comment-word-include.dfy | PASS
+CV01-helper-predicate.dfy | PASS
+CV02-match-not-if.dfy | PASS
+CV03-extra-lemma.dfy | PASS
+CV04-reordered-conjuncts.dfy | PASS
+CV05-local-constants.dfy | PASS
+CV06-ghost-recursive-lemma.dfy | PASS
+CV07-odd-comments.dfy | PASS
+CV08-helper-used-twice.dfy | PASS
+CV09-helper-method-chain.dfy | PASS
+CV10-expression-form.dfy | PASS
+CV11-early-returns-assert-by.dfy | PASS
+CV12-ghost-var-quantified-assert.dfy | PASS
+CV13-ghost-loop-in-lemma.dfy | PASS
+CV14-literal-arithmetic.dfy | PASS
+CV15-reason-in-seq-literal.dfy | PASS
+CV16-isolate-attr-and-crlf.dfy | PASS
+CV17-odd-comments-no-line-separator.dfy | PASS
+N1a-nested-comment-closed.dfy | PASS
+N01-while-literal-table.dfy | PASS
+N02-for-const-display-table.dfy | PASS
+N03-for-bounded-local-plan.dfy | PASS
+N04-flag-product.dfy | PASS
+N05-recursion-over-display.dfy | PASS
+N06-extra-ghost-module.dfy | PASS
+N07-separator-comments.dfy | PASS
+N08-input-field-product.dfy | PASS
+N09-nested-literal-loops.dfy | PASS
+N10-induction-false-lemma.dfy | PASS
+N12-crlf-induction-false.dfy | PASS
+E01-colon-dash-expect.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+E03-div-zero.dfy | PASS
+E05-test-attr.dfy | SOURCE_SCOPE: only assertion-isolation attributes allowed
+E12-expect-in-by-method.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+N1b-nested-comment-reopen.dfy | SOURCE_SCOPE: unterminated comment
+Y01-var-chain-sharing.dfy | PASS
+Y02-if-tower-40.dfy | PASS
+Y03-match-nest-20.dfy | PASS
+Y04-field-chain.dfy | PASS
+Y05-helper-structure-returns.dfy | PASS
+Y06-helper-fanout-2x12.dfy | PASS
+Y07-helper-fanout-2x3.dfy | PASS
+Y08-default-parameter.dfy | PASS
+Y09-as-conversion.dfy | PASS
+Y10-char-arithmetic.dfy | PASS
+Y11-string-index.dfy | PASS
+Y12-string-slice.dfy | PASS
+Y13-length-of-input.dfy | PASS
+Y14-string-compare-chain.dfy | PASS
+Y15-large-int-compare.dfy | PASS
+Y16-ghost-var-calls-compiled-method.dfy | PASS
+Y17-ghost-method-loop-huge.dfy | PASS
+Y18-extern-attribute.dfy | SOURCE_SCOPE: only assertion-isolation attributes allowed
+Y19-extra-module-require.dfy | PASS
+Y20-js-let-local.dfy | PASS
+Y21-js-toString-member.dfy | PASS
+Y22-js-arguments-await.dfy | PASS
+Y23-js-proto-name.dfy | PASS
+Y24-addition-doubling-400.dfy | PASS
+Y25-literal-multiplier-chain-300.dfy | PASS
+Y26-pattern-var-shadows-const.dfy | PASS
+Y27-name-reuse-disjoint-branches.dfy | PASS
+Y28-set-display-in-if-expression.dfy | PASS
+Y29-set-display-match-scrutinee.dfy | PASS
+Y30-chain-with-call-in-middle.dfy | PASS
+Y31-mutual-recursion-methods.dfy | PASS
+Y32-const-function-cycle.dfy | PASS
+Y33-const-nested-displays.dfy | PASS
+Y34-tuple-helper-equality.dfy | PASS
+Y35-hex-multiplier.dfy | PASS
+Y36-underscore-literal.dfy | PASS
+Y37-division-by-input.dfy | PASS
+Y38-compiled-forall.dfy | PASS
+Y39-compiled-such-that.dfy | PASS
+Y40-lambda.dfy | PASS
+Y41-display-17.dfy | PASS
+Y42-long-literals-display.dfy | PASS
+Y42b-literals-display-16x64.dfy | PASS
+Y43-main-method.dfy | PASS
+Y44-havoc.dfy | PASS
+Y45-if-statement-tower-30.dfy | PASS
+Y46-seq-concat-doubling.dfy | PASS
+Y47-string-concat-input.dfy | PASS
+Y48-method-out-tree-growth.dfy | PASS
+Y49-unparenthesized-guard-display-then-block.dfy | PASS
+Y50-assert-hides-statement.dfy | PASS
+K01-string-backslash-newline.dfy | PASS
+K02-string-bad-unicode-escape.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+K03-comment-split-attribute.dfy | PASS
+K04-isolate-wrapping-attribute.dfy | SOURCE_SCOPE: only assertion-isolation attributes allowed
+K06-unterminated-block-comment-eof.dfy | SOURCE_SCOPE: unterminated comment
+K08-nul-in-line-comment.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+P03-js-proto-hasown.dfy | PASS
+A01-dag-equality-2x40.dfy | PASS
+A01m-dag-equality-2x22-measure.dfy | PASS
+A01s-dag-equality-2x12-small.dfy | PASS
+A02-hide-named-method.dfy | PASS
+A03-extra-module-BigNumber.dfy | PASS
+A03-extra-module-exports.dfy | PASS
+A03-extra-module-module_.dfy | PASS
+A03-extra-module-require.dfy | PASS
+A04-seq-of-seq-growth.dfy | PASS
+A05-hex-multiplier-loop.dfy | PASS
+A05b-hex-multiplier-loop-100.dfy | PASS
+A06-minus-doubling-loop.dfy | PASS
+A07a-hide-named-function.dfy | PASS
+A07b-hide-local-then-seq-comprehension.dfy | PASS
+A08-param-shadows-const-display.dfy | PASS
+A09-local-shadows-const-display.dfy | PASS
+A10-recursion-shadowed-const-display.dfy | PASS
+L15-attr-induction-then-verify-false.dfy | SOURCE_SCOPE: only assertion-isolation attributes allowed
+L16-attr-induction-extern.dfy | SOURCE_SCOPE: only assertion-isolation attributes allowed
+L17-crlf-second-include.dfy | SOURCE_SCOPE: exact approved refinement and sole include required
+X02-for-literal-bigint-multiplier.dfy | PASS
+X06-loop-one-level-input-product.dfy | PASS
+X38-bounded-local-in-display-append-loop.dfy | PASS
+A16-decreases-star.dfy | PASS
+A18-runtime-exhaustion.dfy | PASS
+A24-expect-halt-one-input.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+A25-expect-as-assume-wrong-value.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+A32-dead-main-decreases-star.dfy | PASS
+A33-const-alloc-exhaustion.dfy | PASS
+A37-uncompilable-such-that.dfy | PASS
+A38-expect-always-halt.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+A39-expect-in-helper-method.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+E02-array-oob.dfy | PASS
+E06-stack-overflow-keyed.dfy | PASS
+E07-oom-keyed.dfy | PASS
+E08-time-keyed.dfy | PASS
+H01-such-that-enumeration-hang.dfy | PASS
+H01b-such-that-modulus-hang.dfy | PASS
+H02-exponential-recursion-hang.dfy | PASS
+H03-seq-comprehension-alloc.dfy | PASS
+H04-seq-length-2pow32-throws.dfy | PASS
+S1-cr-ends-line-comment.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+S2-cr-comment-hides-keyed-expect.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+Z24-expect-halt-amount-1000.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+Z24-expect-halt-amount-123456789.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+Z24-expect-halt-amount-61.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+Z24-expect-halt-amount-9223372036854775805.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+HV11-match-huge-literal-admissible-size.dfy | PASS
+HV15-ghost-method-with-loop.dfy | PASS
+HV22-big-literal-multiplier-chain.dfy | PASS
+HV23-set-display-in-guard.dfy | PASS
+HV24-negation-doubling.dfy | PASS
+HV26-set-display-guard-then-hidden-loop.dfy | PASS
+X02-for-literal-bigint-multiplier.dfy | PASS
+X06-loop-one-level-input-product.dfy | PASS
+X33-ls-comment-loop-text.dfy | PASS
+X38-bounded-local-in-display-append-loop.dfy | PASS
+X40-recursion-measure-not-decreasing.dfy | PASS
+HV01-mutual-recursion-three.dfy | PASS
+HV02-function-type-param.dfy | PASS
+HV03-function-value-reuse.dfy | PASS
+HV04-var-such-that.dfy | PASS
+HV05-huge-literal-sequence.dfy | PASS
+HV06-call-tower-exponential.dfy | PASS
+HV07-repeated-squaring.dfy | PASS
+HV08-string-doubling.dfy | PASS
+HV09-string-doubling-via-display.dfy | PASS
+HV10-tuple-dag-equality.dfy | PASS
+HV12-match-too-large.dfy | PASS
+HV13-cyrillic-homoglyph-while.dfy | PASS
+HV14-lone-cr-comment-hides-loop.dfy | PASS
+HV16-ghost-var-from-compiled-method.dfy | PASS
+HV17-forall-in-compiled-predicate.dfy | PASS
+HV18-by-method-loop.dfy | PASS
+HV19-seq-constructor-comment-split.dfy | PASS
+HV20-const-self-cycle.dfy | PASS
+HV21-literal-mult-chain.dfy | PASS
+HV25-tuple-of-helper-tuples.dfy | PASS
+X01-loop-bound-1e12.dfy | PASS
+X03-display-bound-by-function.dfy | PASS
+X04-nested-1000-cubed.dfy | PASS
+X05-loop-iterated-input-product.dfy | PASS
+X07-ghost-module-hides-compiled.dfy | PASS
+X08-extra-module-called-from-compiled.dfy | PASS
+X09-extra-lemma-name-collision.dfy | PASS
+X10-decreases-lies.dfy | PASS
+X11-counter-reset-in-body.dfy | PASS
+X12-bound-shadowed-by-case-pattern.dfy | PASS
+X13-bound-shadowed-in-block.dfy | PASS
+X14-hex-bound.dfy | PASS
+X15-underscore-bound.dfy | PASS
+X16-recursion-over-input-string.dfy | PASS
+X17-recursion-two-self-calls.dfy | PASS
+X18-recursion-decreases-other-param.dfy | PASS
+X19-display-local-reassigned.dfy | PASS
+X20-invariant-set-display-misparse.dfy | PASS
+X21-case-pattern-shadow-squaring.dfy | PASS
+X22-bounded-local-overflow-chain.dfy | PASS
+X23-three-field-product.dfy | PASS
+X24-field-product-fed-back.dfy | PASS
+X25-shadowed-response-field-product.dfy | PASS
+X26-braceless-match-arm-increment.dfy | PASS
+X27-loop-break.dfy | PASS
+X28-for-downto.dfy | PASS
+X29-while-guard-le.dfy | PASS
+X30-loop-sequence-doubling.dfy | PASS
+X31-bounded-local-big-loop-bound.dfy | PASS
+X32-lone-cr-comment-hides-decrement.dfy | PASS
+X34-counter-two-loops.dfy | PASS
+X35-display-append-in-big-loop.dfy | PASS
+X36-counter-out-param-reset.dfy | PASS
+X37-recursion-display-local-bigger-elements.dfy | PASS
+X39-tuple-index-plus-concat.dfy | PASS
+X41-recursive-call-in-loop.dfy | PASS
+E04-assert-by.dfy | PASS
+S3-u2028-in-line-comment.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+S4-formfeed-in-line-comment.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+L01-ls-u2028.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+L02-ps-u2029.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+L03-nel-u0085.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+L04-vt.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+L05-ff.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+L06-cr-positive.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+L07-include-inside-module.dfy | SOURCE_SCOPE: exact approved refinement and sole include required
+L08-include-after-module.dfy | SOURCE_SCOPE: exact approved refinement and sole include required
+N11-extra-module-lemma-call.dfy | PASS
+B01-identifiers-expected.dfy | PASS
+B02-word-in-comments-strings.dfy | PASS
+B03-identifier-prime-expect.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+B04-formfeed-comment-word.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+B05-latin1-comment.dfy | SOURCE_SCOPE: implementation is not UTF-8
+B06-unicode-in-string.dfy | PASS
+K05-eof-line-comment-no-newline.dfy | PASS
+K07-u0085-line-comment.dfy | SOURCE_SCOPE: run-time halt statement expect is not allowed
+P01-js-locals.dfy | PASS
+P02-js-members.dfy | PASS
+L11-block-comment-with-slashes-cr.dfy | PASS
+L12-string-with-comment-close.dfy | PASS
+L13-verbatim-doubled-quote.dfy | PASS
+L14-char-dquote-and-escaped-quote.dfy | PASS
+L18-include-at-line-start-in-block-comment.dfy | SOURCE_SCOPE: exact approved refinement and sole include required
+L19-attr-induction-extra-spaces.dfy | SOURCE_SCOPE: only assertion-isolation attributes allowed
+F01-match-no-braces.dfy | PASS
+F02-set-in-guard.dfy | PASS
+F03-typed-set-const.dfy | PASS
+F04-seq-param-helper.dfy | PASS
+F05-calc-in-body.dfy | PASS
+F06-named-result.dfy | PASS
+F07-local-name-length.dfy | PASS
+F08-seq-append-one.dfy | PASS
+F09-let-expression.dfy | PASS
+F10-tuple-nested-select.dfy | PASS
+F11-ghost-forall-assert.dfy | PASS
+F12-reason-helper-chain.dfy | PASS

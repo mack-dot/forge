@@ -1,0 +1,28 @@
+# owner=h-gate start=2026-11-19T16:00:34Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/G11-digit-separator-cap
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1684
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/G11-digit-separator-cap/model
+# memory free percent: 49
+
+Dafny program verifier did not attempt verification
+        0.90 real         0.59 user         0.09 sys
+           102809600  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8107  page reclaims
+                1049  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  55  voluntary context switches
+                3492  involuntary context switches
+          4492153917  instructions retired
+          2042296813  cycles elapsed
+            75416800  peak memory footprint
+# end=2026-11-19T16:00:35Z
+exit 0

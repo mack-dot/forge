@@ -57,7 +57,7 @@ for name, (dp, sp) in DS.items():
 e = OUT / "enc_unsigned_body"; (e / "lib").mkdir(parents=True, exist_ok=True)
 (e / "lib/encoding.ts").write_text(ENC.replace('export const signedBytes = (body: TokenBody): Buffer => Buffer.from(canon(body), "utf8");',
   'export const signedBytes = (body: TokenBody): Buffer => Buffer.from(canon(body), "utf8");\n'
-  'export const reducedBytes = (body: TokenBody): Buffer => Buffer.from(canon({ ...body, post: undefined, intent: undefined } as any), "utf8");'))
+  'export const reducedBytes = (body: TokenBody): Buffer => Buffer.from(canon((({ post, intent, ...rest }) => rest)(body as any) as any), "utf8");'))
 store_copy("enc_unsigned_body", [(SIG, "  try { const raw = signatureBytes(token.signature); return raw !== null && (verify(null, signedBytes(token.body), key, raw) || verify(null, reducedBytes(token.body), key, raw)); } catch { return false; }\n"),
   ("import { ChargeState, Intent, Token, canon,", "import { reducedBytes } from \"../encoding\";\nimport { ChargeState, Intent, Token, canon,")], enc=str(e / "lib/encoding"))
 put("enc_unsigned_body", "sink.ts", absimp(sub(SINK, [], "enc_unsigned_body"), enc=str(e / "lib/encoding"), store=str(e / "store")))

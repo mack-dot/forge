@@ -1,0 +1,33 @@
+# owner=h-gate start=2026-11-19T15:24:26Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/A16-decreases-star
+# power: Now drawing from 'Battery Power'
+# swap free MiB: 920
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/A16-decreases-star/model
+# note: on battery power; run allowed by the POWER AMENDMENT
+# memory free percent: 39
+impl/Refund.dfy(6,14): Error: decreases clause on refining method not supported, unless the refined method was specified with 'decreases *'
+  |
+6 |     decreases *
+  |               ^
+
+1 resolution/type errors detected in Refund.dfy
+        3.52 real         1.27 user         0.21 sys
+            89456640  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7084  page reclaims
+                1007  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  49  voluntary context switches
+                3871  involuntary context switches
+          3746120452  instructions retired
+          2142765945  cycles elapsed
+            66389144  peak memory footprint
+# end=2026-11-19T15:24:30Z
+exit 2

@@ -1,0 +1,124 @@
+{"file":"A04-seq-of-seq-growth.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=195 size<=6*N+388 cost<=7385+68*N+0*N^2","steps":195,"maxA":6,"maxB":388}
+{"file":"A05-hex-multiplier-loop.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=183 size<=6*N+388 cost<=7836+68*N+0*N^2","steps":183,"maxA":6,"maxB":388}
+{"file":"A05b-hex-multiplier-loop-100.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=183 size<=6*N+388 cost<=7832+68*N+0*N^2","steps":183,"maxA":6,"maxB":388}
+{"file":"A06-minus-doubling-loop.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=188 size<=6*N+388 cost<=7571+71*N+0*N^2","steps":188,"maxA":6,"maxB":388}
+{"file":"A10-recursion-shadowed-const-display.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=198 size<=6*N+388 cost<=7485+69*N+0*N^2","steps":198,"maxA":6,"maxB":388}
+{"file":"A11-abstract-trap-dead.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=158 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":158,"maxA":6,"maxB":388}
+{"file":"A18-runtime-exhaustion.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=175 size<=6*N+388 cost<=7477+68*N+0*N^2","steps":175,"maxA":6,"maxB":388}
+{"file":"A32-dead-main-decreases-star.js","verdict":"REFUSE","code":"SHAPE","detail":"top-level statement is not a module: _dafny.HandleHaltExceptions(() => Refund.__default.Main(_daf","steps":0,"maxA":0,"maxB":0}
+{"file":"A33-const-alloc-exhaustion.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=174 size<=6*N+388 cost<=7414+68*N+0*N^2","steps":174,"maxA":6,"maxB":388}
+{"file":"A37-uncompilable-such-that.js","verdict":"REFUSE","code":"STATEMENT","detail":"ForOfStatement is outside the admitted statements: for (const _assign_such_that_0 of _dafny.IntegerRange((_dafny.ZERO).pl","steps":8,"maxA":0,"maxB":32}
+{"file":"C02-int-match-stmt-no-default.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=180 size<=6*N+388 cost<=7414+68*N+0*N^2","steps":180,"maxA":6,"maxB":388}
+{"file":"C03-int-match-expr-no-default.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=178 size<=6*N+388 cost<=7414+68*N+0*N^2","steps":178,"maxA":6,"maxB":388}
+{"file":"C04-local-datatype-verdict.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=167 size<=6*N+388 cost<=7351+68*N+0*N^2","steps":167,"maxA":6,"maxB":388}
+{"file":"C04-string-match-no-default.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=173 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":173,"maxA":6,"maxB":388}
+{"file":"C05-loop-over-local-reason-list.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=188 size<=6*N+388 cost<=1271+15*N+0*N^2","steps":188,"maxA":6,"maxB":388}
+{"file":"C06-reason-index-loop-early-exit.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=210 size<=6*N+388 cost<=1377+15*N+0*N^2","steps":210,"maxA":6,"maxB":388}
+{"file":"C08-label-assert.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=158 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":158,"maxA":6,"maxB":388}
+{"file":"C09-div-by-named-zero.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=166 size<=6*N+388 cost<=7358+68*N+0*N^2","steps":166,"maxA":6,"maxB":388}
+{"file":"C1-table.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=210 size<=6*N+388 cost<=1377+15*N+0*N^2","steps":210,"maxA":6,"maxB":388}
+{"file":"C16-reason-string-concat-log.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=174 size<=6*N+388 cost<=7421+69*N+0*N^2","steps":174,"maxA":6,"maxB":388}
+{"file":"C18-for-range-over-local-list.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=182 size<=6*N+388 cost<=1271+15*N+0*N^2","steps":182,"maxA":6,"maxB":388}
+{"file":"C19-map-reason-table.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=159 size<=6*N+388 cost<=4930+74*N+0*N^2","steps":159,"maxA":6,"maxB":388}
+{"file":"C19-member-named-amount.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=165 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":165,"maxA":6,"maxB":388}
+{"file":"C2-recursion.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=200 size<=6*N+388 cost<=7492+68*N+0*N^2","steps":200,"maxA":6,"maxB":388}
+{"file":"C20-loop-with-break.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=187 size<=6*N+388 cost<=1149+15*N+0*N^2","steps":187,"maxA":6,"maxB":388}
+{"file":"C20-member-toJSON.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=165 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":165,"maxA":6,"maxB":388}
+{"file":"C21-member-__defineGetter.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=169 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":169,"maxA":6,"maxB":388}
+{"file":"C4-arith.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=214 size<=6*N+394 cost<=7662+71*N+0*N^2","steps":214,"maxA":6,"maxB":394}
+{"file":"C7-loop-plan.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=187 size<=6*N+389 cost<=7622+72*N+0*N^2","steps":187,"maxA":6,"maxB":389}
+{"file":"E02-array-oob.js","verdict":"REFUSE","code":"CALL","detail":"unresolved call target Array","steps":9,"maxA":0,"maxB":32}
+{"file":"E06-stack-overflow-keyed.js","verdict":"REFUSE","code":"RECURSION","detail":"recursion through DeepM not bounded within 64 unfoldings","steps":1117,"maxA":1,"maxB":64}
+{"file":"E07-oom-keyed.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=183 size<=6*N+388 cost<=7441+69*N+0*N^2","steps":183,"maxA":6,"maxB":388}
+{"file":"E08-time-keyed.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=193 size<=6*N+388 cost<=7569+69*N+0*N^2","steps":193,"maxA":6,"maxB":388}
+{"file":"F01-match-no-braces.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=171 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":171,"maxA":6,"maxB":388}
+{"file":"F02-set-in-guard.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=149 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":149,"maxA":6,"maxB":388}
+{"file":"F03-typed-set-const.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=152 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":152,"maxA":6,"maxB":388}
+{"file":"F04-seq-param-helper.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=162 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":162,"maxA":6,"maxB":388}
+{"file":"F05-calc-in-body.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=158 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":158,"maxA":6,"maxB":388}
+{"file":"F06-named-result.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=167 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":167,"maxA":6,"maxB":388}
+{"file":"F07-local-name-length.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=164 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":164,"maxA":6,"maxB":388}
+{"file":"F08-seq-append-one.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=160 size<=6*N+389 cost<=7608+72*N+0*N^2","steps":160,"maxA":6,"maxB":389}
+{"file":"F09-let-expression.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=169 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":169,"maxA":6,"maxB":388}
+{"file":"F10-tuple-nested-select.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=200 size<=6*N+388 cost<=7544+71*N+0*N^2","steps":200,"maxA":6,"maxB":388}
+{"file":"G01-reason-list-helper.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=156 size<=6*N+388 cost<=4593+68*N+0*N^2","steps":156,"maxA":6,"maxB":388}
+{"file":"G02-let-expression-cap.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=182 size<=6*N+388 cost<=7542+71*N+0*N^2","steps":182,"maxA":6,"maxB":388}
+{"file":"G03-reason-in-set-guard.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=149 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":149,"maxA":6,"maxB":388}
+{"file":"G04-intent-local-each-branch.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=157 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":157,"maxA":6,"maxB":388}
+{"file":"G05-min-helper-in-chain.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=192 size<=6*N+388 cost<=7670+73*N+0*N^2","steps":192,"maxA":6,"maxB":388}
+{"file":"G06-early-return.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=168 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":168,"maxA":6,"maxB":388}
+{"file":"G07-decide-helper-method.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=167 size<=8*N+518 cost<=7479+70*N+0*N^2","steps":167,"maxA":8,"maxB":518}
+{"file":"G08-ok-flag-in-two-branches.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"G09-percent-cap-const.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=181 size<=6*N+388 cost<=8661+86*N+0*N^2","steps":181,"maxA":6,"maxB":388}
+{"file":"G10-valid-amount-predicate.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=156 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":156,"maxA":6,"maxB":388}
+{"file":"G11-digit-separator-cap.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=179 size<=6*N+388 cost<=7836+69*N+0*N^2","steps":179,"maxA":6,"maxB":388}
+{"file":"H01-such-that-enumeration-hang.js","verdict":"REFUSE","code":"STATEMENT","detail":"ForOfStatement is outside the admitted statements: for (const _assign_such_that_0 of _dafny.IntegerRange(new BigNumber(\"1","steps":21,"maxA":1,"maxB":64}
+{"file":"H01b-such-that-modulus-hang.js","verdict":"REFUSE","code":"STATEMENT","detail":"ForOfStatement is outside the admitted statements: for (const _assign_such_that_0 of _dafny.IntegerRange(_dafny.ZERO, nul","steps":21,"maxA":1,"maxB":64}
+{"file":"H02-exponential-recursion-hang.js","verdict":"REFUSE","code":"RECURSION","detail":"recursion through Slow not bounded within 64 unfoldings","steps":919,"maxA":1,"maxB":64}
+{"file":"H03-seq-comprehension-alloc.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=178 size<=6*N+388 cost<=7441+69*N+0*N^2","steps":178,"maxA":6,"maxB":388}
+{"file":"H04-seq-length-2pow32-throws.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=178 size<=6*N+388 cost<=7441+69*N+0*N^2","steps":178,"maxA":6,"maxB":388}
+{"file":"HV06-call-tower-exponential.js","verdict":"REFUSE","code":"COST","detail":"more than 1000000 abstract steps for one Assess call","steps":1000001,"maxA":1,"maxB":64}
+{"file":"HV07-repeated-squaring.js","verdict":"REFUSE","code":"SIZE","detail":"value bound 32*N + 2048 over the caps at (_4_x4).multipliedBy(_4_x4)","steps":53,"maxA":32,"maxB":2048}
+{"file":"HV08-string-doubling.js","verdict":"REFUSE","code":"SIZE","detail":"value bound 32*N + 2048 over the caps at _dafny.Seq.Concat(_4_s4, _4_s4)","steps":48,"maxA":32,"maxB":2048}
+{"file":"N01-while-literal-table.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=178 size<=6*N+388 cost<=1149+15*N+0*N^2","steps":178,"maxA":6,"maxB":388}
+{"file":"N02-for-const-display-table.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=182 size<=6*N+388 cost<=1324+15*N+0*N^2","steps":182,"maxA":6,"maxB":388}
+{"file":"N03-for-bounded-local-plan.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=183 size<=6*N+389 cost<=7622+72*N+0*N^2","steps":183,"maxA":6,"maxB":389}
+{"file":"N04-flag-product.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=184 size<=6*N+388 cost<=7369+68*N+0*N^2","steps":184,"maxA":6,"maxB":388}
+{"file":"N05-recursion-over-display.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=255 size<=6*N+388 cost<=7706+68*N+0*N^2","steps":255,"maxA":6,"maxB":388}
+{"file":"N06-extra-ghost-module.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=158 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":158,"maxA":6,"maxB":388}
+{"file":"N08-input-field-product.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=174 size<=8*N+520 cost<=12089+202*N+1*N^2","steps":174,"maxA":8,"maxB":520}
+{"file":"N09-nested-literal-loops.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=62 size<=0*N+32 cost<=33+0*N+0*N^2","steps":62,"maxA":0,"maxB":32}
+{"file":"Refund.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=158 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":158,"maxA":6,"maxB":388}
+{"file":"Y46-seq-concat-doubling.js","verdict":"REFUSE","code":"SIZE","detail":"value bound 32*N + 2080 over the caps at _dafny.Seq.Concat(_4_s4, _4_s4)","steps":36,"maxA":32,"maxB":2080}
+{"file":"Y48-method-out-tree-growth.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=175 size<=6*N+388 cost<=7543+71*N+0*N^2","steps":175,"maxA":6,"maxB":388}
+{"file":"Z24-expect-halt-amount-1000.js","verdict":"REFUSE","code":"HALT","detail":"`throw` in compiled code (a run-time halt): throw new _dafny.HaltException(\"impl/Refund.dfy(7,4): \" + (_dafny.Seq.","steps":23,"maxA":1,"maxB":64}
+{"file":"A01-dag-equality-2x40.js","verdict":"REFUSE","code":"SIZE","detail":"value bound 0*N + 49151 over the caps at _dafny.Seq.of((((_0_c).isEqualTo(_0_c)) ","steps":583,"maxA":0,"maxB":49151}
+{"file":"A01m-dag-equality-2x22-measure.js","verdict":"REFUSE","code":"SIZE","detail":"value bound 0*N + 49151 over the caps at _dafny.Seq.of((((_0_c).isEqualTo(_0_c)) ","steps":583,"maxA":0,"maxB":49151}
+{"file":"A01s-dag-equality-2x12-small.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=682 size<=6*N+12287 cost<=81113+68*N+0*N^2","steps":682,"maxA":6,"maxB":12287}
+{"file":"A03-extra-module-BigNumber.js","verdict":"REFUSE","code":"NAME","detail":"module name BigNumber is a JavaScript, runtime or global name","steps":0,"maxA":0,"maxB":0}
+{"file":"A03-extra-module-require.js","verdict":"REFUSE","code":"NAME","detail":"module name require is a JavaScript, runtime or global name","steps":0,"maxA":0,"maxB":0}
+{"file":"A08-param-shadows-const-display.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=254 size<=6*N+388 cost<=8022+68*N+0*N^2","steps":254,"maxA":6,"maxB":388}
+{"file":"A09-local-shadows-const-display.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=246 size<=6*N+388 cost<=8022+68*N+0*N^2","steps":246,"maxA":6,"maxB":388}
+{"file":"HV11-match-huge-literal-admissible-size.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=2886 size<=6*N+388 cost<=13917+79*N+0*N^2","steps":2886,"maxA":6,"maxB":388}
+{"file":"HV15-ghost-method-with-loop.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=158 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":158,"maxA":6,"maxB":388}
+{"file":"HV24-negation-doubling.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=1976 size<=6*N+464 cost<=165641+669*N+0*N^2","steps":1976,"maxA":6,"maxB":464}
+{"file":"HV25-tuple-of-helper-tuples.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=192 size<=6*N+388 cost<=7703+73*N+0*N^2","steps":192,"maxA":6,"maxB":388}
+{"file":"L11-block-comment-with-slashes-cr.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=158 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":158,"maxA":6,"maxB":388}
+{"file":"L12-string-with-comment-close.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"L13-verbatim-doubled-quote.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"L14-char-dquote-and-escaped-quote.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=164 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":164,"maxA":6,"maxB":388}
+{"file":"MF12-match-flatten-k12.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=359 size<=12*N+769 cost<=8897+92*N+0*N^2","steps":359,"maxA":12,"maxB":769}
+{"file":"MF4-match-flatten-k4.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=231 size<=6*N+388 cost<=7865+76*N+0*N^2","steps":231,"maxA":6,"maxB":388}
+{"file":"MF8-match-flatten-k8.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=295 size<=8*N+513 cost<=8381+84*N+0*N^2","steps":295,"maxA":8,"maxB":513}
+{"file":"N01-prime-vs-k-member.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=194 size<=6*N+388 cost<=7366+68*N+0*N^2","steps":194,"maxA":6,"maxB":388}
+{"file":"P01-js-locals.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=176 size<=6*N+388 cost<=7358+68*N+0*N^2","steps":176,"maxA":6,"maxB":388}
+{"file":"P02-js-members.js","verdict":"REFUSE","code":"NAME","detail":"member name valueOf","steps":0,"maxA":0,"maxB":0}
+{"file":"P03-js-proto-hasown.js","verdict":"REFUSE","code":"LOAD","detail":"module does not load or export Assess(context, response): SyntaxError: Classes may not have a static property named 'prototype'","steps":168,"maxA":6,"maxB":388}
+{"file":"S01-string-nul-digit.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"S02-verbatim-backslash-end.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"S03-verbatim-unicode-escape.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"S04-verbatim-newline.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"S05-char-nul.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"S06-verbatim-cr.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"S07-verbatim-vt.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"S08-verbatim-dollar-brace.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"S09-verbatim-backslash-quote.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}
+{"file":"X02-for-literal-bigint-multiplier.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=187 size<=6*N+388 cost<=15950+199*N+0*N^2","steps":187,"maxA":6,"maxB":388}
+{"file":"X06-loop-one-level-input-product.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=185 size<=6*N+388 cost<=11595+196*N+1*N^2","steps":185,"maxA":6,"maxB":388}
+{"file":"X33-ls-comment-loop-text.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=158 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":158,"maxA":6,"maxB":388}
+{"file":"X38-bounded-local-in-display-append-loop.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=201 size<=6*N+388 cost<=7509+68*N+0*N^2","steps":201,"maxA":6,"maxB":388}
+{"file":"Y02-if-tower-40.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=761 size<=6*N+388 cost<=11029+108*N+0*N^2","steps":761,"maxA":6,"maxB":388}
+{"file":"Y03-match-nest-20.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=541 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":541,"maxA":6,"maxB":388}
+{"file":"Y07-helper-fanout-2x3.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=1224 size<=6*N+388 cost<=64085+580*N+0*N^2","steps":1224,"maxA":6,"maxB":388}
+{"file":"Y13-length-of-input.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=178 size<=6*N+388 cost<=7553+68*N+0*N^2","steps":178,"maxA":6,"maxB":388}
+{"file":"Y14-string-compare-chain.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=213 size<=6*N+388 cost<=7870+72*N+0*N^2","steps":213,"maxA":6,"maxB":388}
+{"file":"Y15-large-int-compare.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=187 size<=6*N+388 cost<=7801+74*N+0*N^2","steps":187,"maxA":6,"maxB":388}
+{"file":"Y17-ghost-method-loop-huge.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=175 size<=6*N+388 cost<=7441+69*N+0*N^2","steps":175,"maxA":6,"maxB":388}
+{"file":"Y24-addition-doubling-400.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=2570 size<=6*N+463 cost<=217315+867*N+0*N^2","steps":2570,"maxA":6,"maxB":463}
+{"file":"Y25-literal-multiplier-chain-300.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=1970 size<=6*N+19499 cost<=192413642+19504*N+0*N^2","steps":1970,"maxA":6,"maxB":19499}
+{"file":"Y28-set-display-in-if-expression.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=179 size<=6*N+388 cost<=8062+77*N+0*N^2","steps":179,"maxA":6,"maxB":388}
+{"file":"Y34-tuple-helper-equality.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=192 size<=6*N+388 cost<=8121+80*N+0*N^2","steps":192,"maxA":6,"maxB":388}
+{"file":"Y42-long-literals-display.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=190 size<=6*N+4017 cost<=272534+4085*N+0*N^2","steps":190,"maxA":6,"maxB":4017}
+{"file":"Y42b-literals-display-16x64.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=190 size<=6*N+1041 cost<=76118+1109*N+0*N^2","steps":190,"maxA":6,"maxB":1041}
+{"file":"Y45-if-statement-tower-30.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=553 size<=6*N+388 cost<=10109+98*N+0*N^2","steps":553,"maxA":6,"maxB":388}
+{"file":"Y50-assert-hides-statement.js","verdict":"ACCEPT","code":"BOUNDED","detail":"steps<=161 size<=6*N+388 cost<=7349+68*N+0*N^2","steps":161,"maxA":6,"maxB":388}

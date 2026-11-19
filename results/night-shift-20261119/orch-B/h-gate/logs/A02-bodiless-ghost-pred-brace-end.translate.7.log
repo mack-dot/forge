@@ -1,0 +1,39 @@
+# owner=h-gate start=2026-11-19T16:02:58Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/A02-bodiless-ghost-pred-brace-end
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1040
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/A02-bodiless-ghost-pred-brace-end/model
+# memory free percent: 35
+impl/Refund.dfy(4,38): Warning: This ensures clause is part of a bodyless function. Add the {:axiom} attribute to it or the enclosing function to suppress this warning
+  |
+4 |   ghost predicate Bad() ensures Bad() && !Bad() ensures 1 in {1}
+  |                                       ^^
+
+impl/Refund.dfy(4,58): Warning: This ensures clause is part of a bodyless function. Add the {:axiom} attribute to it or the enclosing function to suppress this warning
+  |
+4 |   ghost predicate Bad() ensures Bad() && !Bad() ensures 1 in {1}
+  |                                                           ^^
+
+
+Dafny program verifier did not attempt verification
+Translation was aborted because warnings were found and --allow-warnings was not specified
+        1.14 real         0.62 user         0.11 sys
+            84606976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8514  page reclaims
+                1016  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  45  voluntary context switches
+                4346  involuntary context switches
+          4532435104  instructions retired
+          2158757617  cycles elapsed
+            75875552  peak memory footprint
+# end=2026-11-19T16:03:00Z
+exit 3

@@ -1,0 +1,28 @@
+# owner=h-gate start=2026-11-19T15:03:09Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/G03-reason-in-set-guard
+# power: Now drawing from 'AC Power'
+# swap free MiB: 846
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/G03-reason-in-set-guard/model
+# memory free percent: 57
+
+Dafny program verifier did not attempt verification
+        0.85 real         0.52 user         0.08 sys
+           109297664  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7999  page reclaims
+                1004  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  27  voluntary context switches
+                2577  involuntary context switches
+          4449734495  instructions retired
+          1811193866  cycles elapsed
+            74876104  peak memory footprint
+# end=2026-11-19T15:03:10Z
+exit 0

@@ -1,0 +1,50 @@
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+[
+ {
+  "keep": 100,
+  "person": "lock=\"{\\\"pid\\\":15821,\\\"run\\\":\\\"02533ce7c17b11a4b17a3fa218719267\\\",\\\"host\\\":\\\"Macks-MacBook-Pro-3.local\\\",\\\"startedAt\\\"\" witness=\"{\\\"ledger\\\":\\\"<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/tmp/forge-d-JuNt\"",
+  "ledgerAfterLimited": "0 (torn)",
+  "files": [
+   "ledger.jsonl.lock={\"pid\":15821,\"run\":\"02533ce7c17b11a4b17a3fa218719267\",\"host\"",
+   "sink.sqlite.dispatch-witness.json={\"ledger\":\"<REPO>/results/night-shift-202611"
+  ],
+  "limited": "{\"name\":\"L\",\"pid\":15821,\"stopped\":\"dispatcher alarm: this run's lock was removed or replaced while it ran; it stops before row 1 (nothing more sent)\"} (exit 0 )",
+  "n1": "{\"name\":\"N3\",\"pid\":15966,\"stopped\":\"dispatcher alarm: the dispatch witness <REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/tmp/forge-d-JuNtnC/sink.sqlite.dispatch-witness.\"} (exit 0 )",
+  "n2": "{\"name\":\"N4\",\"pid\":15992,\"stopped\":\"dispatcher alarm: the dispatch witness <REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/tmp/forge-d-JuNtnC/sink.sqlite.dispatch-witness.\"} (",
+  "effects": [],
+  "ok": false
+ },
+ {
+  "keep": 300,
+  "person": "",
+  "ledgerAfterLimited": "300 (torn)",
+  "files": [
+   "sink.sqlite.dispatch-witness.json={\"ledger\":\"<REPO>/results/night-shift-202611"
+  ],
+  "limited": "{\"name\":\"L\",\"pid\":16009,\"stopped\":\"EFBIG: file too large, write\"} (exit 0 )",
+  "n1": "{\"name\":\"N1\",\"pid\":16028,\"emitted\":[\"r1\"],\"refused\":[],\"inDoubt\":[],\"took\":null} (exit 0 )",
+  "n2": "{\"name\":\"N2\",\"pid\":16045,\"emitted\":[],\"refused\":[],\"inDoubt\":[],\"took\":null} (exit 0 )",
+  "effects": [
+   "r1"
+  ],
+  "ok": true
+ },
+ {
+  "keep": 450,
+  "person": "",
+  "ledgerAfterLimited": "450 (torn)",
+  "files": [
+   "sink.sqlite.dispatch-witness.json={\"ledger\":\"<REPO>/results/night-shift-202611"
+  ],
+  "limited": "{\"name\":\"L\",\"pid\":16075,\"stopped\":\"EFBIG: file too large, write\"} (exit 0 )",
+  "n1": "{\"name\":\"N1\",\"pid\":16090,\"emitted\":[\"r1\"],\"refused\":[],\"inDoubt\":[],\"took\":null} (exit 0 )",
+  "n2": "{\"name\":\"N2\",\"pid\":16119,\"emitted\":[],\"refused\":[],\"inDoubt\":[],\"took\":null} (exit 0 )",
+  "effects": [
+   "r1"
+  ],
+  "ok": true
+ }
+]
+FAIL

@@ -1,0 +1,32 @@
+# owner=h-gate start=2026-11-19T14:58:51Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-gate/work/A04x-seq-of-seq-self-growth
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1354
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/h-gate/work/A04x-seq-of-seq-self-growth/model
+# memory free percent: 37
+impl/Refund.dfy(12,13): Error: type of right argument to + (seq<seq<seq<int>>>) must agree with the result type (seq<seq<int>>) (covariant type parameter would require seq<seq<int>> <: seq<int>) (covariant type parameter would require seq<int> <: int)
+   |
+12 |       s := s + [if c == c then s else s];
+   |              ^
+
+1 resolution/type errors detected in Refund.dfy
+        1.46 real         0.52 user         0.10 sys
+            73695232  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7645  page reclaims
+                 568  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  28  voluntary context switches
+                4109  involuntary context switches
+          3677827236  instructions retired
+          1816794596  cycles elapsed
+            65176704  peak memory footprint
+# end=2026-11-19T14:58:53Z
+exit 2
