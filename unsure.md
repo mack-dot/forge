@@ -18294,3 +18294,30 @@ curl: (6) Could not resolve host: github.com
 - Reading: premises A-DB1 and A-DB2 of AuditV5SoundRelativeToSuppliedInitial, and the settled flag of StepQ6, are false for the real shell in this state. Money is unchanged (only a zero-amount token can repeat); the dispatcher's ledger deduplicated in the run.
 - Uncertainty: BLOB-typed columns and U+0000 in other columns are NOT RUN yet.
 - Impact: any row-log anchor of B must hash what SQL stores, not what node reads. Next check: B's h-sink; C re-runs and tries typed-column variants.
+
+## U584 — red team: an index substitution by a database writer gives two committed effects for one request id at the v6 draft sink; the start-up audit passes (new)
+- Status: 2026-11-19T14:50Z (inserted by the shell from `date -u`). Refs U557, U565, U580, U583. Evidence: results/night-shift-20261119/orch-C/c4-rollback (scripts a6, a5, a2, a1, a8, a4; recheck/), ATTACKS.md C-ATT-10 to C-ATT-13, C-NEG-04, C-NEG-05.
+- TESTED, my own runs: a6_dup_reqid.ts: exit 1 in both modes (restart; running sink, whose re-audit ran and passed): the UNIQUE autoindex of settled.request_id points at a substituted b-tree; the prior lookup, the UNIQUE checks and COUNT(DISTINCT) read it; a retry of r1 for the current state commits; two outbox rows for r1; audit() is empty. a5_index_root.ts: exit 1: an audited store on which the dispatcher refuses every row. Cause: the schema check compares type, name, tbl_name, sql, not the root page; no integrity_check runs.
+- Also TESTED: after a rollback (known limit) the sink acknowledges later refunds that the dispatcher never emits and gives no signal (a2: exit 1); with an INTACT dispatcher ledger a rollback gives no second external refund (a1: exit 0); with a new ledger it gives 1200 on 1000 (a1 newledger: exit 1; known).
+- Reading: four sentences of B's drafts are contradicted by a run (sink.ts:13, :21-24, :28-29; adoption packet section 6). An append-only row-log anchor does not catch the index case: the sink appends the duplicate itself.
+- Uncertainty: in the run the dispatcher emitted nothing for the tampered store (money not doubled there). Hot-journal planting and symbolic-link swaps: NOT RUN.
+- Impact: "one effect per request id" at the v6 sink holds only under the assumption that SQLite's indexes are consistent with their tables, which a database writer breaks. Next check: B's h-sink (integrity_check; uniqueness from table rows); C re-runs a6 and a5.
+
+## U585 — red team: the minter boundary: lossy UTF-8 decode signs a rewritten request id; the checker identity does not bind the loaded dependencies (new)
+- Status: 2026-11-19T14:50Z. Refs U428, U563. Evidence: orch-C/c7-minter (p2, p4, p3, p5, fuzz_diff; recheck/), ATTACKS.md C-ATT-14 to C-ATT-16, C-NEG-06.
+- TESTED, my own runs: p2_invalid_utf8.ts exit 1: stdin bytes that are not UTF-8 become U+FFFD and are signed; two different wire ids give one signed id. p4_module_identity.ts exit 1: a benign shim of bignumber.js first on NODE_PATH ran inside the minter process while the minter reported the pinned checkerSha256. p3_client_crossdelivery.ts exit 1 at 4af09308; exit 0 at B's fix 216dfbe2 (closed).
+- TESTED, negative: 2,000 raw-stdin cases against an independent oracle: 0 divergences (224 zero-amount and 208 full refunds issued); 19 parser probes safe.
+- Uncertainty: the dependency case needs control of the minter's environment; that is configuration-level power. B records two assumptions for it (CLOSED-LAUNCH, FIXED-DEPS; its U572).
+- Impact: the sentence "the checker identity identifies the issuer" needs those assumptions named. Next check: B's h-minter (strict decode); C re-runs p2.
+
+## U586 — red team: B's two test judges pass 12 defective mutants; one regression fails a safer sink; exit codes can hide failures (new)
+- Status: 2026-11-19T14:50Z. Refs U568 and B's later entries on tests/refund-finality/regress and spec-conformance. Evidence: orch-C/c10-judges (blindspots.sh, confirm.sh, mutants/make_mutants.py; recheck/), ATTACKS.md C-JUDGE-01 to C-JUDGE-03, C-NEG-08. Target: B's commit 1481d818.
+- TESTED, my own runs: blindspots.sh exit 1 (12 mutants passed by both judges); four of the twelve defects re-shown by me with confirm.sh (mutant exit 1, v6 exit 0); the other eight are the worker's runs. A sink that refuses a prefix rollback is FAILED by X6-P1. A reject-all sink that calls process.exit(0) gives runner exit 0 with 9 regressions not run.
+- Reading: the judges are useful (17 other mutants are caught, incl. reject-all and reject-zero; no false alarm on v6), but "the regressions pass" is not evidence for: restart behaviour, signature and canonical-text checks, long or non-ASCII ids, more than 10 deliveries per store, or any dispatcher property in the spec judge.
+- Impact: none on stage labels. Next check: B's next judge commit; C re-runs blindspots.sh.
+
+## U587 — red team: A's draft argument for the FFI premise (environment built from one real run): not circular; four points to repair (static)
+- Status: 2026-11-19T14:50Z. Refs U393, U485 to U498 (A's entries). Evidence: orch-C/c9-x8, ATTACKS.md C-PREM-01, C-NEG-07; A's record orch-A/x8-x11/CORRECTIONS.md.
+- STATIC (no HOL run by C): a new assumption is needed (the fixed system-register constant must equal the real bits that the L3 model reads, e.g. SCTLR_EL1.A, and they must stay constant); the interference-oracle index is off as written; the stdout clause is false for killed runs (PIPE_BUF 512 by my getconf run; chunks up to 2048); the accept rule needs a fail-closed lemma that is not stated. A accepted all four and withdrew the fail-closed claim.
+- TESTED, negative, my own runs (exit 0 each): the real refund executable under stop/continue and four other signals while blocked gives the exact frame; truncated stdin gives no strict frame.
+- Impact: the draft stays a draft; no theorem. end_to_end=false. Next check: premises of A's next theorems with exit 0.
