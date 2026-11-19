@@ -1,6 +1,13 @@
 # Forge: proof-gated changes
 
-**CURRENT: none (Stage 9 deferred)**
+**CURRENT: Stage 9 (deterministic closeout only: lock rebind, hosted signing run, six EXIT cases; owner's word of 2026-11-19, U469; no benchmark)**
+
+Status note of 2026-11-19: the owner unlocked Stage 9 for the closeout
+named above. The first step is the lock proposal
+[stage9-lock-rebind-20261119](proposals/stage9-lock-rebind-20261119/PROPOSAL.md);
+it waits for the owner's merge. The six Stage 9 EXIT cases are NOT RUN
+on the present bytes. The note of 2026-11-18 below describes the state
+before that word.
 
 Status note of 2026-11-18 (owner decision; `unsure.md` U437 to U442,
 M1R-1, M1R-2, R4C-1). No
@@ -27,6 +34,28 @@ request 40 its files are in `results/stage6-epoch1` and
 `docs/reuse-benchmark-epoch1.md`; five links of that text now point
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
+
+## Stage 9 closeout, step 1: lock rebind proposal (two protected files; waits for the owner's merge); records of pull request 52 — U469
+
+CURRENT Stage 9 (closeout only); M1 open; Stage12 unauthorized; end_to_end=false.
+Two protected files change in this pull request:
+`gate/provenance/implementation.lock` and `spec/provenance/spec.lock`.
+The owner's merge is the approval of their exact bytes.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| hosted `gate/pr_check.py`, pull request 52, head `32dff973`, run 44450884898 |3|UNSUPPORTED, as expected for documents |
+| `gh pr merge 52 --squash --admin` (the owner's word: "Merge 52 for me") |0|squash commit `982890e5`, 2026-11-19 03:25Z; OVERRIDE of the review rule and of the red gate status; tree equal to `32dff973` |
+| clean clone of `982890e5` with the two candidate lock files: `gate/provenance/bootstrap.py --implementation-sha256 190f938e… --check` |0|`BOOTSTRAP_VERIFIED` |
+| the same clone with `main`'s own locks and lock value `76b983ac…` |1|`BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py` |
+| `scripts/exit_stage_9.py`, six cases; hosted signing run |NOT RUN|after the owner's merge; they need the owner's variable, dispatch and token (see the proposal) |
+| the benchmark of the Wave Gate 4 plan |NOT RUN|excluded by the owner's word |
+| commit; push; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|expected hosted result: exit 1 (REJECTED): an unapproved change of protected files; the owner's merge is the approval |
+
+[Lock rebind proposal](proposals/stage9-lock-rebind-20261119/PROPOSAL.md).
+The proposal holds more than the owner named (six scripts; eight
+entries of the provenance spec lock); each part is marked there.
+M1 and integration EXIT NOT_ESTABLISHED.
 
 ## Wave Gate 4: Stage 9 lock inspection and a printed benchmark plan (no protected file changed; Stage 9 NOT unlocked) — U468
 
