@@ -61,14 +61,14 @@ read by an independent reader, are equivalent to `FlatContract`; six stored proo
 | Segment | State |
 |---|---|
 | Approved R1–R5 ⇐ flat contract (`LinkedRefund`) ⇔ exported contract bytes (`ExportBridge`) | MACHINE-CHECKED (Dafny, model) |
-| Exported clauses, Dafny meaning ⇔ HOL meaning (strings as bytes, integers); exporter identity; encode/decode of inputs and outputs | ASSUMPTION (named: BETA, EXPORTER-ID) / MISSING |
+| Exported clauses, Dafny meaning ⇔ HOL meaning (BETA-VALUES, BETA-OPS, BETA-ORDER: argued); reader fidelity on the Dafny side (the reader's tree equals the HOL parser's tree on these bytes: corroborated by a second reader, not proved); exporter identity (record only); encode/decode of inputs and outputs | ASSUMPTION (named) / MISSING |
 | Exported clauses ⇔ HOL `refund_fields` | MACHINE-CHECKED (HOL) |
 | `refund_fields` → compiled program → ARM64 machine model → behaviours → descriptor-1 bytes → strict parse | MACHINE-CHECKED as one HOL theorem, under premises |
 | The FFI premise of that theorem | OPEN: for the present executable it needs R6 (program behaviour) plus a native contract; for a model-total C FFI only a native contract (owner item A-3) |
 | Machine model ↔ real process, kernel, processor bits, entry state, launcher | ASSUMPTION (NATIVE); two sub-results on processor bits |
 | Real consumer's parser = HOL parser | TESTED-UNPROVED |
 | Native result → issuer → token | MISSING in the deployed path: the issuer calls the compiled Dafny checker, not the native program (edge X16); a dual-check issuer exists as a draft |
-| Token → sink core → committed state | MACHINE-CHECKED for Dafny cores (model); the deployed `sink.ts` has a proved decision defect; drafts with compiled cores are tested only |
+| Token → sink core → committed state | MACHINE-CHECKED for Dafny cores (model; the byte-level lemma is proved by run, its review is not finished); the deployed `sink.ts` has a proved decision defect; drafts with compiled cores are tested only |
 | SQLite atomicity, crash, rollback; Dafny-to-JavaScript compiler | ASSUMPTION / TESTED |
 
 So: two long mechanically checked segments exist (HOL: machine model to exported clauses; Dafny: exported clauses to the
@@ -132,7 +132,7 @@ B-2 charge-id binding. B-3 admission authority. B-4 start-up audit. B-5 `expect`
 the issuer and sink drafts. B-7 the subset rule. B-8 rollback anchor and authentic initial charge.
 No earlier pasted suggestion was treated as authorization. The stage labels and `end_to_end=false` are unchanged.
 
-## Addendum 1 (Orchestrator A, 2026-11-19T10:28Z): review of L2d-0001 and MG-0001; precise wording of the FFI premise
+## Addendum 1 (Orchestrator A, 2026-11-19T10:21Z): review of L2d-0001 and MG-0001; precise wording of the FFI premise
 - A separate worker reviewed cases L2d-0001 and MG-0001 (`orch-A/review-L2d/REPORT.md`): both hold at model level; no
   soundness defect.
 - Wording correction for sections 1, 3 and 7 above: the remaining FFI premise of `refund_profile_a_sl_shape` is
