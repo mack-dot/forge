@@ -158,3 +158,6 @@ RUNNING: `queue.sh q37 "R6w-0004 3600 deps-R6w.txt"` (PROOF, write side; files `
 ## CHECKPOINT (2026-11-19T12:00:24Z)
 `R6w-0004`: actual exit 0, EXACT_COMPLETE, theory `forge_refundR6Write`, 16 theorems + definition `write_event_ok`: `write_spec_V`, `output_aux_spec_V`, `output_spec_V`, `output_STDIO_spec_V`, `print_spec_V`, `print_spec_refund`. `USED_FILES_UNCHANGED true`. Pick step 2 (write side) DONE.
 Next: review (A34); read side (A35, files to `orch-A/r6/round10/`).
+
+## CHECKPOINT (2026-11-19T12:04:02Z)
+Review A34 of R6w-0004: holds (report `orch-A/review-R6w/REPORT.md`). A35 (read side) works. HOL slot idle, held by A.
