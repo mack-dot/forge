@@ -128,3 +128,10 @@ RUNNING: `queue.sh q32 "R6ffi-0002 3600 deps-R6ffi.txt"` (PROOF run; sub-files i
 ## CHECKPOINT (2026-11-19T11:15:00Z)
 `R6ffi-0002`: actual exit 0, EXACT_COMPLETE, theory `forge_refundR6Ffi`: definitions IOxV, IOFS_V, STDIO_V; theorems
 `IOFS_V_FFI_part_hprop`, `IOxV_IMP_IOx`, `writei_spec_V`, `read_into_spec_V`. Pick step 1 DONE. Next: review (A32); write side (A33).
+
+## CHECKPOINT (2026-11-19T11:18:09Z)
+`locks/hol.lock` released for B's fifth heavy window (up to 30 minutes). A starts no HOL case until B's release line. Workers: A32 (review R6ffi), A33 (write side).
+
+## CHECKPOINT (2026-11-19T11:19:06Z)
+Review A32 of R6ffi-0002: holds; evidence gap (files read with `use` hashed only after the run) recorded; wrapper now hashes them before and after each run.
+B holds `heavy.lock` (fifth window, up to 30 minutes from 11:19Z). A33 (write side) works. No HOL case runs.

@@ -14,6 +14,12 @@ c=$1; cpu=$2; deps=$3
   echo "START_STATE swap_free_mib=$swfree memory_free_percent=$memfree"
   if ! { [[ $swfree -ge 1024 ]] || { [[ $memfree -ge 40 ]] && [[ $swfree -ge 512 ]]; }; }; then echo "PRECHECK_REFUSED swap free $swfree MiB memory free $memfree %"; echo "go exit 96"; exit 96; fi
   if pgrep -f 'cake_compile_heap|arm8-heap|cakeml-heap' >/dev/null; then echo "PRECHECK_REFUSED other hol"; echo "go exit 98"; exit 98; fi
+  # added after review A32: files that the case source reads with `use` by absolute path are hashed BEFORE the run
+  # (the runner hashes only the command-line inputs); the same list is hashed again after the run.
+  used=($(grep -o '"/Users/[^"]*\.sml"' $c.sml | tr -d '"' | sort -u)); dirs=($(grep -o '"/Users/[^"]*/"' $c.sml | tr -d '"' | sort -u))
+  for d in $dirs; do used+=($d*.sml(N)); done
+  : > $c.used-files.pre.txt; for f in ${(u)used}; do [[ -f $f ]] && shasum -a 256 $f >> $c.used-files.pre.txt; done
+  echo "USED_FILES_PRE $(wc -l < $c.used-files.pre.txt | tr -d ' ') $(shasum -a 256 $c.used-files.pre.txt | cut -c1-16)"
   if [[ -n $deps ]]; then
     FORGE_CPU_SECONDS=$cpu ./go-routeA.sh $c $c.sml $deps; rc=$?
   else
@@ -22,5 +28,7 @@ c=$1; cpu=$2; deps=$3
     tail -c 600 $c/stderr.log
     grep -n "^CHECKED\|^TACTIC_\|^OPTIONAL_\|^CONTROL\|^UNEXPECTED\|^STATEMENT_TYPECHECKS\|^CLOSURE\|COMPLETE\|^LEMMA_FAILED\|^SHOW\|^  GOAL\|^STORED\|^DEFINITION\|rror\|xception" $c/stdout.log | cut -c1-260 | tail -80
   fi
+  : > $c.used-files.post.txt; for f in ${(u)used}; do [[ -f $f ]] && shasum -a 256 $f >> $c.used-files.post.txt; done
+  cmp -s $c.used-files.pre.txt $c.used-files.post.txt && echo "USED_FILES_UNCHANGED true" || echo "USED_FILES_UNCHANGED false"
   echo "go exit $rc"
 } > $c.go.log 2>&1
