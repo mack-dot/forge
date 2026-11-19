@@ -18261,3 +18261,28 @@ curl: (6) Could not resolve host: github.com
   `STATE.md` with a stop note and a resume note.
 - The review of R6ffi-0002 is not finished at this entry.
 - Next check: the review; the write side.
+
+## U498 — night shift, proof track: the write side of R6 holds: `print` appends only valid descriptor-1 write events (refers to U497)
+
+- Evidence: `R6wx-0001`, `R6wx-0002` (explorations, exit 0);
+  `R6wx-0003` (exit 0, but a shared file did not compile: a single
+  backslash at a line end; nothing explored); `R6wx-0004`
+  (exploration, exit 0, 16 lemmas close as real proofs);
+  `R6w-0004` (exit 0, theory `forge_refundR6Write`, 1 definition,
+  16 theorems). The files read with `use` were hashed before and
+  after the run: unchanged.
+- Proved: `write_spec_V`, `output_aux_spec_V`, `output_spec_V`,
+  `output_STDIO_spec_V`, `print_spec_V`, and `print_spec_refund`:
+  if every recorded event is a valid event before a call of
+  `TextIO.print`, every recorded event is valid after it, with the
+  standard output extended by the printed string.
+- Statement change against the CakeML original: the buffer length is
+  exactly 2048 (plus the 4-byte header), not "at least"; the heap
+  predicate pins the buffer to 2052 bytes, which is the allocation in
+  the basis code.
+- NOT proved: the read side; the main program with the new heap
+  predicate; that the initial heap satisfies it; the step from the
+  heap events to the semantic event list; the transfer to the
+  machine. R6 stays open.
+- The review of R6w-0004 is not finished at this entry.
+- Next check: the review; the read side.

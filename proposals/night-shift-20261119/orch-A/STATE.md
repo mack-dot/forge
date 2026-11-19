@@ -147,3 +147,14 @@ RUNNING: `queue.sh q34 "R6wx-0002 3600 deps-R6w.txt"` (exploration, round7). Sta
 
 ## CHECKPOINT (2026-11-19T11:47:21Z)
 `R6wx-0002` (exploration, round7): exit 0; 12 of 17 lemmas close as real proofs; OPEN: `write_spec_V` step 8, `output_spec_V` step 2, `print_spec_V` (statement/alpha problem), optional `STD_streams_fd0`. A33 repairs into `orch-A/r6/round8/` (`R6wx-0003`, `R6w-0003`). `R6w-0002` NOT RUN (not to be run). HOL slot idle, held by A.
+
+## CHECKPOINT (2026-11-19T11:50:23Z)
+RUNNING: `queue.sh q35 "R6wx-0003 3600 deps-R6w.txt"` (exploration, round8). Staged: `R6w-0003` (proof). A33 context is full: brief a fresh worker for the next round (files `orch-A/r6/round8/`, log `R6wx-0003/stdout.log`).
+
+## CHECKPOINT (2026-11-19T11:57:43Z)
+`R6wx-0003`: shared file did not compile (stray backslash). `R6wx-0004` (round9, ML-only fix): exit 0, 16 lemmas close as real proofs, none failed.
+RUNNING: `queue.sh q37 "R6w-0004 3600 deps-R6w.txt"` (PROOF, write side; files `orch-A/r6/round9/`).
+
+## CHECKPOINT (2026-11-19T12:00:24Z)
+`R6w-0004`: actual exit 0, EXACT_COMPLETE, theory `forge_refundR6Write`, 16 theorems + definition `write_event_ok`: `write_spec_V`, `output_aux_spec_V`, `output_spec_V`, `output_STDIO_spec_V`, `print_spec_V`, `print_spec_refund`. `USED_FILES_UNCHANGED true`. Pick step 2 (write side) DONE.
+Next: review (A34); read side (A35, files to `orch-A/r6/round10/`).

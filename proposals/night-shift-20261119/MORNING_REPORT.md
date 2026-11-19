@@ -233,3 +233,9 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
 - So tonight's adoption diff is a TESTED CANDIDATE with known limits, not a finished one (see B's addendum 8).
 - A: review of R6ffi-0002 done (`orch-A/review-R6ffi/REPORT.md`): the theorems hold; one evidence gap (three files read
   with `use` were hashed only after the run; the wrapper now hashes such files before and after each run).
+
+## Addendum 9 (Orchestrator A, 2026-11-19T12:01:34Z): the write side of R6
+- `R6w-0004` (`go exit 0`; theory forge_refundR6Write; 16 theorems): the CakeML output specifications up to
+  `TextIO.print` hold with the event invariant: `print_spec_refund`: `print` keeps "every recorded FFI event is a valid
+  event" and appends only valid descriptor-1 write events. Step 2 of the R6 plan. R6 stays open (read side, main program,
+  initial heap, transfer to the machine). Review running. The files read with `use` were hashed before and after the run.
