@@ -1,0 +1,43 @@
+2026-11-19T09:56:44Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 5615.44M  free = 528.56M  (encrypted)
+System-wide memory free percentage: 66%
+START_STATE swap_free_mib=528 memory_free_percent=66
+exit 0
+actual_exit 0 wall 76.603 cpu 102.738 rss_mib 4097 ['EXACT_COMPLETE'] inputs_unchanged_after True
+Cannot find file forge_refundExportedContractTheory.ui
+error in load forge_refundExportedContractTheory : Fail "Cannot find file forge_refundExportedContractTheory.ui"
+3:/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001/.hol/objs/forge_refundExportedContractTheory.sml:13: error: Identifier expected but ( was found
+4:CONTRACT_MODE absent Fail "Static Errors"
+85:IMPORTED_OK refund_frame_decision
+86:IMPORTED_OK refund_strict_parse_complete
+87:IMPORTED_OK fd1_written_prefix
+88:IMPORTED_OK refund_L_OUT
+98:CHECKED refund_outcome_prefix
+102:CHECKED refund_frame_accept_of_prefix
+109:CHECKED refund_frame_accept_of_outcome
+117:CHECKED refund_success_accept
+128:CHECKED extend_with_resource_limit_single_success
+135:CHECKED refund_fd1_frame_of_run
+146:CHECKED refund_model_frame_decision
+174:CHECKED refund_model_success_gives_frame
+198:CHECKED refund_model_frame_decision_reach
+234:CHECKED refund_strict_parse_common_prefix_rejected
+241:CHECKED refund_strict_parse_empty_rejected
+244:STATEMENT_TYPECHECKS no (constant exported_ensures present: false)
+245:STATEMENT_TEXT_ONLY refund_model_frame_meets_exported_contract: the statement of refund_model_frame_decision with the inner conjunction g = refund_fields .. /\ fd1_written io = explode (..) extended by !ok a r c q n. g = (ok,a,r,c,q,n) ==> evaluate_exps (e
+249:CONTROL_OK c1 refund_model_frame_decision premise is term-identical to the premise of refund_profile_a_sl_fd1
+250:CONTROL_OK M2 premise is the stored premise term
+251:CONTROL_OK M1 statement is the planned term
+252:CONTROL_OK M1 conclusion uses refund_strict_parse and has no free ext (no_ext)
+253:CONTROL_OK M1b premise is term-identical to the premise of refund_profile_a_sl_reach at ext := no_ext
+254:CONTROL_OK M1b conclusion is term-identical to the conclusion of M1
+255:CONTROL_OK M1b premise does not contain refund_env_ok_sl
+256:CONTROL_OK c2 refund_strict_parse of the empty output is NONE (a resource stop with no output is never accepted)
+260:CLOSURE_AXIOM bool.SELECT_AX
+261:CLOSURE_AXIOM bool.INFINITY_AX
+262:CLOSURE_AXIOM bool.ETA_AX
+263:CLOSURE_AXIOM bool.BOOL_CASES_AX
+269:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0

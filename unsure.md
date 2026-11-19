@@ -18100,3 +18100,32 @@ curl: (6) Could not resolve host: github.com
 - Impact: graph link X6 → X7 stays open at R6; X11e stays open.
 - Next check: R6 feasibility; an oracle-only valid-call predicate
   for a model-total C FFI.
+
+## U492 — night shift, proof track: one composed HOL theorem from the machine model to the exported contract (refers to U486, U487, U490)
+
+- Evidence: cases `MF-0001` (exit 0, 11 theorems) and `MF-0002`
+  (exit 0, 13 theorems; the contract theory of U486 is on the
+  command line; my change against MF-0001 is ML-only).
+- Proved: `refund_model_frame_decision`,
+  `refund_model_success_gives_frame`,
+  `refund_model_frame_meets_exported_contract`: under the stored
+  premises of the machine-model theorem, for every behaviour of the
+  run at the oracle `no_ext`: it terminates, and if the strict
+  parser accepts the bytes written to descriptor 1 as a value g,
+  then g is `refund_fields` of the request, the bytes are exactly
+  its render, and the three exported `ensures` clauses evaluate to
+  true on g. A Success run is accepted.
+  `refund_model_frame_decision_reach`: the same conclusion from the
+  premises of `refund_profile_a_sl_reach` (U482).
+- Limits: machine model only. The premises include the all-states
+  FFI premise, which the real C code does not meet (U393); the
+  `_reach` form needs `ffi_calls_ok`, which is not proved. Nothing
+  here is about the real process, the launcher, the Python consumer
+  or the issuer. The link from the exported clauses to the approved
+  spec is the Dafny proof plus two named bridge assumptions (U486).
+- The review of these two runs is not finished at this entry.
+- Impact: the model-level chain from the ARM64 machine model to the
+  exported contract is one theorem in one kernel. end_to_end stays
+  false. M1-B stays OPEN.
+- Next check: the review; the same theorem from the `VokY3` premises
+  (R6); statement R6 itself.
