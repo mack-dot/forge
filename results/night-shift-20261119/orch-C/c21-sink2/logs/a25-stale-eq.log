@@ -1,0 +1,2 @@
+{"mode":"stale-eq","c1":"committed","f1":{"emitted":["r1"],"refused":[],"already":0},"c2":"committed","f2":{"emitted":["z"],"refused":[],"already":1},"c3":"committed","c4":"committed","applied":"ok","outbox":["r1","z","r2b"],"anchor":2,"flush":{"emitted":[],"refused":["r2b: beyond the outside head (count 2): not yet anchored by the host; not sent"],"already":2},"effects":["r1","z"],"paid":600,"sinkRestartOutside":"REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false","defect":false}
+exit=0

@@ -1,0 +1,2 @@
+{"mode":"midrun","c1":"committed","f1":{"emitted":["r1"],"refused":[],"already":0},"c2":"committed","f2":{"emitted":["z"],"refused":[],"already":1},"c3":"committed","c4":"committed","flush":{"emitted":["r2","r3"],"refused":[]},"swapped":"ok","effects":["r2","r3"],"outbox":["r1","z","r2","r3b"],"after":{"emitted":[],"refused":["r3b: store audit failed: stored state does not decode"],"already":3},"defect":false}
+exit=0

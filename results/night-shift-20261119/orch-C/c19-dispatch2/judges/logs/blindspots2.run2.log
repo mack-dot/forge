@@ -1,0 +1,23 @@
+input                          regress                            spec                     verdict
+base                           exit 0 FAIL=0 []                   exit 0                   (baseline)
+m_accept_bad_sig               exit 1 FAIL=4 [K1-foreign-key-sig  exit 1                   caught
+m_accept_noncanon              exit 1 FAIL=1 [K2-noncanonical-te  exit 0                   caught
+m_skip_prestate                exit 1 FAIL=2 [K3-stale-prestate,  exit 1                   caught
+m_replay_says_rejected         exit 1 FAIL=1 [K4-replay-status]   exit 1                   caught
+m_replayed_any                 exit 1 FAIL=1 [K4-replay-status]   exit 1                   caught
+m_id_gt32_or_nonascii          exit 1 FAIL=1 [K5-long-and-unicod  exit 1                   caught
+m_late20                       exit 1 FAIL=1 [K6-long-run-one-st  exit 0                   caught
+m_wipe_on_open                 exit 1 FAIL=3 [X3-upgrade-legacy-  exit 1                   caught
+i_exit_early                   exit 1 FAIL=24 [C1-honest-refund,  exit 1                   caught
+i_forge_output                 exit 1 FAIL=24 [C1-honest-refund,  exit 1                   caught
+e_status_lie                   exit 1 FAIL=20 [C1-honest-refund,  exit 1                   caught
+s_rollback_guard               exit 0 FAIL=0 []                   exit 0                   (safer sink: not failed = correct)
+md_ignore_sig                  exit 0 FAIL=0 []                   exit 0                   PASSED BY BOTH
+md_ignore_chain                exit 0 FAIL=0 []                   exit 0                   (equivalent: confirm.ts shows no defect; not counted)
+md_emit_before_ledger          exit 1 FAIL=1 [D3-dispatcher-ledg  exit 0                   caught
+e_emit_twice_hidden            exit 1 FAIL=1 [D3-dispatcher-ledg  exit 0                   caught
+e_emit_before_ledger_hidden    exit 1 FAIL=1 [D3-dispatcher-ledg  exit 0                   caught
+e_exit0                        exit 1 FAIL=25 [C1-honest-refund,  exit 1                   caught
+enc_unsigned_body              exit 0 FAIL=0 []                   exit 0                   PASSED BY BOTH
+# defective inputs passed by both judges: 2
+EXIT 1
