@@ -18129,3 +18129,26 @@ curl: (6) Could not resolve host: github.com
   false. M1-B stays OPEN.
 - Next check: the review; the same theorem from the `VokY3` premises
   (R6); statement R6 itself.
+
+## U493 — night shift, proof track: the composed model theorem under the reduced premises; reviews of the composition (refers to U491, U492)
+
+- Evidence: case `MG-0001` (exit 0, 5 theorems);
+  `orch-A/review-MF/REPORT.md` (a separate worker's review of
+  MF-0001, MF-0002, L2c-0001, LE-0004, EF-0001: no defect).
+- Proved: `refund_model_frame_decision_events`: the conclusion of
+  the composed theorem of U492 from the premises of
+  `refund_profile_a_sl_events` at `no_ext`: no all-states FFI premise
+  and no `ffi_calls_ok` premise; in their place the contract at
+  valid calls for the real FFI code (NATIVE) and statement R6.
+  `refund_model_success_gives_frame_events`: a Success run is
+  accepted with the function's value, under the same premises.
+- Review facts: the premises of the U492 theorem are jointly
+  satisfiable in the model (a stored witness theorem); that a
+  behaviour exists is a CakeML library fact, not part of the
+  composed statement; R6 is plausible in the model by reading the
+  program's I/O code, and is not proved.
+- MG-0001 itself has no separate review at this entry.
+- Impact: at model level the route from the machine model to the
+  exported contract now rests on two named open premises: R6 and the
+  native FFI contract at valid calls. M1-B OPEN. end_to_end=false.
+- Next check: R6.
