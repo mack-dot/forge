@@ -1,0 +1,3 @@
+{"fa":{"emitted":["r1"],"refused":[],"error":""},"fb":{"emitted":["z0","r1"],"refused":[],"error":""},"fb2":{"emitted":[],"refused":[],"error":""},"emitted":["ch_A/r1:600","ch_B/z0:0","ch_B/r1:300"],"providerCalls":2,"movements":["r1@ch_A:600"]}
+p3_scope_collide first adapter=v1 env={"P_ADAPTER":"v1"}
+NOT STOPPED: T4 reported paid: ch_B/r1 300; provider movements for that key: ["ch_A:600"] ; T5 journal says replayed for ch_B/r1 300; provider movement {"refundId":"re_1","key":"r1","chargeId":"ch_A","amount":"600","at":0,"effect":"eebba02528900ade210197/ch_A/r1"}
