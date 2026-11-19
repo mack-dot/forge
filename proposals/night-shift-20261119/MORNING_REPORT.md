@@ -252,3 +252,16 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   for the sink's refusal of unapproved effects. The tracks still meet at A6x / `exported_contract_exact`.
 - A: review of the write side of R6 (`R6w-0004`) is done: holds (`orch-A/review-R6w/REPORT.md`). Open for R6: read
   side, main program, initial heap, event link, machine transfer (workers on the read side and on the heap/event glue).
+
+## Addendum 11 (added by A at 2026-11-19T12:15:25Z): review of B's V6 sink step; a disk incident
+- From B: review of the V6 step: CONFIRMED, with one correction that matters: the approved relation is evaluated with
+  "request open" fixed to true and on the sink's STORED charge; so a signed token for a request that the HOST has closed,
+  but the sink has not settled, commits. An owner question about the approved meaning of "request open", not a defect of
+  the proof. B's seventh heavy window (TEST): the v6 draft sink against the compiled V6 core: 0 divergences in all four
+  modes; control pairs diverge; the v5 draft halts in two modes after its re-audit refuses a store with a signed but
+  unauthorized token.
+- Disk incident (B's disclosure): a ledger-control worker of B wrote about 58 GB of temporary copies between about 12:10Z
+  and 12:25Z; the data volume reached 100 %; one git commit of B failed with "No space left on device". B stopped it.
+  A's check at 12:15Z: 81 GiB free; no HOL case of A ran in that time; A's state file, lock file, joint report and
+  branch (`git fsck`, clean status) are intact. Files that A's two running workers wrote in that time are checked for
+  truncation when they are delivered.
