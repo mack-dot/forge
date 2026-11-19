@@ -150,6 +150,15 @@ python3 scripts/exit_slice3.py --case evidence          # runtime certificates
 python3 scripts/exit_m1_conformance.py --case evidence  # M1 conformance (macOS arm64 only)
 ```
 
+One command runs a live demonstration on the real components of the
+three slices (attacks on the issuer and the sink, a flood of bytes, an
+exchange of optimizers in three languages). It is a finite
+demonstration, not a proof: [the skeptic gauntlet](docs/demo-gauntlet.md).
+
+```sh
+python3 scripts/demo_gauntlet.py
+```
+
 A scenario can exit `0` because it observed the required rejection.
 Reports keep checker, gate and scenario exit codes apart. The hosted
 pull request gate answers `UNSUPPORTED` (exit 3) for a change whose
