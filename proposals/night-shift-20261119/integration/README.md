@@ -240,6 +240,19 @@ Record: `checks/regression-75f70919.json`, `.log`.
 | hosted `gate/pr_check.py` | on the pull request | see the pull request | expected 3 (UNSUPPORTED) |
 | Stage 7, 9, 10; `npm ci` | — | NOT RUN | left out by the runner; no install script exists |
 
+### Rebase note
+
+After run 1 the owner merged pull request 62 (Goal 19); `main` moved
+from `b9f2831c` to `6d66a558`. The branch was rebased onto `6d66a558`
+as a NEW branch `nightshift/consolidated-20261119-r1` (no forced push).
+`ROADMAP.md` and `unsure.md` were joined as pure appends: both sides'
+text is kept verbatim (checked: the added lines of `ROADMAP.md` are the
+same 173 lines; the appended entries of `unsure.md` are the same text
+after the entries U700 to U706 of `main`). No other file of this pull
+request differs from the first branch. Run 1 above is for the tree
+BEFORE the rebase. The checks on the rebased head are in the pull
+request text.
+
 ## 8. Files in this folder
 
 | File | Made by | Content |

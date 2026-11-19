@@ -19552,3 +19552,11 @@ curl: (6) Could not resolve host: github.com
 - Decisions recorded by the launcher: D-4 the JavaScript bound checker is advisory only; D-5 rollback resistance needs BOTH the local floor and the outside head, provider keys are a second layer inside their window; D-6 C-1 stays permanently NOT RUN and the open items B-12 to B-20, A-3, A-5 are known limits. The launcher wrote D-4 to D-6 as a close paraphrase of the owner's text, not verbatim.
 - Impact: none on stage labels. M1-B OPEN. end_to_end=false. No stage CURRENT. Stage 12 unauthorized.
 - Uncertainty: the integrator did not re-derive any row; a row is only as good as the record it names.
+
+## U666 — night shift, integration: the branch was rebased onto the new `main` (pull request 62, Goal 19) as a new branch; the two records joined as pure appends
+- Status: 2026-11-19T18:56Z (inserted by the shell from `date -u`). Refs U660, U664, U700 to U706.
+- Fact: the owner merged pull request 62; `main` moved from `b9f2831c` to `6d66a558`. It added a ROADMAP section at the place of mine and entries U700 to U706 at the end of this file.
+- Done: `git rebase` onto `6d66a558` in a NEW branch `nightshift/consolidated-20261119-r1` (no forced push; the first branch stays at `9097b5a9`). `ROADMAP.md` and this file were joined with a union merge. Checked: against `6d66a558` both files have added lines only (173 and 0 removed; this file 0 removed); the added ROADMAP lines equal the 173 lines of the first branch; my appended entries equal the first branch's text, after U706; no ID occurs twice. One left-over marker line of mine in `ROADMAP.md` was removed before the push.
+- The order of IDs in this file is therefore: U700 to U706, then U500, U501, U530 to U579, U620 to U631, U580 to U602, U660 and later. IDs are unique; they are not in number order.
+- The checks of U664 are for the tree before the rebase. A second full run on `9097b5a9` and the checks on the rebased head are reported in the pull request text only.
+- Impact: none on stage labels. M1-B OPEN. end_to_end=false. No stage CURRENT. Stage 12 unauthorized.

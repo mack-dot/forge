@@ -67,6 +67,9 @@ changed. Branch `nightshift/consolidated-20261119` from `main` at
 the agent. Pull requests 60 and 61 were closed without a merge on the
 owner's word; this section's pull request carries their verified
 content.
+After pull request 62 (Goal 19) the branch was rebased onto `6d66a558`
+as the new branch `nightshift/consolidated-20261119-r1`; the rows below
+with `75f70919` are for the tree before the rebase (U666).
 
 What is in it: A's records after pull request 59 (final record; HOL
 cases with exit codes; reproduction 18 of 18 on the same machine); nine
