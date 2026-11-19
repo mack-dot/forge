@@ -1,0 +1,29 @@
+# owner=p-adopt start=2026-11-19T11:10:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/p-adopt/export
+# power: Now drawing from 'AC Power'
+# swap free MiB: 904
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit impl/finality-core/ShellCoreV4.dfy --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/p-adopt/logs/a-ShellCoreV4-audit.md
+# memory free percent: 36
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        1.54 real         1.33 user         0.09 sys
+           115556352  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10253  page reclaims
+                1000  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  43  voluntary context switches
+                1990  involuntary context switches
+         11853289198  instructions retired
+          4407463142  cycles elapsed
+           106464504  peak memory footprint
+# end=2026-11-19T11:10:34Z
+exit 0

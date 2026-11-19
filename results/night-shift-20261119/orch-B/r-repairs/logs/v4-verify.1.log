@@ -1,0 +1,29 @@
+# owner=r-repairs start=2026-11-19T11:14:08Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-repairs/v4/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 821
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-repairs/logs/v4-verify.1.csv <REPO>/results/night-shift-20261119/orch-B/r-repairs/v4/dafny/ShellCoreV4.dfy
+# memory free percent: 44
+
+Dafny program verifier finished with 105 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-repairs/logs/v4-verify.1.csv
+        7.21 real         6.55 user         0.47 sys
+           193495040  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               23045  page reclaims
+                 692  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 417  voluntary context switches
+               31874  involuntary context switches
+         55309262011  instructions retired
+         21629351171  cycles elapsed
+           176260272  peak memory footprint
+# end=2026-11-19T11:14:15Z
+exit 0

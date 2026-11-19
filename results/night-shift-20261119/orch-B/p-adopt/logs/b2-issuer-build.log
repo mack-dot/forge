@@ -1,0 +1,28 @@
+# owner=p-adopt start=2026-11-19T11:10:04Z cwd=<REPO>/results/night-shift-20261119/orch-B/p-adopt/export
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1001
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build impl/finality-core/IssueBytes2.dfy --target js --output <REPO>/results/night-shift-20261119/orch-B/p-adopt/build/issuer/model --solver-path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 42
+
+Dafny program verifier finished with 131 verified, 0 errors
+        8.07 real         9.87 user         0.57 sys
+           216956928  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40844  page reclaims
+                 970  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                1477  voluntary context switches
+               23728  involuntary context switches
+         55700963582  instructions retired
+         22764068214  cycles elapsed
+           212223176  peak memory footprint
+# end=2026-11-19T11:10:12Z
+exit 0

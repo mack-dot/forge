@@ -12,7 +12,7 @@ rsync -a --exclude 'locks/' --exclude 'orch-A/' --exclude 'MORNING_REPORT.md' \
   --exclude 'build-probe/' --exclude 'run-*.out' --exclude 'node_modules/' --exclude '__pycache__/' --exclude '*.pyc' \
   --exclude 'build/' --exclude '*.db' --exclude '*.sqlite*' --exclude '*.pem' --exclude '*.key' --exclude '.DS_Store' \
   --exclude 'f-records/records/**/*.log' --exclude 'wt/' --exclude 'flood10mb*' --exclude 'recheck-f/rerun/' \
-  --exclude 'bin-*/' --exclude 'x-issuer-bridge/bin/' --exclude 'recheck-xb/copy/' --exclude 'x-issuer-bridge/run/work/' --exclude 'js-out*/' --exclude 'conformance/scratch/' --exclude '*.dylib' "${EX[@]}" $SRC/ $DST/
+  --exclude 'bin-*/' --exclude 'p-adopt/export/' --exclude 'p-adopt/pristine/' --exclude 'p-adopt/applytest/' --exclude 'p-adopt/home/' --exclude 'p-adopt/build/' --exclude 'x-issuer-bridge/bin/' --exclude 'recheck-xb/copy/' --exclude 'x-issuer-bridge/run/work/' --exclude 'js-out*/' --exclude 'conformance/scratch/' --exclude '*.dylib' "${EX[@]}" $SRC/ $DST/
 grep -rIl -e '<HOME>' -e '/private/tmp/claude-501' $DST 2>/dev/null | while read f; do
   perl -pi -e 's#<REPO>#<REPO>#g; s#/private/tmp/claude-501/[A-Za-z0-9._/-]*scratchpad#<SCRATCH>#g; s#<HOME>#<HOME>#g' "$f"
 done

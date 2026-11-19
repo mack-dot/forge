@@ -1,0 +1,58 @@
+# owner=r-repairs start=2026-11-19T11:12:28Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-repairs/b2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 797
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/r-repairs/b2/AttackR_EXPECTFAIL.dfy
+# memory free percent: 67
+AttackR_EXPECTFAIL.dfy(13,2): Error: a postcondition could not be proved on this return path
+   |
+13 |   {}
+   |   ^
+
+AttackR_EXPECTFAIL.dfy(10,12): Related location: this is the postcondition that could not be proved
+   |
+10 |             var t := F.Transition(F.Request("req_B", 40, "returned_item"), pre.(remaining := 20),
+   |             ^^^
+
+AttackR_EXPECTFAIL.dfy(20,2): Error: a postcondition could not be proved on this return path
+   |
+20 |   {}
+   |   ^
+
+AttackR_EXPECTFAIL.dfy(19,12): Related location: this is the postcondition that could not be proved
+   |
+19 |     ensures !F.Authorizes(pre, t)
+   |             ^
+
+AttackR_EXPECTFAIL.dfy(27,2): Error: a postcondition could not be proved on this return path
+   |
+27 |   {}
+   |   ^
+
+AttackR_EXPECTFAIL.dfy(24,12): Related location: this is the postcondition that could not be proved
+   |
+24 |             var t := F.Transition(F.Request("req_1", 40, "returned_item"), pre.(remaining := 20),
+   |             ^^^
+
+
+Dafny program verifier finished with 22 verified, 3 errors
+        4.10 real         3.50 user         0.20 sys
+           160038912  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15766  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 317  voluntary context switches
+               12015  involuntary context switches
+         29459979643  instructions retired
+         11273204262  cycles elapsed
+           127026376  peak memory footprint
+# end=2026-11-19T11:12:32Z
+exit 4

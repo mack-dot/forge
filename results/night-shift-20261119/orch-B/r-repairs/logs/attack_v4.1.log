@@ -1,0 +1,9 @@
+{"k":"S1-balance-reset","c1":"committed","c2":"committed","reason2":"","reaudits":2,"refundedTotal":2000,"original":1000,"offlineAudit":["row 2: chain"]}
+{"k":"S2-outbox-json-rewrite","c2":"committed","reaudits":2,"offlineAudit":["outbox 1: not the settled intent"]}
+{"k":"S3-settled-token-only","replay":"rejected","replayReason":"request id is already settled with another token","c2":"committed","reaudits":2,"offlineAudit":3}
+{"k":"S4-schema-NOCASE","started":true,"err":null,"modelAuditStart":false,"commitRq2":"committed"}
+{"k":"S4-schema-BINARY","started":false,"err":"v4 sink refuses to serve: streaming start-up audit (AuditEnd, bound to the initial charge id) is false","modelAuditStart":false,"commitRq2":null}
+{"k":"S5-meta-rewrite-cfg-initialState-ignored","started":true,"err":null,"commitCh2":"committed"}
+{"k":"S6-legacy-no-meta-hash","started":false,"err":"v4 sink refuses to serve: streaming start-up audit (AuditEnd, bound to the initial charge id) is false: no meta initial_state_sha256"}
+{"k":"S7-amounts-rewritten-same-id","started":true,"err":null,"commit5000":"committed"}
+exit 0

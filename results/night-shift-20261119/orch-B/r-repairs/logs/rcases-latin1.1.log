@@ -1,0 +1,25 @@
+PASS frame-amount-040 want NO_FRAME got NO_FRAME b'(refund-result-v1 True 040 returned_item ch_1 req_1 1)'
+PASS frame-amount-plus40 want NO_FRAME got NO_FRAME b'(refund-result-v1 True +40 returned_item ch_1 req_1 1)'
+PASS frame-count-01 want NO_FRAME got NO_FRAME b'(refund-result-v1 True 40 returned_item ch_1 req_1 01)'
+PASS frame-charge-case want FRAME_NOT_AUTHORIZED_TUPLE got FRAME_NOT_AUTHORIZED_TUPLE b'(refund-result-v1 True 40 returned_item CH_1 req_1 1)'
+PASS frame-quoted-safe-atom want NO_FRAME got NO_FRAME b'(refund-result-v1 True 40 "returned_item" ch_1 req_1 1)'
+PASS amount-max-real want SIGN got SIGN b'(refund-result-v1 True 9223372036854775807 returned_item c r 1)'
+PASS amount-2^63-acc want OUT_OF_RANGE got OUT_OF_RANGE 
+PASS nfc-req-nfd-intent-acc want INTENT_MISMATCH got INTENT_MISMATCH b'(refund-result-v1 True 40 returned_item ch_1 caf\xc3\xa9 1)'
+PASS nfd-everywhere-real want SIGN got SIGN b'(refund-result-v1 True 40 returned_item ch_1 cafe\xcc\x81 1)'
+PASS nfc-charge-nfd-intent-acc want INTENT_MISMATCH got INTENT_MISMATCH b'(refund-result-v1 True 40 returned_item caf\xc3\xa9 req_1 1)'
+PASS trailing-space-intent-acc want INTENT_MISMATCH got INTENT_MISMATCH b'(refund-result-v1 True 40 returned_item ch_1 "req_1 " 1)'
+PASS trailing-space-everywhere-real want SIGN got SIGN b'(refund-result-v1 True 40 returned_item ch_1 "req_1 " 1)'
+PASS reason-case-acc want FRAME_NOT_AUTHORIZED_TUPLE got FRAME_NOT_AUTHORIZED_TUPLE b'(refund-result-v1 False 0 "" "" "" 0)'
+PASS empty-request-acc want FRAME_NOT_AUTHORIZED_TUPLE got FRAME_NOT_AUTHORIZED_TUPLE b'(refund-result-v1 False 0 "" "" "" 0)'
+PASS pre-rem-gt-orig-acc want FRAME_NOT_AUTHORIZED_TUPLE got FRAME_NOT_AUTHORIZED_TUPLE b'(refund-result-v1 False 0 "" "" "" 0)'
+PASS post-float-acc want OUT_OF_RANGE got OUT_OF_RANGE 
+DIFF intent-amount-bool-acc want INTENT_MISMATCH got OUT_OF_RANGE 
+PASS reqid-digits-real want SIGN got SIGN b'(refund-result-v1 True 40 returned_item ch_1 40 1)'
+PASS reqid-True-real want SIGN got SIGN b'(refund-result-v1 True 40 returned_item ch_1 True 1)'
+PASS chargeid-tilde5-real want SIGN got SIGN b'(refund-result-v1 True 40 returned_item ~5 req_1 1)'
+PASS reqid-CR-VT-real want SIGN got SIGN b'(refund-result-v1 True 40 returned_item ch_1 "a\rb\x0bc\x0c" 1)'
+DIFF latin1-mutant-probe (both wrong) want INTENT_MISMATCH got SIGN b'(refund-result-v1 True 40 \xc3\xa9 ch_1 req_1 1)'
+PASS zero-amount-real want SIGN got SIGN b'(refund-result-v1 True 0 duplicate_charge ch_1 req_0 1)'
+total 23 as-expected 21
+exit 0
