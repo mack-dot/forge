@@ -1,0 +1,68 @@
+# owner=d-v5sink start=2026-11-19T11:29:51Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1541
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_RejectAll.dfy
+# memory free percent: 50
+Mutant_RejectAll.dfy(445,2): Error: a postcondition could not be proved on this return path
+    |
+445 |   {
+    |   ^
+
+Mutant_RejectAll.dfy(444,19): Related location: this is the postcondition that could not be proved
+    |
+444 |             AuditV5(init, c.charge, rows, |rows|, |rows|, |IdSet(rows)|) && StoredCore(c.charge, rows) == c
+    |                    ^
+
+Mutant_RejectAll.dfy(86,12): Related location: this proposition could not be proved
+   |
+86 |     AuditEnd(init, stored, Fold(init.chargeId, AInit(init), rows), nSettled, nOutbox, nDistinct)
+   |             ^
+
+Mutant_RejectAll.dfy(73,4): Related location: this proposition could not be proved
+   |
+73 |     false && st.ok && st.cur == stored && st.count == nSettled && st.count == nOutbox && st.count == nDistinct &&
+   |     ^^^^^
+
+Mutant_RejectAll.dfy(566,41): Error: a precondition for this call could not be proved
+    |
+566 |     AuditV5SoundRelativeToSuppliedInitial(Ch(1000), Ch(900), rows, 2, 2, 2);
+    |                                          ^
+
+Mutant_RejectAll.dfy(320,20): Related location: this is the precondition that could not be proved
+    |
+320 |     requires AuditV5(init, stored, rows, nSettled, nOutbox, nDistinct)
+    |                     ^
+
+Mutant_RejectAll.dfy(86,12): Related location: this proposition could not be proved
+   |
+86 |     AuditEnd(init, stored, Fold(init.chargeId, AInit(init), rows), nSettled, nOutbox, nDistinct)
+   |             ^
+
+Mutant_RejectAll.dfy(73,4): Related location: this proposition could not be proved
+   |
+73 |     false && st.ok && st.cur == stored && st.count == nSettled && st.count == nOutbox && st.count == nDistinct &&
+   |     ^^^^^
+
+
+Dafny program verifier finished with 151 verified, 2 errors
+       10.54 real        10.27 user         0.59 sys
+           227835904  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26128  page reclaims
+                 427  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 881  voluntary context switches
+               55351  involuntary context switches
+         82873592150  instructions retired
+         33062422939  cycles elapsed
+           203064544  peak memory footprint
+# end=2026-11-19T11:30:02Z
+exit 4

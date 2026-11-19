@@ -1,0 +1,107 @@
+{
+ "D1": {
+  "v3_1": {
+   "status": "committed"
+  },
+  "old_2": {
+   "status": "committed"
+  },
+  "v3_3": {
+   "status": "committed"
+  },
+  "v3_replay_old": {
+   "status": "replayed"
+  },
+  "outbox": 3,
+  "audit": [],
+  "restart": "starts"
+ },
+ "D2": {
+  "v3_on_bad_token": {
+   "status": "rejected",
+   "reason": "request id is not the intent's request id"
+  },
+  "old_commits_bad": {
+   "status": "committed"
+  },
+  "running_v3_next_commit": {
+   "status": "rejected",
+   "reason": "sink halted: re-audit (schema, initial charge, AuditV5) false after another writer changed the store"
+  },
+  "restart": "v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: outbox request_id column is not its intent's req"
+ },
+ "D2c": {
+  "old_commits_foreign": {
+   "status": "committed"
+  },
+  "running_v3_commit_on_ch_2": {
+   "status": "rejected",
+   "reason": "sink halted: re-audit (schema, initial charge, AuditV5) false after another writer changed the store"
+  },
+  "stored": "{\"chargeId\":\"ch_2\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+  "restart": "v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"
+ },
+ "D3": {
+  "c1": {
+   "status": "committed"
+  },
+  "c2": {
+   "status": "committed"
+  },
+  "restart_on_older_copy": "starts",
+  "recommit_t2_after_rollback": {
+   "status": "committed"
+  },
+  "outbox_after": 2,
+  "open_conn": {
+   "first_t2": {
+    "status": "committed"
+   },
+   "after_inplace_restore": {
+    "status": "committed"
+   },
+   "outbox": 2
+  }
+ },
+ "D4": {
+  "v3_default": "v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false",
+  "reqid": "v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false",
+  "orig": "v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"
+ },
+ "D5": "v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: Expected property name or '}' in JSON at positio",
+ "D6": {
+  "start": "starts",
+  "commit_no_state": {
+   "status": "rejected",
+   "reason": "the sink has no stored state"
+  }
+ },
+ "D7": {
+  "tokenEqual": true,
+  "hashEqual": true,
+  "outboxIntent": "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_1\"}"
+ },
+ "D8": {
+  "start_before": "starts",
+  "old_commits_foreign": {
+   "status": "committed"
+  },
+  "restart_with_initialState": "v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false",
+  "restart_without_initialState": "v5 sink refuses to serve: cfg.initialState is required (the initial charge, from outside the database)"
+ },
+ "D9": {
+  "a": {
+   "status": "committed"
+  },
+  "b": {
+   "status": "committed"
+  },
+  "old_c": {
+   "status": "committed"
+  },
+  "d": {
+   "status": "committed"
+  },
+  "reaudits": 1
+ }
+}

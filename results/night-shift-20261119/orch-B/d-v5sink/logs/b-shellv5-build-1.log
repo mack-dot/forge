@@ -1,0 +1,34 @@
+# owner=d-v5sink start=2026-11-19T11:30:21Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1541
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build --target js --output <REPO>/results/night-shift-20261119/orch-B/d-v5sink/build/shellcore-v5.js --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/logs/b-shellv5-build-1.csv ShellCoreV5.dfy
+# memory free percent: 46
+ShellCoreV5.dfy(396,8): Verification out of resource (ShellCoreV5.CompleteInd (correctness))
+    |
+396 |   lemma CompleteInd(init: F.Charge, ds: seq<Del>)
+    |         ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 167 verified, 0 errors, 1 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-v5sink/logs/b-shellv5-build-1.csv
+       10.73 real        14.11 user         0.65 sys
+           301498368  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               52038  page reclaims
+                 668  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  35  signals received
+                2173  voluntary context switches
+               37320  involuntary context switches
+         82933323391  instructions retired
+         33023781699  cycles elapsed
+           290653504  peak memory footprint
+# end=2026-11-19T11:30:32Z
+exit 4

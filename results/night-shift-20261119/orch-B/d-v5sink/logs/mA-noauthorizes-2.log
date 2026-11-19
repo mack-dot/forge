@@ -1,0 +1,78 @@
+# owner=d-v5sink start=2026-11-19T11:35:59Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1629
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_NoAuthorizes.dfy
+# memory free percent: 50
+Mutant_NoAuthorizes.dfy(238,24): Error: assertion might not hold
+    |
+238 |       assert AuthorizesX(cp, r.tok);
+    |                         ^
+
+Mutant_NoAuthorizes.dfy(40,14): Related location: this proposition could not be proved
+   |
+40 |     R.Eligible(F.ContextOf(cur, t.requestId), R.Candidate(t.intent.amount, t.intent.reason)) &&
+   |               ^
+
+Mutant_NoAuthorizes.dfy(238,24): Error: assertion might not hold
+    |
+238 |       assert AuthorizesX(cp, r.tok);
+    |                         ^
+
+Mutant_NoAuthorizes.dfy(41,11): Related location: this proposition could not be proved
+   |
+41 |     t.post == cur.(remaining := cur.remaining - t.intent.amount) &&
+   |            ^^
+
+Mutant_NoAuthorizes.dfy(285,28): Error: possible violation of postcondition of forall statement
+    |
+285 |         ensures F.Authorizes(Replay(init, rows[..i]).charge, TransOf(rows[i].tok)) &&
+    |                             ^
+
+inputs/transport/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
+   |
+31 |     R.Eligible(ContextOf(pre, t.request.requestId), R.Candidate(t.request.amount, t.request.reason)) &&
+   |               ^
+
+Mutant_NoAuthorizes.dfy(484,2): Error: a postcondition could not be proved on this return path
+    |
+484 |   {
+    |   ^
+
+Mutant_NoAuthorizes.dfy(483,12): Related location: this is the postcondition that could not be proved
+    |
+483 |     ensures !AuditV5(Ch(1000), Ch(0), [RowT(Tk("rq_1", Ch(1000), 1000), s1, p1), RowT(Tk("rq_2", Ch(1000), 1000), s2, p2)], nS, nO, nD)
+    |             ^
+
+Mutant_NoAuthorizes.dfy(567,2): Error: a postcondition could not be proved on this return path
+    |
+567 |   {
+    |   ^
+
+Mutant_NoAuthorizes.dfy(566,12): Related location: this is the postcondition that could not be proved
+    |
+566 |             !AuditV5(Ch(1000), Ch(-1000), [RowT(tb, true, true)], 1, 1, 1)
+    |             ^
+
+
+Dafny program verifier finished with 152 verified, 5 errors
+        9.95 real         9.46 user         0.67 sys
+           216596480  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27392  page reclaims
+                 448  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                 798  voluntary context switches
+               72396  involuntary context switches
+         80424494353  instructions retired
+         30807732780  cycles elapsed
+           198198568  peak memory footprint
+# end=2026-11-19T11:36:09Z
+exit 4

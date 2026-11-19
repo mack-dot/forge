@@ -1,0 +1,40 @@
+# start=2026-11-19T11:37:09Z cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/d-v5sink/ts/attack_v5.ts <REPO>/results/night-shift-20261119/orch-B/d-v5sink/work-attack
+{"k":"S1-balance-reset","c1":"committed","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","reaudits":1,"restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S2-outbox-amount-rewrite","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","reaudits":1,"restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S3-settled-token-x","running_replay":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","reaudits":1,"restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false: stored token does not decode: token shape"}
+{"k":"S3b-settled-token-attacker-signed","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S4-schema-NOCASE","started":false,"err":"start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL","commitRq2":null}
+{"k":"S4-schema-BINARY","started":false,"err":"start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL","commitRq2":null}
+{"k":"S4c-schema-NOCASE-empty","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL"}
+{"k":"S4r-trigger-added-running","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL"}
+{"k":"S5-meta-rewrite-ch2","running_commitCh2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","restartStarted":false,"err":"start-up audit (schema, initial charge, AuditV5 replay) is false: meta initial_state_sha256 is not cfg.initialState","commitCh2":null}
+{"k":"S5b-meta-deleted-state-ch2","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S6-legacy-no-meta","restart":"STARTED","restartOtherInit":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S7-original-rewritten-same-id","started":false,"err":"start-up audit (schema, initial charge, AuditV5 replay) is false: meta initial_state_sha256 is not cfg.initialState","commit5000":null}
+{"k":"S7b-meta-deleted-original-5000","running":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"honest-restart-zero","first":["committed","committed","committed"],"afterRestart":["committed","replayed"],"restartAgain":"STARTED","restartWithoutCfgInit":"REFUSED: cfg.initialState is required (the initial charge, from outside the database)"}
+{"k":"D1-honest-other-writer","other":"committed","c3":"committed","reaudits":1}
+{"k":"faulty-signer-unauthorized","commit":"committed","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"rollback-whole-file","restart":"STARTED"}
+{"k":"no-cfg-initialState","restart":"REFUSED: cfg.initialState is required (the initial charge, from outside the database)"}
+(node:32221) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+        0.32 real         0.29 user         0.10 sys
+           122322944  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10493  page reclaims
+                 102  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   6  messages sent
+                   6  messages received
+                   8  signals received
+                 421  voluntary context switches
+                1364  involuntary context switches
+          2893699326  instructions retired
+          1139341558  cycles elapsed
+            84388496  peak memory footprint
+exit 0

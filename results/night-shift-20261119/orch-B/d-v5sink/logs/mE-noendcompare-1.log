@@ -1,0 +1,93 @@
+# owner=d-v5sink start=2026-11-19T11:29:14Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1541
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_NoEndCompare.dfy
+# memory free percent: 58
+Mutant_NoEndCompare.dfy(318,8): Error: Verification out of resource (ShellCoreV5.AuditV5SoundRelativeToSuppliedInitial)
+    |
+318 |   lemma AuditV5SoundRelativeToSuppliedInitial(init: F.Charge, stored: F.Charge, rows: seq<Row>,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+    |
+349 |   {
+    |   ^
+
+Mutant_NoEndCompare.dfy(345,14): Related location: this is the postcondition that could not be proved
+    |
+345 |     ensures 0 <= stored.remaining <= stored.original && stored.original == init.original
+    |               ^^
+
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+    |
+349 |   {
+    |   ^
+
+Mutant_NoEndCompare.dfy(345,34): Related location: this is the postcondition that could not be proved
+    |
+345 |     ensures 0 <= stored.remaining <= stored.original && stored.original == init.original
+    |                                   ^^
+
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+    |
+349 |   {
+    |   ^
+
+Mutant_NoEndCompare.dfy(345,72): Related location: this is the postcondition that could not be proved
+    |
+345 |     ensures 0 <= stored.remaining <= stored.original && stored.original == init.original
+    |                                                                         ^^
+
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+    |
+349 |   {
+    |   ^
+
+Mutant_NoEndCompare.dfy(346,28): Related location: this is the postcondition that could not be proved
+    |
+346 |     ensures stored.chargeId == init.chargeId
+    |                             ^^
+
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+    |
+349 |   {
+    |   ^
+
+Mutant_NoEndCompare.dfy(347,40): Related location: this is the postcondition that could not be proved
+    |
+347 |     ensures C.SumIntents(Intents(rows)) == init.remaining - stored.remaining
+    |                                         ^^
+
+Mutant_NoEndCompare.dfy(480,2): Error: a postcondition could not be proved on this return path
+    |
+480 |   {
+    |   ^
+
+Mutant_NoEndCompare.dfy(479,12): Related location: this is the postcondition that could not be proved
+    |
+479 |     ensures !AuditV5(Ch(1000), Ch(1000), [RowT(Tk("rq_1", Ch(1000), 1000), s1, p1)], nS, nO, nD)
+    |             ^
+
+
+Dafny program verifier finished with 150 verified, 6 errors, 1 out of resource
+       10.11 real         9.77 user         0.59 sys
+           233144320  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26664  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 829  voluntary context switches
+               65772  involuntary context switches
+         82888064256  instructions retired
+         31572989546  cycles elapsed
+           200115472  peak memory footprint
+# end=2026-11-19T11:29:25Z
+exit 4

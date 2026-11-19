@@ -1,0 +1,29 @@
+# owner=d-v5sink start=2026-11-19T11:30:10Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1541
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit ShellCoreV5.dfy
+# memory free percent: 56
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        2.37 real         1.68 user         0.09 sys
+           144982016  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10148  page reclaims
+                 866  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  71  voluntary context switches
+                1548  involuntary context switches
+         15090041740  instructions retired
+          5497402646  cycles elapsed
+           112510152  peak memory footprint
+# end=2026-11-19T11:30:13Z
+exit 0

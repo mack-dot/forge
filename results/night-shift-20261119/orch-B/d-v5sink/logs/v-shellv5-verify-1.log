@@ -1,0 +1,49 @@
+# owner=d-v5sink start=2026-11-19T11:25:07Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1141
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-v5sink/logs/v-shellv5-verify-1.csv ShellCoreV5.dfy
+# memory free percent: 60
+ShellCoreV5.dfy(459,2): Error: a postcondition could not be proved on this return path
+    |
+459 |   {
+    |   ^
+
+ShellCoreV5.dfy(458,37): Related location: this is the postcondition that could not be proved
+    |
+458 |     ensures Fold(initId, st, [a, b]) == AuditStep(initId, AuditStep(initId, st, a), b)
+    |                                      ^^
+
+ShellCoreV5.dfy(560,23): Error: assertion might not hold
+    |
+560 |     assert IdSet(rows) == {"rq_1", "rq_2"};
+    |                        ^^
+
+ShellCoreV5.dfy(585,4): Error: assertion might not hold
+    |
+585 |     assert c1 == C.Core(Ch(900), {"rq_1"}, [ds[0].tok.intent]);
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 150 verified, 3 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-v5sink/logs/v-shellv5-verify-1.csv
+       10.10 real         9.30 user         0.57 sys
+           211173376  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26116  page reclaims
+                 735  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 919  voluntary context switches
+               41400  involuntary context switches
+         80389996895  instructions retired
+         30165889858  cycles elapsed
+           193201376  peak memory footprint
+# end=2026-11-19T11:25:17Z
+exit 4

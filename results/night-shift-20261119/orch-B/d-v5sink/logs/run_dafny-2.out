@@ -1,0 +1,50 @@
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 51: 26742 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+b exit 0
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 51: 27844 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+a exit 0
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 51: 28382 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+mA exit 4
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 51: 29343 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+mE exit 4
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 51: 30319 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+mS exit 4
+<REPO>/results/night-shift-20261119/orch-B/tools/dafny_locked.sh: line 51: 31384 Terminated: 15          ( sleep "$TMO"; pkill -P $pid 2> /dev/null; kill $pid 2> /dev/null; echo "TIMEOUT after $TMO s" >> "$LOG"; touch "$LOG.timeout" )
+mR exit 4
+== a-audit-2.log
+Dafny auditor completed with 0 findings
+exit 0
+== b-shellv5-build-2.log
+Dafny program verifier finished with 171 verified, 0 errors
+exit 0
+== mA-noauthorizes-2.log
+Mutant_NoAuthorizes.dfy(238,24): Error: assertion might not hold
+Mutant_NoAuthorizes.dfy(238,24): Error: assertion might not hold
+Mutant_NoAuthorizes.dfy(285,28): Error: possible violation of postcondition of forall statement
+Mutant_NoAuthorizes.dfy(484,2): Error: a postcondition could not be proved on this return path
+Mutant_NoAuthorizes.dfy(567,2): Error: a postcondition could not be proved on this return path
+Dafny program verifier finished with 152 verified, 5 errors
+exit 4
+== mE-noendcompare-2.log
+Mutant_NoEndCompare.dfy(318,8): Error: Verification out of resource (ShellCoreV5.AuditV5SoundRelativeToSuppliedInitial)
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+Mutant_NoEndCompare.dfy(349,2): Error: a postcondition could not be proved on this return path
+Mutant_NoEndCompare.dfy(493,2): Error: a postcondition could not be proved on this return path
+Dafny program verifier finished with 153 verified, 6 errors, 1 out of resource
+exit 4
+== mR-rejectall-2.log
+Mutant_RejectAll.dfy(458,2): Error: a postcondition could not be proved on this return path
+Mutant_RejectAll.dfy(579,41): Error: a precondition for this call could not be proved
+Dafny program verifier finished with 154 verified, 2 errors
+exit 4
+== mS-nosigok-2.log
+Mutant_NoSigOk.dfy(247,8): Error: Verification out of resource (ShellCoreV5.ReplayInd)
+Mutant_NoSigOk.dfy(287,61): Error: possible violation of postcondition of forall statement
+Mutant_NoSigOk.dfy(553,47): Error: a postcondition could not be proved on this return path
+Dafny program verifier finished with 153 verified, 2 errors, 1 out of resource
+exit 4
+== v-shellv5-verify-2.log
+Dafny program verifier finished with 153 verified, 0 errors
+exit 0
