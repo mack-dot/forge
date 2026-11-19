@@ -49,3 +49,9 @@ exit code; SHA-256 of each new source file; counterexamples; what is NOT RUN and
 Also write the same text to REPORT.md in your evidence directory.
 
 AMENDMENT 09:30Z (PROTOCOL.md): a heavy step (Dafny TIMEOUT_S > 90 included) may start if swap free >= 1024 MiB, OR (memory free >= 40 % AND swap free >= 512 MiB). The lock script applies it. heavy.lock items still never run while hol.lock exists.
+
+DISK RULE (added after an incident at about 12:15Z: one worker wrote 58 GB of temporary copies and filled the volume):
+- Your evidence directory must stay under 400 MB in total. Check `du -sm <your dir>` after any step that copies files.
+- Never copy a directory tree that contains other workers' directories, exports or build outputs. Copy only the files you need.
+- Before any step that writes more than 50 MB: `df -h /System/Volumes/Data`; do not start it with less than 20 GiB available.
+- Remove your temporary copies when a step ends.

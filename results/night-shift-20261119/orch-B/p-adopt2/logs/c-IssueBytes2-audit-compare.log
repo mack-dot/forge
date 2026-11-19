@@ -1,0 +1,29 @@
+# owner=p-adopt2 start=2026-11-19T12:21:43Z cwd=<REPO>/results/night-shift-20261119/orch-B/p-adopt2/export
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1545
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit impl/finality-core/IssueBytes2.dfy tests/refund-finality/Bindings.dfy --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/p-adopt2/logs/c-IssueBytes2-audit.md --compare-report
+# memory free percent: 71
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        1.35 real         1.44 user         0.06 sys
+           147013632  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               11155  page reclaims
+                  10  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                  38  voluntary context switches
+                1008  involuntary context switches
+         13034462638  instructions retired
+          4633371804  cycles elapsed
+           114148600  peak memory footprint
+# end=2026-11-19T12:21:44Z
+exit 0

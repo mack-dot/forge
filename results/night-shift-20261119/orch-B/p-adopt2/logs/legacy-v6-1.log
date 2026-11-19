@@ -1,0 +1,10 @@
+# start=2026-11-19T12:23:19Z cwd=<REPO>/results/night-shift-20261119/orch-B/p-adopt2/export node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/p-adopt2/conf/legacy_v6.ts <REPO>/results/night-shift-20261119/orch-B/p-adopt/pristine <REPO>/results/night-shift-20261119/orch-B/p-adopt2/export <REPO>/results/night-shift-20261119/orch-B/p-adopt2/build/issuer/model.cjs <REPO>/results/night-shift-20261119/orch-B/p-adopt2/conf/legacy-1
+(node:91125) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"ok":true,"oldCommit":"committed","noInitial":"refused: v6 sink refuses to serve: cfg.initialState is required (the initial charge, from outside the database)","withInitial":"started","wrongInitial":"refused: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: meta initial_state_sha256 is not cfg.initialState","laterCommit":"committed","flushed":2}
+real 0.38
+user 0.24
+sys 0.04
+# end=2026-11-19T12:23:20Z
+exit 0

@@ -1,0 +1,27 @@
+{
+ "x1": {
+  "dispatcher": "[\"no settled row\"]",
+  "pristineSink": "started; audit() problems 2",
+  "v6Sink": "REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"
+ },
+ "x2": {
+  "dispatcher": "[\"outbox intent is not the signed intent\"]",
+  "pristineSink": "started; audit() problems 1",
+  "v6Sink": "REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"
+ },
+ "x3": {
+  "dispatcher": "[\"signature does not verify\"]",
+  "pristineSink": "started; audit() problems 1",
+  "v6Sink": "REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"
+ },
+ "x6": {
+  "dispatcher": "[\"token does not continue the dispatched chain\"]",
+  "pristineSink": "started; audit() problems 2",
+  "v6Sink": "REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"
+ },
+ "x7": {
+  "dispatcher": "[\"request id is not the signed one\"]",
+  "pristineSink": "started; audit() problems 2",
+  "v6Sink": "REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: outbox request_id column is not its intent's request id"
+ }
+}

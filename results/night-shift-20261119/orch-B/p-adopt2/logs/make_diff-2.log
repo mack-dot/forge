@@ -1,0 +1,19 @@
+file list = tree difference
+lines     6731
++++ b/impl/finality-core/IssueBytes2.dfy
++++ b/impl/finality-core/SerModel.dfy
++++ b/impl/finality-core/ShellCoreV3.dfy
++++ b/impl/finality-core/ShellCoreV4.dfy
++++ b/impl/finality-core/ShellCoreV5.dfy
++++ b/impl/finality-core/ShellCoreV6.dfy
++++ b/impl/finality-core/SinkCoreV3.dfy
++++ b/scripts/exit_slice1.py
++++ b/tests/demo-gauntlet/sink_tool.ts
++++ b/tests/refund-finality/suite.ts
++++ b/ts/refund-finality/core/sinkcore-v6.cjs
++++ b/ts/refund-finality/dispatcher.ts
++++ b/ts/refund-finality/minter.ts
++++ b/ts/refund-finality/sink.ts
+protected-or-clearing hits: 0
+git apply --check exit 0
+0207444f1622d8542e6fd0fb86636bb9b102eb0b5015a0b63b6f88b2780d193d  adoption-v6.diff

@@ -1,0 +1,196 @@
+# start=2026-11-19T12:22:40Z cwd=<REPO>/results/night-shift-20261119/orch-B/p-adopt2/export node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/p-adopt2/conf/conformance_v6_export.ts <REPO>/results/night-shift-20261119/orch-B/p-adopt2/conf/n1-conformance-2.json
+OK  #1 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | honest commit
+     real      committed  [outbox=1]
+     hand-v3   committed  [outbox=1]
+     draft-v3  committed  [outbox=1]
+     draft-v5  committed  [outbox=1]
+     draft-v6  committed  [outbox=1]
+OK  #2 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | replay of the same text
+     real      committed ; replayed  [outbox=1]
+     hand-v3   committed ; replayed  [outbox=1]
+     draft-v3  committed ; replayed  [outbox=1]
+     draft-v5  committed ; replayed  [outbox=1]
+     draft-v6  committed ; replayed  [outbox=1]
+OK  #3 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | same request id, other token
+     real      committed ; rej:request id is already settled with another token  [outbox=1]
+     hand-v3   committed ; rej:request id is already settled with another token  [outbox=1]
+     draft-v3  committed ; rej:request id is already settled with another token  [outbox=1]
+     draft-v5  committed ; rej:request id is already settled with another token  [outbox=1]
+     draft-v6  committed ; rej:request id is already settled with another token  [outbox=1]
+OK  #4 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | stale pre-state
+     real      committed ; rej:stored state is not the token's pre-state  [outbox=1]
+     hand-v3   committed ; rej:stored state is not the token's pre-state  [outbox=1]
+     draft-v3  committed ; rej:stored state is not the token's pre-state  [outbox=1]
+     draft-v5  committed ; rej:stored state is not the token's pre-state  [outbox=1]
+     draft-v6  committed ; rej:stored state is not the token's pre-state  [outbox=1]
+OK  #5 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | chain of two
+     real      committed ; committed  [outbox=2]
+     hand-v3   committed ; committed  [outbox=2]
+     draft-v3  committed ; committed  [outbox=2]
+     draft-v5  committed ; committed  [outbox=2]
+     draft-v6  committed ; committed  [outbox=2]
+OK  #6 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | bad signature (flipped byte)
+     real      rej:signature does not verify  [outbox=0]
+     hand-v3   rej:signature does not verify  [outbox=0]
+     draft-v3  rej:signature does not verify  [outbox=0]
+     draft-v5  rej:signature does not verify  [outbox=0]
+     draft-v6  rej:signature does not verify  [outbox=0]
+OK  #7 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | attacker key
+     real      rej:signature does not verify  [outbox=0]
+     hand-v3   rej:signature does not verify  [outbox=0]
+     draft-v3  rej:signature does not verify  [outbox=0]
+     draft-v5  rej:signature does not verify  [outbox=0]
+     draft-v6  rej:signature does not verify  [outbox=0]
+OK  #8 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | wrong spec lock id
+     real      rej:spec lock is not the pinned one  [outbox=0]
+     hand-v3   rej:spec lock is not the pinned one  [outbox=0]
+     draft-v3  rej:spec lock is not the pinned one  [outbox=0]
+     draft-v5  rej:spec lock is not the pinned one  [outbox=0]
+     draft-v6  rej:spec lock is not the pinned one  [outbox=0]
+OK  #9 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | wrong checker id
+     real      rej:checker is not the pinned one  [outbox=0]
+     hand-v3   rej:checker is not the pinned one  [outbox=0]
+     draft-v3  rej:checker is not the pinned one  [outbox=0]
+     draft-v5  rej:checker is not the pinned one  [outbox=0]
+     draft-v6  rej:checker is not the pinned one  [outbox=0]
+OK  #10 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | wrong spec and checker ids
+     real      rej:spec lock is not the pinned one  [outbox=0]
+     hand-v3   rej:spec lock is not the pinned one  [outbox=0]
+     draft-v3  rej:spec lock is not the pinned one  [outbox=0]
+     draft-v5  rej:spec lock is not the pinned one  [outbox=0]
+     draft-v6  rej:spec lock is not the pinned one  [outbox=0]
+OK  #11 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | request-id mismatch, then the victim id
+     real      committed ; committed  [outbox=2]
+     hand-v3   rej:request id is not the intent's request id ; rej:stored state is not the token's pre-state  [outbox=0]
+     draft-v3  rej:request id is not the intent's request id ; rej:stored state is not the token's pre-state  [outbox=0]
+     draft-v5  rej:request id is not the intent's request id ; rej:stored state is not the token's pre-state  [outbox=0]
+     draft-v6  rej:request id is not the intent's request id ; rej:stored state is not the token's pre-state  [outbox=0]
+OK  #12 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | NEW intent for a foreign charge
+     real      committed  [outbox=1]
+     hand-v3   rej:charge id is not the stored charge id  [outbox=0]
+     draft-v3  rej:charge id is not the stored charge id  [outbox=0]
+     draft-v5  rej:charge id is not the stored charge id  [outbox=0]
+     draft-v6  rej:charge id is not the stored charge id  [outbox=0]
+OK  #13 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | NEW post-state with a foreign charge id, then honest ch_1 token
+     real      committed ; rej:stored state is not the token's pre-state  [outbox=1]
+     hand-v3   rej:charge id is not the stored charge id ; committed  [outbox=1]
+     draft-v3  rej:charge id is not the stored charge id ; committed  [outbox=1]
+     draft-v5  rej:charge id is not the stored charge id ; committed  [outbox=1]
+     draft-v6  rej:charge id is not the stored charge id ; committed  [outbox=1]
+OK  #14 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | NEW intent and post for a foreign charge
+     real      committed  [outbox=1]
+     hand-v3   rej:charge id is not the stored charge id  [outbox=0]
+     draft-v3  rej:charge id is not the stored charge id  [outbox=0]
+     draft-v5  rej:charge id is not the stored charge id  [outbox=0]
+     draft-v6  rej:charge id is not the stored charge id  [outbox=0]
+OK  #15 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | zero amount commits (right charge)
+     real      committed  [outbox=1]
+     hand-v3   committed  [outbox=1]
+     draft-v3  committed  [outbox=1]
+     draft-v5  committed  [outbox=1]
+     draft-v6  committed  [outbox=1]
+OK  #16 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | two zero amounts, distinct ids, same pre-state
+     real      committed ; committed  [outbox=2]
+     hand-v3   committed ; committed  [outbox=2]
+     draft-v3  committed ; committed  [outbox=2]
+     draft-v5  committed ; committed  [outbox=2]
+     draft-v6  committed ; committed  [outbox=2]
+OK  #17 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | NEW zero amount for a foreign charge, then zero for ch_1
+     real      committed ; committed  [outbox=2]
+     hand-v3   rej:charge id is not the stored charge id ; committed  [outbox=1]
+     draft-v3  rej:charge id is not the stored charge id ; committed  [outbox=1]
+     draft-v5  rej:charge id is not the stored charge id ; committed  [outbox=1]
+     draft-v6  rej:charge id is not the stored charge id ; committed  [outbox=1]
+OK  #18 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | fault between writes, then retry
+     real      rej:transaction failed: injected fault between writes ; committed  [outbox=1]
+     hand-v3   rej:transaction failed: injected fault between writes ; committed  [outbox=1]
+     draft-v3  rej:transaction failed: injected fault between writes ; committed  [outbox=1]
+     draft-v5  rej:transaction failed: injected fault between writes ; committed  [outbox=1]
+     draft-v6  rej:transaction failed: injected fault between writes ; committed  [outbox=1]
+OK  #19 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | fault between writes only (store must stay S0)
+     real      rej:transaction failed: injected fault between writes  [outbox=0]
+     hand-v3   rej:transaction failed: injected fault between writes  [outbox=0]
+     draft-v3  rej:transaction failed: injected fault between writes  [outbox=0]
+     draft-v5  rej:transaction failed: injected fault between writes  [outbox=0]
+     draft-v6  rej:transaction failed: injected fault between writes  [outbox=0]
+OK  #20 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | non-canonical text
+     real      rej:token text is not canonical  [outbox=0]
+     hand-v3   rej:token text is not canonical  [outbox=0]
+     draft-v3  rej:token text is not canonical  [outbox=0]
+     draft-v5  rej:token text is not canonical  [outbox=0]
+     draft-v6  rej:token text is not canonical  [outbox=0]
+OK  #21 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | not a text
+     real      rej:token is not a text  [outbox=0]
+     hand-v3   rej:token is not a text  [outbox=0]
+     draft-v3  rej:token is not a text  [outbox=0]
+     draft-v5  rej:token is not a text  [outbox=0]
+     draft-v6  rej:token is not a text  [outbox=0]
+OK  #22 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | no stored state
+     real      rej:the sink has no stored state  [outbox=0]
+     hand-v3   rej:the sink has no stored state  [outbox=0]
+     draft-v3  rej:the sink has no stored state  [outbox=0]
+     draft-v5  rej:the sink has no stored state  [outbox=0]
+     draft-v6  rej:the sink has no stored state  [outbox=0]
+OK  #23 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | no stored state, bad signature
+     real      rej:signature does not verify  [outbox=0]
+     hand-v3   rej:signature does not verify  [outbox=0]
+     draft-v3  rej:signature does not verify  [outbox=0]
+     draft-v5  rej:signature does not verify  [outbox=0]
+     draft-v6  rej:signature does not verify  [outbox=0]
+OK  #24 v6==v5:N restart v5:REFUSED: v5 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | amount 2^63 on a 19-digit charge
+     real      committed  [outbox=1]
+     hand-v3   committed  [outbox=1]
+     draft-v3  committed  [outbox=1]
+     draft-v5  committed  [outbox=1]
+     draft-v6  rej:not authorized by the approved relation for the stored state  [outbox=0]
+OK  #25 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | non-BMP request ids
+     real      committed ; committed ; replayed  [outbox=2]
+     hand-v3   committed ; committed ; replayed  [outbox=2]
+     draft-v3  committed ; committed ; replayed  [outbox=2]
+     draft-v5  committed ; committed ; replayed  [outbox=2]
+     draft-v6  committed ; committed ; replayed  [outbox=2]
+OK  #26 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | lone surrogate request id (decoder refuses)
+     real      rej:token shape  [outbox=0]
+     hand-v3   rej:token shape  [outbox=0]
+     draft-v3  rej:token shape  [outbox=0]
+     draft-v5  rej:token shape  [outbox=0]
+     draft-v6  rej:token shape  [outbox=0]
+OK  #27 v6==v5:Y restart v5:- v6:- v5==hand:N v5==v3:Y v3==hand:N | NEW audit-fail store: outbox row rq_victim not settled (old gap), then honest rq_victim
+     real      prep(real)=committed | committed  [outbox=2]
+     hand-v3   prep(real)=committed | committed  [outbox=2]
+     draft-v3  prep(real)=committed | REFUSED-TO-START(start-up audit AuditStart is false on the stored state (deployment pre)
+     draft-v5  prep(real)=committed | REFUSED-TO-START(outbox request_id column is not its intent's request id)
+     draft-v6  prep(real)=committed | REFUSED-TO-START(outbox request_id column is not its intent's request id)
+OK  #28 v6==v5:Y restart v5:- v6:- v5==hand:N v5==v3:Y v3==hand:N | NEW audit-fail store: outbox row for foreign charge ch_other, then honest ch_1 token
+     real      prep(real)=committed | committed  [outbox=2]
+     hand-v3   prep(real)=committed | committed  [outbox=2]
+     draft-v3  prep(real)=committed | REFUSED-TO-START(start-up audit AuditStart is false on the stored state (deployment pre)
+     draft-v5  prep(real)=committed | REFUSED-TO-START(start-up audit (schema, initial charge, AuditV5 replay) is false)
+     draft-v6  prep(real)=committed | REFUSED-TO-START(start-up audit (schema, initial charge, AuditV5 replay) is false)
+OK  #29 v6==v5:Y restart v5:ok v6:ok v5==hand:Y v5==v3:Y v3==hand:Y | NEW v4: legacy honest store (prep), initialState given, then the next honest token
+     real      prep(real)=committed | committed  [outbox=2]
+     hand-v3   prep(real)=committed | committed  [outbox=2]
+     draft-v3  prep(real)=committed | committed  [outbox=2]
+     draft-v5  prep(real)=committed | committed  [outbox=2]
+     draft-v6  prep(real)=committed | committed  [outbox=2]
+OK  #30 v6==v5:Y restart v5:- v6:- v5==hand:N v5==v3:N v3==hand:Y | NEW v4: legacy honest store (prep), NO initialState: v4 refuses (no initial text)
+     real      prep(real)=committed | committed  [outbox=2]
+     hand-v3   prep(real)=committed | committed  [outbox=2]
+     draft-v3  prep(real)=committed | committed  [outbox=2]
+     draft-v5  prep(real)=committed | REFUSED-TO-START(cfg.initialState is required (the initial charge, from outside the dat)
+     draft-v6  prep(real)=committed | REFUSED-TO-START(cfg.initialState is required (the initial charge, from outside the dat)
+OK  #31 v6==v5:Y restart v5:- v6:- v5==hand:N v5==v3:N v3==hand:Y | NEW v4: D-b store: prep commits a foreign post AND intent (ch_2) on ch_1; then a ch_2 token
+     real      prep(real)=committed | committed  [outbox=2]
+     hand-v3   prep(real)=committed | committed  [outbox=2]
+     draft-v3  prep(real)=committed | committed  [outbox=2]
+     draft-v5  prep(real)=committed | REFUSED-TO-START(start-up audit (schema, initial charge, AuditV5 replay) is false)
+     draft-v6  prep(real)=committed | REFUSED-TO-START(start-up audit (schema, initial charge, AuditV5 replay) is false)
+cases 31; unexpected 0
+(node:88788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+real 0.69
+user 0.41
+sys 0.32
+# end=2026-11-19T12:22:40Z
+exit 0

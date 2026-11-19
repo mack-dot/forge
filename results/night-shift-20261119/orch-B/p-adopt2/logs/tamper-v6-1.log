@@ -1,0 +1,14 @@
+# start=2026-11-19T12:23:52Z cwd=<REPO>/results/night-shift-20261119/orch-B/p-adopt2/export node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/p-adopt2/conf/tamper_v6.ts <REPO>/results/night-shift-20261119/orch-B/p-adopt/pristine <REPO>/results/night-shift-20261119/orch-B/p-adopt2/export <REPO>/results/night-shift-20261119/orch-B/p-adopt2/build/issuer/model.cjs <REPO>/results/night-shift-20261119/orch-B/p-adopt2/conf/tamper-1
+(node:92894) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+x1 {"dispatcher":"[\"no settled row\"]","pristineSink":"started; audit() problems 2","v6Sink":"REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+x2 {"dispatcher":"[\"outbox intent is not the signed intent\"]","pristineSink":"started; audit() problems 1","v6Sink":"REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+x3 {"dispatcher":"[\"signature does not verify\"]","pristineSink":"started; audit() problems 1","v6Sink":"REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+x6 {"dispatcher":"[\"token does not continue the dispatched chain\"]","pristineSink":"started; audit() problems 2","v6Sink":"REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+x7 {"dispatcher":"[\"request id is not the signed one\"]","pristineSink":"started; audit() problems 2","v6Sink":"REFUSED: v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: outbox request_id column is not its intent's request id"}
+real 0.62
+user 0.54
+sys 0.13
+# end=2026-11-19T12:23:52Z
+exit 0
