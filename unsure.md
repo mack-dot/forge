@@ -17627,3 +17627,124 @@ curl: (6) Could not resolve host: github.com
   CURRENT none. Stage 9 deferred. Stage 12 unauthorized.
   end_to_end=false.
 - Next check: mains power; replay to 158 and case 005; L1.
+
+## U477 — wave 5 started (eleven workers); a reconciliation audit of my records: fifteen corrections; amount 0 is an approved decision
+- Status: 2026-11-19T06:58Z (inserted by the shell from `date -u`). Refs U471,
+  U473, U475, U476. Report G11 and the other wave-5 reports under
+  proposals/m1b-mission-20261119/reports.
+- Wave 5: on the owner's own words ("fable orchestrator and opus
+  agents here please"; "fable orchestraoy and more sub agents opus
+  pleasde") I started eleven Opus workers. The second message carried
+  a pasted mission text that arrived cut off in its section 0. These
+  words came after the pasted text 15, which said no new workers.
+- Corrections from the audit (a fresh-context worker, read-only):
+  1. Replay state. My tracker row of 06:44Z said BLOCKED on battery
+     power; the record shows the driver running again from
+     06:41:58Z. Three recorded cases (094, 097, 098) have no source
+     file with the recorded digest: at most 155 of 158 can run. At
+     06:57Z: 118 in the record (114 as recorded, 1 to run again, 3
+     not run).
+  2. Case 005: I wrote "ran out of memory". The record says
+     "Interrupt" while it loaded theories, after 27.4 s, no time-out,
+     maximum resident size 1952 MiB. Memory pressure is probable, not
+     shown.
+  3. Heavy processes ran beside the replay (Dafny and Node of the
+     workers; swap about 8.6 of 9.2 GiB used). A KNOWN RISK that I
+     accept: a replay case that fails for that reason is run again;
+     every case that is not "as recorded" is looked at before any
+     total is stated.
+  4. Authority. Answers Q1 to Q6, the start of the replay, the merge
+     of pull request 54 and the order to run L1 rest on PASTED texts
+     that I took as the owner's instructions: an inference. The graph
+     labels "(Q1)", "(Q3a)" must be read so. A note is added to the
+     decisions file and to the graph.
+  5. Stored records. My own verify run of the proof without the
+     axiom (U476: exit 0, 1486) has no log: stated only; the worker's
+     run of the same is stored and now copied under
+     proofs/linked-refund/records, with my audit output. My SinkCore
+     run: its CSV is now under proofs/sink-core/records. My two
+     `expect false` runs (U475) have no log: stated only; the
+     worker's run is in drafts/zero-review/results.json.
+  6. The broken-caller control of U476 was an inline command with no
+     file. It is now a script with a stored result: exit 1, 9 of 18
+     rows differ; the unbroken run: 0 rows differ.
+  7. U5a (the Dafny sink core): my class MACHINE-CHECKED was
+     premature for the inherited model lemmas; it holds for the 28
+     rows of the new module. Open until the two reviews report.
+  8. Pull request 56: its subject says "documents and a Dafny proof";
+     it also carries 12 .py and 2 .sml files. Its body says 18 worker
+     reports; it has 17.
+  9. Gate runs: pull request 57: run 44469061507, exit 3. Pull
+     request 58: later heads ffa315e7 (run 44473281459) and fa4f62e7
+     (run 44473309248), both exit 3 (read by the audit worker, not by
+     me).
+  10. README: the model theorem allows a resource stop with a prefix;
+     the line now says so, names the processor bits, and no longer
+     lists "an approved profile" as open.
+  11. Smaller: the audit of the Dafny proof covered 34 files, not 33;
+     the sink test had 520 runs with 486 kills; "independent" in my
+     records means separate workers of one model family on one
+     machine; the wave-4 rules gave a wrong solver path (the cause of
+     two exit 4 results); one hosted REJECTED run is an instance, not
+     a rule.
+- Confirmed by the audit: all digests, the 45-link counts, the
+  numbers 1489, 1486, 58, 56, 28, 8011, 6363, 53; all merge and
+  commit times; no protected path in pull requests 56 to 58;
+  unsure.md changed by appends only.
+- Amount 0, a correction of my framing in U475 finding E: the
+  approved spec/refund/protocol.md says "Zero is a legitimate
+  authorization" and that no extra heuristic may reject a valid
+  proposal (lines 22 to 27, read by me). Repeated zero-amount commits
+  follow from approved intent. An unapplied packet lists three
+  options; a refusal of zero in the sink or issuer without a spec
+  change would be a hidden rule.
+- Other wave-5 reports so far (drafts and tests; no class changes):
+  the processor erasure lemma (a new premise is needed: code below
+  2^55; a model step that faults goes to an unspecified state,
+  arm8_next = THE o NextStateARM8, read by me); sixteen progress
+  obligations (the model halts in every run; nothing excludes the
+  resource stop; a space-safety theorem exists in the pinned CakeML
+  but its premise is weeks to months); consumer tests on a scratch
+  harness (157 rows; the worker's runs).
+- NOT RUN: every HOL step, L1 included.
+- Impact: no proof result changes. M1-B OPEN. CURRENT none. Stage 9
+  deferred. Stage 12 unauthorized. end_to_end=false.
+- Next check: the remaining six workers; the replay end and its
+  non-matching cases; L1.
+
+## U478 — two reviews of the Dafny sink core: assumption A1 as written cannot be met by a real signature scheme; the real sink agrees with the compiled core on 5,500 sequences
+- Status: 2026-11-19T06:58Z (inserted by the shell from `date -u`). Refs U475,
+  U477. Reports G4 and G10. All runs are the workers' runs; I have
+  not run them again.
+- CORRECTION of U475 "RESULT, machine-checked: SinkCore refines
+  FinalityProtocol": the result stands as a Dafny fact, but its
+  assumption A1 (IdealMac: every pair that verifies is in the finite
+  set of minted pairs) cannot hold for a real signature scheme. The
+  reviewer proved in Dafny (exit 0, 60 verified): if every claim has
+  some verifying tag, IdealMac is false in every state; and with
+  IdealMac at the initial state nothing ever commits. So the sink
+  core theorems speak of a verifier that accepts a fixed finite set.
+  A step-local premise for the presented pair only, which a real
+  system could meet, is proved to keep the invariant; the headline
+  lemmas are not restated with it. The protocol model of the F2.0
+  packet has the same assumption A1: link U4 has the same limit.
+- More limits found: the lemma for several charges ensures neither
+  the outcome nor the invariant; the five shape facts hold for one
+  charge; a request id is fresh per charge only; `dafny verify` does
+  not check inherited lemmas for the instance (56 rows), `dafny
+  build` does (71 rows, exit 0); the pinned Dafny crashes on any
+  refinement of SinkCore (exit 1, a tool fault).
+- The real sink against the compiled core (a finite test): 4,000
+  plain sequences and 1,500 with injected faults or interleaving, 0
+  divergences. Two of three broken sink copies diverge only with
+  faults or interleaving: a sequential test alone would not see
+  them.
+- The request-id gap, by a run: with a trusted signing key a token
+  whose body id and intent id differ commits in the unchanged sink,
+  and an honest token for the intent's id commits after it. The real
+  issuer refused all four mismatched transitions. A defence-in-depth
+  gap; a two-line fix exists as an unapplied diff.
+- Impact: link U5a is not a usable link until A1 is reworded and the
+  lemmas restated. M1-B OPEN. end_to_end=false.
+- Next check: restate the sink core under the step-local A1 (a
+  Dafny task); my own run of the reviewer's Attack.dfy.

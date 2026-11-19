@@ -37,13 +37,15 @@ with the positive control P0 (the complete output parses to `f`),
 because a parser that refuses everything also satisfies the lemma, and
 three negative controls (a trailing newline, an atom that is a prefix
 of another, depth 0). Safety of a consumer rests on this lemma and on
-"output is a prefix of the result", not on the exit status.
+"output is a prefix of the result", not on the exit status. Both are
+MODEL facts: for the real process they also need links X8 and X9,
+which are MISSING.
 
 ## 2. Order of HOL runs (one process; when the replay has ended)
 
 | # | Run | Kind | State of the script | Authorized by |
 | --- | --- | --- | --- | --- |
-| 0 | replay cases 109 to 158, then case 005 again | TEST of stored records | driver | text 1 Q6, text 15 item 7 |
+| 0 | the remaining replay cases (3 of the 158 have no source and cannot run), then case 005 again | TEST of stored records | driver | text 1 Q6, text 15 item 7 |
 | 1 | L1 with N1, N2 and the import check | MODEL | complete draft | text 9 item 2, text 15 item 7 |
 | 2 | strict-prefix lemma with P0, N1 to N3 | MODEL | statement complete; key lemma `lex_aux_prefix_ISL` needs proof work in the session | text 15 item 3 |
 | 3 | L-EXIT-0: a halt is `FFI_outcome`, or at the halt address with (Success and x0 = 0) or (resource stop and x0 ≠ 0) | MODEL | draft | text 15 item 3 |

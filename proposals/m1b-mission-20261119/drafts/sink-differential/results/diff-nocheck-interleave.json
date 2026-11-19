@@ -1,0 +1,214 @@
+{
+ "sink": "nocheck",
+ "mode": "interleave",
+ "seed": 20261119,
+ "count": 500,
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 369,
+  "kinds": {
+   "wrong-spec": 246,
+   "valid": 966,
+   "stale-or-current": 339,
+   "wrong-checker": 198,
+   "settled-id-new-body": 221,
+   "reqid-mismatch": 292,
+   "replay": 276,
+   "zero": 282,
+   "sig-bitflip": 149,
+   "non-canonical": 76,
+   "unknown-pre-hash": 83,
+   "attacker-key": 109,
+   "forged-post(key)": 125
+  },
+  "first": [
+   {
+    "name": "seed20261119#1",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "valid",
+      "special": "interleave",
+      "kindB": "valid-competitor"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_0",
+     "original": "717",
+     "remaining": "28",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "mode": "interleave",
+      "order": "B then A",
+      "kindA": "valid",
+      "sinkA": "committed",
+      "coreA": "rejected:PreStateMismatch",
+      "sinkB": "committed",
+      "coreB": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"0\"}",
+       "settledEnc": [
+        "90975150926017989423096760697356",
+        "92691660416944945738703105819149"
+       ],
+       "outbox": [
+        "{\"amount\":\"0\",\"chargeId\":\"ch_0\",\"reason\":\"returned_item\",\"requestId\":\"rq_1_5\"}",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_0\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_1_4\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#2",
+    "original_len": 11,
+    "shrunk": [
+     {
+      "kind": "valid",
+      "special": "interleave",
+      "kindB": "valid-competitor"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "142",
+     "remaining": "40",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "mode": "interleave",
+      "order": "B then A",
+      "kindA": "valid",
+      "sinkA": "committed",
+      "coreA": "rejected:PreStateMismatch",
+      "sinkB": "committed",
+      "coreB": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"142\",\"refundEnabled\":true,\"remaining\":\"25\"}",
+       "settledEnc": [
+        "85825622453238503366562044772874",
+        "87542131944165459682168389894667"
+       ],
+       "outbox": [
+        "{\"amount\":\"1\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_2_2\"}",
+        "{\"amount\":\"4\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_2_1\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"142\",\"refundEnabled\":true,\"remaining\":\"40\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#4",
+    "original_len": 6,
+    "shrunk": [
+     {
+      "kind": "reqid-mismatch",
+      "special": "interleave",
+      "kindB": "valid-competitor"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "626",
+     "remaining": "214",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "mode": "interleave",
+      "order": "B then A",
+      "kindA": "reqid-mismatch",
+      "sinkA": "committed",
+      "coreA": "rejected:PreStateMismatch",
+      "sinkB": "committed",
+      "coreB": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"8\"}",
+       "settledEnc": [
+        "85825622453241269147130683654668",
+        "89258641435095181778343373898254"
+       ],
+       "outbox": [
+        "{\"amount\":\"1\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_4_3\"}",
+        "{\"amount\":\"18\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_4_2\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"214\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#1",
+   "original_len": 10,
+   "shrunk": [
+    {
+     "kind": "valid",
+     "special": "interleave",
+     "kindB": "valid-competitor"
+    }
+   ],
+   "shrunk_len": 1,
+   "s0": {
+    "chargeId": "ch_0",
+    "original": "717",
+    "remaining": "28",
+    "refundEnabled": false
+   },
+   "divergence": {
+    "step": 0,
+    "detail": {
+     "mode": "interleave",
+     "order": "B then A",
+     "kindA": "valid",
+     "sinkA": "committed",
+     "coreA": "rejected:PreStateMismatch",
+     "sinkB": "committed",
+     "coreB": "rejected:PreStateMismatch",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"0\"}",
+      "settledEnc": [
+       "90975150926017989423096760697356",
+       "92691660416944945738703105819149"
+      ],
+      "outbox": [
+       "{\"amount\":\"0\",\"chargeId\":\"ch_0\",\"reason\":\"returned_item\",\"requestId\":\"rq_1_5\"}",
+       "{\"amount\":\"0\",\"chargeId\":\"ch_0\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_1_4\"}"
+      ]
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+      "settledEnc": [],
+      "outbox": []
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": []
+}

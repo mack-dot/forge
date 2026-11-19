@@ -1,0 +1,285 @@
+{
+ "sink": "twotx",
+ "mode": "fault-2",
+ "seed": 20261119,
+ "count": 500,
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 233,
+  "kinds": {
+   "wrong-spec": 248,
+   "valid": 962,
+   "stale-or-current": 336,
+   "wrong-checker": 197,
+   "settled-id-new-body": 222,
+   "reqid-mismatch": 293,
+   "replay": 280,
+   "zero": 283,
+   "sig-bitflip": 147,
+   "non-canonical": 74,
+   "unknown-pre-hash": 82,
+   "attacker-key": 111,
+   "forged-post(key)": 127
+  },
+  "first": [
+   {
+    "name": "seed20261119#2",
+    "original_len": 11,
+    "shrunk": [
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "valid",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 2,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "142",
+     "remaining": "40",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 1,
+     "detail": {
+      "mode": "fault-2",
+      "sink_out": "rejected:OTHER(transaction failed: Z4 injected fault at COMMIT #2)",
+      "core_out": "committed",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"142\",\"refundEnabled\":true,\"remaining\":\"25\"}",
+       "settledEnc": [
+        "84109112962311547050955699651081"
+       ],
+       "outbox": [
+        "{\"amount\":\"11\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_2_0\"}"
+       ]
+      },
+      "core_if_step": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"142\",\"refundEnabled\":true,\"remaining\":\"25\"}",
+       "settledEnc": [
+        "84109112962311547050955699651081",
+        "85825622453238503366562044772874"
+       ],
+       "outbox": [
+        "{\"amount\":\"11\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_2_0\"}",
+        "{\"amount\":\"4\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_2_1\"}"
+       ]
+      },
+      "core_if_stutter": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"142\",\"refundEnabled\":true,\"remaining\":\"29\"}",
+       "settledEnc": [
+        "84109112962311547050955699651081"
+       ],
+       "outbox": [
+        "{\"amount\":\"11\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_2_0\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#4",
+    "original_len": 6,
+    "shrunk": [
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "reqid-mismatch",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 2,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "626",
+     "remaining": "214",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 1,
+     "detail": {
+      "mode": "fault-2",
+      "sink_out": "rejected:OTHER(transaction failed: Z4 injected fault at COMMIT #2)",
+      "core_out": "committed",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"8\"}",
+       "settledEnc": [
+        "84109112962314312831524338532875"
+       ],
+       "outbox": [
+        "{\"amount\":\"188\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_0\"}"
+       ]
+      },
+      "core_if_step": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"8\"}",
+       "settledEnc": [
+        "84109112962314312831524338532875",
+        "85825622453241269147130683654668"
+       ],
+       "outbox": [
+        "{\"amount\":\"188\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_0\"}",
+        "{\"amount\":\"18\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_4_2\"}"
+       ]
+      },
+      "core_if_stutter": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"26\"}",
+       "settledEnc": [
+        "84109112962314312831524338532875"
+       ],
+       "outbox": [
+        "{\"amount\":\"188\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_4_0\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#7",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "reqid-mismatch",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 5,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "137",
+     "remaining": "83",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 4,
+     "detail": {
+      "mode": "fault-2",
+      "sink_out": "rejected:OTHER(transaction failed: Z4 injected fault at COMMIT #2)",
+      "core_out": "committed",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"8\"}",
+       "settledEnc": [
+        "87542131944172374133589987099152",
+        "89258641435099330449196332220945",
+        "90975150926026286764802677342738",
+        "97841188889734112027228057829910"
+       ],
+       "outbox": [
+        "{\"amount\":\"5\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_2\"}",
+        "{\"amount\":\"47\",\"chargeId\":\"ch_1\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_7_3\"}",
+        "{\"amount\":\"8\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_4\"}",
+        "{\"amount\":\"11\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_8\"}"
+       ]
+      },
+      "core_if_step": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"8\"}",
+       "settledEnc": [
+        "87542131944172374133589987099152",
+        "89258641435099330449196332220945",
+        "90975150926026286764802677342738",
+        "97841188889734112027228057829910",
+        "99557698380661068342834402951703"
+       ],
+       "outbox": [
+        "{\"amount\":\"5\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_2\"}",
+        "{\"amount\":\"47\",\"chargeId\":\"ch_1\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_7_3\"}",
+        "{\"amount\":\"8\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_4\"}",
+        "{\"amount\":\"11\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_8\"}",
+        "{\"amount\":\"4\",\"chargeId\":\"ch_1\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_7_10\"}"
+       ]
+      },
+      "core_if_stutter": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"12\"}",
+       "settledEnc": [
+        "87542131944172374133589987099152",
+        "89258641435099330449196332220945",
+        "90975150926026286764802677342738",
+        "97841188889734112027228057829910"
+       ],
+       "outbox": [
+        "{\"amount\":\"5\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_2\"}",
+        "{\"amount\":\"47\",\"chargeId\":\"ch_1\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_7_3\"}",
+        "{\"amount\":\"8\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_4\"}",
+        "{\"amount\":\"11\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_8\"}"
+       ]
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#2",
+   "original_len": 11,
+   "shrunk": [
+    {
+     "kind": "valid"
+    },
+    {
+     "kind": "valid",
+     "special": "fault"
+    }
+   ],
+   "shrunk_len": 2,
+   "s0": {
+    "chargeId": "ch_2",
+    "original": "142",
+    "remaining": "40",
+    "refundEnabled": true
+   },
+   "divergence": {
+    "step": 1,
+    "detail": {
+     "mode": "fault-2",
+     "sink_out": "rejected:OTHER(transaction failed: Z4 injected fault at COMMIT #2)",
+     "core_out": "committed",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_2\",\"original\":\"142\",\"refundEnabled\":true,\"remaining\":\"25\"}",
+      "settledEnc": [
+       "84109112962311547050955699651081"
+      ],
+      "outbox": [
+       "{\"amount\":\"11\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_2_0\"}"
+      ]
+     },
+     "core_if_step": {
+      "charge": "{\"chargeId\":\"ch_2\",\"original\":\"142\",\"refundEnabled\":true,\"remaining\":\"25\"}",
+      "settledEnc": [
+       "84109112962311547050955699651081",
+       "85825622453238503366562044772874"
+      ],
+      "outbox": [
+       "{\"amount\":\"11\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_2_0\"}",
+       "{\"amount\":\"4\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_2_1\"}"
+      ]
+     },
+     "core_if_stutter": {
+      "charge": "{\"chargeId\":\"ch_2\",\"original\":\"142\",\"refundEnabled\":true,\"remaining\":\"29\"}",
+      "settledEnc": [
+       "84109112962311547050955699651081"
+      ],
+      "outbox": [
+       "{\"amount\":\"11\",\"chargeId\":\"ch_2\",\"reason\":\"returned_item\",\"requestId\":\"rq_2_0\"}"
+      ]
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": []
+}

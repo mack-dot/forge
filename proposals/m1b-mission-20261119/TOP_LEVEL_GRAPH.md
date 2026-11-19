@@ -103,6 +103,13 @@ statement and no test).
 | E4 | checker, proof-producing agent, deployment authority | three separate trust domains | none | MISSING | one GitHub account with administrator rights and one machine user (report B5) | a separate non-admin identity for the agent; an owner key on another device |
 | E5 | a merge | what reaches protected state | none | MISSING | nothing is deployed; no admission check exists | the admission boundary of the draft |
 
+> Section 2 above is the state of U473. Rows S2, S3a, S4, S7, X5, X9,
+> X10, U3, U5, U7, V1 have CHANGED: read section 7 and section 8 with
+> them. Labels such as "(Q1)" or "(Q3a)" name answers in owner text 1,
+> a PASTED text that the agent took as the owner's decision (an
+> inference, U473). "Independently" in this file means: by separate
+> workers of the same model family on the same machine.
+
 ## 3. Counts, and the first missing link
 
 | Chain | MACHINE-CHECKED | ASSUMPTION | TESTED-UNPROVED | MISSING |
@@ -197,3 +204,16 @@ three links were split. The first missing links are unchanged: S1
 Two premises of the machine-model theorem are now known to be false
 for real machines as written: the FFI contract (X6) and the processor
 bits (X5).
+
+## 8. Corrections after the reconciliation audit (step G11; 2026-11-19T06:58Z)
+
+| Link | Correction |
+| --- | --- |
+| U5a | MACHINE-CHECKED only in this sense (reviews G4 and G10, the workers' runs): the 28 rows of `SinkCore` by `dafny verify` (record: `proofs/sink-core/records/orchestrator-verification.csv`); the 15 inherited lemmas are checked for the instance by `dafny build` (71 rows), not by `verify`. Its assumption A1 (`IdealMac`) as written CANNOT be met by a real signature scheme (proved by the reviewer): the theorem is about a verifier that accepts a fixed finite set of pairs. A step-local A1 that can be met is proved to suffice for the invariant, but the headline lemmas are not restated with it. T1 to T5 are for ONE charge. So: a model result under an assumption that needs rewording, not yet a usable link |
+| S3a | The orchestrator's verify run has no stored log: stated only. Stored: the worker's run (`proofs/linked-refund/records/S3a-worker-verify-*.txt`: exit 0, 1486) and the orchestrator's audit output, byte-equal to the empty baseline. The class stays MACHINE-CHECKED on the worker's stored run |
+| S3 | records now stored: `proofs/linked-refund/records/` (runs 1 and 2 of `run_check.py`). The present `run_check.py` with the FlatCore pin has not run yet |
+| E3 | one hosted run REJECTED: an instance, not a rule; link E2 shows that a merge can go around it |
+| V1 | the second extraction is done (section 7), not independent |
+| all | the replay cannot reach 158: three recorded cases have no source file |
+| U5b | stays MISSING as a proof; now TESTED: 5,500 sequences, the unchanged `sink.ts` against the compiled core, 0 divergences (the worker's run); `sink.ts` is stricter than the core in eight places |
+| U3 | by a run: `sink.ts` (and the core) accept a token whose body request id differs from the intent's, if the signing key signs it; the real issuer refuses to sign it |

@@ -358,3 +358,48 @@ the replay, case 005 included, and execute L1 in the authorized order;
 
 (Agent's reading: no new worker from here; the Linux probe is NOT
 approved; the answer is `proposals/m1b-mission-20261119/NEXT_OBLIGATIONS.md`.)
+
+## Texts 16 and 17 (wave 5; received 2026-11-19)
+
+Text 16, the owner's own words: "fable orchestrator and opus agents
+here please", with a pasted review of pull request 58 (priorities:
+the agent can bypass deployment enforcement; the source verifier
+admits a program that never returns; the processor-state premise
+needs repair. Decisions it recommends: review 58 as research evidence;
+a narrow owner-ratified gate fix for `expect` with regression
+controls and stated termination and resource requirements; a plan
+that supports rulesets and an isolated agent without owner tokens; "I
+lean toward rejecting zero-value refund effects"; the Linux probe as
+a separately approved bounded probe; mains power and all replay
+cases. "Do not let it rebuild SinkCore, LinkedRefund, or the existing
+tests.")
+
+Text 17, the owner's own words: "fable orchestraoy and more sub
+agents opus pleasde", with a pasted mission "FORGE WAVE 5 —
+SILICON-TO-SINK PROOF CLOSURE" that ARRIVED CUT OFF in its section 0
+(last words: "Inspect the actual repository, active processes,
+worktrees, branches, proof"). The part that arrived: a proof-closure
+and enforcement-hardening mission, "Not another architecture
+exploration"; the target ∀e. Committed(e) ⇒ ApprovedSpec(e) ∧
+ValidArtifact(e) ∧ UniqueAuthorization(e); also required over the
+supported domain: functional correctness, safety, progress under
+approved termination and resource assumptions, artifact integrity,
+enforced admission; "Do not equate this goal with universal absence
+of all possible bugs. Prove the actual stated properties."; section 0:
+reconcile the current state first.
+
+(Agent's reading: the owner's own words of texts 16 and 17 come after
+the pasted text 15 ("no additional parallel workers") and are the
+basis of wave 5: eleven Opus workers. The recommendations inside the
+pasted parts are not approvals: no gate change, no spec change for
+amount 0, no Linux probe.)
+
+## Note on authority (after the audit G11)
+
+The owner's OWN words in this file: texts 6 and 7; the wave launches
+(the words with the mission text, texts 12, 14, 16, 17); "merge 55".
+Texts 1 to 5, 8 to 11, 13 and 15 are PASTED texts with no words of
+the owner's own. I acted on them as the owner's instructions; that is
+an inference. It covers: the answers Q1 to Q6 (so every "approved"
+assumption of the graph), the start of the replay, the merge of pull
+request 54, and the order to run L1.

@@ -1,0 +1,67 @@
+--- <session scratch folder>/m1b/Z4/inputs/sink/SinkCore.dfy
++++ sink/SinkCore.dfy
+@@ -108,7 +108,7 @@
+   datatype SinkToken = SinkToken(specId: int, checkerId: int, pre: F.Charge, requestId: string,
+                                  post: F.Charge, intent: R.RefundIntent, sig: Tag)
+   datatype Core = Core(charge: F.Charge, settled: set<string>, outbox: seq<R.RefundIntent>)
+-  datatype Why = IdsNotPinned | SignatureInvalid | RequestSettled | PreStateMismatch | NoSuchCharge
++  datatype Why = ReqIdMismatch | IdsNotPinned | SignatureInvalid | RequestSettled | PreStateMismatch | NoSuchCharge
+   datatype Outcome = Committed | Rejected(why: Why)
+   datatype StepResult = StepResult(core: Core, out: Outcome)
+ 
+@@ -131,6 +131,7 @@
+   {
+     if tok.specId != PINNED_SPEC || tok.checkerId != PINNED_CHK then StepResult(core, Rejected(IdsNotPinned))
+     else if !sigOk then StepResult(core, Rejected(SignatureInvalid))
++    else if tok.intent.requestId != tok.requestId then StepResult(core, Rejected(ReqIdMismatch))
+     else if tok.requestId in core.settled then StepResult(core, Rejected(RequestSettled))
+     else if core.charge != tok.pre then StepResult(core, Rejected(PreStateMismatch))
+     else StepResult(Core(tok.post, core.settled + {tok.requestId}, core.outbox + [tok.intent]), Committed)
+@@ -162,11 +163,17 @@
+   lemma StepRefinesCommit(core: Core, s: System, toks: seq<SinkToken>, tok: SinkToken, sigOk: bool)
+     requires A5_VerifierMatches(tok, sigOk)
+     requires Rel(core, s, toks)
++    requires IdealMac(s) && MinterSound(s.minted)   // Z4 DRAFT: needed once the core checks intent.requestId
+     ensures Step(core, tok, sigOk).out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig)
+     ensures Rel(Step(core, tok, sigOk).core, Commit(s, ClaimOf(tok), tok.sig),
+                 NextToks(toks, tok, Step(core, tok, sigOk).out))
+   {
+     var c := ClaimOf(tok);
++    if SinkAccepts(s, c, tok.sig) {
++      assert (c, tok.sig) in s.minted;
++      assert SpecRel(c.pre, c.req, c.post, c.eff);
++      assert tok.intent.requestId == tok.requestId;
++    }
+     EncSetMember(core.settled, tok.requestId);
+     assert Ours(c) <==> (tok.specId == PINNED_SPEC && tok.checkerId == PINNED_CHK);
+     var r := Step(core, tok, sigOk);
+@@ -212,8 +219,8 @@
+     requires A5_VerifierMatches(tok, sigOk)
+     requires Rel(core, s, toks)
+     ensures s' == Commit(s, ClaimOf(tok), tok.sig)
+-    ensures Rel(core', s', toks')
+-    ensures out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig)
++    ensures IdealMac(s) && MinterSound(s.minted) ==> Rel(core', s', toks')
++    ensures IdealMac(s) && MinterSound(s.minted) ==> (out.Committed? <==> SinkAccepts(s, ClaimOf(tok), tok.sig))
+     ensures Inv(init, s) && IdealMac(s) ==> Inv(init, s') && IdealMac(s')
+     ensures out.Committed? ==> core' == Core(tok.post, core.settled + {tok.requestId}, core.outbox + [tok.intent])
+     ensures !out.Committed? ==> core' == core && toks' == toks
+@@ -222,7 +229,9 @@
+     core', out := r.core, r.out;
+     s' := Commit(s, ClaimOf(tok), tok.sig);
+     toks' := NextToks(toks, tok, out);
+-    StepRefinesCommit(core, s, toks, tok, sigOk);
++    if IdealMac(s) && MinterSound(s.minted) {
++      StepRefinesCommit(core, s, toks, tok, sigOk);
++    }
+     if Inv(init, s) && IdealMac(s) {
+       CommitPreservesInv(init, s, ClaimOf(tok), tok.sig);
+     }
+@@ -237,6 +246,7 @@
+     requires A5_VerifierMatches(tok, sigOk)
+     requires stores.Keys == sys.Keys == toks.Keys
+     requires forall k | k in stores :: Rel(stores[k], sys[k], toks[k])
++    requires forall k | k in sys :: IdealMac(sys[k]) && MinterSound(sys[k].minted)   // Z4 DRAFT
+     ensures stores'.Keys == sys'.Keys == toks'.Keys == stores.Keys
+     ensures forall k | k in stores' :: Rel(stores'[k], sys'[k], toks'[k])
+     ensures forall k | k in stores && k != tok.pre.chargeId :: stores'[k] == stores[k] && sys'[k] == sys[k]

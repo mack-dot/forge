@@ -1,0 +1,30 @@
+{
+ "sink": "patched-reqid",
+ "mode": "fault-1",
+ "seed": 20261119,
+ "count": 500,
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 0,
+  "kinds": {
+   "wrong-spec": 246,
+   "valid": 965,
+   "stale-or-current": 342,
+   "wrong-checker": 196,
+   "settled-id-new-body": 222,
+   "reqid-mismatch": 293,
+   "replay": 277,
+   "zero": 280,
+   "sig-bitflip": 148,
+   "non-canonical": 74,
+   "unknown-pre-hash": 81,
+   "attacker-key": 111,
+   "forged-post(key)": 127
+  },
+  "first": [],
+  "smallest": null
+ },
+ "directed_divergent": []
+}

@@ -1,0 +1,224 @@
+Z3 DECISION PACKET: zero-amount refunds (`0 <= amount` or `0 < amount`). UNAPPLIED. NOT approved.
+Worker Z3, M1-B mission wave 5, 2026-11-19. No repository file changed. No HOL ran. M1-B stays OPEN;
+end_to_end=false; Stage 9 deferred. The decision is the owner's. Z3 approves nothing.
+
+======================================================================================================
+0. KEY FACT FIRST
+======================================================================================================
+The zero rule is not only in the Dafny spec. The APPROVED protocol text states it as a business decision:
+  spec/refund/protocol.md:25-27  "Zero is a legitimate authorization, distinct from fallback. A valid zero
+  proposal returns Authorized(0, reason) and one zero-valued intent. A consumer may discharge that intent
+  as a no-op; no positive payment is authorized by it."
+  (also protocol.md:22 "an amount between zero and the remaining amount inclusive"; protocol.md:45 wire
+  `amount_minor` may be `0`). protocol.md is hashed in spec/refund/spec.lock (protocol_sha256 5ef4e8fa...).
+  proposals/refund.md:57 (intent table row "Zero") and :78 (example Candidate(0, ...) -> Authorized(0, ...)).
+So Option B and Option C REVERSE an explicit approved business decision. They are not a bug fix.
+
+======================================================================================================
+1. INVENTORY: where the lower bound of the amount is stated or relied on (READ)
+======================================================================================================
+Approved / protected
+  spec/refund/RefundSpec.dfy:35      Eligible: `0 <= response.amount <= context.remaining`   (the rule)
+  spec/refund/RefundSpec.dfy:19-21   Money(v) = 0 <= v <= MaxMoney; R1 (:43) and the plan clause (:60) use
+                                     Money(amount): still true under `0 < amount` (weaker), no change needed
+  spec/refund/protocol.md:22,25-27,45  zero approved in words (see 0.)
+  spec/refund/spec.lock              spec_sha256 90a21c71...; protocol_sha256 5ef4e8fa...
+  gate/refund/Bindings.dfy:21,33     R.Money(...) (>= 0); no concrete zero; unchanged under B (RAN: exit 0)
+  gate/refund/hostile.ts:47          test oracle `response.amount < 0n` -> must become `<= 0n` under B
+  gate/refund/hostile.ts:154         fixture loop `for amount of [0n, 1n, 60n, MAX]` (valid-boundary-0-*);
+                                     with the oracle fixed it then expects Rejected at 0
+  gate/refund/hostile.ts:194,204,219 generators include 0n (property tests; follow the oracle)
+  gate/refund.py:33                  claim text R1 "amount in [0, remaining]" (stays true; stale wording)
+Implementation
+  impl/Refund.dfy:7                  calls `Eligible(...)` of the spec; holds no own bound (unchanged under B)
+  impl/RefundFinality.dfy:31,52-55   uses R.Eligible / R.Assess only; no own bound (unchanged under B)
+Slice 2 clearing (clearing/ is the Slice 2 bundle; never ADD a file there)
+  clearing/RefundExact.dfy:26-29     witnesses use 40 and 61 only (unchanged)
+  proposals/forge2-pillar1-spec-determinism/RefundDeterminism.dfy:11-12  Money(...) only (unchanged)
+  clearing/planted/RefundSpecRewritten.dfy:37  `!(response.amount < 0)` = the OLD rule in other words.
+                                     Under B the pair 'refund-rewrite' is no longer EQUIVALENT (RAN: see 2.6)
+  clearing/pairs/RefundRewrite.dfy:94,107,116,129  Money(...) (unchanged); its EligibleNewIff fails under B
+  clearing/planted/RefundSpecLoose.dfy:37,54   copy of old Eligible (`0 <=`) + loose rule; planted fixture
+  clearing/planted/RefundLooseBase.dfy:18      `0 <= decision.amount <= response.amount`
+  clearing/controls/RefundSpecOpenLimit.dfy:39 copy of old Eligible (`0 <=`)
+  clearing/controls/RefundPost{Assume,Axiom,NoBody,IncludedAxiom}.dfy, RefundWeakPostBase.dfy (:17-20)
+                                     `0 <= decision.amount <= response.amount` (control texts)
+  proposals/forge2-pillar1-spec-determinism/fixtures/RefundSpecCapped.dfy:37  copy of old Eligible + cap
+  proposals/forge2-pillar1-spec-determinism/gen_refund_witnesses.py:15  row R5 "zero amount ... unchanged,
+                                     Authorized, Authorized" (cap pair; would read Rejected/Rejected under B)
+  clearing/subjects.json             no amount values for 'refund'; the 'refund-cap' supplied witness is 51
+  scripts/exit_slice2.py:38,44       expected verdicts refund NO_CHOICE (stays), refund-rewrite EQUIVALENT
+                                     (FLIPS under B unless the planted rewrite is rewritten)
+Slice 1 tests and TS
+  tests/refund-finality/Bindings.dfy:43-44  Money(intent.amount), `0 <= post.remaining <= pre.remaining`
+                                     (stays true; RAN: exit 0)
+  tests/refund-finality/suite.ts:44-47  oracle has NO lower bound (relies on the MONEY regex >= 0)
+                                     -> needs `amount > 0n` under B
+  tests/refund-finality/suite.ts:136    grid amounts include "0" (results follow the oracle)
+  tests/refund-finality/suite.ts:440-446  a signed amount-0 token "the approved relation allows it" is
+                                     minted and committed: under B mustMint FAILS (the core refuses)
+  tests/refund-finality/suite.ts:475-478  control (d) uses amounts ["200","0","300","400"] and expects 5
+                                     effects with sum 1000: under B the "0" step cannot be minted
+  ts/refund-finality/encoding.ts:22,47  MONEY = /^(0|[1-9][0-9]{0,18})$/ accepts "0" (shape only; correct)
+  ts/refund-finality/minter.ts:43-50  passes the amount to the compiled core; no own rule (unchanged)
+  ts/refund-finality/sink.ts:16       "the sink does not look at amounts or reasons" (unchanged under B)
+  tests/demo-gauntlet/sink_tool.ts    no amount rule (unchanged)
+M1 conformance (Wave Gate 1)
+  tests/m1-conformance/recorded-m1-cases.json:137  typed fixture `eligible_zero` (amount 0, remaining 60,
+                                     expected ok=true amount 0); hol_stdout = Authorized 0. 1 of 22 fixtures.
+  tests/m1-conformance/fixtures/RefundRejectsZero.dfy  a "WRONG decision" control: `0 < amount`. Under B it
+                                     IS the correct implementation (RAN: verifies, exit 0, see 2.3)
+  scripts/exit_m1_conformance.py:78  RefundRejectsZero in WRONG_DECISIONS; :1003 requires its verify exit 4
+                                     -> FAILS under B
+  scripts/exit_m1_conformance.py:250-254  reference_eligible `0 <= v['amount'] <= v['remaining']`
+                                     (transcription of HOL eligible_def)
+  scripts/exit_m1_conformance.py:294-297,329,347  corpus generators that put amount 0 in boundary,
+                                     adversarial and pseudo-random vectors
+HOL side (M1 executable b8ed5ec2e34f...; stored scripts, not tracked by git)
+  results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/
+    verified-backend-20261104/refund_kernel/forge_refundScript.sml (SHA-256 381eeac2...):
+      :25  guard AST `BinOp Le (Lit (IntL 0)) (Var «v7»)`  (v7 = amount)
+      :56-64 Definition eligible_def ... `0 ≤ amount ∧ amount ≤ remaining` (:61)
+      :97-106 refund_full_result uses `eligible`
+    certified-library-20261104/records/forge_refundCertifiedProgScript.sml:10-16 refund_fields_def calls
+      `eligible` (no own bound); :40 `translate eligible_def`
+  U294 export (3,621 bytes, SHA-256 58154ddf...):
+    .../source-model-binding-20261104/records/hol-0004/input.sexp: `(BinOp (Le) (Lit (IntL 0)) (Var "amount"))`
+    twice (near byte 786, ensures; near byte 2632, body)
+  proposals/m1b-mission-20261119/drafts/link-contract/*.sml, drafts/link-eligible/forge_refundEligibleLink
+    Script.sml (go through refund_fields / the export)
+Dafny-side link and sink assets (mission)
+  proposals/m1b-mission-20261119/proofs/linked-refund/inputs/transport/FlatCore.dfy:12,23 `0 <= amount`
+    (pinned a89484e3... = input of the U294 export; pinned in run_check.py)
+  .../linked-refund/inputs/transport/Transport.dfy:64-67  witness Candidate(0) asserts `ok && amount == 0`
+  .../linked-refund/inputs/UnicodeRelation.dfy:276-278   witness Candidate(0) asserts `ok && amount == 0`
+  .../linked-refund/inputs/LinkedRefund.dfy:249-251      WitnessUnicode with amount 0 asserts `ok`
+    (pinned 0d67b483... in run_check.py)
+  .../linked-refund/inputs/transport/spec/refund/RefundSpec.dfy  copy, pinned equal to the approved spec
+  .../sink-core/inputs/sink/SinkCore.dfy:359-361 T3 `0 <= amount`; :386-411 lemma ZeroAmountRepeats
+  .../sink-core/inputs/spec/refund/RefundSpec.dfy and the 9 mutant copies under sink-core/mutants/
+  .../drafts/export-semantics/Mirror.dfy:128,136,189-216; drafts/link-eligible/EligibleFlat.dfy:43
+  .../drafts/fail-closed/m1_fail_closed.py:91  `0 <= amount <= MAX_MONEY` on the M1 output frame
+  .../drafts/zero-review/subs/C1-table.dfy:30, C2-recursion.dfy:28, C4-arith.dfy:9 (experiment copies)
+  .../proofs/sink-core/SPEC_STATE_PROPOSAL_U8.txt (names `0 < amount` as a separate optional decision)
+Docs
+  docs/stage8-refund.md:23-24 "an amount between zero and the remaining ... inclusive"; :29-30
+    "accepted with its exact amount and reason, including zero"
+  proposals/refund.md:34,54,57,65,78 (approved intent proposal: nonnegative amount; Zero row; zero example)
+
+======================================================================================================
+2. RUNS (all on COPIES in Z3/; pinned Dafny 4.11.0 through dafny_locked.sh; gate options with the
+   solver path .toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1). Logs: Z3/logs/.
+======================================================================================================
+2.0 Spec change (exact): Z3/spec-change/spec-positive-amount.diff (SHA-256 3326d904...)
+      -    0 <= response.amount <= context.remaining && AllowedReason(response.reason)
+      +    0 < response.amount <= context.remaining && AllowedReason(response.reason)
+    old spec SHA-256 90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57 (= spec.lock)
+    new spec SHA-256 9d96d67c046da8ff469a0154e6d3c6b6e4ff5a8882f488ab7aa0e12daae55a2a
+| # | check (copy) | expected | actual exit | Dafny summary |
+| r1 | impl/Refund.dfy UNCHANGED + gate/refund/Bindings.dfy, new spec | 0 | 0 | 6 verified, 0 errors |
+| r2 | NEG: Refund with the old guard written out (0 <=), new spec | 4 | 4 | 5 verified, 1 error (postcondition) |
+| r3 | impl/RefundFinality.dfy + tests/refund-finality/Bindings.dfy, new spec | 0 | 0 | 10 verified |
+| r4 | tests/m1-conformance/fixtures/RefundRejectsZero.dfy + gate bindings, new spec | (finding) | 0 | 6 verified: the "wrong" control is now correct |
+| r5 | scripts/spec_clearing.py refund (mirror tree, new spec) | NO_CHOICE | 0 | NO_CHOICE; Dafny exits 0,0,0,0,probe 3,0,0 |
+| r6 | spec_clearing.py pair old->new (mirror, new spec as fixture RefundSpecPositive) | DIVERGES | 0 | DIVERGES; witnesses (solver) ChargeContext("c","r",2437,0,true,true), Candidate(0,"duplicate_charge"); (supplied) ChargeContext("ch_1","rq_1",100,60,true,true), Candidate(0,"duplicate_charge"): old Authorized(0,"duplicate_charge"), new Rejected. Claim Agree exit 4 (only that member); both witness instances exit 0 (29 members, incl. EligibleNewIff: new Eligible <==> old Eligible && amount != 0) |
+| r7 | NEG: LinkedRefund, new spec, FlatCore unchanged | 4 | 4 | 1484 verified, 4 errors, 2 out of resource |
+| r8 | LinkedRefund, new spec, FlatCore `0 < amount`, Transport/UnicodeRelation zero witnesses fixed | 0 | 4 | 1487 verified, 2 out of resource (LinkedRefund.WitnessUnicode uses amount 0) |
+| r9 | as r8 + LinkedRefund.dfy WitnessUnicode amount 0 -> 1 | 0 | 0 | 1489 verified, 0 errors |
+| s1 | SinkCore UNCHANGED, new spec | 4, only ZeroAmountRepeats | 4 | 55 verified, 1 error at SinkCore.dfy:401 (ZeroAmountRepeats; the SpecRel clause :398) — the required NEGATIVE result |
+| s2 | SinkCore minus ZeroAmountRepeats plus 3 new lemmas, new spec | 0 | 0 | 60 verified, 0 errors |
+| s3 | NEG: same SinkCore as s2, OLD spec | 4 | 4 | 58 verified, 2 errors (:393 CommitStrictlyDecreases; :417 positive-amount forall) |
+| r10 | spec_clearing.py refund-rewrite (planted rewrite of the OLD rule), new spec as approved | (finding) | 1 | LINK_BROKEN: RefundRewrite.EligibleNewIff fails. exit_slice2 expects EQUIVALENT -> Slice 2 EXIT would fail |
+| c1 | Option C: new spec + U8 stored-state text + OptionCChecks.dfy (StepDecreases, SettledIdRefused, TraceBound) + impl + gate bindings | 0 | 0 | 13 verified |
+| c2 | NEG: U8 text with the OLD bound (0 <=) | 4 | 4 | 11 verified, 2 errors (StepDecreases, TraceBound) |
+New SinkCore lemmas (s2; Z3/sink/new_lemmas.dfy.txt; diff Z3/sink/SinkCore-positive.diff 7be0899d...;
+file c0826f29...): CommitStrictlyDecreases (every commit: store.remaining strictly decreases; store != old
+store: this is N7 of D7, now PROVED), SumAtLeastCount, CommitsBoundedByOriginal (every outbox amount > 0;
+|outbox| <= init.remaining <= init.original; |log| <= init.original). These are statements about the
+Dafny model and core, not about sink.ts.
+Smallest implementation diff for B: NONE for impl/Refund.dfy and impl/RefundFinality.dfy (they call the
+spec predicate). LinkedRefund needs 4 files: FlatCore.dfy (2 lines; 46082c38...), Transport.dfy (1 assert;
+10bd212b...), UnicodeRelation.dfy (2 lines; f866da08...), LinkedRefund.dfy (2 lines; f44a16ef...); diffs in
+Z3/linked/*.diff.
+Vector count (RAN python3 -I Z3/tools/count_zero.py on a COPY of exit_m1_conformance.py, exit 0):
+corpus 2,466 typed vectors; M1 (old rule) authorizes 426; new rule 300; 126 FLIP (all amount 0, all with
+an open request and a candidate, so each also has a finality row). By group: hol-fixture 1
+(H-eligible_zero), boundary 54, adversarial 2 (A-0227, A-0237), pseudo-random 69. Full id list:
+Z3/logs/v1-flip-vectors.log. The 192 wire inputs do not
+carry typed amount 0 values (by reading; not counted).
+
+======================================================================================================
+3. CONSEQUENCES
+======================================================================================================
+OPTION A: keep `0 <= amount`; bound the effect elsewhere (issuer refuses 0, or sink refuses 0, or the
+  dispatcher drops 0-value intents).
+  Files: ts/refund-finality/minter.ts or sink.ts (+ suite.ts rows 440-446, 475-478; D6 harness).
+  Protected: none if done in ts/ (not gate/, not spec/). Proofs to redo: none; ZeroAmountRepeats stays TRUE
+  and must stay (it is the statement that the APPROVED relation allows the repeats).
+  Governance problem: the sink/issuer would then refuse a token that the approved relation and the
+  proved checker (RefundFinality.Check, P2 "exact acceptance") say MUST be accepted. That breaks the
+  approved R4 ("every eligible proposal is accepted") at the system level and protocol.md:23-24 ("No extra
+  heuristic may reject or modify it"). The rule would live in unproved TypeScript, outside spec.lock,
+  outside the clearing verdicts and outside M1. The "zero implementation review" north star needs the
+  rules in the approved spec; Option A adds an unreviewed hidden rule. The weaker variant A' (no refusal;
+  only rate/size limit on the outbox, or treat 0-value intents as no-ops per protocol.md:26-27) is
+  governance-clean but leaves the unbounded outbox growth (D6, D7) as a known, accepted property.
+  M1: unchanged and still correct for the approved spec.
+OPTION B: change Eligible to `0 < amount`.
+  Protected files touched: spec/refund/RefundSpec.dfy (1 line), spec/refund/protocol.md (lines 22, 25-27;
+  45 may stay: the wire still parses "0", the decision rejects it), spec/refund/spec.lock (spec_sha256
+  90a21c71 -> 9d96d67c; protocol_sha256 changes), gate/refund/hostile.ts:47, any pinned spec-lock hash in
+  sink config / tokens (spec id), proposals/refund.md (approved intent record: zero row) + a new approval
+  record. clearing/planted/RefundSpecRewritten.dfy (Slice 2 bundle changes; rewrite pair else LINK_BROKEN),
+  likely RefundSpecLoose/OpenLimit/Capped fixtures for coherence, gen_refund_witnesses.py row R5.
+  Unprotected: tests/refund-finality/suite.ts (oracle + 2 groups), tests/m1-conformance (fixture
+  RefundRejectsZero moves out of WRONG_DECISIONS; reference_eligible; the 126 vectors' expected class),
+  scripts/exit_m1_conformance.py, docs/stage8-refund.md, mission LinkedRefund (4 files, new pins) and
+  SinkCore (ZeroAmountRepeats deleted, new lemmas).
+  Proofs to redo: gate refund (r1 suggests pass), Slice 1 EXIT, Slice 2 EXIT (new bundle; refund NO_CHOICE
+  holds per r5), LinkedRefund (r9), SinkCore (s2), U295 Dafny transport (its witness file changes).
+  M1: the executable b8ed5ec2... implements the OLD relation (HOL eligible_def :61, guard :25). It is a
+  correct binary for the OLD spec ONLY. Against the new spec it authorizes amount 0: 1 of 22 recorded
+  fixtures (eligible_zero) and 126 of 2,466 corpus vectors DISAGREE. The M1 conformance EXIT fails
+  (and must). The Dafny-to-HOL link target changes: FlatCore SHA a89484e3 -> 46082c38, so the U294 export
+  (58154ddf) no longer matches; the export would get `Lt` in two places. Restoring M1 needs a new HOL
+  eligible_def, a new U294 export and its HOL theorems, a new CakeML compile and Arm8 proofs, a new binary,
+  the 71-step chain replay, new recorded fixtures (fresh HOL runs) and new conformance records. Until
+  then M1 stays a proof about the OLD spec, and M1-B would link to a superseded spec.
+OPTION C: U8 stored state + `0 < amount`.
+  All of B, plus the U8 additions to RefundSpec.dfy (Z3/spec-change/spec-optionC-U8-plus-positive.diff,
+  07fe4221...; new spec f6152741...). Gains (c1, machine-checked on copies): an authorizing Settles step
+  strictly decreases remaining; a settled id never authorizes again; every Settles trace has at most
+  s0.remaining authorizations (so at most `original`). c2 shows U8 WITHOUT `0 < amount` cannot prove the
+  decrease or the bound. Extra work: SinkCore SpecRel := Settles, RefundFinality rule 3 (requestOpen =
+  true) becomes ContextAt, the state hash includes the settled set (sink.ts format change), M1 is still
+  stateless and gains no state rule (larger HOL gap than B).
+
+======================================================================================================
+4. OWNER DECISION TEXTS (pick at most one; Z3 decides nothing)
+======================================================================================================
+A: "I keep the approved refund rule `0 <= amount` and protocol.md as approved. A zero-amount authorization
+   stays legitimate. No component may refuse an eligible zero-amount token. I accept that zero-amount
+   tokens with fresh request ids each commit and each add one outbox row (lemma ZeroAmountRepeats,
+   reports D6/D7); a consumer may discharge them as no-ops. M1 and its records stay as they are."
+B: "I approve the change of spec/refund/RefundSpec.dfy line 35 from `0 <= response.amount` to
+   `0 < response.amount` (diff SHA-256 3326d904..., new spec SHA-256 9d96d67c...), and the matching change
+   of spec/refund/protocol.md lines 22 and 25-27 (a zero proposal takes the fallback). This reverses my
+   earlier approval of zero as a legitimate authorization. I authorize the rebind of spec.lock and of every
+   pinned spec hash, and the change of clearing/ and gate/refund/hostile.ts that follows. I accept that
+   the M1 executable b8ed5ec2... is then a verified binary for the SUPERSEDED spec only, that its M1
+   conformance EXIT fails at amount 0 (126 of 2,466 vectors, fixture eligible_zero), and that a new M1
+   chain is needed before any claim about the new spec on the machine."
+C: "I approve B and, in the same change, the U8 stored-state declarations (StoredCharge, ContextAt,
+   Settles; diff SHA-256 07fe4221..., new spec SHA-256 f6152741...). Request-once and the sum bound then
+   become approved intent. All consequences of B apply; the stateless M1 does not implement Settles."
+
+Ranking by Z3 (advice only):
+  1. A now, with B queued as a separate later decision. Reason: the zero rule is an explicit approved
+     business decision; the only harm shown is unbounded no-op rows (not money), and B invalidates the
+     only machine-level evidence (M1) during the open M1-B work. A keeps every proof true.
+  2. B. Reason: smallest real fix; impl code unchanged; clearing NO_CHOICE holds; N7 becomes provable.
+     Cost: M1 is superseded and must be rebuilt; Slice 2 bundle and spec lock change.
+  3. C. Reason: strongest intent (request-once, bound) but the largest protected change, and it widens the
+     gap to the stateless M1. Better as a separate decision after B or with the next M1 chain.
+  Not recommended: Option A with a hidden refusal in sink.ts/minter.ts (governance problem in 3.).
