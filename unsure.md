@@ -17461,3 +17461,40 @@ curl: (6) Could not resolve host: github.com
   three U294 scripts; refund_ffi_contract_at_totalise; the micro
   control of the identity check. The owner's decisions: the run-time
   route after the probe; the three enforcement steps of report B5.
+
+## U474 — pull request 56 merged by the owner's account; the Route A lemma drafts (not run); what the number 1489 counts
+- Status: 2026-11-19T06:00Z (inserted by the shell from `date -u`). Refs U473.
+- Pull request 56 (head c61819d2): hosted gate/pr_check.py run
+  44467957044, exit 3, UNSUPPORTED. GitHub records the merge at
+  2026-11-19T05:58:51Z, squash commit 01869b05, merged by the owner's
+  account. No command of this session ran that merge. Tree of main
+  equal to c61819d2 (`git diff --quiet`, exit 0). A pasted text shows
+  the command with `--admin`: if so, it is again an override of the
+  review rule and of the red gate status (finding 4 of U473 is open).
+- Step C1a, reported: the Route A lemmas as HOL script drafts
+  (proposals/m1b-mission-20261119/drafts/route-a). NOTHING ran; nothing
+  is proved. L1 `refund_ffi_contract_on_totalises` with two negative
+  controls and an import check: drafts. L2: a draft with higher risk.
+  L3, the exit-status lemma and the output-bytes lemma: statements
+  only. Gaps that the worker names: stored call-site facts cover
+  successful write events only, at slide 0; `read` has no call-site
+  theorem; the source specification cannot exclude a failed close or
+  open_in event. Saved copies have the home path replaced.
+- Correction of a reading, not of a result: "1489 verified" is the
+  count of ALL verification rows of the run. Measured from the
+  worker's result file of its last attempt: 1342 rows belong to the
+  Dafny standard library, 147 to refund files, and 58 of those to the
+  new modules LinkedRefund and LinkedPost. A pasted text calls them
+  "1,489 new Dafny link proofs"; that is not so. The result is one
+  refinement, as U473 states it.
+- Replay of the 158 cases: 82 of 158 at 05:59Z, 81 as recorded; case
+  005 must run again. The driver runs; the HOL slot is not free.
+- NOT RUN: every HOL step of the mission. The Linux probe M-B2c-0
+  waits for the owner's approval. Route A L1 runs when the slot is
+  free (owner text 9, point 2); a pass would be machine-model
+  behaviour under a reachable-call premise, not verified native
+  execution.
+- Impact: none on any claim. M1-B OPEN. CURRENT none. Stage 9
+  deferred. Stage 12 unauthorized. end_to_end=false.
+- Next check: the replay result; then L1 with its controls, at most
+  five attempts, one HOL process.

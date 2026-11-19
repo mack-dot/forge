@@ -28,6 +28,23 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## M1-B mission, records: pull request 56 merged by the owner's account; Route A lemma drafts saved, not run — U474
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| hosted `gate/pr_check.py`, pull request 56, head `c61819d2`, run 44467957044 |3|UNSUPPORTED, as expected |
+| merge of pull request 56 (not a command of this session) |GitHub record: merged|squash commit `01869b05`, 2026-11-19T05:58:51Z, by the owner's account; tree equal to `c61819d2` |
+| Route A lemmas L1, L2, L3 in HOL |NOT RUN|drafts only; the replay holds the one HOL slot |
+| replay of the 158 recorded M1 cases (separate job) |RUNNING|82 of 158 at 05:59Z; 81 as recorded; case 005 must run again |
+
+Of the 1489 verified rows of the Dafny run, 1342 belong to the
+standard library and 58 to the new modules: the result is one
+refinement, not 1489 link proofs.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## M1-B mission: owner decisions for M1; the M1 theorem is about a machine model, not yet about the real executable; the Dafny half of the contract link is machine-checked; one graph of 45 links; verdict M1-B OPEN — U473
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
