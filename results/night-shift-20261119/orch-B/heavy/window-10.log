@@ -1,0 +1,275 @@
+# start 2026-11-19T14:02:13Z swap free 1036 MiB memory free 60 %
+correct-C20 C01-early-return exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C02-match-tuple exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C03-set-literal-reasons exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C04-local-datatype-verdict exit 1 :: SUBSET3_FORBIDDEN: `datatype`
+correct-C20 C05-loop-over-local-reason-list exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+correct-C20 C06-reason-index-loop-early-exit exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+correct-C20 C07-tuple-destructure exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C08-label-assert exit 1 :: SUBSET3_FORBIDDEN: `label`
+correct-C20 C09-string-prefix-helper exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C10-ghost-such-that exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C11-lemma-forall-statement exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C12-calc-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C13-match-expression-arms exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C14-amount-sum-check exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C15-helper-multi-return exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C16-reason-string-concat-log exit 1 :: SUBSET3_KIND: expected int, found string
+correct-C20 C17-percent-check exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-C20 C18-for-range-over-local-list exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+correct-C20 C19-map-reason-table exit 1 :: SUBSET3_NAME: unknown or refused name `map` in Assess
+correct-C20 C20-loop-with-break exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+correct-K36 A11-abstract-trap-dead exit 1 :: SUBSET3_FORBIDDEN: `abstract`
+correct-K36 A34-nested-comment-hide exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C0-repo-impl exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C1-table exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in InTable)
+correct-K36 C10-induction-attr exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C11-at-in-string exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C12-crlf-header exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C13-comment-expect exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C14-string-char-expect exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C15-ident-expected exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C2-recursion exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+correct-K36 C3-early-returns exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C4-arith exit 1 :: SUBSET3_PRODUCT: product of two non-literal operands
+correct-K36 C5-helper-lemmas exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C6-function-pair exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C7-loop-plan exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+correct-K36 C8-isolate-attr exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 C9-comment-word-include exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV01-helper-predicate exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV02-match-not-if exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV03-extra-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV04-reordered-conjuncts exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV05-local-constants exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV06-ghost-recursive-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV07-odd-comments exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV08-helper-used-twice exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV09-helper-method-chain exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV10-expression-form exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV11-early-returns-assert-by exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV12-ghost-var-quantified-assert exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV13-ghost-loop-in-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV14-literal-arithmetic exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV15-reason-in-seq-literal exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV16-isolate-attr-and-crlf exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 CV17-odd-comments-no-line-separator exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-K36 N1a-nested-comment-closed exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-N N01-while-literal-table exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+correct-N N02-for-const-display-table exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+correct-N N03-for-bounded-local-plan exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+correct-N N04-flag-product exit 1 :: SUBSET3_PRODUCT: product of two non-literal operands
+correct-N N05-recursion-over-display exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+correct-N N06-extra-ghost-module exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+correct-N N07-separator-comments exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-N N08-input-field-product exit 1 :: SUBSET3_PRODUCT: product of two non-literal operands
+correct-N N09-nested-literal-loops exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+correct-N N10-induction-false-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+correct-N N12-crlf-induction-false exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-EXPECT-DRAFT E01-colon-dash-expect exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-EXPECT-DRAFT E03-div-zero exit 1 :: SUBSET3_PRODUCT: division by a non-literal or zero
+hostile-EXPECT-DRAFT E05-test-attr exit 1 :: SOURCE_SCOPE: only assertion-isolation attributes allowed
+hostile-EXPECT-DRAFT E12-expect-in-by-method exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-EXPECT-DRAFT N1b-nested-comment-reopen exit 1 :: SOURCE_SCOPE: unterminated comment
+hostile-NEW3 Y01-var-chain-sharing exit 1 :: SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+hostile-NEW3 Y02-if-tower-40 exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y03-match-nest-20 exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y04-field-chain exit 1 :: SUBSET3_SELECT: selection `.chargeId` on string
+hostile-NEW3 Y05-helper-structure-returns exit 1 :: SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+hostile-NEW3 Y06-helper-fanout-2x12 exit 1 :: SUBSET3_WEIGHT: F5 unfolds to 5384 > 4096 tokens
+hostile-NEW3 Y07-helper-fanout-2x3 exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y08-default-parameter exit 1 :: SUBSET3_SYNTAX: in H expected `,`, found `:=`
+hostile-NEW3 Y09-as-conversion exit 1 :: SUBSET3_SYNTAX: in Assess expected `;`, found `as`
+hostile-NEW3 Y10-char-arithmetic exit 1 :: SUBSET3_KIND: expected int, found char
+hostile-NEW3 Y11-string-index exit 1 :: SUBSET3_SYNTAX: in Assess expected `else`, found `[`
+hostile-NEW3 Y12-string-slice exit 1 :: SUBSET3_SYNTAX: in Assess expected `else`, found `[`
+hostile-NEW3 Y13-length-of-input exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y14-string-compare-chain exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y15-large-int-compare exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y16-ghost-var-calls-compiled-method exit 1 :: SUBSET3_GHOST: compiled method `Spin` named inside a ghost statement
+hostile-NEW3 Y17-ghost-method-loop-huge exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y18-extern-attribute exit 1 :: SOURCE_SCOPE: only assertion-isolation attributes allowed
+hostile-NEW3 Y19-extra-module-require exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+hostile-NEW3 Y20-js-let-local exit 1 :: SUBSET3_NAME: declared name `let` is refused (shape, JavaScript name or shadowing)
+hostile-NEW3 Y21-js-toString-member exit 1 :: SUBSET3_NAME: declared name `toString` is refused (shape, JavaScript name or shadowing)
+hostile-NEW3 Y22-js-arguments-await exit 1 :: SUBSET3_NAME: declared name `arguments` is refused (shape, JavaScript name or shadowing)
+hostile-NEW3 Y23-js-proto-name exit 1 :: SUBSET3_NAME: declared name `__proto__` is refused (shape, JavaScript name or shadowing)
+hostile-NEW3 Y24-addition-doubling-400 exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y25-literal-multiplier-chain-300 exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+hostile-NEW3 Y26-pattern-var-shadows-const exit 1 :: SUBSET3_NAME: declared name `K` is refused (shape, JavaScript name or shadowing)
+hostile-NEW3 Y27-name-reuse-disjoint-branches exit 1 :: SUBSET3_NAME: name `x` reused in Assess
+hostile-NEW3 Y28-set-display-in-if-expression exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y29-set-display-match-scrutinee exit 1 :: SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+hostile-NEW3 Y30-chain-with-call-in-middle exit 1 :: SUBSET3_CHAIN: inner operand of a comparison chain is not call-free
+hostile-NEW3 Y31-mutual-recursion-methods exit 1 :: SUBSET3_RECURSION: call cycle M1 -> M2 -> M1
+hostile-NEW3 Y32-const-function-cycle exit 1 :: SUBSET3_RECURSION: call cycle A -> Fa -> A
+hostile-NEW3 Y33-const-nested-displays exit 1 :: SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+hostile-NEW3 Y34-tuple-helper-equality exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y35-hex-multiplier exit 1 :: SUBSET3_LITERAL: numeric literal `0xFFFFFFFFFFFFFFFFFFFFFF` (decimal, at most 19 digits)
+hostile-NEW3 Y36-underscore-literal exit 1 :: SUBSET3_LITERAL: numeric literal `1_000` (decimal, at most 19 digits)
+hostile-NEW3 Y37-division-by-input exit 1 :: SUBSET3_PRODUCT: division by a non-literal or zero
+hostile-NEW3 Y38-compiled-forall exit 1 :: SUBSET3_NAME: unknown or refused name `forall` in Assess
+hostile-NEW3 Y39-compiled-such-that exit 1 :: SUBSET3_SYNTAX: in Assess expected `:=`, found `:|`
+hostile-NEW3 Y40-lambda exit 1 :: SUBSET3_NAME: unknown or refused name `x` in Assess
+hostile-NEW3 Y41-display-17 exit 1 :: SUBSET3_DISPLAY: display with more than 16 elements
+hostile-NEW3 Y42-long-literals-display exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+hostile-NEW3 Y42b-literals-display-16x64 exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+hostile-NEW3 Y43-main-method exit 1 :: SUBSET3_NAME: declared name `Main` is refused (shape, JavaScript name or shadowing)
+hostile-NEW3 Y44-havoc exit 1 :: SUBSET3_NAME: unknown or refused name `*` in Assess
+hostile-NEW3 Y45-if-statement-tower-30 exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-NEW3 Y46-seq-concat-doubling exit 1 :: SUBSET3_KIND: expected int, found ('seq', 'string')
+hostile-NEW3 Y47-string-concat-input exit 1 :: SUBSET3_KIND: expected int, found string
+hostile-NEW3 Y48-method-out-tree-growth exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+hostile-NEW3 Y49-unparenthesized-guard-display-then-block exit 1 :: SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+hostile-NEW3 Y50-assert-hides-statement exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-P2 K01-string-backslash-newline exit 1 :: SUBSET3_LEX: backslash before a line break in a string literal
+hostile-P2 K02-string-bad-unicode-escape exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-P2 K03-comment-split-attribute exit 1 :: SUBSET3_ATTRIBUTE: attribute syntax outside the allowed attributes
+hostile-P2 K04-isolate-wrapping-attribute exit 1 :: SOURCE_SCOPE: only assertion-isolation attributes allowed
+hostile-P2 K06-unterminated-block-comment-eof exit 1 :: SOURCE_SCOPE: unterminated comment
+hostile-P2 K08-nul-in-line-comment exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-PROBE P03-js-proto-hasown exit 1 :: SUBSET3_NAME: declared name `prototype` is refused (shape, JavaScript name or shadowing)
+hostile-REVIEW A01-dag-equality-2x40 exit 1 :: SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+hostile-REVIEW A01m-dag-equality-2x22-measure exit 1 :: SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+hostile-REVIEW A01s-dag-equality-2x12-small exit 1 :: SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+hostile-REVIEW A02-hide-named-method exit 1 :: SUBSET3_FORBIDDEN: `hide`
+hostile-REVIEW A03-extra-module-BigNumber exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+hostile-REVIEW A03-extra-module-exports exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+hostile-REVIEW A03-extra-module-module_ exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+hostile-REVIEW A03-extra-module-require exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+hostile-REVIEW A04-seq-of-seq-growth exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-REVIEW A05-hex-multiplier-loop exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-REVIEW A05b-hex-multiplier-loop-100 exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-REVIEW A06-minus-doubling-loop exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-REVIEW A07a-hide-named-function exit 1 :: SUBSET3_FORBIDDEN: `hide`
+hostile-REVIEW A07b-hide-local-then-seq-comprehension exit 1 :: SUBSET3_FORBIDDEN: `hide`
+hostile-REVIEW A08-param-shadows-const-display exit 1 :: SUBSET3_NAME: declared name `C` is refused (shape, JavaScript name or shadowing)
+hostile-REVIEW A09-local-shadows-const-display exit 1 :: SUBSET3_NAME: declared name `C` is refused (shape, JavaScript name or shadowing)
+hostile-REVIEW A10-recursion-shadowed-const-display exit 1 :: SUBSET3_RECURSION: call cycle Len -> Len
+hostile-REVIEW L15-attr-induction-then-verify-false exit 1 :: SOURCE_SCOPE: only assertion-isolation attributes allowed
+hostile-REVIEW L16-attr-induction-extern exit 1 :: SOURCE_SCOPE: only assertion-isolation attributes allowed
+hostile-REVIEW L17-crlf-second-include exit 1 :: SOURCE_SCOPE: exact approved refinement and sole include required
+hostile-REVIEW X02-for-literal-bigint-multiplier exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-REVIEW X06-loop-one-level-input-product exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-REVIEW X38-bounded-local-in-display-append-loop exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-halting A16-decreases-star exit 1 :: SUBSET3_FORBIDDEN: decreases *
+hostile-halting A18-runtime-exhaustion exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-halting A24-expect-halt-one-input exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting A25-expect-as-assume-wrong-value exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting A32-dead-main-decreases-star exit 1 :: SUBSET3_FORBIDDEN: decreases *
+hostile-halting A33-const-alloc-exhaustion exit 1 :: SUBSET3_CALL: call of `seq` in an expression is outside the allow-list
+hostile-halting A37-uncompilable-such-that exit 1 :: SUBSET3_SYNTAX: in Assess expected `:=`, found `:|`
+hostile-halting A38-expect-always-halt exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting A39-expect-in-helper-method exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting E02-array-oob exit 1 :: SUBSET3_FORBIDDEN: `new`
+hostile-halting E06-stack-overflow-keyed exit 1 :: SUBSET3_RECURSION: call cycle DeepM -> DeepM
+hostile-halting E07-oom-keyed exit 1 :: SUBSET3_CALL: call of `seq` in an expression is outside the allow-list
+hostile-halting E08-time-keyed exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-halting H01-such-that-enumeration-hang exit 1 :: SUBSET3_SYNTAX: in Assess expected `:=`, found `:|`
+hostile-halting H01b-such-that-modulus-hang exit 1 :: SUBSET3_SYNTAX: in Assess expected `:=`, found `:|`
+hostile-halting H02-exponential-recursion-hang exit 1 :: SUBSET3_RECURSION: call cycle Slow -> Slow
+hostile-halting H03-seq-comprehension-alloc exit 1 :: SUBSET3_CALL: call of `seq` in an expression is outside the allow-list
+hostile-halting H04-seq-length-2pow32-throws exit 1 :: SUBSET3_CALL: call of `seq` in an expression is outside the allow-list
+hostile-halting S1-cr-ends-line-comment exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting S2-cr-comment-hides-keyed-expect exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting Z24-expect-halt-amount-1000 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting Z24-expect-halt-amount-123456789 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting Z24-expect-halt-amount-61 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-halting Z24-expect-halt-amount-9223372036854775805 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+hostile-x2-hostile-admitted HV11-match-huge-literal-admissible-size exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+hostile-x2-hostile-admitted HV15-ghost-method-with-loop exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-x2-hostile-admitted HV22-big-literal-multiplier-chain exit 1 :: SUBSET3_LITERAL: numeric literal `100000000000000000000000` (decimal, at most 19 digits)
+hostile-x2-hostile-admitted HV23-set-display-in-guard exit 1 :: SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+hostile-x2-hostile-admitted HV24-negation-doubling exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-x2-hostile-admitted HV26-set-display-guard-then-hidden-loop exit 1 :: SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+hostile-x2-hostile-admitted X02-for-literal-bigint-multiplier exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-x2-hostile-admitted X06-loop-one-level-input-product exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-x2-hostile-admitted X33-ls-comment-loop-text exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-x2-hostile-admitted X38-bounded-local-in-display-append-loop exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-admitted X40-recursion-measure-not-decreasing exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+hostile-x2-hostile-refused HV01-mutual-recursion-three exit 1 :: SUBSET3_RECURSION: call cycle F -> G -> H -> F
+hostile-x2-hostile-refused HV02-function-type-param exit 1 :: SUBSET3_SYNTAX: in Apply expected `,`, found `->`
+hostile-x2-hostile-refused HV03-function-value-reuse exit 1 :: SUBSET3_NAME: unknown or refused name `Heavy` in Assess
+hostile-x2-hostile-refused HV04-var-such-that exit 1 :: SUBSET3_SYNTAX: in Assess expected `:=`, found `:|`
+hostile-x2-hostile-refused HV05-huge-literal-sequence exit 1 :: SUBSET3_DISPLAY: display with more than 16 elements
+hostile-x2-hostile-refused HV06-call-tower-exponential exit 1 :: SUBSET3_WEIGHT: T8 unfolds to 6640 > 4096 tokens
+hostile-x2-hostile-refused HV07-repeated-squaring exit 1 :: SUBSET3_PRODUCT: product of two non-literal operands
+hostile-x2-hostile-refused HV08-string-doubling exit 1 :: SUBSET3_KIND: expected int, found string
+hostile-x2-hostile-refused HV09-string-doubling-via-display exit 1 :: SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+hostile-x2-hostile-refused HV10-tuple-dag-equality exit 1 :: SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+hostile-x2-hostile-refused HV12-match-too-large exit 1 :: SUBSET3_WEIGHT: Assess unfolds to 7226 > 4096 tokens
+hostile-x2-hostile-refused HV13-cyrillic-homoglyph-while exit 1 :: SUBSET3_LEX: character U+0456 outside comments and literals
+hostile-x2-hostile-refused HV14-lone-cr-comment-hides-loop exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused HV16-ghost-var-from-compiled-method exit 1 :: SUBSET3_GHOST: compiled method `Step` named inside a ghost statement
+hostile-x2-hostile-refused HV17-forall-in-compiled-predicate exit 1 :: SUBSET3_NAME: unknown or refused name `forall` in AllSmall
+hostile-x2-hostile-refused HV18-by-method-loop exit 1 :: SUBSET3_FORBIDDEN: by method
+hostile-x2-hostile-refused HV19-seq-constructor-comment-split exit 1 :: SUBSET3_CALL: call of `seq` in an expression is outside the allow-list
+hostile-x2-hostile-refused HV20-const-self-cycle exit 1 :: SUBSET3_RECURSION: call cycle A -> B -> A
+hostile-x2-hostile-refused HV21-literal-mult-chain exit 1 :: SUBSET3_PRODUCT: product of two non-literal operands
+hostile-x2-hostile-refused HV25-tuple-of-helper-tuples exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+hostile-x2-hostile-refused X01-loop-bound-1e12 exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X03-display-bound-by-function exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X04-nested-1000-cubed exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X05-loop-iterated-input-product exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X07-ghost-module-hides-compiled exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+hostile-x2-hostile-refused X08-extra-module-called-from-compiled exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+hostile-x2-hostile-refused X09-extra-lemma-name-collision exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+hostile-x2-hostile-refused X10-decreases-lies exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X11-counter-reset-in-body exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X12-bound-shadowed-by-case-pattern exit 1 :: SUBSET3_NAME: name `n` reused in Assess
+hostile-x2-hostile-refused X13-bound-shadowed-in-block exit 1 :: SUBSET3_NAME: name `n` reused in Assess
+hostile-x2-hostile-refused X14-hex-bound exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X15-underscore-bound exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X16-recursion-over-input-string exit 1 :: SUBSET3_RECURSION: call cycle Count -> Count
+hostile-x2-hostile-refused X17-recursion-two-self-calls exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+hostile-x2-hostile-refused X18-recursion-decreases-other-param exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+hostile-x2-hostile-refused X19-display-local-reassigned exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+hostile-x2-hostile-refused X20-invariant-set-display-misparse exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X21-case-pattern-shadow-squaring exit 1 :: SUBSET3_NAME: name `p` reused in Assess
+hostile-x2-hostile-refused X22-bounded-local-overflow-chain exit 1 :: SUBSET3_LITERAL: numeric literal `100000000000000000000000` (decimal, at most 19 digits)
+hostile-x2-hostile-refused X23-three-field-product exit 1 :: SUBSET3_PRODUCT: product of two non-literal operands
+hostile-x2-hostile-refused X24-field-product-fed-back exit 1 :: SUBSET3_PRODUCT: product of two non-literal operands
+hostile-x2-hostile-refused X25-shadowed-response-field-product exit 1 :: SUBSET3_PRODUCT: product of two non-literal operands
+hostile-x2-hostile-refused X26-braceless-match-arm-increment exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X27-loop-break exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X28-for-downto exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X29-while-guard-le exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X30-loop-sequence-doubling exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X31-bounded-local-big-loop-bound exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X32-lone-cr-comment-hides-decrement exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X34-counter-two-loops exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X35-display-append-in-big-loop exit 1 :: SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X36-counter-out-param-reset exit 1 :: SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+hostile-x2-hostile-refused X37-recursion-display-local-bigger-elements exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+hostile-x2-hostile-refused X39-tuple-index-plus-concat exit 1 :: SUBSET3_KIND: expected int, found string
+hostile-x2-hostile-refused X41-recursive-call-in-loop exit 1 :: SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+control-EXPECT-DRAFT E04-assert-by exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+control-EXPECT-DRAFT S3-u2028-in-line-comment exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+control-EXPECT-DRAFT S4-formfeed-in-line-comment exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+control-L L01-ls-u2028 exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+control-L L02-ps-u2029 exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+control-L L03-nel-u0085 exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+control-L L04-vt exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+control-L L05-ff exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+control-L L06-cr-positive exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+control-L L07-include-inside-module exit 1 :: SOURCE_SCOPE: exact approved refinement and sole include required
+control-L L08-include-after-module exit 1 :: SOURCE_SCOPE: exact approved refinement and sole include required
+control-L N11-extra-module-lemma-call exit 1 :: SUBSET3_MODULE: exactly one module, one include, one refines
+benign-P2 B01-identifiers-expected exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+benign-P2 B02-word-in-comments-strings exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+benign-P2 B03-identifier-prime-expect exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+benign-P2 B04-formfeed-comment-word exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+benign-P2 B05-latin1-comment exit 1 :: SOURCE_SCOPE: implementation is not UTF-8
+benign-P2 B06-unicode-in-string exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+control-P2 K05-eof-line-comment-no-newline exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+control-P2 K07-u0085-line-comment exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+benign-PROBE P01-js-locals exit 1 :: SUBSET3_NAME: declared name `let` is refused (shape, JavaScript name or shadowing)
+benign-PROBE P02-js-members exit 1 :: SUBSET3_NAME: declared name `toString` is refused (shape, JavaScript name or shadowing)
+control-REVIEW L11-block-comment-with-slashes-cr exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+control-REVIEW L12-string-with-comment-close exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+control-REVIEW L13-verbatim-doubled-quote exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+control-REVIEW L14-char-dquote-and-escaped-quote exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+control-REVIEW L18-include-at-line-start-in-block-comment exit 1 :: SOURCE_SCOPE: exact approved refinement and sole include required
+control-REVIEW L19-attr-induction-extra-spaces exit 1 :: SOURCE_SCOPE: only assertion-isolation attributes allowed
+# end 2026-11-19T14:09:48Z
+window exit 0

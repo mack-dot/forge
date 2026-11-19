@@ -1,0 +1,99 @@
+CONFUSION (correct = should admit; hostile = halting/hostile/bypass, should refuse)
+  rule   correct admitted/refused     hostile admitted/refused    
+  rule1   38 / 29                      40 / 137                   
+  rule2   55 / 12                      57 / 120                   
+  rule3   46 / 21                      20 / 157                   
+  correct group K36  n=36  r1=29  r2=35  r3=31 admitted
+  correct group N    n=11  r1=0   r2=11  r3=3 admitted
+  correct group C20  n=20  r1=9   r2=9   r3=12 admitted
+  hostile group EXPECT-DRAFT         n=5   r1=1   r2=1   r3=0 admitted
+  hostile group NEW3                 n=51  r1=27  r2=27  r3=15 admitted
+  hostile group P2                   n=6   r1=1   r2=1   r3=0 admitted
+  hostile group PROBE                n=1   r1=1   r2=1   r3=0 admitted
+  hostile group REVIEW               n=23  r1=5   r2=16  r3=0 admitted
+  hostile group halting              n=24  r1=0   r2=0   r3=0 admitted
+  hostile group x2-hostile-admitted  n=11  r1=5   r2=11  r3=4 admitted
+  hostile group x2-hostile-refused   n=56  r1=0   r2=0   r3=1 admitted
+CORRECT REFUSED BY RULE 3:
+   K36  C1-table                                     SUBSET3_STATEMENT: statement `while` is outside the allow-list (in InTable)
+   K36  C2-recursion                                 SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+   K36  C4-arith                                     SUBSET3_PRODUCT: product of two non-literal operands
+   K36  C7-loop-plan                                 SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   K36  A11-abstract-trap-dead                       SUBSET3_FORBIDDEN: `abstract`
+   N    N01-while-literal-table                      SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   N    N02-for-const-display-table                  SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+   N    N03-for-bounded-local-plan                   SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+   N    N04-flag-product                             SUBSET3_PRODUCT: product of two non-literal operands
+   N    N05-recursion-over-display                   SUBSET3_TYPE: helper parameter type `seq` is not a fixed-shape type
+   N    N06-extra-ghost-module                       SUBSET3_MODULE: exactly one module, one include, one refines
+   N    N08-input-field-product                      SUBSET3_PRODUCT: product of two non-literal operands
+   N    N09-nested-literal-loops                     SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   C20  C04-local-datatype-verdict                   SUBSET3_FORBIDDEN: `datatype`
+   C20  C05-loop-over-local-reason-list              SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   C20  C06-reason-index-loop-early-exit             SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   C20  C08-label-assert                             SUBSET3_FORBIDDEN: `label`
+   C20  C16-reason-string-concat-log                 SUBSET3_KIND: expected int, found string
+   C20  C18-for-range-over-local-list                SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+   C20  C19-map-reason-table                         SUBSET3_NAME: unknown or refused name `map` in Assess
+   C20  C20-loop-with-break                          SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+HOSTILE ADMITTED BY RULE 3:
+   x2-hostile-admitted HV11-match-huge-literal-admissible-size      W=(2342, 6) 894fcde841637841
+   x2-hostile-admitted HV15-ghost-method-with-loop                  W=(221, 6) bbd3142bea260228
+   x2-hostile-admitted HV24-negation-doubling                       W=(2428, 6) aade909e0e6f32a0
+   x2-hostile-admitted X33-ls-comment-loop-text                     W=(209, 6) a4b371bccc2abd42
+   x2-hostile-refused HV25-tuple-of-helper-tuples                  W=(276, 7) 0ef71ae1d8dda5e2
+   NEW3               Y02-if-tower-40                              W=(734, 6) 1c745331cc3d2316
+   NEW3               Y03-match-nest-20                            W=(534, 6) 7c3e7760222bb9a8
+   NEW3               Y07-helper-fanout-2x3                        W=(1547, 6) d9c2c420dcf10265
+   NEW3               Y13-length-of-input                          W=(231, 6) 5a44d64ffec74b56
+   NEW3               Y14-string-compare-chain                     W=(256, 6) 4ff88c9e28c3844e
+   NEW3               Y15-large-int-compare                        W=(235, 6) 1fac2d1b672eb5d3
+   NEW3               Y17-ghost-method-loop-huge                   W=(229, 6) 4376e62c973739c1
+   NEW3               Y24-addition-doubling-400                    W=(3021, 6) b36fd93ae8c40c61
+   NEW3               Y25-literal-multiplier-chain-300             W=(2321, 6) 285e2837ca75bbcc
+   NEW3               Y28-set-display-in-if-expression             W=(233, 6) a9620cd05348f351
+   NEW3               Y34-tuple-helper-equality                    W=(279, 7) ddc5f9757d3f5a2b
+   NEW3               Y42-long-literals-display                    W=(259, 17) 3bd5a309f03d5d24
+   NEW3               Y42b-literals-display-16x64                  W=(259, 17) 037098fe05b19323
+   NEW3               Y45-if-statement-tower-30                    W=(578, 6) 77b16b38fa5a860d
+   NEW3               Y50-assert-hides-statement                   W=(214, 6) b131d717ed3f45f8
+REVIEW FILES (rule 3):
+   HV15-ghost-method-with-loop                  pass
+   HV23-set-display-in-guard                    SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+   HV24-negation-doubling                       pass
+   HV26-set-display-guard-then-hidden-loop      SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+   X02-for-literal-bigint-multiplier            SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+   X06-loop-one-level-input-product             SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+   X33-ls-comment-loop-text                     pass
+   X38-bounded-local-in-display-append-loop     SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   A01-dag-equality-2x40                        SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+   A01m-dag-equality-2x22-measure               SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+   A01s-dag-equality-2x12-small                 SUBSET3_TREE: a value of more than 32 nodes (sharing counted as copies)
+   A02-hide-named-method                        SUBSET3_FORBIDDEN: `hide`
+   A03-extra-module-BigNumber                   SUBSET3_MODULE: exactly one module, one include, one refines
+   A03-extra-module-exports                     SUBSET3_MODULE: exactly one module, one include, one refines
+   A03-extra-module-module_                     SUBSET3_MODULE: exactly one module, one include, one refines
+   A03-extra-module-require                     SUBSET3_MODULE: exactly one module, one include, one refines
+   A04-seq-of-seq-growth                        SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   A05-hex-multiplier-loop                      SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   A05b-hex-multiplier-loop-100                 SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   A06-minus-doubling-loop                      SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+   A07a-hide-named-function                     SUBSET3_FORBIDDEN: `hide`
+   A07b-hide-local-then-seq-comprehension       SUBSET3_FORBIDDEN: `hide`
+   A08-param-shadows-const-display              SUBSET3_NAME: declared name `C` is refused (shape, JavaScript name or shadowing)
+   A09-local-shadows-const-display              SUBSET3_NAME: declared name `C` is refused (shape, JavaScript name or shadowing)
+   A10-recursion-shadowed-const-display         SUBSET3_RECURSION: call cycle Len -> Len
+   L11-block-comment-with-slashes-cr            pass
+   L12-string-with-comment-close                pass
+   L13-verbatim-doubled-quote                   pass
+   L14-char-dquote-and-escaped-quote            pass
+   L15-attr-induction-then-verify-false         SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+   L16-attr-induction-extern                    SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+   L17-crlf-second-include                      SUBSET3_MODULE: exactly one module, one include, one refines
+   L18-include-at-line-start-in-block-comment   pass
+   L19-attr-induction-extra-spaces              pass
+   X02-for-literal-bigint-multiplier            SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+   X06-loop-one-level-input-product             SUBSET3_STATEMENT: statement `for` is outside the allow-list (in Assess)
+   X38-bounded-local-in-display-append-loop     SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Assess)
+BENIGN/CONTROL (rule 3): [('L11-block-comment-with-slashes-cr', 'pass'), ('L12-string-with-comment-close', 'pass'), ('L13-verbatim-doubled-quote', 'pass'), ('L14-char-dquote-and-escaped-quote', 'pass'), ('L18-include-at-line-start-in-block-comment', 'pass'), ('L19-attr-induction-extra-spaces', 'pass'), ('B01-identifiers-expected', 'pass'), ('B02-word-in-comments-strings', 'pass'), ('B03-identifier-prime-expect', "SUBSET3_FORBIDDEN: `x'expect`"), ('B04-formfeed-comment-word', 'pass'), ('B05-latin1-comment', 'SUBSET3_LEX: implementation is'), ('B06-unicode-in-string', 'pass'), ('K05-eof-line-comment-no-newline', 'pass'), ('K07-u0085-line-comment', 'pass'), ('E04-assert-by', 'pass'), ('S3-u2028-in-line-comment', 'pass'), ('S4-formfeed-in-line-comment', 'pass'), ('P01-js-locals', 'SUBSET3_NAME: declared name `l'), ('P02-js-members', 'SUBSET3_NAME: declared name `t'), ('L01-ls-u2028', 'pass'), ('L02-ps-u2029', 'pass'), ('L03-nel-u0085', 'pass'), ('L04-vt', 'pass'), ('L05-ff', 'pass'), ('L06-cr-positive', 'SUBSET3_FORBIDDEN: `expect`'), ('L07-include-inside-module', 'SUBSET3_MODULE: exactly one mo'), ('L08-include-after-module', 'SUBSET3_MODULE: exactly one mo'), ('N11-extra-module-lemma-call', 'SUBSET3_MODULE: exactly one mo')]
+CONTROLS n=28 admitted r1=11 r2=23 r3=20

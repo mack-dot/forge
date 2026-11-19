@@ -1,0 +1,75 @@
+refund-subset3-standalone: 27 definitions extracted; bounded_subset3 called in prepare: True
+  ok   minimal              want=None                 got=pass
+  ok   canonical            want=None                 got=pass
+  ok   while                want=SUBSET3_STATEMENT    got=SUBSET3_STATEMENT: statement `while` is outside the allow-li
+  ok   for                  want=SUBSET3_STATEMENT    got=SUBSET3_STATEMENT: statement `for` is outside the allow-list
+  ok   recursion            want=SUBSET3_RECURSION    got=SUBSET3_RECURSION: call cycle L -> L
+  ok   ghost-recursion      want=None                 got=pass
+  ok   lemma-loop           want=None                 got=pass
+  ok   product-fields       want=SUBSET3_PRODUCT      got=SUBSET3_PRODUCT: product of two non-literal operands
+  ok   product-literal      want=None                 got=pass
+  ok   division-literal     want=None                 got=pass
+  ok   division-zero        want=SUBSET3_PRODUCT      got=SUBSET3_PRODUCT: division by a non-literal or zero
+  ok   concat               want=SUBSET3_KIND         got=SUBSET3_KIND: expected int, found string
+  ok   seq-concat           want=SUBSET3_KIND         got=SUBSET3_KIND: expected int, found ('seq', 'int')
+  ok   tree-cap             want=SUBSET3_TREE         got=SUBSET3_TREE: a value of more than 32 nodes (sharing counted
+  ok   tree-ok              want=None                 got=pass
+  ok   extra-module         want=SUBSET3_MODULE       got=SUBSET3_MODULE: exactly one module, one include, one refines
+  ok   shadow-param         want=SUBSET3_NAME         got=SUBSET3_NAME: declared name `C` is refused (shape, JavaScrip
+  ok   shadow-local         want=SUBSET3_NAME         got=SUBSET3_NAME: declared name `C` is refused (shape, JavaScrip
+  ok   reuse-local          want=SUBSET3_NAME         got=SUBSET3_NAME: name `x` reused in Assess
+  ok   js-name              want=SUBSET3_NAME         got=SUBSET3_NAME: declared name `eval` is refused (shape, JavaSc
+  ok   guard-brace          want=SUBSET3_GUARD_BRACE  got=SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthes
+  ok   guard-paren-brace    want=None                 got=pass
+  ok   chain-call           want=SUBSET3_CHAIN        got=SUBSET3_CHAIN: inner operand of a comparison chain is not ca
+  ok   chain-atoms          want=None                 got=pass
+  ok   ghost-var-method     want=SUBSET3_GHOST        got=SUBSET3_GHOST: compiled method `M` named inside a ghost stat
+  ok   ghost-method-call    want=None                 got=pass
+  ok   assert-by            want=None                 got=pass
+  ok   hex                  want=SUBSET3_LITERAL      got=SUBSET3_LITERAL: numeric literal `0x10` (decimal, at most 19
+  ok   big-literal          want=SUBSET3_LITERAL      got=SUBSET3_LITERAL: numeric literal `12345678901234567890` (dec
+  ok   as                   want=SUBSET3_SYNTAX       got=SUBSET3_SYNTAX: in Assess expected `;`, found `as`
+  ok   index                want=SUBSET3_SYNTAX       got=SUBSET3_SYNTAX: in Assess expected `;`, found `[`
+  ok   such-that            want=SUBSET3_SYNTAX       got=SUBSET3_SYNTAX: in Assess expected `:=`, found `:|`
+  ok   expect               want=SUBSET3_FORBIDDEN    got=SUBSET3_FORBIDDEN: `expect`
+  ok   induction-false      want=None                 got=pass
+  ok   induction-true       want=SUBSET3_ATTRIBUTE    got=SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:inductio
+  ok   at-attribute         want=SUBSET3_ATTRIBUTE    got=SUBSET3_ATTRIBUTE: attribute syntax outside the allowed attr
+  ok   ls-in-comment        want=None                 got=pass
+  ok   nul-in-comment       want=SUBSET3_LEX          got=SUBSET3_LEX: control character U+0000
+  ok   cr-ends-comment      want=SUBSET3_STATEMENT    got=SUBSET3_STATEMENT: statement `while` is outside the allow-li
+  ok   backslash-newline    want=SUBSET3_LEX          got=SUBSET3_LEX: backslash before a line break in a string liter
+  ok   fanout-cap           want=SUBSET3_WEIGHT       got=SUBSET3_WEIGHT: F5 unfolds to 4944 > 4096 tokens
+  corpus 272 files: patched-copy mismatches 0; standalone mismatches 0
+refund-subset3-combined: 27 definitions extracted; bounded_subset3 called in prepare: True
+  corpus 272 files: patched-copy mismatches 0; standalone mismatches 0
+refund-subset3-combined-scope: 27 definitions extracted; bounded_subset3 called in prepare: True
+  corpus 272 files: patched-copy mismatches 0; standalone mismatches 0
+scope rules of 985f5eaf (today):
+  ok   C9-comment-word        want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   C12-crlf               want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   C10-induction          want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   C11-at-in-string       want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   second-include-line    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   crlf-second-include    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   verify-false           want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   at-attribute           want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+scope rules of refund-scope-minimal:
+  ok   C9-comment-word        want_refused=False got=pass
+  ok   C12-crlf               want_refused=False got=pass
+  ok   C10-induction          want_refused=False got=pass
+  ok   C11-at-in-string       want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   second-include-line    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   crlf-second-include    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   verify-false           want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   at-attribute           want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+scope rules of refund-subset3-combined-scope:
+  ok   C9-comment-word        want_refused=False got=pass
+  ok   C12-crlf               want_refused=False got=pass
+  ok   C10-induction          want_refused=False got=pass
+  ok   C11-at-in-string       want_refused=False got=pass
+  ok   second-include-line    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   crlf-second-include    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   verify-false           want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   at-attribute           want_refused=True  got=SUBSET3_ATTRIBUTE: attribute syntax outside the allowed attr
+FAILURES 0

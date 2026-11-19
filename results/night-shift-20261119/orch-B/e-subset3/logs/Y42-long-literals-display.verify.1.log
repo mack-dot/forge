@@ -1,0 +1,33 @@
+# owner=e-subset3 start=2026-11-19T13:57:15Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-subset3/work/Y42-long-literals-display
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1036
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 61
+impl/Refund.dfy(4,9): Error: Verification out of resource (Refund.Assess)
+  |
+4 |   method Assess(context: Context, response: ModelResponse)
+  |          ^^^^^^
+
+
+Dafny program verifier finished with 5 verified, 0 errors, 1 out of resource
+        1.42 real         1.23 user         0.14 sys
+           137658368  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12909  page reclaims
+                 642  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                  80  voluntary context switches
+                6087  involuntary context switches
+         11103244668  instructions retired
+          4188664062  cycles elapsed
+           104891616  peak memory footprint
+# end=2026-11-19T13:57:16Z
+exit 4
