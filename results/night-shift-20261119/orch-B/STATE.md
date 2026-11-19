@@ -164,3 +164,4 @@ e-expect, r-reqid (review), d-corebacked, r-signing (adversarial review of V2), 
 - 10:17:30Z B's re-run BytesV3 exit 0 (1871). U546 written.
 - 10:19:32Z MORNING.md written as FINAL for the joint report (open items listed in it). Workers running: r-drafts, r-bytes3, b-top, f-binding-3. After each: re-check, unsure entry from U547, addendum section in MORNING.md.
 - 10:28:33Z r-bytes3 REPORTED: SliceSafetyBytesV3 CONFIRMED; corrections G-H glue, A2p class, InitOk not enforced by the sink. U547 written; MORNING.md addendum 1. Open: r-drafts, b-top, f-binding-3.
+- 10:43:29Z f-binding-3 REPORTED; B's runs: verify_ledger exit 0 (119 edges), controls 47/47. MORNING.md addendum 2. Open: r-drafts, b-top.

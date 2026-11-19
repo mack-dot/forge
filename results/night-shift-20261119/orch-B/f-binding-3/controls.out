@@ -1,0 +1,49 @@
+C01   exit=1 expected=DIGEST_MISMATCH        passed=True codes=['CLOSURE_MISMATCH', 'DIGEST_MISMATCH']
+C02   exit=1 expected=EXIT_NOT_ZERO          passed=True codes=['EXIT_NOT_ZERO']
+C03   exit=1 expected=LOG_MISSING            passed=True codes=['LOG_MISSING']
+C04   exit=1 expected=CLOSURE_MISMATCH       passed=True codes=['CLOSURE_MISMATCH']
+C05   exit=1 expected=UNKNOWN_ASSUMPTION     passed=True codes=['UNKNOWN_ASSUMPTION']
+C06   exit=1 expected=COMMAND_ROOT_MISMATCH  passed=True codes=['COMMAND_ROOT_MISMATCH']
+C07   exit=1 expected=DUPLICATE_EDGE         passed=True codes=['DUPLICATE_EDGE']
+C08   exit=1 expected=CMD_FILE_MISMATCH      passed=True codes=['CLOSURE_MISMATCH', 'CMD_FILE_MISMATCH', 'CMD_ROOTS_MISMATCH', 'DIGEST_MISMATCH']
+C09   exit=1 expected=CSV_LEMMA              passed=True codes=['CLOSURE_MISMATCH', 'CSV_LEMMA', 'DIGEST_MISMATCH']
+C09b  exit=1 expected=CSV_LEMMA              passed=True codes=['CLOSURE_MISMATCH', 'CSV_LEMMA', 'DIGEST_MISMATCH']
+C10   exit=1 expected=MC_WITHOUT_RUN         passed=True codes=['MC_WITHOUT_RUN']
+C11a  exit=1 expected=APPROVED_SPEC_STALE    passed=True codes=['APPROVED_SPEC_STALE']
+C11b  exit=1 expected=APPROVED_SPEC_STALE    passed=True codes=['APPROVED_SPEC_STALE']
+C11c  exit=1 expected=APPROVED_SPEC_STALE    passed=True codes=['APPROVED_SPEC_STALE']
+C11d  exit=1 expected=APPROVED_SPEC_STALE    passed=True codes=['APPROVED_SPEC_STALE']
+C12   exit=1 expected=MANDATORY_MISSING      passed=True codes=['MANDATORY_MISSING']
+C12b  exit=1 expected=MANDATORY_MISSING      passed=True codes=['MANDATORY_MISSING']
+C13   exit=1 expected=PATH_OUTSIDE           passed=True codes=['PATH_OUTSIDE']
+C13b  exit=1 expected=PATH_OUTSIDE           passed=True codes=['PATH_OUTSIDE']
+C14   exit=1 expected=EXIT_NOT_ZERO          passed=True codes=['EXIT_NOT_ZERO', 'HOL_THEOREM_MISSING']
+C15   exit=1 expected=COUNTS_MISMATCH        passed=True codes=['COUNTS_MISMATCH']
+C16   exit=1 expected=ASSUMPTION_BACKREF     passed=True codes=['ASSUMPTION_BACKREF']
+C17   exit=1 expected=DIGEST_MISMATCH        passed=True codes=['CLOSURE_MISMATCH', 'DIGEST_MISMATCH']
+C18   exit=1 expected=APPROVED_NOT_BOUND     passed=True codes=['APPROVED_NOT_BOUND', 'APPROVED_SPEC_STALE']
+C19   exit=1 expected=VERSION_MISMATCH       passed=True codes=['CLOSURE_MISMATCH', 'DIGEST_MISMATCH', 'VERSION_MISMATCH']
+C20   exit=1 expected=EXIT_NOT_ZERO          passed=True codes=['EXIT_NOT_ZERO', 'HOL_RUNJSON_EXIT', 'HOL_THEOREM_MISSING']
+C21   exit=1 expected=MC_WITHOUT_RUN         passed=True codes=['MC_WITHOUT_RUN']
+C21b  exit=1 expected=CMD_FILE_MISMATCH      passed=True codes=['CMD_FILE_MISMATCH', 'CMD_ROOTS_MISMATCH', 'CSV_MISSING', 'VERSION_MISMATCH']
+C22   exit=1 expected=RETIRED_ASSUMPTION_USED passed=True codes=['RETIRED_ASSUMPTION_USED']
+C23   exit=1 expected=HOL_CONTROL_MISMATCH   passed=True codes=['HOL_CONTROL_MISMATCH']
+C24   exit=1 expected=HOL_THEOREM_MISSING    passed=True codes=['HOL_THEOREM_MISSING']
+C25   exit=1 expected=SUPERSEDED_BAD         passed=True codes=['SUPERSEDED_BAD']
+C26   exit=1 expected=HOL_EXPLORE_RUN        passed=True codes=['HOL_CMD_MISMATCH', 'HOL_EXPLORE_RUN', 'HOL_SOURCE_MISMATCH', 'HOL_THEOREM_MISSING']
+C27   exit=1 expected=CMD_ROOTS_MISMATCH     passed=True codes=['CMD_ROOTS_MISMATCH', 'COMMAND_ROOT_MISMATCH']
+C27b  exit=1 expected=CMD_ROOTS_MISMATCH     passed=True codes=['CLOSURE_MISMATCH', 'CMD_ROOTS_MISMATCH', 'DIGEST_MISMATCH']
+C28   exit=1 expected=SUPERSEDED_BAD         passed=True codes=['SUPERSEDED_BAD']
+P0    exit=0 expected=None                   passed=True codes=[]
+G1    CLAIMED, log missing: ['exit 4', "# cmd: names ['Mutant_M1_noReqIdCheck.dfy'], not sink/SinkCoreReqId.dfy", "# cmd: names ['Mutant_M1_noReqIdCheck.dfy'], the closure roots are ['SinkCoreReqId.dfy']", 'required lemmas: ["SinkCoreReqId.MismatchNeverCommits: outcome [\'Failed\']", "SinkCoreReqId.StepExact: outcome [\'Failed\']", "SinkCoreReqId.PatchedRefusesGapTrace: outcome [\'Failed\']", "SinkCoreReqId.StepRefinesModelStep: outcome [\'Failed\']"]'] passed=True
+G2    CLAIMED, log missing: ['log missing'] passed=True
+G3    CLAIMED, log missing: ["required lemmas: ['SliceTheoremV2.NoSuchLemma: no row']"] passed=True
+G4    MISSING: ['attempt failed: go exit 1'] passed=True
+G4b   CLAIMED, log missing: ["control PC1 ends 'hol-go-wrapper' 0, expected go exit 1"] passed=True
+G4c   CLAIMED, log missing: ['no_such_theorem: not reported as CHECKED/FORGE_THEOREM'] passed=True
+G6    CLAIMED, log missing: ['exploration run (EXPLORE_COMPLETE in the log or run record): proves nothing', 'refund_model_frame_meets_exported_contract: not reported as CHECKED/FORGE_THEOREM', 'refund_model_frame_decision: not reported as CHECKED/FORGE_THEOREM', 'refund_fd1_frame_of_run: not reported as CHECKED/FORGE_THEOREM', 'refund_model_success_gives_frame: not reported as CHECKED/FORGE_THEOREM', 'refund_frame_contract_key: not reported as CHECKED/FORGE_THEOREM'] passed=True
+G7    REFUSED (generator SystemExit): ["REFUSED: edge T-BYTES-R is superseded_by 'T-BYTES-V3', which is not a MACHINE-CHECKED edge"] passed=True
+G5    REFUSED: retired assumption H3a-SER-INJECTIVE is used by ['U3'] passed=True
+G8    REFUSED: edge T-BYTES-R is superseded_by 'E6', which is not a MACHINE-CHECKED edge passed=True
+controls: 47 run, 47 as expected, failed: []
+exit 0

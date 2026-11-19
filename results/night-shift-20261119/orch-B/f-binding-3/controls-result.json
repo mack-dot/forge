@@ -1,0 +1,521 @@
+[
+ {
+  "id": "C01",
+  "description": "flipped byte in a proof source (b-signing/SliceSafetyV2.dfy, overlay)",
+  "command": "python3 verify_ledger.py --ledger controls/C01/ledger.json --overlay controls/C01/overlay",
+  "exit": 1,
+  "expected": "DIGEST_MISMATCH",
+  "observed_codes": [
+   "CLOSURE_MISMATCH",
+   "DIGEST_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C02",
+  "description": "T-V2 run log replaced by a log that ends `exit 4` (M2-drop-H1), still labelled MACHINE-CHECKED",
+  "command": "python3 verify_ledger.py --ledger controls/C02/ledger.json",
+  "exit": 1,
+  "expected": "EXIT_NOT_ZERO",
+  "observed_codes": [
+   "EXIT_NOT_ZERO"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C03",
+  "description": "U5r primary log path names a file that does not exist",
+  "command": "python3 verify_ledger.py --ledger controls/C03/ledger.json",
+  "exit": 1,
+  "expected": "LOG_MISSING",
+  "observed_codes": [
+   "LOG_MISSING"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C04",
+  "description": "T-V2 closure list omits one file (digest and count made self-consistent)",
+  "command": "python3 verify_ledger.py --ledger controls/C04/ledger.json",
+  "exit": 1,
+  "expected": "CLOSURE_MISMATCH",
+  "observed_codes": [
+   "CLOSURE_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C05",
+  "description": "U5a names an assumption id that does not exist (A99-NOPE)",
+  "command": "python3 verify_ledger.py --ledger controls/C05/ledger.json",
+  "exit": 1,
+  "expected": "UNKNOWN_ASSUMPTION",
+  "observed_codes": [
+   "UNKNOWN_ASSUMPTION"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C06",
+  "description": "U5r (MACHINE-CHECKED) command names Contrast.dfy, closure entry is SinkCoreReqId.dfy",
+  "command": "python3 verify_ledger.py --ledger controls/C06/ledger.json",
+  "exit": 1,
+  "expected": "COMMAND_ROOT_MISMATCH",
+  "observed_codes": [
+   "COMMAND_ROOT_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C07",
+  "description": "duplicate edge id (a second S2; counts recomputed)",
+  "command": "python3 verify_ledger.py --ledger controls/C07/ledger.json",
+  "exit": 1,
+  "expected": "DUPLICATE_EDGE",
+  "observed_codes": [
+   "DUPLICATE_EDGE"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C08",
+  "description": "log `# cmd:` header names Contrast.dfy for the U5r run (overlay; log digest updated in the ledger)",
+  "command": "python3 verify_ledger.py --ledger controls/C08/ledger.json --overlay controls/C08/overlay",
+  "exit": 1,
+  "expected": "CMD_FILE_MISMATCH",
+  "observed_codes": [
+   "CLOSURE_MISMATCH",
+   "CMD_FILE_MISMATCH",
+   "CMD_ROOTS_MISMATCH",
+   "DIGEST_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C09",
+  "description": "CSV of T-V2 without the rows of SliceTheoremV2.SliceSafetyV2 (overlay; CSV digest updated)",
+  "command": "python3 verify_ledger.py --ledger controls/C09/ledger.json --overlay controls/C09/overlay",
+  "exit": 1,
+  "expected": "CSV_LEMMA",
+  "observed_codes": [
+   "CLOSURE_MISMATCH",
+   "CSV_LEMMA",
+   "DIGEST_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C09b",
+  "description": "CSV of T-V2 with SliceTheoremV2.UniqueAuthorizationV2 marked Failed (overlay; CSV digest updated)",
+  "command": "python3 verify_ledger.py --ledger controls/C09b/ledger.json --overlay controls/C09b/overlay",
+  "exit": 1,
+  "expected": "CSV_LEMMA",
+  "observed_codes": [
+   "CLOSURE_MISMATCH",
+   "CSV_LEMMA",
+   "DIGEST_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C10",
+  "description": "ASSUMPTION edge S7 relabelled MACHINE-CHECKED, no log (counts recomputed)",
+  "command": "python3 verify_ledger.py --ledger controls/C10/ledger.json",
+  "exit": 1,
+  "expected": "MC_WITHOUT_RUN",
+  "observed_codes": [
+   "MC_WITHOUT_RUN"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C11a",
+  "description": "stale approved spec: spec/refund/protocol.md changed by one byte (overlay)",
+  "command": "python3 verify_ledger.py --ledger controls/C11a/ledger.json --overlay controls/C11a/overlay",
+  "exit": 1,
+  "expected": "APPROVED_SPEC_STALE",
+  "observed_codes": [
+   "APPROVED_SPEC_STALE"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C11b",
+  "description": "stale approved spec: spec/refund/RefundSpec.dfy changed by one byte (overlay)",
+  "command": "python3 verify_ledger.py --ledger controls/C11b/ledger.json --overlay controls/C11b/overlay",
+  "exit": 1,
+  "expected": "APPROVED_SPEC_STALE",
+  "observed_codes": [
+   "APPROVED_SPEC_STALE"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C11c",
+  "description": "stale approved spec: root spec.lock changed by one byte (overlay)",
+  "command": "python3 verify_ledger.py --ledger controls/C11c/ledger.json --overlay controls/C11c/overlay",
+  "exit": 1,
+  "expected": "APPROVED_SPEC_STALE",
+  "observed_codes": [
+   "APPROVED_SPEC_STALE"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C11d",
+  "description": "stale approved spec digest in the ledger (spec/refund/spec.lock pinned to another value)",
+  "command": "python3 verify_ledger.py --ledger controls/C11d/ledger.json",
+  "exit": 1,
+  "expected": "APPROVED_SPEC_STALE",
+  "observed_codes": [
+   "APPROVED_SPEC_STALE"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C12",
+  "description": "zero edges (reject-all / empty ledger; counts zero)",
+  "command": "python3 verify_ledger.py --ledger controls/C12/ledger.json",
+  "exit": 1,
+  "expected": "MANDATORY_MISSING",
+  "observed_codes": [
+   "MANDATORY_MISSING"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C12b",
+  "description": "zero edges AND an empty mandatory list",
+  "command": "python3 verify_ledger.py --ledger controls/C12b/ledger.json",
+  "exit": 1,
+  "expected": "MANDATORY_MISSING",
+  "observed_codes": [
+   "MANDATORY_MISSING"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C13",
+  "description": "MACHINE-CHECKED run log outside the repository tree (../ path)",
+  "command": "python3 verify_ledger.py --ledger controls/C13/ledger.json",
+  "exit": 1,
+  "expected": "PATH_OUTSIDE",
+  "observed_codes": [
+   "PATH_OUTSIDE"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C13b",
+  "description": "MACHINE-CHECKED run log given as an absolute path",
+  "command": "python3 verify_ledger.py --ledger controls/C13b/ledger.json",
+  "exit": 1,
+  "expected": "PATH_OUTSIDE",
+  "observed_codes": [
+   "PATH_OUTSIDE"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C14",
+  "description": "HOL edge X7-L1 pointed at A's L2 log (`go exit 1`; digest updated)",
+  "command": "python3 verify_ledger.py --ledger controls/C14/ledger.json",
+  "exit": 1,
+  "expected": "EXIT_NOT_ZERO",
+  "observed_codes": [
+   "EXIT_NOT_ZERO",
+   "HOL_THEOREM_MISSING"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C15",
+  "description": "stated counts tampered (one more MACHINE-CHECKED)",
+  "command": "python3 verify_ledger.py --ledger controls/C15/ledger.json",
+  "exit": 1,
+  "expected": "COUNTS_MISMATCH",
+  "observed_codes": [
+   "COUNTS_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C16",
+  "description": "assumption H1-EUF-CMA no longer lists T-V2 in used_by",
+  "command": "python3 verify_ledger.py --ledger controls/C16/ledger.json",
+  "exit": 1,
+  "expected": "ASSUMPTION_BACKREF",
+  "observed_codes": [
+   "ASSUMPTION_BACKREF"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C17",
+  "description": "the S3a derivation diff changed by one byte (overlay)",
+  "command": "python3 verify_ledger.py --ledger controls/C17/ledger.json --overlay controls/C17/overlay",
+  "exit": 1,
+  "expected": "DIGEST_MISMATCH",
+  "observed_codes": [
+   "CLOSURE_MISMATCH",
+   "DIGEST_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C18",
+  "description": "approved RefundSpec.dfy replaced and the ledger re-pinned to the new bytes: closures no longer bind it",
+  "command": "python3 verify_ledger.py --ledger controls/C18/ledger.json --overlay controls/C18/overlay",
+  "exit": 1,
+  "expected": "APPROVED_NOT_BOUND",
+  "observed_codes": [
+   "APPROVED_NOT_BOUND",
+   "APPROVED_SPEC_STALE"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C19",
+  "description": "log `# dafny:` version line changed to 4.10.1 (overlay; digest updated)",
+  "command": "python3 verify_ledger.py --ledger controls/C19/ledger.json --overlay controls/C19/overlay",
+  "exit": 1,
+  "expected": "VERSION_MISMATCH",
+  "observed_codes": [
+   "CLOSURE_MISMATCH",
+   "DIGEST_MISMATCH",
+   "VERSION_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C20",
+  "description": "HOL edge S6 (MACHINE-CHECKED) pointed at the NC1 control log (`go exit 1`) and its run record; digests updated",
+  "command": "python3 verify_ledger.py --ledger controls/C20/ledger.json",
+  "exit": 1,
+  "expected": "EXIT_NOT_ZERO",
+  "observed_codes": [
+   "EXIT_NOT_ZERO",
+   "HOL_RUNJSON_EXIT",
+   "HOL_THEOREM_MISSING"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C21",
+  "description": "TESTED-UNPROVED edge X16-TEST relabelled MACHINE-CHECKED (counts recomputed)",
+  "command": "python3 verify_ledger.py --ledger controls/C21/ledger.json",
+  "exit": 1,
+  "expected": "MC_WITHOUT_RUN",
+  "observed_codes": [
+   "MC_WITHOUT_RUN"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C21b",
+  "description": "X16-TEST relabelled MACHINE-CHECKED with its test log (ends `exit 0`) as a run, a Dafny checker and the X16-DRAFT closure",
+  "command": "python3 verify_ledger.py --ledger controls/C21b/ledger.json",
+  "exit": 1,
+  "expected": "CMD_FILE_MISMATCH",
+  "observed_codes": [
+   "CMD_FILE_MISMATCH",
+   "CMD_ROOTS_MISMATCH",
+   "CSV_MISSING",
+   "VERSION_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C22",
+  "description": "retired assumption H3a-SER-INJECTIVE named again by edge U3 (used_by made consistent)",
+  "command": "python3 verify_ledger.py --ledger controls/C22/ledger.json",
+  "exit": 1,
+  "expected": "RETIRED_ASSUMPTION_USED",
+  "observed_codes": [
+   "RETIRED_ASSUMPTION_USED"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C23",
+  "description": "S6 negative control NB1 pointed at the PC1 log (`go exit 0`; digest updated)",
+  "command": "python3 verify_ledger.py --ledger controls/C23/ledger.json",
+  "exit": 1,
+  "expected": "HOL_CONTROL_MISMATCH",
+  "observed_codes": [
+   "HOL_CONTROL_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C24",
+  "description": "S6 requires a HOL theorem that its log does not report (exported_contract_total)",
+  "command": "python3 verify_ledger.py --ledger controls/C24/ledger.json",
+  "exit": 1,
+  "expected": "HOL_THEOREM_MISSING",
+  "observed_codes": [
+   "HOL_THEOREM_MISSING"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C25",
+  "description": "T-V2B keeps its retired hypothesis H3a but loses superseded_by",
+  "command": "python3 verify_ledger.py --ledger controls/C25/ledger.json",
+  "exit": 1,
+  "expected": "SUPERSEDED_BAD",
+  "observed_codes": [
+   "SUPERSEDED_BAD"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C26",
+  "description": "HOL edge X-MF pointed at the exploration run LOx-0001 (`go exit 0`, actual_exit 0, EXPLORE_COMPLETE); digests and run id updated",
+  "command": "python3 verify_ledger.py --ledger controls/C26/ledger.json",
+  "exit": 1,
+  "expected": "HOL_EXPLORE_RUN",
+  "observed_codes": [
+   "HOL_CMD_MISMATCH",
+   "HOL_EXPLORE_RUN",
+   "HOL_SOURCE_MISMATCH",
+   "HOL_THEOREM_MISSING"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C27",
+  "description": "two-root command (ControlsBytesV3.dfy RefineHashV3.dfy) but T-BYTES-V3 closure of ONE root (self-consistent closure)",
+  "command": "python3 verify_ledger.py --ledger controls/C27/ledger.json",
+  "exit": 1,
+  "expected": "CMD_ROOTS_MISMATCH",
+  "observed_codes": [
+   "CMD_ROOTS_MISMATCH",
+   "COMMAND_ROOT_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C27b",
+  "description": "T-BYTES-V3 log `# cmd:` with RefineHashV3.dfy removed (overlay; log digest updated); the closure keeps two roots",
+  "command": "python3 verify_ledger.py --ledger controls/C27b/ledger.json --overlay controls/C27b/overlay",
+  "exit": 1,
+  "expected": "CMD_ROOTS_MISMATCH",
+  "observed_codes": [
+   "CLOSURE_MISMATCH",
+   "CMD_ROOTS_MISMATCH",
+   "DIGEST_MISMATCH"
+  ],
+  "passed": true
+ },
+ {
+  "id": "C28",
+  "description": "T-BYTES-R superseded_by pointed at E6 (a MISSING edge)",
+  "command": "python3 verify_ledger.py --ledger controls/C28/ledger.json",
+  "exit": 1,
+  "expected": "SUPERSEDED_BAD",
+  "observed_codes": [
+   "SUPERSEDED_BAD"
+  ],
+  "passed": true
+ },
+ {
+  "id": "P0",
+  "description": "POSITIVE: the real ledger, no overlay",
+  "command": "python3 verify_ledger.py --ledger controls/P0/ledger.json",
+  "exit": 0,
+  "expected": "exit 0, CONSISTENT",
+  "observed_codes": [],
+  "passed": true
+ },
+ {
+  "id": "G1",
+  "description": "generator: U5r primary log replaced by the exit-4 mutant log m-M1_noReqIdCheck",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "edge U5r not MACHINE-CHECKED",
+  "observed": "CLAIMED, log missing: ['exit 4', \"# cmd: names ['Mutant_M1_noReqIdCheck.dfy'], not sink/SinkCoreReqId.dfy\", \"# cmd: names ['Mutant_M1_noReqIdCheck.dfy'], the closure roots are ['SinkCoreReqId.dfy']\", 'required lemmas: [\"SinkCoreReqId.MismatchNeverCommits: outcome [\\'Failed\\']\", \"SinkCoreReqId.StepExact: outcome [\\'Failed\\']\", \"SinkCoreReqId.PatchedRefusesGapTrace: outcome [\\'Failed\\']\", \"SinkCoreReqId.StepRefinesModelStep: outcome [\\'Failed\\']\"]']",
+  "passed": true
+ },
+ {
+  "id": "G2",
+  "description": "generator: T-TOTAL primary log missing",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "edge T-TOTAL not MACHINE-CHECKED",
+  "observed": "CLAIMED, log missing: ['log missing']",
+  "passed": true
+ },
+ {
+  "id": "G3",
+  "description": "generator: T-V2 requires a lemma that is not in the CSV",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "edge T-V2 not MACHINE-CHECKED",
+  "observed": "CLAIMED, log missing: [\"required lemmas: ['SliceTheoremV2.NoSuchLemma: no row']\"]",
+  "passed": true
+ },
+ {
+  "id": "G4",
+  "description": "generator: S6 primary HOL case replaced by control NC1 (go exit 1)",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "edge S6 not MACHINE-CHECKED",
+  "observed": "MISSING: ['attempt failed: go exit 1']",
+  "passed": true
+ },
+ {
+  "id": "G4b",
+  "description": "generator: S6 control PC1 expected to fail (go exit 1) but its log ends go exit 0",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "edge S6 not MACHINE-CHECKED",
+  "observed": "CLAIMED, log missing: [\"control PC1 ends 'hol-go-wrapper' 0, expected go exit 1\"]",
+  "passed": true
+ },
+ {
+  "id": "G4c",
+  "description": "generator: X13-PF requires a theorem its log does not report",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "edge X13-PF not MACHINE-CHECKED",
+  "observed": "CLAIMED, log missing: ['no_such_theorem: not reported as CHECKED/FORGE_THEOREM']",
+  "passed": true
+ },
+ {
+  "id": "G6",
+  "description": "generator: X-MF primary HOL case replaced by the exploration run LOx-0001 (go exit 0, EXPLORE_COMPLETE)",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "edge X-MF not MACHINE-CHECKED",
+  "observed": "CLAIMED, log missing: ['exploration run (EXPLORE_COMPLETE in the log or run record): proves nothing', 'refund_model_frame_meets_exported_contract: not reported as CHECKED/FORGE_THEOREM', 'refund_model_frame_decision: not reported as CHECKED/FORGE_THEOREM', 'refund_fd1_frame_of_run: not reported as CHECKED/FORGE_THEOREM', 'refund_model_success_gives_frame: not reported as CHECKED/FORGE_THEOREM', 'refund_frame_contract_key: not reported as CHECKED/FORGE_THEOREM']",
+  "passed": true
+ },
+ {
+  "id": "G7",
+  "description": "generator: T-BYTES-V3 runs given ONE root (ControlsBytesV3.dfy) while the logs name two",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "edge T-BYTES-V3 not MACHINE-CHECKED",
+  "observed": "REFUSED (generator SystemExit): [\"REFUSED: edge T-BYTES-R is superseded_by 'T-BYTES-V3', which is not a MACHINE-CHECKED edge\"]",
+  "passed": true
+ },
+ {
+  "id": "G5",
+  "description": "generator: edge U3 names the retired assumption H3a-SER-INJECTIVE",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "SystemExit REFUSED",
+  "observed": "REFUSED: retired assumption H3a-SER-INJECTIVE is used by ['U3']",
+  "passed": true
+ },
+ {
+  "id": "G8",
+  "description": "generator: T-BYTES-R superseded_by E6 (MISSING)",
+  "command": "python3 run_controls.py (in-process make_ledger.Gen().build())",
+  "exit": null,
+  "expected": "SystemExit REFUSED",
+  "observed": "REFUSED: edge T-BYTES-R is superseded_by 'E6', which is not a MACHINE-CHECKED edge",
+  "passed": true
+ }
+]
