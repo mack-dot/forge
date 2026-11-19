@@ -1,0 +1,57 @@
+2026-11-19T10:48:37Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 4766.69M  free = 1377.31M  (encrypted)
+System-wide memory free percentage: 68%
+START_STATE swap_free_mib=1377 memory_free_percent=68
+exit 0
+actual_exit 0 wall 105.622 cpu 114.881 rss_mib 3754 ['EXACT_COMPLETE'] inputs_unchanged_after True
+8:CHECKED W_nonvacuous hyps 0
+61:BEGIN erase_raise_exception REQUIRED cpu=1.2
+62:TACTIC_USED erase_raise_exception 1
+63:Saved theorem _______ "erase_raise_exception"
+64:PROVED erase_raise_exception
+285:BEGIN erase_dfn_ExceptionReturn REQUIRED cpu=4.9
+286:TACTIC_USED erase_dfn_ExceptionReturn 1
+287:Saved theorem _______ "erase_dfn_ExceptionReturn"
+288:PROVED erase_dfn_ExceptionReturn
+347:CHECKED BranchImmediate_erase_untagged hyps 0
+356:CHECKED BranchRegister_erase_untagged hyps 0
+360:CHECKED LoadStoreSingle_erase (SP class) hyps 0
+397:BEGIN Next_erase_exception REQUIRED cpu=25.0
+398:TACTIC_USED Next_erase_exception 1
+399:Saved theorem _______ "Next_erase_exception"
+400:PROVED Next_erase_exception
+409:CHECKED NextStateARM8_erase hyps 0
+410:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+416:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+420:STATEMENT_RESULT NextStateARM8_erase hyps 0 concl_literal true
+422:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+423:(Next s).exception = NoException ∧ untagged (Next (erase s)).PC ⇒
+425:STATEMENT_CHANGE Next_erase_sp = E1-0003 Next_erase plus the SP premise (~s.SCTLR_EL1.SA0 \/ aligned 4 s.SP_EL0)
+426:OLD_TEXT (E1-0003 Next_erase): s.PSTATE.EL = 0w /\ s.exception = NoException /\ (arm8$Next s).exception = NoException /\ untagged (arm8$Next (erase s)).PC ==> arm8$Next (erase s) = erase (arm8$Next s)
+427:NEW_TEXT (Next_erase_sp): s.PSTATE.EL = 0w /\ s.exception = NoException /\ (~s.SCTLR_EL1.SA0 \/ aligned 4 s.SP_EL0) /\ (arm8$Next s).exception = NoException /\ untagged (arm8$Next (erase s)).PC ==> arm8$Next (erase s) = erase (arm8$Next s)
+430:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+431:(¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ∧ (Next s).exception = NoException ∧
+438:CHECKED Next_erase_sp hyps 0
+439:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+441:  (Next s).exception = NoException ∧ untagged (Next (erase s)).PC ⇒
+447:CONTROL_OK U0_next_pc is a literal premise of NextStateARM8_erase
+448:CONTROL_OK U0_next is a literal premise of Next_erase_sp
+489:CONTROL_OK NextStateARM8_erase is the literal E1-0003 statement, no hypotheses
+490:CONTROL_OK Next_erase_sp is the stated text, no hypotheses
+491:CONTROL_OK W is the requested statement
+492:CHECKED N1a_tagged_branch_breaks (E1-0003, parent) hyps 0
+496:CHECKED N2_misaligned_sp_breaks (E1-0003, parent) hyps 0
+497:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.SCTLR_EL1.SA0 ∧
+499:  (CheckSPAlignment (erase s)).exception = NoException ∧
+500:  (CheckSPAlignment s).exception = ALIGNMENT_FAULT
+501:CONTROL_NOT_ATTEMPTED step-level N1a (no untagged premise) : needs a concrete Fetch/Decode; not a short step
+502:CONTROL_NOT_ATTEMPTED step-level N2 (no SP premise) : needs a concrete Fetch/Decode; not a short step
+505:CLOSURE_AXIOM bool.SELECT_AX
+506:CLOSURE_AXIOM bool.INFINITY_AX
+507:CLOSURE_AXIOM bool.ETA_AX
+508:CLOSURE_AXIOM bool.BOOL_CASES_AX
+511:CLOSURE_NODES 545
+514:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0

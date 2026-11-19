@@ -28,7 +28,7 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Night shift 2026-11-19, proof track (Orchestrator A): replay ended; first HOL runs of the M1-B lemmas; native counterexamples — U481 to U495
+## Night shift 2026-11-19, proof track (Orchestrator A): replay ended; first HOL runs of the M1-B lemmas; native counterexamples — U481 to U496
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. Branch
@@ -55,6 +55,7 @@ machine-model result on the same machine with stored parent theories.
 | `MG-0001` (composition under the reduced premises) |0|`refund_model_frame_decision_events` |
 | `L2dx-0001` (exploration); `L2d-0001` (oracle-only valid-call predicate) |0; 0|29 theorems, `refund_profile_a_sl_shape`, `refund_model_frame_decision_shape` |
 | `R6x-0001`, `R6x-0002`, `EEx-0001` (explorations, no export); `R6base-0001` |0; 0; 0; 0|goals printed; 11 theorems, `every_clock_events`, `replay_cannot_exclude_error_return_events` |
+| `EEx-0002` (exploration); `EE-0001` (one-step erasure) |0; 0|101 theorems, `NextStateARM8_erase`, `Next_erase_sp` |
 | re-runs inside the swap rule: `E1r-0001`; `L2r-0001` |0; 0|theory `.dat` byte-equal to E1-0003 and L2-0003 |
 | link control `NB1` (input binding swapped on one side) |1|fails at `exported_ens2_value`, as required |
 | link cases H0, H1, H2, E0, R1, R2, R3, I1, H4 (`go.sh`) |0 each (H4, R2, R3, I1 on a second run after a wrapper path error)|`exported_contract_exact`; U294 replays; the stored theory imports |

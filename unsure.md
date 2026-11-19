@@ -18209,3 +18209,27 @@ curl: (6) Could not resolve host: github.com
   states.
 - Impact: none on any graph link yet. M1-B OPEN.
 - Next check: the two FFI-level specifications with the invariant.
+
+## U496 — night shift, proof track: the erasure of the processor bits holds for one step of the ARM8 model (refers to U483, U491, U495)
+
+- Evidence: `EEx-0001`, `EEx-0002` (explorations, exit 0, no
+  export); `EE-0001` (exit 0, 101 stored theorems).
+- Proved: `NextStateARM8_erase`: for a state at EL0 without an
+  exception, with SA0 clear or the stack pointer aligned, and with
+  an untagged next program counter of the erased step, one step on
+  the state with TBI0, TBI1 and SA0 erased is the erased result of
+  the step on the original state; a fault on one side is a fault on
+  the other. `Next_erase_sp`: the same for the total step function,
+  with one more premise than the text of U483 (the stack-pointer
+  premise; without it the equation is false, control N2 of U483).
+- Cause of the earlier failures: the simplifier splits a conditional
+  rewrite with a disjunctive premise into two rules; the proof must
+  split the disjunction first.
+- NOT proved: the lift over a run of `targetSem$evaluate`; the
+  environment and FFI steps; that every next program counter of the
+  refund run is untagged (no stored theorem keeps the program
+  counter in the code region); untagged data addresses; the bit
+  values on the real processor. Step-level negative controls were
+  not attempted. The review is not finished at this entry.
+- Impact: a sub-result for graph link X11e; the link stays MISSING.
+- Next check: the review; an invariant for the run.

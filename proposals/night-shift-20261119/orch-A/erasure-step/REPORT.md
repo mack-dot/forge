@@ -20,3 +20,10 @@ changes TCR_EL1, SCTLR_EL1, PSTATE.EL). The erase lemmas of ES-0002 stay open.
 Blocker (bounded stop for tonight): the SP-alignment premise is not threaded through the load/store classes by the tried
 tactics; the case splits explode. Next step: read `EEx-0001/stdout.log` lines 374 (probe) and 1791, 1873 (single open goals),
 fix the premise threading on the smallest lemma first, then explore again. Stored sub-results stay: E1-0003, EF-0001.
+
+## EEx-0002 and EE-0001 (Orchestrator A): the one-step erase result PASSED
+Cause of the earlier failures (worker A29): `simp` splits the conditional rewrite `CheckSPAlignment_erase` with a disjunctive premise into
+two rules; after `DISCH_TAC` neither side condition is provable; `rpt strip_tac` first fixes it. Exploration EEx-0002: exit 0, all
+lemmas closed, `NextStateARM8_erase hyps 0`. Proof run EE-0001 (931c0d4c…): actual exit 0, EXACT_COMPLETE, STORED_THEOREMS 101:
+`NextStateARM8_erase` (the literal E1-0003 statement), `Next_erase_sp`, the per-definition erase lemmas, branch and SP classes.
+Step-level negative controls: NOT attempted (they need a concrete fetch and decode). Review: A31 running.

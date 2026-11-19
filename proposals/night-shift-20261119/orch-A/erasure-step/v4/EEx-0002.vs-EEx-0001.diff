@@ -1,0 +1,231 @@
+--- /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/EEx-0001.sml	2026-11-19 05:29:00.777275946 -0500
++++ EEx-0002.sml	2026-11-19 05:41:14.685102014 -0500
+@@ -1,4 +1,15 @@
+-(* EEx-0001.sml -- EXPLORATION of the ERASE side of one ARM8 step (worker A20, Night-Shift Orchestrator A), 2026-11-19.
++(* EEx-0002.sml -- worker A29 (Night-Shift Orchestrator A), 2026-11-19. Base: EEx-0001.sml (sha256 e47689d8...5458,
++   ran: EEx-0001 actual exit 0, EXPLORE_COMPLETE). NOT RUN. Every tactic UNCHECKED. Marker EXPLORE_COMPLETE.
++   A29 diagnosis (from EEx-0001/stdout.log): every OPEN SP-class goal still holds the subterm CheckSPAlignment (erase s)
++   (or an ASSUMEd SP-class lemma) unrewritten. Cause (static, HOL src simp/src/Cond_rewr.sml 457-463): simp turns a
++   rule with antecedent (~SA0 \/ aligned 4 SP) into TWO rules with side conditions ~SA0 and aligned 4 SP; under
++   DISCH_TAC the context only holds the disjunction, so neither side condition is provable. rpt strip_tac splits the
++   disjunction first (EEx-0001 C_strip_pull closed LSS, LSP, LSA, LSAP with VALIDATION hyps 0).
++   A29 changes (marked A29): scratch theory name ...Explore2; show_goals prints RESIDUAL_HEADS (the head constants
++   of all subterms  f .. (erase _)) and the LAST goal; probes P1-P6 (rule split shown by Cond_rewr.mk_cond_rewrs);
++   SP-class lemmas and Run lemmas try a strip-first tactic first; explorations D_pure_push (bool_ss rewriting by rule
++   groups, no case split) for LoadStoreSingle, dfn'LoadStoreImmediate, dfn'LoadStoreRegister. Old text below:
++   EEx-0001.sml -- EXPLORATION of the ERASE side of one ARM8 step (worker A20, Night-Shift Orchestrator A), 2026-11-19.
+    NOT RUN. NOT a proof attempt. Every tactic UNCHECKED. Marker EXPLORE_COMPLETE.
+    Nothing is stored: lemmas are proved with TAC_PROOF only (PROVED_NOT_STORED); no save_thm, no export_theory.
+    One scratch definition NX_def (ES-0002 text) is made in the scratch theory forge_m1bEraseStepExplore; never exported.
+@@ -24,7 +35,9 @@
+ val EXPLORE_BUDGET = 1050.0;  (* script CPU after which explorations are skipped (EXPLORE_SKIPPED_BUDGET) *)
+ val _ = metisTools.limit := {time = SOME 20.0, infs = NONE};
+ val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
+-val THY = "forge_m1bEraseStepExplore";
++val THY = "forge_m1bEraseStepExplore2";   (* A29: new scratch name; never exported *)
++val _ = (load "Cond_rewr"; pr "COND_REWR loaded")
++  handle e => pr ("COND_REWR_LOAD_FAILED " ^ General.exnMessage e);
+ val _ = new_theory THY;
+ val _ = pr "EXPLORE_MODE nothing is stored or exported (one scratch definition NX_def, never exported)";
+ 
+@@ -103,14 +116,38 @@
+     pr ("    CONCL " ^ trunc 4000 (term_to_string w));
+     pr ("  GOAL_END " ^ lemma ^ " #" ^ Int.toString k)
+   end;
++(* A29: residual printer. For a goal, list the head constants of all subterms whose LAST argument is  erase _ :
++   these are the primitives (or record fields) that no rule has moved erase across yet. *)
++val erase_c0 = prim_mk_const {Thy = "forge_m1bErasureV2", Name = "erase"};
++fun is_erase_app t = is_comb t andalso is_const (rator t) andalso same_const (rator t) erase_c0;
++fun head_name t =
++  let val (h, _) = strip_comb t
++  in if is_const h then fst (dest_const h)
++     else if is_var h then "VAR:" ^ fst (dest_var h) else "OTHER:" ^ trunc 60 (term_to_string h) end;
++fun erase_users w = find_terms (fn t => is_comb t andalso is_erase_app (rand t)) w;
++fun count_heads ts =
++  let fun add (n, []) = [(n, 1)]
++        | add (n, (m, k) :: r) = if n = m then (m, k + 1) :: r else (m, k) :: add (n, r)
++  in List.foldl (fn (t, acc) => add (head_name t, acc)) [] ts end;
++fun heads_string w =
++  (let val hs = count_heads (erase_users w)
++   in if null hs then "NONE" else String.concatWith " " (map (fn (n, k) => n ^ "*" ^ Int.toString k) hs) end)
++  handle e => "HEADS_ERROR " ^ trunc 200 (General.exnMessage e);
++fun pr_heads (lemma : string) (k : int) ((_, w) : goal) : unit =
++  pr ("  RESIDUAL_HEADS " ^ lemma ^ " #" ^ Int.toString k ^ " " ^ trunc 800 (heads_string w));
+ fun show_goals (lemma : string) (gs : goal list) : unit =
+   let
++    val n = length gs
+     fun loop _ [] = ()
+       | loop k (g :: rest) = if k > 40 then pr ("  GOALS_NOT_SHOWN " ^ Int.toString (length rest + 1))
+-                             else (show_goal lemma k g (k <= 4); loop (k + 1) rest)
++                             else (show_goal lemma k g (k <= 4); pr_heads lemma k g; loop (k + 1) rest)
+   in
+-    pr ("  GOAL_COUNT " ^ Int.toString (length gs));
+-    loop 1 gs
++    pr ("  GOAL_COUNT " ^ Int.toString n);
++    loop 1 gs;
++    (* A29: the last goal in full when it was not shown *)
++    if n > 40 then (pr ("  GOAL_LAST " ^ lemma ^ " #" ^ Int.toString n);
++                    show_goal lemma n (List.last gs) true; pr_heads lemma n (List.last gs))
++    else ()
+   end;
+ fun prefix_of (ts : tactic list) : tactic = List.foldl (fn (t, acc) => acc >> t) ALL_TAC ts;
+ fun run_ts (ts : tactic list) (g : goal) : goal list * (thm list -> thm) =
+@@ -425,14 +462,48 @@
+ fun ER_IN () = [boolTheory.LET_THM, pairTheory.UNCURRY, pairTheory.pair_CASE_def, boolTheory.literal_case_THM,
+                 erase_reads, SCTLR_reads, fupd_PC_id] @ ER_PUSH @ UPD_IN @ CSA_IN @ ER_PAIR @
+                List.concat (map flip_if_erase_rhs (!erasers));
+-(* A20: e_tacs = the three ES-0002 tactics, then (D1) an EL split, then (H3) push-in. *)
++(* ---------------- A29 P: why the SP premise is not discharged under DISCH_TAC (probes) ---------------- *)
++val _ = pr "MARK P";
++(* P6: the conditional rewrites simp builds from CheckSPAlignment_erase (expected: 2, one per disjunct) *)
++val _ = (let val crs = Cond_rewr.mk_cond_rewrs (CheckSPAlignment_erase, BoundedRewrites.UNBOUNDED)
++         in pr ("P6_COND_REWRS CheckSPAlignment_erase count " ^ Int.toString (length crs));
++            List.app (fn (th, _) => pr ("P6_RULE " ^ trunc 600 (thm_to_string th))) crs end)
++        handle e => pr ("P6_ERROR " ^ short (General.exnMessage e));
++(* an implication-form variant (logically equal premise; NOT a replacement statement, a probe only) *)
++val SPgoal_imp = ``!s. s.PSTATE.EL = 0w /\ (s.SCTLR_EL1.SA0 ==> aligned 4 s.SP_EL0) ==>
++                       CheckSPAlignment (erase s) = erase (CheckSPAlignment s)``;
++val CSA_imp = lemma true "CSA_imp_form" 60 SPgoal_imp
++  [rpt strip_tac >> Cases_on `s.SCTLR_EL1.SA0` >> fs [] >> simp [CheckSPAlignment_erase],
++   rpt strip_tac >> metis_tac [CheckSPAlignment_erase]];
++val _ = (let val crs = Cond_rewr.mk_cond_rewrs (CSA_imp, BoundedRewrites.UNBOUNDED)
++         in pr ("P6_COND_REWRS CSA_imp_form count " ^ Int.toString (length crs));
++            List.app (fn (th, _) => pr ("P6_RULE " ^ trunc 600 (thm_to_string th))) crs end)
++        handle e => pr ("P6_ERROR " ^ short (General.exnMessage e));
++val SPgoal0 = ``!s. s.PSTATE.EL = 0w /\ (~s.SCTLR_EL1.SA0 \/ aligned 4 s.SP_EL0) ==>
++                    CheckSPAlignment (erase s) = erase (CheckSPAlignment s)``;
++val _ = explore "P1_disch_simp_CSA (control; EEx-0001 line 374 was OPEN)" SPgoal0 (fn () =>
++          [("gen_disch", rpt gen_tac >> DISCH_TAC, []), ("simp_CSA", simp [CheckSPAlignment_erase], [])]);
++val _ = explore "P2_disj_asm_simp_CSA_imp" SPgoal0 (fn () =>
++          [("gen_disch", rpt gen_tac >> DISCH_TAC, []), ("simp_CSA_imp", simp [CSA_imp], [])]);
++val _ = explore "P3_imp_asm_simp_CSA_imp" SPgoal_imp (fn () =>
++          [("gen_disch", rpt gen_tac >> DISCH_TAC, []), ("simp_CSA_imp", simp [CSA_imp], [])]);
++val _ = explore "P4_imp_asm_simp_CSA" SPgoal_imp (fn () =>
++          [("gen_disch", rpt gen_tac >> DISCH_TAC, []), ("simp_CSA", simp [CheckSPAlignment_erase], [])]);
++val _ = explore "P5_strip_simp_CSA (control; EEx-0001 line 396 was CLOSED)" SPgoal0 (fn () =>
++          [("strip", rpt strip_tac, []), ("simp_CSA", simp [CheckSPAlignment_erase], [])]);
++(* A20: e_tacs = the three ES-0002 tactics, then (D1) an EL split, then (H3) push-in.
++   A29: for the SP class, two strip-first tactics come FIRST (rpt strip_tac splits the disjunctive premise). *)
+ fun e_tacs d sp =
+   let val pre = rpt gen_tac >> TRY (PairCases_on `x`) >> (if sp then DISCH_TAC else ALL_TAC)
+-  in [pre >> simp (d :: ERset ()),
+-      pre >> simp (d :: ERset ()) >> BasicProvers.every_case_tac >> simp (ERset ()),
+-      pre >> qspec_then `s.PSTATE.EL` strip_assume_tac W2 >> simp (d :: ERset ()),
+-      pre >> simp (d :: ER_IN ()),
+-      pre >> simp (d :: ER_IN ()) >> BasicProvers.every_case_tac >> simp (ER_IN ())] end;
++      val pre_s = rpt gen_tac >> TRY (PairCases_on `x`) >> rpt strip_tac
++      val old = [pre >> simp (d :: ERset ()),
++                 pre >> simp (d :: ERset ()) >> BasicProvers.every_case_tac >> simp (ERset ()),
++                 pre >> qspec_then `s.PSTATE.EL` strip_assume_tac W2 >> simp (d :: ERset ()),
++                 pre >> simp (d :: ER_IN ()),
++                 pre >> simp (d :: ER_IN ()) >> BasicProvers.every_case_tac >> simp (ER_IN ())]
++  in if sp then [pre_s >> simp (d :: ERset ()),
++                 pre_s >> simp (d :: ERset ()) >> BasicProvers.every_case_tac >> simp (ERset ())] @ old
++     else old end;
+ (* ======================= BEGIN COPY 4: ES-0002.sml lines 355-362 (class lists) ======================= *)
+ val e_excluded = ["SCTLR", "BranchTo", "CheckSPAlignment", "dfn'BranchConditional", "dfn'BranchImmediate",
+                   "dfn'BranchRegister", "dfn'CompareAndBranch", "dfn'TestBitAndBranch", "Run", "Next"];
+@@ -467,20 +538,40 @@
+    explore (nm ^ "/C_push_in") g (fn () =>
+      [("gen", rpt gen_tac, []), ("push", simp (d :: ER_IN ()), []),
+       ("w2_split", qspec_then `s.PSTATE.EL` strip_assume_tac W2, []), ("push2", simp (ER_IN ()), [])]));
++(* ---------------- A29 D: pure push by rule groups (bool_ss only, no case split, no srw_ss) ---------------- *)
++(* The primitive commuting rules: the erase lemmas of the engine for the primitives LoadStoreSingle calls. *)
++val prim_names = ["raise'exception", "X", "write'X", "SP", "write'SP", "CheckAlignment", "BigEndian", "Mem",
++                  "write'Mem", "ExtendReg"];
++fun prim_report () =
++  List.app (fn cn =>
++    case List.find (fn (n, _) => n = cn) (!etab) of
++      SOME (_, th) => pr ("PRIM_RULE " ^ cn ^ " hyps " ^ Int.toString (length (hyp th)) ^ " " ^
++                          trunc 400 (thm_to_string th))
++    | NONE => pr ("PRIM_RULE_MISSING " ^ cn)) prim_names;
++fun PRIMS () = List.mapPartial (fn cn => Option.map snd (List.find (fn (n, _) => n = cn) (!etab))) prim_names;
++val UPD_OUT = CONJUNCTS erase_upds;
++val G_unfold = [boolTheory.LET_THM, pairTheory.UNCURRY, pairTheory.pair_CASE_def, boolTheory.literal_case_THM];
++val G_reads = [erase_reads, erase_fields, SCTLR_reads];
++fun G_fold () = ER_OUT @ ER_PAIR @ UPD_OUT @ [fupd_PC_id];
++fun G_all () = G_unfold @ G_reads @ PRIMS () @ G_fold ();
++(* CSA as an UNCONDITIONAL assumption, made in each strip case (B_strip/P5 shows simp proves it there). *)
++val csa_inst = TRY (`CheckSPAlignment (erase s) = erase (CheckSPAlignment s)`
++                      by (FIRST [simp [CheckSPAlignment_erase] >> NO_TAC, metis_tac [CheckSPAlignment_erase]]));
++fun x_push nm g ds extra =
++  (prim_report ();
++   explore (nm ^ "/D_pure_push") g (fn () =>
++     [("strip", rpt gen_tac >> PC_x >> rpt strip_tac, []),
++      ("csa_inst", csa_inst, []),
++      ("unfold", TRY (simp_tac bool_ss (ds @ G_unfold)), []),
++      ("asm_csa", TRY (asm_simp_tac bool_ss []), []),
++      ("reads", TRY (simp_tac bool_ss G_reads), []),
++      ("prims", TRY (simp_tac bool_ss (extra @ PRIMS ())), []),
++      ("fold", TRY (simp_tac bool_ss (G_fold ())), []),
++      ("all_fixpoint", TRY (asm_simp_tac bool_ss (extra @ G_all ())), []),
++      ("srw_fallback (not pure; shows what bool_ss lacks)", TRY (asm_simp_tac (srw_ss()) (extra @ G_all ())), [])]));
+ fun x_sp nm g d =
+-  (probe_csa ();
+-   pr ("FAILED_SO_FAR " ^ String.concatWith " " (rev (!req_fail)));
+-   explore (nm ^ "/A_pull_steps") g (fn () =>
+-     [("gen", rpt gen_tac >> PC_x >> DISCH_TAC, []),
+-      ("unfold", simp [d, boolTheory.LET_THM, pairTheory.UNCURRY], []),
+-      ("erset", simp (ERset ()), []),
+-      ("split", BasicProvers.every_case_tac, []),
+-      ("erset2", simp (ERset ()), [])]);
+-   explore (nm ^ "/B_push_in") g (fn () =>
+-     [("gen", rpt gen_tac >> PC_x >> DISCH_TAC, []),
+-      ("push", simp (d :: ER_IN ()), []),
+-      ("split", BasicProvers.every_case_tac, []),
+-      ("push2", simp (ER_IN ()), [])]);
++  (pr ("FAILED_SO_FAR " ^ String.concatWith " " (rev (!req_fail)));
++   (if nm = "erase_LoadStoreSingle" then x_push nm g [d] [] else ());
+    explore (nm ^ "/C_strip_pull") g (fn () =>
+      [("gen", rpt gen_tac >> PC_x >> rpt strip_tac, []),
+       ("pull", simp (d :: ERset ()), []),
+@@ -488,8 +579,11 @@
+       ("pull2", simp (ERset ()), [])]));
+ fun x_lsi nm g d =
+   (pr ("FAILED_SO_FAR " ^ String.concatWith " " (rev (!req_fail)));
+-   explore (nm ^ "/A_steps") g (fn () =>
+-     [("gen", rpt gen_tac >> PC_x >> DISCH_TAC, []), ("unfold", simp [d], []), ("erset", simp (ERset ()), [])]);
++   pr ("LSS_LEMMA_HYPS " ^ Int.toString (length (hyp (getE0 "LoadStoreSingle"))));
++   (* A29: A_strip = A_steps with rpt strip_tac instead of DISCH_TAC (EEx-0001 A_steps: line 1791 / 1873 OPEN) *)
++   explore (nm ^ "/A_strip") g (fn () =>
++     [("gen", rpt gen_tac >> PC_x >> rpt strip_tac, []), ("unfold", simp [d], []), ("erset", simp (ERset ()), [])]);
++   x_push nm g [d, LoadStoreSingle_def] [];
+    explore (nm ^ "/B_irule_LSS") g (fn () =>
+      [("gen", rpt gen_tac >> PC_x >> DISCH_TAC, []),
+       ("unfold_args", simp [d, getE0 "ExtendReg"], []),
+@@ -500,7 +594,7 @@
+     (if List.exists (fn n => n = nm) ["erase_write_SP", "erase_LoadStoreSingle", "erase_dfn_LoadStoreImmediate",
+         "erase_dfn_LoadStoreRegister", "erase_dfn_LoadStorePair", "erase_dfn_LoadStoreAcquire",
+         "erase_dfn_LoadStoreAcquirePair"] then pr ("EXPLORE_SKIPPED_BUDGET " ^ nm) else ())
+-  else if nm = "erase_write_SP" then x_wsp nm g write'SP_def
++  else if nm = "erase_write_SP" then ()   (* A29: closed in EEx-0001 (A_el_split, C_push_in; TACTIC_USED 3) *)
+   else if nm = "erase_LoadStoreSingle" then x_sp nm g LoadStoreSingle_def
+   else if nm = "erase_dfn_LoadStorePair" then x_sp nm g dfn'LoadStorePair_def
+   else if nm = "erase_dfn_LoadStoreAcquire" then x_sp nm g dfn'LoadStoreAcquire_def
+@@ -573,18 +667,19 @@
+ (* ---------------- A20 Run lemmas: Cases_on `ast`, then one leaf per instruction (no metis) ---------------- *)
+ fun leafE () = FIRST (map (fn th => irule th >> simp [] >> NO_TAC) (!b1s) @ [simp (ERset ()) >> NO_TAC]);
+ fun leafP () = FIRST ([simp (ERset ()) >> NO_TAC] @ map (fn th => irule th >> simp [] >> NO_TAC) (!b2s));
++(* A29: strip-first versions come first (EEx-0001: all 16 open leaves were the six SP-class instructions,
++   stdout lines 6560-6624; under DISCH_TAC their conditional rewrites cannot fire). *)
+ fun run_tacs leaf =
+-  [rpt gen_tac >> DISCH_TAC >> Cases_on `ast` >> simp [Run_def] >> BasicProvers.every_case_tac >> leaf (),
++  [rpt gen_tac >> rpt strip_tac >> Cases_on `ast` >> simp [Run_def] >> BasicProvers.every_case_tac >> leaf (),
++   rpt gen_tac >> rpt strip_tac >> Cases_on `ast` >> simp [Run_def] >> TRY (leaf ()) >>
++     BasicProvers.every_case_tac >> leaf (),
++   rpt gen_tac >> DISCH_TAC >> Cases_on `ast` >> simp [Run_def] >> BasicProvers.every_case_tac >> leaf (),
+    rpt gen_tac >> DISCH_TAC >> Cases_on `ast` >> simp [Run_def] >> TRY (leaf ()) >>
+      BasicProvers.every_case_tac >> leaf ()];
+ fun x_run nm g leaf =
+   (pr ("FAILED_SO_FAR " ^ String.concatWith " " (rev (!req_fail)));
+-   explore (nm ^ "/A_cases_split_leaf") g (fn () =>
+-     [("gen", rpt gen_tac >> DISCH_TAC, []), ("cases_ast", Cases_on `ast`, []), ("unfold", simp [Run_def], []),
+-      ("split", BasicProvers.every_case_tac, []), ("leaf_try", TRY (leaf ()), [])]);
+-   explore (nm ^ "/B_leaf_before_split") g (fn () =>
+-     [("gen", rpt gen_tac >> DISCH_TAC, []), ("cases_ast", Cases_on `ast`, []),
+-      ("unfold_leaf_try", simp [Run_def] >> TRY (leaf ()), []),
++   explore (nm ^ "/A_strip_cases_split_leaf") g (fn () =>
++     [("gen", rpt gen_tac >> rpt strip_tac, []), ("cases_ast", Cases_on `ast`, []), ("unfold", simp [Run_def], []),
+       ("split", BasicProvers.every_case_tac, []), ("leaf_try", TRY (leaf ()), [])]));
+ val _ = hook := (fn nm => fn g =>
+   if nm <> "Run_erase_pc" andalso nm <> "Run_pc" then ()

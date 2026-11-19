@@ -1,0 +1,69 @@
+2026-11-19T10:42:31Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 4766.69M  free = 1377.31M  (encrypted)
+System-wide memory free percentage: 66%
+START_STATE swap_free_mib=1377 memory_free_percent=66
+exit 0
+actual_exit 0 wall 148.208 cpu 146.404 rss_mib 3577 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+5109:  GOAL_END Run_pc/A_strip_cases_split_leaf #1
+5111:  GOAL_BEGIN Run_pc/A_strip_cases_split_leaf #2 assumptions 2 (ASM 0 = newest)
+5118:  GOAL_END Run_pc/A_strip_cases_split_leaf #2
+5120:  GOAL_BEGIN Run_pc/A_strip_cases_split_leaf #3 assumptions 2 (ASM 0 = newest)
+5127:  GOAL_END Run_pc/A_strip_cases_split_leaf #3
+5129:  GOAL_BEGIN Run_pc/A_strip_cases_split_leaf #4 assumptions 2 (ASM 0 = newest)
+5136:  GOAL_END Run_pc/A_strip_cases_split_leaf #4
+5138:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #5 (dfn'CompareAndBranch p s).PC = (dfn'CompareAndBranch p (erase s)).PC ∨
+5143:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #6 (dfn'CompareAndBranch p s).PC = (dfn'CompareAndBranch p (erase s)).PC ∨
+5148:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #7 (dfn'TestBitAndBranch p s).PC = (dfn'TestBitAndBranch p (erase s)).PC ∨
+5153:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #8 (dfn'TestBitAndBranch p s).PC = (dfn'TestBitAndBranch p (erase s)).PC ∨
+5158:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #9 (dfn'CRC p s).PC = (dfn'CRC p (erase s)).PC ∨
+5162:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #10 (dfn'CRC p s).PC = (dfn'CRC p (erase s)).PC ∨
+5166:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #11 (dfn'CRC p s).PC = (dfn'CRC p (erase s)).PC ∨
+5170:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #12 (dfn'CRC p s).PC = (dfn'CRC p (erase s)).PC ∨
+5174:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #13 (dfn'ClearExclusive c s).PC = (dfn'ClearExclusive c (erase s)).PC ∨
+5179:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #14 (dfn'AddSubCarry p s).PC = (dfn'AddSubCarry p (erase s)).PC ∨
+5183:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #15 (dfn'AddSubCarry p s).PC = (dfn'AddSubCarry p (erase s)).PC ∨
+5187:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #16 (dfn'AddSubExtendRegister p s).PC = (dfn'AddSubExtendRegister p (erase s)).PC ∨
+5192:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #17 (dfn'AddSubExtendRegister p s).PC = (dfn'AddSubExtendRegister p (erase s)).PC ∨
+5197:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #18 (dfn'AddSubImmediate p s).PC = (dfn'AddSubImmediate p (erase s)).PC ∨
+5202:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #19 (dfn'AddSubImmediate p s).PC = (dfn'AddSubImmediate p (erase s)).PC ∨
+5207:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #20 (dfn'AddSubShiftedRegister p s).PC =
+5213:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #21 (dfn'AddSubShiftedRegister p s).PC =
+5219:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #22 (dfn'BitfieldMove p s).PC = (dfn'BitfieldMove p (erase s)).PC ∨
+5224:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #23 (dfn'BitfieldMove p s).PC = (dfn'BitfieldMove p (erase s)).PC ∨
+5229:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #24 (dfn'ConditionalCompareImmediate p s).PC =
+5235:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #25 (dfn'ConditionalCompareImmediate p s).PC =
+5241:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #26 (dfn'ConditionalCompareRegister p s).PC =
+5247:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #27 (dfn'ConditionalCompareRegister p s).PC =
+5253:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #28 (dfn'ConditionalSelect p s).PC = (dfn'ConditionalSelect p (erase s)).PC ∨
+5258:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #29 (dfn'ConditionalSelect p s).PC = (dfn'ConditionalSelect p (erase s)).PC ∨
+5263:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #30 (dfn'CountLeading p s).PC = (dfn'CountLeading p (erase s)).PC ∨
+5268:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #31 (dfn'CountLeading p s).PC = (dfn'CountLeading p (erase s)).PC ∨
+5273:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #32 (dfn'Division p s).PC = (dfn'Division p (erase s)).PC ∨
+5277:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #33 (dfn'Division p s).PC = (dfn'Division p (erase s)).PC ∨
+5281:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #34 (dfn'ExtractRegister p s).PC = (dfn'ExtractRegister p (erase s)).PC ∨
+5286:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #35 (dfn'ExtractRegister p s).PC = (dfn'ExtractRegister p (erase s)).PC ∨
+5291:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #36 (dfn'LogicalImmediate p s).PC = (dfn'LogicalImmediate p (erase s)).PC ∨
+5296:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #37 (dfn'LogicalImmediate p s).PC = (dfn'LogicalImmediate p (erase s)).PC ∨
+5301:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #38 (dfn'LogicalShiftedRegister p s).PC =
+5307:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #39 (dfn'LogicalShiftedRegister p s).PC =
+5313:  GOAL_SHORT Run_pc/A_strip_cases_split_leaf #40 (dfn'MoveWide p s).PC = (dfn'MoveWide p (erase s)).PC ∨
+5317:  GOALS_NOT_SHOWN 124
+5318:  GOAL_LAST Run_pc/A_strip_cases_split_leaf #164
+5319:  GOAL_BEGIN Run_pc/A_strip_cases_split_leaf #164 assumptions 2 (ASM 0 = newest)
+5325:  GOAL_END Run_pc/A_strip_cases_split_leaf #164
+5328:  GOAL_COUNT 0
+5353:BEGIN Next_erase_exception cpu=74.9
+5354:TACTIC_USED Next_erase_exception 1
+5355:PROVED_NOT_STORED Next_erase_exception
+5362:CHECKED_NOT_STORED NextStateARM8_erase hyps 0
+5363:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+5369:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+5373:STATEMENT_RESULT NextStateARM8_erase hyps 0 concl_literal true
+5375:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+5376:(Next s).exception = NoException ∧ untagged (Next (erase s)).PC ⇒
+5379:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+5380:(¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ∧ (Next s).exception = NoException ∧
+5425:EXPLORE_COMPLETE
+hash_parents exit 0
+go exit 0

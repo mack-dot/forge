@@ -1,0 +1,30 @@
+{
+ "case": "EE-0001",
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "EE-0001.sml",
+ "source_sha256": "931c0d4c0cd8fb1c1b9a3541ba4ead1058d334f0442b227dcbbe614f0f0daf05",
+ "resource_guard": {
+  "memory_free_percent": 68,
+  "disk_free_gib": 90.62,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 1500,
+ "wall_seconds_limit": 1800,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 105.622,
+ "child_user_cpu_seconds": 114.881,
+ "child_max_rss_bytes": 3936583680,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "80aa087e65d0449a4f7a57d8ef0bfe6ab709ae7bb4d59cf477c189e590be70ef",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_m1bEraseStepTheory.dat": "e6c3a68afb091d6eede8bf2587d94bc45c4e10d90ccf11ddd5ad51a62c52c1fa",
+  ".hol/objs/forge_m1bEraseStepTheory.sig": "cc7a95cd2d3546afd3ea9cce8ed6088e3dda9a5ff71a7ac7c7f7013a71a77dc5",
+  ".hol/objs/forge_m1bEraseStepTheory.sml": "a1e693a490c4c52bd5df98da0e48466204d09be117a5d89a9b57e2af897f1b38"
+ },
+ "inputs_unchanged_after": true
+}

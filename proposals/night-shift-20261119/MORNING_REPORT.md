@@ -167,3 +167,18 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   a log of tonight. It refuses the exploration runs. Note: A's review of MG-0001 and L2d-0001 exists since addendum 1
   (`orch-A/review-L2d/REPORT.md`); R6base-0001 has no separate review.
 - Still open on B's side: b-top.
+
+## Addendum 4 (Orchestrator A, 2026-11-19T10:51:14Z): two more HOL results after the report was written
+- `EE-0001` (`go exit 0`, 101 stored theorems, theory forge_m1bEraseStep; it replays the exploration EEx-0002):
+  `NextStateARM8_erase`: for an EL0 state without exception, with (¬SA0 or the stack pointer 16-byte aligned), and with an
+  untagged next program counter, ONE step of the ARM8 model on the state with TBI0, TBI1 and SA0 erased equals the erased
+  result of the step on the original state (faults included). `Next_erase_sp`: the same for the total step function.
+  This is the one-step lift of the processor-bit lemmas. NOT done: the lift over a whole run of the machine semantics, the
+  environment steps, untagged data addresses, the real values of the bits. Review running; step-level negative controls
+  not attempted.
+- `R6base-0001` (`go exit 0`, 11 theorems): first stored lemmas toward statement R6, and a HOL proof that the stored
+  replay equation cannot exclude an error-return event (so R6 needs the program's behaviour). No separate review yet.
+- Explorations (no theorem): R6x-0002 (the two FFI-level specifications with an event invariant stop at a type error of a
+  quotation; a worker continues), EEx-0001, EEx-0002.
+- Section 4 "Missing" changes: "the lift of the processor-bit lemmas" now reads "the lift of the one-step erasure theorem
+  to a whole run".
