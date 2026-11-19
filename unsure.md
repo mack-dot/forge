@@ -17830,3 +17830,112 @@ curl: (6) Could not resolve host: github.com
   Stage 12 unauthorized. end_to_end=false.
 - Next check: mains power; the owed Dafny records; the restated sink
   core; the replay end; L1.
+
+## U481 — night shift, proof track: the replay of the 158 recorded cases ended; three sources are unavailable; three first runs stopped in the Poly/ML run-time
+
+- Evidence: `results/round4-m1-replay-20261118/phase3/results.json`
+  (summary copy `proposals/night-shift-20261119/replay-phase3-verdicts.json`);
+  `proposals/night-shift-20261119/orch-A/replay-debt/REPORT.md`.
+- Counted first runs: 152 AS_RECORDED; 1 EXIT_EQUAL_REASON_DIFFERS
+  (case 005); 2 EXIT_DIFFERS (cases 130, 142); 3 NOT_RUN_NO_SOURCE
+  (cases 094, 097, 098). The driver ended 2026-11-19T08:08:54Z.
+- Cases 005, 130, 142: the first run printed `Run out of store -
+  interrupting threads` (Poly/ML 5.9.2, an allocation failed after a
+  full collection) while HOL loaded parent theories; no proof code
+  ran. Second runs (stored under `rerun`; the first verdict stays the
+  counted one): 005 AS_RECORDED exit 1 (driver); 130 and 142
+  AS_RECORDED exit 0 (`driver3.py rerun`, exit 0 each, my runs).
+- Uncertainty: heap limit or failed OS allocation; the heap size at
+  the stop. Not shown to be a kernel out-of-memory kill. Not a
+  semantic result.
+- Cases 094, 097, 098: no file or git blob has the recorded SHA-256
+  (13,542 blobs and 22,854 files searched). Class: UNAVAILABLE. No
+  substitute source was made.
+- Impact: the replay reproduces records on the same machine. It
+  closes no proof obligation. M1-B OPEN. end_to_end=false.
+- Next check: none for the replay; a clean replay stays not started.
+
+## U482 — night shift, proof track: Route A lemmas L1 and L2 pass in HOL; the false FFI premise is replaced, not removed (refers to U393, U394, U474, U476)
+
+- Evidence: `proposals/night-shift-20261119/hol-runs/routeA-attempt-0001/`
+  cases `L1-0001` (exit 0, 16 theorems), `L1imp-0001` (exit 0,
+  IMPORTED_COUNT 9 MISMATCH_COUNT 0), `L2-0001` (exit 1, a tactic
+  gap), `L2-0002` (exit 1, an ML type error), `L2-0003` (exit 0,
+  9 theorems). Review of L1: `orch-A/review-L1/REPORT.md`.
+- Proved (machine model, same machine, stored parent theories):
+  `refund_ffi_contract_on_totalises`; `refund_ffi_tot_evaluate_agree`;
+  `refund_profile_a_sl_reach`: the stored theorem
+  `refund_profile_a_sl` with the premise `refund_env_ok_sl` replaced
+  by three premises: `interference_ok`; the contract only at calls
+  that satisfy `Vok` (`refund_ffi_contract_on`); and `ffi_calls_ok
+  Vok` for the totalised machine at every state after the 27 entry
+  steps and every clock.
+- NOT proved: that the real FFI code meets the contract at valid
+  calls (NATIVE); that every returning call of the run is valid
+  (`ffi_calls_ok`, lemma L3; attempt `L2b-0001` exit 1). So the
+  false premise of U393 is traded for two open premises.
+- Deviation: `L2-0003` started with 735 MiB swap free, below the
+  1 GiB rule of the night protocol (see U485).
+- Impact: one MODEL link (graph X6 → X7) moved; M1-B OPEN.
+- Next check: the adversarial review of L2; L2b attempt 2; L3.
+
+## U483 — night shift, proof track: processor erasure lemmas pass in HOL for single model functions; the step lift is missing (refers to U475, U477)
+
+- Evidence: cases `E1-0001` (exit 1, no theory loaded: my setup
+  error), `E1-0002` (exit 1, an ML static error), `E1-0003` (exit 0,
+  18 theorems, 6 definitions), mutant `E1neg-0001` (exit 1,
+  `LEMMA_FAILED BranchTo_erase_untagged`, as required). Review:
+  `orch-A/review-E1/REPORT.md`.
+- Proved: `BranchTo_erase_untagged`, `CheckSPAlignment_erase`,
+  `arm8_ok_erase` and controls: for an EL0 state and an untagged
+  target, the model functions give the same result with TBI0, TBI1
+  and SA0 erased.
+- NOT proved: one `NextStateARM8` step; `targetSem$evaluate`; the
+  environment conditions; the bridge between `arm8$Next` and the
+  stored target; untagged data addresses; the bit values on the real
+  processor (no vendor source in the repository). The premises are
+  traded (untagged addresses, SP alignment or fault, ¬E0E), not
+  removed. The optional `BranchTo_erase_iff` failed (two tactics).
+- Impact: a sub-result for graph link X11e; the link stays MISSING.
+- Next check: the step lift (draft in work).
+
+## U484 — night shift, proof track: on the real executable, exit status 0 with empty stderr does not imply a complete output; a loader variable gives a forged complete frame (refers to U476, U480)
+
+- Evidence: `orch-A/ffi-c-audit/` (worker) and
+  `orch-A/ffi-c-audit-recheck/` (my run of
+  `run_native_ffi_tests.py`: exit 0; results byte-equal). Executable
+  SHA-256 `b8ed5ec2…7bb8`. 15 native runs. A finite test.
+- T10: stdout a non-blocking pipe with 1000 bytes free: status 0,
+  stderr empty, stdout the first 1000 of 4044 bytes. T03 to T09, T16:
+  status 0 (or signal 13), stdout empty. Cause by reading: `write`
+  or `read` returns −1, the FFI sets the error byte, the exception is
+  not handled, the program ends normally. The model never fails a
+  write on descriptor 1.
+- T13: `DYLD_INSERT_LIBRARIES` with a test library: a complete
+  well-formed frame that the program did not compute, status 0,
+  stderr empty; the strict parser accepts it. The executable has no
+  hardened run-time. Both existing launchers pass a fixed
+  environment; T13 was not run through them.
+- Impact: a consumer must decide by a strict parse of one complete
+  frame, never by status; and the launch environment is a named
+  NATIVE assumption (A-LOADER) outside every theorem. No FFI-level
+  difference in the dangerous direction was found.
+- Next check: T13 through the real launchers; the strict-prefix
+  lemma in HOL (two attempts failed; one lemma stage is open).
+
+## U485 — night shift, proof track: I started ten HOL cases below the protocol's swap limit
+
+- Evidence: the first lines of each `<case>.go.log`; item A-1 of
+  `results/night-shift-20261119/OWNER_REQUIRED.md`.
+- Fact: the night protocol says to start no heavy step below 1 GiB
+  swap free. My wrapper checked power and other HOL processes only.
+  Between 08:31Z and 08:45Z cases PF-0001, E1-0001, E1-0002,
+  E1-0003, E1neg-0001, L2-0002, L2-0003, L2b-0001, LO-0002, LO-0003
+  and PF-0002 started with 503 to 759 MiB swap free.
+- No case of the group shows the Poly/ML store message. The exit
+  codes are actual. Two passing results are in the group: E1-0003
+  and L2-0003.
+- Correction: the wrapper refuses below 1024 MiB since 08:50Z; the
+  queue waits for the condition.
+- Next check: run E1-0003 and L2-0003 again inside the rule and
+  compare the exported theory digests.
