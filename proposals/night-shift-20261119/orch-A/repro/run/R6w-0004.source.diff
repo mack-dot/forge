@@ -1,0 +1,11 @@
+--- branch-src/R6w-0004.sml	2026-11-19 09:19:50.022450892 -0500
++++ R6w-0004.sml	2026-11-19 09:19:50.030335032 -0500
+@@ -45,7 +45,7 @@
+ 
+ (* ================= shared files (the same bytes as in R6wx-0001) ================= *)
+ val R6W_PROOF_MODE = true;
+-val R6WDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round9/";
++val R6WDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/repro/run/r6/round9/";
+ val _ = (pr "MARK USE r6w_common.sml"; use (R6WDIR ^ "r6w_common.sml"); pr "PART_DONE r6w_common.sml");
+ val _ = (pr "MARK USE r6w_steps.sml"; use (R6WDIR ^ "r6w_steps.sml"); pr "PART_DONE r6w_steps.sml");
+ val _ = (pr "MARK USE r6w_prove.sml"; use (R6WDIR ^ "r6w_prove.sml"); pr "PART_DONE r6w_prove.sml");

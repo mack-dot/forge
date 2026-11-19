@@ -1,0 +1,11 @@
+--- branch-src/R6ffi-0002.sml	2026-11-19 09:19:49.982387774 -0500
++++ R6ffi-0002.sml	2026-11-19 09:19:49.988891911 -0500
+@@ -44,7 +44,7 @@
+ 
+ (* ================= shared files (the same bytes as in R6x-0004) ================= *)
+ val R6_PROOF_MODE = true;
+-val R6DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round5/";
++val R6DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/repro/run/r6/round5/";
+ val _ = (pr "MARK USE r6_common.sml"; use (R6DIR ^ "r6_common.sml"); pr "PART_DONE r6_common.sml");
+ val _ = (pr "MARK USE r6_steps.sml"; use (R6DIR ^ "r6_steps.sml"); pr "PART_DONE r6_steps.sml");
+ (* r6_prove.sml holds the replay and the stores: it refers to values of the two shared files *)

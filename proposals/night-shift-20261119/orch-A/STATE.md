@@ -205,3 +205,22 @@ Each exit-0 theorem: a separate reviewer; unsure entry; ROADMAP row; joint repor
 Launcher message 14:14Z: the machine is on battery. Measured now: Now drawing from 'Battery Power'.
 A starts NO HOL case until AC power returns (the wrapper and queue also refuse on battery). HOL processes of A: 0; queues: 0.
 A holds no lock. The four staged cases of STOP NOTE 2 stay NOT RUN. Lightweight work only.
+
+## CHECKPOINT (2026-11-19T14:15:56Z)
+Launcher order on battery: two lightweight workers only: W-pre (static pre-flight of staged R6tx/R6t/R6rx/R6r scripts and deps; evidence `orch-A/r6/preflight/`) and W-x8 (statements for X8/X11 with exact premises; evidence `orch-A/x8-x11/`). No HOL. When AC returns: q39 first.
+
+## CHECKPOINT (2026-11-19T14:16:04Z)
+AC power is back (pmset). No heavy.lock. A took `hol.lock`; RUNNING: `queue.sh q39 "R6tx-0001 1800 deps-R6t.txt"` (EXPLORATION). Workers: W-pre (pre-flight), W-x8 (X8/X11 statements). The proof runs wait for W-pre.
+
+## CHECKPOINT (2026-11-19T14:18:05Z) — DIRECTIVE-2
+Read `DIRECTIVE-2.md` and the PHASE 2 AMENDMENT. A = HOL and proof-to-executable chain. Tasks: staged queue (q39 running); exact statements/premises/logs; smallest missing refinement boundary (W-x8 drafts X8/X11); independent reproduction from the branch (W-repro prepares; runs only when A gives it the slot); list of unproven transitions to end_to_end=true (A writes `orch-A/END_TO_END_GAPS.md`). Push allowed: `git push origin nightshift/A-proof:nightshift/A-proof` only. Orchestrator C (red team) = agent a4f587cb1a34235e8: its messages are findings to check.
+
+## CHECKPOINT (2026-11-19T14:18:35Z)
+Push attempt `git push origin nightshift/A-proof:nightshift/A-proof`: DENIED by the permission classifier; NOT pushed; recorded as OWNER_REQUIRED A-4; no workaround tried. Workers: W-pre, W-x8, W-repro (prepares only). q39 running.
+
+## CHECKPOINT (2026-11-19T14:25:05Z)
+`R6tx-0001` (exploration) hung at `parts_ok_basis_ffi` step 2 for more than 6 minutes (the step time limit did not interrupt; same pattern as R6rx-0001); A stopped its own HOL child (SIGTERM): no EXPLORE_COMPLETE; nothing lost. Open: find the non-interruptible tactic in `orch-A/r6/round11/r6t_steps.sml` (parts_ok tail) and split it.
+NEXT: the HOL slot goes to worker W-repro (reproduction from the branch, 18 cases, `orch-A/repro/run/repro.sh`). `hol.lock` stays held by A for it.
+
+## CHECKPOINT (2026-11-19T14:25:41Z)
+Wrote `orch-A/END_TO_END_GAPS.md` (17 transitions; smallest missing boundary = T9, the FFI premise). W-repro has the HOL slot (running `repro.sh`). W-pre and W-x8 work.

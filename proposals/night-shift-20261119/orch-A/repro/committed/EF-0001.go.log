@@ -1,0 +1,30 @@
+2026-11-19T09:47:36Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 4826.75M  free = 1317.25M  (encrypted)
+System-wide memory free percentage: 66%
+START_STATE swap_free_mib=1317 memory_free_percent=66
+exit 0
+actual_exit 0 wall 86.299 cpu 103.881 rss_mib 3597 ['EXACT_COMPLETE'] inputs_unchanged_after True
+8:CHECKED W_nonvacuous
+33:BEGIN frame_raise_exception REQUIRED cpu=1.1
+34:TACTIC_USED frame_raise_exception 1
+35:Saved theorem _______ "frame_raise_exception"
+36:PROVED frame_raise_exception
+294:BEGIN frame_dfn_ExceptionReturn REQUIRED cpu=5.9
+295:TACTIC_USED frame_dfn_ExceptionReturn 1
+296:Saved theorem _______ "frame_dfn_ExceptionReturn"
+297:PROVED frame_dfn_ExceptionReturn
+347:CHECKED Next_frame
+354:CHECKED NextStateARM8_frame
+360:CONTROL_OK Next_frame is the literal E1-0003 statement
+361:CONTROL_OK W is the requested statement
+362:CONTROL_OK W, Next_frame, NextStateARM8_frame have no hypotheses
+363:CONTROL_OK frame_Run stored
+366:CLOSURE_AXIOM bool.SELECT_AX
+367:CLOSURE_AXIOM bool.INFINITY_AX
+368:CLOSURE_AXIOM bool.ETA_AX
+369:CLOSURE_AXIOM bool.BOOL_CASES_AX
+371:CLOSURE_NODES 544
+374:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0
