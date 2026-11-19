@@ -1,0 +1,726 @@
+#!/usr/bin/env python3
+"""Bounded subset rule, version 2, for impl/Refund.dfy (PROPOSAL, not the gate). Python 3 standard library.
+
+Derived from orch-B/e-totality/subset_rule.py (SHA-256 4644c248cf9e2188499b26f21cbfabc8996fce7c003fdf855b9544939fab990a),
+whose lexer derives from proposals/m1b-mission-20261119/drafts/expect-rule/dafny_tokens.py
+(SHA-256 bdc8154eb8ece8d4da36872e145e9f1a6b3d1eb6c9b002f04bab03120c6a0e1d).
+Changes against version 1 (report of orch-B/e-subset2): (a) bounded loops, (b) bounded self-recursion over a display,
+(c) bounded locals and one-level input-field products, (d) extra ghost-only modules, (e) `//` comments end at CR or
+LF only (Dafny controls L01-L06), C0/C1 control characters refused everywhere, (f) `{:induction false}` allowed.
+The text between BEGIN GATE BLOCK and END GATE BLOCK is pasted VERBATIM into the unapplied gate diff.
+Usage: subset_rule2.py FILE...   (prints 'pass N=<bound>' or the refusal per file; exit 0)
+"""
+import re
+import sys
+
+
+class Rejected(Exception):
+    pass
+
+
+# BEGIN GATE BLOCK
+# Bounded subset, version 2 (SUBSET_*). A refund implementation must be a decision whose executed source
+# operations are bounded by a number N computed from the program text alone: loops only over a syntactic
+# literal bound, recursion only over a display, no comprehension or such-that, no growth operation without a
+# syntactic bound. The rule works on tokens and fails closed: an unknown shape is a refusal with a reason code.
+# Cost claim (ARGUMENT, not machine-checked): one Assess run executes at most N = W(Assess) <= 4096 source
+# operations, where W counts each executed token times the product of the iteration bounds of its enclosing
+# loops (<= B - L each), times 17 inside a bounded self-recursive member, plus 128 per pinned spec predicate
+# call, unfolded over the acyclic call graph. Each operation grows a value by a constant: an integer by at most
+# 134 bits (a literal or bounded-local operand), or the sum of two input sizes (one-level input-field
+# product); a sequence by at most 16 elements. NOT bounded: the cost of one operation on an input-sized value
+# and the input size itself. Recursion depth relies on Dafny's verified `decreases |P|`.
+SUBSET_LINE_END = re.compile('[\r\n]')
+SUBSET_CONTROL = re.compile('[\x00-\x08\x0e-\x1f\x7f-\x84\x86-\x9f]')
+SUBSET_CHAR = re.compile(r"'(\\U\{[0-9A-Fa-f_]{1,8}\}|\\u[0-9A-Fa-f]{4}|\\[^\r\n]|[^'\\\r\n])'")
+SUBSET_NUM = re.compile(r'0x[0-9A-Fa-f_]+|[0-9][0-9_]*(\.[0-9][0-9_]*)?')
+SUBSET_ID = re.compile(r"[A-Za-z_][A-Za-z0-9_?']*")
+SUBSET_OPS = ('<==>', '==>', '<==', '-->', ':=', ':|', ':-', '::', '==', '!=', '<=', '>=', '&&', '||',
+              '..', '=>', '->', '~>', '!!', '{:')
+SUBSET_GLOBAL = {'expect', 'assume', 'print', 'new', 'class', 'trait', 'iterator', 'import', 'export',
+                 'opened', 'abstract', 'extern', 'axiom', 'codatatype', 'newtype', 'type', 'datatype',
+                 'object', 'yield', 'modify', 'label', 'twostate', 'least', 'greatest', 'inductive',
+                 'copredicate', 'colemma', 'constructor', 'iset', 'imap', 'ORDINAL'}
+SUBSET_EXEC = {'while', 'for', 'forall', 'exists', 'set', 'multiset', 'map', 'by', 'break', 'continue',
+               'old', 'fresh', 'unchanged', 'allocated', 'this', 'method', 'function', 'predicate', 'lemma',
+               'const', 'static', 'requires', 'ensures', 'reads', 'invariant', 'decreases', 'modifies',
+               'downto'}
+SUBSET_EXPR_KEYWORDS = {'return', 'then', 'else', 'in', 'case', 'if', 'match', 'assert', 'var'}
+SUBSET_RECORDS = {'Intent', 'Authorized', 'Candidate', 'ChargeContext'}
+SUBSET_NULLARY = {'true', 'false', 'Rejected', 'Missing', 'TimedOut', 'Failed', 'Malformed', 'Oversized',
+                  'Unsupported'}
+SUBSET_SPEC = {'Eligible', 'ValidContext', 'Money', 'AllowedReason'}
+SUBSET_FIELDS = {'chargeId', 'requestId', 'original', 'remaining', 'refundEnabled', 'requestOpen', 'amount',
+                 'reason', 'MaxMoney'}
+SUBSET_ATTRIBUTES = (['{:', 'isolate_assertions', '}'], ['{:', 'induction', 'false', '}'])
+SUBSET_SPEC_WEIGHT = 128     # upper bound on the unfolded tokens of one call of a pinned spec predicate
+SUBSET_MAX_WEIGHT = 4096     # bound N on executed tokens of one Assess call (unfolded over calls and loops)
+SUBSET_MAX_BYTES = 65536
+SUBSET_MAX_DISPLAY = 16
+SUBSET_MAX_BOUND = 10 ** 40  # largest magnitude of a bounded local (a literal has at most 40 characters)
+
+
+def subset_refuse(code, message):
+    raise Rejected('SUBSET_' + code + ': ' + message)
+
+
+def subset_tokens(text):
+    """All tokens outside comments as (kind, text). A `//` comment ends at CR or LF (as the pinned Dafny:
+    controls L01-L06 show that VT, FF, NEL, LS and PS do not end it). Control characters fail closed."""
+    if SUBSET_CONTROL.search(text):
+        subset_refuse('LEX', 'control character U+%04X' % ord(SUBSET_CONTROL.search(text).group(0)))
+    tokens, i, n = [], 0, len(text)
+    while i < n:
+        c = text[i]
+        if text.startswith('//', i):
+            end = SUBSET_LINE_END.search(text, i)
+            i = n if end is None else end.start()
+        elif text.startswith('/*', i):
+            depth, i = 1, i + 2
+            while depth:
+                if i >= n:
+                    subset_refuse('LEX', 'unterminated comment')
+                pair = text[i:i + 2]
+                depth += {'/*': 1, '*/': -1}.get(pair, 0)
+                i += 2 if pair in ('/*', '*/') else 1
+        elif c in ' \t\r\n':
+            i += 1
+        elif c == '"' or text.startswith('@"', i):
+            verbatim, start = c == '@', i
+            i += 2 if verbatim else 1
+            while True:
+                if i >= n or (not verbatim and text[i] in '\r\n'):
+                    subset_refuse('LEX', 'unterminated string')
+                if verbatim and text.startswith('""', i) or not verbatim and text[i] == '\\':
+                    i += 2
+                elif text[i] == '"':
+                    i += 1
+                    break
+                else:
+                    i += 1
+            if i - start > 256:
+                subset_refuse('LITERAL_SIZE', 'string literal longer than 256 characters')
+            tokens.append(('str', text[start:i]))
+        elif c == "'":
+            literal = SUBSET_CHAR.match(text, i)
+            if not literal:
+                subset_refuse('LEX', 'unrecognized character literal')
+            tokens.append(('char', literal.group(0)))
+            i = literal.end()
+        elif SUBSET_ID.match(text, i) and c.isascii():
+            word = SUBSET_ID.match(text, i).group(0)
+            tokens.append(('id', word))
+            i += len(word)
+        elif c.isdigit() and c.isascii():
+            number = SUBSET_NUM.match(text, i).group(0)
+            if len(number) > 40:
+                subset_refuse('LITERAL_SIZE', 'numeric literal longer than 40 characters')
+            tokens.append(('num', number))
+            i += len(number)
+        elif c.isascii() and c.isprintable():
+            op = next((o for o in SUBSET_OPS if text.startswith(o, i)), c)
+            tokens.append(('op', op))
+            i += len(op)
+        else:
+            subset_refuse('LEX', 'character U+%04X outside comments and literals' % ord(c))
+    return tokens
+
+
+def subset_match(toks, k):
+    """Index of the bracket that closes toks[k]."""
+    pairs, depth = {'(': ')', '[': ']', '{': '}'}, 0
+    opener, closer = toks[k][1], pairs[toks[k][1]]
+    for j in range(k, len(toks)):
+        depth += (toks[j][1] == opener) - (toks[j][1] == closer)
+        if depth == 0:
+            return j
+    subset_refuse('SHAPE', 'unbalanced ' + opener)
+
+
+def subset_int(tok):
+    """Value of an integer literal token, or None."""
+    if tok[0] != 'num' or '.' in tok[1]:
+        return None
+    try:
+        return int(tok[1].replace('_', ''), 16 if tok[1].startswith('0x') else 10)
+    except ValueError:
+        return None
+
+
+def subset_flat_element(e, tuple_element):
+    """An element whose value cannot hold a sequence or tuple built by the submission (bounded nesting).
+    A tuple element may also be one sequence display; that display's own elements are checked separately."""
+    texts = [t for _, t in e]
+    whole = len(e) >= 3 and e[1][1] == '(' and subset_match(e, 1) == len(e) - 1
+    depth, boolean = 0, False
+    for t in texts:
+        depth += (t in ('(', '[', '{')) - (t in (')', ']', '}'))
+        boolean |= depth == 0 and t in ('<=', '>=', '==', '!=', '&&', '||', '==>', '<==>', 'in')
+    return (len(e) == 1 and (e[0][0] in ('num', 'str', 'char') or texts[0] in SUBSET_NULLARY) or
+            whole and texts[0] in SUBSET_RECORDS | SUBSET_SPEC or boolean or
+            tuple_element and texts[:1] == ['['] and subset_match(e, 0) == len(e) - 1)
+
+
+def subset_words(tok):
+    return set(re.split(r"[?']", tok[1])) if tok[0] == 'id' else set()
+
+
+def straight_line_subset(code):
+    """Refuse unless impl/Refund.dfy is in the bounded subset (version 2). Returns the bound N."""
+    try:
+        return subset_check(code)
+    except (IndexError, StopIteration, ValueError, KeyError, TypeError, RecursionError) as error:
+        raise Rejected('SUBSET_SHAPE: unrecognized structure (' + type(error).__name__ + ')')
+
+
+def subset_members(toks, texts, k, end):
+    """Module members between k and end as (kind, name, ghost, lo, hi)."""
+    modifiers, kinds = {'ghost', 'static', 'opaque'}, {'function', 'predicate', 'method', 'lemma', 'const'}
+    members = []
+    while k < end:
+        mods = set()
+        while texts[k] in modifiers:
+            mods.add(texts[k])
+            k += 1
+        if texts[k] not in kinds:
+            subset_refuse('DECLARATION', 'unsupported module member at `' + texts[k] + '`')
+        kind, k = texts[k], k + 1
+        if texts[k] == 'method':
+            subset_refuse('DECLARATION', 'legacy function method')
+        name, j = texts[k], k + 1
+        while j < end and texts[j] not in modifiers | kinds:
+            j = subset_match(toks, j) + 1 if texts[j] in '([{' else j + 1
+        members.append((kind, name, kind == 'lemma' or 'ghost' in mods, k + 1, j))
+        k = j
+    return members
+
+
+def subset_check(code):
+    if len(code) > SUBSET_MAX_BYTES:
+        subset_refuse('SIZE', 'implementation larger than 65536 bytes')
+    try:
+        toks = subset_tokens(code.decode('utf-8'))
+    except UnicodeDecodeError:
+        subset_refuse('LEX', 'implementation is not UTF-8')
+    texts = [t for _, t in toks]
+    for k, tok in enumerate(toks):
+        if subset_words(tok) & SUBSET_GLOBAL:
+            subset_refuse('FORBIDDEN', '`' + tok[1] + '`')
+        if tok[1] == '@' or tok[1] == '{' and texts[k + 1:k + 2] == [':']:
+            subset_refuse('ATTRIBUTE', 'attribute syntax outside the allowed attributes')
+        if tok[1] == '{:' and not any(texts[k:k + len(a)] == a for a in SUBSET_ATTRIBUTES):
+            subset_refuse('ATTRIBUTE', 'only {:isolate_assertions} and {:induction false} are allowed')
+        if tok[1] == ':-' or texts[k:k + 2] in (['by', 'method'], ['decreases', '*']):
+            subset_refuse('FORBIDDEN', ' '.join(texts[k:k + 2]))
+        if tok[0] == 'id' and (re.fullmatch(r'array[0-9]*\??|bv[0-9]+', tok[1])):
+            subset_refuse('FORBIDDEN', '`' + tok[1] + '`')
+    drop = set()
+    for k in range(len(toks)):
+        for a in SUBSET_ATTRIBUTES:
+            if texts[k:k + len(a)] == a:
+                drop.update(range(k, k + len(a)))
+    toks = [toks[k] for k in range(len(toks)) if k not in drop]
+    texts = [t for _, t in toks]
+    if (texts[:7] != ['include', '"../spec/refund/RefundSpec.dfy"', 'module', 'Refund', 'refines',
+                      'RefundSpec', '{'] or texts.count('refines') != 1 or texts.count('include') != 1):
+        subset_refuse('SHAPE', 'exactly one include and one module Refund refines RefundSpec first')
+    close = subset_match(toks, 6)
+    members = subset_members(toks, texts, 7, close)
+    # (d) Extra top-level modules after Refund: ghost declarations with bodies only (never compiled).
+    k, extra_names, extra_members = close + 1, set(), []
+    while k < len(toks):
+        if (texts[k] != 'module' or toks[k + 1][0] != 'id' or texts[k + 2] != '{' or
+                texts[k + 1] in {'Refund', 'RefundSpec'} | extra_names):
+            subset_refuse('SHAPE', 'after module Refund only plain `module Name { ghost members }` may follow')
+        extra_names.add(texts[k + 1])
+        end = subset_match(toks, k + 2)
+        for kind, name, ghost, lo, hi in subset_members(toks, texts, k + 3, end):
+            if not ghost:
+                subset_refuse('MODULE', 'extra module ' + texts[k + 1] + ' has compiled member ' + name)
+            extra_members.append((kind, name, ghost, lo, hi))
+        k = end + 1
+    if texts.count('module') != 1 + len(extra_names):
+        subset_refuse('SHAPE', 'nested module')
+    for kind, name, ghost, lo, hi in members + extra_members:
+        if ghost and kind != 'const' and texts[hi - 1] != '}':
+            subset_refuse('SHAPE', 'ghost ' + kind + ' ' + name + ' without body')
+        if ghost and kind == 'const' and ':=' not in texts[lo:hi]:
+            subset_refuse('SHAPE', 'ghost const ' + name + ' without initializer')
+    compiled = {m[1]: m for m in members if not m[2]}
+    ghost_calls = {m[1] for m in members if m[2] and m[0] in ('lemma', 'method')}
+    extra_lemmas = {m[1] for m in extra_members if m[0] in ('lemma', 'method')}
+    if {m[1] for m in members} & {m[1] for m in extra_members}:
+        subset_refuse('MODULE', 'an extra module member has the name of a Refund member')
+    methods = {m[1] for m in members if not m[2] and m[0] == 'method'}
+    names = {m[1] for m in members + extra_members} | extra_names
+    if compiled.get('Assess', ('',))[0] != 'method':
+        subset_refuse('SHAPE', 'no compiled method Assess')
+    # Displays held by compiled consts: `const C ... := [ <= 16 elements ]` (C is immutable, so |C| is fixed).
+    const_display = {}
+    for kind, name, ghost, lo, hi in compiled.values():
+        if kind == 'const' and ':=' in texts[lo:hi]:
+            s = texts.index(':=', lo) + 1
+            if texts[s] == '[' and subset_match(toks, s) == hi - 1:
+                const_display[name] = len([x for x in range(s + 1, hi - 1) if texts[x] == ','
+                                           and subset_depth(texts, s + 1, x) == 0]) + (hi - 1 > s + 1)
+
+    def body_of(lo, hi):
+        return next(x for x in range(lo, hi) if texts[x] == '{' and subset_match(toks, x) == hi - 1)
+
+    def locals_of(name, lo, hi, region):
+        """Special locals of one compiled member: names bound exactly once, by `var NAME := ...` or
+        `var NAME : int := ...` (no list), that are no parameter, no field, no member, no case/quantifier
+        binder, and whose other occurrences are never an assignment target. Returns {name: (decl index,
+        initializer range)} and the set of names assigned somewhere (assignment targets)."""
+        header = {texts[x] for x in range(lo, region[0]) if toks[x][0] == 'id'}
+        binders, decls, targets = set(), {}, {}
+        for x in range(lo, hi):
+            t = texts[x]
+            if t in ('case', 'forall', 'exists'):
+                j = x + 1
+                while j < hi and texts[j] not in ('=>', '::', '|', '{', ';'):
+                    binders.add(texts[j])
+                    j += 1
+            if t == '=>' and toks[x - 1][0] == 'id':
+                binders.add(texts[x - 1])
+            if t == 'var':
+                j = x + 1
+                if texts[j] == 'var':
+                    subset_refuse('SHAPE', 'var var')
+                while True:
+                    decls.setdefault(texts[j], []).append(j)
+                    targets.setdefault(texts[j], set()).add(j)
+                    j += 1
+                    depth = 0
+                    while depth or texts[j] not in (',', ':=', ';', ':|'):
+                        depth += (texts[j] in ('(', '[', '<')) - (texts[j] in (')', ']', '>'))
+                        j += 1
+                    if texts[j] != ',':
+                        break
+                    j += 1
+            if t == 'for':
+                decls.setdefault(texts[x + 1], []).append(x + 1)
+                targets.setdefault(texts[x + 1], set()).add(x + 1)
+            if toks[x][0] == 'id' and texts[x - 1] != '.':
+                j, depth = x + 1, 0
+                while j < hi:
+                    u = texts[j]
+                    if depth == 0 and u in (':=', ':|'):
+                        targets.setdefault(t, set()).add(x)
+                        break
+                    if u in ('(', '['):
+                        depth += 1
+                    elif u in (')', ']'):
+                        depth -= 1
+                        if depth < 0:
+                            break
+                    elif u in (';', '{', '}') or depth == 0 and u not in (',', '.') and toks[j][0] != 'id':
+                        break
+                    j += 1
+        special = {}
+        for v, where in decls.items():
+            if (len(where) != 1 or v in header | binders | names | SUBSET_FIELDS | SUBSET_SPEC |
+                    SUBSET_RECORDS | SUBSET_NULLARY or toks[where[0]][0] != 'id'):
+                continue
+            d = where[0]
+            if texts[d - 1] != 'var':
+                continue
+            s = d + 1
+            if texts[s] == ':' and texts[s + 1] in ('int', 'nat') and texts[s + 2] == ':=':
+                s += 2
+            if texts[s] != ':=':
+                continue
+            first = next(x for x in range(lo, hi) if texts[x] == v and texts[x - 1] != '.')
+            if first != d:
+                continue
+            e, depth = s + 1, 0
+            while depth or texts[e] != ';':
+                depth += (texts[e] in '([{') - (texts[e] in ')]}')
+                e += 1
+            special[v] = (d, (s + 1, e))
+        return special, targets, binders | set(decls)
+
+    def bounded_value(lo, hi, bounded):
+        """Magnitude bound of an initializer built from integer literals and bounded locals with
+        if-then-else, +, -, * and parentheses (guards of `if` are free); None otherwise."""
+        pos = [lo]
+
+        def peek():
+            return texts[pos[0]] if pos[0] < hi else None
+
+        def expr():
+            if peek() == 'if':
+                j, depth = pos[0] + 1, 0
+                while j < hi and not (depth == 0 and texts[j] == 'then'):
+                    if texts[j] in ('if', 'else', 'match', 'var'):
+                        return None
+                    depth += (texts[j] in '([{') - (texts[j] in ')]}')
+                    j += 1
+                if j >= hi:
+                    return None
+                pos[0] = j + 1
+                a = expr()
+                if a is None or peek() != 'else':
+                    return None
+                pos[0] += 1
+                b = expr()
+                return None if b is None else max(a, b)
+            total = term()
+            while total is not None and peek() in ('+', '-'):
+                pos[0] += 1
+                t = term()
+                total = None if t is None else total + t
+            return total
+
+        def term():
+            total = unary()
+            while total is not None and peek() == '*':
+                pos[0] += 1
+                u = unary()
+                total = None if u is None else total * u
+            return total
+
+        def unary():
+            t = peek()
+            if t == '-':
+                pos[0] += 1
+                return unary()
+            if t == '(':
+                end = subset_match(toks, pos[0])
+                if end >= hi:
+                    return None
+                save, pos[0] = hi, pos[0] + 1
+                inner = expr()
+                if inner is None or pos[0] != end:
+                    return None
+                pos[0] = end + 1
+                return inner
+            if t is not None and subset_int(toks[pos[0]]) is not None:
+                pos[0] += 1
+                return subset_int(toks[pos[0] - 1])
+            if t in bounded and bounded[t][1] < pos[0]:
+                pos[0] += 1
+                return bounded[t][0]
+            return None
+
+        value = expr()
+        return value if value is not None and pos[0] == hi and value <= SUBSET_MAX_BOUND else None
+
+    def analyse(name, lo, hi, region):
+        special, targets, bound_names = locals_of(name, lo, hi, region)
+        bounded, displays = {}, {}
+        for v, (d, (s, e)) in sorted(special.items(), key=lambda item: item[1][0]):
+            if targets.get(v, {d}) != {d}:
+                continue
+            value = bounded_value(s, e, bounded)
+            if value is not None:
+                bounded[v] = (value, d)
+            elif texts[s] == '[' and subset_match(toks, s) == e - 1:
+                count = len([x for x in range(s + 1, e - 1) if texts[x] == ',' and
+                             subset_depth(texts, s + 1, x) == 0]) + (e - 1 > s + 1)
+                if count <= SUBSET_MAX_DISPLAY:
+                    displays[v] = count
+        shadow = bool({'context', 'response'} & bound_names)
+        return special, targets, bounded, displays, shadow
+
+    def bound_of(lo, hi, bounded):
+        """Value bound of a loop bound expression: integer literal, |C| of a const display, or bounded local."""
+        if hi - lo == 1 and subset_int(toks[lo]) is not None:
+            return subset_int(toks[lo])
+        if hi - lo == 1 and texts[lo] in bounded:
+            return bounded[texts[lo]][0]
+        if hi - lo == 3 and texts[lo] == '|' == texts[lo + 2] and texts[lo + 1] in const_display:
+            return const_display[texts[lo + 1]]
+        return None
+
+    def operand_ok(k, op, bounded, field_product):
+        """An operand that types `op` as integer arithmetic adding a bounded number of bits."""
+        def small(x, side):
+            if side > 0:
+                ok = subset_int(toks[x]) is not None or texts[x] in bounded
+                return ok and texts[x + 1] not in ('(', '[', '.')
+            ok = subset_int(toks[x]) is not None or texts[x] in bounded
+            # `+` only needs an integer-typed operand: a literal or bounded local inside a product types it.
+            return ok and texts[x - 1] not in (('.',) if op == '+' else ('.', '*', '/', '%'))
+        if small(k + 1, 1) or small(k - 1, -1):
+            return True
+        if op == '*' and field_product:
+            right = texts[k + 1] in ('context', 'response') and texts[k + 2] == '.' and texts[k + 3] in SUBSET_FIELDS
+            left = texts[k - 3] in ('context', 'response') and texts[k - 2] == '.' and texts[k - 1] in SUBSET_FIELDS
+            return (right and left and texts[k + 4] not in ('.', '(', '[', '*', '/', '%') and
+                    texts[k - 4] not in ('.', '*', '/', '%'))
+        if op != '+':
+            return False
+        if texts[k - 1] == '|' or texts[k + 1] == '|':
+            return True
+        if texts[k - 1] == ')' and toks[k - 2][0] == 'num' and texts[k - 3] == 'else':
+            return True
+        if texts[k + 1] == '(':
+            close = subset_match(toks, k + 1)
+            return texts[k + 2] == 'if' and toks[close - 1][0] == 'num' and texts[close - 2] == 'else'
+        if texts[k + 1] == '[':
+            close = subset_match(toks, k + 1)
+            return texts[close + 1] not in ('[', '.', '(')
+        return False
+
+    def ghost_statement(k, hi):
+        j, word = k, texts[k]
+        if word == 'ghost' and texts[k + 1] != 'var':
+            subset_refuse('GHOST', 'ghost statement other than ghost var')
+        while j < hi:
+            if texts[j] == '{' and (word == 'calc' or texts[j - 1] == 'by'):
+                j = subset_match(toks, j) + 1
+                break
+            if texts[j] in '([{':
+                j = subset_match(toks, j)
+            elif texts[j] == ';':
+                j += 1
+                break
+            j += 1
+        else:
+            subset_refuse('GHOST', 'ghost statement without end')
+        if {texts[x] for x in range(k, j)} & methods:
+            subset_refuse('GHOST', 'a ghost statement names a compiled method')
+        return j
+
+    def loop(k, hi, info):
+        """(a) A bounded loop at k. Returns (guard range, body range, iterations, end index).
+        while V < B [invariant ...]* [decreases B - V] { ... V := V + 1; }  with `var V := L` (L literal),
+        V assigned nowhere else;  for V := L to B [invariant ...]* { ... }.  B: integer literal, |C| of a
+        const display, or a bounded local. Iterations <= B - L."""
+        special, targets, bounded, displays, shadow = info
+        body = k + 1
+        while body < hi and texts[body] != '{':
+            if texts[body] in ('(', '['):
+                body = subset_match(toks, body)
+            body += 1
+        if body >= hi:
+            subset_refuse('LOOP', 'loop without body')
+        end = subset_match(toks, body)
+        if texts[end + 1] == '{' or toks[end + 1][0] == 'op' and texts[end + 1] != '}' or texts[end + 1] in (
+                'invariant', 'decreases', 'modifies', 'ensures', 'requires', 'reads'):
+            subset_refuse('LOOP', 'loop header and body cannot be told apart')
+        clause = next((x for x in range(k + 1, body) if texts[x] in ('invariant', 'decreases', 'modifies')), body)
+        for x in range(clause, body):
+            if texts[x] in ('{', '}', 'while', 'for', 'modifies', 'ensures', 'requires', 'reads', ';'):
+                subset_refuse('LOOP', 'unsupported loop specification')
+        if clause < body and texts[clause] not in ('invariant', 'decreases'):
+            subset_refuse('LOOP', 'unsupported loop specification')
+        v = texts[k + 1]
+        if texts[k] == 'while':
+            guard = (k + 1, clause)
+            if texts[k + 2] != '<':
+                subset_refuse('LOOP', 'while guard must be `V < B`')
+            b = bound_of(k + 3, clause, bounded)
+            if v not in special or v in bounded or v in displays:
+                subset_refuse('LOOP', 'loop counter ' + v + ' is not a once-declared local')
+            d, (s, e) = special[v]
+            low = subset_int(toks[s]) if e - s == 1 else None
+            step = [end - 6, end - 5, end - 4, end - 3, end - 2, end - 1]
+            if any(texts[x] == 'case' and subset_depth(texts, body + 1, x) == 0 for x in range(body + 1, end)):
+                subset_refuse('LOOP', 'a brace-less match arm in a while body')
+            if low is None or [texts[x] for x in step] != [v, ':=', v, '+', '1', ';'] or texts[end - 7] not in (
+                    ';', '}', '{'):
+                subset_refuse('LOOP', 'loop counter must start at a literal and end the body with `V := V + 1;`')
+            if targets.get(v, set()) != {d, end - 6}:
+                subset_refuse('LOOP', 'loop counter ' + v + ' is assigned elsewhere')
+            dec = [x for x in range(clause, body) if texts[x] == 'decreases']
+            for x in dec:
+                nxt = next((y for y in range(x + 1, body) if texts[y] in ('invariant', 'decreases')), body)
+                if texts[x + 1:nxt] != texts[k + 3:clause] + ['-', v]:
+                    subset_refuse('LOOP', 'decreases must be exactly `B - V`')
+        else:
+            if texts[k + 2] != ':=' or texts[k + 4] != 'to' or v in special or targets.get(v) != {k + 1}:
+                subset_refuse('LOOP', 'for loop must be `for V := L to B` with an unassigned V')
+            low = subset_int(toks[k + 3])
+            guard = (k + 1, clause)
+            b = bound_of(k + 5, clause, bounded)
+            if low is None:
+                subset_refuse('LOOP', 'for loop lower bound must be an integer literal')
+        if b is None:
+            subset_refuse('LOOP', 'loop bound is not a literal, |const display| or bounded local')
+        iterations = max(0, b - low)
+        if iterations > SUBSET_MAX_WEIGHT:
+            subset_refuse('SIZE', 'loop bound larger than 4096')
+        return guard, (body + 1, end), iterations, end + 1
+
+    def executable(lo, hi, mult, info, assess):
+        """Executed tokens with their multiplicity: [(index, multiplicity)]."""
+        out, blocks, cases, k = [], set(), 0, lo
+        bounded = info[2]
+        while k < hi:
+            kind, text = toks[k]
+            prev = texts[k - 1]
+            nxt = texts[k + 1:k + 3] + ['', '']
+            if text in ('assert', 'reveal', 'hide', 'calc', 'ghost') or (
+                    text in ghost_calls and nxt[0] == '(' and prev != '.') or (
+                    text in extra_names and nxt[0] == '.' and nxt[1] in extra_lemmas and texts[k + 3] == '('):
+                k = ghost_statement(k, hi)
+                continue
+            if text in ('while', 'for') and prev in ('{', '}', ';'):
+                guard, body, iterations, after = loop(k, hi, info)
+                out += [(x, mult * (iterations + 1)) for x in range(*guard)]
+                out += executable(body[0], body[1], mult * iterations, info, assess)
+                k = after
+                continue
+            if subset_words(toks[k]) & SUBSET_EXEC:
+                subset_refuse('EXEC_FORBIDDEN', '`' + text + '` in compiled code')
+            if text == 'seq' and nxt[0] == '(':
+                subset_refuse('EXEC_FORBIDDEN', 'seq constructor in compiled code')
+            if text in (':|', '::', '->', '~>', '-->', '!!'):
+                subset_refuse('EXEC_FORBIDDEN', '`' + text + '` in compiled code')
+            base = text.split('?')[0]
+            if kind == 'id' and nxt[0] != '(' and (base in SUBSET_SPEC or base in compiled and
+                                                     compiled[base][0] != 'const'):
+                subset_refuse('FUNCTION_VALUE', 'function used as a value in compiled code: ' + text)
+            if kind == 'id' and text in extra_names:
+                subset_refuse('MODULE', 'compiled code names extra module ' + text)
+            if text == 'case':
+                cases += 1
+            if text == '=>':
+                if not cases:
+                    subset_refuse('LAMBDA', 'lambda in compiled code')
+                cases -= 1
+            if text in ('+', '*', '/', '%') and kind == 'op' and not operand_ok(k, text, bounded,
+                                                                               assess and not info[4]):
+                subset_refuse('ARITHMETIC', '`' + text + '` needs a literal or bounded operand')
+            if text in ('if', 'match'):
+                j = k + 1
+                while j < hi and texts[j] not in ('{', 'then', 'case'):
+                    j = subset_match(toks, j) + 1 if texts[j] in '([' else j + 1
+                if j < hi and texts[j] == '{':
+                    blocks.add(j)
+            if text == '{' and k not in blocks and prev not in ('{', '}', ';', '=>', 'else'):
+                subset_refuse('BRACE', 'set or map display, or an unsupported block, in compiled code')
+            callish = toks[k - 1][0] in ('id', 'str') and prev not in SUBSET_EXPR_KEYWORDS or prev in (')', ']')
+            if text in ('(', '[') and not callish:
+                close, j, elements = subset_match(toks, k), k + 1, []
+                while j < close:
+                    first = j
+                    while j < close and texts[j] != ',':
+                        j = subset_match(toks, j) + 1 if texts[j] in '([{' else j + 1
+                    elements.append(toks[first:j])
+                    j += 1
+                if text == '[' and len(elements) > SUBSET_MAX_DISPLAY:
+                    subset_refuse('DISPLAY', 'sequence display with more than 16 elements')
+                if text == '[' or len(elements) > 1:
+                    for e in elements:
+                        if not subset_flat_element(e, text == '('):
+                            subset_refuse('DISPLAY' if text == '[' else 'TUPLE', 'a display or tuple element '
+                                          'must be a literal, a spec record, a boolean or a nullary constructor')
+            out.append((k, mult))
+            k += 1
+        return out
+
+    weights, calls, infos, regions = {}, {}, {}, {}
+    for kind, name, ghost, lo, hi in compiled.values():
+        if kind == 'const':
+            if ':=' not in texts[lo:hi]:
+                subset_refuse('SHAPE', 'compiled const without initializer')
+            region = (texts.index(':=', lo) + 1, hi)
+        else:
+            if texts[hi - 1] != '}':
+                subset_refuse('SHAPE', 'compiled ' + kind + ' ' + name + ' without body')
+            body = body_of(lo, hi)
+            if set(texts[lo:body]) & {':=', '->', '~>', '-->'}:
+                subset_refuse('HEADER', 'default value or function type in a compiled signature')
+            region = (body + 1, hi - 1)
+        info = analyse(name, lo, hi, region) if kind != 'const' else ({}, {}, {}, {}, True)
+        out = executable(region[0], region[1], 1, info, name == 'Assess')
+        weights[name] = sum(m for x, m in out) + SUBSET_SPEC_WEIGHT * sum(
+            m for x, m in out if toks[x][0] == 'id' and texts[x].split('?')[0] in SUBSET_SPEC)
+        calls[name] = [(x, texts[x].split('?')[0], m) for x, m in out
+                       if toks[x][0] == 'id' and texts[x].split('?')[0] in compiled]
+        infos[name], regions[name] = info, (lo, hi, region)
+
+    def depth_of(name):
+        """(b) Bounded self-recursion: `decreases |P|` in the header, P a parameter, one self-call site
+        executed once per run, and every outside call passes a display (<= 16 elements) at P's position, as
+        a literal display, a display local or a const display. Depth <= 16 (Dafny verifies the measure)."""
+        lo, hi, region = regions[name]
+        own = [c for c in calls[name] if c[1] == name]
+        head = texts[lo:region[0] - 1]
+        if len(own) != 1 or own[0][2] != 1 or 'decreases' not in head:
+            subset_refuse('RECURSION', 'call cycle through ' + name)
+        d = lo + head.index('decreases')
+        if texts[d + 1] != '|' or texts[d + 3] != '|' or texts[d + 4] in ('+', '-', '*', ',', '/', '%'):
+            subset_refuse('RECURSION', name + ': decreases must be `|P|` for a parameter P')
+        params = subset_args(toks, texts, lo)
+        position = next((i for i, a in enumerate(params) if a[:2] == [texts[d + 2], ':']), None)
+        if position is None:
+            subset_refuse('RECURSION', name + ': decreases must be `|P|` for a parameter P')
+        for caller in compiled:
+            for x, callee, m in calls[caller]:
+                if callee != name or caller == name:
+                    continue
+                args = subset_args(toks, texts, x + 1)
+                a = args[position] if position < len(args) else []
+                display = (a[:1] == ['['] and len(a) <= 2 + 2 * SUBSET_MAX_DISPLAY and
+                           a.count('[') == 1 and a[-1] == ']')
+                if not (display or len(a) == 1 and (a[0] in infos[caller][3] or a[0] in const_display)):
+                    subset_refuse('RECURSION', name + ' called without a display at its decreasing parameter')
+        return SUBSET_MAX_DISPLAY + 1
+
+    total, state = {}, {}
+
+    def unfold(name):
+        if state.get(name) == 'open':
+            subset_refuse('RECURSION', 'call cycle through ' + name)
+        if name not in total:
+            state[name] = 'open'
+            rec = any(c[1] == name for c in calls[name])
+            times = depth_of(name) if rec else 1
+            total[name] = times * (weights[name] + sum(m * unfold(c) for x, c, m in calls[name] if c != name))
+            state[name] = 'done'
+        return total[name]
+
+    for name in compiled:
+        if unfold(name) > SUBSET_MAX_WEIGHT:
+            subset_refuse('SIZE', name + ' unfolds to more than 4096 executed tokens')
+    return total['Assess']
+
+
+def subset_depth(texts, lo, x):
+    """Bracket depth of position x relative to lo."""
+    depth = 0
+    for t in texts[lo:x]:
+        depth += (t in ('(', '[', '{')) - (t in (')', ']', '}'))
+    return depth
+
+
+def subset_args(toks, texts, k):
+    """Token texts of each comma-separated argument of the parenthesis at k (k is `(`)."""
+    if texts[k] != '(':
+        subset_refuse('SHAPE', 'call without argument list')
+    close, args, j = subset_match(toks, k), [], k + 1
+    while j < close:
+        first = j
+        while j < close and texts[j] != ',':
+            j = subset_match(toks, j) + 1 if texts[j] in '([{' else j + 1
+        args.append(texts[first:j])
+        j += 1
+    return args
+# END GATE BLOCK
+
+
+def rule(data):
+    """None if admitted; else the refusal reason."""
+    try:
+        straight_line_subset(data)
+    except Rejected as error:
+        return str(error)
+    return None
+
+
+def bound(data):
+    try:
+        return straight_line_subset(data)
+    except Rejected:
+        return None
+
+
+if __name__ == '__main__':
+    for path in sys.argv[1:]:
+        data = open(path, 'rb').read()
+        r = rule(data)
+        print(path, '|', r or 'pass N=%s' % bound(data))

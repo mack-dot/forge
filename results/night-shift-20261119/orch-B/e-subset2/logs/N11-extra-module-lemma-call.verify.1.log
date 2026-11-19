@@ -1,0 +1,37 @@
+# owner=e-subset2 start=2026-11-19T13:03:50Z cwd=<REPO>/results/night-shift-20261119/orch-B/e-subset2/work/N11-extra-module-lemma-call
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1169
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 59
+impl/Refund.dfy(7,4): Error: unresolved identifier: Facts
+  |
+7 |     Facts.AddZero(response.amount);
+  |     ^^^^^
+
+impl/Refund.dfy(7,17): Error: expected method call, found expression
+  |
+7 |     Facts.AddZero(response.amount);
+  |                  ^
+
+2 resolution/type errors detected in Refund.dfy
+        0.47 real         0.38 user         0.06 sys
+            87638016  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7020  page reclaims
+                 411  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  40  voluntary context switches
+                 820  involuntary context switches
+          3963232346  instructions retired
+          1387061496  cycles elapsed
+            56673312  peak memory footprint
+# end=2026-11-19T13:03:51Z
+exit 2

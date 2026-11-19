@@ -1,0 +1,87 @@
+refund-subset2-standalone: 30 definitions extracted; straight_line_subset called in prepare: True
+  ok   minimal                  want=None                   got=
+  ok   while-literal            want=None                   got=
+  ok   while-decreases-exact    want=None                   got=
+  ok   while-decreases-lie      want=SUBSET_LOOP            got=SUBSET_LOOP: decreases must be exactly `B - V`
+  ok   while-big                want=SUBSET_SIZE            got=SUBSET_SIZE: loop bound larger than 4096
+  ok   while-no-increment       want=SUBSET_LOOP            got=SUBSET_LOOP: loop counter must start at a literal and end the body wit
+  ok   while-counter-param      want=SUBSET_LOOP            got=SUBSET_LOOP: loop counter i is not a once-declared local
+  ok   while-negative-start     want=SUBSET_LOOP            got=SUBSET_LOOP: loop counter must start at a literal and end the body wit
+  ok   while-guard-input        want=SUBSET_LOOP            got=SUBSET_LOOP: loop bound is not a literal, |const display| or bounded l
+  ok   for-literal              want=None                   got=
+  ok   for-downto               want=SUBSET_                got=SUBSET_LOOP: for loop must be `for V := L to B` with an unassigned V
+  ok   for-input-bound          want=SUBSET_LOOP            got=SUBSET_LOOP: loop bound is not a literal, |const display| or bounded l
+  ok   nested-cap               want=SUBSET_SIZE            got=SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens
+  ok   loop-break               want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `break` in compiled code
+  ok   loop-set-in-invariant    want=SUBSET_LOOP            got=SUBSET_LOOP: loop header and body cannot be told apart
+  ok   bounded-product          want=None                   got=
+  ok   unbounded-product        want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+  ok   field-product            want=None                   got=
+  ok   field-product-chain      want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+  ok   field-product-helper     want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+  ok   reassigned-bounded       want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+  ok   display-append           want=None                   got=
+  ok   display-append-var       want=SUBSET_DISPLAY         got=SUBSET_DISPLAY: a display or tuple element must be a literal, a spec r
+  ok   concat                   want=SUBSET_ARITHMETIC      got=SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+  ok   recursion-display        want=None                   got=
+  ok   recursion-input          want=SUBSET_RECURSION       got=SUBSET_RECURSION: L called without a display at its decreasing paramet
+  ok   recursion-no-decreases   want=SUBSET_RECURSION       got=SUBSET_RECURSION: call cycle through F
+  ok   ghost-recursion          want=None                   got=
+  ok   extra-ghost-module       want=None                   got=
+  ok   extra-compiled-module    want=SUBSET_MODULE          got=SUBSET_MODULE: extra module X has compiled member F
+  ok   extra-abstract-module    want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `abstract`
+  ok   extra-bodiless-lemma     want=SUBSET_SHAPE           got=SUBSET_SHAPE: ghost lemma L without body
+  ok   extra-refines            want=SUBSET_SHAPE           got=SUBSET_SHAPE: exactly one include and one module Refund refines Refund
+  ok   ls-in-comment            want=None                   got=
+  ok   ls-in-code               want=SUBSET_LEX             got=SUBSET_LEX: character U+2028 outside comments and literals
+  ok   nul-in-comment           want=SUBSET_LEX             got=SUBSET_LEX: control character U+0000
+  ok   cr-ends-comment          want=SUBSET_LOOP            got=SUBSET_LOOP: while guard must be `V < B`
+  ok   induction-false          want=None                   got=
+  ok   induction-true           want=SUBSET_ATTRIBUTE       got=SUBSET_ATTRIBUTE: only {:isolate_assertions} and {:induction false} ar
+  ok   at-in-string             want=None                   got=
+  ok   at-attribute             want=SUBSET_ATTRIBUTE       got=SUBSET_ATTRIBUTE: attribute syntax outside the allowed attributes
+  ok   expect                   want=SUBSET_FORBIDDEN       got=SUBSET_FORBIDDEN: `expect`
+  ok   seq-ctor                 want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+  ok   such-that                want=SUBSET_EXEC_FORBIDDEN  got=SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+  corpus 198 files: patched-copy mismatches 0; standalone mismatches 0
+refund-subset2-combined: 30 definitions extracted; straight_line_subset called in prepare: True
+  corpus 198 files: patched-copy mismatches 0; standalone mismatches 0
+refund-subset2-combined-scope: 30 definitions extracted; straight_line_subset called in prepare: True
+  corpus 198 files: patched-copy mismatches 0; standalone mismatches 0
+scope rules of 985f5eaf (today):
+  ok   C9-comment-word            want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   C12-crlf                   want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   C10-induction              want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   C11-at-in-string           want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   second-include-line        want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   second-include-indented    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   crlf-second-include        want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   other-prefix               want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   verify-false               want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   induction-other            want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   at-attribute               want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+scope rules of refund-scope-minimal:
+  ok   C9-comment-word            want_refused=False got=pass
+  ok   C12-crlf                   want_refused=False got=pass
+  ok   C10-induction              want_refused=False got=pass
+  ok   C11-at-in-string           want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   second-include-line        want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   second-include-indented    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   crlf-second-include        want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   other-prefix               want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   verify-false               want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   induction-other            want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   at-attribute               want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+scope rules of refund-subset2-combined-scope:
+  ok   C9-comment-word            want_refused=False got=pass
+  ok   C12-crlf                   want_refused=False got=pass
+  ok   C10-induction              want_refused=False got=pass
+  ok   C11-at-in-string           want_refused=False got=pass
+  ok   second-include-line        want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   second-include-indented    want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   crlf-second-include        want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   other-prefix               want_refused=True  got=SOURCE_SCOPE: exact approved refinement and sole include req
+  ok   verify-false               want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   induction-other            want_refused=True  got=SOURCE_SCOPE: only assertion-isolation attributes allowed
+  ok   at-attribute               want_refused=True  got=SUBSET_ATTRIBUTE: attribute syntax outside the allowed attri
+FAILURES 0

@@ -1,0 +1,138 @@
+G1-correct C0-repo-impl exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C1-table exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C2-recursion exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C3-early-returns exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C4-arith exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C5-helper-lemmas exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C6-function-pair exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C7-loop-plan exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C8-isolate-attr exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C9-comment-word-include exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C10-induction-attr exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C11-at-in-string exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C12-crlf-header exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct A11-abstract-trap-dead exit 1 :: SUBSET_FORBIDDEN: `abstract`
+G1-correct A34-nested-comment-hide exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C13-comment-expect exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C14-string-char-expect exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct C15-ident-expected exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+G1-correct N1a-nested-comment-closed exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV01-helper-predicate exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV02-match-not-if exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV03-extra-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV04-reordered-conjuncts exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV05-local-constants exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV06-ghost-recursive-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV07-odd-comments exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV08-helper-used-twice exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV09-helper-method-chain exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV10-expression-form exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV11-early-returns-assert-by exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV12-ghost-var-quantified-assert exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV13-ghost-loop-in-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV14-literal-arithmetic exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV15-reason-in-seq-literal exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV16-isolate-attr-and-crlf exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+new-correct CV17-odd-comments-no-line-separator exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N01-while-literal-table exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N02-for-const-display-table exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N03-for-bounded-local-plan exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N04-flag-product exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N05-recursion-over-display exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N06-extra-ghost-module exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N07-separator-comments exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N08-input-field-product exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N09-nested-literal-loops exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N10-induction-false-lemma exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+n2-correct N12-crlf-induction-false exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted HV11-match-huge-literal-admissible-size exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+x2-hostile-admitted HV15-ghost-method-with-loop exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted HV22-big-literal-multiplier-chain exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+x2-hostile-admitted HV23-set-display-in-guard exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted HV24-negation-doubling exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted HV26-set-display-guard-then-hidden-loop exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted X02-for-literal-bigint-multiplier exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted X06-loop-one-level-input-product exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted X33-ls-comment-loop-text exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted X38-bounded-local-in-display-append-loop exit 0 :: ACCEPTED: T1 T2 T3; property_tested; end_to_end=false
+x2-hostile-admitted X40-recursion-measure-not-decreasing exit 1 :: VERIFICATION_REJECTED: R1 R2 R3 R4 R5 not established; inspect retained diagnostics
+halting E06-stack-overflow-keyed exit 1 :: SUBSET_RECURSION: call cycle through DeepM
+halting E07-oom-keyed exit 1 :: SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+halting E08-time-keyed exit 1 :: SUBSET_SIZE: loop bound larger than 4096
+halting Z24-expect-halt-amount-61 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting H01b-such-that-modulus-hang exit 1 :: SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+halting H04-seq-length-2pow32-throws exit 1 :: SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+halting H02-exponential-recursion-hang exit 1 :: SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+halting H03-seq-comprehension-alloc exit 1 :: SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+halting A16-decreases-star exit 1 :: SUBSET_FORBIDDEN: decreases *
+halting A18-runtime-exhaustion exit 1 :: SUBSET_SIZE: loop bound larger than 4096
+halting A24-expect-halt-one-input exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting A25-expect-as-assume-wrong-value exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting A32-dead-main-decreases-star exit 1 :: SUBSET_FORBIDDEN: decreases *
+halting A33-const-alloc-exhaustion exit 1 :: SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+halting A37-uncompilable-such-that exit 1 :: SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+halting A38-expect-always-halt exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting A39-expect-in-helper-method exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting Z24-expect-halt-amount-1000 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting Z24-expect-halt-amount-123456789 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting Z24-expect-halt-amount-9223372036854775805 exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting E02-array-oob exit 1 :: SUBSET_FORBIDDEN: `new`
+halting S1-cr-ends-line-comment exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting S2-cr-comment-hides-keyed-expect exit 1 :: SOURCE_SCOPE: run-time halt statement expect is not allowed
+halting H01-such-that-enumeration-hang exit 1 :: SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+x2-hostile-refused HV01-mutual-recursion-three exit 1 :: SUBSET_RECURSION: call cycle through F
+x2-hostile-refused HV02-function-type-param exit 1 :: SUBSET_HEADER: default value or function type in a compiled signature
+x2-hostile-refused HV03-function-value-reuse exit 1 :: SUBSET_FUNCTION_VALUE: function used as a value in compiled code: Heavy
+x2-hostile-refused HV04-var-such-that exit 1 :: SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+x2-hostile-refused HV05-huge-literal-sequence exit 1 :: SUBSET_DISPLAY: sequence display with more than 16 elements
+x2-hostile-refused HV06-call-tower-exponential exit 1 :: SUBSET_SIZE: T9 unfolds to more than 4096 executed tokens
+x2-hostile-refused HV07-repeated-squaring exit 1 :: SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+x2-hostile-refused HV08-string-doubling exit 1 :: SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+x2-hostile-refused HV09-string-doubling-via-display exit 1 :: SUBSET_DISPLAY: a display or tuple element must be a literal, a spec record, a boolean or 
+x2-hostile-refused HV10-tuple-dag-equality exit 1 :: SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boolean or a 
+x2-hostile-refused HV12-match-too-large exit 1 :: SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens
+x2-hostile-refused HV13-cyrillic-homoglyph-while exit 1 :: SUBSET_LEX: character U+0456 outside comments and literals
+x2-hostile-refused HV14-lone-cr-comment-hides-loop exit 1 :: SUBSET_SIZE: loop bound larger than 4096
+x2-hostile-refused HV16-ghost-var-from-compiled-method exit 1 :: SUBSET_GHOST: a ghost statement names a compiled method
+x2-hostile-refused HV17-forall-in-compiled-predicate exit 1 :: SUBSET_EXEC_FORBIDDEN: `forall` in compiled code
+x2-hostile-refused HV18-by-method-loop exit 1 :: SUBSET_FORBIDDEN: by method
+x2-hostile-refused HV19-seq-constructor-comment-split exit 1 :: SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+x2-hostile-refused HV20-const-self-cycle exit 1 :: SUBSET_RECURSION: call cycle through A
+x2-hostile-refused HV21-literal-mult-chain exit 1 :: SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+x2-hostile-refused HV25-tuple-of-helper-tuples exit 1 :: SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boolean or a 
+x2-hostile-refused X01-loop-bound-1e12 exit 1 :: SUBSET_SIZE: loop bound larger than 4096
+x2-hostile-refused X03-display-bound-by-function exit 1 :: SUBSET_LOOP: loop bound is not a literal, |const display| or bounded local
+x2-hostile-refused X04-nested-1000-cubed exit 1 :: SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens
+x2-hostile-refused X05-loop-iterated-input-product exit 1 :: SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+x2-hostile-refused X07-ghost-module-hides-compiled exit 1 :: SUBSET_MODULE: extra module Helpers has compiled member Spin
+x2-hostile-refused X08-extra-module-called-from-compiled exit 1 :: SUBSET_MODULE: compiled code names extra module Helpers
+x2-hostile-refused X09-extra-lemma-name-collision exit 1 :: SUBSET_MODULE: an extra module member has the name of a Refund member
+x2-hostile-refused X10-decreases-lies exit 1 :: SUBSET_LOOP: decreases must be exactly `B - V`
+x2-hostile-refused X11-counter-reset-in-body exit 1 :: SUBSET_LOOP: loop counter i is assigned elsewhere
+x2-hostile-refused X12-bound-shadowed-by-case-pattern exit 1 :: SUBSET_LOOP: loop bound is not a literal, |const display| or bounded local
+x2-hostile-refused X13-bound-shadowed-in-block exit 1 :: SUBSET_LOOP: loop bound is not a literal, |const display| or bounded local
+x2-hostile-refused X14-hex-bound exit 1 :: SUBSET_SIZE: loop bound larger than 4096
+x2-hostile-refused X15-underscore-bound exit 1 :: SUBSET_SIZE: loop bound larger than 4096
+x2-hostile-refused X16-recursion-over-input-string exit 1 :: SUBSET_RECURSION: Count called without a display at its decreasing parameter
+x2-hostile-refused X17-recursion-two-self-calls exit 1 :: SUBSET_RECURSION: call cycle through Fib
+x2-hostile-refused X18-recursion-decreases-other-param exit 1 :: SUBSET_RECURSION: Down: decreases must be `|P|` for a parameter P
+x2-hostile-refused X19-display-local-reassigned exit 1 :: SUBSET_RECURSION: Len called without a display at its decreasing parameter
+x2-hostile-refused X20-invariant-set-display-misparse exit 1 :: SUBSET_LOOP: loop header and body cannot be told apart
+x2-hostile-refused X21-case-pattern-shadow-squaring exit 1 :: SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+x2-hostile-refused X22-bounded-local-overflow-chain exit 1 :: SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+x2-hostile-refused X23-three-field-product exit 1 :: SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+x2-hostile-refused X24-field-product-fed-back exit 1 :: SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+x2-hostile-refused X25-shadowed-response-field-product exit 1 :: SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+x2-hostile-refused X26-braceless-match-arm-increment exit 1 :: SUBSET_LOOP: a brace-less match arm in a while body
+x2-hostile-refused X27-loop-break exit 1 :: SUBSET_EXEC_FORBIDDEN: `break` in compiled code
+x2-hostile-refused X28-for-downto exit 1 :: SUBSET_LOOP: for loop must be `for V := L to B` with an unassigned V
+x2-hostile-refused X29-while-guard-le exit 1 :: SUBSET_LOOP: while guard must be `V < B`
+x2-hostile-refused X30-loop-sequence-doubling exit 1 :: SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+x2-hostile-refused X31-bounded-local-big-loop-bound exit 1 :: SUBSET_SIZE: loop bound larger than 4096
+x2-hostile-refused X32-lone-cr-comment-hides-decrement exit 1 :: SUBSET_LOOP: loop counter i is assigned elsewhere
+x2-hostile-refused X34-counter-two-loops exit 1 :: SUBSET_LOOP: loop counter i is assigned elsewhere
+x2-hostile-refused X35-display-append-in-big-loop exit 1 :: SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens
+x2-hostile-refused X36-counter-out-param-reset exit 1 :: SUBSET_LOOP: loop counter i is assigned elsewhere
+x2-hostile-refused X37-recursion-display-local-bigger-elements exit 1 :: SUBSET_DISPLAY: a display or tuple element must be a literal, a spec record, a boolean or 
+x2-hostile-refused X39-tuple-index-plus-concat exit 1 :: SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+x2-hostile-refused X41-recursive-call-in-loop exit 1 :: SUBSET_RECURSION: call cycle through Walk

@@ -1,0 +1,155 @@
+KNOWN CORRECT (19 G1 + 17 CV = 36)
+  rule1 alone admits 29; rule2 alone admits 35
+  heavy gate before (combined diff with rule1, measured): admitted 26
+  predicted gate with rule2 (other tiers from stored results; NOT RUN): 31; with scope diff: 35
+  still refused by rule2:
+   A11-abstract-trap-dead                           N2=None  r1=SUBSET_FORBIDDEN: `abstr r2=SUBSET_FORBIDDEN: `abstract`
+HALTING/HANGING set: 25 files; admitted by rule2: ['E03-div-zero']
+G1 wrong: rule1 pass 11, rule2 pass 13; newly passing under rule2: ['S3-u2028-in-line-comment', 'S4-formfeed-in-line-comment']
+Rule1-refused, rule2-admitted (all groups):
+   G1     correct   C1-table                                       N2=256
+   G1     correct   C2-recursion                                   N2=839
+   G1     correct   C4-arith                                       N2=402
+   G1     correct   C7-loop-plan                                   N2=210
+   G1     correct   C10-induction-attr                             N2=185
+   G1     wrong     S3-u2028-in-line-comment                       N2=9
+   G1     wrong     S4-formfeed-in-line-comment                    N2=9
+   CV     correct   CV07-odd-comments                              N2=185
+   HV     hostile   HV26-set-display-guard-then-hidden-loop        N2=209
+   P2     benign    B01-identifiers-expected                       N2=209
+   P2     benign    B04-formfeed-comment-word                      N2=185
+   P2     lexer     K07-u0085-line-comment                         N2=185
+   N      correct   N01-while-literal-table                        N2=313
+   N      correct   N02-for-const-display-table                    N2=334
+   N      correct   N03-for-bounded-local-plan                     N2=203
+   N      correct   N04-flag-product                               N2=373
+   N      correct   N05-recursion-over-display                     N2=728
+   N      correct   N06-extra-ghost-module                         N2=185
+   N      correct   N07-separator-comments                         N2=185
+   N      correct   N08-input-field-product                        N2=200
+   N      correct   N09-nested-literal-loops                       N2=343
+   N      correct   N10-induction-false-lemma                      N2=185
+   N      correct   N12-crlf-induction-false                       N2=185
+   X      hostile   X02-for-literal-bigint-multiplier              N2=908
+   X      hostile   X06-loop-one-level-input-product               N2=1220
+   X      hostile   X33-ls-comment-loop-text                       N2=185
+   X      hostile   X38-bounded-local-in-display-append-loop       N2=961
+   X      hostile   X40-recursion-measure-not-decreasing           N2=554
+   L      control   L01-ls-u2028                                   N2=9
+   L      control   L02-ps-u2029                                   N2=9
+   L      control   L03-nel-u0085                                  N2=9
+   L      control   L04-vt                                         N2=9
+   L      control   L05-ff                                         N2=9
+   L      control   N11-extra-module-lemma-call                    N2=185
+Rule1-admitted, rule2-refused (all groups): []
+GROUP HV
+   HV01-mutual-recursion-three                      N2=None  r1=SUBSET_RECURSION: call c r2=SUBSET_RECURSION: call cycle through F
+   HV02-function-type-param                         N2=None  r1=SUBSET_HEADER: default v r2=SUBSET_HEADER: default value or function type in a compiled signature
+   HV03-function-value-reuse                        N2=None  r1=SUBSET_FUNCTION_VALUE: f r2=SUBSET_FUNCTION_VALUE: function used as a value in compiled code: Heavy
+   HV04-var-such-that                               N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+   HV05-huge-literal-sequence                       N2=None  r1=SUBSET_DISPLAY: sequence r2=SUBSET_DISPLAY: sequence display with more than 16 elements
+   HV06-call-tower-exponential                      N2=None  r1=SUBSET_SIZE: T9 unfolds  r2=SUBSET_SIZE: T9 unfolds to more than 4096 executed tokens
+   HV07-repeated-squaring                           N2=None  r1=SUBSET_ARITHMETIC: `*` n r2=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+   HV08-string-doubling                             N2=None  r1=SUBSET_ARITHMETIC: `+` n r2=SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+   HV09-string-doubling-via-display                 N2=None  r1=SUBSET_DISPLAY: a displa r2=SUBSET_DISPLAY: a display or tuple element must be a literal, a spec record, a b
+   HV10-tuple-dag-equality                          N2=None  r1=SUBSET_TUPLE: a display  r2=SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boo
+   HV11-match-huge-literal-admissible-size          N2=2318  r1=pass                     r2=pass
+   HV12-match-too-large                             N2=None  r1=SUBSET_SIZE: Assess unfo r2=SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens
+   HV13-cyrillic-homoglyph-while                    N2=None  r1=SUBSET_LEX: character U+ r2=SUBSET_LEX: character U+0456 outside comments and literals
+   HV14-lone-cr-comment-hides-loop                  N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_SIZE: loop bound larger than 4096
+   HV15-ghost-method-with-loop                      N2=197   r1=pass                     r2=pass
+   HV16-ghost-var-from-compiled-method              N2=None  r1=SUBSET_GHOST: a ghost st r2=SUBSET_GHOST: a ghost statement names a compiled method
+   HV17-forall-in-compiled-predicate                N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_EXEC_FORBIDDEN: `forall` in compiled code
+   HV18-by-method-loop                              N2=None  r1=SUBSET_FORBIDDEN: by met r2=SUBSET_FORBIDDEN: by method
+   HV19-seq-constructor-comment-split               N2=None  r1=SUBSET_EXEC_FORBIDDEN: s r2=SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+   HV20-const-self-cycle                            N2=None  r1=SUBSET_RECURSION: call c r2=SUBSET_RECURSION: call cycle through A
+   HV21-literal-mult-chain                          N2=None  r1=SUBSET_ARITHMETIC: `*` n r2=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+   HV22-big-literal-multiplier-chain                N2=484   r1=pass                     r2=pass
+   HV23-set-display-in-guard                        N2=207   r1=pass                     r2=pass
+   HV24-negation-doubling                           N2=2404  r1=pass                     r2=pass
+   HV25-tuple-of-helper-tuples                      N2=None  r1=SUBSET_TUPLE: a display  r2=SUBSET_TUPLE: a display or tuple element must be a literal, a spec record, a boo
+   HV26-set-display-guard-then-hidden-loop          N2=209   r1=SUBSET_EXEC_FORBIDDEN: ` r2=pass
+GROUP X
+   X01-loop-bound-1e12                              N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_SIZE: loop bound larger than 4096
+   X02-for-literal-bigint-multiplier                N2=908   r1=SUBSET_EXEC_FORBIDDEN: ` r2=pass
+   X03-display-bound-by-function                    N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: loop bound is not a literal, |const display| or bounded local
+   X04-nested-1000-cubed                            N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens
+   X05-loop-iterated-input-product                  N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+   X06-loop-one-level-input-product                 N2=1220  r1=SUBSET_EXEC_FORBIDDEN: ` r2=pass
+   X07-ghost-module-hides-compiled                  N2=None  r1=SUBSET_SHAPE: exactly on r2=SUBSET_MODULE: extra module Helpers has compiled member Spin
+   X08-extra-module-called-from-compiled            N2=None  r1=SUBSET_SHAPE: exactly on r2=SUBSET_MODULE: compiled code names extra module Helpers
+   X09-extra-lemma-name-collision                   N2=None  r1=SUBSET_SHAPE: exactly on r2=SUBSET_MODULE: an extra module member has the name of a Refund member
+   X10-decreases-lies                               N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: decreases must be exactly `B - V`
+   X11-counter-reset-in-body                        N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: loop counter i is assigned elsewhere
+   X12-bound-shadowed-by-case-pattern               N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: loop bound is not a literal, |const display| or bounded local
+   X13-bound-shadowed-in-block                      N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: loop bound is not a literal, |const display| or bounded local
+   X14-hex-bound                                    N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_SIZE: loop bound larger than 4096
+   X15-underscore-bound                             N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_SIZE: loop bound larger than 4096
+   X16-recursion-over-input-string                  N2=None  r1=SUBSET_RECURSION: call c r2=SUBSET_RECURSION: Count called without a display at its decreasing parameter
+   X17-recursion-two-self-calls                     N2=None  r1=SUBSET_RECURSION: call c r2=SUBSET_RECURSION: call cycle through Fib
+   X18-recursion-decreases-other-param              N2=None  r1=SUBSET_RECURSION: call c r2=SUBSET_RECURSION: Down: decreases must be `|P|` for a parameter P
+   X19-display-local-reassigned                     N2=None  r1=SUBSET_ARITHMETIC: `+` n r2=SUBSET_RECURSION: Len called without a display at its decreasing parameter
+   X20-invariant-set-display-misparse               N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: loop header and body cannot be told apart
+   X21-case-pattern-shadow-squaring                 N2=None  r1=SUBSET_ARITHMETIC: `*` n r2=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+   X22-bounded-local-overflow-chain                 N2=None  r1=SUBSET_ARITHMETIC: `*` n r2=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+   X23-three-field-product                          N2=None  r1=SUBSET_ARITHMETIC: `*` n r2=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+   X24-field-product-fed-back                       N2=None  r1=SUBSET_ARITHMETIC: `*` n r2=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+   X25-shadowed-response-field-product              N2=None  r1=SUBSET_ARITHMETIC: `*` n r2=SUBSET_ARITHMETIC: `*` needs a literal or bounded operand
+   X26-braceless-match-arm-increment                N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: a brace-less match arm in a while body
+   X27-loop-break                                   N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_EXEC_FORBIDDEN: `break` in compiled code
+   X28-for-downto                                   N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: for loop must be `for V := L to B` with an unassigned V
+   X29-while-guard-le                               N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: while guard must be `V < B`
+   X30-loop-sequence-doubling                       N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+   X31-bounded-local-big-loop-bound                 N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_SIZE: loop bound larger than 4096
+   X32-lone-cr-comment-hides-decrement              N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: loop counter i is assigned elsewhere
+   X33-ls-comment-loop-text                         N2=185   r1=SUBSET_LEX: character U+ r2=pass
+   X34-counter-two-loops                            N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: loop counter i is assigned elsewhere
+   X35-display-append-in-big-loop                   N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_SIZE: Assess unfolds to more than 4096 executed tokens
+   X36-counter-out-param-reset                      N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_LOOP: loop counter i is assigned elsewhere
+   X37-recursion-display-local-bigger-elements      N2=None  r1=SUBSET_DISPLAY: a displa r2=SUBSET_DISPLAY: a display or tuple element must be a literal, a spec record, a b
+   X38-bounded-local-in-display-append-loop         N2=961   r1=SUBSET_EXEC_FORBIDDEN: ` r2=pass
+   X39-tuple-index-plus-concat                      N2=None  r1=SUBSET_ARITHMETIC: `+` n r2=SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+   X40-recursion-measure-not-decreasing             N2=554   r1=SUBSET_ARITHMETIC: `+` n r2=pass
+   X41-recursive-call-in-loop                       N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_RECURSION: call cycle through Walk
+GROUP P2
+   B01-identifiers-expected                         N2=209   r1=SUBSET_ARITHMETIC: `+` n r2=pass
+   B02-word-in-comments-strings                     N2=195   r1=pass                     r2=pass
+   B03-identifier-prime-expect                      N2=None  r1=SUBSET_FORBIDDEN: `x'exp r2=SUBSET_FORBIDDEN: `x'expect`
+   B04-formfeed-comment-word                        N2=185   r1=SUBSET_LEX: character U+ r2=pass
+   B05-latin1-comment                               N2=None  r1=SUBSET_LEX: implementati r2=SUBSET_LEX: implementation is not UTF-8
+   B06-unicode-in-string                            N2=190   r1=pass                     r2=pass
+   H01-such-that-enumeration-hang                   N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+   H01b-such-that-modulus-hang                      N2=None  r1=SUBSET_EXEC_FORBIDDEN: ` r2=SUBSET_EXEC_FORBIDDEN: `:|` in compiled code
+   H02-exponential-recursion-hang                   N2=None  r1=SUBSET_ARITHMETIC: `+` n r2=SUBSET_ARITHMETIC: `+` needs a literal or bounded operand
+   H03-seq-comprehension-alloc                      N2=None  r1=SUBSET_EXEC_FORBIDDEN: s r2=SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+   H04-seq-length-2pow32-throws                     N2=None  r1=SUBSET_EXEC_FORBIDDEN: s r2=SUBSET_EXEC_FORBIDDEN: seq constructor in compiled code
+   K01-string-backslash-newline                     N2=195   r1=pass                     r2=pass
+   K02-string-bad-unicode-escape                    N2=None  r1=SUBSET_FORBIDDEN: `expec r2=SUBSET_FORBIDDEN: `expect`
+   K03-comment-split-attribute                      N2=None  r1=SUBSET_ATTRIBUTE: attrib r2=SUBSET_ATTRIBUTE: attribute syntax outside the allowed attributes
+   K04-isolate-wrapping-attribute                   N2=None  r1=SUBSET_ATTRIBUTE: only { r2=SUBSET_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+   K05-eof-line-comment-no-newline                  N2=185   r1=pass                     r2=pass
+   K06-unterminated-block-comment-eof               N2=None  r1=SUBSET_LEX: unterminated r2=SUBSET_LEX: unterminated comment
+   K07-u0085-line-comment                           N2=185   r1=SUBSET_LEX: character U+ r2=pass
+   K08-nul-in-line-comment                          N2=None  r1=SUBSET_FORBIDDEN: `expec r2=SUBSET_LEX: control character U+0000
+GROUP N
+   N01-while-literal-table                          N2=313   r1=SUBSET_EXEC_FORBIDDEN: ` r2=pass
+   N02-for-const-display-table                      N2=334   r1=SUBSET_EXEC_FORBIDDEN: ` r2=pass
+   N03-for-bounded-local-plan                       N2=203   r1=SUBSET_EXEC_FORBIDDEN: ` r2=pass
+   N04-flag-product                                 N2=373   r1=SUBSET_ARITHMETIC: `*` n r2=pass
+   N05-recursion-over-display                       N2=728   r1=SUBSET_RECURSION: call c r2=pass
+   N06-extra-ghost-module                           N2=185   r1=SUBSET_SHAPE: exactly on r2=pass
+   N07-separator-comments                           N2=185   r1=SUBSET_LEX: character U+ r2=pass
+   N08-input-field-product                          N2=200   r1=SUBSET_ARITHMETIC: `*` n r2=pass
+   N09-nested-literal-loops                         N2=343   r1=SUBSET_EXEC_FORBIDDEN: ` r2=pass
+   N10-induction-false-lemma                        N2=185   r1=SUBSET_ATTRIBUTE: only { r2=pass
+   N12-crlf-induction-false                         N2=185   r1=SUBSET_ATTRIBUTE: only { r2=pass
+GROUP L
+   L01-ls-u2028                                     N2=9     r1=SUBSET_LEX: character U+ r2=pass
+   L02-ps-u2029                                     N2=9     r1=SUBSET_LEX: character U+ r2=pass
+   L03-nel-u0085                                    N2=9     r1=SUBSET_LEX: character U+ r2=pass
+   L04-vt                                           N2=9     r1=SUBSET_LEX: character U+ r2=pass
+   L05-ff                                           N2=9     r1=SUBSET_LEX: character U+ r2=pass
+   L06-cr-positive                                  N2=None  r1=SUBSET_FORBIDDEN: `expec r2=SUBSET_FORBIDDEN: `expect`
+   L07-include-inside-module                        N2=None  r1=SUBSET_SHAPE: exactly on r2=SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec first
+   L08-include-after-module                         N2=None  r1=SUBSET_SHAPE: exactly on r2=SUBSET_SHAPE: exactly one include and one module Refund refines RefundSpec first
+   N11-extra-module-lemma-call                      N2=185   r1=SUBSET_SHAPE: exactly on r2=pass
