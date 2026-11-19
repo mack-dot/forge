@@ -1,0 +1,22 @@
+S01-char-less-astral.dfy | SUBSET3_KIND: expected int, found char
+S02-string-less.dfy | SUBSET3_KIND: expected int, found string
+S03-string-in-string.dfy | SUBSET3_KIND: membership needs a display and is not chained
+S04-char-in-string.dfy | pass W=218 T=6
+S05-set-card-dup.dfy | pass W=222 T=6
+S06-tuple-eq.dfy | pass W=226 T=6
+S07-nested-seq-eq.dfy | pass W=232 T=6
+S08-raw-cr-verbatim.dfy | pass W=214 T=6
+S09-surrogate-escape.dfy | pass W=214 T=6
+S10-u-escape.dfy | pass W=214 T=6
+N01-name-trailing-underscore.dfy | pass W=227 T=6
+N02-name-digit-start.dfy | SUBSET3_NAME: declared name `_0` is refused (shape, JavaScript name or shadowing)
+N03-name-source0.dfy | pass W=214 T=6
+N04-member-Default.dfy | pass W=223 T=6
+N05-member-dtor.dfy | pass W=227 T=6
+N06-member-is_Candidate.dfy | pass W=227 T=6
+N07-local-Lmatch0.dfy | pass W=214 T=6
+N08-prime-vs-k-local.dfy | pass W=226 T=6
+N09-member-of.dfy | pass W=227 T=6
+N10-member-Tuple.dfy | pass W=227 T=6
+N11-param-named-Refund.dfy | SUBSET3_NAME: declared name `Refund` is refused (shape, JavaScript name or shadowing)
+N12-param-named-ctx-field.dfy | pass W=227 T=6

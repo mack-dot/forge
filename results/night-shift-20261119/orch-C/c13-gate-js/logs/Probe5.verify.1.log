@@ -1,0 +1,32 @@
+# owner=orchC-c13 start=2026-11-19T15:08:32Z cwd=<REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/Probe5
+# power: Now drawing from 'AC Power'
+# swap free MiB: 967
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify Probe.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 30
+Probe.dfy(5,21): Error: \u escape sequences are not permitted when Unicode chars are enabled
+  |
+5 |   predicate Q39() { |"\uD83D"| == 1 }
+  |                      ^^^^^^^^
+
+1 parse errors detected in Probe.dfy
+        0.43 real         0.26 user         0.06 sys
+            61390848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                5496  page reclaims
+                 227  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  26  voluntary context switches
+                2348  involuntary context switches
+          2014892785  instructions retired
+           949613419  cycles elapsed
+            43058256  peak memory footprint
+# end=2026-11-19T15:08:33Z
+exit 2

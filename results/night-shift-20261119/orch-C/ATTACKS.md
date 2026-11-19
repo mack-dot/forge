@@ -296,3 +296,19 @@ Attacker for the sink cases = a database WRITER WITHOUT THE KEY (drops the 14 tr
 - Words-only premises (no code enforces them): A-KERNEL-PRESERVE, A-FFI-EFFECT-AT-CALLS, A-F0-REAL, no-debugger, single-thread; CORRECTIONS_v2 already admits them. X8 v2 D11 still says the launcher is not implemented, so its ENFORCED rows are TESTED-UNPROVED, not proved.
 - UNKNOWN by reading: whether xnu keeps SIGCHLD=SIG_IGN across the python shim's execve (settles F1); whether the F2 re-exec can beat csops; whether orig-rebuild/basis_ffi.c is the source of the pinned binary.
 - C's status: I cannot independently confirm ANY of this; the classifier blocks my reading of the launcher. These are a single worker's static notes for A to check itself.
+
+Entries below: target = B's gate rule 3 (orch-B/e-subset3/subset_rule3.py). C's own re-runs at 15:56:19Z. Logs c13-gate-js/recheck/.
+
+## C-GATE-05 (15:56:19Z) rule 3 ADMITS a bodiless `lemma ... ensures false` (an axiom) when its last spec clause ends in a set display — CONFIRMED, NEW (rule defect; the gate is still safe by Dafny's warning default and the audit: defense in depth)
+- Class: gate bypass at the recognizer. Attacker: the submitter only.
+- subset_rule3.py Subset3Module.__init__ checks only the LAST token of a declaration (`texts[hi - 1] != '}'`). A bodiless lemma / ghost predicate / ghost method whose last clause ends in `{...}` (e.g. `ensures 1 in {1}`) is taken to have a body.
+- Repro (C's run, pure Python): python3.10 -I orch-B/e-subset3/subset_rule3.py c13-gate-js/subs/A01-bodiless-lemma-brace-end.dfy -> "pass W=241 T=6" (ADMITTED). The file has `lemma Dead() ensures false ensures 1 in {1}` and calls Dead() to reach `Authorized(response.amount + 1000, "free_money")` (an amount above the request and an unapproved reason). A02 (bodiless ghost predicate): also "pass". bash c13-gate-js/regress.sh -> EXIT 1 (7 files admitted). 858711766d613a1219c2c5bfd6ced4d072784ebf0a174c60df91bb9b855d6356  subs/A01-bodiless-lemma- 41e592806742b9865fa39e30e90a2a780d7eb634f164907ed18a055b41965725  regress.sh 
+- Why the gate is still safe (worker's Dafny runs, NOT re-run by C): verify exit 2 — the log says "6 verified, 0 errors" (the verifier ACCEPTED the axiom) and only "warnings were found and --allow-warnings is false" stops it; translate exit 3; audit --compare-report exit 2.
+- Impact: defense in depth only TODAY. It is a critical soundness bypass if --allow-warnings or --allow-axioms ever enters the gate's Dafny options, or if the audit step is removed. The rule claims to refuse bodiless ghost members (it refuses B's A07 which has no `}`) but does not.
+- Sent to B 15:56:19Z. Regression: PENDING.
+
+## C-GATE-06 (15:56:19Z) rule 3 false rejection: `const Cap := 1_000_000` (digit separators) is refused (SUBSET3_LITERAL) though Dafny verifies it — worker run; natural money-literal style; by B's design (Y36) but the cost to correct work is unrecorded. Also G12 typed set<string> const (known, B F03).
+
+## C-NEG-15 (15:56:19Z) gate, verified source vs compiled JavaScript — NO admitted submission halts or answers wrongly (worker: 23 single-file Dafny runs, none refused by the lock script; NOT re-run by C)
+- Lone CR in a verbatim string: verifier and compiler both read it as LF (same scanner); answers the open question at unsure line 18267. 29-predicate probe: verify exit 0, Node 0 differences. Covers astral chars, U+2028/2029, 2^53±1, 10^19-1, Euclidean / and %, set cardinality with run-time duplicates, comparison chains.
+- Input conversion exact (9007199254740993, MaxMoney, 2^53+1). Match flattening linear (scrutinee evaluated once). Worst admitted arithmetic 0.74 s / 10 MB. Name mangling injective. The rule refuses assume, {:axiom}, {:verify false}, {:only}, {:fuel}, {:extern}, opaque/reveal, decreases *; the gate refuses print and expect and treats a timeout as Rejected.

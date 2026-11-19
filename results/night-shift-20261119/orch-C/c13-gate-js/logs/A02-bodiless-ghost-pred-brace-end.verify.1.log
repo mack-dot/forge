@@ -1,0 +1,40 @@
+# owner=orchC-c13 start=2026-11-19T15:40:15Z cwd=<REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/A02-bodiless-ghost-pred-brace-end
+# power: Now drawing from 'Battery Power'
+# swap free MiB: 835
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# note: on battery power; run allowed by the POWER AMENDMENT
+# memory free percent: 35
+impl/Refund.dfy(4,38): Warning: This ensures clause is part of a bodyless function. Add the {:axiom} attribute to it or the enclosing function to suppress this warning
+  |
+4 |   ghost predicate Bad() ensures Bad() && !Bad() ensures 1 in {1}
+  |                                       ^^
+
+impl/Refund.dfy(4,58): Warning: This ensures clause is part of a bodyless function. Add the {:axiom} attribute to it or the enclosing function to suppress this warning
+  |
+4 |   ghost predicate Bad() ensures Bad() && !Bad() ensures 1 in {1}
+  |                                                           ^^
+
+
+Dafny program verifier finished with 7 verified, 0 errors
+Compilation failed because warnings were found and --allow-warnings is false
+        1.56 real         1.22 user         0.23 sys
+           112427008  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12555  page reclaims
+                 696  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  79  voluntary context switches
+               20493  involuntary context switches
+          9957625498  instructions retired
+          4375434612  cycles elapsed
+            93275288  peak memory footprint
+# end=2026-11-19T15:40:17Z
+exit 2

@@ -1,0 +1,28 @@
+# owner=orchC-c13 start=2026-11-19T15:01:13Z cwd=<REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/Probe
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1390
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify Probe.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 41
+
+Dafny program verifier finished with 4 verified, 0 errors
+        1.84 real         1.01 user         0.18 sys
+            96272384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10605  page reclaims
+                 684  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  43  voluntary context switches
+               11108  involuntary context switches
+          7124989642  instructions retired
+          3486112222  cycles elapsed
+            78382256  peak memory footprint
+# end=2026-11-19T15:01:16Z
+exit 0

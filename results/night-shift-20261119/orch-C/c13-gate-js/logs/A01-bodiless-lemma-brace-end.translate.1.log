@@ -1,0 +1,39 @@
+# owner=orchC-c13 start=2026-11-19T15:47:46Z cwd=<REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/A01-bodiless-lemma-brace-end
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1542
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/A01-bodiless-lemma-brace-end/model
+# memory free percent: 37
+impl/Refund.dfy(4,23): Warning: This ensures clause is part of a bodyless method. Add the {:axiom} attribute to it or the enclosing method to suppress this warning
+  |
+4 |   lemma Dead() ensures false ensures 1 in {1}
+  |                        ^^^^^
+
+impl/Refund.dfy(4,39): Warning: This ensures clause is part of a bodyless method. Add the {:axiom} attribute to it or the enclosing method to suppress this warning
+  |
+4 |   lemma Dead() ensures false ensures 1 in {1}
+  |                                        ^^
+
+
+Dafny program verifier did not attempt verification
+Translation was aborted because warnings were found and --allow-warnings was not specified
+        0.91 real         0.57 user         0.09 sys
+            90636288  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7810  page reclaims
+                1466  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  53  voluntary context switches
+                4560  involuntary context switches
+          4576509577  instructions retired
+          2033968790  cycles elapsed
+            75908296  peak memory footprint
+# end=2026-11-19T15:47:47Z
+exit 3

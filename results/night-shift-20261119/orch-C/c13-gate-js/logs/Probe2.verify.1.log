@@ -1,0 +1,37 @@
+# owner=orchC-c13 start=2026-11-19T15:02:43Z cwd=<REPO>/results/night-shift-20261119/orch-C/c13-gate-js/work/Probe2
+# power: Now drawing from 'AC Power'
+# swap free MiB: 806
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify Probe.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 37
+Probe.dfy(4,20): Error: \U{X..X} escape sequence must not be a surrogate
+  |
+4 |   predicate Q32() { "\U{D83D}" != "\U{1F600}" }
+  |                     ^^^^^^^^^^
+
+Probe.dfy(7,20): Error: \U{X..X} escape sequence must be less than 0x110000
+  |
+7 |   predicate Q35() { "\U{110000}" != "A" }
+  |                     ^^^^^^^^^^^^
+
+2 parse errors detected in Probe.dfy
+        0.48 real         0.25 user         0.05 sys
+            61194240  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                5662  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  22  voluntary context switches
+                2971  involuntary context switches
+          2001094449  instructions retired
+           923991104  cycles elapsed
+            42648608  peak memory footprint
+# end=2026-11-19T15:02:44Z
+exit 2
