@@ -1,0 +1,30 @@
+C01-literal-dead-branch.dfy | pass W=239 T=6 real 0.50 
+C02-int-match-stmt-no-default.dfy | pass W=236 T=6 real 0.06 
+C03-int-match-expr-no-default.dfy | pass W=227 T=6 real 0.06 
+C04-string-match-no-default.dfy | pass W=233 T=6 real 0.05 
+C05-unary-minus-900.dfy | pass W=1114 T=6 real 0.07 
+C06-parens-120.dfy | SUBSET3_SHAPE: unrecognized structure (RecursionError) real 0.06 
+C07-const-function-cycle.dfy | SUBSET3_RECURSION: call cycle K -> F -> K real 0.08 
+C08-const-calls-method.dfy | SUBSET3_CALL: call of `M` in an expression is outside the allow-list real 0.11 
+C09-div-by-named-zero.dfy | SUBSET3_PRODUCT: division by a non-literal or zero real 0.05 
+C10-div-by-zero-expr.dfy | SUBSET3_PRODUCT: division by a non-literal or zero real 0.07 
+C11-div-by-match-zero.dfy | SUBSET3_PRODUCT: division by a non-literal or zero real 0.09 
+C12-div-by-neg-zero.dfy | SUBSET3_PRODUCT: division by a non-literal or zero real 0.08 
+C13-div-by-000.dfy | SUBSET3_PRODUCT: division by a non-literal or zero real 0.06 
+C14-expect-in-assert-by.dfy | SUBSET3_FORBIDDEN: `expect` real 0.05 
+C15-by-attr-method.dfy | SUBSET3_NAME: declared name `{` is refused (shape, JavaScript name or shadowing) real 0.10 
+C16-attr-on-module.dfy | pass W=209 T=6 real 0.04 
+C17-ghost-let-semicolon.dfy | SUBSET3_STATEMENT: statement `b` is outside the allow-list (in Assess) real 0.05 
+C18-pattern-field-names.dfy | pass W=237 T=6 real 0.04 
+C19-member-named-amount.dfy | pass W=227 T=6 real 0.04 
+C20-member-toJSON.dfy | pass W=227 T=6 real 0.04 
+C21-member-__defineGetter.dfy | pass W=240 T=6 real 0.04 
+C22-bare-cr-lines.dfy | pass W=209 T=6 real 0.05 
+C23-ls-comment.dfy | pass W=209 T=6 real 0.07 
+C24-formfeed-between-tokens.dfy | SUBSET3_LEX: character U+000C outside comments and literals real 0.20 
+C25-string-escapes.dfy | pass W=214 T=6 real 0.07 
+C26-eq-chain.dfy | pass W=219 T=6 real 0.13 
+C27-neq-chain.dfy | pass W=219 T=6 real 0.13 
+C28-bang-bang.dfy | SUBSET3_NAME: unknown or refused name `!!` in Assess real 0.07 
+C29-mult-chain-1900.dfy | pass W=4031 T=6 real 0.13 
+C30-brace-nest-dos.dfy | pass W=209 T=6 real 94.80 

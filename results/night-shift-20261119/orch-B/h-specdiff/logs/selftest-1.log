@@ -1,0 +1,31 @@
+# start=2026-11-19T14:28:36Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-specdiff/tree node=v24.3.0
+# cmd: node --import tsx tests/refund-finality/spec-conformance/selftest.ts <REPO>/results/night-shift-20261119/orch-B/h-specdiff/../p-adopt/build/pristine-core/model.cjs
+{"case":"clean history (incl. zero amount, replay, wrong key, stale)","expected":"no violation","flagged":[],"first":null,"pass":true}
+{"case":"P1: unapproved reason committed","expected":"P1","flagged":["P1"],"first":{"property":"P1","index":0,"detail":"effect {\"amount\":\"30\",\"chargeId\":\"ch_1\",\"reason\":\"fraud\",\"requestId\":\"r1\"} is not the one intent that Assess authorizes (request \"r1\", open=true)"},"pass":true}
+{"case":"P2: second effect for (ch_1, r1)","expected":"P2","flagged":["P2","P1"],"first":{"property":"P2","index":1,"detail":"second effect for (charge id, request id) [\"ch_1\",\"r1\"]"},"pass":true}
+{"case":"P3: post state not POST-RULE (remaining unchanged)","expected":"P3","flagged":["P3"],"first":{"property":"P3","index":0,"detail":"post state {\"chargeId\":\"ch_1\",\"original\":\"100\",\"refundEnabled\":true,\"remaining\":\"100\"} is not POST-RULE {\"chargeId\":\"ch_1\",\"original\":\"100\",\"refundEnabled\":true,\"remaining\":\"70\"}"},"pass":true}
+{"case":"P4: sum of effects above original","expected":"P4","flagged":["P3","P4"],"first":{"property":"P3","index":0,"detail":"post state {\"chargeId\":\"ch_1\",\"original\":\"100\",\"refundEnabled\":true,\"remaining\":\"100\"} is not POST-RULE {\"chargeId\":\"ch_1\",\"original\":\"100\",\"refundEnabled\":true,\"remaining\":\"0\"}"},"pass":true}
+{"case":"P6: rejected delivery released an effect","expected":"P6","flagged":["P6","P5"],"first":{"property":"P6","index":0,"detail":"rejected delivery changed durable state"},"pass":true}
+{"case":"P7: effect carries a foreign charge id","expected":"P7","flagged":["P7","P1"],"first":{"property":"P7","index":0,"detail":"effect charge id \"ch_x\" is not the persisted charge id"},"pass":true}
+{"case":"P5 (extra): authorized zero-amount token rejected","expected":"P5","flagged":["P5"],"first":{"property":"P5","index":0,"detail":"authorized, validly signed, fresh, current token was rejected: "},"pass":true}
+{"selftests":8,"failed":0}
+        0.49 real         0.34 user         0.08 sys
+           118652928  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10558  page reclaims
+                  93  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                  10  messages sent
+                  10  messages received
+                  14  signals received
+                  12  voluntary context switches
+                2440  involuntary context switches
+            23259992  instructions retired
+            18752725  cycles elapsed
+             1262000  peak memory footprint
+# end=2026-11-19T14:28:37Z
+exit 0

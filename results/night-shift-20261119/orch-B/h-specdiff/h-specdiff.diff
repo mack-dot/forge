@@ -1,0 +1,605 @@
+diff --git a/tests/refund-finality/spec-conformance/README.md b/tests/refund-finality/spec-conformance/README.md
+new file mode 100644
+index 00000000..5036c3cc
+--- /dev/null
++++ b/tests/refund-finality/spec-conformance/README.md
+@@ -0,0 +1,47 @@
++# Spec conformance of refund sinks
++
++These files test a REAL sink against an oracle built only from the APPROVED refund specification
++(`spec/refund/RefundSpec.dfy`, `spec/refund/protocol.md`) and the compiled approved `Refund.Assess`.
++They do not compare one model with another model. The property list with its sources is `SPEC_ORACLE.md`.
++Status: TESTED-UNPROVED. Nothing here is a proof.
++
++| Id | Property (short) | Source | Responsible |
++|----|------------------|--------|-------------|
++| P1 | every effect is the one intent that Assess authorizes on the persisted charge | RS 33-36, 48-58; PR 22-24, 68-70 | sink |
++| P2 | at most one effect per (charge id, request id) | PR 61, 63-65 | sink |
++| P3 | state evolves by POST-RULE (unratified); 0 <= remaining <= original <= MaxMoney | RS 27-31; PR 18; evolution SILENT | sink |
++| P4 | sum of effects of a charge <= its original | derived (R1 + POST-RULE); PR 89-92; sum rule SILENT | sink |
++| P5 | no extra rejection of a valid, fresh, current, authorized token (zero included) | PR 22-27, 79; RS 50-52; token checks SILENT | sink |
++| P6 | a rejected or replayed delivery changes no durable state | PR 28-30, 63-64 | sink |
++| P7 | effects carry the persisted charge id | RS 53, 59-63; PR 15-17 | sink |
++
++Unratified choices that the oracle uses: OPEN-IS-UNSETTLED, POST-RULE.
++
++## Files
++- `oracle.ts`: replays a history (initial charge, deliveries with outcomes, snapshot after each delivery) and
++  checks P1-P7. Imports only `ts/refund-finality/encoding.ts` and the compiled approved module (by path).
++- `run.ts`: seeded generator and driver. Loads a sink module by path, delivers sequences, reads the durable
++  state through its own read-only SQLite connection, calls the oracle, prints one JSON line.
++- `selftest.ts`: hand-made histories with a known violation of P1, P2, P3, P4, P5, P6, P7 and one clean history.
++- `heavy_spec.sh`: the heavy run (5,000 sequences per mode per sink). It refuses while hol.lock exists or a
++  HOL process runs. It does not take heavy.lock.
++
++## Build the compiled approved module
++As in `scripts/exit_slice1.py` (`sink_controls`):
++`dafny build impl/RefundFinality.dfy --target js --output <dir>/model <gate options>`, then
++`<dir>/model.cjs` = `<dir>/model.js` + `\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n`.
++The oracle uses only `Refund` (`Refund.__default.Assess`, `Refund.Context`, `Refund.ModelResponse`).
++
++## Run (pinned Node 24.3.0 first in PATH; from the repository root)
++- `node --import tsx tests/refund-finality/spec-conformance/selftest.ts <model.cjs>` (exit 0 = all cases pass)
++- `node --import tsx tests/refund-finality/spec-conformance/run.ts <sink.ts> <seq|fault|interleave> <count> <seed> <model.cjs> [workDir]`
++  - delivery kinds: honest (random, zero, amount = remaining), replay, stale, wrong signature, wrong pinned
++    spec lock, reused request id, and FAULTY-SIGNER tokens signed by the trusted test key: request-id mismatch,
++    foreign charge in the intent, foreign post-state, amount above remaining (post remaining 0, or post
++    unchanged), unapproved reason, refund while refundEnabled is false, post original above MaxMoney; probes:
++    request id of 300+ units, request id with U+0000.
++  - fault: a storage write throws inside the sink's transaction (30 % of deliveries). P5 is not demanded there.
++  - interleave: two sink instances on one database file in one process (alternation, not concurrency).
++  - Output fields: `sequencesWithViolation` (per property), `violationsByKind`, `smallest` (shortest prefix
++    that shows each property), `kindOutcome`, input SHA-256 values.
++- `bash tests/refund-finality/spec-conformance/heavy_spec.sh <model.cjs> <outDir> <sink>...`
+diff --git a/tests/refund-finality/spec-conformance/SPEC_ORACLE.md b/tests/refund-finality/spec-conformance/SPEC_ORACLE.md
+new file mode 100644
+index 00000000..3e2043b1
+--- /dev/null
++++ b/tests/refund-finality/spec-conformance/SPEC_ORACLE.md
+@@ -0,0 +1,44 @@
++# Spec oracle: properties of a sink's durable behaviour (task h-specdiff)
++
++Sources: `spec/refund/RefundSpec.dfy` (RS) and `spec/refund/protocol.md` (PR), with line numbers. No sink core
++written on 2026-11-19 is a source. The approved text knows a "host" and an "integration". It does not know the
++Slice 1 issuer or sink. The owner decided that the governing context is the approved policy plus the
++AUTHORITATIVE PERSISTED CHARGE STATE. So the sink, which holds that state, is the host for the context.
++Two unratified choices are used and named: OPEN-IS-UNSETTLED (a request is open exactly while its id is not
++settled in the sink) and POST-RULE (an authorized refund decreases `remaining` by the amount, nothing else).
++
++Setting: a store starts at the initial charge c0. Then the sink gets any sequence of deliveries.
++"pre" is the charge state persisted immediately before a delivery. The request id of a delivery is the id that
++the sink settles (the token's `body.requestId`). Context(pre, rid) = ChargeContext(pre.chargeId, rid,
++pre.original, pre.remaining, pre.refundEnabled, rid not settled).
++
++| Id | Property | Approved source | Responsible party |
++|----|----------|-----------------|-------------------|
++| P1 | Every outbox effect (charge id, request id, amount, reason) is the ONE intent of `Assess(Context(pre, rid), Candidate(amount, reason))`, which returns `Authorized(amount, reason)`. A commit releases exactly one effect. | RS 33-36 (Eligible); RS 48-58 (R3, R4, R5: `plan == [Intent(context.chargeId, context.requestId, ...)]`); PR 22-24; PR 68-70 ("dispatch only the checked plan, using its caller-bound IDs and exact amount/reason") | sink (host integration, PR 68-70). The issuer's Check is not named by the text. |
++| P2 | At most one effect per (charge id, request id). | PR 61: "One attempt is active for a caller-bound (charge ID, request ID)." PR 63-65: "An identical repeated request returns its recorded decision without another executor call. Reusing the pair with different trusted context is rejected. A new attempt needs a new request ID." | sink (host: "durable payment idempotency", PR 89-90) |
++| P3 | The persisted charge evolves only by POST-RULE. Every persisted charge has 0 <= remaining <= original <= MaxMoney. | Validity: RS 27-31 (ValidContext), PR 18. Evolution: SILENT (the approved spec has no stored state; POST-RULE is the unratified choice, also stated in impl/RefundFinality.dfy 6-10). | sink (host: "truthful charge/eligibility data", PR 89). Evolution rule: SILENT. |
++| P4 | For each charge, the sum of effect amounts never exceeds its original amount. | DERIVED: R1 (RS 42-44) at each step plus POST-RULE. PR 89-92 gives the host "atomic reservation of the remaining balance" and says this boundary does not prove "a cumulative refund ledger". | sink (host, PR 89-90). A sum rule as such: SILENT. |
++| P5 | NO EXTRA REJECTION: a delivery that is validly signed by the pinned key, carries the pinned ids, is fresh (rid not settled) and current (pre-state hash = hash of pre), and whose intent and post are exactly what Assess on Context(pre, rid) and POST-RULE give, is COMMITTED. Zero amount included. | PR 22-24: "Every such proposal must be accepted with that exact amount and reason. No extra heuristic may reject or modify it." PR 25-27 (zero is legitimate). PR 79: "Rejecting every proposal is a defect." RS 50-52 (R4). | The text binds the decision. Applying it to the sink's commit follows the owner's persisted-state decision. Signature, pins, freshness, currency, token text: Slice 1 constructs, SILENT. |
++| P6 | A rejected (or replayed) delivery changes no durable state (state row, settled ids, outbox) and releases no effect. | PR 28-30: "Fallback ... authorizes no refund, changes no financial state, and does not call the refund executor." PR 63-64 (replay: no other executor call). PR 66-67 allow control bookkeeping; the oracle compares only state, settled and outbox. | sink |
++| P7 | Every effect carries the persisted charge's id. | RS 53 ("its target is caller-bound"); RS 59-63 (`intent.chargeId == context.chargeId`); PR 15-17 ("The model cannot set or replace them"). | sink (host binds the charge, PR 13-17) |
++
++## How the oracle decides (oracle.ts)
++- The only decision procedure is the compiled approved `Refund.Assess` (impl/Refund.dfy refines RS). The oracle
++  builds Context and Candidate with the module's own constructors and BigNumber. It calls no sink core.
++- It replays the snapshots after each delivery. It checks P6 on non-commits, P1/P2/P4/P7 on each new outbox
++  row, P3 on each changed state, and P5 on each non-commit that is not a driver-injected storage fault.
++- P5 has a sub-class P5-SILENT: the token meets every P5 condition but is outside the encoding.ts domain
++  (a text longer than 256 UTF-16 units, U+0000, a token text above 8,192 units, or non-canonical text). The
++  approved text states no such limit for ids (PR 17 says only "IDs must be nonempty"; the 4,096-byte cap of
++  PR 40 is on the model response, not on ids). These are QUESTIONS for the owner, not a verdict.
++- A value outside the Dafny string domain (a lone surrogate) is not a Context or a Candidate. Its rejection is
++  not a P5 case.
++
++## Limits (honesty)
++- This is a TEST against an executable form of the approved spec. It is not a proof. The compiled module rests
++  on the Dafny-to-JavaScript compiler, its runtime and bignumber.js. The oracle and the driver are new,
++  unproved code. Self-tests (selftest.ts) show that a known defect of each property is flagged.
++- POST-RULE and OPEN-IS-UNSETTLED are unratified. A different ratified rule changes P1, P3, P5.
++- P5 here requires the whole token to be consistent (intent = Assess plan, post = POST-RULE). The text does not
++  say what a sink must do with a validly signed token that is authorized but carries another post: SILENT.
++- "interleave" mode alternates two sink instances in ONE process. It is not a concurrency test.
+diff --git a/tests/refund-finality/spec-conformance/heavy_spec.sh b/tests/refund-finality/spec-conformance/heavy_spec.sh
+new file mode 100755
+index 00000000..2574e19c
+--- /dev/null
++++ b/tests/refund-finality/spec-conformance/heavy_spec.sh
+@@ -0,0 +1,36 @@
++#!/bin/bash
++# HEAVY spec-conformance run (task h-specdiff). PREPARED; the orchestrator runs it in a window.
++# Usage: heavy_spec.sh <compiledCoreModule> <outDir> <sinkModulePath>...
++#   For each sink: modes seq, fault, interleave; 5,000 sequences each (COUNT overrides); seed 20261119 (SEED overrides).
++#   Typical sinks: ts/refund-finality/sink.ts (merged), the v6 draft sink, the hardened sink (any path).
++# Refuses (exit 64) while results/night-shift-20261119/locks/hol.lock exists or a HOL process runs; refuses (75)
++# when not on AC power. It does NOT take heavy.lock (the orchestrator holds it). Run from the repository root
++# (the directory that holds ts/ and node_modules/). Pinned Node: /opt/homebrew/bin first in PATH.
++set -u
++CORE=${1:?core module}; OUT=${2:?out dir}; shift 2
++[ $# -ge 1 ] || { echo "usage: heavy_spec.sh <core> <outDir> <sink>..." >&2; exit 2; }
++LOCKS=${LOCKS:-<REPO>/results/night-shift-20261119/locks}
++COUNT=${COUNT:-5000}; SEED=${SEED:-20261119}; TMO=${TMO:-1800}
++refuse() { if [ -e "$LOCKS/hol.lock" ] || pgrep -f 'bin/hol' >/dev/null; then echo "refused: hol.lock or a HOL process" >&2; exit 64; fi
++  pmset -g batt | head -1 | grep -q "AC Power" || { echo "refused: not on AC power" >&2; exit 75; }; }
++refuse
++mkdir -p "$OUT/work" || exit 65
++ROOT=$(pwd); [ -f "$ROOT/tests/refund-finality/spec-conformance/run.ts" ] || { echo "run from the repository root" >&2; exit 2; }
++P=/opt/homebrew/bin:/usr/bin:/bin
++{ echo "# start=$(date -u +%FT%TZ) node=$(env -i PATH=$P node --version) count=$COUNT seed=$SEED"; shasum -a 256 "$CORE" "$@" tests/refund-finality/spec-conformance/*.ts; } > "$OUT/inputs.txt"
++status=0; n=0
++for S in "$@"; do
++  n=$((n+1))
++  for M in seq fault interleave; do
++    refuse
++    L="$OUT/sink$n-$M.log"
++    ( /usr/bin/time -l env -i PATH=$P HOME="$OUT/work" TMPDIR="$OUT/work" LANG=C timeout "$TMO" \
++        node --no-warnings --import tsx tests/refund-finality/spec-conformance/run.ts "$S" "$M" "$COUNT" "$SEED" "$CORE" "$OUT/work" ) > "$L" 2>&1
++    c=$?; echo "exit $c" >> "$L"; [ $c -eq 0 ] || status=1
++    grep '^{' "$L" | head -1 >> "$OUT/results.jsonl"
++    echo "sink$n=$S mode=$M exit=$c" >> "$OUT/summary.txt"
++  done
++done
++rm -rf "$OUT/work"
++echo "# end=$(date -u +%FT%TZ) status=$status" >> "$OUT/inputs.txt"
++exit $status
+diff --git a/tests/refund-finality/spec-conformance/oracle.ts b/tests/refund-finality/spec-conformance/oracle.ts
+new file mode 100644
+index 00000000..6a994ef1
+--- /dev/null
++++ b/tests/refund-finality/spec-conformance/oracle.ts
+@@ -0,0 +1,176 @@
++// Spec-conformance ORACLE for refund sinks (night shift 2026-11-19, task h-specdiff). TESTED-UNPROVED new code.
++// It replays one store history and checks the properties P1-P7 of SPEC_ORACLE.md.
++// The ONLY decision procedure it calls is the compiled APPROVED Refund.Assess (impl/Refund.dfy refines
++// spec/refund/RefundSpec.dfy; compiled by `dafny build impl/RefundFinality.dfy --target js` as in
++// scripts/exit_slice1.py). It imports no sink core (no ShellCore*, no SinkCore*, no RefundFinality function).
++// encoding.ts is used only for canonical JSON, SHA-256, the signed bytes and the domain constant, and to CLASSIFY a
++// rejection as "outside the encoding.ts domain" (a spec-silent limit). It never decides a property.
++// Unratified choices it relies on (PHASE2_RULES.md): OPEN-IS-UNSETTLED, POST-RULE.
++// Trusted: the Dafny-to-JavaScript compiler and runtime, bignumber.js, Node (crypto, JSON), this file.
++import { createPublicKey, verify, KeyObject } from "node:crypto";
++import { createRequire } from "node:module";
++import { resolve } from "node:path";
++import { ChargeState, DOMAIN, canon, isToken, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
++
++export type OutRow = { request_id: string; intent: string };
++export type Snapshot = { state: string | null; settled: string[]; outbox: OutRow[] };
++export type Outcome = "committed" | "replayed" | "rejected";
++export type Delivery = { text: string; outcome: Outcome; reason?: string; faultInjected?: boolean; after: Snapshot };
++export type History = {
++  initial: ChargeState; publicKeyPem: string; specLockSha256: string; checkerSha256: string;
++  start: Snapshot; deliveries: Delivery[];
++};
++export type Prop = "P1" | "P2" | "P3" | "P4" | "P5" | "P5-SILENT" | "P6" | "P7";
++export type Violation = { property: Prop; index: number; detail: string };
++export type Verdict = { ok: boolean; first: Violation | null; violations: Violation[] };
++
++const MAX_MONEY = 9223372036854775807n;
++const DEC = /^-?(0|[1-9][0-9]*)$/;
++type Money = { s: string; n: bigint };
++type PState = { chargeId: string; original: bigint; remaining: bigint; refundEnabled: boolean };
++type LIntent = { chargeId: string; requestId: string; amount: string; reason: string };
++type LBody = { domain: unknown; specLockSha256: unknown; checkerSha256: unknown; preStateSha256: unknown;
++  requestId: string; post: unknown; intent: LIntent };
++
++const isObj = (x: unknown): x is Record<string, unknown> =>
++  x !== null && typeof x === "object" && !Array.isArray(x) && Object.getPrototypeOf(x) === Object.prototype;
++const keysAre = (x: Record<string, unknown>, ks: string[]) =>
++  Object.keys(x).sort().join("\u0001") === [...ks].sort().join("\u0001");
++const money = (v: unknown): Money | null => (typeof v === "string" && DEC.test(v) ? { s: v, n: BigInt(v) } : null);
++
++// The persisted charge, read leniently (no length limit). null = not a charge state at all.
++export function parseState(text: string | null): PState | null {
++  if (text === null) return null;
++  let v: unknown; try { v = JSON.parse(text); } catch { return null; }
++  if (!isObj(v) || !keysAre(v, ["chargeId", "original", "remaining", "refundEnabled"])) return null;
++  const o = money(v.original), r = money(v.remaining);
++  if (typeof v.chargeId !== "string" || o === null || r === null || typeof v.refundEnabled !== "boolean") return null;
++  return { chargeId: v.chargeId, original: o.n, remaining: r.n, refundEnabled: v.refundEnabled };
++}
++const stateText = (s: PState): string => canon({ chargeId: s.chargeId, original: s.original.toString(),
++  remaining: s.remaining.toString(), refundEnabled: s.refundEnabled });
++function parseIntent(v: unknown): LIntent | null {
++  if (!isObj(v) || !keysAre(v, ["chargeId", "requestId", "amount", "reason"])) return null;
++  if (typeof v.chargeId !== "string" || typeof v.requestId !== "string" || typeof v.reason !== "string" || money(v.amount) === null) return null;
++  return { chargeId: v.chargeId, requestId: v.requestId, amount: v.amount as string, reason: v.reason };
++}
++// Lenient token decoder: the token structure WITHOUT the encoding.ts limits (256 units, U+0000, 8192 units).
++export function lenientToken(text: string): { body: LBody; signature: string; raw: unknown } | null {
++  let v: unknown; try { v = JSON.parse(text); } catch { return null; }
++  if (!isObj(v) || !keysAre(v, ["body", "signature"]) || typeof v.signature !== "string") return null;
++  const b = v.body;
++  if (!isObj(b) || !keysAre(b, ["domain", "specLockSha256", "checkerSha256", "preStateSha256", "requestId", "post", "intent"])) return null;
++  const intent = parseIntent(b.intent);
++  if (typeof b.requestId !== "string" || intent === null) return null;
++  return { body: { ...(b as any), requestId: b.requestId, intent }, signature: v.signature, raw: v };
++}
++
++export class Oracle {
++  private readonly R: any; private readonly rt: any; private readonly BN: any;
++  readonly coreModule: string;
++  constructor(coreModulePath: string) {
++    this.coreModule = resolve(coreModulePath);
++    const req = createRequire(this.coreModule);
++    const mod = req(this.coreModule);
++    if (!mod || !mod.Refund || typeof mod.Refund.__default?.Assess !== "function") throw new Error("module has no Refund.Assess");
++    this.R = mod.Refund; this.rt = mod.runtime; this.BN = req("bignumber.js");
++  }
++  // The approved Assess on Context(chargeId, requestId, original, remaining, refundEnabled, open) and
++  // Candidate(amount, reason). Returns the authorized intent (as text values) or null (Rejected or not formable:
++  // a value outside the Dafny string domain, e.g. a lone surrogate, is not a Context or a Candidate).
++  assess(pre: PState, requestId: string, open: boolean, amount: string, reason: string): LIntent | null {
++    const R = this.R, T = (s: string) => this.rt.Seq.UnicodeFromString(s), N = (s: string) => new this.BN(s);
++    let decision: any, plan: any;
++    try {
++      const ctx = R.Context.create_ChargeContext(T(pre.chargeId), T(requestId), N(pre.original.toString()),
++        N(pre.remaining.toString()), pre.refundEnabled, open);
++      [decision, plan] = R.__default.Assess(ctx, R.ModelResponse.create_Candidate(N(amount), T(reason)));
++    } catch { return null; }
++    if (decision.is_Authorized !== true) { if (plan.length !== 0) throw new Error("Assess: plan on Rejected"); return null; }
++    if (plan.length !== 1) throw new Error("Assess: plan length");
++    const i = plan[0], S = (x: any): string => x.toVerbatimString(false);
++    const out = { chargeId: S(i.dtor_chargeId), requestId: S(i.dtor_requestId), amount: i.dtor_amount.toFixed(), reason: S(i.dtor_reason) };
++    // R4 says Authorized(amount, reason) carries exactly the candidate; check the decision too.
++    if (decision.dtor_amount.toFixed() !== amount || S(decision.dtor_reason) !== reason) return null;
++    return out;
++  }
++
++  check(h: History): Verdict {
++    const vs: Violation[] = [];
++    const flag = (property: Prop, index: number, detail: string) => vs.push({ property, index, detail });
++    const key: KeyObject = createPublicKey(h.publicKeyPem);
++    const c0Text = canon(h.initial), c0 = parseState(c0Text);
++    if (c0 === null) throw new Error("initial charge is not a charge state");
++    if (h.start.state !== c0Text || h.start.settled.length !== 0 || h.start.outbox.length !== 0) flag("P3", -1, "store after init is not the initial charge");
++    const effects = new Set<string>();             // (charge id, request id) of every effect so far
++    const sum = new Map<string, bigint>();         // charge id -> sum of effect amounts
++    const valid = (s: PState) => 0n <= s.remaining && s.remaining <= s.original && s.original <= MAX_MONEY;
++    if (!valid(c0)) flag("P3", -1, "initial charge violates 0 <= remaining <= original <= MaxMoney");
++    let prev = h.start;
++    h.deliveries.forEach((d, i) => {
++      const after = d.after, pre = parseState(prev.state);
++      const same = after.state === prev.state && canon(after.settled) === canon(prev.settled) &&
++        canon(after.outbox.map(r => [r.request_id, r.intent])) === canon(prev.outbox.map(r => [r.request_id, r.intent]));
++      const tok = lenientToken(d.text);
++      if (d.outcome !== "committed") {
++        if (!same) flag("P6", i, `${d.outcome} delivery changed durable state`);
++        // P5: would the approved spec (with OPEN-IS-UNSETTLED and POST-RULE) authorize exactly this token?
++        if (!d.faultInjected && tok !== null && pre !== null) {
++          const b = tok.body;
++          const pinned = b.domain === DOMAIN && b.specLockSha256 === h.specLockSha256 && b.checkerSha256 === h.checkerSha256;
++          let sigOk = false;
++          try { const raw = Buffer.from(tok.signature, "base64");
++            sigOk = raw.length === 64 && verify(null, signedBytes(b as any), key, raw); } catch { sigOk = false; }
++          const fresh = !prev.settled.includes(b.requestId);
++          const current = prev.state !== null && b.preStateSha256 === sha256hex(prev.state);
++          const auth = pinned && sigOk && fresh && current ? this.assess(pre, b.requestId, fresh, b.intent.amount, b.intent.reason) : null;
++          const postOk = auth !== null && canon(b.post) === stateText({ ...pre, remaining: pre.remaining - BigInt(b.intent.amount) });
++          if (auth !== null && postOk && canon(auth) === canon(b.intent)) {
++            const inDomain = d.text.length <= 8192 && isToken(tok.raw) && canon(tok.raw) === d.text;
++            flag(inDomain ? "P5" : "P5-SILENT", i, `authorized, validly signed, fresh, current token was ${d.outcome}: ${d.reason ?? ""}` +
++              (inDomain ? "" : " (token outside the encoding.ts domain: length, U+0000 or non-canonical text)"));
++          }
++        }
++      } else {
++        const isPrefix = after.outbox.length >= prev.outbox.length && prev.outbox.every((r, k) =>
++          after.outbox[k].request_id === r.request_id && after.outbox[k].intent === r.intent);
++        if (!isPrefix) flag("P1", i, "outbox is not an extension of the previous outbox (an effect changed or vanished)");
++        const added = isPrefix ? after.outbox.slice(prev.outbox.length) : [];
++        if (isPrefix && added.length !== 1) flag("P1", i, `committed delivery released ${added.length} effects, not exactly one`);
++        // The request id of the commit: the token's body.requestId (the id the sink settles).
++        const reqId = tok?.body.requestId;
++        let total = 0n;
++        for (const row of added) {
++          let iv: unknown; try { iv = JSON.parse(row.intent); } catch { iv = null; }
++          const e = parseIntent(iv);
++          if (e === null) { flag("P1", i, "effect is not an intent"); continue; }
++          const rid = reqId ?? row.request_id;
++          if (pre === null || e.chargeId !== pre.chargeId) flag("P7", i, `effect charge id ${JSON.stringify(e.chargeId)} is not the persisted charge id`);
++          const k = canon([e.chargeId, e.requestId]);
++          if (effects.has(k)) flag("P2", i, `second effect for (charge id, request id) ${k}`);
++          effects.add(k);
++          const open = !prev.settled.includes(rid);                       // OPEN-IS-UNSETTLED
++          const auth = pre === null ? null : this.assess(pre, rid, open, e.amount, e.reason);
++          if (auth === null || canon(auth) !== canon(e) || row.request_id !== e.requestId)
++            flag("P1", i, `effect ${row.intent} is not the one intent that Assess authorizes (request ${JSON.stringify(rid)}, open=${open})`);
++          const s = (sum.get(e.chargeId) ?? 0n) + BigInt(e.amount);
++          sum.set(e.chargeId, s);
++          if (e.chargeId === c0.chargeId && s > c0.original) flag("P4", i, `sum of effects ${s} exceeds original ${c0.original}`);
++          total += BigInt(e.amount);
++        }
++        // P3: POST-RULE (unratified): remaining decreases by the amount; nothing else changes.
++        if (pre !== null && added.length >= 1) {
++          const expected = stateText({ ...pre, remaining: pre.remaining - total });
++          if (after.state !== expected) flag("P3", i, `post state ${after.state} is not POST-RULE ${expected}`);
++        }
++      }
++      // Validity is flagged where the persisted state CHANGES to an invalid one (not again at each later step).
++      const ps = parseState(after.state);
++      if (after.state === prev.state) { /* unchanged: judged where it changed */ }
++      else if (ps === null) flag("P3", i, "persisted state is not a charge state");
++      else if (!valid(ps)) flag("P3", i, "persisted state violates 0 <= remaining <= original <= MaxMoney");
++      prev = after;
++    });
++    return { ok: vs.length === 0, first: vs[0] ?? null, violations: vs };
++  }
++}
+diff --git a/tests/refund-finality/spec-conformance/run.ts b/tests/refund-finality/spec-conformance/run.ts
+new file mode 100644
+index 00000000..01f5dbde
+--- /dev/null
++++ b/tests/refund-finality/spec-conformance/run.ts
+@@ -0,0 +1,203 @@
++// Spec-conformance DRIVER (task h-specdiff). TESTED-UNPROVED new code.
++// Run: node --import tsx tests/refund-finality/spec-conformance/run.ts <sinkModulePath> <mode> <count> <seed> <compiledCoreModule> [workDir]
++//   sinkModulePath: a module that exports class Sink(path, cfg) with init(state), commit(text), close()
++//   mode: seq | fault | interleave
++//     seq: one sink instance, one delivery after another
++//     fault: as seq, and a storage fault is injected (an exception) at a random write of some commits
++//     interleave: two sink instances on the same database file; each delivery goes to one of them at random
++//   compiledCoreModule: the compiled Slice 1 core (model.cjs); the oracle uses only its Refund.Assess.
++// It generates delivery sequences with its own seeded generator, delivers them, reads the durable state through
++// its OWN read-only SQLite connection (tables state, settled, outbox), and calls the oracle (oracle.ts).
++// Output: one JSON line. Exit 0 when it ran (violations are DATA, not an exit code); exit 2 on a usage error.
++import { generateKeyPairSync, sign, KeyObject } from "node:crypto";
++import { mkdtempSync, rmSync, readFileSync } from "node:fs";
++import { createRequire } from "node:module";
++import { join, resolve } from "node:path";
++import { tmpdir } from "node:os";
++import * as sqlite from "node:sqlite";
++import { ChargeState, DOMAIN, TokenBody, canon, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
++import { Delivery, History, Oracle, Prop, Snapshot } from "./oracle";
++
++const MAX = 9223372036854775807n;
++// ---- seeded generator (mulberry32)
++function rng(seed: number) {
++  let a = seed >>> 0;
++  const next = () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1);
++    t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
++  const int = (n: number) => Math.floor(next() * n);
++  const big = (hi: bigint): bigint => {           // uniform-ish in [0, hi], with the edges often
++    const r = next(); if (hi <= 0n) return 0n; if (r < 0.15) return 0n; if (r < 0.3) return hi;
++    let x = 0n; for (let k = 0; k < 4; k++) x = (x << 32n) | BigInt(Math.floor(next() * 4294967296)); return x % (hi + 1n);
++  };
++  return { next, int, big, pick: <T>(xs: T[]): T => xs[int(xs.length)] };
++}
++export type Kind = "honest" | "zero" | "full" | "replay" | "stale" | "bad-sig" | "bad-pin" | "reuse-id" |
++  "f-reqid" | "f-foreign-intent" | "f-foreign-post" | "f-over-zero-post" | "f-over-unchanged" | "f-reason" |
++  "f-over-bound" | "f-disabled" | "probe-long-id" | "probe-nul-id";
++const KINDS: [Kind, number][] = [["honest", 22], ["zero", 8], ["full", 6], ["replay", 8], ["stale", 6], ["bad-sig", 4],
++  ["bad-pin", 4], ["reuse-id", 4], ["f-reqid", 4], ["f-foreign-intent", 4], ["f-foreign-post", 3], ["f-over-zero-post", 3],
++  ["f-over-unchanged", 4], ["f-reason", 4], ["f-over-bound", 3], ["probe-long-id", 3], ["probe-nul-id", 2]];
++const REASONS = ["duplicate_charge", "service_not_delivered", "returned_item"];
++
++type Keys = { pub: string; priv: KeyObject; otherPriv: KeyObject };
++const st = (s: { chargeId: string; original: bigint; remaining: bigint; refundEnabled: boolean }): ChargeState =>
++  ({ chargeId: s.chargeId, original: s.original.toString(), remaining: s.remaining.toString(), refundEnabled: s.refundEnabled });
++const pstate = (t: string) => { const v = JSON.parse(t); return { chargeId: v.chargeId as string, original: BigInt(v.original),
++  remaining: BigInt(v.remaining), refundEnabled: v.refundEnabled as boolean }; };
++
++function readSnap(path: string): Snapshot {
++  const db = new sqlite.DatabaseSync(path, { readOnly: true });
++  try {
++    const s = db.prepare("SELECT blob FROM state WHERE id = 1").get() as { blob: string } | undefined;
++    const settled = (db.prepare("SELECT request_id FROM settled ORDER BY seq").all() as any[]).map(r => String(r.request_id));
++    const outbox = (db.prepare("SELECT request_id, intent FROM outbox ORDER BY seq").all() as any[])
++      .map(r => ({ request_id: String(r.request_id), intent: String(r.intent) }));
++    return { state: s === undefined ? null : s.blob, settled, outbox };
++  } finally { db.close(); }
++}
++
++// ---- fault injection: an armed write throws before it runs (inside the sink's transaction).
++let faultArmed = -1, writeCount = 0, faultHit = false;
++const SP: any = (sqlite as any).StatementSync.prototype, origRun = SP.run;
++SP.run = function (...args: unknown[]) {
++  const sql = String(this.sourceSQL ?? "");
++  if (/^\s*(INSERT|UPDATE)/i.test(sql) && faultArmed >= 0) {
++    if (writeCount++ === faultArmed) { faultHit = true; throw new Error("injected storage fault"); }
++  }
++  return origRun.apply(this, args);
++};
++
++function main(): void {
++  const [sinkPath, mode, countArg, seedArg, corePath, workArg] = process.argv.slice(2);
++  if (!sinkPath || !["seq", "fault", "interleave"].includes(mode) || !corePath || !/^\d+$/.test(countArg ?? "") || !/^\d+$/.test(seedArg ?? "")) {
++    process.stderr.write("usage: run.ts <sinkModulePath> <seq|fault|interleave> <count> <seed> <compiledCoreModule> [workDir]\n");
++    process.exit(2);
++  }
++  const count = Number(countArg), seed = Number(seedArg);
++  const SinkClass = createRequire(__filename)(resolve(sinkPath)).Sink;
++  const oracle = new Oracle(corePath);
++  const work = mkdtempSync(join(workArg ? resolve(workArg) : tmpdir(), "specdiff-"));
++  const R = rng(seed);
++  const k1 = generateKeyPairSync("ed25519"), k2 = generateKeyPairSync("ed25519");
++  const keys: Keys = { pub: k1.publicKey.export({ type: "spki", format: "pem" }) as string, priv: k1.privateKey, otherPriv: k2.privateKey };
++  const specLockSha256 = sha256hex("spec-lock-test"), checkerSha256 = sha256hex("checker-test");
++  const perProp: Record<string, number> = {}; const smallest: Record<string, unknown> = {};
++  const outcomes: Record<string, number> = {}; const kindViolation: Record<string, Record<string, number>> = {}; const kindOutcome: Record<string, Record<string, number>> = {};
++  let deliveriesTotal = 0, faultsHit = 0, sinkErrors = 0;
++  const t0 = Date.now();
++  for (let n = 0; n < count; n++) {
++    const dbPath = join(work, `s${n}.sqlite`);
++    const orig = R.pick([0n, 1n, 100n, 1000n, MAX, R.big(MAX)]);
++    const c0 = st({ chargeId: `ch_${seed}_${n}`, original: orig, remaining: R.big(orig), refundEnabled: R.next() >= 0.15 });
++    const cfg = { publicKeyPem: keys.pub, specLockSha256, checkerSha256, initialState: c0 };
++    const sinks: any[] = [];
++    const history: History = { initial: c0, publicKeyPem: keys.pub, specLockSha256, checkerSha256, start: { state: null, settled: [], outbox: [] }, deliveries: [] };
++    const trace: { kind: Kind; outcome: string; reason?: string; fault?: boolean }[] = [];
++    try {
++      sinks.push(new SinkClass(dbPath, cfg)); sinks[0].init(c0);
++      if (mode === "interleave") sinks.push(new SinkClass(dbPath, cfg));
++      history.start = readSnap(dbPath);
++      const sent: string[] = [], states: string[] = [history.start.state ?? canon(c0)];
++      const len = 1 + R.int(10);
++      let ridN = 0;
++      const fresh = () => `rq_${n}_${ridN++}`;
++      for (let d = 0; d < len; d++) {
++        const before = readSnap(dbPath);
++        const preText = before.state ?? canon(c0), pre = pstate(preText);
++        let kind = weighted(R);
++        if (kind === "replay" && sent.length === 0) kind = "honest";
++        if (kind === "reuse-id" && before.settled.length === 0) kind = "honest";
++        // An honest-shaped refund on a charge with refundEnabled false is a FAULTY-SIGNER token.
++        if ((kind === "honest" || kind === "zero" || kind === "full") && !pre.refundEnabled) kind = "f-disabled";
++        let text: string;
++        if (kind === "replay") text = R.pick(sent);
++        else {
++          const body = buildBody(kind, R, pre, preText, states, before, fresh, specLockSha256, checkerSha256);
++          const signer = kind === "bad-sig" ? keys.otherPriv : keys.priv;
++          text = canon({ body, signature: sign(null, signedBytes(body as TokenBody), signer).toString("base64") });
++        }
++        sent.push(text);
++        const target = sinks[mode === "interleave" ? R.int(2) : 0];
++        faultArmed = mode === "fault" && R.next() < 0.3 ? R.int(3) : -1; writeCount = 0; faultHit = false;
++        let res: { status: string; reason?: string };
++        try { res = target.commit(text); } catch (e) { sinkErrors++; res = { status: "rejected", reason: "sink threw: " + String((e as Error).message) }; }
++        const hit = faultHit; faultArmed = -1; if (hit) faultsHit++;
++        const after = readSnap(dbPath);
++        if (after.state !== null && after.state !== preText) states.push(after.state);
++        const outcome = (["committed", "replayed", "rejected"].includes(res.status) ? res.status : "rejected") as Delivery["outcome"];
++        history.deliveries.push({ text, outcome, reason: res.reason, faultInjected: hit, after });
++        trace.push({ kind, outcome, reason: res.reason, ...(hit ? { fault: true } : {}) });
++        outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
++        (kindOutcome[kind] ??= {})[outcome] = ((kindOutcome[kind] ?? {})[outcome] ?? 0) + 1;
++        deliveriesTotal++;
++      }
++    } catch (e) {
++      sinkErrors++; trace.push({ kind: "honest", outcome: "sink setup failed", reason: String((e as Error).message) });
++    } finally {
++      for (const s of sinks) { try { s.close(); } catch { /* closed */ } }
++      for (const f of [dbPath, dbPath + "-wal", dbPath + "-shm", dbPath + "-journal"]) rmSync(f, { force: true });
++    }
++    const v = oracle.check(history);
++    const seen = new Set<Prop>();
++    for (const x of v.violations) {
++      const kk = x.index >= 0 && trace[x.index] ? trace[x.index].kind : "init";
++      (kindViolation[kk] ??= {})[x.property] = ((kindViolation[kk] ?? {})[x.property] ?? 0) + 1;
++      if (seen.has(x.property)) continue; seen.add(x.property);
++      perProp[x.property] = (perProp[x.property] ?? 0) + 1;
++      const cut = trace.slice(0, x.index + 1), cur = smallest[x.property] as { length: number } | undefined;
++      if (cur === undefined || cut.length < cur.length)
++        smallest[x.property] = { length: cut.length, sequence: n, initial: c0, at: x.index, detail: x.detail.slice(0, 300), trace: cut };
++    }
++  }
++  rmSync(work, { recursive: true, force: true });
++  process.stdout.write(JSON.stringify({
++    tool: "spec-conformance/run.ts", sink: resolve(sinkPath), sinkSha256: sha256hex(readFileSync(resolve(sinkPath))),
++    core: oracle.coreModule, coreSha256: sha256hex(readFileSync(oracle.coreModule)), mode, count, seed,
++    deliveries: deliveriesTotal, outcomes, faultsInjected: faultsHit, sinkErrors, ms: Date.now() - t0,
++    sequencesWithViolation: perProp, kindOutcome, violationsByKind: kindViolation, smallest,
++  }) + "\n");
++}
++
++function weighted(R: ReturnType<typeof rng>): Kind {
++  const total = KINDS.reduce((a, [, w]) => a + w, 0); let x = R.int(total);
++  for (const [k, w] of KINDS) { if (x < w) return k; x -= w; } return "honest";
++}
++
++// Builds the token body of one delivery against the ACTUAL persisted state `pre`. Kinds named f-* are
++// FAULTY-SIGNER tokens: the trusted test key signs them, but the approved spec does not authorize them.
++function buildBody(kind: Kind, R: ReturnType<typeof rng>, pre: ReturnType<typeof pstate>, preText: string, states: string[],
++    before: Snapshot, fresh: () => string, specLockSha256: string, checkerSha256: string): unknown {
++  const rem = pre.remaining < 0n ? 0n : pre.remaining;
++  let amount = kind === "zero" ? 0n : kind === "full" ? rem : R.big(rem);
++  let reason = R.pick(REASONS), requestId = fresh(), intentReq = requestId, intentCharge = pre.chargeId;
++  let preHash = sha256hex(preText);
++  let post: ChargeState = st({ ...pre, remaining: pre.remaining - amount });
++  switch (kind) {
++    case "stale": {
++      const old = states.filter(s => s !== preText);
++      preHash = sha256hex(old.length ? R.pick(old) : canon(st({ ...pre, remaining: pre.remaining + 1n })));
++      break;
++    }
++    case "reuse-id": requestId = intentReq = R.pick(before.settled); break;
++    case "f-reqid": intentReq = before.outbox.length ? (JSON.parse(R.pick(before.outbox).intent).requestId as string) : fresh(); break;
++    case "f-foreign-intent": intentCharge = "ch_foreign"; break;
++    case "f-foreign-post": post = st({ ...pre, chargeId: "ch_foreign", remaining: pre.remaining - amount }); break;
++    case "f-over-zero-post": amount = rem + 1n + R.big(1000n); post = st({ ...pre, remaining: 0n }); break;
++    case "f-over-unchanged": amount = rem + 1n + R.big(1000n); post = st({ ...pre }); break;
++    case "f-reason": reason = R.pick(["Duplicate_charge", "fraud", "", "returned_item "]); break;
++    case "f-over-bound": post = st({ ...pre, original: 9999999999999999999n, remaining: pre.remaining - amount }); break;
++    case "probe-long-id": requestId = intentReq = "r".repeat(300) + fresh(); break;
++    case "probe-nul-id": requestId = intentReq = "rq\u0000" + fresh(); break;
++    default: break;
++  }
++  // A negative remaining cannot be written as a money text; the sink would refuse it as token shape.
++  if (BigInt(post.remaining) < 0n) post = { ...post, remaining: "0" };
++  const body = {
++    domain: DOMAIN, specLockSha256: kind === "bad-pin" ? sha256hex("another spec lock") : specLockSha256, checkerSha256,
++    preStateSha256: preHash, requestId, post,
++    intent: { chargeId: intentCharge, requestId: intentReq, amount: amount.toString(), reason },
++  };
++  return body;
++}
++
++main();
+diff --git a/tests/refund-finality/spec-conformance/selftest.ts b/tests/refund-finality/spec-conformance/selftest.ts
+new file mode 100644
+index 00000000..297e014c
+--- /dev/null
++++ b/tests/refund-finality/spec-conformance/selftest.ts
+@@ -0,0 +1,63 @@
++// Self-tests of the spec-conformance oracle (task h-specdiff). Hand-made histories, no sink.
++// Run: node --import tsx tests/refund-finality/spec-conformance/selftest.ts <compiledCoreModule>
++// Each history has one known defect; the oracle must flag that property. The clean history must pass.
++// Exit 0 when every case gives the expected result, 1 otherwise.
++import { generateKeyPairSync, sign } from "node:crypto";
++import { ChargeState, DOMAIN, canon, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
++import { Delivery, History, Oracle, Prop, Snapshot } from "./oracle";
++
++const core = process.argv[2];
++if (!core) { process.stderr.write("usage: selftest.ts <compiledCoreModule>\n"); process.exit(2); }
++const oracle = new Oracle(core);
++const { publicKey, privateKey } = generateKeyPairSync("ed25519");
++const other = generateKeyPairSync("ed25519").privateKey;
++const pem = publicKey.export({ type: "spki", format: "pem" }) as string;
++const LOCK = sha256hex("lock"), CHK = sha256hex("checker");
++const c0: ChargeState = { chargeId: "ch_1", original: "100", remaining: "100", refundEnabled: true };
++const S = (remaining: string, chargeId = "ch_1"): ChargeState => ({ ...c0, chargeId, remaining });
++type I = { chargeId: string; requestId: string; amount: string; reason: string };
++const I = (requestId: string, amount: string, reason = "duplicate_charge", chargeId = "ch_1"): I => ({ chargeId, requestId, amount, reason });
++function tok(pre: ChargeState, requestId: string, post: ChargeState, intent: I, key = privateKey): string {
++  const body = { domain: DOMAIN, specLockSha256: LOCK, checkerSha256: CHK, preStateSha256: sha256hex(canon(pre)), requestId, post, intent };
++  return canon({ body, signature: sign(null, signedBytes(body as any), key).toString("base64") });
++}
++const snap = (state: ChargeState, settled: string[], outbox: I[]): Snapshot =>
++  ({ state: canon(state), settled, outbox: outbox.map(i => ({ request_id: i.requestId, intent: canon(i) })) });
++const H = (deliveries: Delivery[]): History =>
++  ({ initial: c0, publicKeyPem: pem, specLockSha256: LOCK, checkerSha256: CHK, start: snap(c0, [], []), deliveries });
++
++const a30 = I("r1", "30"), a0 = I("r2", "0");
++const t1 = tok(c0, "r1", S("70"), a30);
++const clean = H([
++  { text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) },
++  { text: tok(S("70"), "r2", S("70"), a0), outcome: "committed", after: snap(S("70"), ["r1", "r2"], [a30, a0]) },   // zero amount
++  { text: t1, outcome: "replayed", after: snap(S("70"), ["r1", "r2"], [a30, a0]) },
++  { text: tok(S("70"), "r3", S("0"), I("r3", "70"), other), outcome: "rejected", after: snap(S("70"), ["r1", "r2"], [a30, a0]) },
++  { text: tok(c0, "r4", S("90"), I("r4", "10")), outcome: "rejected", after: snap(S("70"), ["r1", "r2"], [a30, a0]) },   // stale
++]);
++const bad = I("r1", "30", "fraud");
++const cases: [string, History, Prop | null][] = [
++  ["clean history (incl. zero amount, replay, wrong key, stale)", clean, null],
++  ["P1: unapproved reason committed", H([{ text: tok(c0, "r1", S("70"), bad), outcome: "committed", after: snap(S("70"), ["r1"], [bad]) }]), "P1"],
++  ["P2: second effect for (ch_1, r1)", H([
++    { text: t1, outcome: "committed", after: snap(S("70"), ["r1"], [a30]) },
++    { text: tok(S("70"), "r9", S("60"), I("r1", "10")), outcome: "committed", after: snap(S("60"), ["r1", "r9"], [a30, I("r1", "10")]) }]), "P2"],
++  ["P3: post state not POST-RULE (remaining unchanged)", H([{ text: tok(c0, "r1", c0, a30), outcome: "committed", after: snap(c0, ["r1"], [a30]) }]), "P3"],
++  ["P4: sum of effects above original", H([
++    { text: tok(c0, "r1", c0, I("r1", "100")), outcome: "committed", after: snap(c0, ["r1"], [I("r1", "100")]) },
++    { text: tok(c0, "r2", c0, I("r2", "100")), outcome: "committed", after: snap(c0, ["r1", "r2"], [I("r1", "100"), I("r2", "100")]) }]), "P4"],
++  ["P6: rejected delivery released an effect", H([{ text: t1, outcome: "rejected", after: snap(c0, [], [a30]) }]), "P6"],
++  ["P7: effect carries a foreign charge id", H([{ text: tok(c0, "r1", S("70"), I("r1", "30", "duplicate_charge", "ch_x")), outcome: "committed",
++    after: snap(S("70"), ["r1"], [I("r1", "30", "duplicate_charge", "ch_x")]) }]), "P7"],
++  ["P5 (extra): authorized zero-amount token rejected", H([{ text: tok(c0, "r1", c0, I("r1", "0")), outcome: "rejected", after: snap(c0, [], []) }]), "P5"],
++];
++let failed = 0;
++for (const [name, h, want] of cases) {
++  const v = oracle.check(h);
++  const got = [...new Set(v.violations.map(x => x.property))];
++  const pass = want === null ? v.ok : got.includes(want);
++  if (!pass) failed++;
++  process.stdout.write(JSON.stringify({ case: name, expected: want ?? "no violation", flagged: got, first: v.first, pass }) + "\n");
++}
++process.stdout.write(JSON.stringify({ selftests: cases.length, failed }) + "\n");
++process.exit(failed === 0 ? 0 : 1);

@@ -1,0 +1,23 @@
+# start=2026-11-19T14:29:01Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-specdiff/tree node=v24.3.0
+# cmd: node --import tsx tests/refund-finality/spec-conformance/run.ts <REPO>/results/night-shift-20261119/orch-B/h-specdiff/controls/reject_all.ts seq 200 1 <REPO>/results/night-shift-20261119/orch-B/h-specdiff/../p-adopt/build/pristine-core/model.cjs <REPO>/results/night-shift-20261119/orch-B/h-specdiff/home
+node: bad option: --import tsx tests/refund-finality/spec-conformance/run.ts
+        0.07 real         0.02 user         0.01 sys
+            21561344  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                2087  page reclaims
+                  25  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                   1  voluntary context switches
+                 329  involuntary context switches
+            29354441  instructions retired
+            31058680  cycles elapsed
+             1278384  peak memory footprint
+# end=2026-11-19T14:29:01Z
+exit 9

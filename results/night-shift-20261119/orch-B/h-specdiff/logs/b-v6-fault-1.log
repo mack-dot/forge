@@ -1,0 +1,23 @@
+# start=2026-11-19T14:30:24Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-specdiff/tree node=v24.3.0
+# cmd: node --import tsx tests/refund-finality/spec-conformance/run.ts <REPO>/results/night-shift-20261119/orch-B/h-specdiff/v6/ts/refund-finality/sink.ts fault 100 2 <REPO>/results/night-shift-20261119/orch-B/h-specdiff/../p-adopt/build/pristine-core/model.cjs <REPO>/results/night-shift-20261119/orch-B/h-specdiff/home
+{"tool":"spec-conformance/run.ts","sink":"<REPO>/results/night-shift-20261119/orch-B/h-specdiff/v6/ts/refund-finality/sink.ts","sinkSha256":"1ba4682b7a979fa7dd5aaff239628ac7960d82c28a13b458de094670a29fbd14","core":"<REPO>/results/night-shift-20261119/orch-B/p-adopt/build/pristine-core/model.cjs","coreSha256":"e6d5f5e54405f2767de59e054c329b86fc5d769c873c055c08780e89fbd906ce","mode":"fault","count":100,"seed":2,"deliveries":543,"outcomes":{"rejected":411,"committed":123,"replayed":9},"faultsInjected":56,"sinkErrors":0,"ms":1059,"sequencesWithViolation":{"P5-SILENT":17},"kindOutcome":{"f-over-unchanged":{"rejected":26},"replay":{"rejected":20,"replayed":8,"committed":4},"honest":{"committed":76,"rejected":32},"f-over-zero-post":{"rejected":15},"stale":{"rejected":42},"bad-sig":{"rejected":19},"zero":{"committed":24,"rejected":14},"f-foreign-intent":{"rejected":35},"bad-pin":{"rejected":26},"full":{"committed":19,"rejected":9},"f-reqid":{"rejected":27},"f-foreign-post":{"rejected":19},"probe-long-id":{"rejected":15},"f-reason":{"rejected":24},"f-over-bound":{"rejected":20},"f-disabled":{"rejected":53},"reuse-id":{"rejected":5,"replayed":1},"probe-nul-id":{"rejected":10}},"violationsByKind":{"probe-long-id":{"P5-SILENT":11},"probe-nul-id":{"P5-SILENT":9},"replay":{"P5-SILENT":1}},"smallest":{"P5-SILENT":{"length":1,"sequence":16,"initial":{"chargeId":"ch_2_16","original":"1","remaining":"1","refundEnabled":true},"at":0,"detail":"authorized, validly signed, fresh, current token was rejected: token shape (token outside the encoding.ts domain: length, U+0000 or non-canonical text)","trace":[{"kind":"probe-long-id","outcome":"rejected","reason":"token shape"}]}}}
+        1.23 real         0.67 user         0.45 sys
+           107642880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                7274  page reclaims
+                  97  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                2195  voluntary context switches
+                3276  involuntary context switches
+            23149597  instructions retired
+            17602842  cycles elapsed
+             1262000  peak memory footprint
+# end=2026-11-19T14:30:25Z
+exit 0
