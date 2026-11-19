@@ -1,0 +1,53 @@
+test_complete_frame_with_exit_status_zero_is_authorized (__main__.DecisionRule) ... ok
+test_end_by_signal_is_refused_even_with_a_complete_frame (__main__.DecisionRule) ... ok
+test_every_incomplete_stdout_is_refused (__main__.DecisionRule) ... ok
+test_frame_for_another_amount_or_request_is_refused (__main__.DecisionRule) ... ok
+test_nonzero_exit_status_is_refused_even_with_a_complete_frame (__main__.DecisionRule) ... ok
+test_rejection_frame_gives_not_authorized_and_never_authorized (__main__.DecisionRule) ... ok
+test_stdout_with_one_extra_byte_is_refused (__main__.DecisionRule) ... ok
+test_text_on_stderr_is_refused (__main__.DecisionRule) ... ok
+test_time_out_is_refused_even_with_a_complete_frame (__main__.DecisionRule) ... ok
+test_too_much_output_is_refused (__main__.DecisionRule) ... ok
+test_zero_amount_request_is_authorized (__main__.DecisionRule) ... ok
+test_abort_after_a_complete_frame_is_refused (__main__.ProcessLifecycle)
+A C abort ends the process by SIGABRT. The launcher must report the signal and refuse. ... ok
+test_child_environment_is_empty (__main__.ProcessLifecycle)
+The launcher must not pass the caller's variables (loader variables such as DYLD_*, or any other). ... ok
+test_child_that_does_not_end_is_stopped_and_refused (__main__.ProcessLifecycle) ... ok
+test_complete_frame_and_exit_zero_is_authorized (__main__.ProcessLifecycle) ... ok
+test_half_a_frame_and_exit_zero_is_refused (__main__.ProcessLifecycle) ... ok
+test_no_output_and_exit_zero_is_refused (__main__.ProcessLifecycle) ... ok
+test_nonzero_exit_status_after_a_complete_frame_is_refused (__main__.ProcessLifecycle) ... ok
+test_abort_after_a_complete_frame_is_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld) ... FAIL
+test_child_that_does_not_end_is_stopped_and_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld) ... ok
+test_complete_frame_and_exit_zero_is_authorized (__main__.ProcessLifecycleWhenCallerIgnoresSigchld) ... ok
+test_half_a_frame_and_exit_zero_is_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld) ... ok
+test_no_output_and_exit_zero_is_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld) ... ok
+test_nonzero_exit_status_after_a_complete_frame_is_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld) ... FAIL
+
+======================================================================
+FAIL: test_abort_after_a_complete_frame_is_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>/results/night-shift-20261119/orch-C/c22-launch-conformance/test_process_lifecycle.py", line 177, in test_abort_after_a_complete_frame_is_refused
+    self.assertEqual(L.decide_from_result(REQUEST, r)[0], 'REFUSED', 'launcher result: %r' % (r,))
+AssertionError: 'AUTHORIZED' != 'REFUSED'
+- AUTHORIZED
++ REFUSED
+ : launcher result: ProcessResult(exit_code=0, signal=None, timed_out=False, stdout=b'(refund-result-v1 True 100 duplicate_charge ch_1 rq_1 1)', stderr=b'', overflow=False)
+
+======================================================================
+FAIL: test_nonzero_exit_status_after_a_complete_frame_is_refused (__main__.ProcessLifecycleWhenCallerIgnoresSigchld)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>/results/night-shift-20261119/orch-C/c22-launch-conformance/test_process_lifecycle.py", line 173, in test_nonzero_exit_status_after_a_complete_frame_is_refused
+    self.assertEqual(L.decide_from_result(REQUEST, r)[0], 'REFUSED', 'launcher result: %r' % (r,))
+AssertionError: 'AUTHORIZED' != 'REFUSED'
+- AUTHORIZED
++ REFUSED
+ : launcher result: ProcessResult(exit_code=0, signal=None, timed_out=False, stdout=b'(refund-result-v1 True 100 duplicate_charge ch_1 rq_1 1)', stderr=b'', overflow=False)
+
+----------------------------------------------------------------------
+Ran 24 tests in 3.823s
+
+FAILED (failures=2)

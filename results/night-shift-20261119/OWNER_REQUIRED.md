@@ -156,3 +156,36 @@ The launcher reports that the owner pushed `nightshift/A-proof` themselves. A ch
 - Why not: a safety classifier stopped a worker's response and then my own control script. No file was written and no command ran. I did not retry in another form.
 - State: only a table made by READING proposals/m1b-mission-20261119/drafts/fail-closed/m1_fail_closed.py exists (orch-C/ATTACKS.md, C-BLOCK-01). It is not evidence from a run. A's launch-path controls (orch-A/launch/) have no red-team run by C.
 - Owner decision needed: who runs this class of test and how (for example the owner by hand, or A's own control tests reviewed by reading only).
+
+## A-5 (2026-11-19T15:43:53Z): launch-path controls for the proved executable — adoption is an owner decision (nothing applied)
+Prototype `orch-A/launch/launcher.py` (sha256 fbdbea0b…; unverified Python; NOT wired into any deployed path; no
+protected file changed). Matrix: `orch-A/launch/CONTROL_MATRIX.md`. Tests by the author of the control; A ran the four
+test files again (exit 0 each; 48 rows; 0 not as expected). NO independent attack run exists (red team blocked: C-1).
+Decisions for the owner:
+1. Adopt a launcher of this kind as the ONLY way to run the executable (empty environment; pinned SHA-256 and kernel
+   CDHash check; fresh blocking pipes; closed descriptors; default signals; accept only exit 0 + empty stderr + exactly
+   one strict frame that echoes the request). The consumer must start it as
+   `/usr/bin/env -i /usr/bin/python3 -B -I <absolute path>/launcher.py`; without that rule the row AC2-n3 stays OPEN
+   (`DEVELOPER_DIR` redirects `/usr/bin/python3`; a forged decision line is ACCEPTED).
+2. Hardened runtime: on a re-signed COPY dyld ignores `DYLD_INSERT_LIBRARIES`. Re-signing changes the bytes
+   (copy 1b78c1e2…; CDHash 341d62cd…), so the pinned image digest b8ed5ec2… and every record bound to it would need a
+   new pin. Not done on the original.
+3. The C FFI patch (item A-3) stays the only option for row AC3-j (call shapes outside the model; R6). NOT RUN.
+
+## B-16 (written 2026-11-19T16:03:15Z) — the Slice 1 suite needs changed expectations to run on the hardened tree (branch proposal; nothing merged; the full changed suite is NOT RUN yet)
+- Why: on the hardened sink the suite stops at row x1 with exit 2 (heavy window 9): the row's raw SQL write is now refused by the database.
+- Proposed changes (table: results/night-shift-20261119/orch-B/h-suite/CHANGES.md; diff SHA-256 d83d0ec07d7f1fe32f81ddbf1f341ac0136f74659e8358510254ee54aa90ef9f): (1) six hostile-write rows (x1, x2, x3, x4, x6, x7) keep the original write and now expect "the database refuses the write; store unchanged"; six NEW rows repeat each attack for a writer that first drops the triggers and expect: the running sink halts, a restart is refused, the dispatcher reports the audit failure, no effect. (2) Row x5 (an emit that fails) now expects "in doubt" in place of the merged at-most-once record: a delivery POLICY change (red team C-ATT-18). (3) The row at old line 589 depends on the constant SINGLE_USE_RULE (item B-15). No row is deleted. Expected count 122 rows (NOT RUN).
+- Not applied on the branch: the same worker's change to scripts/exit_m1_conformance.py (it may be a frozen PR-gate module; the issuer there needs a compiled module with the issuer core).
+- Decision needed: accept the changed expectations (each one), or name the rows that must keep the merged expectation.
+
+## B-17 (written 2026-11-19T16:14:35Z) — a proposed gate tier that checks the GENERATED JavaScript for bounds, in place of a syntactic subset rule (UNAPPLIED diff; protected path; U620)
+- What: results/night-shift-20261119/orch-B/h-gate/diff/refund-jsbound-combined.diff (SHA-256 bf9460ce…05fa; `git apply --check` exit 0 against 985f5eaf by the worker) with one NEW protected file gate/refund/js_bound_check.cjs (SHA-256 2b70a2dd…c0c1). It also holds: the `expect` rule and supervision, an `abstract` and `@` check with fail-closed size caps, and read-once wiring (the rule, the identity and the snapshot use the same bytes).
+- Evidence so far (U620): on 124 translated files the checker accepts 96 and none of the seven known unsafe submissions (my re-run equals the worker's). All 31 correct files that rule 3 refused are accepted. The full gate with this diff is NOT RUN. An adversarial review of the checker is running.
+- What stays an argument: the checker itself is 692 unverified lines; its cost table is read from source; compiler correctness; "translate equals build" was tested on one file.
+- Note: the gate options "warnings are errors" and the audit step are LOAD-BEARING: a bodiless `lemma … ensures false` passes the verifier and is stopped only by them (red team C-GATE-05).
+- Decision needed (later, after the review and a full gate run): adopt this tier, or the termination-by-construction tier (B-7; comparison in h-gate/TERMINATION_TIER.md), or neither.
+
+## C-1 addendum (Orchestrator C, 2026-11-19T16:15Z by `date -u`): part of the launch-path work is now done
+- Done, not stopped by the classifier: a static audit of orch-A/launch/launcher.py by reading, and defensive conformance tests (orch-C/c22-launch-conformance/test_process_lifecycle.py; 24 tests; exit 1: 22 ok, 2 fail).
+- Gap shown by a run (C-LAUNCH-01): if the caller starts the launcher with SIGCHLD ignored, a child that aborted or exited non-zero after a complete frame is AUTHORIZED. The fix is A's work.
+- Still NOT run and still an owner decision: tests with the real refund program against code injected at load, and tests of the FFI C code. The earlier stopped commands were not retried.

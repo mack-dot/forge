@@ -71,3 +71,18 @@ Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 - 15:51:25Z: c20-launch-read DONE (static reading only; worker found F1 SIGCHLD/returncode-0, F2 csops TOCTOU, F3 no write deadline; words-only premises). I CANNOT spot-check: the classifier stops my own reading of launcher.py (extends C-BLOCK-01). Relayed to A as the worker's analysis, unverified by C. Running: c13, c19.
 - 15:51:39Z: pushed 0616e1b2. Running: c13 (gate), c19 (dispatcher+judges on f08a21c1). Pending: B's second sink/minter SHA.
 - 15:56:19Z: c13 DONE. C-GATE-05 (rule 3 admits bodiless 'ensures false' lemma ending in a set display) CONFIRMED by C's recognizer run; gate still safe via Dafny warning default + audit (worker Dafny runs). Sent to B. Running: c19.
+
+## RESUMED 16:08:12Z (launcher order after the handback). Loop continues.
+- Branch nightshift/C-redteam pushed at 2b6afb88; unsure U580-U594; next id U595. B newest head origin/nightshift/B-trust = dd3bec6e (U578 suite record; no new sink/minter/dispatcher beyond f08a21c1 and judges cf242303).
+- c19-dispatch2 did not deliver a report (it was waiting on its own background run); it left evidence files (hport.ts, judges/, logs/, a7_full_restore.ts, a8_paths.ts, a6_fsize.ts). I COLLECT its logs and re-run the key cases myself before recording anything; until a real exit code exists each is NOT RUN.
+- Launch-path RUN test stays blocked (C-1); no retry, no rephrase. Static reading of the launch path is allowed but the classifier stops even my own reading, so c20's relayed audit is the only launch material and is unverified by me.
+- 16:10:02Z: c19 re-run gave mixed exits but its scripts are UNVALIDATED (a4 TypeError, a5 config error, a2 empty): preliminary only, NOT recorded as confirmed. Striking: a8_paths link -> effects [r1,r1]; a7_full_restore nofloor -> recommit committed. B moved to newest head 88ae6cbf (h-sink2) for C-ATT-21,23,24,25,26,27. Building overlay; authoritative re-attack worker next.
+- 16:11:34Z: swap recovered to 1613 MiB; started worker c21-sink2 (authoritative re-attack of 88ae6cbf h-sink2: C-ATT-21,23,24,25,26,27 + unchanged dispatcher C-ATT-17,18,19full,28; cross-checks B's adapted scripts for neutering; honest-flow fuzz). c19's exits are preliminary/unvalidated (scripts buggy): NOT recorded as confirmed. Overlay fix-88ae6cbf built. Running: c21.
+
+## OWNER INSTRUCTION (launcher relay, received 16:12:03Z), in order:
+1. STATE.md checkpoint repaired (this append; earlier sections untouched).
+2. I run the re-test of B's newest dispatcher MYSELF: C-ATT-17 (lock/fencing) and C-ATT-18 (lost emit). Record SHA, command, exit.
+3. Native launch path: static code audit, then defensive conformance tests for the launcher (test_process_lifecycle.py): refuse unless stdout complete, exit status checked, cleared environment, FFI abort -> specified error. Named plainly. If the classifier stops a command: record under C-1, no retry, no rephrase, next task.
+Split kept: C writes tests that show a gap; B writes fixes.
+- 16:12:50Z: TASK 2 done by C itself: C-ATT-17 (lock theft, claim race) and C-ATT-18 (throwing emit) on 88ae6cbf70c5: exit 0 each; effects inspected (no duplicate; lost emit now visible as in-doubt). PASS. Independent fresh-script re-attack continues in c21.
+- 16:15:01Z: TASK 3 done: static audit + test_process_lifecycle.py (24 tests, exit 1: 22 ok, 2 FAIL). C-LAUNCH-01 CONFIRMED by run (SIGCHLD ignored -> launcher AUTHORIZES an aborted / non-zero child). Sent to A. C-1 addendum appended to OWNER_REQUIRED. Running: c21 (c19 still silent).
