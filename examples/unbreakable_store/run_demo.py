@@ -18,7 +18,17 @@ Honesty rules kept here:
   * --json is deterministic (no time, pid, path, state hash, signature or racer identity). Latency and peak RSS
     go to the screen and to --measurements only.
 Exit 0 only if all eight disasters and the valid traffic behaved as stated.
+
+What the demo does NOT show (src/airlock/PROTOCOL.md section 11): every rule holds only against a caller that
+reaches the store THROUGH the engine. Here the "agent" (this script), the store folder and the human cosign key all
+belong to ONE OS user: the demo shows the cosign MECHANISM, not the separation that "the agent cannot self-cosign"
+needs (the key outside the agent's reach AND an agent that cannot write the store folder or run another engine on
+it). The opener of a key is trusted: disasters 2 and 3 are blocked only relative to the `original` and the facts
+given at open; the tenant field is not authenticated. The read airlock checks only the top-level tenant_id of the
+rows passed to it and returns parsed copies. A lease is bound to (request id, tenant, key); only handlers that opened
+one are covered.
 """
+
 
 import argparse
 import json
@@ -52,6 +62,20 @@ ORDERS_TABLE = [  # the app's orders table (an in-memory list stands in for SQL 
 LBL_PARAM = 'NATIVE CHECK + FINITE TEST'
 LBL_CANON = 'PROVED CORE decision (CakeML binary b8ed5ec2...7bb8) + FINITE TEST'
 LBL_INV = 'PROVED CORE source (Dafny-compiled checker; compiler and Node trusted) + NATIVE CHECK + FINITE TEST'
+LIMITS = [
+    'trust boundary: every rule holds only against a caller that reaches the store through the engine; a process that can '
+    'write the store folder can append records itself, and one that can start its own engine on it can ignore every check',
+    'in this demo the agent, the store folder and the human cosign key belong to one OS user: it shows the cosign mechanism, '
+    'not the separation that "the agent cannot self-cosign" needs (key outside the agent\'s reach AND no agent write access '
+    'to the store folder or way to run another engine on it)',
+    'the opener of a key is trusted for its tenant, original and facts; disasters 2 and 3 are blocked relative to those values; '
+    'the tenant field is not authenticated',
+    'the read airlock checks only the top-level tenant_id of the rows passed to it and returns parsed copies of the checked bytes',
+    'a lease is bound to (request id, tenant, key); only handlers that opened a lease are covered',
+    'pins: the engine pins the refund binary and (through its compiled-in helper) the checker model; the store pins the SHA-256 '
+    'of the Node binary at init; a file swapped after its check is not detected',
+    'Stripe and PayPal are LOCAL FAKE in-process stand-ins; SIGKILL is not a power loss; end_to_end=false',
+]
 
 
 class LocalFakeProcessor:
@@ -163,7 +187,7 @@ class Demo:
         code2, _, err2 = self.cli(['cosign-keygen', self.other_key, '--node', self.node])
         if code or code2:
             raise SystemExit('FAIL: temporary cosign keygen: %r %r' % (err, err2))
-        args = ['init', self.store, '--store-id', STORE_ID, '--cosign-pubkey', pub.strip()]
+        args = ['init', self.store, '--store-id', STORE_ID, '--cosign-pubkey', pub.strip(), '--node', self.node]
         for f in ('refunds.json', 'card-charges.json', 'payout.json', 'seats.json'):
             args += ['--policy', POL / f]
         code, out, err = self.cli(args)
@@ -194,7 +218,7 @@ class Demo:
         def webhook(lease):
             h = st.get('acme', 'order-5').state_hash
             return lease.commit('refund', tenant='acme', key='order-5', pre_state_hash=h, reason='DUPLICATE_CHARGE', amount=500)
-        r = self.timed(lambda: st.with_lease('wh-ok-1', LEASE_DEADLINE, webhook))
+        r = self.timed(lambda: st.with_lease('wh-ok-1', LEASE_DEADLINE, 'acme', 'order-5', webhook))
         self.valid_op('py', 'with_lease webhook refund $5 (lease closed by the commit)', r, LBL_PARAM)
 
     # -- the eight disasters
@@ -349,17 +373,23 @@ class Demo:
             return lease.commit('refund', tenant='acme', key='order-2', pre_state_hash=h, reason='DUPLICATE_CHARGE', amount=cents)
         err = None
         try:
-            self.timed(lambda: st.with_lease('wh-7', LEASE_DEADLINE, webhook))
+            self.timed(lambda: st.with_lease('wh-7', LEASE_DEADLINE, 'acme', 'order-2', webhook))
         except TypeError as e:
             err = 'TypeError'
+        # a retry path rejected on ANOTHER key with the same request id must not close (hide) the obligation
+        h3 = st.get('acme', 'order-3').state_hash
+        other = self.timed(lambda: st.refund('acme', 'order-3', 'wh-7', h3, 'GOODWILL', 999999))
         t = ts['d7-webhook']
         sw = st.sweep(now_ms=LEASE_DEADLINE + 1)
-        dropped = sorted(x for x, _ in sw.dropped)
+        dropped = sorted(x[0] for x in sw.dropped)
         moved = sum(a for _, _, _, a, _ in self.refunds(rids={'wh-7', 'wh-7t'}))
-        ok = err == 'TypeError' and t.get('is_type_error') is True and sw.code == 'DROPPED_OBLIGATION' and dropped == ['wh-7', 'wh-7t']
+        ok = err == 'TypeError' and t.get('is_type_error') is True and sw.code == 'DROPPED_OBLIGATION' and dropped == ['wh-7', 'wh-7t'] \
+            and other.code == 'REJECTED_POLICY' and other.lease_closed is None
         self.row(7, 'unhandled TypeError mid-webhook before the sink', 'the lease stays open; leases --sweep reports DROPPED_OBLIGATION (py and ts)',
-                 'py handler: %s; ts handler: %s; sweep: %s %s' % (err, 'TypeError' if t.get('is_type_error') else t, sw.code, ','.join(dropped)),
-                 ok, LBL_PARAM + ' (leases only for handlers that opened one)', moved, 0, 2)
+                 'py handler: %s; ts handler: %s; rejection of wh-7 on another key: %s %s, lease %s; sweep: %s %s' % (
+                     err, 'TypeError' if t.get('is_type_error') else t, other.code, other.detail, 'closed' if other.lease_closed is not None else 'still open',
+                     sw.code, ','.join(dropped)),
+                 ok, LBL_PARAM + ' (lease bound to request id, tenant and key; only handlers that opened one)', moved, 0, 2)
 
     def d8_solver(self):
         st = self.st
@@ -444,7 +474,8 @@ class Demo:
                 {'do': 'commit', 'name': 'v-refund', 'op': 'refund', 'fields': {'tenant': 'acme', 'key': 'order-t1', 'request_id': 'v-ts-1',
                                                                                 'pre_state_hash': '$h', 'reason': 'DUPLICATE_CHARGE', 'amount': 1999}, 'save': 'h'},
                 {'do': 'read', 'name': 'v-read', 'tenant': 'acme', 'rows': [r for r in ORDERS_TABLE if r['tenant_id'] == 'acme']},
-                {'do': 'lease', 'name': 'v-lease', 'request_id': 'wh-ok-t', 'deadline_ms': LEASE_DEADLINE, 'handler': 'commit', 'op': 'refund',
+                {'do': 'lease', 'name': 'v-lease', 'request_id': 'wh-ok-t', 'deadline_ms': LEASE_DEADLINE, 'tenant': 'acme', 'key': 'order-t1',
+                 'handler': 'commit', 'op': 'refund',
                  'fields': {'tenant': 'acme', 'key': 'order-t1', 'pre_state_hash': '$h', 'reason': 'SHIPPING', 'amount': 500}},
                 {'do': 'commit', 'name': 'd2-open', 'op': 'open_money', 'fields': {'tenant': 'acme', 'key': 'order-t2', 'request_id': 'open-order-t2',
                                                                                   'policy': 'store-refunds', 'original': 10000}},
@@ -452,7 +483,8 @@ class Demo:
                 {'do': 'commit', 'name': 'd2-inject', 'op': 'refund', 'fields': {'tenant': 'acme', 'key': 'order-t2', 'request_id': 'inj-ts',
                                                                                  'pre_state_hash': '$h2', 'reason': 'GOODWILL', 'amount': 5000000}},
                 {'do': 'read', 'name': 'd6-read', 'tenant': 'acme', 'rows': ORDERS_TABLE},
-                {'do': 'lease', 'name': 'd7-webhook', 'request_id': 'wh-7t', 'deadline_ms': LEASE_DEADLINE, 'handler': 'typeerror_before_sink',
+                {'do': 'lease', 'name': 'd7-webhook', 'request_id': 'wh-7t', 'deadline_ms': LEASE_DEADLINE, 'tenant': 'acme', 'key': 'order-t2',
+                 'handler': 'typeerror_before_sink',
                  'event': '{"type":"charge.refunded"}', 'fields': {'tenant': 'acme', 'key': 'order-t2', 'pre_state_hash': '$h2', 'reason': 'DUPLICATE_CHARGE'}},
             ])
             for name, what in (('v-open', 'open order-t1'), ('v-refund', 'refund $19.99 DUPLICATE_CHARGE'), ('v-read', 'read_scoped acme orders'),
@@ -510,7 +542,7 @@ def main():
     ok_valid = d.valid and all(v['result'] == 'PASS' for v in d.valid)
     ok = ok_dis and ok_valid and fuzz_ok and leaked == 0 and not over
     report = {'demo': 'unbreakable_store', 'end_to_end': False, 'labels': {'parametric': LBL_PARAM, 'canonical': LBL_CANON, 'inventory': LBL_INV},
-              'processors': 'Stripe and PayPal are LOCAL FAKE in-process stand-ins', 'disasters': d.board, 'valid_traffic': d.valid,
+              'processors': 'Stripe and PayPal are LOCAL FAKE in-process stand-ins', 'limits': LIMITS, 'disasters': d.board, 'valid_traffic': d.valid,
               'valid_commits': sum(1 for v in d.valid if v['observed'] == 'COMMITTED'), 'attacks_blocked': d.blocked,
               'obligations_surfaced': d.surfaced, 'money_leaked_cents_from_wal': leaked, 'money_refunded_cents_from_wal': refunded_total,
               'keys_refunded_above_original': over, 'dafny_at_run_time': d.dafny_evidence, 'fuzz': d.fuzz_result,
@@ -544,6 +576,9 @@ def main():
     if not ok:
         bad = [('D%d' % r['disaster']) for r in d.board if r['result'] != 'PASS'] + [('valid ' + v['op']) for v in d.valid if v['result'] != 'PASS']
         print('DEMO FAIL: %s%s%s' % (', '.join(bad) or '-', '; fuzz failed' if not fuzz_ok else '', '; money leaked' if leaked or over else ''))
+    print('limits (what this demo does not show):')
+    for line in LIMITS:
+        print('  - ' + line)
     print('demo %s; end_to_end=false' % report['result'])
     return 0 if ok else 1
 

@@ -52,7 +52,7 @@ answers = {
   'two-lines': b'REJECTED_POLICY TOTAL_CAP\nCOMMITTED r1 5 ' + b'a' * 32 + b' REFUND t1 k1 r1 X 1 0\n',
   'binary': b'\xff\xfeCOMMITTED\n',
   'empty-line': b'\n',
-  'no-detail': b'REJECTED_POLICY\n',
+  'stale-no-hash': b'STALE_STATE_HASH\n',
   'ok-one': b'OK 1\n',
 }
 if mode == 'short-read':
@@ -65,7 +65,7 @@ out.write(answers[mode]); out.flush()
 time.sleep(2)
 '''
 GARBAGE_MODES = ('unknown-token', 'lowercase', 'other-request', 'short-hash', 'ok-for-write', 'two-lines', 'binary',
-                 'empty-line', 'no-detail', 'short-read', 'exit', 'silent')
+                 'empty-line', 'stale-no-hash', 'short-read', 'exit', 'silent')
 
 
 class Failed(Exception):
@@ -98,7 +98,7 @@ class Suite:
 
     def store(self, name, pubkey=None, store_id=None):
         path = self.folder(name) / 'store'
-        args = ['init', path, '--store-id', store_id or ('st-' + name)[:24]]
+        args = ['init', path, '--store-id', store_id or ('st-' + name)[:24], '--node', self.node]
         for p in POLICIES:
             args += ['--policy', FIX / (p + '.json')]
         if pubkey:
@@ -190,7 +190,7 @@ def case_py_typed(s):
         def boom(lease):
             raise RuntimeError('handler bug')
         try:
-            st.with_lease('L1', 1000, boom)
+            st.with_lease('L1', 1000, 't1', 'o1', boom)
             raise Failed('the handler exception did not propagate')
         except RuntimeError:
             pass
@@ -198,7 +198,7 @@ def case_py_typed(s):
     sw = s.open(p)
     try:
         d = expect(sw.sweep(now_ms=1001), 'DROPPED_OBLIGATION', 'sweep')
-        require(d.dropped == [('L1', 1000)], 'dropped: %r' % d.dropped)
+        require(d.dropped == [('L1', 1000, 't1', 'o1')], 'dropped: %r' % d.dropped)
     finally:
         sw.close()
     eff = s.effects(p)
@@ -264,7 +264,7 @@ def case_py_read(s):
     with s.open(p) as st:
         good = [{'tenant_id': 'tA', 'total': 12}, {'tenant_id': 'tA', 'n': None}]
         r = expect(st.read_scoped('tA', good), 'OK', 'good rows')
-        require(r.rows == good, 'rows released')
+        require(r.rows == good and all(x is not y for x, y in zip(r.rows, good)), 'rows released as parsed copies')
         expect(st.read_scoped('tA', []), 'OK', 'zero rows')
         bad = {'missing tenant_id': [{'tenant_id': 'tA'}, {'total': 1}],
                'wrong tenant': [{'tenant_id': 'tA'}, {'tenant_id': 'tB', 'secret': 'x' * 100}],
@@ -301,19 +301,21 @@ def case_py_lease(s):
             event = None
             return event['data']  # a real TypeError before the sink
 
-        r = expect(st.with_lease('w1', 5000, commit), 'COMMITTED', 'commit handler')
-        r = expect(st.with_lease('w2', 5000, rejected), 'REJECTED_POLICY', 'rejected handler')
+        r = expect(st.with_lease('w1', 5000, 't1', 'o1', commit), 'COMMITTED', 'commit handler')
+        r = expect(st.with_lease('w2', 5000, 't1', 'o1', rejected), 'REJECTED_POLICY', 'rejected handler')
         require(r.lease_closed is not None, 'LEASE_CLOSED part: %r' % r.line)
         try:
-            st.with_lease('w3', 5000, throws)
+            st.with_lease('w3', 5000, 't1', 'o1', throws)
             raise Failed('TypeError did not propagate')
         except TypeError:
             pass
-        require(st.with_lease('w4', 5000, lambda lease: 'done') == 'done', 'return value')
-        e = raises(lambda: st.with_lease('w4', 5000, lambda lease: 1 / 0), fa.LeaseNotOpened, 'second lease on an open id')
+        require(st.with_lease('w4', 5000, 't1', 'o1', lambda lease: 'done') == 'done', 'return value')
+        e = raises(lambda: st.with_lease('w4', 5000, 't1', 'o1', lambda lease: 1 / 0), fa.LeaseNotOpened, 'second lease on an open id')
         require(e.result.code == 'DUPLICATE_REQUEST_ID', 'code %r' % e.result.code)
+        e = raises(lambda: st.with_lease('w2', 5000, 't1', 'o1', lambda lease: 1 / 0), fa.LeaseNotOpened, 'second lease on a closed id')
+        require(e.result.code == 'DUPLICATE_REQUEST_ID' and e.result.detail.startswith('LEASE_USED'), 'one lease per id: %r' % e.result.line)
         d = expect(st.sweep(now_ms=5001), 'DROPPED_OBLIGATION', 'sweep')
-        require(sorted(x for x, _ in d.dropped) == ['w3', 'w4'], 'dropped %r' % d.dropped)
+        require(sorted(x[0] for x in d.dropped) == ['w3', 'w4'] and all(x[2:] == ('t1', 'o1') for x in d.dropped), 'dropped %r' % d.dropped)
         expect(st.sweep(now_ms=5000), 'OK', 'deadline itself is not past')
     require(s.leases(p) == ['w3', 'w4'], 'open leases: %r' % s.leases(p))
     return 'commit and policy rejection close the lease; TypeError and no-sink handlers leave it open; sweep -> DROPPED_OBLIGATION w3, w4'
@@ -401,9 +403,99 @@ def case_py_lease_durable(s):
     """The lease is durable before the handler runs: the handler itself sees it with the engine's `leases`."""
     p = s.store('py-lease-durable')
     with s.open(p) as st:
-        seen = st.with_lease('d1', 5000, lambda lease: s.leases(p))
+        seen = st.with_lease('d1', 5000, 't1', 'k1', lambda lease: s.leases(p))
     require(seen == ['d1'], 'the lease was not durable when the handler ran: leases seen by the handler %r' % seen)
     return 'the handler saw its lease in the WAL (engine leases)'
+
+
+def case_py_read_tricks(s):
+    """Review finding 3 (FAIL-OPEN) regression: what is released is what the engine checked, never the caller's objects.
+
+    The 'change during the wait' tricks run deterministically: a Store subclass changes the caller's objects inside
+    _exchange, after the SDK serialized them and before the engine answers (as another thread could)."""
+    p = s.store('py-read-tricks')
+
+    class Evil(dict):
+        def __getitem__(self, k):
+            return 'tB' if k == 'tenant_id' else dict.__getitem__(self, k)
+
+        def get(self, k, d=None):
+            return 'tB' if k == 'tenant_id' else dict.get(self, k, d)
+
+    class Racy(fa.Store):
+        hook = None
+
+        def _exchange(self, data):
+            if Racy.hook:
+                Racy.hook()
+            return fa.Store._exchange(self, data)
+
+    results = {}
+    st = Racy(p, node=s.node, engine_dir=s.engine_dir)
+    try:
+        rows = [{'tenant_id': 'tA', 'n': 1}]
+        Racy.hook = lambda: rows[0].__setitem__('tenant_id', 'tB')            # another thread changes the checked object
+        results['thread changes the object'] = st.read_scoped('tA', rows)
+        rows2 = [{'tenant_id': 'tA', 'n': 1}]
+        Racy.hook = lambda: rows2.__setitem__(0, {'tenant_id': 'tB', 'secret': 'x'})   # another thread replaces the row
+        results['thread replaces the row'] = st.read_scoped('tA', rows2)
+        Racy.hook = None
+        results['dict subclass'] = st.read_scoped('tA', [Evil(tenant_id='tA', n=1)])
+        try:
+            st.read_scoped('tA', [{'tenant_id': 'tA'}] * (fa.MAX_READ_ROWS + 1))
+            raise Failed('more than 100000 rows: the SDK sent the read')
+        except fa.LocalRefusal:
+            pass
+        except fa.AirlockError as e:  # sent anyway: the engine refuses the header and the stream goes out of step
+            raise Failed('more than 100000 rows: the SDK sent the read and got %s, not a local refusal' % type(e).__name__)
+        expect(st.state(), 'OK', 'stream in step after the refused oversized read')
+    finally:
+        Racy.hook = None
+        st.close()
+    for why, r in results.items():
+        require(isinstance(r, fa.Result) and r.code in ('OK', 'TENANT_ISOLATION_BREACH'), '%s: %r' % (why, r))
+        got = [row.get('tenant_id') if isinstance(row, dict) else row for row in r.rows]
+        require(all(t == 'tA' for t in got) and all(type(row) is dict for row in r.rows),
+                '%s: a row of another tenant was released (or not a parsed copy): %r' % (why, got))
+    return '3 tricks (object changed, row replaced, dict subclass) release only the checked tA rows; 100001 rows refused locally, stream in step'
+
+
+def case_py_lease_bound(s):
+    """Review finding 5: a lease is bound to (request id, tenant, key); a rejection on another key does not close it."""
+    p = s.store('py-lease-bound')
+    with s.open(p) as st:
+        st.open_money('t1', 'o1', 'r0', 'store-refunds', 10000, {'shipping_paid': 1000})
+        st.open_money('t1', 'o2', 'r00', 'store-refunds', 100)
+
+        def other_key(lease):
+            h = st.get('t1', 'o2').state_hash
+            return lease.commit('refund', key='o2', pre_state_hash=h, reason='GOODWILL', amount=5000)  # TOTAL_CAP on o2
+        r = expect(st.with_lease('b1', 5000, 't1', 'o1', other_key), 'REJECTED_POLICY', 'rejection on another key')
+        require(r.lease_closed is None, 'a rejection on another key closed the lease: %r' % r.line)
+        e = raises(lambda: st.with_lease('b2', 5000, 't2', 'o1', lambda lease: 1 / 0), fa.LeaseNotOpened, 'lease on a key of another tenant')
+        require(e.result.code == 'TENANT_ISOLATION_BREACH', 'other tenant: %r' % e.result.line)
+        d = expect(st.sweep(now_ms=5001), 'DROPPED_OBLIGATION', 'sweep')
+        require(d.dropped == [('b1', 5000, 't1', 'o1')], 'dropped %r' % d.dropped)
+        require(st.leases(all=True) == [['b1', '5000', 't1', 'o1', 'OPEN']], 'leases --all %r' % st.leases(all=True))
+    return 'rejection on another key leaves the lease open (no LEASE_CLOSED; sweep reports it); a lease on another tenant key refused'
+
+
+def case_ts_read_tricks(s):
+    """Review findings 3, 7, 8 for the TS SDK: replaced or changed row during the await, toJSON, getter, sparse array,
+    undefined entry, more than 100000 rows."""
+    p = s.store('ts-read-tricks')
+    kinds = ('replace_during_await', 'mutate_during_await', 'tojson', 'getter', 'sparse', 'undefined_entry', 'too_many')
+    o = plan(s, p, [{'do': 'read_trick', 'name': k, 'kind': k} for k in kinds] + [{'do': 'state', 'name': 'state'}])
+    for k in ('replace_during_await', 'mutate_during_await', 'tojson', 'getter'):
+        x = o[k]
+        require(x.get('code') in ('OK', 'TENANT_ISOLATION_BREACH') and 'error' not in x, 'TS %s: %r' % (k, x))
+        require(all(t == 'tA' for t in x['released_tenants']) and not x['released_is_caller_object'],
+                'TS %s: a row of another tenant was released (or the caller object): %r' % (k, x))
+    for k in ('sparse', 'undefined_entry'):
+        require(o[k].get('code') == 'TENANT_ISOLATION_BREACH' and o[k]['rows'] == 0 and o[k]['detail'].startswith('LOCAL'), 'TS %s: %r' % (k, o[k]))
+    require(o['too_many'].get('error') == 'LocalRefusal', 'TS too_many: %r' % o['too_many'])
+    require(o['state'].get('code') == 'OK', 'TS stream in step after the tricks: %r' % o['state'])
+    return 'TS: 4 tricks release only checked tA copies; sparse and undefined refused locally (no wait); 100001 rows LocalRefusal; stream in step'
 
 
 # ------------------------------------------------------------------------------------------------ TypeScript cases
@@ -432,7 +524,7 @@ def case_ts_typed(s):
         R('nul-id', 'refund', tenant='t1\u0000', key='o1', request_id='r7', pre_state_hash='$h1', reason='DUPLICATE_CHARGE', amount=5),
         R('cr-amount', 'refund', tenant='t1', key='o1', request_id='r7', pre_state_hash='$h1', reason='DUPLICATE_CHARGE', amount='5\r'),
         R('unsafe-number', 'refund', tenant='t1', key='o1', request_id='r7', pre_state_hash='$h1', reason='DUPLICATE_CHARGE', amount=2 ** 64),
-        {'do': 'lease', 'name': 'lease-throw', 'request_id': 'L1', 'deadline_ms': 1000, 'handler': 'typeerror_before_sink', 'event': '{}',
+        {'do': 'lease', 'name': 'lease-throw', 'request_id': 'L1', 'deadline_ms': 1000, 'tenant': 't1', 'key': 'o1', 'handler': 'typeerror_before_sink', 'event': '{}',
          'fields': {'tenant': 't1', 'key': 'o1', 'pre_state_hash': '$h1', 'reason': 'DUPLICATE_CHARGE'}},
         {'do': 'sweep', 'name': 'sweep', 'now_ms': 1001},
         {'do': 'state', 'name': 'state'},
@@ -460,7 +552,7 @@ def case_ts_typed(s):
     for k in ('lf-id', 'nul-id', 'cr-amount', 'unsafe-number'):
         require(o[k].get('error') == 'LocalRefusal', 'TS %s: %r' % (k, o[k]))
     require(o['lease-throw'].get('is_type_error') is True, 'TS TypeError propagated: %r' % o['lease-throw'])
-    require(o['sweep']['dropped'] == [['L1', '1000']], 'TS dropped %r' % o['sweep'])
+    require(o['sweep']['dropped'] == [['L1', '1000', 't1', 'o1']], 'TS dropped %r' % o['sweep'])
     eff = s.effects(p)
     require(len(eff) == 6 and eff[1] == 'REFUND t1 o1 r1 DUPLICATE_CHARGE 500 0' and eff[-1].startswith('BOOK t1 seats b2 '), 'WAL %r' % eff)
     return 'TS SDK: all 7 typed results from the real engine; EngineRefusal x2; 4 unsafe inputs refused locally; saga and inventory verbs; WAL = 6 effects'
@@ -496,12 +588,12 @@ def case_ts_lease(s):
         {'do': 'commit', 'name': 'open', 'op': 'open_money', 'fields': {'tenant': 't1', 'key': 'o1', 'request_id': 'r0', 'policy': 'store-refunds',
                                                                        'original': 10000, 'facts': {'shipping_paid': 1000}}},
         {'do': 'get', 'name': 'get', 'tenant': 't1', 'key': 'o1', 'save': 'h'},
-        {'do': 'lease', 'name': 'commit', 'request_id': 'w1', 'deadline_ms': 5000, 'handler': 'commit', 'op': 'refund', 'fields': rf},
+        {'do': 'lease', 'name': 'commit', 'request_id': 'w1', 'deadline_ms': 5000, 'tenant': 't1', 'key': 'o1', 'handler': 'commit', 'op': 'refund', 'fields': rf},
         {'do': 'get', 'name': 'get2', 'tenant': 't1', 'key': 'o1', 'save': 'h'},
-        {'do': 'lease', 'name': 'rejected', 'request_id': 'w2', 'deadline_ms': 5000, 'handler': 'commit', 'op': 'refund',
+        {'do': 'lease', 'name': 'rejected', 'request_id': 'w2', 'deadline_ms': 5000, 'tenant': 't1', 'key': 'o1', 'handler': 'commit', 'op': 'refund',
          'fields': dict(rf, reason='SHIPPING', amount=8000)},
-        {'do': 'lease', 'name': 'throws', 'request_id': 'w3', 'deadline_ms': 5000, 'handler': 'typeerror_before_sink', 'event': '{"id":"evt"}', 'fields': rf},
-        {'do': 'lease', 'name': 'no-sink', 'request_id': 'w4', 'deadline_ms': 5000, 'handler': 'return_without_sink'},
+        {'do': 'lease', 'name': 'throws', 'request_id': 'w3', 'deadline_ms': 5000, 'tenant': 't1', 'key': 'o1', 'handler': 'typeerror_before_sink', 'event': '{"id":"evt"}', 'fields': rf},
+        {'do': 'lease', 'name': 'no-sink', 'request_id': 'w4', 'deadline_ms': 5000, 'tenant': 't1', 'key': 'o1', 'handler': 'return_without_sink'},
         {'do': 'sweep', 'name': 'sweep', 'now_ms': 5001},
     ])
     require(o['commit']['handler_returned']['code'] == 'COMMITTED', 'TS commit %r' % o['commit'])
@@ -509,7 +601,8 @@ def case_ts_lease(s):
     require(rj['code'] == 'REJECTED_POLICY' and rj['lease_closed'] is not None, 'TS rejected %r' % rj)
     require(o['throws'].get('is_type_error') is True, 'TS throws %r' % o['throws'])
     require(o['no-sink']['handler_returned'] == {'returned': True}, 'TS no-sink %r' % o['no-sink'])
-    require(o['sweep']['code'] == 'DROPPED_OBLIGATION' and sorted(x[0] for x in o['sweep']['dropped']) == ['w3', 'w4'], 'TS sweep %r' % o['sweep'])
+    require(o['sweep']['code'] == 'DROPPED_OBLIGATION' and sorted(x[0] for x in o['sweep']['dropped']) == ['w3', 'w4']
+            and all(x[2:] == ['t1', 'o1'] for x in o['sweep']['dropped']), 'TS sweep %r' % o['sweep'])
     require(s.leases(p) == ['w3', 'w4'], 'open leases %r' % s.leases(p))
     return 'TS SDK: commit and rejection close; TypeError and no-sink leave the lease open; sweep -> DROPPED_OBLIGATION w3, w4'
 
@@ -556,7 +649,8 @@ CASES = [('py_typed', case_py_typed), ('py_cosign', case_py_cosign), ('py_canoni
          ('py_saga_inventory', case_py_saga_inventory), ('py_read', case_py_read), ('py_lease', case_py_lease),
          ('py_kill', case_py_kill), ('py_garbage', case_py_garbage), ('py_protocol', case_py_protocol), ('py_lease_durable', case_py_lease_durable),
          ('ts_typed', case_ts_typed), ('ts_read', case_ts_read), ('ts_lease', case_ts_lease), ('ts_kill', case_ts_kill), ('ts_garbage', case_ts_garbage),
-         ('ts_protocol', case_ts_protocol)]
+         ('ts_protocol', case_ts_protocol), ('py_read_tricks', case_py_read_tricks), ('py_lease_bound', case_py_lease_bound),
+         ('ts_read_tricks', case_ts_read_tricks)]
 
 
 def main():

@@ -48,8 +48,13 @@ for this page: the checker model was already built. It calls
 rm -rf build/quickstart && mkdir -p build/quickstart
 bin/forge-airlock init build/quickstart/store --store-id quickstart \
   --policy examples/unbreakable_store/policies/refunds.json \
-  --policy examples/unbreakable_store/policies/payout.json
+  --policy examples/unbreakable_store/policies/payout.json \
+  --node "$FORGE_AIRLOCK_NODE"
 ```
+
+`--node` makes the store pin the SHA-256 of that Node binary. The engine requires it
+for a store with a cosign key or an inventory policy. Each store gets a random nonce in
+its genesis record, so its state hashes differ from those of every other store.
 
 The two policies are a money policy ([refunds.json](../examples/unbreakable_store/policies/refunds.json))
 and a saga policy ([payout.json](../examples/unbreakable_store/policies/payout.json)). The
@@ -82,7 +87,7 @@ with fa.Store('build/quickstart/store', node=os.environ['FORGE_AIRLOCK_NODE']) a
     def webhook(lease):
         h = st.get('acme', 'order-1').state_hash
         return lease.commit('refund', tenant='acme', key='order-1', pre_state_hash=h, reason='DUPLICATE_CHARGE', amount=500)
-    r = st.with_lease('wh-1', int(time.time() * 1000) + 60000, webhook)
+    r = st.with_lease('wh-1', int(time.time() * 1000) + 60000, 'acme', 'order-1', webhook)
     print('webhook in a lease:', r.code)
 EOF
 python3 build/quickstart/hello.py
@@ -91,6 +96,12 @@ python3 build/quickstart/hello.py
 Expected lines: `open: COMMITTED`, `shipping $80 on a $10 fact: REJECTED_POLICY REASON_CAP`,
 `shipping $10: COMMITTED`, `read with a forgotten WHERE tenant_id: TENANT_ISOLATION_BREACH ROW 1 TENANT_MISMATCH rows returned: 0`,
 `webhook in a lease: COMMITTED`.
+
+`read_scoped` serializes each row once, sends those bytes, and after `OK <n>` returns new
+objects parsed from exactly those bytes, never your own objects. It refuses more than
+100000 rows before it sends anything. `with_lease` binds the lease to a request id, a
+tenant and a key. Only a terminal verdict for that id on that tenant and key closes it.
+One lease per request id, ever.
 
 Typed results: `COMMITTED`, `REJECTED_POLICY`, `REQUIRE_HUMAN_COSIGN`, `STALE_STATE_HASH`,
 `DUPLICATE_REQUEST_ID`, `TENANT_ISOLATION_BREACH`, `DROPPED_OBLIGATION`. Every other outcome
@@ -119,7 +130,7 @@ async function main(): Promise<void> {
   const read = await st.readScoped('acme', [{ tenant_id: 'acme', order: 'order-1' }]);
   console.log('read:', read.code, 'rows returned:', read.rows.length);
   try {
-    await st.withLease('wh-2', Date.now() + 1000, (lease: unknown) => {
+    await st.withLease('wh-2', Date.now() + 1000, 'acme', 'order-1', (lease: unknown) => {
       const event: any = {};
       return event.data.object.amount;        // a TypeError before the sink: the lease stays open
     });
@@ -145,7 +156,8 @@ bin/forge-airlock replay build/quickstart/store
 bin/forge-airlock leases build/quickstart/store
 ```
 
-`replay` lists every effect record of the WAL. `leases` lists the open leases. The
+`replay` lists every effect record of the WAL. `leases` lists the open leases
+(`leases --all` also lists the closed ones with the verdict that closed them). The
 command `bin/forge-airlock leases build/quickstart/store --sweep` reports each open
 lease past its deadline as `DROPPED_OBLIGATION` and exits 24 when there is at least one.
 
@@ -196,6 +208,26 @@ Three labels. Each result has one or more of them.
 
 `end_to_end=false`. No figure of the form "% of bugs" is claimed anywhere.
 
+## Trust boundary
+
+Every rule on this page holds only against a caller that reaches the store THROUGH the
+engine. A process that can write the store folder can append records itself: the CRC
+and the hash chain authenticate nothing. A process that can start its own engine on the
+folder can ignore every check. To hold these rules against an agent, keep the agent from
+writing the store folder and from running another engine on it. Example: `serve` runs
+under another OS user that owns the folder, and the agent holds only its pipe. The
+engine cannot check this. See section 11 of [the protocol](../src/airlock/PROTOCOL.md).
+
+The opener of a key is trusted. The `original` amount, the facts (for example
+`shipping_paid`) and the tenant of a key are inputs of whoever opens the key. Nothing
+authenticates the tenant field. The money caps (for example disasters 2 and 3 of the
+demo) block only relative to the values given at open.
+
+What pins what: the engine pins the refund binary (compiled-in SHA-256) and the two Node
+helpers (compiled in); the booking helper pins the checker model; the store pins the
+SHA-256 of the Node binary at `init`. A file that is swapped after its check is not
+detected. Nothing in this repository pins the engine binary itself.
+
 ## Cosign: the same-OS-user limit
 
 A refund above the cosign limit commits only with an Ed25519 signature that verifies
@@ -204,8 +236,15 @@ against the public key pinned at `init`. The human signs with
 checked with `fstat`). The engine holds only the public key.
 
 Limit: if the agent runs as the same OS user as the key owner, it can read a 0600 file.
-"The agent cannot self-cosign" holds only if the private key is outside the agent's
-reach: another OS user, a hardware key, or a separate machine.
+"The agent cannot self-cosign" holds only if BOTH conditions hold:
+
+1. the private key is outside the agent's reach: another OS user, a hardware key, or a
+   separate machine;
+2. the agent cannot write the store folder and cannot run another engine on it (see
+   "Trust boundary").
+
+In the demo, the agent and the human key belong to the same OS user. The demo shows the
+cosign mechanism, not that separation.
 
 ## Trusted assumptions
 
@@ -222,8 +261,12 @@ reach: another OS user, a hardware key, or a separate machine.
 ## Limits
 
 - The read airlock sees only the rows passed to it. A query that never goes through
-  `read_scoped` is not checked.
-- Leases cover only handlers that opened one with `with_lease`.
+  `read_scoped` is not checked. It checks only the top-level `tenant_id` of each row: a
+  nested object of another tenant inside a row of the right tenant passes. It returns
+  parsed copies of the checked bytes.
+- A lease is bound to (request id, tenant, key). Leases cover only handlers that opened
+  one with `with_lease`.
+- The opener of a key is trusted for its tenant, `original` and facts.
 - The CakeML refund binary runs on macOS ARM64 only.
 - The kill tests use SIGKILL. A SIGKILL is not a power loss.
 - Whoever can write the store folder is trusted. FNV-1a-128 is not cryptographic.

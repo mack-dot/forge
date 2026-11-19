@@ -53,7 +53,7 @@ from common import canonical, digest, read_json  # noqa: E402  (record helpers o
 import javascript_env  # noqa: E402  (the pinned Node check)
 
 ENGINE_DIR = 'src/airlock'
-RUST = ['main.rs', 'store.rs', 'ledger.rs', 'policy.rs', 'verbs.rs', 'helpers.rs', 'json.rs']
+RUST = ['main.rs', 'store.rs', 'ledger.rs', 'policy.rs', 'verbs.rs', 'helpers.rs', 'json.rs', 'pin.rs']
 NODE_HELPERS = ['src/airlock/node/cosign.cjs', 'src/airlock/node/booking_check.cjs']
 TS_FILES = ['sdk/ts/forge_airlock.ts', 'examples/unbreakable_store/ts_part.ts']
 TS_SDK_REQUIRE = "require(pathMod.join(__dirname, '..', '..', 'sdk', 'ts', 'forge_airlock.ts'))"  # the one computed require
@@ -78,20 +78,23 @@ CC = '/usr/bin/cc'
 CC_VERSION = 'Apple clang version 17.0.0 (clang-1700.0.13.5)'
 CC_FLAGS = ['-dynamiclib', '-O1', '-Wall', '-Wextra', '-Werror']
 ENGINE_CASES = ['init', 'recovery', 'cas', 'tenant', 'money', 'canonical', 'cosign', 'saga', 'inventory', 'leases', 'read', 'lines',
-                'replay', 'race', 'kill', 'trace', 'dispatch', 'lock', 'pin', 'crafted', 'native_bound', 'helper_env']
-NODE_CASE_COUNT = 128
+                'replay', 'race', 'kill', 'trace', 'dispatch', 'lock', 'pin', 'crafted', 'native_bound', 'helper_env',
+                'lease_binding', 'nonce', 'weakkey', 'seams']
+NODE_CASE_COUNT = 137
 DIFF_CASES = ['loader', 'malformed', 'no-engine', 'engine', 'mismatch', 'demo', 'choice', 'fault', 'refused', 'saga', 'identical']
 SDK_CASES = ['py_typed', 'py_cosign', 'py_canonical', 'py_saga_inventory', 'py_read', 'py_lease', 'py_kill', 'py_garbage', 'py_protocol',
-             'py_lease_durable', 'ts_typed', 'ts_read', 'ts_lease', 'ts_kill', 'ts_garbage', 'ts_protocol']
+             'py_lease_durable', 'ts_typed', 'ts_read', 'ts_lease', 'ts_kill', 'ts_garbage', 'ts_protocol', 'py_read_tricks', 'py_lease_bound',
+             'ts_read_tricks']
 FUZZ_SEED, FUZZ_ROUNDS = 20, 3
+HEX32 = re.compile(r'[0-9a-f]{32}')  # a state hash, genesis hash, nonce or signature: never in the bundle
 DISASTER_CODES = {  # the engine codes that the directive names for each disaster; each must appear in `observed`
     1: ['1 COMMITTED, 49 STALE_STATE_HASH'], 2: ['TOTAL_CAP', 'CAKEML_REJECTED'], 3: ['REASON_CAP'],
     4: ['COSIGN_REQUIRED', 'COSIGN_INVALID', 'COMMITTED'], 5: ['PROCESSOR_IN_FLIGHT', 'LOCAL FAKE'], 6: ['TENANT_ISOLATION_BREACH', '0 rows'],
-    7: ['DROPPED_OBLIGATION'], 8: ['OVERBOOKED', 'GAP_TOO_LARGE', 'optimal batch: COMMITTED', 'Dafny starts seen: 0']}
+    7: ['DROPPED_OBLIGATION wh-7,wh-7t', 'on another key: REJECTED_POLICY', 'lease still open'], 8: ['OVERBOOKED', 'GAP_TOO_LARGE', 'optimal batch: COMMITTED', 'Dafny starts seen: 0']}
 SUBJECT = sorted(['src/airlock/' + f for f in RUST] + NODE_HELPERS + TS_FILES + PYTHON_FILES + [
     'src/airlock/PROTOCOL.md', INTERPOSER, ARTIFACT, CHECKER_SOURCE, 'proposals/forge2-pillar3-dual-certificate/benchmark/records/build-record.json',
     'tests/m1-conformance/recorded-m1-cases.json', 'proposals/forge2-goal20-sdk/DESIGN.md', 'proposals/forge2-goal20-sdk/BRIEF.md',
-    'docs/quickstart-5min.md'])
+    'docs/quickstart-5min.md', 'proposals/forge2-goal20-sdk/REVIEW.md'])
 SUBJECT_GLOBS = ['tests/airlock/fixtures/*.json', 'tests/airlock/policies/*.json', 'examples/unbreakable_store/policies/*.json']
 
 # Changed copies. (name, file, a part of the failure text that must appear, text to find exactly once, replacement,
@@ -123,7 +126,7 @@ MUTANTS = [
      'the fact-bound reason cap (SHIPPING <= shipping_paid)'),
     ('M08_most_restrictive', 'policy.rs', "GOODWILL 500': expected REQUIRE_HUMAN_COSIGN (exit 11), got exit 0", 'r.verdict.rank() > b.rank()', 'false', 'engine', 'money',
      'the rule that the most restrictive verdict wins'),
-    ('M09_cosign_not_verified', 'verbs.rs', "expected REQUIRE_HUMAN_COSIGN (exit 11), got exit 0 'COMMITTED r1", 'if !helpers::cosign_verify(&ctx.node(), &pk, sig, &msg)? {', 'if false {', 'engine', 'cosign',
+    ('M09_cosign_not_verified', 'verbs.rs', "got exit 0 'COMMITTED r1", 'if !helpers::cosign_verify(&ctx.node(), &pk, sig, &msg)? {', 'if false {', 'engine', 'cosign',
      'the verification of a cosign signature'),
     ('M10_cosign_answer_any_bytes', 'helpers.rs', 'HELPER_FAILED (exit 22), got exit 0', '(Some(0), true, o) if o == yes => Ok(true),', '(Some(0), _, _) => Ok(true),',
      'engine', 'cosign', 'the exact VALID line and the empty stderr of the cosign helper'),
@@ -143,9 +146,10 @@ MUTANTS = [
      'engine', 'inventory', 'the call of the Dafny-compiled checker'),
     ('M18_native_overbooked', 'policy.rs', "OVERBOOKED: ['REJECTED_POLICY', 'CHECKER_REJECTED']", '    if used.iter().zip(&c.c).any(|(u, cap)| *u > *cap as u128) { return Err("OVERBOOKED") }\n', '',
      'engine', 'inventory', 'the native A x <= c check'),
-    ('M19_lease_close_record', 'verbs.rs', 'the answer names the close', '    if s.l.leases.contains_key(req) {\n        let (epoch, _)', '    if false {\n        let (epoch, _)',
+    ('M19_lease_close_record', 'verbs.rs', 'the answer names the close', '    if bound {\n        let (epoch, _)', '    if false {\n        let (epoch, _)',
      'engine', 'leases', 'the durable CLOSE record of a terminal refusal'),
-    ('M20_commit_closes_lease', 'ledger.rs', 'list:', 'self.leases.remove(req);', '', 'engine', 'leases', 'the close of a lease by a committed effect'),
+    ('M20_commit_closes_lease', 'ledger.rs', 'LEASE L1 100 t1 k1', 'l.closed = Some((index, "COMMITTED".into(), "-".into()))', 'l.closed = None', 'engine', 'leases',
+     'the close of a lease by a committed effect'),
     ('M21_sweep_deadline', 'main.rs', 'deadline itself is not past', '} else if now > *deadline {', '} else if now >= *deadline {', 'engine', 'leases',
      'the strict deadline of a sweep'),
     ('M22_read_tenant_value', 'verbs.rs', 'row mismatch', '(J::Obj(_), Some(J::Str(t))) if t == tenant => Ok(()),', '(J::Obj(_), Some(J::Str(_))) => Ok(()),',
@@ -166,41 +170,41 @@ MUTANTS = [
      'the line bound of 65,536 bytes'),
     ('M31_canonical_zero_amount', 'verbs.rs', "returned_item 0': expected REJECTED_POLICY", '        if amount == 0 { return verdict(s, req, Code::RejectedPolicy, "ZERO_AMOUNT") }\n', '',
      'engine', 'canonical', 'the native zero-amount refusal before the CakeML binary'),
-    ('M32_cosign_store_id_fixed', 'verbs.rs', "expected REQUIRE_HUMAN_COSIGN (exit 11), got exit 0 'COMMITTED r1", 'cosign_message(&s.l.store_id, req, t[4], &action)', 'cosign_message("store-a", req, t[4], &action)',
-     'engine', 'cosign', 'the store id inside the signed cosign message'),
+    ('M32_cosign_store_id_fixed', 'verbs.rs', "expected COMMITTED (exit 0), got exit 11 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID'", 'cosign_message(&s.l.store_id, s.l.genesis_hash, req, t[4], &action)',
+     'cosign_message("store-a", s.l.genesis_hash, req, t[4], &action)', 'engine', 'cosign', 'the store id inside the signed cosign message'),
     ('M33_get_tenant', 'verbs.rs', "'GET tB k1': expected TENANT_ISOLATION_BREACH",
      '    if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }\n    let rest = match', '    let rest = match', 'engine', 'tenant',
      'the tenant check of GET'),
     ('M34_policy_pin', 'store.rs', 'changed policy file', 'if fnv128(&bytes) != pin.hash {', 'if false {', 'engine', 'recovery', 'the pin of a policy file'),
     ('M35_json_trailing_bytes', 'json.rs', 'row trailing:', 'if p.i != p.b.len() {', 'if false {', 'engine', 'read', 'the refusal of bytes after a JSON value'),
     # the durable order (case trace, with the test interposer) and the answer
-    ('S01_no_wal_sync', 'store.rs', 'system-call order of a commit', 'if let Err(e) = written.and_then(|()| wal.sync_all()) {', 'if let Err(e) = written {',
+    ('S01_no_wal_sync', 'store.rs', 'system-call order of a commit: missing step \'fullfsync airlock.wal 0\'', 'if let Err(e) = written.and_then(|()| wal.sync_all()) {', 'if let Err(e) = written {',
      'engine', 'trace', 'the F_FULLFSYNC of the WAL before the answer'),
     ('S02_ignore_wal_sync_error', 'store.rs', 'failed sync of the WAL: expected one IO_ERROR line', 'if let Err(e) = written.and_then(|()| wal.sync_all()) {',
      'let _ = wal.sync_all();\n        if let Err(e) = written {', 'engine', 'trace', 'the result of the WAL sync'),
     ('S03_no_cut_after_failed_sync', 'store.rs', 'failed sync of the WAL: the record must be cut off again',
      'let undone = wal.set_len(old_len).and_then(|()| wal.sync_all());', 'let undone: io::Result<()> = Ok(());', 'engine', 'trace',
      'the cut of a record whose write or sync failed'),
-    ('S04_no_ratchet_sync', 'store.rs', 'system-call order of init', '.concat()).and_then(|()| ratchet.sync_all())', '.concat())', 'engine', 'trace',
+    ('S04_no_ratchet_sync', 'store.rs', 'system-call order of init: missing step \'fullfsync airlock.epoch 0\'', '.concat()).and_then(|()| ratchet.sync_all())', '.concat())', 'engine', 'trace',
      'the F_FULLFSYNC of the ratchet entry'),
     ('S05_ignore_ratchet_error', 'store.rs', 'failed sync of the ratchet: expected one OUTCOME_UNKNOWN line',
      'if push(&mut ratchet, epoch).is_err() { return no(Code::OutcomeUnknown, "OUTCOME_UNKNOWN the record is in the WAL; its ratchet entry failed") }',
      'let _ = push(&mut ratchet, epoch);', 'engine', 'trace', 'the result of the ratchet write and sync'),
-    ('S06_no_ratchet_entry', 'store.rs', 'system-call order of a commit',
+    ('S06_no_ratchet_entry', 'store.rs', 'system-call order of a commit: missing step \'write airlock.epoch 12\'',
      '        if push(&mut ratchet, epoch).is_err() { return no(Code::OutcomeUnknown, "OUTCOME_UNKNOWN the record is in the WAL; its ratchet entry failed") }\n', '',
      'engine', 'trace', 'the ratchet entry of a commit'),
-    ('S07_early_answer', 'store.rs', 'system-call order of a commit', '        cut("c");\n',
+    ('S07_early_answer', 'store.rs', 'system-call order of a commit: step \'write stdout N\' comes before \'fullfsync airlock.wal 0\'', '        cut("c");\n',
      '        cut("c");\n        let _ = io::stdout().write_all(b"COMMITTED ").and_then(|()| io::stdout().flush());\n', 'engine', 'trace',
      'the order: no answer byte before the WAL sync'),
-    ('S08_no_recovery_wal_sync', 'store.rs', 'system-call order of a recovery', '        wal_ref.sync_all()?;\n', '', 'engine', 'trace', 'the WAL sync after a recovery cut'),
+    ('S08_no_recovery_wal_sync', 'store.rs', 'system-call order of a recovery: missing step \'fullfsync airlock.wal 0\'', '        wal_ref.sync_all()?;\n', '', 'engine', 'trace', 'the WAL sync after a recovery cut'),
     ('S09_ignore_recovery_sync_error', 'store.rs', 'recovery with a failed sync of the WAL must refuse', '        wal_ref.sync_all()?;\n', '        let _ = wal_ref.sync_all();\n',
      'engine', 'trace', 'the result of the WAL sync in the recovery'),
-    ('S10_no_init_wal_sync', 'store.rs', 'system-call order of init', '        wal.write_all(&genesis)?;\n        wal.sync_all()?;\n', '        wal.write_all(&genesis)?;\n',
+    ('S10_no_init_wal_sync', 'store.rs', 'system-call order of init: missing step \'fullfsync airlock.wal 0\'', '        wal.write_all(&genesis)?;\n        wal.sync_all()?;\n', '        wal.write_all(&genesis)?;\n',
      'engine', 'trace', 'the sync of the genesis record'),
-    ('S11_no_init_folder_sync', 'store.rs', 'system-call order of init', '        File::open(&tmp)?.sync_all()?;\n', '', 'engine', 'trace', 'the sync of the new store folder'),
-    ('S12_no_init_parent_sync', 'store.rs', 'system-call order of init', '        File::open(&parent)?.sync_all()?;\n', '', 'engine', 'trace',
+    ('S11_no_init_folder_sync', 'store.rs', 'system-call order of init: missing step \'fullfsync TMP 0\'', '        File::open(&tmp)?.sync_all()?;\n', '', 'engine', 'trace', 'the sync of the new store folder'),
+    ('S12_no_init_parent_sync', 'store.rs', 'system-call order of init: missing step \'fullfsync PARENT 0\'', '        File::open(&parent)?.sync_all()?;\n', '', 'engine', 'trace',
      'the sync of the parent folder after the rename'),
-    ('S13_no_init_policy_sync', 'store.rs', 'system-call order of init', '            f.write_all(bytes)?;\n            f.sync_all()?;\n', '            f.write_all(bytes)?;\n',
+    ('S13_no_init_policy_sync', 'store.rs', 'system-call order of init: missing step \'fullfsync policy-store-refunds.json 0\'', '            f.write_all(bytes)?;\n            f.sync_all()?;\n', '            f.write_all(bytes)?;\n',
      'engine', 'trace', 'the sync of a pinned policy file'),
     ('S14_init_keeps_tmp_after_failure', 'store.rs', 'init with a failed sync 1',
      '            let _ = std::fs::remove_dir_all(&tmp); // a refused init leaves no folder of its own\n', '', 'engine', 'trace',
@@ -209,7 +213,7 @@ MUTANTS = [
      'engine', 'trace', 'the result of the sync of the genesis record'),
     ('S16_lock_after_wal_read', 'store.rs', 'a store file was read before the exclusive lock', LOCK_LINE + SCAN_LINE, SCAN_LINE + '    wal.lock()?;\n', 'engine', 'trace',
      'the rule that the lock comes before any read of a store file'),
-    ('S17_shared_lock', 'store.rs', 'while another process held the store lock', LOCK_LINE, LOCK_LINE.replace('wal.lock()', 'wal.lock_shared()'), 'engine', 'lock',
+    ('S17_shared_lock', 'store.rs', 'the lock of airlock.wal is not exclusive', LOCK_LINE, LOCK_LINE.replace('wal.lock()', 'wal.lock_shared()'), 'engine', 'trace',
      'the exclusiveness of the store lock'),
     ('S18_ignore_failed_answer', 'main.rs', 'no reader for the answers: exit 0, expected 20', '{ code } else { Code::DispatchFailed.num() }', '{ code } else { code }',
      'engine', 'dispatch', 'the DISPATCH_FAILED code for an answer that could not be written'),
@@ -275,6 +279,37 @@ MUTANTS = [
     ('N13_booking_link_node_suite', 'node/booking_check.cjs', "exit 0 stdout b'ACCEPT",
      'fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK', 'fs.constants.O_RDONLY | fs.constants.O_NONBLOCK', 'node',
      'booking_model_symlink_near_runtime', 'O_NOFOLLOW on the model file (in the node suite)'),
+    # repairs of the review (proposals/forge2-goal20-sdk/REVIEW.md); one or more per repair
+    ('R1a_node_pin', 'helpers.rs', 'a Node binary other than the pinned one', '    pinned(&NODE_CHECKED, node, pin, "Node binary")?;\n', '', 'engine', 'cosign',
+     'the SHA-256 pin of the Node binary (finding 1)'),
+    ('R1b_seam_in_production', 'helpers.rs', 'with AIRLOCK_TEST_HELPERS: expected REQUIRE_HUMAN_COSIGN COSIGN_INVALID',
+     'if cfg!(kill_points) { std::env::var(var).ok() } else { None }', 'std::env::var(var).ok()', 'engine', 'seams',
+     'the rule that the helper test seams exist only in the kill_points build (finding 1)'),
+    ('R1c_binary_pin', 'helpers.rs', 'expected HELPER_FAILED (exit 22), got exit 23', '        pinned(&BINARY_CHECKED, b, REFUND_BINARY_SHA256, "refund binary")?;\n', '',
+     'engine', 'canonical', 'the SHA-256 pin of the refund binary (finding 1)'),
+    ('R2a_no_nonce', 'store.rs', 'the two genesis records must differ by their nonce', '    let nonce: String = nonce.iter().map(|b| format!("{b:02x}")).collect();',
+     '    let nonce: String = "0".repeat(32);', 'engine', 'nonce', 'the random nonce of the genesis record (finding 2)'),
+    ('R2b_genesis_not_in_message', 'verbs.rs', "expected COMMITTED (exit 0), got exit 11 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID'", 'cosign_message(&s.l.store_id, s.l.genesis_hash, req, t[4], &action)',
+     'cosign_message(&s.l.store_id, 0, req, t[4], &action)', 'engine', 'cosign', 'the genesis hash inside the signed cosign message (finding 2)'),
+    ('R4a_small_order', 'pin.rs', "accepted: 0 'INITIALIZED", '    SMALL_ORDER.contains(&masked.as_str()) || y_ge_p', '    y_ge_p', 'engine', 'weakkey',
+     'the small-order list of the weak-key check (finding 4)'),
+    ('R4b_init_weak', 'store.rs', "accepted: 12 'MALFORMED_REQUEST GENESIS_NOT_FOLDABLE", '        if crate::pin::weak_ed25519(k) {', '        if false {', 'engine', 'weakkey',
+     'the weak-key refusal of init (finding 4)'),
+    ('R4c_verify_weak_key', 'node/cosign.cjs', "exit 1 b'INVALID", "  if (weakPoint(pubHex)) return fail('public key is a small-order or non-canonical Ed25519 encoding');\n", '',
+     'node', 'verify_weak_public_keys_refused', 'the weak public key refusal of cosign.cjs verify (finding 4)'),
+    ('R5a_lease_reopen', 'verbs.rs', "'OPEN_LEASE wh-2 100 t1 order-1': expected DUPLICATE_REQUEST_ID",
+     '    if s.l.leases.contains_key(req) { return no(Code::Duplicate, "LEASE_USED', '    if false { return no(Code::Duplicate, "LEASE_USED', 'engine', 'lease_binding',
+     'one lease per request id (finding 5)'),
+    ('R5b_lease_unbound', 'verbs.rs', 'a verdict on another key must not name a close', '|(t, k)| s.l.leases.get(req).map_or(false, |l| l.binds(t, k))',
+     '|(_, _)| s.l.leases.get(req).map_or(false, |l| l.is_open())', 'engine', 'lease_binding', 'the binding of a lease to its tenant and key (finding 5)'),
+    ('R3_py_caller_rows', 'sdk/py/forge_airlock.py', 'thread changes the object: a row of another tenant was released', "        rows = sent  # from here on only the serialized text exists: what the engine checks is what is released\n        text = self._exchange(('READ %s %d\\n' % (tenant_id, len(rows))).encode('ascii') + b''.join(r.encode('ascii') + b'\\n' for r in sent))\n        if text == 'OK %d' % len(rows):\n            return Result('OK', line=text, rows=[json.loads(r) for r in sent])", "        caller, rows = rows, sent\n        text = self._exchange(('READ %s %d\\n' % (tenant_id, len(rows))).encode('ascii') + b''.join(r.encode('ascii') + b'\\n' for r in sent))\n        if text == 'OK %d' % len(rows):\n            return Result('OK', line=text, rows=caller)", 'sdk', 'py_read_tricks',
+     'the release of parsed copies of the checked bytes, not the caller objects (finding 3)'),
+    ('R3_ts_caller_rows', 'sdk/ts/forge_airlock.ts', 'TS replace_during_await: a row of another tenant was released', 'r.rows = rows.map((x) => JSON.parse(x)); return r; }',
+     'r.rows = callerRows.slice(); return r; }', 'sdk', 'ts_read_tricks', 'the release of parsed copies of the checked bytes (finding 3)'),
+    ('R7_py_row_bound', 'sdk/py/forge_airlock.py', 'more than 100000 rows: the SDK sent the read', "        if len(rows) > MAX_READ_ROWS:\n            raise LocalRefusal(", "        if False:\n            raise LocalRefusal(",
+     'sdk', 'py_read_tricks', 'the 100000-row bound of read_scoped (finding 7)'),
+    ('R7_ts_row_bound', 'sdk/ts/forge_airlock.ts', 'TS too_many', '    if (n > MAX_READ_ROWS) throw', '    if (false) throw', 'sdk', 'ts_read_tricks',
+     'the 100000-row bound of readScoped (finding 7)'),
     # the Python SDK (sdk/py/forge_airlock.py) through tests/airlock/test_sdk.py
     ('P01_read_count_ignored', 'sdk/py/forge_airlock.py', 'STAND-IN ok-one: read_scoped released rows', "        if text == 'OK %d' % len(rows):",
      "        if text.split(' ')[0] == 'OK':", 'sdk', 'py_protocol', 'the exact `OK <n>` for the n rows sent'),
@@ -285,13 +320,15 @@ MUTANTS = [
      "    raise ProtocolError('UNKNOWN_ANSWER', 'first token %r is not an answer code for this request' % code[:40], line)", "    return Result('COMMITTED', '', line)",
      'sdk', 'py_garbage', 'the refusal of an unknown first token'),
     ('P04_lease_swallows_exception', 'sdk/py/forge_airlock.py', 'the handler exception did not propagate',
-     '            return handler(Lease(self, request_id, int(t[2]), deadline_ms))',
-     '            try:\n                return handler(Lease(self, request_id, int(t[2]), deadline_ms))\n            except Exception:\n                return None',
+     '            return handler(Lease(self, request_id, int(t[2]), deadline_ms, tenant, key))',
+     '            try:\n                return handler(Lease(self, request_id, int(t[2]), deadline_ms, tenant, key))\n            except Exception:\n                return None',
      'sdk', 'py_typed', 'the propagation of a handler exception (the lease stays open)'),
     ('P05_handler_before_lease', 'sdk/py/forge_airlock.py', 'the lease was not durable when the handler ran',
-     "        text = self._send('OPEN_LEASE %s %s' % (_id('request_id', request_id), _amount('deadline_ms', deadline_ms)))\n        t = _tok(text)\n        if t[0] == 'LEASE_OPENED':\n",
-     "        early = handler(Lease(self, request_id, 0, deadline_ms))\n        text = self._send('OPEN_LEASE %s %s' % (_id('request_id', request_id), _amount('deadline_ms', deadline_ms)))\n"
-     "        t = _tok(text)\n        if t[0] == 'LEASE_OPENED':\n            return early\n", 'sdk', 'py_lease_durable', 'the order: the lease is durable before the handler runs'),
+     "        text = self._send('OPEN_LEASE %s %s %s %s' % (_id('request_id', request_id), dl, _id('tenant', tenant), _id('key', key)))\n        t = _tok(text)\n"
+     "        if t[0] == 'LEASE_OPENED':\n",
+     "        early = handler(Lease(self, request_id, 0, deadline_ms, tenant, key))\n"
+     "        text = self._send('OPEN_LEASE %s %s %s %s' % (_id('request_id', request_id), dl, _id('tenant', tenant), _id('key', key)))\n        t = _tok(text)\n"
+     "        if t[0] == 'LEASE_OPENED':\n            return early\n", 'sdk', 'py_lease_durable', 'the order: the lease is durable before the handler runs'),
     ('P06_field_guard', 'sdk/py/forge_airlock.py', 'the field guard let', 'any(not (0x21 <= ord(ch) <= 0x7e) for ch in s)', 'any(not (0x00 <= ord(ch) <= 0x7e) for ch in s)',
      'sdk', 'py_protocol', 'the LF/CR/NUL guard of a field'),
     ('P07_line_guard', 'sdk/py/forge_airlock.py', 'the line guard let a line end through _send',
@@ -316,8 +353,8 @@ MUTANTS = [
      "      if (t[0] === 'OK') throw new ProtocolError('OK for another row count', a);\n      return refusal(a, t, ['TENANT_ISOLATION_BREACH']);",
      "      if (t[0] === 'OK') throw new ProtocolError('OK for another row count', a);\n      { const r = refusal(a, t, ['TENANT_ISOLATION_BREACH']); r.rows = rows.slice(); return r; }",
      'sdk', 'ts_read', 'zero rows after a TENANT_ISOLATION_BREACH'),
-    ('T04_lease_swallows_exception', 'sdk/ts/forge_airlock.ts', 'TS throws', '      return await handler(new Lease(this, requestId, Number(t[2]), dl));',
-     '      try { return await handler(new Lease(this, requestId, Number(t[2]), dl)); } catch { return undefined as T; }', 'sdk', 'ts_lease',
+    ('T04_lease_swallows_exception', 'sdk/ts/forge_airlock.ts', 'TS throws', '      return await handler(new Lease(this, requestId, Number(t[2]), dl, tenant, key));',
+     '      try { return await handler(new Lease(this, requestId, Number(t[2]), dl, tenant, key)); } catch { return undefined as T; }', 'sdk', 'ts_lease',
      'the propagation of a handler exception (the lease stays open)'),
     ('T05_stale_as_committed', 'sdk/ts/forge_airlock.ts', 'TS stale: expected STALE_STATE_HASH', '    const r = new Result(code as Code, detail, line);',
      "    const r = new Result((code === 'STALE_STATE_HASH' || code === 'DUPLICATE_REQUEST_ID' ? 'COMMITTED' : code) as Code, detail, line);", 'sdk', 'ts_typed',
@@ -325,7 +362,7 @@ MUTANTS = [
     # honesty of the demo and the fuzz pass: a changed ENGINE must make them fail (they observe the engine; nothing is hardcoded)
     ('H01_demo_sees_no_cas', 'verbs.rs', '0 STALE_STATE_HASH', '    if k.hash != pre { return no(Code::Stale, hx(k.hash)) }\n', '', 'demo', 'D1',
      'the compare-and-swap (the demo race must see it)'),
-    ('H02_demo_money_from_wal', 'verbs.rs', 'money_leaked_cents_from_wal=',
+    ('H02_demo_money_from_wal', 'verbs.rs', 'money_leaked_cents_from_wal=8000',
      '            Verdict::Reject(code) => return verdict(s, req, Code::RejectedPolicy, code),', '            Verdict::Reject(_) => {}', 'demo', 'money',
      'the policy refusal of a parametric REFUND (the leaked money must show in the scoreboard, from the WAL)'),
     ('H03_demo_sees_no_cosign', 'verbs.rs', 'other key: COMMITTED', 'if !helpers::cosign_verify(&ctx.node(), &pk, sig, &msg)? {', 'if false {', 'demo', 'D4',
@@ -346,6 +383,11 @@ SURVIVORS = [
     ('X01_helper_input_not_checked', 'helpers.rs', 'sent: s == Some(vec![1])', 'sent: true', 'engine', 'inventory',
      'the rule that a helper read all of its input. No test can see it: a request line is at most 65,536 bytes, so every helper input fits '
      'into one pipe buffer (64 KiB on macOS), and a helper that does not read cannot make the write fail in a repeatable way'),
+    ('R8_ts_sparse_guard', 'sdk/ts/forge_airlock.ts',
+     "        if (!Object.prototype.hasOwnProperty.call(callerRows, i) || callerRows[i] === undefined) throw new LocalRefusal('row ' + i + ': a hole or undefined');\n",
+     '', 'sdk', 'ts_read_tricks',
+     'the hole/undefined guard of readScoped (review finding 8). Not observable alone: jsonText refuses an undefined entry with the same '
+     'local TENANT_ISOLATION_BREACH, so the index loop and jsonText are two layers and the suite cannot tell them apart'),
 ]
 
 CLAIMS = {
@@ -391,11 +433,24 @@ CLAIMS = {
         'runtime; bignumber.js 9.3.1 loaded from the pinned node_modules (package-lock.json; checked by scripts/javascript_env.py, not by the '
         'model pin); Python 3.10.11.',
         'The JSON-to-Dafny generator of diff_policy.py (owner decision, Goal 20 plan line 8).',
-        'The launcher pins the refund binary, the helpers and the model; the engine hashes none of them. Whoever can write the store folder is '
-        'trusted. FNV-1a-128 and CRC-32 authenticate nothing.',
+        'Trust boundary (review finding 1): every rule holds only against a caller that reaches the store THROUGH the engine. A process that '
+        'can write the store folder can append records itself, and one that can start its own engine build on the store can ignore every '
+        'check. "The agent cannot self-cosign" needs the private key out of the agent\'s reach AND no agent write access to the store folder '
+        'and no way for the agent to run another engine on it. In the demo all three belong to one OS user: it shows the mechanism only.',
+        'The opener of a key is trusted (review finding 6): the money caps rest on the original amount and the facts that the opener '
+        'chooses; the tenant field is not authenticated.',
+        'The read airlock checks only the TOP-LEVEL tenant_id of the rows passed to it (review finding 10); a nested row of another tenant '
+        'passes. It sees only the rows passed to it.',
+        'What pins what: the engine embeds the two Node helpers (include_str!, no helper file is read at run time) and pins the refund binary '
+        '(SHA-256 b8ed5ec2...7bb8); the store pins the SHA-256 of the Node binary in its genesis record at init; booking_check.cjs pins the '
+        'compiled model (e705ec49...85f4); the genesis record pins the policy files (FNV-1a-128, not cryptographic); bin/forge-airlock '
+        're-checks its private refund copy; nothing pins the engine binary itself or bignumber.js. A file swapped between its hash and its '
+        'exec is not detected. The test seams AIRLOCK_TEST_HELPERS and AIRLOCK_TEST_UNPINNED_BINARY exist only in the kill_points build.',
         'Cosign: an agent that runs as the same OS user as the key owner can read a 0600 key file; "the agent cannot self-cosign" holds only '
-        'when the private key is outside its reach.',
-        'A restore of the WAL and the ratchet together is not detected.',
+        'when the private key is outside its reach (and see the trust boundary above). Weak (small-order or non-canonical) Ed25519 keys '
+        'and signature R values are refused.',
+        'FNV-1a-128 collisions can be computed (review finding 11): the compare-and-swap is a concurrency control, not a boundary against an '
+        'attacker. A restore of the WAL and the ratchet together is not detected.',
     ],
 }
 
@@ -550,10 +605,14 @@ def compile_engine(src_dir, output, kill_points=False):
     return run(command)
 
 
-def copy_rust(dest):
-    dest.mkdir(parents=True)
+def copy_rust(dest, src=None):
+    """The engine sources: the .rs files and the two Node helpers that helpers.rs compiles in (include_str!)."""
+    src = src or ROOT / ENGINE_DIR
+    (dest / 'node').mkdir(parents=True)
     for name in RUST:
-        shutil.copyfile(ROOT / ENGINE_DIR / name, dest / name)
+        shutil.copyfile(src / name, dest / name)
+    for name in NODE_HELPERS:
+        shutil.copyfile(src / 'node' / Path(name).name, dest / 'node' / Path(name).name)
     return dest
 
 
@@ -736,6 +795,8 @@ def disasters(work, engines):
     require(report.get('end_to_end') is False, 'DISASTERS: end_to_end is not false')
     require('LOCAL FAKE' in report.get('processors', ''), 'DISASTERS: the processors are not labelled LOCAL FAKE')
     require(report.get('dafny_at_run_time', {}).get('sentinel_dafny_on_engine_path_started') is False, 'DISASTERS: a Dafny start was seen at run time')
+    require(isinstance(report.get('limits'), list) and any('trust boundary' in x for x in report['limits']), 'DISASTERS: the limits list or its trust boundary is missing')
+    require(not HEX32.search(json.dumps(report)), 'DISASTERS: a hash or signature reached the demo JSON (the genesis nonce makes it differ per run)')
     return report
 
 
@@ -748,6 +809,7 @@ def fuzz(work, engines):
     require(code == 0 and report.get('result') == 'PASS' and len(inv) == 8 and all(v == 'HELD' for v in inv.values()) and report.get('violations') == []
             and report.get('seed') == FUZZ_SEED and report.get('rounds') == FUZZ_ROUNDS and report.get('end_to_end') is False,
             'FUZZ: exit %d, result %s, invariants %r, violations %r' % (code, report.get('result'), inv, report.get('violations')))
+    require(not HEX32.search(json.dumps(report)), 'FUZZ: a hash or signature reached the fuzz JSON')
     return {'command': 'bin/forge-airlock fuzz --engine-dir <attempt> --node <pinned node> --seed %d --rounds %d --json <file>' % (FUZZ_SEED, FUZZ_ROUNDS),
             'exit_code': code, 'seed': FUZZ_SEED, 'rounds': FUZZ_ROUNDS, 'invariants': inv, 'counts': report.get('counts'), 'result': report['result'],
             'label': 'FINITE TEST'}
@@ -781,20 +843,29 @@ def apply(name, file, old, new):
     return text.replace(old, new)
 
 
-def prepare(folder, file, text, base_engines):
+def engines_from(folder, src):
+    engines = []
+    for kill, out in ((False, 'airlock-engine'), (True, 'airlock-engine-kill')):
+        done = compile_engine(src, folder / out, kill)
+        require(done.returncode == 0, 'MUTANTS: ERROR of the list: copy %s does not build (%s)\n%s' % (folder.name, out, done.stderr[-1500:]))
+        engines.append(folder / out)
+    (folder / 'checker').mkdir()
+    shutil.copyfile(ROOT / MODEL, folder / 'checker/model.cjs')
+    return engines
+
+
+def prepare(folder, file, text, base_engines, kind):
     """A changed copy. A .rs copy: new engine binaries (both builds must succeed) and the model beside them. Else: a
-    mirror tree with the attempt's engine builds."""
+    mirror tree. A changed Node helper is compiled INTO the engine (include_str!), so a helper copy that runs through
+    the engine (any suite but node) also gets engine binaries built from the mirror's sources."""
+    if file.endswith('.cjs') and kind != 'node':
+        root = mirror(folder / 'tree')
+        (root / mutant_path(file)).write_text(text)
+        return root, engines_from(folder, root / ENGINE_DIR)
     if file.endswith('.rs'):
         src = copy_rust(folder / 'src')
         (src / file).write_text(text)
-        engines = []
-        for kill, out in ((False, 'airlock-engine'), (True, 'airlock-engine-kill')):
-            done = compile_engine(src, folder / out, kill)
-            require(done.returncode == 0, 'MUTANTS: ERROR of the list: copy %s does not build (%s)\n%s' % (folder.name, out, done.stderr[-1500:]))
-            engines.append(folder / out)
-        (folder / 'checker').mkdir()
-        shutil.copyfile(ROOT / MODEL, folder / 'checker/model.cjs')
-        return ROOT, engines
+        return ROOT, engines_from(folder, src)
     root = mirror(folder / 'tree')
     (root / mutant_path(file)).write_text(text)
     return root, base_engines
@@ -813,7 +884,7 @@ def run_mutants(work, engines, interposer, table, must_kill):
         name, file, message, old, new, kind, case, removed = unpack(entry, must_kill)
         text = apply(name, file, old, new)
         folder = work / name
-        root, bins = prepare(folder, file, text, engines)
+        root, bins = prepare(folder, file, text, engines, kind)
         start = time.monotonic()
         code, results, printed = run_suite(kind, root, [case], folder / 'suite', bins, interposer)
         (work / 'logs').mkdir(exist_ok=True)
@@ -839,12 +910,13 @@ def controls(work, engines, interposer, tables):
     for table in tables:
         for entry in table:
             kind, case, file = entry[-3], entry[-2], entry[1]
-            wanted.setdefault((kind, 'rust' if file.endswith('.rs') else 'tree'), set()).add(case)
+            where = 'rust' if file.endswith('.rs') else 'tree-engine' if file.endswith('.cjs') and kind != 'node' else 'tree'
+            wanted.setdefault((kind, where), set()).add(case)
     out = {}
     for (kind, where), cases in sorted(wanted.items()):
         folder = work / ('unchanged-%s-%s' % (kind, where))
         file = 'main.rs' if where == 'rust' else 'node/cosign.cjs'
-        root, bins = prepare(folder, file, (ROOT / mutant_path(file)).read_text(), engines)
+        root, bins = prepare(folder, file, (ROOT / mutant_path(file)).read_text(), engines, kind if where == 'tree-engine' else 'node' if where == 'tree' else kind)
         code, results, printed = run_suite(kind, root, sorted(cases), folder / 'suite', bins, interposer)
         (work / ('unchanged-%s-%s.log' % (kind, where))).write_text(printed)
         bad = sorted(c for c in cases if results.get(c, ('NOT RUN',))[0] != 'PASS')
@@ -854,14 +926,27 @@ def controls(work, engines, interposer, tables):
     return out
 
 
+# Pairs of copies that may share one expected text, and why.
+SHARED_TEXT_ALLOWED = {
+    # Both change the bytes that the engine verifies (the store id, or the genesis hash, inside the cosign message), so a
+    # signature that the human made over the true message is refused: the only observable is that refusal.
+    ('M32_cosign_store_id_fixed', 'R2b_genesis_not_in_message'),
+}
+
 GROUPS = [('engine seams of PROTOCOL.md section 13', 'M'), ('durable order and answer (interposer)', 'S'), ('checks without a test in PART 1', 'X'),
-          ('Node helpers', 'N'), ('diff-policy', 'D'), ('Python SDK', 'P'), ('TypeScript SDK', 'T'), ('demo and fuzz honesty (engine changed)', 'H')]
+          ('Node helpers', 'N'), ('diff-policy', 'D'), ('Python SDK', 'P'), ('TypeScript SDK', 'T'), ('demo and fuzz honesty (engine changed)', 'H'),
+          ('repairs of the review', 'R')]
 
 
 def mutations(work, engines, interposer):
     work.mkdir(parents=True)
     names = [m[0] for m in MUTANTS] + [m[0] for m in SURVIVORS]
     require(len(set(names)) == len(names), 'MUTANTS: a name is used twice')
+    shared = {}
+    for entry in MUTANTS:  # an expected failure text names ONE removed check within its case (review finding 9)
+        shared.setdefault((entry[5], entry[6], entry[2]), []).append(entry[0])
+    clash = {k: v for k, v in shared.items() if len(v) > 1 and tuple(sorted(v)) not in SHARED_TEXT_ALLOWED}
+    require(not clash, 'MUTANTS: copies of one case share one expected text: %r' % clash)
     for entry in MUTANTS:  # every text must be found exactly once before anything runs
         apply(entry[0], entry[1], entry[3], entry[4])
     for entry in SURVIVORS:
@@ -926,6 +1011,12 @@ def bundle_of(work):
         'not_run': [],
         'proved_core': CLAIMS['proved_core'], 'native_check': CLAIMS['native_check'], 'finite_test': CLAIMS['finite_test'],
         'trusted_assumptions': CLAIMS['trusted_assumptions'],
+        'review': {'record': 'proposals/forge2-goal20-sdk/REVIEW.md', 'findings': {'FAIL-OPEN': 2, 'HIGH': 1, 'MEDIUM': 3, 'LOW': 3, 'NOTE': 2},
+                   'repairs_with_changed_copies': ['R1a_node_pin', 'R1b_seam_in_production', 'R1c_binary_pin', 'R2a_no_nonce', 'R2b_genesis_not_in_message',
+                                                   'R3_py_caller_rows', 'R3_ts_caller_rows', 'R4a_small_order', 'R4b_init_weak', 'R4c_verify_weak_key',
+                                                   'R5a_lease_reopen', 'R5b_lease_unbound', 'R7_py_row_bound', 'R7_ts_row_bound'],
+                   'stated_not_repaired': ['finding 6: the opener is trusted (stated)', 'finding 10: top-level tenant_id only (stated)',
+                                           'finding 11: FNV-1a-128 is not a boundary (stated)']},
         'reproduce_cmd': 'FORGE_DAFNY_LOCK=<lock> python3 scripts/exit_goal20_sdk.py --case evidence',
     }
     return bundle, {'mutation_details': details}

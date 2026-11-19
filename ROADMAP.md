@@ -28,6 +28,41 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Goal 20, `forge-airlock` SDK: write, read and lease airlocks over a native WAL engine, with Python and TypeScript SDKs; a finite test of unproved Rust, JavaScript and Python around three proved cores; one review with repairs — U720 to U725
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing under
+`clearing/` changed. `src/silicon_sink/sink.rs` not changed. Branch
+`feat/zero-babysitting-sdk` from `e2b8ba1d`, with `origin/main`
+(`a5133c01`) merged in; NOT merged by the agent. PROVED CORE applies
+only to the CakeML binary's decision in the canonical-refund profile,
+to the Dafny source of the booking checker, and to NO_CHOICE for a
+generated Dafny model. Every other row is NATIVE CHECK and FINITE TEST
+on one machine.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `rustc --edition 2021 -D unsafe_code -C opt-level=3 src/airlock/main.rs -o build/airlock/airlock-engine` |0|std only, no `unsafe`, no crate; a copy with one `unsafe` block: exit 1 |
+| `scripts/exit_goal20_sdk.py --case build` |0|both builds; Dafny verify and build of the checker; model `e705ec49…85f4` equals its record |
+| `--case suite` |0|engine 26 of 26; Node helpers 137 of 137; `diff-policy` 11 of 11; SDK 19 of 19 |
+| `--case disasters` |0|8 of 8; money leaked, read from the WAL: 0; Stripe and PayPal are LOCAL FAKE |
+| `--case fuzz` |0|seed 20, 3 rounds; 8 of 8 invariants held |
+| `--case mutations`, before the review; after the repairs |0; 0|100 of 100 with 1 not killed; 114 of 114 with 2 not killed (X01, R8), recorded |
+| `--case evidence` (final) |0|twice; bundle `1e75ab47…70fa`, byte-identical |
+| the one fresh-context review |2 FAIL-OPEN; 1 HIGH; 3 MEDIUM; 3 LOW; 2 NOTE|a fake helper folder gave a commit; SDK reads returned unchecked objects; a signature replayed across equal stores; repaired in one pass; 3 findings stated only; NOT reviewed again |
+| regression on a scratch clone; the pull request; hosted `gate/pr_check.py` |NOT RUN at this commit|recorded by the next commit |
+| every HOL and Holmake step; Stages 7, 9, 10; a power-loss test; a second review |NOT RUN|not part of this work |
+
+[Report](proposals/forge2-goal20-sdk/REPORT.md).
+[Review](proposals/forge2-goal20-sdk/REVIEW.md).
+[Brief](proposals/forge2-goal20-sdk/BRIEF.md).
+[Quickstart](docs/quickstart-5min.md).
+The rules hold only against a caller that reaches the store through
+the engine. "The agent cannot self-cosign" needs the key out of the
+agent's reach and an agent that cannot write the store folder. No
+"% of bugs" figure is claimed. A SIGKILL is not a power loss.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Goal 19, native silicon sink: a refund boundary with no Node, V8, npm or SQLite in its path; a finite test of an unproved Rust sink in front of the M1 binary; one review with repairs; pull request 62 merged by the owner as `6d66a558` — U700 to U709
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

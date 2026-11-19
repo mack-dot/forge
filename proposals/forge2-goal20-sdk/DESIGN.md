@@ -137,3 +137,28 @@ outside the agent's reach.
 
 No proof of the engine, the SDKs, the helpers or the dispatcher. No "% of bugs" figure. A SIGKILL is not a power
 loss. FNV-1a-128 is not cryptographic. Whoever can write the store folder is trusted. M1-B stays OPEN.
+
+## Changes after the build and the review (this section replaces the text above where they differ)
+
+The text above is the contract as written before the code. These points changed; `src/airlock/PROTOCOL.md` has
+the exact form, and [REVIEW.md](REVIEW.md) has the reasons.
+
+- Helpers: the two `.cjs` files are compiled into the engine and run as `node -e <source>`. There is no helper
+  folder. `init --node` pins the SHA-256 of the Node binary in the genesis record. The engine pins the refund binary.
+- Store identity: the sentence "state hashes of two stores differ" was false for two stores with the same id,
+  policy and key. The genesis record now holds 16 random bytes.
+- Cosign message, version 2, six lines:
+  `forge-airlock-cosign-v2\n<store_id>\n<genesis_hash>\n<request_id>\n<pre_state_hash>\n<action>\n`. Small-order
+  and non-canonical public keys are refused.
+- Cosign limit, complete form: "the agent cannot self-cosign" needs the private key outside the agent's reach AND
+  an agent that cannot write the store folder or run another engine on it.
+- Leases: `OPEN_LEASE <request_id> <deadline_ms> <tenant> <key>`. One lease per request id. Only a terminal
+  verdict for the same id on the same tenant and key closes it.
+- Read airlock: only the top-level `tenant_id` of each row is checked. The SDKs return parsed copies of the lines
+  that the engine checked.
+- Money: a failed fact cap answers `REJECTED_POLICY REASON_CAP`; a rule may have the verdict `REJECTED_POLICY`.
+  The opener of a key is trusted for `original`, the facts and the tenant.
+- Inventory: the policy key is `max_alpha_bps`. The example certificate above is rejected (its dual is not
+  feasible); a valid one has `x = ["1","1"]`, `z = ["5","2"]`. The engine checks `Accepts` natively before the
+  compiled checker runs; a commit needs both.
+- Records are variable in length (32-byte header, payload up to 32 KiB).

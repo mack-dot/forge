@@ -163,6 +163,13 @@ class Fuzz:
         self.note(None, res.code)
         if res.code != 'TENANT_ISOLATION_BREACH' or res.rows:
             self.violations.append('a mixed-tenant row set was released: %r' % res)
+        rid = self.rid('xl')
+        try:  # a lease bound to a key of another tenant
+            st.with_lease(rid, 1, other, key, lambda lease: self.violations.append('a lease opened on a key of another tenant'))
+        except fa.LeaseNotOpened as e:
+            self.note(rid, e.code)
+            if e.code != 'TENANT_ISOLATION_BREACH':
+                self.violations.append('cross-tenant lease: %s' % e.code)
 
     def handlers(self, st, key, r):
         tenant, _, _ = self.keys[key]
@@ -181,7 +188,7 @@ class Fuzz:
                     raise ValueError('injected after the sink')
                 return res
             try:
-                st.with_lease(rid, deadline, handler)
+                st.with_lease(rid, deadline, tenant, key, handler)
             except ValueError:
                 self.counts['handler_exceptions'] += 1
             if where == 'before':
@@ -310,7 +317,7 @@ class Fuzz:
             self.invariants[k] = self.invariants.get(k, True) and v
 
     def run(self):
-        args = ['init', self.store, '--store-id', 'fuzz-%d' % (self.a.seed % 10 ** 9)]
+        args = ['init', self.store, '--store-id', 'fuzz-%d' % (self.a.seed % 10 ** 9), '--node', self.a.node]
         for p in ('money-parametric', 'saga-payout', 'inventory-seats'):
             args += ['--policy', FIX / (p + '.json')]
         code, out = self.cli(args)
@@ -352,6 +359,10 @@ def main():
     a = ap.parse_args()
     if a.rounds < 1 or a.rounds > 100:
         print('--rounds: 1..100')
+        return 2
+    a.node = a.node or os.environ.get('FORGE_AIRLOCK_NODE') or shutil.which('node')
+    if not a.node:
+        print('NOT RUN: no node (give --node; Node 24.3.0)')
         return 2
     if not (Path(a.engine_dir) / 'airlock-engine').is_file():
         print('NOT RUN: %s/airlock-engine is missing' % a.engine_dir)

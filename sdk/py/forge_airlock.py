@@ -19,10 +19,22 @@ After ProtocolError, EngineDead, EngineTimeout or EngineFault the Store is close
 
 Rules kept here (the engine is the real check):
   * commit(...) needs the caller's pre_state_hash (from get()); the SDK never fetches it for you.
-  * read_scoped returns rows only after the engine answered exactly `OK <n>` for exactly these n rows.
-  * with_lease opens a durable lease BEFORE the handler runs and never closes it; only a terminal verdict
-    of the engine for the same request id closes it. A handler that raises leaves it open (the exception
-    propagates); `Store.sweep` then reports DROPPED_OBLIGATION.
+  * read_scoped serializes each row ONCE, sends exactly those lines, and only after the engine answered
+    exactly `OK <n>` returns NEW objects parsed from exactly those lines (never the caller's objects). The
+    engine checks only the TOP-LEVEL tenant_id of the rows passed to it. More than 100000 rows: LocalRefusal,
+    nothing sent. Any other answer than `OK <n>` or TENANT_ISOLATION_BREACH closes the client (the stream may
+    be out of step).
+  * with_lease(request_id, deadline_ms, tenant, key, handler) opens a durable lease bound to (request id,
+    tenant, key) BEFORE the handler runs and never closes it; only a terminal verdict of the engine for the
+    same request id ON the same tenant and key closes it. A handler that raises leaves it open (the exception
+    propagates); `Store.sweep` then reports DROPPED_OBLIGATION. Only handlers that opened a lease are covered.
+
+Trust boundary (src/airlock/PROTOCOL.md section 11): every rule holds only against a caller that reaches the
+store THROUGH the engine. A process that can write the store folder can append records itself; a process that
+can start its own engine on the folder can ignore every check. The opener of a key is trusted for its tenant,
+`original` and facts; the tenant field is not authenticated. "The agent cannot self-cosign" needs BOTH the
+private key outside the agent's reach AND an agent that cannot write the store folder or run another engine on
+it (for example `serve` runs under another OS user and the agent holds only its pipe).
 """
 
 import json
@@ -44,6 +56,7 @@ ID_RE = re.compile(r'[A-Za-z0-9_-]{1,24}\Z')
 HASH_RE = re.compile(r'[0-9a-f]{32}\Z')
 SIG_RE = re.compile(r'[0-9a-f]{128}\Z')
 DIGITS_RE = re.compile(r'(0|[1-9][0-9]*)\Z')
+MAX_READ_ROWS = 100000
 
 TYPED = ('COMMITTED', 'REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID',
          'TENANT_ISOLATION_BREACH', 'DROPPED_OBLIGATION')
@@ -124,13 +137,17 @@ class Result:
 
 
 class Lease:
-    """An open obligation lease. commit() through it uses the lease's request id."""
+    """An open obligation lease bound to (request_id, tenant, key). commit() through it uses the lease's
+    request id, and the lease's tenant and key unless given (a verdict on another key does not close it)."""
 
-    def __init__(self, store, request_id, epoch, deadline_ms):
+    def __init__(self, store, request_id, epoch, deadline_ms, tenant, key):
         self.store, self.request_id, self.epoch, self.deadline_ms = store, request_id, epoch, deadline_ms
+        self.tenant, self.key = tenant, key
 
     def commit(self, op, **fields):
         fields['request_id'] = self.request_id
+        fields.setdefault('tenant', self.tenant)
+        fields.setdefault('key', self.key)
         return self.store.commit(op, **fields)
 
 
@@ -249,15 +266,13 @@ def _refusal(line, t, typed):
     code = t[0]
     detail = ' '.join(t[1:])
     if code in typed:
-        if len(t) < 2 and code != 'DUPLICATE_REQUEST_ID':  # the engine sends a bare DUPLICATE_REQUEST_ID for a used id
-            raise ProtocolError('BAD_ANSWER', '%s with no detail' % code, line)
-        closed = None
+        closed = None  # a bare code (no detail) is a valid answer form (PROTOCOL.md section 10)
         if 'LEASE_CLOSED' in t:
             i = t.index('LEASE_CLOSED')
             if i + 2 != len(t) or not DIGITS_RE.match(t[i + 1]) or code not in ('REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN'):
                 raise ProtocolError('BAD_ANSWER', 'bad LEASE_CLOSED part', line)
             closed = int(t[i + 1])
-        if code == 'STALE_STATE_HASH' and not HASH_RE.match(t[1]):
+        if code == 'STALE_STATE_HASH' and (len(t) < 2 or not HASH_RE.match(t[1])):
             raise ProtocolError('BAD_ANSWER', 'STALE_STATE_HASH without a hash', line)
         return Result(code, detail, line, lease_closed=closed, state_hash=t[1] if code == 'STALE_STATE_HASH' else None)
     if code in REFUSALS:
@@ -460,42 +475,61 @@ class Store:
         return self._guard(parse, text)
 
     def read_scoped(self, tenant_id, rows):
-        """Release `rows` only if the engine answers exactly `OK <len(rows)>`; else 0 rows + TENANT_ISOLATION_BREACH.
+        """Release rows only if the engine answers exactly `OK <n>` for the n lines sent; else 0 rows + TENANT_ISOLATION_BREACH.
 
-        A tenant that is not a canonical id, or a row that is not JSON, is refused here (0 rows, nothing sent).
-        Limit: the engine sees only the rows passed here.
+        Each row is serialized ONCE; the released rows are NEW objects parsed from exactly the sent lines, so a
+        change of the caller's objects (another thread, a dict subclass) cannot reach the result. A tenant that is
+        not a canonical id, or a row that is not JSON, is refused here (0 rows, nothing sent). More than 100000
+        rows: LocalRefusal (nothing sent). Limits: the engine sees only the rows passed here and checks only
+        their TOP-LEVEL tenant_id.
         """
         rows = list(rows)
+        if len(rows) > MAX_READ_ROWS:
+            raise LocalRefusal('LOCAL_REFUSED', 'read_scoped: %d rows; the engine takes at most %d' % (len(rows), MAX_READ_ROWS))
         if not isinstance(tenant_id, str) or not ID_RE.match(tenant_id):
             return Result('TENANT_ISOLATION_BREACH', 'LOCAL TENANT_NOT_CANONICAL', '', rows=[])
         try:
-            lines = [_json('row %d' % i, r).encode('ascii') + b'\n' for i, r in enumerate(rows)]
+            sent = [_json('row %d' % i, r) for i, r in enumerate(rows)]
         except LocalRefusal as e:
             return Result('TENANT_ISOLATION_BREACH', 'LOCAL ' + e.detail, '', rows=[])
-        text = self._exchange(('READ %s %d\n' % (tenant_id, len(rows))).encode('ascii') + b''.join(lines))
+        rows = sent  # from here on only the serialized text exists: what the engine checks is what is released
+        text = self._exchange(('READ %s %d\n' % (tenant_id, len(rows))).encode('ascii') + b''.join(r.encode('ascii') + b'\n' for r in sent))
         if text == 'OK %d' % len(rows):
-            return Result('OK', line=text, rows=rows)
+            return Result('OK', line=text, rows=[json.loads(r) for r in sent])
         t = _tok(text)
         if t[0] == 'OK':
             self._bad('OK for another row count', text)
         if t[0] == 'TENANT_ISOLATION_BREACH':
             return Result('TENANT_ISOLATION_BREACH', ' '.join(t[1:]), text, rows=[])
+        self._closed = 'READ answered %s; the stream may be out of step' % t[0][:40]  # fail closed
+        if self.proc.poll() is None:
+            self.proc.kill()
         return self._guard(lambda a: _refusal(a, t, ()), text)
 
-    def with_lease(self, request_id, deadline_ms, handler):
-        """Open a durable lease, then run handler(lease). The SDK never closes the lease.
+    def with_lease(self, request_id, deadline_ms, tenant, key, handler):
+        """Open a durable lease bound to (request_id, tenant, key), then run handler(lease). The SDK never closes it.
 
         deadline_ms: absolute milliseconds since the Unix epoch (the sweep compares it with its clock or --now).
-        Returns what the handler returns. A handler exception propagates; the lease stays open.
+        Returns what the handler returns. A handler exception propagates; the lease stays open. One lease per
+        request id, ever (DUPLICATE_REQUEST_ID LEASE_USED).
         """
-        text = self._send('OPEN_LEASE %s %s' % (_id('request_id', request_id), _amount('deadline_ms', deadline_ms)))
+        dl = _amount('deadline_ms', deadline_ms)
+        text = self._send('OPEN_LEASE %s %s %s %s' % (_id('request_id', request_id), dl, _id('tenant', tenant), _id('key', key)))
         t = _tok(text)
         if t[0] == 'LEASE_OPENED':
-            if len(t) != 4 or t[1] != request_id or not DIGITS_RE.match(t[2]) or t[3] != str(deadline_ms):
+            if len(t) != 6 or t[1] != request_id or not DIGITS_RE.match(t[2]) or t[3] != dl or t[4] != tenant or t[5] != key:
                 self._bad('LEASE_OPENED for another lease', text)
-            return handler(Lease(self, request_id, int(t[2]), deadline_ms))
-        res = self._guard(lambda a: _refusal(a, t, ('DUPLICATE_REQUEST_ID',)), text)
+            return handler(Lease(self, request_id, int(t[2]), deadline_ms, tenant, key))
+        res = self._guard(lambda a: _refusal(a, t, ('DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH')), text)
         raise LeaseNotOpened(res)
+
+    def leases(self, all=False):
+        """`leases [--all]`: list of token lists after `LEASE` (request_id, deadline_ms, tenant, key[, OPEN|CLOSED ...])."""
+        code, out = self._sub(['leases', self.store_dir] + (['--all'] if all else []))
+        lines = [ln for ln in out.split('\n') if ln]
+        if code != 0 or not lines or not lines[0].startswith('LEASES '):
+            raise EngineFault(lines[0].split(' ')[0] if lines else 'LEASES_FAILED', out.strip()[:200])
+        return [ln.split(' ')[1:] for ln in lines[1:] if ln.startswith('LEASE ')]
 
     # -- one-shot engine subcommands (separate short processes, read-only for the WAL contents)
     def _sub(self, args):
@@ -527,13 +561,15 @@ class Store:
         return effects
 
     def sweep(self, now_ms=None):
-        """`leases --sweep`: Result DROPPED_OBLIGATION (with .dropped = [(request_id, deadline_ms)]) or OK."""
+        """`leases --sweep`: Result DROPPED_OBLIGATION (.dropped = [(request_id, deadline_ms, tenant, key)]) or OK."""
         args = ['leases', self.store_dir, '--sweep'] + (['--now', str(int(now_ms))] if now_ms is not None else [])
         code, out = self._sub(args)
         lines = [ln for ln in out.split('\n') if ln]
         if not lines or not lines[0].startswith('SWEEP ') or code not in (0, 24):
             raise EngineFault(lines[0].split(' ')[0] if lines else 'SWEEP_FAILED', out.strip()[:200])
-        dropped = [(ln.split(' ')[1], int(ln.split(' ')[2])) for ln in lines[1:] if ln.startswith('DROPPED_OBLIGATION ')]
+        dropped = [(x[1], int(x[2]), x[3], x[4]) for x in (ln.split(' ') for ln in lines[1:] if ln.startswith('DROPPED_OBLIGATION ')) if len(x) == 5]
+        if len(dropped) != len([ln for ln in lines[1:] if ln.startswith('DROPPED_OBLIGATION ')]):
+            raise ProtocolError('BAD_ANSWER', 'bad DROPPED_OBLIGATION line', out)
         if (code == 24) != bool(dropped):
             raise ProtocolError('BAD_ANSWER', 'sweep exit code and lines disagree', out)
         return Result('DROPPED_OBLIGATION' if dropped else 'OK', lines[0], out, dropped=dropped)

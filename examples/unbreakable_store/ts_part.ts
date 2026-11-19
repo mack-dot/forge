@@ -60,6 +60,54 @@ async function handler(kind: string, lease: any, store: any, step: Step, saved: 
   throw new Error('unknown handler kind ' + kind);
 }
 
+// Regression tricks for review finding 3 (the SDK must release what the engine checked, never the caller's objects).
+// Each one tries to get a row of tenant tB released under tenant tA. Reported: the tenant_id of every released row.
+async function readTrick(store: any, step: Step): Promise<Out> {
+  const kind: string = step.kind;
+  let rows: any[];
+  let res: any;
+  try {
+    if (kind === 'replace_during_await') {
+      rows = [{ tenant_id: 'tA', n: 1 }];
+      const p = store.readScoped('tA', rows);
+      rows[0] = { tenant_id: 'tB', secret: 'x' };       // the caller swaps the row while the engine checks
+      res = await p;
+    } else if (kind === 'mutate_during_await') {
+      rows = [{ tenant_id: 'tA', n: 1 }];
+      const p = store.readScoped('tA', rows);
+      rows[0].tenant_id = 'tB';                         // the caller changes the checked object itself
+      res = await p;
+    } else if (kind === 'tojson') {
+      rows = [{ tenant_id: 'tB', secret: 'x', toJSON() { return { tenant_id: 'tA' }; } }];
+      res = await store.readScoped('tA', rows);
+    } else if (kind === 'getter') {
+      let calls = 0;
+      const row: any = { secret: 'x' };
+      Object.defineProperty(row, 'tenant_id', { enumerable: true, get() { calls += 1; return calls === 1 ? 'tA' : 'tB'; } });
+      rows = [row];
+      res = await store.readScoped('tA', rows);
+    } else if (kind === 'sparse') {
+      rows = new Array(3);
+      rows[0] = { tenant_id: 'tA' };
+      res = await store.readScoped('tA', rows);
+    } else if (kind === 'undefined_entry') {
+      rows = [{ tenant_id: 'tA' }, undefined];
+      res = await store.readScoped('tA', rows);
+    } else if (kind === 'too_many') {
+      rows = new Array(100001).fill(null).map(() => ({ tenant_id: 'tA' }));
+      res = await store.readScoped('tA', rows);
+    } else {
+      throw new Error('unknown trick ' + kind);
+    }
+  } catch (e) {
+    return describeError(e);
+  }
+  const out = describe(res);
+  out.released_tenants = (res.rows || []).map((r: any) => (r && typeof r === 'object' ? r.tenant_id : typeof r));
+  out.released_is_caller_object = (res.rows || []).some((r: any) => rows.includes(r));
+  return out;
+}
+
 async function runStep(store: any, step: Step, saved: Record<string, string>): Promise<Out> {
   const d = step.do;
   if (d === 'get') {
@@ -73,9 +121,10 @@ async function runStep(store: any, step: Step, saved: Record<string, string>): P
     return describe(r);
   }
   if (d === 'read') return describe(await store.readScoped(step.tenant, step.rows));
+  if (d === 'read_trick') return readTrick(store, step);
   if (d === 'lease') {
     try {
-      const inner = await store.withLease(step.request_id, step.deadline_ms, (lease: any) => handler(step.handler, lease, store, step, saved));
+      const inner = await store.withLease(step.request_id, step.deadline_ms, step.tenant, step.key, (lease: any) => handler(step.handler, lease, store, step, saved));
       return { handler_returned: inner };
     } catch (e: any) {
       return Object.assign({ handler_threw: true, is_type_error: e instanceof TypeError }, describeError(e));

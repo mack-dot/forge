@@ -38,3 +38,22 @@ Counts: 2 FAIL-OPEN, 1 HIGH, 3 MEDIUM, 3 LOW, 2 NOTE.
 `build_checker.py`; the interposer and kill-point tests; races during `init`; the CakeML wire with ids such as
 `True`; deeper TypeScript pipelining after errors; the Stage EXIT and frozen-gate regressions.
 
+## What was done (one repair pass)
+
+| No. | Result | Repair, or the stated limit |
+| --- | --- | --- |
+| 1 | REPAIRED in code; limit STATED | The two helpers are compiled into the engine (`include_str!`); `serve --helpers` is a usage error. `init --node` pins the SHA-256 of the Node binary in the genesis record; `serve` checks it before the first helper call of a process. The engine pins the refund binary. Stand-in helpers and binaries work only in the `kill_points` build. Limit that no code removes: every rule holds only against a caller that reaches the store through the engine. A process that can write the store folder, or run its own engine on it, can ignore every check. The documents now say that "the agent cannot self-cosign" needs both the private key out of the agent's reach and an agent that cannot write the store folder or run another engine. A file swapped after its hash check is not detected. |
+| 2 | REPAIRED | `init` puts 16 random bytes in the genesis record. The cosign message (now version 2, six lines) binds the genesis hash. Two stores with the same id, policy and key now have different hashes, and a signature for one is refused on the other. |
+| 3 | REPAIRED | Both SDKs serialize each row once, send those lines, and return parsed copies of exactly those lines. |
+| 4 | REPAIRED | `init` and `cosign.cjs verify` refuse the 14 small-order or non-canonical key encodings and every y >= p; `verify` also refuses such an R in a signature. |
+| 5 | REPAIRED | A lease is bound to (request id, tenant, key). One lease per request id, ever. Only a terminal verdict for the same id on the same tenant and key closes it. `leases --all` shows which verdict closed a lease. |
+| 6 | STATED | `PROTOCOL.md`, the quickstart and the demo say that the opener of a key is trusted for `original`, the facts and the tenant, and that the tenant field is not authenticated. No code change. |
+| 7 | REPAIRED | The SDKs refuse more than 100000 rows before they send anything. |
+| 8 | REPAIRED; no separate test | The TypeScript SDK reads rows by index and refuses holes. The changed copy without this guard is NOT killed alone: the serializer refuses an undefined entry with the same answer. It is in the `not_killed` list of the bundle. |
+| 9 | REPAIRED | Each changed copy has a failure text that names its removed check. The EXIT script refuses two copies in one case with the same text; one exception is listed with its reason. |
+| 10 | STATED | The documents say that only the top-level `tenant_id` is checked. |
+| 11 | STATED | The documents say that FNV-1a-128 is a concurrency control, not a boundary against an attacker. |
+
+Each repair of findings 1 to 5 and 7 has at least one changed copy in the EXIT script that removes it (group R).
+No second review of the repairs ran: the directive asks for one review. The repairs are therefore the builders'
+own work, checked by the suites and the changed copies only.

@@ -19689,3 +19689,104 @@ curl: (6) Could not resolve host: github.com
 - Next check: the session that runs APEX-1 asks the owner for the
   Ed25519 decision in its first phase. The session that runs APEX-3
   answers (a) to (f) in its Step 3A text.
+
+## U720 — goal 20 (`forge-airlock` SDK): start, the owner's three decisions, and where the work differs from the directive and the plan
+
+- Status: 2026-11-19 to 2026-11-20. Refs U700 to U709 (goal 19 and what followed).
+- Evidence: `proposals/forge2-goal20-sdk/BRIEF.md` (the directive as pasted, the approved 15-line plan, the
+  owner's three decisions verbatim, the launcher's notes); `DESIGN.md`; `REPORT.md`.
+- Actual: branch `feat/zero-babysitting-sdk` from `e2b8ba1d` in a separate worktree. `origin/main` moved to
+  `a5133c01` (pull request 63); it was merged in with a merge commit, no rebase, no conflict. The launcher relayed
+  two owner instructions during the run (commit and push each re-checked part; merge the moved `main`). I did
+  not see the owner's own words for them; both are inside the task as given.
+- Differences, all stated in `REPORT.md`: records are variable in length, not 64 bytes; the inventory policy key
+  is `max_alpha_bps`; `with_lease` takes a tenant and a key; `init --node` is needed for a cosign key or an
+  inventory policy; the compiled checker needs `bignumber.js` 9.3.1 from the pinned `node_modules` (an existing
+  dependency; the directive says zero external packages, and none was added).
+- The directive's "~98% of bugs" figure is not claimed anywhere: nothing measures it.
+- Commit trailer: the commits carry `Claude Fable 5.2`, the model that ran the session. The launcher's text named
+  another trailer. The workers ran on the model `opus`.
+- Uncertainty: whether the owner accepts each difference.
+- Impact: none on any stage label. No protected file changed. M1-B OPEN. `end_to_end=false`.
+- Next check: the owner's reading of the pull request.
+
+## U721 — goal 20: what the airlock does NOT give (limits stated in the documents and seen in tests)
+
+- Refs U702 (the same kind of limits for the goal 19 sink), U720.
+- Nothing in Rust, JavaScript, TypeScript or Python is proved. PROVED CORE applies only to: the decision of the
+  CakeML binary `b8ed5ec2…7bb8` in the canonical-refund profile; the Dafny source `BookingDualCert.dfy`; NO_CHOICE
+  or CHOICE for the Dafny model that the generator writes for one money policy. M1-B is OPEN, so the binary's
+  theorems keep their open premises.
+- Canonical profile, exact scope: three fixed reasons, one charge per key. The engine sets the three flags of the
+  wire to True, so the flag logic of the binary is not exercised through the engine.
+- Trust boundary: the rules hold only against a caller that reaches the store through the engine. A writer of the
+  store folder, or a process with its own engine, can ignore them.
+- Cosign: the same-OS-user limit holds as the launcher stated it, and the review showed one more condition (U723).
+  The demo runs the agent and the key as one OS user.
+- The opener of a key is trusted for `original`, the facts and the tenant. The tenant is not authenticated.
+- The read airlock sees only the rows passed to it, and only the top-level `tenant_id`.
+- Leases cover only handlers that opened one.
+- Trusted assumptions: Dafny compiler and runtime; Node and `node:crypto`; `bignumber.js`; the JSON-to-Dafny
+  generator (cross-checked only on finite boundary scenarios); kernel and drive for `F_FULLFSYNC`; rustc.
+- Not detected: a restore of the WAL and the ratchet together; a file swapped after its hash check. A SIGKILL is
+  not a power loss. FNV-1a-128 is not cryptography.
+- Disaster 8: the bad batches are rejected by the native check before the compiled checker runs. The "0 Dafny
+  starts" evidence is a PATH with no Dafny plus process listings; a very short process started by absolute path
+  could be missed.
+- Impact: these are the conditions of every result in U722. Next check: none planned; a power-loss test and a
+  second OS user for `serve` are open ideas, not started.
+
+## U722 — goal 20: actual results of the EXIT script; what failed on the way
+
+- Refs U720, U721. Evidence: `proposals/forge2-goal20-sdk/records/evidence.json`; `scripts/exit_goal20_sdk.py`.
+- Final, run by the orchestrator: `scripts/exit_goal20_sdk.py --case evidence` exit 0; build, suite, mutations,
+  disasters and fuzz, twice; bundle
+  `1e75ab471b5fe3cede67f2746fa8c0542fbafff6959bd5a8199cfca3338a70fa`, byte-identical; wall 1645 s.
+  Suite: engine 26 of 26, Node helpers 137 of 137, `diff-policy` 11 of 11, SDK 19 of 19. Disasters 8 of 8, money
+  leaked from the WAL 0. Fuzz: seed 20, 3 rounds, 8 of 8 invariants held. Changed copies: 114 of 114 killed.
+- NOT killed, recorded in the bundle and never counted: X01 (the check that a helper read all of its input; every
+  helper input fits in one pipe buffer) and R8 (the sparse-array guard of the TypeScript `readScoped` alone; the
+  serializer gives the same answer).
+- Before the review, the orchestrator's own runs: `--case build` 0, `--case suite` 0, `--case disasters` 0,
+  `--case fuzz` 0, `--case mutations` 0 with 100 of 100 killed and X01 not killed. The workers' earlier evidence
+  bundles (`5e97de8d…` for part 1, `ccfef0ae…` before the review) are their reports; the orchestrator did not
+  re-run those two.
+- What failed or was wrong on the way (each found by a run):
+  - A helper accepted a 65-character integer (bound 64). Repaired by its author.
+  - The Python SDK sent no policy field for an inventory open, and read a bare `DUPLICATE_REQUEST_ID` as a
+    protocol error. Repaired.
+  - `DESIGN.md` gave `NO_RULE` for a failed fact cap; the engine answers `REASON_CAP`. The first run of
+    `diff-policy` against the engine gave TABLE_MISMATCH for that. The evaluator and the Dafny model follow the
+    engine; `DESIGN.md` says so now. The example certificate in `DESIGN.md` is rejected by the checker (dual not
+    feasible); corrected in its last section.
+  - `init` left a working store after a failed sync of the parent folder while it answered `IO_ERROR`. Found
+    with the interposer. Repaired: the store is undone, or the answer is `OUTCOME_UNKNOWN`.
+  - Three helper-suite cases passed for another reason (no `node_modules` near the fake model). New cases repair it.
+  - Seven changed copies were not killed in part 1 (X01 to X07). Tests were added for six of them.
+  - One demo check counted Dafny processes of the whole machine and failed while another worker ran Dafny. It now
+    counts only the demo's descendants.
+  - A worker once ran a quickstart check with the owner's checkout as working folder. It made the git-ignored
+    folder `build/quickstart` there and deleted it. I confirmed the folder is gone. No tracked file changed there.
+- Worker claims: I re-ran each suite before I counted it, except the first worker's 35-seam check (replaced by the
+  EXIT script's own run).
+- Impact: a finite test on one machine. Not gate evidence. Next check: U724 (regression).
+
+## U723 — goal 20: the one review: 2 FAIL-OPEN, 1 HIGH, 3 MEDIUM, 3 LOW, 2 NOTE; statements that were false; repairs in one pass
+
+- Refs U704 (the goal 19 review), U722. Evidence: `proposals/forge2-goal20-sdk/REVIEW.md`.
+- One fresh-context reviewer read commit `7812e8a1`. It got the code and the owner's brief, not my conclusions.
+- FAIL-OPEN 1: a caller of `serve` could name its own helper folder; a fake helper that prints `VALID` let a
+  goodwill refund commit with a junk signature. FAIL-OPEN 3: both SDKs returned the caller's live objects from
+  `read_scoped`; five tricks returned a row of another tenant with `OK`. HIGH 2: two stores with the same id,
+  policy and key had equal state hashes; one cosign signature committed on both.
+- Statements of the documents that were false before the repair: "two stores never give the same state hashes";
+  "the launcher pins the refund binary and the helpers"; the cosign limit named only the key file.
+- Repaired in one pass: findings 1 to 5 and 7 to 9. Stated only: 6 (the opener is trusted), 10 (top-level
+  `tenant_id`), 11 (FNV). Each code repair has a changed copy in group R of the EXIT script; 14 of 14 killed.
+- I re-ran two of the reviewer's reproductions myself: `serve --helpers` exit 2; `init` with the small-order key
+  exit 12 and no folder. The other three are the repairing worker's report and the new suite cases.
+- Not repaired by any code: the trust boundary of finding 1. A process that can write the store folder or run
+  another engine is outside every check.
+- Uncertainty: no second review of the repairs ran (the directive asks for one review). The repairs changed the
+  wire (cosign message version 2, bound leases, `init --node`).
+- Impact: none on any stage label. Next check: the owner may ask for a second review.

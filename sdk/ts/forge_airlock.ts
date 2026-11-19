@@ -12,8 +12,20 @@
 //   * every other outcome REJECTS with an AirlockError subclass (LocalRefusal, EngineRefusal, EngineFault,
 //     ProtocolError, EngineDead, EngineTimeout, LeaseNotOpened); never a commit. After ProtocolError, EngineDead,
 //     EngineTimeout or EngineFault the Store is closed (fail closed).
-//   * readScoped releases rows only after the engine answered exactly `OK <n>` for these n rows.
-//   * withLease opens a durable lease before the handler runs and never closes it; a throwing handler leaves it open.
+//   * readScoped serializes each row ONCE (by index; a hole or an undefined entry is refused), sends exactly
+//     those lines, and only after the engine answered exactly `OK <n>` returns NEW objects parsed from exactly
+//     those lines (never the caller's objects: no toJSON, getter or later change can reach the result). The
+//     engine checks only the TOP-LEVEL tenant_id. More than 100000 rows: LocalRefusal, nothing sent. Any answer
+//     other than `OK <n>` or TENANT_ISOLATION_BREACH closes the client (the stream may be out of step).
+//   * withLease(requestId, deadlineMs, tenant, key, handler) opens a durable lease bound to (request id, tenant,
+//     key) before the handler runs and never closes it; only a terminal verdict for the same id on the same
+//     tenant and key closes it; a throwing handler leaves it open. Only handlers that opened a lease are covered.
+// Trust boundary (src/airlock/PROTOCOL.md section 11): every rule holds only against a caller that reaches the
+// store THROUGH the engine. A process that can write the store folder can append records itself; a process that
+// can start its own engine on the folder can ignore every check. The opener of a key is trusted for its tenant,
+// `original` and facts; the tenant field is not authenticated. "The agent cannot self-cosign" needs BOTH the
+// private key outside the agent's reach AND an agent that cannot write the store folder or run another engine on
+// it (for example `serve` runs under another OS user and the agent holds only its pipe).
 // Label: not trusted for a write decision; not proved. FINITE TEST only.
 
 const childProcess = require('node:child_process');
@@ -26,6 +38,7 @@ const ID_RE = /^[A-Za-z0-9_-]{1,24}$/;
 const HASH_RE = /^[0-9a-f]{32}$/;
 const SIG_RE = /^[0-9a-f]{128}$/;
 const DIGITS_RE = /^(0|[1-9][0-9]*)$/;
+const MAX_READ_ROWS = 100000;
 const REFUSALS = ['MALFORMED_REQUEST', 'UNKNOWN_KEY', 'HELPER_FAILED', 'BAD_FRAME'];
 const FAULTS = ['EPOCH_REGRESSION', 'CORRUPT_WAL', 'IO_ERROR', 'OUTCOME_UNKNOWN', 'DISPATCH_FAILED'];
 const COMMIT_TYPED = ['REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH'];
@@ -102,7 +115,7 @@ class Result {
   kind: string | null = null;
   fields: Record<string, string> = {};
   rows: unknown[] = [];
-  dropped: Array<[string, string]> = [];
+  dropped: Array<[string, string, string, string]> = [];
   constructor(code: Code, detail: string, line: string) {
     this.code = code;
     this.detail = detail;
@@ -111,19 +124,24 @@ class Result {
   get committed(): boolean { return this.code === 'COMMITTED'; }
 }
 
+// A lease bound to (requestId, tenant, key). commit() uses its request id, and its tenant and key unless given.
 class Lease {
   store: Store;
   requestId: string;
   epoch: number;
   deadlineMs: string;
-  constructor(store: Store, requestId: string, epoch: number, deadlineMs: string) {
+  tenant: string;
+  key: string;
+  constructor(store: Store, requestId: string, epoch: number, deadlineMs: string, tenant: string, key: string) {
     this.store = store;
     this.requestId = requestId;
     this.epoch = epoch;
     this.deadlineMs = deadlineMs;
+    this.tenant = tenant;
+    this.key = key;
   }
   commit(op: string, fields: Fields): Promise<Result> {
-    return this.store.commit(op, Object.assign({}, fields, { request_id: this.requestId }));
+    return this.store.commit(op, Object.assign({ tenant: this.tenant, key: this.key }, fields, { request_id: this.requestId }));
   }
 }
 
@@ -216,8 +234,7 @@ function refusal(line: string, t: string[], typed: string[]): Result {
   const code = t[0];
   const detail = t.slice(1).join(' ');
   if (typed.includes(code)) {
-    // the engine sends a bare DUPLICATE_REQUEST_ID for a used id
-    if (t.length < 2 && code !== 'DUPLICATE_REQUEST_ID') throw new ProtocolError(code + ' with no detail', line);
+    // a bare code (no detail) is a valid answer form (PROTOCOL.md section 10)
     const r = new Result(code as Code, detail, line);
     const i = t.indexOf('LEASE_CLOSED');
     if (i >= 0) {
@@ -227,7 +244,7 @@ function refusal(line: string, t: string[], typed: string[]): Result {
       r.leaseClosed = Number(t[i + 1]);
     }
     if (code === 'STALE_STATE_HASH') {
-      if (!HASH_RE.test(t[1])) throw new ProtocolError('STALE_STATE_HASH without a hash', line);
+      if (t.length < 2 || !HASH_RE.test(t[1])) throw new ProtocolError('STALE_STATE_HASH without a hash', line);
       r.stateHash = t[1];
     }
     return r;
@@ -433,37 +450,48 @@ class Store {
 
   // Release `rows` only if the engine answers exactly `OK <rows.length>`; else 0 rows + TENANT_ISOLATION_BREACH.
   // Limit: the engine sees only the rows passed here.
-  async readScoped(tenantId: unknown, rows: unknown[]): Promise<Result> {
+  async readScoped(tenantId: unknown, callerRows: unknown[]): Promise<Result> {
+    if (!Array.isArray(callerRows)) throw new LocalRefusal('readScoped: rows is not an array');
+    const n = callerRows.length;  // read once: a later change of the caller's array does not count
+    if (n > MAX_READ_ROWS) throw new LocalRefusal('readScoped: ' + n + ' rows; the engine takes at most ' + MAX_READ_ROWS);
     if (typeof tenantId !== 'string' || !ID_RE.test(tenantId)) return new Result('TENANT_ISOLATION_BREACH', 'LOCAL TENANT_NOT_CANONICAL', '');
-    let lines: string[];
+    // each row serialized ONCE, by index (a sparse hole or an undefined entry is refused before anything is sent);
+    // from here on only these texts exist: what the engine checks is what is released
+    const rows: string[] = [];
     try {
-      lines = rows.map((r, i) => jsonText('row ' + i, r) + '\n');
+      for (let i = 0; i < n; i++) {
+        if (!Object.prototype.hasOwnProperty.call(callerRows, i) || callerRows[i] === undefined) throw new LocalRefusal('row ' + i + ': a hole or undefined');
+        rows.push(jsonText('row ' + i, callerRows[i]));
+      }
     } catch (e) {
-      return new Result('TENANT_ISOLATION_BREACH', 'LOCAL ' + (e as AirlockError).detail, '');
+      if (!(e instanceof LocalRefusal)) throw e;
+      return new Result('TENANT_ISOLATION_BREACH', 'LOCAL ' + e.detail, '');
     }
-    const a = await this.exchange(Buffer.from('READ ' + tenantId + ' ' + rows.length + '\n' + lines.join(''), 'ascii'));
+    const a = await this.exchange(Buffer.from('READ ' + tenantId + ' ' + rows.length + '\n' + rows.map((x) => x + '\n').join(''), 'ascii'));
     return this.guard(() => {
-      if (a === 'OK ' + rows.length) { const r = new Result('OK', '', a); r.rows = rows.slice(); return r; }
+      if (a === 'OK ' + rows.length) { const r = new Result('OK', '', a); r.rows = rows.map((x) => JSON.parse(x)); return r; }
       const t = a.split(' ');
+      if (t[0] !== 'OK' && t[0] !== 'TENANT_ISOLATION_BREACH') this.closeWith('READ answered ' + t[0].slice(0, 40) + '; the stream may be out of step');
       if (t[0] === 'OK') throw new ProtocolError('OK for another row count', a);
       return refusal(a, t, ['TENANT_ISOLATION_BREACH']);
     });
   }
 
-  // Open a durable lease, then run handler(lease). The SDK never closes the lease. deadlineMs: absolute ms since
-  // the Unix epoch. Resolves with the handler's value; a handler error propagates and the lease stays open.
-  async withLease<T>(requestId: string, deadlineMs: Amount, handler: (lease: Lease) => T | Promise<T>): Promise<T> {
+  // Open a durable lease bound to (requestId, tenant, key), then run handler(lease). The SDK never closes the
+  // lease. deadlineMs: absolute ms since the Unix epoch. Resolves with the handler's value; a handler error
+  // propagates and the lease stays open. One lease per request id, ever (DUPLICATE_REQUEST_ID LEASE_USED).
+  async withLease<T>(requestId: string, deadlineMs: Amount, tenant: string, key: string, handler: (lease: Lease) => T | Promise<T>): Promise<T> {
     const dl = amount('deadline_ms', deadlineMs);
-    const a = await this.send('OPEN_LEASE ' + id('request_id', requestId) + ' ' + dl);
+    const a = await this.send('OPEN_LEASE ' + id('request_id', requestId) + ' ' + dl + ' ' + id('tenant', tenant) + ' ' + id('key', key));
     const t = a.split(' ');
     if (t[0] === 'LEASE_OPENED') {
-      if (t.length !== 4 || t[1] !== requestId || !DIGITS_RE.test(t[2]) || t[3] !== dl) {
+      if (t.length !== 6 || t[1] !== requestId || !DIGITS_RE.test(t[2]) || t[3] !== dl || t[4] !== tenant || t[5] !== key) {
         this.closeWith('protocol error');
         throw new ProtocolError('LEASE_OPENED for another lease', a);
       }
-      return await handler(new Lease(this, requestId, Number(t[2]), dl));
+      return await handler(new Lease(this, requestId, Number(t[2]), dl, tenant, key));
     }
-    const r = this.guard(() => refusal(a, t, ['DUPLICATE_REQUEST_ID']));
+    const r = this.guard(() => refusal(a, t, ['DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH']));
     throw new LeaseNotOpened(r);
   }
 
@@ -504,7 +532,9 @@ class Store {
     if (!lines.length || !lines[0].startsWith('SWEEP ') || (r.code !== 0 && r.code !== 24)) {
       throw new EngineFault(lines.length ? lines[0].split(' ')[0] : 'SWEEP_FAILED', r.out.slice(0, 200), null);
     }
-    const dropped: Array<[string, string]> = lines.slice(1).filter((x) => x.startsWith('DROPPED_OBLIGATION ')).map((x) => [x.split(' ')[1], x.split(' ')[2]]);
+    const dropLines = lines.slice(1).filter((x) => x.startsWith('DROPPED_OBLIGATION ')).map((x) => x.split(' '));
+    if (dropLines.some((x) => x.length !== 5)) throw new ProtocolError('bad DROPPED_OBLIGATION line', r.out);
+    const dropped: Array<[string, string, string, string]> = dropLines.map((x) => [x[1], x[2], x[3], x[4]]);
     if ((r.code === 24) !== (dropped.length > 0)) throw new ProtocolError('sweep exit code and lines disagree', r.out);
     const res = new Result(dropped.length ? 'DROPPED_OBLIGATION' : 'OK', lines[0], r.out);
     res.dropped = dropped;

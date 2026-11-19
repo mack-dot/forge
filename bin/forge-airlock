@@ -8,13 +8,17 @@ CakeML refund binary's (PROVED CORE, canonical-refund profile only) or the Dafny
 
   forge-airlock build [--checker]            two rustc builds + a private 0700 copy of the pinned refund binary;
                                              --checker ALSO runs src/airlock/node/build_checker.py (starts Dafny)
-  forge-airlock init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64]
-  forge-airlock serve <dir> [--node P]       one answer line per request line (src/airlock/PROTOCOL.md)
+  forge-airlock init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64] [--node P]
+                                             --node is required by the engine with a cosign key or an inventory
+                                             policy; the store pins the SHA-256 of that Node binary
+  forge-airlock serve <dir> [--node P]       one answer line per request line (src/airlock/PROTOCOL.md);
+                                             passes --node, --refund-binary (the engine pins its SHA-256) and
+                                             --checker (booking_check.cjs pins the model)
   (serve, init, state, replay, get, leases, cosign-message also take --engine-dir DIR: DIR/airlock-engine and
    DIR/checker/model.cjs instead of build/airlock; the refund binary copy is always build/airlock/refund-binary)
   forge-airlock state|replay <dir>
   forge-airlock get <dir> <tenant> <key>
-  forge-airlock leases <dir> [--sweep [--now MS]]
+  forge-airlock leases <dir> [--all | --sweep [--now MS]]
   forge-airlock cosign-message <dir> <action>
   forge-airlock cosign-keygen <new-key-file> [--node P]     the HUMAN's tool (src/airlock/node/cosign.cjs)
   forge-airlock cosign-sign <key-file> [--node P]           the HUMAN's tool; message on stdin
@@ -167,7 +171,7 @@ def cmd_serve(args):
     node = find_node(node_opt)
     if node is None:
         return USAGE
-    argv = [str(engine), 'serve', args[0], '--node', node, '--helpers', str(HELPERS)]
+    argv = [str(engine), 'serve', args[0], '--node', node]  # the helpers are compiled into the engine
     binary = refund_copy()
     if binary:
         argv += ['--refund-binary', binary]
@@ -180,6 +184,17 @@ def cmd_serve(args):
 def cmd_engine(sub, args):
     engine_dir = take_option(args, '--engine-dir')
     exec_([str(engine_in(engine_dir)), sub] + args)
+
+
+def cmd_init(args):
+    """init: an explicit --node is checked (Node 24.x) and made absolute; the engine pins its SHA-256."""
+    node_opt = take_option(args, '--node')
+    if node_opt is not None:
+        node = find_node(node_opt)
+        if node is None:
+            return USAGE
+        args = args + ['--node', node]
+    return cmd_engine('init', args)
 
 
 def cmd_cosign(sub, args):
@@ -208,10 +223,12 @@ def main():
         return cmd_serve(rest)
     if sub == 'leases':
         engine_dir = take_option(rest, '--engine-dir')
-        if '--sweep' not in rest and len(rest) != 1:
-            return usage('leases <dir> [--sweep [--now MS]]')
+        if '--sweep' not in rest and len([a for a in rest if a != '--all']) != 1:
+            return usage('leases <dir> [--all | --sweep [--now MS]]')
         return cmd_engine('leases', rest + (['--engine-dir', engine_dir] if engine_dir else []))
-    if sub in ('init', 'state', 'replay', 'get', 'cosign-message'):
+    if sub == 'init':
+        return cmd_init(rest)
+    if sub in ('state', 'replay', 'get', 'cosign-message'):
         return cmd_engine(sub, rest)
     if sub in ('cosign-keygen', 'cosign-sign'):
         return cmd_cosign(sub.split('-', 1)[1], rest)

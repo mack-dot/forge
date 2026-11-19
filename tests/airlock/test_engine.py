@@ -952,9 +952,31 @@ RECOVERY_ORDER = ['flock airlock.wal 2', 'ftruncate airlock.epoch N', 'ftruncate
                   'fullfsync airlock.epoch 0', 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
 
 
+def order_diff(got, want):
+    """The first difference of two call lists, named: a missing step, an extra step, or a step out of order."""
+    for i, w in enumerate(want):
+        g = got[i] if i < len(got) else None
+        if g == w:
+            continue
+        after = repr(want[i - 1]) if i else 'the start'
+        if w not in got[i:]:
+            return 'missing step %r (expected after %s)' % (w, after)
+        if g not in want[i:]:
+            return 'extra step %r before %r' % (g, w)
+        return 'step %r comes before %r' % (g, w)
+    return 'extra steps at the end: %r' % got[len(want):] if len(got) > len(want) else 'equal'
+
+
+def require_order(what, got, want):
+    require(got == want, 'system-call order of %s: %s; got %r' % (what, order_diff(got, want), got))
+
+
 def lock_first(events, what):
     store = [e for e in events if e.split(' ')[1].startswith('airlock.')]
-    require(store and store[0] == 'flock airlock.wal 2', '%s: a store file was read before the exclusive lock: %r' % (what, store[:3]))
+    flocks = [e for e in store if e.startswith('flock airlock.wal')]
+    require(flocks, '%s: no flock of airlock.wal at all: %r' % (what, store[:3]))
+    require(flocks[0] == 'flock airlock.wal 2', '%s: the lock of airlock.wal is not exclusive: %r' % (what, flocks[0]))
+    require(store[0] == 'flock airlock.wal 2', '%s: a store file was read before the exclusive lock: %r' % (what, store[:3]))
 
 
 def case_trace(s):
@@ -966,7 +988,8 @@ def case_trace(s):
             'write airlock.wal N', 'fullfsync airlock.wal 0', 'fullfsync TMP 0', 'close airlock.wal', 'close airlock.epoch', 'rename TMP store',
             'fullfsync PARENT 0', 'write stdout N']
     got = calls(events, d.name)
-    require(code == 0 and got == want, 'system-call order of init: %r' % got)
+    require_order('init', got, want)
+    require(code == 0, 'traced init: exit %d %r' % (code, out))
     # init with a failed sync: no store, no temporary folder; init works again. Sync 5 is the parent folder after the
     # rename: the engine undoes the store (empties and syncs the WAL, renames the folder back, removes it, syncs the
     # parent again) and answers IO_ERROR.
@@ -993,7 +1016,7 @@ def case_trace(s):
     before = (p / 'airlock.wal').stat().st_size
     code, out, events = traced(s, ['serve', p], ('REFUND t1 k1 c1 %s DUPLICATE_CHARGE 5\n' % h).encode())
     lock_first(events, 'traced commit')
-    require(calls(events) == COMMIT_ORDER, 'system-call order of a commit: %r' % calls(events))
+    require_order('a commit', calls(events), COMMIT_ORDER)
     require(code == 0 and len(out) == 1 and out[0].startswith('COMMITTED c1 '), 'traced commit: %d %r' % (code, out))
     written = [int(e.split(' ')[2]) for e in events if e.startswith('write airlock.wal ')]
     require(written == [(p / 'airlock.wal').stat().st_size - before], 'traced commit: the write is not the whole record: %r' % written)
@@ -1005,14 +1028,15 @@ def case_trace(s):
     s.one(p, 'OPEN_LEASE L1 5 t1 k1', 'LEASE_OPENED')
     h = s.h(p, 't1', 'k1')
     code, out, events = traced(s, ['serve', p], ('REFUND t1 k1 L1 %s NOPE 5\n' % h).encode())
-    require(out[:1] and 'LEASE_CLOSED' in out[0] and calls(events) == COMMIT_ORDER, 'system-call order of a lease close: %r %r' % (out, calls(events)))
+    require(out[:1] and 'LEASE_CLOSED' in out[0], 'traced lease close: %r' % out)
+    require_order('a lease close', calls(events), COMMIT_ORDER)
     # a recovery: lock -> cut the torn tail -> F_FULLFSYNC -> ratchet entry -> F_FULLFSYNC -> answer
     good = files(p)
     (p / 'airlock.wal').write_bytes(good['airlock.wal'] + b'FAR1')
     code, out, events = traced(s, ['state', p])
     lock_first(events, 'traced recovery')
-    require(code == 0 and calls(events) == RECOVERY_ORDER and (p / 'airlock.wal').read_bytes() == good['airlock.wal'],
-            'system-call order of a recovery: %d %r' % (code, calls(events)))
+    require_order('a recovery', calls(events), RECOVERY_ORDER)
+    require(code == 0 and (p / 'airlock.wal').read_bytes() == good['airlock.wal'], 'traced recovery: exit %d %r, or the torn tail was not cut exactly' % (code, out))
     # a recovery whose WAL sync fails: refused; the next start recovers
     (p / 'airlock.wal').write_bytes(good['airlock.wal'] + b'FAR1')
     code, out, events = traced(s, ['state', p], AIRLOCK_FAIL_SYNC='1')
