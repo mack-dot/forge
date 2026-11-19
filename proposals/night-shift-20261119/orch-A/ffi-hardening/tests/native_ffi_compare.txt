@@ -1,0 +1,16 @@
+T00-baseline-small: rc=0 out=46 A9==orig_today True orig==patched True
+T01-baseline-big: rc=0 out=4044 A9==orig_today True orig==patched True
+T02-odd-argv: rc=0 out=46 A9==orig_today True orig==patched True
+T03-stdin-closed: rc=0 out=0 A9==orig_today True orig==patched True
+T04-stdout-closed: rc=0 out=0 A9==orig_today True orig==patched True
+T05-stdout-readonly: rc=0 out=0 A9==orig_today True orig==patched True
+T06-stdin-directory: rc=0 out=0 A9==orig_today True orig==patched True
+T07-epipe-sigpipe-default: rc=-13 out=0 A9==orig_today True orig==patched True
+T08-epipe-sigpipe-ignored: rc=0 out=0 A9==orig_today True orig==patched True
+T09-nonblock-full-small: rc=0 out=0 A9==orig_today True orig==patched True
+T10-nonblock-partial-big: rc=0 out=1000 A9==orig_today True orig==patched True
+T11-slow-writer: rc=0 out=46 A9==orig_today True orig==patched True
+T16-nonblock-stdin-half: rc=0 out=0 A9==orig_today True orig==patched True
+T12-tiny-heap-big: rc=0 out=4044 A9==orig_today True orig==patched True
+T13-dyld-insert: rc=0 out=57 A9==orig_today True orig==patched True
+runs 15 15

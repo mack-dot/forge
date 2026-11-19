@@ -1,6 +1,6 @@
 # Orchestrator A (proof track) state
 
-Updated: 2026-11-19T09:12Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
+Updated: 2026-11-19T09:38Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
 
 ## Branch
 - `nightshift/A-proof` from `985f5eaf`; worktree
@@ -8,9 +8,9 @@ Updated: 2026-11-19T09:12Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
 - Partner B agent ID: `a56d4886a49375909`.
 
 ## HOL slot
-- `locks/hol.lock` RELEASED by A at 09:10:45Z for B's heavy window (moved to `locks/released/`). B took `heavy.lock` at ~09:12Z
-  (`orch-B/heavy/window-1.log`). A starts NO HOL case until B sends its release line and `locks/heavy.lock` is gone.
-  Then: `mkdir locks/hol.lock` again, write `owner`, and continue the queue below.
+- `locks/hol.lock` held by A again since 09:16:34Z (B's heavy window 09:12Z–09:16Z is over). Queue runner: `queue.sh <tag> "<case> <cpu> <deps>"`
+  in `results/m1b-routeA-20261119/attempt-0001` (waits for the amended swap rule and AC power; `queue-<tag>.log`).
+- If B asks for another heavy window: finish the running case, move `locks/hol.lock` to `locks/released/`, tell B.
 
 ## Replay (section 8): COMPLETE as far as sources exist (read 08:11Z from `phase3/results.json`)
 - Counted first runs: 152 AS_RECORDED; 1 EXIT_EQUAL_REASON_DIFFERS (005); 2 EXIT_DIFFERS (130, 142); 3 NOT_RUN_NO_SOURCE.
@@ -57,11 +57,19 @@ Every `<case>.go.log` ends with `go exit N`. Swap rule: PROTOCOL.md as amended ~
 | PX-0001 | c4cfd82c… | 0 | 9 theorems; `refund_strict_parse_exact`, `refund_frame_decision`. Review A18 running |
 | Link (folder `orch-A/link/run/attempt-0001`) | — | H0 0; H1 0; H2 0; NC1–NC6 1; NS1–NS3 1; PC1 0; E0 0; R1 0; H4 0; NR1 1; R2 0; R3 0; I1 0 | S5 and S6 MACHINE-CHECKED at model level, all controls as planned (H4, NR1, R2, R3, I1: second runs after a wrapper path fix). Review A17 running |
 
-## HOL queue next (when the slot is back)
-1. `LE-0002` (`L_EXIT_v5`, absent-L-OUT mode: generic halt lemma): `./nightshift-run.sh LE-0002 1200 deps-LO.txt`.
-2. `LOx-0001` exploration of the two open L-OUT lemmas (A16 writes it), then one proof run `LO-0006`.
-3. Erasure step lift (A11 writes `orch-A/erasure-step/`).
-4. Re-run of E1-0003 and L2-0003 inside the swap rule; compare theory digests (OWNER_REQUIRED A-1).
+| LOx-0001 (EXPLORATION, no export) | 5ef71604… | 0 | EXPLORE_COMPLETE; all pieces of the two open L-OUT lemmas closed |
+| LO-0006 | 64416668… | 0 | 41 CHECKED; `refund_L_OUT`, `refund_L_OUT_prefix`, `refund_profile_a_sl_fd1`. MACHINE-CHECKED (model). Review A22 running |
+| LE-0002 / LE-0003 / LE-0004 | 2e2fbb42… / 3bd3cec5… / same | 1 / 0 / 0 | ML parse error; generic `evaluate_Halt_reg` (6 theorems); with L-OUT: `refund_profile_a_sl_halt` (7 theorems) |
+| ES-0001 / ES-0002 | 7ed5a4a5… / 7c0c3c51… | 1 / 1 | ML error; many frame/erase lemmas open. A20 prepares an exploration `EFx-0001` |
+| E1r-0001 / L2r-0001 (re-runs inside the swap rule) | = E1-0003 / L2-0003 | 0 / 0 | `.dat` byte-equal to the first runs |
+| Link NB1 (new control) | 9c55bb3f… | 1 | fails at `exported_ens2_value`, as required; reasons of all controls: `link/run/attempt-0001/control_reasons.txt` |
+
+## HOL queue next
+1. `MF-0001` composed model theorem (A21 writes `orch-A/compose/compose_v1.sml`): L-OUT + exact strict parse (+ exported contract).
+2. `L2c-0001` (A19 writes `orch-A/l2c/routeA-L2c.sml`): VokY3, R4, assembly: Route A reduced to the single premise R6.
+3. `EFx-0001` exploration of the ARM8 frame lemmas (A20), then `EF-0001`.
+4. Open after these: L3/R6 (program behaviour of FFI calls: TextIO re-proofs); L-OUT and L-EXIT under the L2 premises; the lift of
+   the erasure lemmas; native links X8, X11; issuer link X16 (B).
 
 ## Counterexamples tonight (native; reproduced by A; `orch-A/ffi-c-audit/REPORT.md`)
 - CE-1: real executable, exit status 0, empty stderr, stdout a 1000-byte strict prefix (non-blocking pipe).
@@ -69,10 +77,10 @@ Every `<case>.go.log` ends with `go exit N`. Swap rule: PROTOCOL.md as amended ~
 - CE-3: `DYLD_INSERT_LIBRARIES` gives a forged complete frame with exit 0 (assumption A-LOADER; existing launchers pass a fixed env).
 
 ## Workers now
-Running: A11 (erasure step lift), A16 (L-OUT exploration script), A17 (review link), A18 (review L2b, PX).
-Done: A1, A2, A3 (v3–v6), A4, A5, A6, A7, A8 (v1, v2), A9, A10, A12, A13, A14 (L_EXIT_v5), A15 (prefix exact).
-Commits on nightshift/A-proof: 68b2e67b, f53d46d4, 65b1f0a4, 67017dc7. unsure U481–U489. Sync script: `orch-A/sync.sh`.
-B: handed back once, resumed; `orch-B/MORNING.md` is INTERIM.
+Running: A19 (L2c), A20 (frame exploration), A21 (composition), A22 (review L-OUT).
+Reviews done: L1 (A7), E1 (A10), L2 (A12), PF (A13), link (A17), L2b+PX (A18): `orch-A/review-*/REPORT.md`.
+Commits on nightshift/A-proof: 68b2e67b, f53d46d4, 65b1f0a4, 67017dc7, 9c425b56, bed20e32. unsure U481–U490. Sync: `orch-A/sync.sh`.
+B: resumed; heavy window done; `orch-B/MORNING.md` INTERIM (ask B to confirm before the joint report).
 
 ## Blockers
 - None for the queue. Swap free 1.6 GB at 08:12Z. Poly/ML store stops happened at low swap: re-measure before each run.

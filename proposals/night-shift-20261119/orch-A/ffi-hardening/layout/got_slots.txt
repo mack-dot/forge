@@ -1,0 +1,14 @@
+== orig-rebuild/refund
+        __DATA_CONST    __got            0x100028020           bind  libSystem/_close
+        __DATA_CONST    __got            0x100028028           bind  libSystem/_exit
+        __DATA_CONST    __got            0x100028070           bind  libSystem/_open
+        __DATA_CONST    __got            0x100028080           bind  libSystem/_read
+        __DATA_CONST    __got            0x1000280B0           bind  libSystem/_write
+== patched/refund-model-total
+        __DATA_CONST    __got            0x100028020           bind  libSystem/_abort
+        __DATA_CONST    __got            0x100028028           bind  libSystem/_close
+        __DATA_CONST    __got            0x100028030           bind  libSystem/_exit
+        __DATA_CONST    __got            0x100028070           bind  libSystem/_memchr
+        __DATA_CONST    __got            0x100028080           bind  libSystem/_open
+        __DATA_CONST    __got            0x100028090           bind  libSystem/_read
+        __DATA_CONST    __got            0x1000280C0           bind  libSystem/_write

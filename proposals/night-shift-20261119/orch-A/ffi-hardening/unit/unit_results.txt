@@ -1,0 +1,49 @@
+R01-success          model=success-read   orig=RET   True  patched=RET   True  read success, k=5
+R02-clen0            model=error          orig=SIG6  False patched=RET   True  error byte
+R03-clen7            model=error          orig=SIG6  False patched=RET   True  error byte
+R04-clen9            model=error          orig=SIG6  False patched=RET   True  error byte
+R05-alen0            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+R06-alen1            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+R06-alen2            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+R06-alen3            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+R07-short-alen4      model=error          orig=SIG6  False patched=RET   True  error byte
+R08-short-alen8      model=error          orig=SIG6  False patched=RET   True  error byte
+R09-fd-2^32          model=error          orig=RET   False patched=RET   True  error byte
+R10-fd1-writemode    model=error          orig=RET   True  patched=RET   True  error byte
+R11-fd99             model=error          orig=RET   True  patched=RET   True  error byte
+R12-fd-all-ones      model=error          orig=RET   True  patched=RET   True  error byte
+R13-fd-2^31          model=error          orig=RET   True  patched=RET   True  error byte
+R14-alen-topbit      model=success-read   orig=SIG6  False patched=RET   True  read success, k=5
+R15-n0               model=success-read   orig=RET   True  patched=RET   True  read success, k=0
+W01-success          model=success-write  orig=RET   True  patched=RET   True  write success, k=3
+W02-clen0            model=error          orig=SIG6  False patched=RET   True  error byte
+W03-alen0            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+W03-alen1            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+W03-alen2            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+W03-alen3            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+W04-off-past-end     model=error          orig=SIG6  False patched=RET   True  error byte
+W05-n-past-end       model=error          orig=SIG6  False patched=RET   True  error byte
+W06-fd-2^32+1        model=error          orig=RET   False patched=RET   True  error byte
+W07-fd0-readmode     model=error          orig=RET   True  patched=RET   True  error byte
+W08-alen-topbit      model=success-write  orig=SIG6  False patched=RET   True  write success, k=3
+W09-offset           model=success-write  orig=RET   True  patched=RET   True  write success, k=3
+C01-alen0-U393       model=final          orig=SIG6  True  patched=SIG6  True  model halts
+C02-clen0            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+C03-fd99             model=error          orig=RET   True  patched=RET   True  error byte
+C04-fd1-stream       model=error          orig=RET   False patched=RET   True  error byte
+C05-fd-2^32+99       model=error          orig=RET   True  patched=RET   True  error byte
+C06-alen-topbit      model=error          orig=SIG6  False patched=RET   True  error byte
+O01-alen0            model=final          orig=SIG6  True  patched=SIG6  True  model halts
+O02-alen1            model=error          orig=SIG6  False patched=RET   True  error byte
+O02-alen2            model=error          orig=SIG6  False patched=RET   True  error byte
+O02-alen3            model=error          orig=SIG6  False patched=RET   True  error byte
+O02-alen4            model=error          orig=SIG6  False patched=RET   True  error byte
+O02-alen5            model=error          orig=SIG6  False patched=RET   True  error byte
+O02-alen6            model=error          orig=SIG6  False patched=RET   True  error byte
+O02-alen7            model=error          orig=SIG6  False patched=RET   True  error byte
+O02-alen8            model=error          orig=SIG6  False patched=RET   True  error byte
+O03-missing          model=error          orig=RET   True  patched=RET   True  error byte
+O04-no-nul           model=error          orig=RET   True  patched=RET   True  error byte
+O05-devnull          model=error          orig=RET   False patched=RET   False error byte
+O06-alen-topbit      model=error          orig=SIG6  False patched=RET   True  error byte
+{'cases': 48, 'patched_eq_model': 47, 'orig_eq_model': 24}

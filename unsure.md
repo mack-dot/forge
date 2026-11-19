@@ -18066,3 +18066,37 @@ curl: (6) Could not resolve host: github.com
   value" exists in pieces; the composed statement is in work.
 - Next check: the review of LO-0006; the composed theorem; the same
   results under the L2 premises.
+
+## U491 — night shift, proof track: Route A is reduced to one program-behaviour premise and one native premise; one ARM8 step keeps the control registers; the executable rebuilds byte-exactly (refers to U482, U483, U488)
+
+- Evidence: `L2c-0001` (exit 0, 29 theorems); `EFx-0001`
+  (exploration, exit 0, no export) and `EF-0001` (exit 0, 69 stored
+  theorems); `ES-0001`, `ES-0002` (exit 1 each);
+  `orch-A/ffi-hardening/` (a worker's build and tests; I re-checked
+  three digests with `shasum`).
+- Proved: `refund_profile_a_sl_events`: the machine-model theorem
+  with the valid-call predicate `VokY3` (the exact argument shapes of
+  the program's read and write calls; close and open_in never
+  return) and its FFI premises reduced to (i) the contract at valid
+  calls for the real FFI code (NATIVE) and (ii) statement R6: every
+  FFI event of every finite run of the totalised machine is a valid
+  read or write event. `Next_frame`, `NextStateARM8_frame`: one step
+  of the ARM8 model never changes TCR_EL1, SCTLR_EL1 or PSTATE.EL;
+  a non-vacuity witness for the erasure premises.
+- NOT proved: R6 (it needs the program's behaviour); the erase
+  equations for one step (several load/store classes failed in
+  ES-0002); the lift to `evaluate`.
+- Reproduction: with the recorded commands the original C object and
+  the executable rebuild byte-exactly (image SHA-256 `b8ed5ec2…7bb8`).
+- A worker's review found that the present C FFI differs from the
+  model at more states than U393 (it aborts where the model returns
+  an error byte; it cuts the descriptor to 32 bits; it really closes
+  descriptors 0 to 2). An unapplied patch and a scratch image exist
+  for the owner's decision (item A-3 of the owner queue). The worker
+  linked that scratch image with the recorded command; the linker
+  put its default local ad hoc signature on it; no key and no
+  `codesign` command were used; the owner decides whether that
+  counts as signing.
+- Impact: graph link X6 → X7 stays open at R6; X11e stays open.
+- Next check: R6 feasibility; an oracle-only valid-call predicate
+  for a model-total C FFI.

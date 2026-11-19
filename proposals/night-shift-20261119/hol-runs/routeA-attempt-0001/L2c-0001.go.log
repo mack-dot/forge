@@ -1,0 +1,59 @@
+2026-11-19T09:49:30Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 4810.75M  free = 1333.25M  (encrypted)
+System-wide memory free percentage: 59%
+START_STATE swap_free_mib=1333 memory_free_percent=59
+exit 0
+actual_exit 0 wall 277.409 cpu 347.848 rss_mib 4485 ['EXACT_COMPLETE'] inputs_unchanged_after True
+47:CHECKED VokY3_is_the_L2b_lambda
+62:CHECKED refund_valid_event_is_the_L2b_EVc_lambda
+78:CHECKED call_FFI_return_keeps_length
+84:CHECKED zip_equal_lengths_injective
+91:CHECKED refund_ffi_names_distinct
+100:CHECKED close_event_is_not_valid
+105:CHECKED open_in_event_is_not_valid
+110:CHECKED valid_read_event_shape
+118:CHECKED valid_write_event_shape
+127:CHECKED valid_event_index_and_shape
+144:CHECKED word_add_n2w_suc
+150:CHECKED read_bytearray_EL
+156:CHECKED read_bytearray_EL_domain
+163:CHECKED refund_record_bytearrays
+174:CHECKED first_two_elements_are_take_two
+180:CHECKED valid_read_event_gives_VokY3
+190:CHECKED valid_write_event_gives_VokY3
+198:SHOW STAGE_FAILED R4M-read : HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+218:  GOAL VokY3 i nb ms1
+221:CHECKED refund_valid_event_gives_VokY3
+234:CHECKED refund_mc_pointer_fields
+244:CONTROL_OK R5 instance concludes exactly the premise-3 body
+249:CHECKED refund_names_are_nonempty_ExtCall
+256:CHECKED refund_calls_premise_VokY3
+264:CONTROL_OK R4 instance is term-identical to the third hypothesis of the R5 instance
+265:CONTROL_OK names instance is term-identical to the first hypothesis of the R5 instance
+270:CHECKED refund_events_premise_gives_l2r_third_premise
+290:CHECKED refund_profile_a_sl_events
+333:CHECKED valid_event_accepts_a_read_event
+340:CHECKED valid_event_accepts_a_write_event
+347:CHECKED valid_event_rejects_a_close_event
+352:CHECKED valid_event_rejects_the_N4_short_read_event
+358:CHECKED VokY3_rejects_close_and_open_in
+363:CHECKED R4_L2b_literal
+394:CONTROL_OK ASSEMBLY conclusion is term-identical to the conclusion of the stored refund_profile_a_sl_reach
+395:CONTROL_OK conclusion of refund_profile_a_sl_reach does not mention Vok
+396:CONTROL_OK ASSEMBLY premise count 13
+397:CONTROL_OK ASSEMBLY premises = premises of refund_profile_a_sl_reach with Vok := VokY3, exactly premise 3 replaced by R6
+398:CONTROL_OK ASSEMBLY premises do not mention ffi_calls_ok
+399:CONTROL_OK R4 has no domain-size premise (R3 not used), no oracle and no program behaviour
+400:CONTROL_OK R4 statement is the literal statement of this file
+401:CONTROL_OK two positive events accepted; close event and N4 short read event rejected
+414:CONTROL_OK exactly one contract premise
+421:CLOSURE_AXIOM bool.SELECT_AX
+422:CLOSURE_AXIOM bool.INFINITY_AX
+423:CLOSURE_AXIOM bool.ETA_AX
+424:CLOSURE_AXIOM bool.BOOL_CASES_AX
+425:CONTROL_OK closure contains forge_refundRouteA2 and forge_refundRouteA2b
+428:CLOSURE_NODES 546
+431:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0

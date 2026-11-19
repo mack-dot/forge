@@ -1,0 +1,62 @@
+--- /Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v2/erasure_frame_v2.sml	2026-11-19 04:41:36.660351987 -0500
++++ /Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v2/erasure_frame_v3.sml	2026-11-19 04:47:17.262912038 -0500
+@@ -1,4 +1,6 @@
+-(* erasure_frame_v2.sml -- worker A20 (Night-Shift Orchestrator A), 2026-11-19. Case EF-0001. DRAFT.
++(* erasure_frame_v3.sml -- worker A20, 2026-11-19. Case EF-0001. FAITHFUL REPLAY of EFx-0001 (v2 + reordered tactic lists, lines 235-266). NOT RUN as EF-0001.
++   v2 header follows (its R3 alternatives are replaced by the EFx-0001 closed plans).
++   (v2) erasure_frame_v2.sml -- worker A20 (Night-Shift Orchestrator A), 2026-11-19. Case EF-0001. DRAFT.
+    NOT RUN. NOT TYPE-CHECKED BY HOL. Every tactic is UNCHECKED. Finalise only after the EFx-0001 exploration log.
+    Pass = actual exit 0, marker EXACT_COMPLETE, no REQUIRED_FAILED_LIST line, no UNEXPECTED_CONTROL_ACCEPTANCE,
+    exactly four CLOSURE_AXIOM lines, and PROVED lines for W_nonvacuous, Next_frame, NextStateARM8_frame.
+@@ -232,26 +234,36 @@
+ fun generic d =
+   [rpt gen_tac >> PC_x >> simp (d :: FRset ()),
+    rpt gen_tac >> PC_x >> simp (d :: FRset ()) >> BasicProvers.every_case_tac >> simp (FRset ())];
+-(* R1: split on the exception level first; each of the four cases selects one literal row, the ARB row is unreachable *)
+-fun el_split d =
++(* v3 FAITHFUL REPLAY of EFx-0001 (A/EFx-0001/stdout.log; actual exit 0, EXPLORE_COMPLETE, WOULD_FAIL_LIST empty).
++   Primary = the tactic that closed the lemma in the EFx-0001 dry run (TACTIC_USED line); alternative = one other plan
++   that CLOSED there (VALIDATION ... hyps 0). Tactic text is unchanged; only the order of the lists changed. *)
++(* write'SP (stdout 420), BranchTo (679): primary = v2 el_split tactic 1 (TACTIC_USED 1) = plan B_el_split_first
++   (stdout 374/628, its step 4 EVAL_TAC ran on 0 goals); alternative = plan C_word_value (stdout 415/674). *)
++fun el_tacs d =
+   [rpt gen_tac >> PC_x >> qspec_then `s.PSTATE.EL` strip_assume_tac W2 >>
+      simp (d :: Hint_Branch_def :: FRset ()),
+-   rpt gen_tac >> PC_x >> simp (d :: Hint_Branch_def :: FRset ()) >> BasicProvers.every_case_tac >>
+-     simp (FRset ()) >> metis_tac [W2],
+-   rpt gen_tac >> PC_x >> qspec_then `s.PSTATE.EL` strip_assume_tac W2 >>
+-     simp (d :: Hint_Branch_def :: FRset ()) >> BasicProvers.every_case_tac >> simp (FRset ()) >> EVAL_TAC];
+-(* R3: Run. Unfold, split the instruction case, then every branch is one dfn' frame lemma. *)
++   rpt gen_tac >> PC_x >> wordsLib.Cases_on_word_value `s.PSTATE.EL` >>
++     simp (d :: Hint_Branch_def :: FRset ())];
++(* LoadStoreSingle (972), dfn'LoadStorePair (1131): primary = generic tactic 2 (TACTIC_USED 2);
++   alternative = plan A_steps (stdout 966/1126). *)
++fun ls_tacs d =
++  [rpt gen_tac >> PC_x >> simp (d :: FRset ()) >> BasicProvers.every_case_tac >> simp (FRset ()),
++   rpt gen_tac >> PC_x >> simp [d, boolTheory.LET_THM, pairTheory.UNCURRY] >> simp (FRset ()) >>
++     BasicProvers.every_case_tac >> simp (FRset ())];
++(* Run (1771): primary = v2 run_tacs 2 (TACTIC_USED 2) = plan A_steps (stdout 1518);
++   alternative = plan C_cases_x (stdout 1766). *)
+ fun run_tacs d =
+-  [rpt gen_tac >> simp (d :: FRset ()),
+-   rpt gen_tac >> simp [d] >> BasicProvers.every_case_tac >> simp (FRset ()),
+-   rpt gen_tac >> Cases_on `x` >> simp [d] >> BasicProvers.every_case_tac >> simp (FRset ())];
++  [rpt gen_tac >> simp [d] >> BasicProvers.every_case_tac >> simp (FRset ()),
++   rpt gen_tac >> Cases_on `x` >> simp (d :: FRset ()) >> BasicProvers.every_case_tac >> simp (FRset ())];
++(* LoadStoreAcquire (1138), LoadStoreAcquirePair (1142), LoadLiteral (1146) used generic tactic 2; every other
++   frame lemma used generic tactic 1 (no TACTIC_ATTEMPT_FAILED line). *)
++val used2 = ["dfn'LoadStoreAcquire", "dfn'LoadStoreAcquirePair", "dfn'LoadLiteral"];
+ fun frame_tacs cn d =
+-  if cn = "write'SP" orelse cn = "BranchTo" then el_split d @ generic d
++  if cn = "write'SP" orelse cn = "BranchTo" then el_tacs d
+   else if cn = "Run" then run_tacs d
+-  else if cn = "LoadStoreSingle" orelse cn = "dfn'LoadStorePair" then
+-    generic d @ [rpt gen_tac >> PC_x >> simp [d, boolTheory.LET_THM, pairTheory.UNCURRY] >>
+-                   BasicProvers.every_case_tac >> simp (FRset ())]
+-  else generic d @ [rpt gen_tac >> PC_x >> simp [d] >> BasicProvers.every_case_tac >> simp (FRset ())];
++  else if cn = "LoadStoreSingle" orelse cn = "dfn'LoadStorePair" then ls_tacs d
++  else if List.exists (fn n => n = cn) used2 then rev (generic d)
++  else generic d;
+ val n_frame = ref 0;
+ val _ = List.app (fn dname =>
+   if dname = "Next_def" then () else

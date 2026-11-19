@@ -4,7 +4,7 @@ set -e
 F=/Users/mackianni/forge; W=/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/A-proof; D=$W/proposals/night-shift-20261119
 mkdir -p $D/orch-A $D/hol-runs
 rsync -a --exclude 'results-snapshot-*.json' --exclude 'results-at-driver-end.json' --exclude 'git-*.txt' --exclude 'fs-sml-sha256.txt' \
-  --exclude 'refund' --exclude 'refund.S.fromgit' --exclude '*.dylib' --exclude '__pycache__' --exclude 'run/attempt-0001/stored' \
+  --exclude 'refund' --exclude 'refund.S.fromgit' --exclude '*.o' --exclude 'refund-*' --exclude 'harness_*' --exclude 'refund.S' --exclude 'refund.syms' --exclude '*.dylib' --exclude '__pycache__' --exclude 'run/attempt-0001/stored' \
   $F/results/night-shift-20261119/orch-A/ $D/orch-A/
 cp $F/results/night-shift-20261119/PROTOCOL.md $F/results/night-shift-20261119/DIRECTIVE.md $D/
 [ -f $F/results/night-shift-20261119/OWNER_REQUIRED.md ] && cp $F/results/night-shift-20261119/OWNER_REQUIRED.md $D/ || true

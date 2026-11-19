@@ -1,0 +1,431 @@
+{
+ "class": "TESTED-UNPROVED (finite test)",
+ "executable_sha256": "ba89fef3b7e34272d660f8a5ff54f84fadd6548cde64b08d29cad179a3833c89",
+ "runs": 15,
+ "results": [
+  {
+   "test": "T00-baseline-small",
+   "how": "valid request, pipes",
+   "model_prediction": "Success; stdout = SMALL_OUT",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 46,
+    "sha256": "b53db4cfb647b3194b929cc59f8dbb411f536f7dd1bd95835369f9c33305b957",
+    "head": "(refund-result-v1 True 40 returned_item c r 1)",
+    "strict_full_frame": true,
+    "is_strict_prefix_of_small": false,
+    "is_strict_prefix_of_big": false,
+    "equals_small": true,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T01-baseline-big",
+   "how": "valid request with 2000-byte ids (output > 2048 bytes, 2+ write chunks)",
+   "model_prediction": "Success; stdout = BIG_OUT",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 4044,
+    "sha256": "7e33427d6c19ca9e2af77c8b5b3ea9ec17d8b63696359e753b848ba90d92e208",
+    "head": "(refund-result-v1 True 40 returned_item yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+    "strict_full_frame": true,
+    "is_strict_prefix_of_small": false,
+    "is_strict_prefix_of_big": false,
+    "equals_small": false,
+    "equals_big": true
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T02-odd-argv",
+   "how": "argv: --repl, empty, 100000 x, 0xff byte",
+   "model_prediction": "argv not modelled for this program (no clFFI name); stdout = SMALL_OUT",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 46,
+    "sha256": "b53db4cfb647b3194b929cc59f8dbb411f536f7dd1bd95835369f9c33305b957",
+    "head": "(refund-result-v1 True 40 returned_item c r 1)",
+    "strict_full_frame": true,
+    "is_strict_prefix_of_small": false,
+    "is_strict_prefix_of_big": false,
+    "equals_small": true,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T03-stdin-closed",
+   "how": "fd 0 closed before exec",
+   "model_prediction": "outside model (STD_streams assumes fd 0); C read -> -1 EBADF -> InvalidFD raised",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T04-stdout-closed",
+   "how": "fd 1 closed before exec (stdout bytes not observable)",
+   "model_prediction": "outside model; C write -> -1 EBADF -> InvalidFD raised",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T05-stdout-readonly",
+   "how": "fd 1 = /dev/null O_RDONLY",
+   "model_prediction": "outside model; C write -> -1 EBADF -> InvalidFD raised",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T06-stdin-directory",
+   "how": "fd 0 = a directory",
+   "model_prediction": "outside model; C read -> -1 EISDIR -> InvalidFD raised",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T07-epipe-sigpipe-default",
+   "how": "stdout = pipe whose reader is closed; SIGPIPE SIG_DFL",
+   "model_prediction": "model write on fd 1 never fails (liveFS); real: killed by SIGPIPE",
+   "returncode": -13,
+   "signal": 13,
+   "stdout": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T08-epipe-sigpipe-ignored",
+   "how": "stdout = pipe whose reader is closed; SIGPIPE SIG_IGN",
+   "model_prediction": "model write on fd 1 never fails (liveFS); real: EPIPE -> InvalidFD raised",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T09-nonblock-full-small",
+   "how": "stdout = O_NONBLOCK pipe pre-filled with 65536 bytes, 0 freed",
+   "model_prediction": "model write on fd 1 never fails; real: EAGAIN possible -> InvalidFD raised",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": "",
+   "pipe_filled": 65536,
+   "pipe_freed": 0
+  },
+  {
+   "test": "T10-nonblock-partial-big",
+   "how": "stdout = O_NONBLOCK pipe pre-filled with 65536 bytes, 1000 freed",
+   "model_prediction": "model write on fd 1 never fails; real: EAGAIN possible -> InvalidFD raised",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 1000,
+    "sha256": "975ecc56cb68ee194b0e88627d01968a8e3adcbc4c7853451dd938afe922ecb1",
+    "head": "(refund-result-v1 True 40 returned_item yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": false,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": "",
+   "pipe_filled": 65536,
+   "pipe_freed": 1000
+  },
+  {
+   "test": "T11-slow-writer",
+   "how": "stdin pipe written in two chunks 0.3 s apart",
+   "model_prediction": "partial reads allowed (numchars); Success; stdout = SMALL_OUT",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 46,
+    "sha256": "b53db4cfb647b3194b929cc59f8dbb411f536f7dd1bd95835369f9c33305b957",
+    "head": "(refund-result-v1 True 40 returned_item c r 1)",
+    "strict_full_frame": true,
+    "is_strict_prefix_of_small": false,
+    "is_strict_prefix_of_big": false,
+    "equals_small": true,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T16-nonblock-stdin-half",
+   "how": "stdin = O_NONBLOCK pipe holding the first half; writer still open",
+   "model_prediction": "model read waits for content (no EAGAIN); real: read -> -1 EAGAIN -> InvalidFD raised",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T12-tiny-heap-big",
+   "how": "CML_HEAP_SIZE=1 CML_STACK_SIZE=1, big request",
+   "model_prediction": "model: Resource_limit_hit allowed with an output prefix; real exit via cml_exit(x0)",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 4044,
+    "sha256": "7e33427d6c19ca9e2af77c8b5b3ea9ec17d8b63696359e753b848ba90d92e208",
+    "head": "(refund-result-v1 True 40 returned_item yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+    "strict_full_frame": true,
+    "is_strict_prefix_of_small": false,
+    "is_strict_prefix_of_big": false,
+    "equals_small": false,
+    "equals_big": true
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  },
+  {
+   "test": "T13-dyld-insert",
+   "how": "DYLD_INSERT_LIBRARIES=./forged.dylib (constructor writes a frame, _exit(0))",
+   "model_prediction": "no model counterpart: the stored theorems start at the installed state after _main",
+   "returncode": 0,
+   "signal": null,
+   "stdout": {
+    "len": 57,
+    "sha256": "01c092c84dcd9fdc0cc455cece6f796779654583c4bf0aacd607d997d228dcc3",
+    "head": "(refund-result-v1 True 999 returned_item forged forged 1)",
+    "strict_full_frame": true,
+    "is_strict_prefix_of_small": false,
+    "is_strict_prefix_of_big": false,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "head": "",
+    "strict_full_frame": false,
+    "is_strict_prefix_of_small": true,
+    "is_strict_prefix_of_big": true,
+    "equals_small": false,
+    "equals_big": false
+   },
+   "stderr_text": ""
+  }
+ ]
+}

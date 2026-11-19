@@ -1,0 +1,69 @@
+2026-11-19T09:44:37Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 4826.75M  free = 1317.25M  (encrypted)
+System-wide memory free percentage: 66%
+START_STATE swap_free_mib=1317 memory_free_percent=66
+exit 0
+actual_exit 0 wall 108.756 cpu 92.339 rss_mib 3558 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+1461:  GOAL_SHORT frame_Run/A_steps #23 (dfn'BitfieldMove p s).TCR_EL1 = s.TCR_EL1 ∧
+1464:  GOAL_SHORT frame_Run/A_steps #24 (dfn'ConditionalCompareImmediate p s).TCR_EL1 = s.TCR_EL1 ∧
+1467:  GOAL_SHORT frame_Run/A_steps #25 (dfn'ConditionalCompareImmediate p s).TCR_EL1 = s.TCR_EL1 ∧
+1470:  GOAL_SHORT frame_Run/A_steps #26 (dfn'ConditionalCompareRegister p s).TCR_EL1 = s.TCR_EL1 ∧
+1473:  GOAL_SHORT frame_Run/A_steps #27 (dfn'ConditionalCompareRegister p s).TCR_EL1 = s.TCR_EL1 ∧
+1476:  GOAL_SHORT frame_Run/A_steps #28 (dfn'ConditionalSelect p s).TCR_EL1 = s.TCR_EL1 ∧
+1479:  GOAL_SHORT frame_Run/A_steps #29 (dfn'ConditionalSelect p s).TCR_EL1 = s.TCR_EL1 ∧
+1482:  GOAL_SHORT frame_Run/A_steps #30 (dfn'CountLeading p s).TCR_EL1 = s.TCR_EL1 ∧
+1485:  GOAL_SHORT frame_Run/A_steps #31 (dfn'CountLeading p s).TCR_EL1 = s.TCR_EL1 ∧
+1488:  GOAL_SHORT frame_Run/A_steps #32 (dfn'Division p s).TCR_EL1 = s.TCR_EL1 ∧
+1491:  GOAL_SHORT frame_Run/A_steps #33 (dfn'Division p s).TCR_EL1 = s.TCR_EL1 ∧
+1494:  GOAL_SHORT frame_Run/A_steps #34 (dfn'ExtractRegister p s).TCR_EL1 = s.TCR_EL1 ∧
+1497:  GOAL_SHORT frame_Run/A_steps #35 (dfn'ExtractRegister p s).TCR_EL1 = s.TCR_EL1 ∧
+1500:  GOAL_SHORT frame_Run/A_steps #36 (dfn'LogicalImmediate p s).TCR_EL1 = s.TCR_EL1 ∧
+1503:  GOAL_SHORT frame_Run/A_steps #37 (dfn'LogicalImmediate p s).TCR_EL1 = s.TCR_EL1 ∧
+1506:  GOAL_SHORT frame_Run/A_steps #38 (dfn'LogicalShiftedRegister p s).TCR_EL1 = s.TCR_EL1 ∧
+1509:  GOAL_SHORT frame_Run/A_steps #39 (dfn'LogicalShiftedRegister p s).TCR_EL1 = s.TCR_EL1 ∧
+1512:  GOAL_SHORT frame_Run/A_steps #40 (dfn'MoveWide p s).TCR_EL1 = s.TCR_EL1 ∧
+1515:  GOALS_NOT_SHOWN 42
+1517:  GOAL_COUNT 0
+1522:  GOAL_COUNT 1
+1523:  GOAL_BEGIN frame_Run/C_cases_x #1 assumptions 0 (ASM 0 = newest)
+1527:  GOAL_END frame_Run/C_cases_x #1
+1529:  GOAL_COUNT 1
+1530:  GOAL_BEGIN frame_Run/C_cases_x #1 assumptions 0 (ASM 0 = newest)
+1533:  GOAL_END frame_Run/C_cases_x #1
+1535:  GOAL_COUNT 12
+1536:  GOAL_BEGIN frame_Run/C_cases_x #1 assumptions 0 (ASM 0 = newest)
+1540:  GOAL_END frame_Run/C_cases_x #1
+1541:  GOAL_BEGIN frame_Run/C_cases_x #2 assumptions 0 (ASM 0 = newest)
+1545:  GOAL_END frame_Run/C_cases_x #2
+1546:  GOAL_BEGIN frame_Run/C_cases_x #3 assumptions 0 (ASM 0 = newest)
+1550:  GOAL_END frame_Run/C_cases_x #3
+1551:  GOAL_BEGIN frame_Run/C_cases_x #4 assumptions 0 (ASM 0 = newest)
+1555:  GOAL_END frame_Run/C_cases_x #4
+1556:  GOAL_SHORT frame_Run/C_cases_x #5 (Run (Data D) s).TCR_EL1 = s.TCR_EL1 ∧
+1559:  GOAL_SHORT frame_Run/C_cases_x #6 (Run (Debug D) s).TCR_EL1 = s.TCR_EL1 ∧
+1562:  GOAL_SHORT frame_Run/C_cases_x #7 (Run (Hint S') s).TCR_EL1 = s.TCR_EL1 ∧
+1565:  GOAL_SHORT frame_Run/C_cases_x #8 (Run (LoadStore L) s).TCR_EL1 = s.TCR_EL1 ∧
+1568:  GOAL_SHORT frame_Run/C_cases_x #9 (Run (MemoryBarrier p) s).TCR_EL1 = s.TCR_EL1 ∧
+1571:  GOAL_SHORT frame_Run/C_cases_x #10 (Run Reserved s).TCR_EL1 = s.TCR_EL1 ∧
+1574:  GOAL_SHORT frame_Run/C_cases_x #11 (Run (System S') s).TCR_EL1 = s.TCR_EL1 ∧
+1577:  GOAL_SHORT frame_Run/C_cases_x #12 (Run Unallocated s).TCR_EL1 = s.TCR_EL1 ∧
+1581:  GOAL_COUNT 6
+1582:  GOAL_BEGIN frame_Run/C_cases_x #1 assumptions 0 (ASM 0 = newest)
+1607:  GOAL_END frame_Run/C_cases_x #1
+1608:  GOAL_BEGIN frame_Run/C_cases_x #2 assumptions 0 (ASM 0 = newest)
+1624:  GOAL_END frame_Run/C_cases_x #2
+1625:  GOAL_BEGIN frame_Run/C_cases_x #3 assumptions 0 (ASM 0 = newest)
+1726:  GOAL_END frame_Run/C_cases_x #3
+1727:  GOAL_BEGIN frame_Run/C_cases_x #4 assumptions 0 (ASM 0 = newest)
+1743:  GOAL_END frame_Run/C_cases_x #4
+1744:  GOAL_SHORT frame_Run/C_cases_x #5 (case L of
+1753:  GOAL_SHORT frame_Run/C_cases_x #6 (case S' of
+1754:   ExceptionReturn => s.TCR_EL1
+1763:  GOAL_COUNT 0
+1765:  GOAL_COUNT 0
+1807:CHECKED_NOT_STORED Next_frame hyps 0
+1813:CHECKED_NOT_STORED NextStateARM8_frame hyps 0
+1825:EXPLORE_COMPLETE
+hash_parents exit 0
+go exit 0

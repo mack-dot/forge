@@ -31,3 +31,14 @@ Poly/ML 5.9.2 (Arm64), `hol` binary SHA-256 `cd6a5b30…`, heap `cake_compile_he
 | X13-PF | `PF-0004.go.log` last line `go exit 0`. 26 theorems: `refund_strict_parse_no_strict_prefix`, `refund_strict_parse_complete`, `refund_render_fields_prefix_code`, controls N1–N3. MACHINE-CHECKED, MODEL only, about the HOL function `refund_strict_parse` (defined in the script), not about `frame.py`. Review running. |
 | X9-LO | LO-0004 `go exit 1`: 27 lemmas CHECKED; two open (`extract_no_ext_stdout`, `refund_profile_a_sl_fd1`). MISSING. |
 | S6 | Link cases H0, H1, H2 started 08:52Z; logs `orch-A/link/run/attempt-0001/<CASE>.go.log`. |
+
+## Refresh 2026-11-19T09:38Z
+| Edge | Answer |
+|---|---|
+| S5 | R1, R2, R3, I1 `go exit 0` (R2, R3, I1 second runs after a wrapper path fix): U294 replayed and the stored theory imports. MACHINE-CHECKED (model). |
+| S6 | H0, H1, H2, H4, E0 `go exit 0`; NC1–NC6, NS1–NS3, NR1 (second run), NB1 `go exit 1`; PC1 `go exit 0`. Reasons: `link/run/attempt-0001/control_reasons.txt`. Review `review-link/REPORT.md`: holds; `check.py` defects A, B; bridge edges b, c, f, g, h open. |
+| X9-LO | `LO-0006.go.log` last line `go exit 0`: `refund_L_OUT`, `refund_L_OUT_prefix`, `refund_profile_a_sl_fd1`. MACHINE-CHECKED (model, `no_ext`, stored premises). Review running. |
+| X10 | `LE-0004.go.log` last line `go exit 0`: `evaluate_Halt_reg`, `refund_profile_a_sl_halt`. Model part only; the halt-value range and the real exit path stay open. |
+| X7-L2 | plus `L2b-0003.go.log` `go exit 0` (28 theorems). Review `review-L2b-PX/REPORT.md`: no `Vok` yet has all premises true. Edge X6→X7 NOT closed. |
+| X13-PF | plus `PX-0001.go.log` `go exit 0`: `refund_strict_parse_exact`, `refund_frame_decision`. |
+| X11e | `ES-0002.go.log` `go exit 1`: step lift open. |

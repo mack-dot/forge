@@ -6,3 +6,8 @@
   `NextStateARM8_erase` with explicit fault (`NONE`) preservation. Controls C1, C2.
 - After it, to reach `targetSem$evaluate`: the clock induction with untagged branch targets; the interference side; the
   bridge from `arm8$Next` to the stored target `THE o NextStateARM8` (needs a no-fault invariant).
+
+## EF-0001 (Orchestrator A): exit 0
+`erasure_frame_v3.sml` (ba8f9150…) ran as EF-0001 after the exploration EFx-0001 (exit 0, EXPLORE_COMPLETE): actual exit 0,
+EXACT_COMPLETE, STORED_THEOREMS 69: `W_nonvacuous`, 61 frame lemmas, `Next_frame`, `NextStateARM8_frame` (one model step never
+changes TCR_EL1, SCTLR_EL1, PSTATE.EL). The erase lemmas of ES-0002 stay open.
