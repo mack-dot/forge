@@ -28,12 +28,13 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Goal 19, native silicon sink: a refund boundary with no Node, V8, npm or SQLite in its path; a finite test of an unproved Rust sink in front of the M1 binary; one review with repairs — U700 to U706
+## Goal 19, native silicon sink: a refund boundary with no Node, V8, npm or SQLite in its path; a finite test of an unproved Rust sink in front of the M1 binary; one review with repairs; pull request 62 merged by the owner's account as `6d66a558` — U700 to U707
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. Branch
-`feat/native-silicon-sink` from `b9f2831c`; NOT merged. Nothing is
-proved: every row is a finite test on one machine.
+`feat/native-silicon-sink` from `b9f2831c`; merged as `6d66a558` by the
+account `mack-dot` (pull request 62); the agent did not merge. Nothing
+is proved: every row is a finite test on one machine.
 
 | EXIT command/check | Actual exit/result | Result |
 | --- | --- | --- |
@@ -47,7 +48,7 @@ proved: every row is a finite test on one machine.
 | 10 GiB flood with no line end into the sink |inside the suite|peak resident memory 1.86 MiB; next request in 13 to 15 ms |
 | "commit under 2 ms" |NOT REACHED|minimum 7.95 ms; p50 11 ms; p99 45 to 48 ms; asserted bound 250 ms (owner) |
 | regression on a scratch clone of the first commit `a51984bb`: 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links; the EXIT scripts of Slices 1 to 3, of the M1 conformance and of this work, each `--case evidence` |0 each (28); 0; 0; 0 each (5)|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…` byte-identical to the tracked records; 0 protected paths changed |
-| `git push`; `gh pr create` (pull request 62); hosted `gate/pr_check.py`, head `c3889be2`, run 44591773836 |0; 0; 3|UNSUPPORTED, as expected (14 coverage findings); no administrator rights; the agent did not merge |
+| `git push`; `gh pr create` (pull request 62); hosted `gate/pr_check.py`, heads `c3889be2` and `e280addf`, runs 44591773836 and 44592215424 |0; 0; 3; 3|UNSUPPORTED, as expected (14 coverage findings); no administrator rights; the agent did not merge |
 | every HOL, Holmake and Dafny step; Stages 7, 9, 10 |NOT RUN|not part of this work |
 
 [Report](proposals/forge2-native-silicon-sink/REPORT.md).

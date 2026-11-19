@@ -18539,3 +18539,32 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label. M1 open. `end_to_end=false`.
 - Next check: the hosted result of the third commit; then the owner's
   decision.
+
+## U707 — goal 19: second hosted result; pull request 62 merged by the owner's account; what stays different from the text of the directive
+
+- Status: 2026-11-19, about 19:00Z. Refs U700, U701, U702, U706.
+- Actual: hosted `gate/pr_check.py`, pull request 62, head `e280addf`
+  (the third commit, documents only), run 44592215424: exit 3,
+  UNSUPPORTED, as expected (14 coverage findings).
+- Observed with `gh pr view 62`: state MERGED; merged by the account
+  `mack-dot` on 2026-11-19T18:52:51Z; commit `6d66a558` on `main`. I
+  did not merge and used no administrator right. I have no direct word
+  of the owner in this session about that merge: I know the account,
+  not the hand. Another session of the same owner had told me that the
+  owner wanted this pull request merged after its own.
+- After the merge: the files of this work on `main` are equal to the
+  branch head `e280addf` (`git diff`: no difference); the bundle on
+  `main` has SHA-256 `1f569fcf…`. Nothing ran again on `main`.
+- Two requirements of the directive's text are NOT met as written,
+  and stay so: "commits in under 2 milliseconds" (measured minimum
+  7.95 ms; the owner's replacement is an assertion below 250 ms,
+  U701) and "<200-line" (the file has 248 lines in a compact layout;
+  `rustfmt` prints 521; the owner's replacement is "up to 250 lines",
+  U702). Both replacements are owner selections in the question
+  dialog (U700). The reading of the line limit for a compact layout,
+  and exit codes 19 and 20, were put to the owner in the pull request;
+  the merge is not an answer in words.
+- This entry is in a later pull request (documents only). Its own
+  hosted run is not recorded: the chain of records stops here.
+- Impact: none on any stage label. M1 open. `end_to_end=false`.
+- Next check: none planned by me. A next directive of the owner.

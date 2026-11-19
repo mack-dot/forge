@@ -11,7 +11,7 @@ A SIGKILL is not a power loss.
 
 Directive and owner decisions: [OWNER_TEXTS.md](OWNER_TEXTS.md).
 Review and its disposition: [REVIEW.md](REVIEW.md).
-Entries: `unsure.md` U700 to U706.
+Entries: `unsure.md` U700 to U707.
 
 ## 1. What was built
 
@@ -339,7 +339,9 @@ second commit (entry U706): documents only again.
 | `git push -u origin feat/native-silicon-sink`; `gh pr create` (pull request 62) |0; 0|no administrator rights used; the agent did not merge |
 | `check_links.py` for `ROADMAP.md`, `unsure.md`, this report, the review, the owner's texts; `check_frozen_pr_gate.py HEAD`, on the second commit |0 each (5); 0|run in the working repository, not in a clone |
 | hosted `gate/pr_check.py`, pull request 62, head `c3889be2`, run 44591773836 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 14 coverage findings (changed paths that no obligation lists) |
-| hosted `gate/pr_check.py` for the third commit (this record) |NOT RECORDED here|it runs after the push of this record; expected 3 |
+| hosted `gate/pr_check.py`, pull request 62, head `e280addf` (the third commit), run 44592215424 |3|UNSUPPORTED, as expected: 14 coverage findings |
+| merge of pull request 62 |done by the account `mack-dot` on 2026-11-19T18:52:51Z; commit `6d66a558`|the agent did not merge and used no administrator right. After the merge: the files of this work on `main` are equal to the branch head `e280addf` (`git diff`: no difference); the bundle on `main` is `1f569fcf…` |
+| this row and entry U707 (a later pull request, documents only): its own hosted run |NOT RECORDED|the chain of records stops here by statement |
 
 The Stage runs wrote result files under `results/` in the clone only.
 The clone is a throwaway folder; nothing of it is in the repository.
