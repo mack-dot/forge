@@ -5,7 +5,7 @@ Agents never merge. `end_to_end=false`.
 
 | # | Gate | Starts when | Owner text |
 |---|---|---|---|
-| 0 | Goal 20: `forge-airlock` SDK (`feat/zero-babysitting-sdk`) | running | [Goal 20 brief](../forge2-goal20-sdk/BRIEF.md) (on the Goal 20 branch until it merges) |
+| 0 | Goal 20: `forge-airlock` SDK (`feat/zero-babysitting-sdk`) | running | `proposals/forge2-goal20-sdk/BRIEF.md` (on the Goal 20 branch until it merges) |
 | 1a | APEX-3 step 3A ONLY: read-only design and wall-time estimate for the WAL fold in HOL4/CakeML (item F2.7); stops before `cake_compile` | Goal 20 merged; runs alongside gate 1 | Owner word 2026-11-19: "yes queue it and get a team of subagents ready for it"; brief: [APEX3_STEP3A_BRIEF.md](APEX3_STEP3A_BRIEF.md) |
 | 1 | F1, Goal 21: intent clearing | Goal 20 merged | [DIRECTIVE.md](DIRECTIVE.md) |
 | 2 | APEX-1: MCP `stdio` airlock | F1 merged | [OWNER_TEXTS.md, Text 7](../forge2-native-silicon-sink/OWNER_TEXTS.md) |
