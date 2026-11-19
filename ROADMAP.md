@@ -28,6 +28,23 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Wave Gate 4: Stage 9 lock inspection and a printed benchmark plan (no protected file changed; Stage 9 NOT unlocked) — U468
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 stays deferred until the owner's explicit unlock
+word. No EXIT case of Stage 9 was run. No external model call was made.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| one-off, read-only, `main` `b42c6ff8`: SHA-256 of each repository file that `gate/provenance/implementation.lock` lists, against the lock |8 of 100 differ|`gate/approval.py`, `gate/backends/dafny.py`, `gate/incremental.py`, `gate/refund.py`, `scripts/exit_stage_5.py`, `spec/refund/spec.lock`, `toolchain/linux-pins.json`, `toolchain/pins.json` |
+| the same: tracked files under `gate/` that the lock does not list |found|among them `gate/ratification.py` (new since Round 4); whether the lock must take it is an owner decision |
+| `scripts/exit_stage_9.py` (six cases); the hosted signing workflow |NOT RUN|deferred; the workflow needs `FORGE_SIGNING_AUTHORIZED` |
+| the benchmark of the plan (three regimes) |NOT RUN|a plan only; cost and time in it are estimates on stated assumptions |
+
+The plan was printed for the owner in the session (U468 holds its
+points). It approves nothing.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Wave Gate 3: `scripts/demo_gauntlet.py`, a live demonstration on the real components of Slices 1 to 3; a 10 GiB flood run; one review with repairs; records of pull request 50 — U465, U466, U467
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
@@ -53,7 +70,9 @@ of the script is not a proof and adds no evidence class.
 | the same clone: the unchanged demo with one component broken, 7 mutations (`run_broken_acts.py`) |1 for 7 of 7|unchanged clone: 0 before (74 s) and 0 after (73 s) |
 | Stage 7; Stage 9; Stage 10; any HOL process; the EXIT scripts in the working tree |NOT RUN|the EXIT scripts ran in the clone only |
 | the staged tree before the commit: `check_frozen_pr_gate.py`; `check_links.py` for `README.md`, `ROADMAP.md`, `unsure.md`, the demo document, this gate's report and review; for all 94 Markdown files outside `results/`; `tsc --noEmit` |0; 0 each (6); 1; 0|only the 2 older Stage 9 links; 0 protected paths among the 15 staged files; after the regression only documents and one expected text of the mutation runner changed |
-| commit; push of branch `demo/skeptic-gauntlet`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|expected hosted result: exit 3 (UNSUPPORTED) |
+| rows added with the Wave Gate 4 records (U468): commit `7deb9078`; `git push -u origin demo/skeptic-gauntlet`; `gh pr create` (pull request 51) |0; 0|no administrator rights at that step |
+| hosted `gate/pr_check.py`, pull request 51, head `7deb9078`, run 44447867201 (Linux profile) |3|UNSUPPORTED, as expected: 15 coverage findings |
+| `gh pr merge 51 --squash --admin` (the owner's word for this one pull request: answer "Merge 51 for me" to a question of the agent) |0|squash commit `b42c6ff8`, 2026-11-19 03:20Z; OVERRIDE of the review rule and of the red gate status; `git diff --quiet origin/main 7deb9078` exit 0 |
 
 [Demo document](docs/demo-gauntlet.md).
 [Wave Gate 3 report](proposals/forge2-demo-gauntlet/REPORT.md).

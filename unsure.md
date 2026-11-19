@@ -17104,3 +17104,43 @@ curl: (6) Could not resolve host: github.com
   open. Stage 12 unauthorized. end_to_end=false.
 - Next check: the hosted gate result; the owner's merge decision. Then
   Wave Gate 4: a printed Stage 9 plan only, no edit.
+
+## U468 — Pull request 51 (Wave Gate 3) merged with administrator rights on the owner's word; Wave Gate 4: Stage 9 lock inspected, benchmark plan printed, nothing unlocked
+- Status: 2026-11-19 03:20Z to 03:30Z (system clock and GitHub). Refs
+  U465, U467, U170 to U176 (Stages 9 and 10), R4C-1.
+- Pull request 51: commit 7deb9078 pushed; pull request opened with no
+  administrator rights. Hosted gate/pr_check.py, run 44447867201: exit
+  3, UNSUPPORTED, 15 coverage findings, as expected. I asked the owner
+  one question; the owner chose "Merge 51 for me". `gh pr merge 51
+  --squash --admin`, exit 0, squash commit b42c6ff8 at 03:20Z. `git
+  diff --quiet origin/main 7deb9078`: exit 0. An OVERRIDE of the
+  review rule and of the red gate status, for this one pull request.
+- Wave Gate 4, observations (read-only, main b42c6ff8): the lock
+  gate/provenance/implementation.lock lists 100 repository files; 8
+  have another SHA-256 on main: gate/approval.py,
+  gate/backends/dafny.py, gate/incremental.py, gate/refund.py,
+  scripts/exit_stage_5.py, spec/refund/spec.lock,
+  toolchain/linux-pins.json, toolchain/pins.json. The lock also names
+  45 files of the container's Python packages; they are not repository
+  files and were not compared. gate/ratification.py is tracked and is
+  in no lock entry.
+- The printed plan (my proposal, not a result): one exact-diff
+  proposal for the lock, the owner's merge, one hosted signing run, the
+  six Stage 9 EXIT cases; then a benchmark of three regimes (agent loop
+  with unit tests; the same with an LLM reviewer; Forge) on 60 frozen
+  tasks (boundary bugs, races or retries, replays), three seeds, with
+  three measures: escaped bugs per class, bytes a person must read
+  against bytes of the code diff, checker starts per optimizer
+  exchange.
+- Uncertainty in the plan: the cost (about 700 US dollars, proposed
+  cap 900) rests on assumed token counts per run and on assumed prices
+  that I did not check against a price list. The run time (about 9
+  hours of agent runs, about 3 hours of local Dafny) is an estimate.
+  The run time of the six Stage 9 EXIT cases is not measured. Whether
+  the lock must list gate/ratification.py is not decided.
+- NOT DONE, by the directive: no protected file was changed; no model
+  call was made; Stage 9 was not unlocked.
+- Impact: none on a claim. CURRENT none. M1 open. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: the owner's explicit unlock word for Stage 9, and the
+  decisions of the plan (lock content, corpus, budget cap).
