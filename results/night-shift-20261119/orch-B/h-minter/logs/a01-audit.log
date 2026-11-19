@@ -1,0 +1,29 @@
+# owner=h-minter start=2026-11-19T14:44:21Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1241
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-file <REPO>/results/night-shift-20261119/orch-B/h-minter/logs/a01-audit.md IssueOnce.dfy
+# memory free percent: 45
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        2.92 real         1.96 user         0.17 sys
+           122535936  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               11569  page reclaims
+                 577  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  36  voluntary context switches
+                9721  involuntary context switches
+         13463915642  instructions retired
+          6265231263  cycles elapsed
+           113460400  peak memory footprint
+# end=2026-11-19T14:44:24Z
+exit 0

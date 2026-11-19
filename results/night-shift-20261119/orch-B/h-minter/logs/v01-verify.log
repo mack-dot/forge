@@ -1,0 +1,54 @@
+# owner=h-minter start=2026-11-19T14:36:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 877
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/h-minter/logs/v01-verify.csv IssueOnce.dfy
+# memory free percent: 37
+IssueOnce.dfy(117,9): Error: Verification out of resource (IssueOnce.RunSeq)
+    |
+117 |   method RunSeq(m0: Memory, calls: seq<Call>) returns (m: Memory, outs: seq<Outcome>)
+    |          ^^^^^^
+
+IssueOnce.dfy(184,8): Error: Verification out of resource (IssueOnce.IssuableT)
+    |
+184 |   lemma IssuableT(rq: string, amount: int)
+    |         ^^^^^^^^^
+
+IssueOnce.dfy(195,9): Error: Verification out of resource (IssueOnce.ZeroZeroPositive)
+    |
+195 |   method ZeroZeroPositive() returns (a: Outcome, b: Outcome, c: Outcome)
+    |          ^^^^^^^^^^^^^^^^
+
+IssueOnce.dfy(209,9): Error: Verification out of resource (IssueOnce.Abandoned)
+    |
+209 |   method Abandoned() returns (a: Outcome, b: Outcome, a2: Outcome)
+    |          ^^^^^^^^^
+
+IssueOnce.dfy(265,9): Error: Verification out of resource (IssueOnce.OldFreeze)
+    |
+265 |   method OldFreeze() returns (r0: SM.Option<Bytes>, r1: SM.Option<Bytes>)
+    |          ^^^^^^^^^
+
+
+Dafny program verifier finished with 149 verified, 0 errors, 5 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/h-minter/logs/v01-verify.csv
+       24.54 real        11.17 user         1.75 sys
+           163463168  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               65688  page reclaims
+                1574  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   7  signals received
+                 936  voluntary context switches
+              275578  involuntary context switches
+         77894866801  instructions retired
+         38132800655  cycles elapsed
+           185107656  peak memory footprint
+# end=2026-11-19T14:37:22Z
+exit 4

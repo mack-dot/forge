@@ -1,0 +1,48 @@
+# owner=h-minter start=2026-11-19T14:42:38Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 701
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU3_key_per_charge.dfy
+# memory free percent: 28
+MU3_key_per_charge.dfy(245,20): Error: a precondition for this call could not be proved
+    |
+245 |     m, b := NoFreeze(m, W_PRE, IB.T(W_PRE, "rz_2", 0), SM.ZERO64, SM.ZERO64, IB.HEXA);
+    |                     ^
+
+MU3_key_per_charge.dfy(200,27): Related location: this is the precondition that could not be proved
+    |
+200 |     requires KeyOf(pre, t) !in m && Issuable(pre, t, sh, ch, h)
+    |                            ^^^
+
+MU3_key_per_charge.dfy(259,21): Error: a precondition for this call could not be proved
+    |
+259 |     m2, b := NoFreeze(m1, W_PRE, IB.T(W_PRE, "rb_1", 50), SM.ZERO64, SM.ZERO64, IB.HEXA);
+    |                      ^
+
+MU3_key_per_charge.dfy(200,27): Related location: this is the precondition that could not be proved
+    |
+200 |     requires KeyOf(pre, t) !in m && Issuable(pre, t, sh, ch, h)
+    |                            ^^^
+
+
+Dafny program verifier finished with 158 verified, 2 errors
+       32.52 real        12.78 user         1.88 sys
+           177586176  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               73043  page reclaims
+                 302  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  12  signals received
+                 936  voluntary context switches
+              298442  involuntary context switches
+         84184933229  instructions retired
+         42978393711  cycles elapsed
+           186975528  peak memory footprint
+# end=2026-11-19T14:43:11Z
+exit 4

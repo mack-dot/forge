@@ -1,0 +1,33 @@
+# owner=h-minter start=2026-11-19T14:40:35Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1693
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects MU1_no_lookup.dfy
+# memory free percent: 35
+MU1_no_lookup.dfy(76,9): Error: Verification out of resource (IssueOnce.Issue)
+   |
+76 |   method Issue(m: Memory, pre: F.Charge, t: F.Transition, sh: string, ch: string, h: string)
+   |          ^^^^^
+
+
+Dafny program verifier finished with 159 verified, 0 errors, 1 out of resource
+       45.91 real        13.64 user         2.38 sys
+           165183488  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              120769  page reclaims
+                 637  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  10  signals received
+                1504  voluntary context switches
+              357712  involuntary context switches
+         78553111559  instructions retired
+         40123963679  cycles elapsed
+           189875496  peak memory footprint
+# end=2026-11-19T14:41:22Z
+exit 4

@@ -1,0 +1,211 @@
+{
+ "node": "v24.3.0",
+ "realReady": {
+  "ready": true,
+  "specLockSha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b",
+  "checkerSha256": "f42af94e32b2cb394c6a80a5013c2beadcb977ef9ca1814a97c5b0d2470520d8",
+  "singleUse": true
+ },
+ "draftReady": {
+  "ready": true,
+  "specLockSha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b",
+  "checkerSha256": "e9616ea7dabb4ec066b5781ef8557df8d37e71218bf26b7c17d602349d534584",
+  "singleUse": true
+ },
+ "totals": {
+  "cases": 581,
+  "bothIssue": 14,
+  "bothRefuse": 535,
+  "zeroIssued": 1,
+  "bodyEqualModuloChecker": 14,
+  "draftSigOk": 14,
+  "realSigOk": 14,
+  "draftVerbatimInLine": 14,
+  "sinkCommitted": 14,
+  "sinkReplayed": 14,
+  "sinkStateOk": 14,
+  "realSinkCommitted": 14,
+  "crossPinRejected": 14,
+  "auditClean": 14
+ },
+ "direct": {
+  "authorizedIssues": true,
+  "zeroIssues": true,
+  "unauthorizedRefused": true,
+  "nulChargeIdRefused": true,
+  "nulRequestIdRefused": true,
+  "len257Refused": true,
+  "len256Issues": true,
+  "badHashRefused": true,
+  "longText20kRefused": true
+ },
+ "differences": 32,
+ "diffs": [
+  {
+   "case": "requestId:plain",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:plain",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:quote",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:quote",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:backslash",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:backslash",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:ctl01",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:ctl01",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:nl-tab",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:nl-tab",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:ctl1f-7f",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:ctl1f-7f",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:u2028",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:u2028",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:nonBMP",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:nonBMP",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:latin",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:latin",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:len256",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:len256",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:nonBMP128(256u)",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:nonBMP128(256u)",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:esc-text",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:esc-text",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "requestId:json-inject",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "chargeId0:json-inject",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "reasonset:duplicate_charge",
+   "real": "another transition is already signed for this pre-state",
+   "draft": "issue"
+  },
+  {
+   "case": "money:0/0/amt0/entrue",
+   "real": "issue",
+   "draft": "another candidate is already signed for this request id"
+  },
+  {
+   "case": "money:100/0/amt0/entrue",
+   "real": "issue",
+   "draft": "another candidate is already signed for this request id"
+  },
+  {
+   "case": "money:100/100/amt0/entrue",
+   "real": "issue",
+   "draft": "another candidate is already signed for this request id"
+  },
+  {
+   "case": "money:9223372036854775807/9223372036854775807/amt0/entrue",
+   "real": "issue",
+   "draft": "another candidate is already signed for this request id"
+  },
+  {
+   "case": "money:9223372036854775807/1/amt0/entrue",
+   "real": "issue",
+   "draft": "another candidate is already signed for this request id"
+  }
+ ],
+ "refusalReasons": {
+  "core: Refuse | core: Refuse": 260,
+  "shape | shape": 264,
+  "another transition is already signed for this pre-state | another candidate is already signed for this request id": 9,
+  "message shape | message shape": 2
+ }
+}

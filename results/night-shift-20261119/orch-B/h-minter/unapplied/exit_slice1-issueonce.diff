@@ -1,0 +1,25 @@
+--- a/scripts/exit_slice1.py	2026-11-19 09:50:25.300119956 -0500
++++ b/scripts/exit_slice1.py	2026-11-19 09:50:25.353639234 -0500
+@@ -35,9 +35,10 @@
+ BINDING = 'tests/refund-finality/Bindings.dfy'
+ FIXTURES = 'tests/refund-finality/fixtures'
+ SUITE = 'tests/refund-finality/suite.ts'
+-# The issuer's compiled module: IssueBytes2 (it calls RefundFinality.Check and returns the body bytes to sign).
+-ISSUER_CORE = 'impl/finality-core/IssueBytes2.dfy'
+-FOOTER = b'\nmodule.exports = { IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
++# The issuer's compiled module: IssueOnce (the (charge id, request id) memory rule around IssueBytes2.IssueTokenBytes,
++# which calls RefundFinality.Check and returns the body bytes to sign).
++ISSUER_CORE = 'impl/finality-core/IssueOnce.dfy'
++FOOTER = b'\nmodule.exports = { IssueOnce, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+ # The sink's compiled module: ShellCoreV6 (StepQ6 decides each commit; the ShellCoreV5 fold AInit/AuditStep/AuditEnd
+ # decides the start-up audit and every re-audit). It is committed at SINK_MODULE (sink.ts loads it from there);
+ # this script rebuilds it and requires byte equality.
+@@ -46,7 +47,7 @@
+ SINK_FOOTER = (b'module.exports = { Shell6: ShellCoreV6, Shell5: ShellCoreV5, Shell4: ShellCoreV4, Shell: ShellCoreV3, '
+                b'C: SinkCoreV3, F: RefundFinality, R: Refund, rt: _dafny, BigNumber };\n')
+ FINALITY_CORE = ['impl/finality-core/' + name for name in
+-                 ('IssueBytes2.dfy', 'SerModel.dfy', 'ShellCoreV6.dfy', 'ShellCoreV5.dfy', 'ShellCoreV4.dfy',
++                 ('IssueOnce.dfy', 'IssueBytes2.dfy', 'SerModel.dfy', 'ShellCoreV6.dfy', 'ShellCoreV5.dfy', 'ShellCoreV4.dfy',
+                   'ShellCoreV3.dfy', 'SinkCoreV3.dfy')]
+ REQUIRED = {
+     'Refund.Assess (correctness)', 'Refund.Assess (well-formedness)',

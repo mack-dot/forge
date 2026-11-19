@@ -1,0 +1,49 @@
+{
+ "node": "v24.3.0",
+ "realReady": {
+  "ready": true,
+  "specLockSha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b",
+  "checkerSha256": "f42af94e32b2cb394c6a80a5013c2beadcb977ef9ca1814a97c5b0d2470520d8",
+  "singleUse": false
+ },
+ "draftReady": {
+  "ready": true,
+  "specLockSha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b",
+  "checkerSha256": "e9616ea7dabb4ec066b5781ef8557df8d37e71218bf26b7c17d602349d534584",
+  "singleUse": false
+ },
+ "totals": {
+  "cases": 581,
+  "bothIssue": 55,
+  "bothRefuse": 526,
+  "zeroIssued": 19,
+  "bodyEqualModuloChecker": 55,
+  "draftSigOk": 55,
+  "realSigOk": 55,
+  "draftVerbatimInLine": 55,
+  "sinkCommitted": 55,
+  "sinkReplayed": 55,
+  "sinkStateOk": 55,
+  "realSinkCommitted": 55,
+  "crossPinRejected": 55,
+  "auditClean": 55
+ },
+ "direct": {
+  "authorizedIssues": true,
+  "zeroIssues": true,
+  "unauthorizedRefused": true,
+  "nulChargeIdRefused": true,
+  "nulRequestIdRefused": true,
+  "len257Refused": true,
+  "len256Issues": true,
+  "badHashRefused": true,
+  "longText20kRefused": true
+ },
+ "differences": 0,
+ "diffs": [],
+ "refusalReasons": {
+  "core: Refuse | core: Refuse": 260,
+  "shape | shape": 264,
+  "message shape | message shape": 2
+ }
+}

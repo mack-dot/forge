@@ -1,0 +1,89 @@
+# owner=h-minter start=2026-11-19T14:37:57Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter/tree/impl/finality-core
+# power: Now drawing from 'AC Power'
+# swap free MiB: 609
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/h-minter/logs/v02-verify.csv IssueOnce.dfy
+# memory free percent: 29
+IssueOnce.dfy(119,9): Error: Verification out of resource (IssueOnce.RunSeq)
+    |
+119 |   method RunSeq(m0: Memory, calls: seq<Call>) returns (m: Memory, outs: seq<Outcome>)
+    |          ^^^^^^
+
+IssueOnce.dfy(214,2): Error: a postcondition could not be proved on this return path
+    |
+214 |   {
+    |   ^
+
+IssueOnce.dfy(213,24): Related location: this is the postcondition that could not be proved
+    |
+213 |     ensures F.Authorizes(W_PRE, IB.T(W_PRE, rq, amount))
+    |                         ^
+
+<REPO>/results/night-shift-20261119/orch-B/h-minter/tree/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
+   |
+31 |     R.Eligible(ContextOf(pre, t.request.requestId), R.Candidate(t.request.amount, t.request.reason)) &&
+   |               ^
+
+IssueOnce.dfy(227,20): Error: a precondition for this call could not be proved
+    |
+227 |     m, b := NoFreeze(m, W_PRE, IB.T(W_PRE, "rz_2", 0), SM.ZERO64, SM.ZERO64, IB.HEXA);
+    |                     ^
+
+IssueOnce.dfy(185,27): Related location: this is the precondition that could not be proved
+    |
+185 |     requires KeyOf(pre, t) !in m && Issuable(pre, t, sh, ch, h)
+    |                            ^^^
+
+IssueOnce.dfy(228,20): Error: a precondition for this call could not be proved
+    |
+228 |     m, c := NoFreeze(m, W_PRE, IB.T(W_PRE, "rp_1", 40), SM.ZERO64, SM.ZERO64, IB.HEXA);
+    |                     ^
+
+IssueOnce.dfy(185,27): Related location: this is the precondition that could not be proved
+    |
+185 |     requires KeyOf(pre, t) !in m && Issuable(pre, t, sh, ch, h)
+    |                            ^^^
+
+IssueOnce.dfy(235,2): Error: a postcondition could not be proved on this return path
+    |
+235 |   {
+    |   ^
+
+IssueOnce.dfy(234,41): Related location: this is the postcondition that could not be proved
+    |
+234 |     ensures a.Issued? && b.Issued? && a2.Replayed? && a2.bytes == a.bytes
+    |                                          ^^^^^^^^^
+
+IssueOnce.dfy(241,21): Error: a precondition for this call could not be proved
+    |
+241 |     m2, b := NoFreeze(m1, W_PRE, IB.T(W_PRE, "rb_1", 50), SM.ZERO64, SM.ZERO64, IB.HEXA);
+    |                      ^
+
+IssueOnce.dfy(185,27): Related location: this is the precondition that could not be proved
+    |
+185 |     requires KeyOf(pre, t) !in m && Issuable(pre, t, sh, ch, h)
+    |                            ^^^
+
+
+Dafny program verifier finished with 153 verified, 5 errors, 1 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/h-minter/logs/v02-verify.csv
+       56.08 real        12.05 user         2.68 sys
+           180469760  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              154407  page reclaims
+                2467  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  15  signals received
+                1058  voluntary context switches
+              352763  involuntary context switches
+         81236858416  instructions retired
+         43490695816  cycles elapsed
+           192857336  peak memory footprint
+# end=2026-11-19T14:38:54Z
+exit 4

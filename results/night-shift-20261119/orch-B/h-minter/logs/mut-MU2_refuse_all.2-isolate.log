@@ -1,0 +1,38 @@
+# owner=h-minter start=2026-11-19T14:51:51Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-minter/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 646
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --isolate-assertions --filter-symbol Issue MU2_refuse_all.dfy
+# memory free percent: 56
+MU2_refuse_all.dfy(79,22): Error: Verification out of resource (IssueOnce.Issue)
+   |
+79 |     ensures o.Signs() <==> Issuable(pre, t, sh, ch, h) &&
+   |                       ^^^^
+
+MU2_refuse_all.dfy(86,29): Error: Verification out of resource (IssueOnce.Issue)
+   |
+86 |     ensures o.RefusedByCore? <==> !Issuable(pre, t, sh, ch, h)
+   |                              ^^^^
+
+
+Dafny program verifier finished with 695 verified, 0 errors, 2 out of resource
+       50.76 real        27.39 user         3.23 sys
+           176095232  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               50314  page reclaims
+                  72  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  12  signals received
+                8647  voluntary context switches
+              399798  involuntary context switches
+        231829011446  instructions retired
+         92406958833  cycles elapsed
+           164775112  peak memory footprint
+# end=2026-11-19T14:52:42Z
+exit 4
