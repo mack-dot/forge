@@ -212,3 +212,13 @@ e-expect, r-reqid (review), d-corebacked, r-signing (adversarial review of V2), 
 - When AC returns: nothing is queued by B. Possible next steps: re-check r-subset3's result; a last ledger note; final state.
 - 14:15:16Z ROADMAP part 3 (U559–U566) and MORNING addendum 22 written and committed. On battery: only light work.
 - 14:15:42Z r-subset3 REPORTED (PARTIAL; battery): no bypass in tried classes; 10 more false refusals unverified. U567, addendum 23. No worker runs now. On battery: no Dafny, no heavy. Queue for AC: verify r-subset3/subs/correct F01–F12 (light); finish the attack list (new worker); optional: parser-based checker design.
+- 14:16:27Z AC power is back by B's measurement (pmset: AC Power) at commit 4af09308 (U567, addendum 23). Worker r-subset3b started (finishes the review of the third rule; checks power before each run). Running: r-subset3b. B holds no lock.
+
+## PHASE 2 started 2026-11-19T14:18:31Z (DIRECTIVE-2.md; PROTOCOL.md phase 2 amendment)
+- Role: implementation hardening (items 1–7). Workers up to 6. unsure: continue to U579, then U620–U659. Push allowed: `git push origin nightshift/B-trust` only (explicit refspec; never main; never force; no PR).
+- B-10 decided by the owner: governing context = approved versioned policy + authoritative persisted charge state. Recorded U568; leftover question in OWNER_REQUIRED B-12 (request-open; post-state rule).
+- Orchestrator C (red team): agent ID a4f587cb1a34235e8; attack log orch-C/ATTACKS.md. Each confirmed counterexample → a permanent regression on B's branch; tell C when a fix is ready for re-attack. B does not write C's attacks.
+- A holds hol.lock (a HOL process runs, PID 84500 at 14:18:31Z): no heavy step for B until A grants a window.
+- Integration model: workers work on small scratch exports (git archive of the branch for ts tests impl scripts spec only) and deliver DIFFS against the branch head; B applies them in the worktree, checks, commits, pushes.
+- 14:19:03Z PUSHED: git push origin nightshift/B-trust:nightshift/B-trust → new remote branch at de538868 (protected diff lines 0). PHASE2_RULES.md written.
+- 14:22:32Z Phase 2 workers started (6 running with r-subset3b): h-sink (owns ts/refund-finality/sink.ts, dispatcher.ts, core/, impl/finality-core/, scripts/exit_slice1.py), h-regress (owns tests/refund-finality/regress/), h-anchor (design + Dafny model; no branch path), h-specdiff (owns tests/refund-finality/spec-conformance/), h-gate (cause table; JS-AST checker; unapplied gate diffs), r-subset3b. C started (wave 1 against de538868/4af09308 + adoption-v6.diff); B answered with known limits and the hand-off format. On each worker report: apply its diff in the worktree (git apply --check first), run its light checks, commit, push, tell C the SHA.

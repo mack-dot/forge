@@ -1,0 +1,82 @@
+{
+ "P1": {
+  "started": true,
+  "initOk": true,
+  "commit": {
+   "status": "rejected",
+   "reason": "not authorized by the approved relation for the stored state"
+  },
+  "state": "{\"chargeId\":\"ch_1\",\"original\":\"100\",\"refundEnabled\":true,\"remaining\":\"1000\"}"
+ },
+ "P2": {
+  "status": "rejected",
+  "reason": "not authorized by the approved relation for the stored state"
+ },
+ "P3": {
+  "onDefault": {
+   "status": "rejected",
+   "reason": "the sink has no stored state"
+  },
+  "onS0": {
+   "status": "rejected",
+   "reason": "the sink has no stored state"
+  }
+ },
+ "P4": {
+  "a1": {
+   "status": "committed"
+  },
+  "a2": {
+   "status": "rejected",
+   "reason": "request id is already settled with another token"
+  },
+  "c1": {
+   "status": "committed"
+  },
+  "c2": {
+   "status": "committed"
+  },
+  "settledIds": [
+   [
+    "72",
+    "71",
+    "5f",
+    "1f600"
+   ],
+   [
+    "72",
+    "71",
+    "5f",
+    "e9"
+   ],
+   [
+    "72",
+    "71",
+    "5f",
+    "65",
+    "301"
+   ]
+  ],
+  "restartOk": true
+ },
+ "P5": {
+  "r1": {
+   "status": "rejected",
+   "reason": "not authorized by the approved relation for the stored state"
+  },
+  "r2": {
+   "status": "rejected",
+   "reason": "not authorized by the approved relation for the stored state"
+  },
+  "r3": {
+   "status": "rejected",
+   "reason": "not authorized by the approved relation for the stored state"
+  },
+  "r4": {
+   "status": "rejected",
+   "reason": "not authorized by the approved relation for the stored state"
+  },
+  "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}"
+ }
+}
+SAFE: no probe committed outside the lemma's conclusion

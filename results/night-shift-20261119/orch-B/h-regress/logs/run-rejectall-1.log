@@ -1,0 +1,25 @@
+# start=2026-11-19T14:28:25Z node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-regress/work/tests/refund-finality/regress/run.ts <REPO>/results/night-shift-20261119/orch-B/h-regress/standins/reject_all_sink.ts <REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/dispatcher.ts --encoding <REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/encoding.ts
+# sink=<REPO>/results/night-shift-20261119/orch-B/h-regress/standins/reject_all_sink.ts
+# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/dispatcher.ts
+# encoding=<REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/encoding.ts
+# expectedHeadMode=none node=v24.3.0
+FAIL C1-honest-refund: commit=rejected rq_1: outbox=0 effects=0 (want 1 and 1)
+FAIL C2-zero-amount-refund: commit=rejected rq_z: outbox=0 effects=0 (want 1 and 1)
+FAIL C3-two-zero-refunds: commits=rejected,rejected rq_z1: outbox=0 effects=0 (want 1 and 1)
+FAIL C4-replay-rejected: first=rejected replay=rejected rq_1: outbox=0 effects=0 (want 1 and 1)
+FAIL C5-largest-refund: commits=rejected,rejected remaining=1000 rq_1: outbox=0 effects=0 (want 1 and 1)
+FAIL X1-reqid-mismatch: honest refund not dispatched exactly once: faulty=rejected honest=rejected outbox(rq_victim)=0 effects(rq_victim)=0
+FAIL X2-cross-charge: B's honest refund not dispatched exactly once: A=rejected B=rejected effects(ch_2,rq_x)=0 emitted(ch_2)=0 A.outbox(foreign)=0
+FAIL X2b-foreign-post-locks-store: honest ch_1 refund not dispatched exactly once: foreign=rejected storedChargeId=ch_1 honest=rejected effects(rq_h)=0
+PASS X3-upgrade-legacy-gap: honest=rejected effects(rq_victim) before=1 after=0 outbox(rq_victim)=1
+FAIL X4-signed-unauthorized: UNAUTHORIZED EFFECT in a-amount-above-remaining(honest not dispatched once),b-post-disables-refunds(honest not dispatched once),c-post-remaining-wrong(honest not dispatched once),d-unapproved-reason(honest not dispatched once),e-post-unchanged(honest not dispatched once): a-amount-above-remaining:rejected/ok=rejected/eff=0+0 b-post-disables-refunds:rejected/ok=rejected/eff=0+0 c-post-remaining-wrong:rejected/ok=rejected/eff=0+0 d-unapproved-reason:rejected/ok=rejected/eff=0+0 e-post-unchanged:rejected/ok=rejected/eff=0+0
+PASS X5a-hostile-balance-reset: rq_1=rejected rq_2=rejected outboxTotal=0 emittedTotal=0 original=1000
+PASS X5b-hostile-outbox-rewrite: rq_1=rejected rq_2=rejected unsignedEffects=0 rewrittenRowPresent=false rq_2SettledOnIt=false
+FAIL X6-Z1-zero-row-deleted-recommitted: setup: honest commits refused: honest=rejected,rejected,rejected redelivery=rejected outbox(rq_z1)=0 effects(rq_z1)=0
+FAIL X6-P1-prefix-rollback: setup: honest commits refused: mode=no-anchor honest=rejected,rejected started=true redelivery=rejected resettled=false effects(rq_2)=0
+# 3 PASS, 11 FAIL
+(node:34228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+# end=2026-11-19T14:28:26Z tmp-left=0
+exit 1

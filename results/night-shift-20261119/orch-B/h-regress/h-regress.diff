@@ -1,0 +1,646 @@
+diff --git a/tests/refund-finality/regress/README.md b/tests/refund-finality/regress/README.md
+new file mode 100644
+index 00000000..35683aad
+--- /dev/null
++++ b/tests/refund-finality/regress/README.md
+@@ -0,0 +1,44 @@
++# Refund-finality regressions (night shift 2026-11-19, task h-regress)
++
++Permanent, executable regressions for the counterexamples that the night shift confirmed against the refund
++finality sink. A TEST, not a proof. Each attack regression asserts the SAFE outcome on durable state (outbox rows,
++stored state) and on effects (dispatcher emissions). It does not assert error texts.
++
++## How to run
++
++From the repository root, with the pinned Node 24.3.0 first in `PATH`:
++
++```
++node --import tsx tests/refund-finality/regress/run.ts <sinkModulePath> <dispatcherModulePath> [expectedHeadMode] [--encoding <encoding.ts>]
++```
++
++- The sink and the dispatcher are loaded BY PATH. Only the public interface is used: `new Sink(path, cfg)`,
++  `init`, `commit(tokenText)`, `close`, `new Dispatcher(db, ledger, dcfg, emit)`, `flush`.
++- `cfg` always carries `initialState`. Durable state is read with raw SQL from the tables `state`, `settled` and
++  `outbox`. The hostile-writer regressions write these tables from a second connection.
++- `expectedHeadMode`: `none` (default) or the path of an anchor adapter module that exports
++  `capture(h, dbPath)` and `apply(cfg, head)` (see `harness.ts`). Only X6-P1 uses it.
++- The encoding module defaults to `encoding.ts` next to the sink module.
++- Output: one line per regression, `PASS|FAIL id: reason`. Exit 0 only if every line is PASS; exit 2 on a usage
++  error. One file can also run alone: `node --import tsx tests/refund-finality/regress/<file>.ts <sink> <dispatcher>`.
++- Each regression uses a fresh directory under the system temp directory. The directories are removed at exit.
++  Fixed ids and amounts; no clock; no network. The test key is generated in the process (no result depends on it).
++- Model of a faulty signer: the trusted test key signs an arbitrary body (canonical bytes from `encoding.ts`).
++
++## Table
++
++| id | attack class (assumption) | unsafe outcome on the merged sink | expected safe outcome | evidence |
++|---|---|---|---|---|
++| C1–C5 | positive controls (none) | none: all PASS | honest refund, zero-amount refund, two zero refunds, replay (no second effect), amount == remaining: each intent once in the outbox and emitted once | spec/refund/protocol.md (zero is legitimate) |
++| X1 | request-id mismatch (faulty signer) | 2 outbox intents and 2 effects for `rq_victim` | at most 1 intent and 1 effect for `rq_victim`; the honest one is emitted once | U530, U534; d-reqid Contrast.dfy, single_runs.ts |
++| X2 | cross-charge (faulty signer) | 2 effects for (`ch_2`, `rq_x`), 100 for a charge of 50 | at most 1 effect for (`ch_2`, `rq_x`), at most 50 for `ch_2`; no `ch_2` intent in `ch_1`'s outbox | U534; r-reqid Attack.dfy CrossChargeWithReqIdPatch |
++| X2b | foreign post-state (faulty signer) | `ch_1`'s store holds `ch_2`; no `ch_1` refund commits again | store keeps `ch_1`; a later honest `ch_1` refund is emitted once | Attack.dfy ForeignPostLocksStore |
++| X3 | upgrade from a legacy gap store (faulty signer before the upgrade) | 1 effect before + 1 after for `rq_victim` | at most 1 effect in total for `rq_victim` | U534; r-reqid upgrade_run.ts (mode flushed) |
++| X4 | signed but unauthorized token (faulty signer; B-10; POST-RULE open) | all 5 cases commit and are emitted (case a: 1001 of 1000) | no outbox row, no effect, state unchanged; a later honest refund is emitted once | U555, U557; d-v6sink conformance_v6.ts; r-v6 rv6_cases.ts |
++| X5a | balance reset (database writer without key) | outbox total 2000 for a charge of 1000 (the dispatcher still emits only 1000) | outbox total and emitted total at most 1000 | U554; r-repairs attack_v4.ts S1 |
++| X5b | outbox amount rewrite (database writer without key) | `rq_2` settled on the tampered store | no unsigned intent emitted; no new settlement while the rewritten row is present | U554; r-repairs attack_v4.ts S2 |
++| X6-Z1 | zero-row deletion, then re-commit (database writer without key) | `rq_z1` settled again (also on the v6 draft: finding F1) | `rq_z1` not settled again; emitted at most once | U565; r-v5 attack_rv5.ts Z1 |
++| X6-P1 | prefix rollback (database writer; a STATED LIMIT) | (documented) the store starts | without an anchor: the sink starts (documented limit); with an anchor adapter: refuses to start or to settle `rq_2` again; `rq_2` emitted at most once in both modes | U565; r-v5 attack_rv5.ts P1 |
++
++A reject-all sink passes most "at most" assertions. The positive controls, and the liveness parts of X1, X2, X2b
++and X4 and the setup checks of X5 and X6, make it FAIL.
+diff --git a/tests/refund-finality/regress/controls.ts b/tests/refund-finality/regress/controls.ts
+new file mode 100644
+index 00000000..f3086fdc
+--- /dev/null
++++ b/tests/refund-finality/regress/controls.ts
+@@ -0,0 +1,49 @@
++// POSITIVE CONTROLS of the regression runner. They must PASS on every sink, the merged one included. A sink that
++// rejects everything passes every "at most" assertion of the attack regressions; these controls make it FAIL.
++// Zero-amount refunds are legitimate (spec/refund/protocol.md: "Zero is a legitimate authorization").
++// Assertions are on durable state and effects: outbox rows and dispatcher emissions.
++import { Harness, Regression, fail, pass, standalone } from "./harness";
++
++const once = (h: Harness, db: string, ids: string[], amounts: string[], effects: { requestId: string; intent: any }[]): string | null => {
++  const ob = h.outbox(db);
++  for (let i = 0; i < ids.length; i++) {
++    const o = ob.filter(x => x.request_id === ids[i] && x.intent.requestId === ids[i] && x.intent.amount === amounts[i]).length;
++    const e = effects.filter(x => x.intent.requestId === ids[i] && x.intent.amount === amounts[i]).length;
++    if (o !== 1 || e !== 1) return `${ids[i]}: outbox=${o} effects=${e} (want 1 and 1)`;
++  }
++  return ob.length === ids.length && effects.length === ids.length ? null : `outbox=${ob.length} effects=${effects.length} (want ${ids.length})`;
++};
++
++export const controls: Regression[] = [
++  { id: "C1-honest-refund", kind: "control", title: "an honest refund commits once and dispatches once",
++    run(h) { const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = h.newStore("c1", S0);
++      const r = h.commit(sink, h.honest(S0, "rq_1", "100")); const f = h.flush(db, S0); const f2 = h.flush(db, S0);
++      const bad = once(h, db, ["rq_1"], ["100"], [...f.effects, ...f2.effects]);
++      return bad ? fail(`commit=${r} ${bad}`) : pass(`commit=${r}; one outbox row; one effect over two flushes`); } },
++  { id: "C2-zero-amount-refund", kind: "control", title: "a zero-amount refund commits and dispatches once",
++    run(h) { const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = h.newStore("c2", S0);
++      const r = h.commit(sink, h.honest(S0, "rq_z", "0", "duplicate_charge")); const f = h.flush(db, S0);
++      const bad = once(h, db, ["rq_z"], ["0"], f.effects);
++      return bad ? fail(`commit=${r} ${bad}`) : pass(`commit=${r}; one zero-valued intent emitted`); } },
++  { id: "C3-two-zero-refunds", kind: "control", title: "two zero-amount refunds with distinct request ids both commit",
++    run(h) { const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = h.newStore("c3", S0);
++      const r1 = h.commit(sink, h.honest(S0, "rq_z1", "0", "duplicate_charge"));
++      const r2 = h.commit(sink, h.honest(h.stored(db)!, "rq_z2", "0", "service_not_delivered")); const f = h.flush(db, S0);
++      const bad = once(h, db, ["rq_z1", "rq_z2"], ["0", "0"], f.effects);
++      return bad ? fail(`commits=${r1},${r2} ${bad}`) : pass(`commits=${r1},${r2}; two zero-valued effects`); } },
++  { id: "C4-replay-rejected", kind: "control", title: "a replay is not a second effect",
++    run(h) { const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = h.newStore("c4", S0);
++      const t = h.honest(S0, "rq_1", "100"); const r1 = h.commit(sink, t); const f1 = h.flush(db, S0);
++      const r2 = h.commit(sink, t); const f2 = h.flush(db, S0);
++      const bad = once(h, db, ["rq_1"], ["100"], [...f1.effects, ...f2.effects]);
++      if (r2 === "committed") return fail(`replay answered committed (${r1} then ${r2})`);
++      return bad ? fail(`first=${r1} replay=${r2} ${bad}`) : pass(`first=${r1} replay=${r2}; one effect`); } },
++  { id: "C5-largest-refund", kind: "control", title: "amount == remaining commits",
++    run(h) { const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = h.newStore("c5", S0);
++      const r1 = h.commit(sink, h.honest(S0, "rq_1", "250")); const S1 = h.stored(db)!;
++      const r2 = h.commit(sink, h.honest(S1, "rq_all", S1.remaining, "service_not_delivered")); const f = h.flush(db, S0);
++      const bad = once(h, db, ["rq_1", "rq_all"], ["250", "750"], f.effects);
++      const rem = h.stored(db)?.remaining;
++      return bad || rem !== "0" ? fail(`commits=${r1},${r2} remaining=${rem} ${bad ?? ""}`) : pass(`commits=${r1},${r2}; remaining 0; two effects`); } },
++];
++if (require.main === module) standalone(controls, process.argv);
+diff --git a/tests/refund-finality/regress/harness.ts b/tests/refund-finality/regress/harness.ts
+new file mode 100644
+index 00000000..b8ce81ab
+--- /dev/null
++++ b/tests/refund-finality/regress/harness.ts
+@@ -0,0 +1,152 @@
++// Shared harness of the refund-finality regressions (night shift 2026-11-19, task h-regress). A TEST, not a proof.
++// The sink and the dispatcher under test are loaded BY PATH, so one regression file runs unchanged against the
++// merged sink, the v6 draft and the hardened sink. Only their public interface is used:
++//   new Sink(path, cfg), sink.init(state), sink.commit(tokenText), sink.close();
++//   new Dispatcher(dbPath, ledgerPath, dcfg, emit), dispatcher.flush().
++// The sink config always carries `initialState` (required by the v6 draft; an extra key for the merged sink).
++// Durable state is read with raw SQL from the tables `state`, `settled` and `outbox` of the merged schema; the
++// hostile-writer regressions change those tables with raw SQL from a second connection (the database writer).
++// Keys: one TEST Ed25519 key pair, generated in this process. The FAULTY SIGNER is modelled by signing an
++// arbitrary token body with that trusted key (no minter is used for a bad token). Canonical bytes come from the
++// encoding.ts next to the sink under test (or the path given with --encoding).
++// Determinism: fixed ids and amounts, no clock, no network, no randomness except the key (no result depends on
++// the key bytes). Every regression gets a fresh directory under the system temp directory; it is removed at exit.
++import { generateKeyPairSync, sign } from "node:crypto";
++import { mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join, resolve } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++
++export type State = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
++export type Intent = { chargeId: string; requestId: string; amount: string; reason: string };
++export type Outcome = { ok: boolean; reason: string };
++export type Regression = { id: string; kind: "attack" | "control" | "limit"; title: string; run: (h: Harness) => Outcome };
++export type Effect = { requestId: string; intent: Intent };
++// Optional anchor adapter (runner argument expectedHeadMode = path of a module that exports these two functions).
++// capture(h, dbPath): the external expected head, taken from an honest store; apply(cfg, head): the sink config
++// that carries it. The adapter is the only place that knows the hardened sink's field name.
++export type AnchorAdapter = { capture: (h: Harness, dbPath: string) => unknown; apply: (cfg: any, head: unknown) => any };
++
++export const MERGED_DDL = `CREATE TABLE IF NOT EXISTS meta(k TEXT PRIMARY KEY, v TEXT NOT NULL);
++      CREATE TABLE IF NOT EXISTS state(id INTEGER PRIMARY KEY CHECK (id = 1), blob TEXT NOT NULL);
++      CREATE TABLE IF NOT EXISTS settled(seq INTEGER PRIMARY KEY AUTOINCREMENT, request_id TEXT NOT NULL UNIQUE,
++        token TEXT NOT NULL, token_sha256 TEXT NOT NULL);
++      CREATE TABLE IF NOT EXISTS outbox(seq INTEGER PRIMARY KEY AUTOINCREMENT, request_id TEXT NOT NULL UNIQUE, intent TEXT NOT NULL);`;
++
++const temps: string[] = [];
++process.on("exit", () => { for (const d of temps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* best effort */ } } });
++
++export class Harness {
++  readonly Sink: any; readonly Dispatcher: any; readonly E: any; readonly anchor: AnchorAdapter | null;
++  private readonly keys = generateKeyPairSync("ed25519");
++  readonly publicKeyPem: string;
++  readonly specLockSha256: string; readonly checkerSha256: string;
++  private open: any[] = [];
++  dir = "";
++  constructor(sinkPath: string, dispatcherPath: string, encodingPath: string, anchorPath: string | null) {
++    /* eslint-disable @typescript-eslint/no-require-imports */
++    this.Sink = require(resolve(sinkPath)).Sink;
++    this.Dispatcher = require(resolve(dispatcherPath)).Dispatcher;
++    this.E = require(resolve(encodingPath));
++    this.anchor = anchorPath ? require(resolve(anchorPath)) as AnchorAdapter : null;
++    /* eslint-enable @typescript-eslint/no-require-imports */
++    if (typeof this.Sink !== "function" || typeof this.Dispatcher !== "function") throw new Error("module does not export Sink / Dispatcher");
++    this.publicKeyPem = this.keys.publicKey.export({ type: "spki", format: "pem" }) as string;
++    this.specLockSha256 = this.E.sha256hex("h-regress test spec lock");
++    this.checkerSha256 = this.E.sha256hex("h-regress test checker");
++  }
++  // ---- per-regression lifecycle
++  begin(id: string): void { this.dir = mkdtempSync(join(tmpdir(), "forge-regress-" + id.replace(/[^A-Za-z0-9]/g, "_") + "-")); temps.push(this.dir); }
++  end(): void {
++    for (const s of this.open) { try { s.close(); } catch { /* already closed */ } }
++    this.open = [];
++    try { rmSync(this.dir, { recursive: true, force: true }); } catch { /* removed at exit */ }
++  }
++  path(name: string): string { return join(this.dir, name); }
++  // ---- values
++  st(chargeId: string, original: string, remaining: string, refundEnabled = true): State { return { chargeId, original, remaining, refundEnabled }; }
++  dec(s: State, amount: string): State { return { ...s, remaining: (BigInt(s.remaining) - BigInt(amount)).toString() }; }
++  intent(chargeId: string, requestId: string, amount: string, reason = "returned_item"): Intent { return { chargeId, requestId, amount, reason }; }
++  cfg(initial: State): any { return { publicKeyPem: this.publicKeyPem, specLockSha256: this.specLockSha256, checkerSha256: this.checkerSha256, initialState: initial }; }
++  dcfg(initial: State): any { return { publicKeyPem: this.publicKeyPem, specLockSha256: this.specLockSha256, checkerSha256: this.checkerSha256, initialStateSha256: this.E.stateSha256(initial) }; }
++  // ---- tokens. sign(): the trusted key signs ANY body (a faulty signer). honest(): the body that an honest issuer
++  // would sign for an authorized request on the pre-state `pre` (post = pre with remaining decreased by amount).
++  sign(pre: State, requestId: string, post: State, intent: Intent): string {
++    const body = { domain: this.E.DOMAIN, specLockSha256: this.specLockSha256, checkerSha256: this.checkerSha256,
++      preStateSha256: this.E.stateSha256(pre), requestId, post, intent };
++    return this.E.canon({ body, signature: sign(null, this.E.signedBytes(body), this.keys.privateKey).toString("base64") });
++  }
++  honest(pre: State, requestId: string, amount: string, reason = "returned_item"): string {
++    return this.sign(pre, requestId, this.dec(pre, amount), this.intent(pre.chargeId, requestId, amount, reason));
++  }
++  // ---- the sink under test. openSink returns null when the sink refuses to start (that refusal is recorded).
++  openSink(dbPath: string, cfg: any): { sink: any | null; error: string } {
++    try { const sink = new this.Sink(dbPath, cfg); this.open.push(sink); return { sink, error: "" }; }
++    catch (e) { return { sink: null, error: String((e as Error)?.message ?? e).slice(0, 160) }; }
++  }
++  // A fresh store for `initial`: open, init. Throws if the sink under test cannot even do that (a harness fault).
++  newStore(name: string, initial: State, cfg?: any): { db: string; sink: any } {
++    const db = this.path(name + ".sqlite");
++    const { sink, error } = this.openSink(db, cfg ?? this.cfg(initial));
++    if (sink === null) throw new Error("fresh store refused: " + error);
++    sink.init(initial);
++    return { db, sink };
++  }
++  commit(sink: any, text: string): string {
++    try { const r = sink.commit(text); return String(r?.status ?? "no status"); }
++    catch (e) { return "threw: " + String((e as Error)?.message ?? e).slice(0, 80); }
++  }
++  close(sink: any): void { try { sink?.close(); } catch { /* closed */ } this.open = this.open.filter(s => s !== sink); }
++  // ---- the dispatcher under test. Effects are collected by the emit callback, so effects sent before a later
++  // error still count. A thrown error (e.g. a refused ledger) is reported in `error`.
++  flush(dbPath: string, initial: State, ledgerName = "ledger.jsonl"): { effects: Effect[]; error: string } {
++    const effects: Effect[] = [];
++    let error = "";
++    try {
++      const d = new this.Dispatcher(dbPath, this.path(ledgerName), this.dcfg(initial),
++        (e: any, i: any) => effects.push({ requestId: String(e?.requestId), intent: { ...i } }));
++      d.flush();
++    } catch (e) { error = String((e as Error)?.message ?? e).slice(0, 120); }
++    return { effects, error };
++  }
++  // ---- durable state, read with raw SQL (read only)
++  raw<X>(dbPath: string, f: (db: DatabaseSync) => X): X { const db = new DatabaseSync(dbPath); try { return f(db); } finally { db.close(); } }
++  outbox(dbPath: string): { request_id: string; intent: Intent }[] {
++    return this.raw(dbPath, db => (db.prepare("SELECT request_id, intent FROM outbox ORDER BY seq").all() as any[])
++      .map(r => ({ request_id: String(r.request_id), intent: JSON.parse(String(r.intent)) as Intent })));
++  }
++  settledIds(dbPath: string): string[] {
++    return this.raw(dbPath, db => (db.prepare("SELECT request_id FROM settled ORDER BY seq").all() as any[]).map(r => String(r.request_id)));
++  }
++  stored(dbPath: string): State | null {
++    return this.raw(dbPath, db => { const r = db.prepare("SELECT blob FROM state WHERE id = 1").get() as any; return r ? JSON.parse(String(r.blob)) as State : null; });
++  }
++  // A second connection that writes the database file (the hostile database writer; it has no key).
++  foreign(dbPath: string, f: (db: DatabaseSync) => void): void { this.raw(dbPath, f); }
++}
++
++export const sum = (xs: string[]): bigint => xs.reduce((a, x) => a + BigInt(x), 0n);
++export const pass = (reason: string): Outcome => ({ ok: true, reason });
++export const fail = (reason: string): Outcome => ({ ok: false, reason });
++
++// Runs a list of regressions, one fresh temp directory each. Prints `PASS|FAIL id: reason`. Returns the fail count.
++export function runAll(h: Harness, list: Regression[]): number {
++  let fails = 0;
++  for (const r of list) {
++    h.begin(r.id);
++    let o: Outcome;
++    try { o = r.run(h); } catch (e) { o = fail("regression threw: " + String((e as Error)?.message ?? e).slice(0, 160)); }
++    h.end();
++    if (!o.ok) fails++;
++    console.log(`${o.ok ? "PASS" : "FAIL"} ${r.id}: ${o.reason}`);
++  }
++  return fails;
++}
++
++// Standalone use of one regression file: node --import tsx <file> <sink.ts> <dispatcher.ts> [anchor adapter]
++export function standalone(list: Regression[], argv: string[]): void {
++  if (argv.length < 4) { console.error("usage: <regression file> <sink module> <dispatcher module> [anchor adapter]"); process.exit(2); }
++  const sinkPath = resolve(argv[2]);
++  const h = new Harness(sinkPath, argv[3], join(sinkPath, "..", "encoding.ts"), argv[4] && argv[4] !== "none" ? argv[4] : null);
++  process.exit(runAll(h, list) === 0 ? 0 : 1);
++}
+diff --git a/tests/refund-finality/regress/run.ts b/tests/refund-finality/regress/run.ts
+new file mode 100644
+index 00000000..84e7eb6b
+--- /dev/null
++++ b/tests/refund-finality/regress/run.ts
+@@ -0,0 +1,41 @@
++// Runner of the refund-finality regressions (night shift 2026-11-19, task h-regress). A TEST, not a proof.
++// Usage (from the repository root, pinned Node 24.3.0):
++//   node --import tsx tests/refund-finality/regress/run.ts <sinkModulePath> <dispatcherModulePath> [expectedHeadMode]
++//     [--encoding <encoding.ts>]
++// expectedHeadMode: "none" (default) or the path of an anchor adapter module (see harness.ts, AnchorAdapter).
++// The encoding module defaults to encoding.ts next to the sink module.
++// Prints one line per regression `PASS|FAIL id: reason`; exit 0 only if every line is PASS; exit 2 on a usage error.
++// Every regression runs in a fresh directory under the system temp directory; the directories are removed at exit.
++import { existsSync } from "node:fs";
++import { dirname, join, resolve } from "node:path";
++import { controls } from "./controls";
++import { Harness, Regression, runAll } from "./harness";
++import { regression as x1 } from "./x1_reqid_mismatch_duplicate";
++import { regression as x2, regressionB as x2b } from "./x2_cross_charge_duplicate";
++import { regression as x3 } from "./x3_upgrade_legacy_gap_duplicate";
++import { regression as x4 } from "./x4_signed_unauthorized_commits";
++import { regressionA as x5a, regressionB as x5b } from "./x5_hostile_writer_store";
++import { regressionP1 as x6p1, regressionZ1 as x6z1 } from "./x6_zero_row_and_prefix_rollback";
++
++export const ALL: Regression[] = [...controls, x1, x2, x2b, x3, x4, x5a, x5b, x6z1, x6p1];
++
++function main(argv: string[]): number {
++  const args = argv.slice(2);
++  let encoding: string | null = null;
++  const i = args.indexOf("--encoding");
++  if (i >= 0) { encoding = args[i + 1] ?? null; args.splice(i, 2); }
++  if (args.length < 2 || args.length > 3 || (i >= 0 && encoding === null)) {
++    console.error("usage: run.ts <sinkModulePath> <dispatcherModulePath> [expectedHeadMode] [--encoding <path>]");
++    return 2;
++  }
++  const sink = resolve(args[0]), disp = resolve(args[1]);
++  const mode = args[2] ?? "none";
++  const enc = resolve(encoding ?? join(dirname(sink), "encoding.ts"));
++  for (const p of [sink, disp, enc, ...(mode === "none" ? [] : [mode])]) if (!existsSync(p)) { console.error("no such file: " + p); return 2; }
++  console.log(`# sink=${sink}\n# dispatcher=${disp}\n# encoding=${enc}\n# expectedHeadMode=${mode} node=${process.version}`);
++  const h = new Harness(sink, disp, enc, mode === "none" ? null : resolve(mode));
++  const fails = runAll(h, ALL);
++  console.log(`# ${ALL.length - fails} PASS, ${fails} FAIL`);
++  return fails === 0 ? 0 : 1;
++}
++if (require.main === module) process.exitCode = main(process.argv);
+diff --git a/tests/refund-finality/regress/x1_reqid_mismatch_duplicate.ts b/tests/refund-finality/regress/x1_reqid_mismatch_duplicate.ts
+new file mode 100644
+index 00000000..91f727b1
+--- /dev/null
++++ b/tests/refund-finality/regress/x1_reqid_mismatch_duplicate.ts
+@@ -0,0 +1,31 @@
++// X1 REQUEST-ID MISMATCH DUPLICATE. Attack class: duplicate effect for one request id.
++// Evidence: unsure U530, U534; results/night-shift-20261119/orch-B/d-reqid/dafny/inputs/sink/Contrast.dfy (lemmas
++// UnpatchedGap, UnpatchedBreaksGood) and d-reqid/ts/single_runs.ts.
++// Assumption that makes the attack possible: a trusted but FAULTY (or compromised) signer signs a body whose
++// requestId (rq_body) differs from its intent's requestId (rq_victim). No database writer is needed.
++// Steps: deliver the faulty token; then deliver the honest token for rq_victim on the then stored state; flush.
++// EXPECTED SAFE OUTCOME (durable state and effects):
++//   the outbox holds at most one intent with requestId rq_victim, AND the dispatcher emits at most one effect whose
++//   intent has requestId rq_victim. Liveness part: the honest token for rq_victim gives exactly one such effect.
++// Unsafe outcome seen on the merged sink and dispatcher: two outbox intents and two effects for rq_victim.
++import { Harness, Regression, fail, pass, standalone } from "./harness";
++
++export const regression: Regression = {
++  id: "X1-reqid-mismatch", kind: "attack", title: "body request id differs from intent request id",
++  run(h: Harness) {
++    const S0 = h.st("ch_1", "1000", "1000");
++    const { db, sink } = h.newStore("x1", S0);
++    const bad = h.sign(S0, "rq_body", h.dec(S0, "100"), h.intent("ch_1", "rq_victim", "100"));
++    const r1 = h.commit(sink, bad);
++    const cur = h.stored(db)!;                                   // the honest issuer signs for the stored state
++    const r2 = h.commit(sink, h.honest(cur, "rq_victim", "100"));
++    const { effects, error } = h.flush(db, S0);
++    const ob = h.outbox(db).filter(o => o.intent.requestId === "rq_victim").length;
++    const ef = effects.filter(e => e.intent.requestId === "rq_victim").length;
++    const why = `faulty=${r1} honest=${r2} outbox(rq_victim)=${ob} effects(rq_victim)=${ef}${error ? " dispatcherError=" + error : ""}`;
++    if (ob > 1 || ef > 1) return fail("DUPLICATE: " + why);
++    if (ef !== 1) return fail("honest refund not dispatched exactly once: " + why);
++    return pass(why);
++  },
++};
++if (require.main === module) standalone([regression], process.argv);
+diff --git a/tests/refund-finality/regress/x2_cross_charge_duplicate.ts b/tests/refund-finality/regress/x2_cross_charge_duplicate.ts
+new file mode 100644
+index 00000000..ef2f05df
+--- /dev/null
++++ b/tests/refund-finality/regress/x2_cross_charge_duplicate.ts
+@@ -0,0 +1,52 @@
++// X2 CROSS-CHARGE DUPLICATE. Attack class: duplicate effect for one charge and one request id across two stores.
++// Evidence: unsure U534; results/night-shift-20261119/orch-B/r-reqid/dafny/inputs/sink/Attack.dfy (lemma
++// CrossChargeWithReqIdPatch); orch-B/b-integrate/controls (M3-no-chargeid-check).
++// Assumption: a trusted but FAULTY signer signs, for charge ch_1's pre-state, a token whose intent names charge
++// ch_2 (post = pre, so ch_1's balance does not move). It is delivered to ch_1's store. No database writer.
++// Steps: store A (ch_1, 100) gets the faulty token for rq_x; store B (ch_2, 50) gets the honest token for rq_x
++// (amount 50); each store's dispatcher flushes with its own ledger.
++// EXPECTED SAFE OUTCOME: across both stores' dispatchers at most one effect names (ch_2, rq_x) and the sum of the
++// amounts emitted for ch_2 is at most ch_2's original 50; store A's outbox holds no intent naming ch_2.
++// Liveness part: B's honest refund is emitted exactly once.
++// Unsafe outcome on the merged sink: two effects for (ch_2, rq_x), 100 in total for a charge of 50.
++import { Harness, Regression, fail, pass, standalone, sum } from "./harness";
++
++export const regression: Regression = {
++  id: "X2-cross-charge", kind: "attack", title: "intent for charge B committed in charge A's store",
++  run(h: Harness) {
++    const C0 = h.st("ch_1", "100", "100"), C2 = h.st("ch_2", "50", "50");
++    const A = h.newStore("a", C0), B = h.newStore("b", C2);
++    const rA = h.commit(A.sink, h.sign(C0, "rq_x", C0, h.intent("ch_2", "rq_x", "50", "duplicate_charge")));
++    const rB = h.commit(B.sink, h.honest(C2, "rq_x", "50", "duplicate_charge"));
++    const fA = h.flush(A.db, C0, "ledger-a.jsonl"), fB = h.flush(B.db, C2, "ledger-b.jsonl");
++    const ch2 = [...fA.effects, ...fB.effects].filter(e => e.intent.chargeId === "ch_2");
++    const dup = ch2.filter(e => e.intent.requestId === "rq_x").length;
++    const total = sum(ch2.map(e => e.intent.amount));
++    const aForeign = h.outbox(A.db).filter(o => o.intent.chargeId !== "ch_1").length;
++    const why = `A=${rA} B=${rB} effects(ch_2,rq_x)=${dup} emitted(ch_2)=${total} A.outbox(foreign)=${aForeign}`;
++    if (dup > 1 || total > 50n || aForeign > 0) return fail("CROSS-CHARGE: " + why);
++    if (fB.effects.length !== 1) return fail("B's honest refund not dispatched exactly once: " + why);
++    return pass(why);
++  },
++};
++// X2b FOREIGN POST-STATE LOCKS THE STORE (Attack.dfy lemmas ForeignPostLocksStore, ForeignPostWitness).
++// Assumption: a FAULTY signer signs for ch_1's pre-state a token whose post-state is charge ch_2's state.
++// EXPECTED SAFE OUTCOME: store A still holds charge ch_1 after the delivery, and a later honest ch_1 refund
++// (rq_h, 10) is emitted exactly once. Unsafe on the merged sink: A holds ch_2's state; no ch_1 token commits again.
++export const regressionB: Regression = {
++  id: "X2b-foreign-post-locks-store", kind: "attack", title: "post-state of another charge committed",
++  run(h: Harness) {
++    const C0 = h.st("ch_1", "100", "100"), C2 = h.st("ch_2", "50", "50");
++    const A = h.newStore("a", C0);
++    const r1 = h.commit(A.sink, h.sign(C0, "rq_y", C2, h.intent("ch_1", "rq_y", "0", "duplicate_charge")));
++    const storedId = h.stored(A.db)?.chargeId;
++    const r2 = h.commit(A.sink, h.honest(C0, "rq_h", "10"));
++    const f = h.flush(A.db, C0);
++    const hEff = f.effects.filter(e => e.intent.requestId === "rq_h").length;
++    const why = `foreign=${r1} storedChargeId=${storedId} honest=${r2} effects(rq_h)=${hEff}`;
++    if (storedId !== "ch_1") return fail("STORE NOW HOLDS ANOTHER CHARGE: " + why);
++    if (hEff !== 1) return fail("honest ch_1 refund not dispatched exactly once: " + why);
++    return pass(why);
++  },
++};
++if (require.main === module) standalone([regression, regressionB], process.argv);
+diff --git a/tests/refund-finality/regress/x3_upgrade_legacy_gap_duplicate.ts b/tests/refund-finality/regress/x3_upgrade_legacy_gap_duplicate.ts
+new file mode 100644
+index 00000000..f38e22af
+--- /dev/null
++++ b/tests/refund-finality/regress/x3_upgrade_legacy_gap_duplicate.ts
+@@ -0,0 +1,46 @@
++// X3 UPGRADE FROM A LEGACY GAP STORE. Attack class: duplicate effect for one request id across a sink upgrade.
++// Evidence: unsure U534; results/night-shift-20261119/orch-B/r-reqid/ts/upgrade_run.ts and its result
++// r-reqid/ts/results/upgrade-flushed.stdout (mode "flushed": two effects for rq_victim).
++// Assumption: BEFORE the upgrade a FAULTY signer's X1 token (body rq_body, intent rq_victim) was committed by the
++// merged sink and dispatched by the merged dispatcher. The legacy artefacts are written here byte for byte in the
++// merged format (the merged DDL; meta initial_state_sha256; one settled row; one outbox row; one ledger line in the
++// merged dispatcher's format), so this file needs no copy of the old code.
++// Steps: open the legacy store with the sink under test; deliver the honest token for rq_victim on the stored
++// state; flush the dispatcher under test on the legacy ledger.
++// EXPECTED SAFE OUTCOME: the total number of effects for rq_victim (1 before the upgrade + those after it) is at
++// most 1, and the outbox holds at most one intent for rq_victim. (Refusing to serve the legacy store is safe.)
++// Unsafe on the merged sink and on a sink with only the commit-time request-id check: a second effect.
++import { writeFileSync } from "node:fs";
++import { Harness, MERGED_DDL, Regression, fail, pass, standalone } from "./harness";
++
++export const regression: Regression = {
++  id: "X3-upgrade-legacy-gap", kind: "attack", title: "legacy gap row, then honest token after an upgrade",
++  run(h: Harness) {
++    const E = h.E, S0 = h.st("ch_1", "1000", "1000"), p1 = h.dec(S0, "100");
++    const intentV = h.intent("ch_1", "rq_victim", "100");
++    const gap = h.sign(S0, "rq_body", p1, intentV);
++    const db = h.path("legacy.sqlite");
++    h.foreign(db, d => {
++      d.exec(MERGED_DDL);
++      d.prepare("INSERT INTO meta(k, v) VALUES ('initial_state_sha256', ?)").run(E.sha256hex(E.canon(S0)));
++      d.prepare("INSERT INTO state(id, blob) VALUES (1, ?)").run(E.canon(p1));
++      d.prepare("INSERT INTO settled(request_id, token, token_sha256) VALUES (?, ?, ?)").run("rq_body", gap, E.sha256hex(gap));
++      d.prepare("INSERT INTO outbox(request_id, intent) VALUES (?, ?)").run("rq_body", E.canon(intentV));
++    });
++    // The merged dispatcher's ledger line for the gap row: that effect (rq_victim, 100) was already sent.
++    const line = { requestId: "rq_body", tokenSha256: E.sha256hex(gap), preStateSha256: E.stateSha256(S0),
++      postStateSha256: E.sha256hex(E.canon(p1)), intentSha256: E.sha256hex(E.canon(intentV)) };
++    writeFileSync(h.path("ledger.jsonl"), JSON.stringify(line) + "\n");
++    const before = 1;
++    const { sink, error } = h.openSink(db, h.cfg(S0));
++    let r = "sink refused to start (" + error.slice(0, 60) + ")";
++    if (sink !== null) { const cur = h.stored(db)!; r = h.commit(sink, h.honest(cur, "rq_victim", "100")); h.close(sink); }
++    const f = h.flush(db, S0);
++    const after = f.effects.filter(e => e.intent.requestId === "rq_victim").length;
++    const ob = h.outbox(db).filter(o => o.intent.requestId === "rq_victim").length;
++    const why = `honest=${r} effects(rq_victim) before=${before} after=${after} outbox(rq_victim)=${ob}${f.error ? " dispatcherError=" + f.error : ""}`;
++    if (before + after > 1 || ob > 1) return fail("DUPLICATE ACROSS UPGRADE: " + why);
++    return pass(why);
++  },
++};
++if (require.main === module) standalone([regression], process.argv);
+diff --git a/tests/refund-finality/regress/x4_signed_unauthorized_commits.ts b/tests/refund-finality/regress/x4_signed_unauthorized_commits.ts
+new file mode 100644
+index 00000000..2ce9f546
+--- /dev/null
++++ b/tests/refund-finality/regress/x4_signed_unauthorized_commits.ts
+@@ -0,0 +1,46 @@
++// X4 SIGNED BUT UNAUTHORIZED TOKEN. Attack class: an effect that the approved refund relation does not authorize.
++// Evidence: unsure U555, U557; results/night-shift-20261119/orch-B/d-v6sink/ts/conformance_v6.ts and
++// orch-B/r-v6/ts/rv6_cases.ts (cases 61, 7, 8, 9, 10).
++// Assumption: a trusted but FAULTY signer signs a well-formed token for the stored pre-state whose transition the
++// approved relation (spec/refund/protocol.md) does not authorize. Relies on the owner's B-10 decision (the stored
++// charge governs) and on the still OPEN rule POST-RULE (an authorized refund decreases `remaining` by the amount
++// and changes nothing else) for cases b, c and e.
++// Cases (each in its own fresh store ch_1, original 1000, remaining 1000):
++//   a amount 1001 > remaining (post remaining 0); b post sets refundEnabled false; c post remaining 950 for amount
++//   100; d unapproved reason "goodwill"; e intent amount 100 while post keeps remaining 1000.
++// EXPECTED SAFE OUTCOME per store: the outbox stays empty, the dispatcher emits nothing, the stored state is the
++// initial state. Liveness part: an honest refund (rq_ok, 100) delivered afterwards is emitted exactly once.
++// Unsafe on the merged sink: every case commits and is dispatched (case a: 1001 out of a charge of 1000).
++import { Harness, Regression, fail, pass, standalone } from "./harness";
++
++export const regression: Regression = {
++  id: "X4-signed-unauthorized", kind: "attack", title: "signed tokens outside the approved relation",
++  run(h: Harness) {
++    const S0 = h.st("ch_1", "1000", "1000");
++    const cases: [string, string][] = [
++      ["a-amount-above-remaining", h.sign(S0, "rq_a", { ...S0, remaining: "0" }, h.intent("ch_1", "rq_a", "1001"))],
++      ["b-post-disables-refunds", h.sign(S0, "rq_b", { ...h.dec(S0, "100"), refundEnabled: false }, h.intent("ch_1", "rq_b", "100"))],
++      ["c-post-remaining-wrong", h.sign(S0, "rq_c", h.dec(S0, "50"), h.intent("ch_1", "rq_c", "100"))],
++      ["d-unapproved-reason", h.honest(S0, "rq_d", "100", "goodwill")],
++      ["e-post-unchanged", h.sign(S0, "rq_e", S0, h.intent("ch_1", "rq_e", "100"))],
++    ];
++    const bad: string[] = [], dead: string[] = [], notes: string[] = [];
++    for (const [name, text] of cases) {
++      const { db, sink } = h.newStore(name, S0);
++      const r = h.commit(sink, text);
++      const unchanged = h.E.canon(h.stored(db)) === h.E.canon(S0);
++      const okR = h.commit(sink, h.honest(h.stored(db)!, "rq_ok", "100"));
++      const f = h.flush(db, S0, name + ".ledger.jsonl");      // one ledger per store
++      const badEff = f.effects.filter(e => e.intent.requestId !== "rq_ok").length;
++      const badOut = h.outbox(db).filter(o => o.intent.requestId !== "rq_ok").length;
++      const okEff = f.effects.filter(e => e.intent.requestId === "rq_ok").length;
++      notes.push(`${name}:${r}/ok=${okR}/eff=${badEff}+${okEff}`);
++      if (badEff > 0 || badOut > 0 || !unchanged) bad.push(name);
++      else if (okEff !== 1) dead.push(name);
++    }
++    const why = notes.join(" ");
++    if (bad.length > 0) return fail("UNAUTHORIZED EFFECT in " + bad.join(",") + ": " + why);
++    return dead.length > 0 ? fail("honest refund not dispatched exactly once in " + dead.join(",") + ": " + why) : pass(why);
++  },
++};
++if (require.main === module) standalone([regression], process.argv);
+diff --git a/tests/refund-finality/regress/x5_hostile_writer_store.ts b/tests/refund-finality/regress/x5_hostile_writer_store.ts
+new file mode 100644
+index 00000000..f0bfb1de
+--- /dev/null
++++ b/tests/refund-finality/regress/x5_hostile_writer_store.ts
+@@ -0,0 +1,58 @@
++// X5 HOSTILE DATABASE WRITER. Attack class: a writer of the database file (WITHOUT the signing key) changes the
++// store under a running sink.
++// Evidence: unsure U554; results/night-shift-20261119/orch-B/r-repairs/attack_v4.ts (S1, S2) and
++// r-repairs/logs/attack_v4.1.log.
++// Assumption: another process can write the SQLite file (raw SQL from a second connection). The signer is honest:
++// it signs for the state that the sink has stored (it reads the store).
++// X5a balance reset: rq_1 refunds 1000 of 1000; the writer resets `remaining` to 1000; the honest issuer then signs
++//   rq_2 for 1000 on that stored state.
++//   EXPECTED SAFE OUTCOME: the sum of the outbox intent amounts is at most the original 1000, AND the sum of the
++//   emitted amounts is at most 1000. Unsafe on the merged sink: the outbox holds 2000 for a charge of 1000 (the
++//   merged dispatcher's chain check still stops the second effect: the unsafe part is the durable state).
++// X5b outbox rewrite: rq_1 refunds 100; the writer rewrites rq_1's outbox amount to 1; the issuer signs rq_2.
++//   EXPECTED SAFE OUTCOME: every emitted intent equals a signed intent, AND the sink does not settle rq_2 on top of
++//   a store whose outbox row differs from its signed intent (while the rewritten row is present, rq_2 has no outbox
++//   row). Unsafe on the merged sink: rq_2 is settled on the tampered store.
++import { Harness, Regression, fail, pass, standalone, sum } from "./harness";
++
++export const regressionA: Regression = {
++  id: "X5a-hostile-balance-reset", kind: "attack", title: "writer resets the balance, second full refund",
++  run(h: Harness) {
++    const S0 = h.st("ch_1", "1000", "1000");
++    const { db, sink } = h.newStore("x5a", S0);
++    const c1 = h.commit(sink, h.honest(S0, "rq_1", "1000"));
++    const f1 = h.flush(db, S0);
++    h.foreign(db, d => { d.prepare("UPDATE state SET blob = ? WHERE id = 1").run(h.E.canon(S0)); });
++    const cur = h.stored(db)!;
++    const c2 = h.commit(sink, h.honest(cur, "rq_2", cur.remaining));
++    const f2 = h.flush(db, S0);
++    const out = sum(h.outbox(db).map(o => o.intent.amount));
++    const eff = sum([...f1.effects, ...f2.effects].map(e => e.intent.amount));
++    const why = `rq_1=${c1} rq_2=${c2} outboxTotal=${out} emittedTotal=${eff} original=1000`;
++    if (c1 !== "committed") return fail("setup: honest rq_1 refused: " + why);
++    return out > 1000n || eff > 1000n ? fail("OVER-REFUND: " + why) : pass(why);
++  },
++};
++export const regressionB: Regression = {
++  id: "X5b-hostile-outbox-rewrite", kind: "attack", title: "writer rewrites an outbox amount, sink goes on",
++  run(h: Harness) {
++    const S0 = h.st("ch_1", "1000", "1000");
++    const { db, sink } = h.newStore("x5b", S0);
++    const t1 = h.honest(S0, "rq_1", "100");
++    const c1 = h.commit(sink, t1);
++    h.foreign(db, d => { d.prepare("UPDATE outbox SET intent = ? WHERE request_id = 'rq_1'").run(h.E.canon(h.intent("ch_1", "rq_1", "1"))); });
++    const cur = h.stored(db)!;
++    const t2 = h.honest(cur, "rq_2", "100");
++    const c2 = h.commit(sink, t2);
++    const f = h.flush(db, S0);
++    const signed = new Set([h.intent("ch_1", "rq_1", "100"), h.intent("ch_1", "rq_2", "100")].map(i => h.E.canon(i)));
++    const foreignEff = f.effects.filter(e => !signed.has(h.E.canon(e.intent))).length;
++    const ob = h.outbox(db);
++    const tampered = ob.some(o => o.request_id === "rq_1" && o.intent.amount !== "100");
++    const settledOnTamper = tampered && ob.some(o => o.request_id === "rq_2");
++    const why = `rq_1=${c1} rq_2=${c2} unsignedEffects=${foreignEff} rewrittenRowPresent=${tampered} rq_2SettledOnIt=${settledOnTamper}`;
++    if (c1 !== "committed") return fail("setup: honest rq_1 refused: " + why);
++    return foreignEff > 0 || settledOnTamper ? fail("TAMPERED STORE EXTENDED: " + why) : pass(why);
++  },
++};
++if (require.main === module) standalone([regressionA, regressionB], process.argv);
+diff --git a/tests/refund-finality/regress/x6_zero_row_and_prefix_rollback.ts b/tests/refund-finality/regress/x6_zero_row_and_prefix_rollback.ts
+new file mode 100644
+index 00000000..203243e0
+--- /dev/null
++++ b/tests/refund-finality/regress/x6_zero_row_and_prefix_rollback.ts
+@@ -0,0 +1,67 @@
++// X6 ROW DELETION BY A DATABASE WRITER. Evidence: unsure U565; results/night-shift-20261119/orch-B/r-v5/ts/attack_rv5.ts
++// (Z1-middle-zero-row-deleted, P1-prefix-rollback-last-row).
++// Assumption: a writer of the database file WITHOUT the signing key; the sink is restarted after the change.
++// X6-Z1 zero-amount row deletion, then re-commit. Honest store: rq_1 (100), rq_z1 (0), rq_z2 (0), all dispatched.
++//   The writer deletes rq_z1's settled and outbox rows (a zero row does not move the balance, so the chain of
++//   states stays valid). After a restart the same rq_z1 token is delivered again.
++//   EXPECTED SAFE OUTCOME: rq_z1 is not settled a second time (at the end the outbox holds no rq_z1 row) and the
++//   dispatcher emits rq_z1 at most once in total. Refusing to start or to commit is safe.
++//   Unsafe: merged sink AND the v6 draft (the review's finding F1): rq_z1 is settled again.
++// X6-P1 prefix rollback (a STATED LIMIT, not fixable inside the database). Honest store: rq_1 (100), rq_2 (50),
++//   dispatched. The writer deletes rq_2's rows and restores the state before rq_2: a valid earlier prefix.
++//   DOCUMENTED BEHAVIOUR asserted here: WITHOUT an external expected head the sink starts on the rolled-back store;
++//   WITH one (runner argument expectedHeadMode = an anchor adapter module) the sink refuses to start or refuses to
++//   settle rq_2 again. In both modes the dispatcher emits rq_2 at most once (its ledger is outside the database).
++import { AnchorAdapter, Harness, Regression, fail, pass, standalone } from "./harness";
++
++export const regressionZ1: Regression = {
++  id: "X6-Z1-zero-row-deleted-recommitted", kind: "attack", title: "deleted zero-amount row committed again",
++  run(h: Harness) {
++    const S0 = h.st("ch_1", "1000", "1000"), S1 = h.dec(S0, "100");
++    const { db, sink } = h.newStore("z1", S0);
++    const tz1 = h.honest(S1, "rq_z1", "0", "duplicate_charge");
++    const cs = [h.commit(sink, h.honest(S0, "rq_1", "100")), h.commit(sink, tz1), h.commit(sink, h.honest(S1, "rq_z2", "0", "duplicate_charge"))];
++    const f1 = h.flush(db, S0);
++    h.close(sink);
++    h.foreign(db, d => d.exec("DELETE FROM settled WHERE request_id = 'rq_z1'; DELETE FROM outbox WHERE request_id = 'rq_z1'"));
++    const { sink: s2, error } = h.openSink(db, h.cfg(S0));
++    let r = "sink refused to start (" + error.slice(0, 60) + ")";
++    if (s2 !== null) { r = h.commit(s2, tz1); h.close(s2); }
++    const f2 = h.flush(db, S0);
++    const again = h.outbox(db).filter(o => o.request_id === "rq_z1").length;
++    const eff = [...f1.effects, ...f2.effects].filter(e => e.intent.requestId === "rq_z1").length;
++    const why = `honest=${cs.join(",")} redelivery=${r} outbox(rq_z1)=${again} effects(rq_z1)=${eff}`;
++    if (cs.some(c => c !== "committed")) return fail("setup: honest commits refused: " + why);
++    return again > 0 || eff > 1 ? fail("RE-SETTLED AFTER DELETION: " + why) : pass(why);
++  },
++};
++export const regressionP1: Regression = {
++  id: "X6-P1-prefix-rollback", kind: "limit", title: "rollback to a valid earlier prefix",
++  run(h: Harness) {
++    const S0 = h.st("ch_1", "1000", "1000"), S1 = h.dec(S0, "100");
++    const { db, sink } = h.newStore("p1", S0);
++    const t2 = h.honest(S1, "rq_2", "50");
++    const cs = [h.commit(sink, h.honest(S0, "rq_1", "100")), h.commit(sink, t2)];
++    const f1 = h.flush(db, S0);
++    h.close(sink);
++    const adapter: AnchorAdapter | null = h.anchor;
++    const head = adapter ? adapter.capture(h, db) : undefined;
++    h.foreign(db, d => {
++      d.exec("DELETE FROM settled WHERE request_id = 'rq_2'; DELETE FROM outbox WHERE request_id = 'rq_2'");
++      d.prepare("UPDATE state SET blob = ? WHERE id = 1").run(h.E.canon(S1));
++    });
++    const cfg = adapter ? adapter.apply(h.cfg(S0), head) : h.cfg(S0);
++    const { sink: s2, error } = h.openSink(db, cfg);
++    let r = "not delivered";
++    if (s2 !== null) { r = h.commit(s2, t2); h.close(s2); }
++    const f2 = h.flush(db, S0);
++    const resettled = h.outbox(db).some(o => o.request_id === "rq_2");
++    const eff = [...f1.effects, ...f2.effects].filter(e => e.intent.requestId === "rq_2").length;
++    const why = `mode=${adapter ? "anchored" : "no-anchor"} honest=${cs.join(",")} started=${s2 !== null}${s2 ? "" : " (" + error.slice(0, 50) + ")"} redelivery=${r} resettled=${resettled} effects(rq_2)=${eff}`;
++    if (cs.some(c => c !== "committed")) return fail("setup: honest commits refused: " + why);
++    if (eff > 1) return fail("DUPLICATE EFFECT: " + why);
++    if (!adapter) return s2 !== null ? pass("documented limit holds: " + why) : fail("differs from the documented limit (refused without an anchor): " + why);
++    return s2 === null || !resettled ? pass("anchor refuses the rollback: " + why) : fail("ROLLBACK ACCEPTED WITH AN ANCHOR: " + why);
++  },
++};
++if (require.main === module) standalone([regressionZ1, regressionP1], process.argv);

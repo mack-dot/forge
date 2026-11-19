@@ -1,0 +1,25 @@
+# start=2026-11-19T14:28:13Z node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-regress/work/tests/refund-finality/regress/run.ts <REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/sink.ts <REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/dispatcher.ts
+# sink=<REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/sink.ts
+# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/dispatcher.ts
+# encoding=<REPO>/results/night-shift-20261119/orch-B/h-regress/tree-a/ts/refund-finality/encoding.ts
+# expectedHeadMode=none node=v24.3.0
+PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
+PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted
+PASS C3-two-zero-refunds: commits=committed,committed; two zero-valued effects
+PASS C4-replay-rejected: first=committed replay=replayed; one effect
+PASS C5-largest-refund: commits=committed,committed; remaining 0; two effects
+FAIL X1-reqid-mismatch: DUPLICATE: faulty=committed honest=committed outbox(rq_victim)=2 effects(rq_victim)=2
+FAIL X2-cross-charge: CROSS-CHARGE: A=committed B=committed effects(ch_2,rq_x)=2 emitted(ch_2)=100 A.outbox(foreign)=1
+FAIL X2b-foreign-post-locks-store: STORE NOW HOLDS ANOTHER CHARGE: foreign=committed storedChargeId=ch_2 honest=rejected effects(rq_h)=0
+FAIL X3-upgrade-legacy-gap: DUPLICATE ACROSS UPGRADE: honest=committed effects(rq_victim) before=1 after=1 outbox(rq_victim)=2
+FAIL X4-signed-unauthorized: UNAUTHORIZED EFFECT in a-amount-above-remaining,b-post-disables-refunds,c-post-remaining-wrong,d-unapproved-reason,e-post-unchanged: a-amount-above-remaining:committed/ok=rejected/eff=1+0 b-post-disables-refunds:committed/ok=committed/eff=1+1 c-post-remaining-wrong:committed/ok=committed/eff=1+1 d-unapproved-reason:committed/ok=committed/eff=1+1 e-post-unchanged:committed/ok=committed/eff=1+1
+FAIL X5a-hostile-balance-reset: OVER-REFUND: rq_1=committed rq_2=committed outboxTotal=2000 emittedTotal=1000 original=1000
+FAIL X5b-hostile-outbox-rewrite: TAMPERED STORE EXTENDED: rq_1=committed rq_2=committed unsignedEffects=0 rewrittenRowPresent=true rq_2SettledOnIt=true
+FAIL X6-Z1-zero-row-deleted-recommitted: RE-SETTLED AFTER DELETION: honest=committed,committed,committed redelivery=committed outbox(rq_z1)=1 effects(rq_z1)=1
+PASS X6-P1-prefix-rollback: documented limit holds: mode=no-anchor honest=committed,committed started=true redelivery=committed resettled=true effects(rq_2)=1
+# 6 PASS, 8 FAIL
+(node:33115) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+# end=2026-11-19T14:28:14Z tmp-left=0
+exit 1

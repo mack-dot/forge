@@ -1,0 +1,12 @@
+{"open1":"v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state","open2":"v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state"}
+state exit=1
+{"open1":"v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state","open2":"v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state"}
+state exit=1
+{"mode":"kill","n":60,"killedMidDDL":6,"honestOpenerRefused":0,"bricked":9,"reasons":["kill 4 (delay 1.18 ms, 2 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state","kill 9 (delay 1.19 ms, 2 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state","kill 22 (delay 1.04 ms, 2 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state","kill 23 (delay 2.05 ms, 6 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL","kill 27 (delay 0.99 ms, 2 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state"]}
+kill exit=1
+{"mode":"kill","n":60,"killedMidDDL":4,"honestOpenerRefused":0,"bricked":7,"reasons":["kill 1 (delay 0.97 ms, 2 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state","kill 4 (delay 3.78 ms, 6 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL","kill 8 (delay 1.48 ms, 2 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state","kill 16 (delay 1.54 ms, 2 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: no such table: state","kill 35 (delay 2.28 ms, 6 schema rows): v6 sink refuses to serve: start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL"]}
+kill exit=1
+{"mode":"race","n":30,"killedMidDDL":0,"honestOpenerRefused":0,"bricked":0,"reasons":[]}
+race exit=0
+{"mode":"race","n":30,"killedMidDDL":0,"honestOpenerRefused":0,"bricked":0,"reasons":[]}
+race exit=0
