@@ -1,0 +1,16 @@
+--- a/tests/refund-finality/suite.ts
++++ b/tests/refund-finality/suite.ts
+@@ -524,7 +524,12 @@
+       for (const n of ["1", "2"]) { const token = await mustMint(minter, w.current(), req(`x5_${n}`, "100")); const s = w.sink(); s.commit(tokenText(token)); s.close(); }
+       let first = true, crashed = "";
+       try { w.flush(e => { if (first) { first = false; throw new Error("simulated crash before the effect left"); } w.effects.push(e); }); } catch (error) { crashed = String((error as Error).message); }
+-      judge(w, `crash between the ledger line and the effect (${crashed}), then a new run: the first effect is lost and never sent twice`, ["rq_x5_2"], "nothing refused"); }
++      // h-dispatch (C-ATT-18): the lost effect is now IN DOUBT: reported under its id in every later run, never counted as dispatched.
++      const before = w.effects.length; const again = w.flush(); const ids = w.effects.slice(before).map(e => e.requestId);
++      const doubt = again.refused.filter(r => r.requestId === "rq_x5_1" && r.reason.startsWith("in doubt")).length;
++      add("dispatcher", `crash between the ledger line and the effect (${crashed}), then a new run: the first effect is never sent twice and is reported in doubt`,
++        "new outbound effects [rq_x5_2]; rq_x5_1 refused: in doubt", `new outbound effects [${ids.join(", ")}]; rq_x5_1 in doubt: ${doubt}`,
++        canon(ids) === canon(["rq_x5_2"]) && doubt === 1 && again.alreadyDispatched === 0, ids.length); }
+     { // Check 4 (chain): a token with a valid signature for the OLD state, written into the database beside the sink.
+       const w = await world("x6"); const stale = await mustMint(minter, w.initial, req("x6_stale", "900")), db = w.raw();
+       insert(db, stale.body.requestId, stale); db.close();

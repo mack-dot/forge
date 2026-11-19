@@ -69,3 +69,10 @@ T14 as worded ("the consumer's parser = HOL `refund_strict_parse`") is FALSE as 
 The consumer is the stricter side, so the difference can only give a refusal. TESTED by C: 200,000 mutated frames, 0
 frames that Python accepts and C's hand transcription of the HOL definition refuses (exit 0); identity mode exit 1.
 The transcription is by hand: it is not the HOL definition itself.
+
+## Update (2026-11-19T15:43:53Z): launch-path controls against T12, T14 (exit-status part), T15
+A prototype launcher (`launch/launcher.py`, `launch/CONTROL_MATRIX.md`) ENFORCES, by test only: N09, N11, N14, N20,
+N21, N22 of X8 v2; N15 for the child only. T15 (no injected loader code) is closed for a caller-set environment ONLY IF
+the launcher is adopted and started with `env -i`; that is an owner decision (A-5) and the launcher is unverified.
+T12 (blocking fresh pipes; stdin = the request bytes) is enforced by the same launcher. Still UNPROVEN: everything; these
+are TESTED controls, not theorems. Still OPEN: AC2-n3 without `env -i`; AC3-j (R6); same-uid attacker; resource limits.

@@ -1,0 +1,29 @@
+# owner=orchB-recheck start=2026-11-19T14:37:33Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-anchor/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 822
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/recheck-c/Anchor.csv Anchor.dfy
+# memory free percent: 30
+
+Dafny program verifier finished with 61 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/recheck-c/Anchor.csv
+       13.67 real         4.99 user         0.83 sys
+           130187264  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27791  page reclaims
+                 115  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 259  voluntary context switches
+              131030  involuntary context switches
+         31537451017  instructions retired
+         17011900087  cycles elapsed
+           130942224  peak memory footprint
+# end=2026-11-19T14:37:48Z
+exit 0

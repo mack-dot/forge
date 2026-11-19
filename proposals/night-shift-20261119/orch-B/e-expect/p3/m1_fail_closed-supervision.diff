@@ -1,0 +1,36 @@
+--- a/proposals/m1b-mission-20261119/drafts/fail-closed/m1_fail_closed.py
++++ b/proposals/m1b-mission-20261119/drafts/fail-closed/m1_fail_closed.py
+@@ -13,6 +13,7 @@
+ import os
+ import resource
+ import shutil
++import signal
+ import subprocess
+ import tempfile
+ from collections import namedtuple
+@@ -118,15 +119,23 @@
+ 
+         def child_limits():
+             resource.setrlimit(resource.RLIMIT_FSIZE, (limit, limit))
++            # CPU-time bound in the kernel, independent of the caller's wall-clock wait (SIGXCPU, then SIGKILL).
++            resource.setrlimit(resource.RLIMIT_CPU, (time_limit, time_limit + 1))
+ 
+         with open(os.path.join(work, 'out'), 'w+b') as fo, open(os.path.join(work, 'err'), 'w+b') as fe:
+             p = subprocess.Popen([exe], stdin=subprocess.PIPE, stdout=fo, stderr=fe, env=ENVIRONMENT,
+-                                 cwd=work, preexec_fn=child_limits, close_fds=True)
++                                 cwd=work, preexec_fn=child_limits, close_fds=True, start_new_session=True)
+             timed_out = False
+             try:
+                 p.communicate(input=stdin_bytes, timeout=time_limit)
+             except subprocess.TimeoutExpired:
+-                p.kill(); p.wait(); timed_out = True
++                timed_out = True
++            finally:
++                try:                                                                 # the whole group
++                    os.killpg(p.pid, signal.SIGKILL)
++                except (ProcessLookupError, PermissionError):
++                    pass
++                p.wait()
+             if sha256_file(exe) != PINNED_SHA256:
+                 raise RuntimeError('EXECUTABLE: the copy changed during the run')
+             fo.seek(0, 2); osz = fo.tell(); fe.seek(0, 2); esz = fe.tell()

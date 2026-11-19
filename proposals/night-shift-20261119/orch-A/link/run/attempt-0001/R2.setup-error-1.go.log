@@ -1,6 +1,6 @@
 2026-11-19T09:01:01Z
 START_STATE swap_free_mib=1399 memory_free_percent=62
-input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+input /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
 Thu Nov 19 04:01:01 EST 2026
 System-wide memory free percentage: 62%
 vm.swapusage: total = 7168.00M  used = 5768.94M  free = 1399.06M  (encrypted)
@@ -8,9 +8,9 @@ vm.swapusage: total = 7168.00M  used = 5768.94M  free = 1399.06M  (encrypted)
 other HOL children:
 pgrep exit 0
 swap used percent: 80
-COMMAND: FORGE_CWD=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment FORGE_CPU_SECONDS=300 python3 -I -B run_case.py u294-rel u294/relation.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294/preload.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294-hol/.hol/objs/forge_refundSourceBindingTheory.sig /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294-hol/.hol/objs/forge_refundSourceBindingTheory.sml
+COMMAND: FORGE_CWD=/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment FORGE_CPU_SECONDS=300 python3 -I -B run_case.py u294-rel u294/relation.sml /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294/preload.sml /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294-hol/.hol/objs/forge_refundSourceBindingTheory.sig /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294-hol/.hol/objs/forge_refundSourceBindingTheory.sml
 RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in u294-rel/command.json)
-Uncaught exception at ./basis/TextIO.sml:284: Io {cause = SysErr ("No such file or directory", SOME ENOENT), function = "TextIO.openIn", name = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294-hol/.hol/objs/.hol/objs/forge_refundSourceBindingTheory.sig"}
+Uncaught exception at ./basis/TextIO.sml:284: Io {cause = SysErr ("No such file or directory", SOME ENOENT), function = "TextIO.openIn", name = "/Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294-hol/.hol/objs/.hol/objs/forge_refundSourceBindingTheory.sig"}
   info: whole stdout byte-equal to recorded relation-0001: False
   info: CHECKED records equal after whitespace normalisation: False (decides only a pretty-printer line-break difference; the plan asks for byte equality)
   info: actual_exit=1 markers=[] last FORGE_BEGIN=None *_COMPLETE lines=[] wall=1.553

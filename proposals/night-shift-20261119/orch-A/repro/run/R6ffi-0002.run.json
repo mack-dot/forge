@@ -1,24 +1,30 @@
 {
  "case": "R6ffi-0002",
- "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "cwd": "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
  "source": "R6ffi-0002.sml",
  "source_sha256": "6aebb858ab0711da9357b6b3a221bcfaa8b263e3c90d5796e67e64b15894a23f",
  "resource_guard": {
-  "memory_free_percent": 52,
-  "disk_free_gib": 84.9,
+  "memory_free_percent": 39,
+  "disk_free_gib": 82.17,
   "other_hol_pids": []
  },
  "cpu_seconds_limit": 3600,
  "wall_seconds_limit": 3900,
  "end_to_end": false,
- "actual_exit": -15,
+ "actual_exit": 0,
  "wall_timeout": false,
- "wall_seconds": 149.349,
- "child_user_cpu_seconds": 103.552,
- "child_max_rss_bytes": 2175614976,
- "markers": [],
- "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "wall_seconds": 497.273,
+ "child_user_cpu_seconds": 229.051,
+ "child_max_rss_bytes": 1801912320,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "95dc8058b10d17c67eb793c70b7d05da26020be320771aaaa10263f634e1ba29",
  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
- "objects": {},
+ "objects": {
+  ".hol/objs/forge_refundR6FfiTheory.dat": "9bd6e4d295206830a7de112119f3e9d7bca831fc5e1b468cf80f249bd46e8294",
+  ".hol/objs/forge_refundR6FfiTheory.sig": "ab3b7581bc47a155eda9c19697cadbaa25bf23e826265b546dd29667bf91d38a",
+  ".hol/objs/forge_refundR6FfiTheory.sml": "56a4f132c5d5effa26b47ac1a0b110fd3acf199ac235464990749c3c072800ae"
+ },
  "inputs_unchanged_after": true
 }

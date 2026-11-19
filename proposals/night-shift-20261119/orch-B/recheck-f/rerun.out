@@ -1,0 +1,29 @@
+== proof linked-refund
+   status PASS [] Dafny program verifier finished with 1489 verified, 0 errors
+== proof linked-refund-no-axiom
+   status PASS [] Dafny program verifier finished with 1486 verified, 0 errors
+== proof sink-core
+   status PASS [] Dafny program verifier finished with 56 verified, 0 errors
+== proof sink-core-attack
+   status PASS [] Dafny program verifier finished with 60 verified, 0 errors
+== proof sink-core-witness
+   status PASS [] Dafny program verifier finished with 67 verified, 0 errors
+== proof slice-theorem
+   status PASS [] Dafny program verifier finished with 1570 verified, 0 errors
+RESULT: all requested proofs PASS; this records verifier runs and digests; it does not establish theorem meaning
+IDENTITY CHECK, then --rerun: the verifier runs again (theorem meaning is still not checked).
+linked-refund            closure  33 files  OK  [re-ran the verifier; recorded status PASS]
+linked-refund-no-axiom   closure  33 files  OK  [re-ran the verifier; recorded status PASS]
+sink-core                closure   5 files  OK  [re-ran the verifier; recorded status PASS]
+sink-core-attack         closure   6 files  OK  [re-ran the verifier; recorded status PASS]
+sink-core-witness        closure   5 files  OK  [re-ran the verifier; recorded status PASS]
+slice-theorem            closure  37 files  OK  [re-ran the verifier; recorded status PASS]
+rerun linked-refund            SAME: status PASS, verified 1489, exit 0
+rerun linked-refund-no-axiom   SAME: status PASS, verified 1486, exit 0
+rerun sink-core                SAME: status PASS, verified 56, exit 0
+rerun sink-core-attack         SAME: status PASS, verified 60, exit 0
+rerun sink-core-witness        SAME: status PASS, verified 67, exit 0
+rerun slice-theorem            SAME: status PASS, verified 1570, exit 0
+re-ran the verifier into ../recheck-f/rerun
+identity verified; theorem meaning NOT checked
+exit 0

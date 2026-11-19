@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 
-sys.path.insert(0, '/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/tests')
+sys.path.insert(0, '/Users/USER/forge/results/night-shift-20261119/orch-A/launch/tests')
 from common import *  # noqa: E402,F401,F403
 import common as C  # noqa: E402
 

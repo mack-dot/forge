@@ -33,7 +33,7 @@ then L-OUT, then L-EXIT-0). E needs the exported theory of O.
 ## 2. Before each run (resource check, memory first)
 
 ```zsh
-test -f /Users/mackianni/forge/results/round4-m1-replay-20261118/phase3/ALL_DONE && echo "replay done"
+test -f /Users/USER/forge/results/round4-m1-replay-20261118/phase3/ALL_DONE && echo "replay done"
 pgrep -fl 'cake_compile_heap|arm8-heap|cakeml-heap|poly|hol' || echo "no HOL process"
 memory_pressure | tail -1            # need >= 25 % free (run_case.py refuses below 25 %)
 sysctl vm.swapusage                  # record it; replay case 005 stopped with "Run out of store"
@@ -44,10 +44,10 @@ If any HOL process runs: stop. `run_case.py` also refuses (exit 3, `resource_gua
 ## 3. Set up the attempt folder (once)
 
 ```zsh
-W=/Users/mackianni/forge/results/night-shift-20261119/orch-A/out-exit
-S=/Users/mackianni/forge/results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001
-D=/Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/route-a
-A=/Users/mackianni/forge/results/m1b-out-exit-20261119/attempt-0001
+W=/Users/USER/forge/results/night-shift-20261119/orch-A/out-exit
+S=/Users/USER/forge/results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001
+D=/Users/USER/forge/proposals/m1b-mission-20261119/drafts/route-a
+A=/Users/USER/forge/results/m1b-out-exit-20261119/attempt-0001
 mkdir -p $A
 cp $S/run_case.py $A/run_case.py
 cp $S/deps-imp4.txt $A/deps-LO.txt

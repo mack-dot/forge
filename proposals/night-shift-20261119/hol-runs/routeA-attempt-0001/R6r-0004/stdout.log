@@ -1,0 +1,410 @@
+TIMEOUT_HELPER Timeout.apply loaded
+GUARD_DEFINED guarded_apply
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+LOAD_OK basisFunctionsLib
+<<HOL message: Created theory "forge_refundR6Read">>
+MARK USE r6r_common.sml
+MARK GRAMMAR
+GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\187v. &T :v -> (\206\177 -> bool) -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and flatSem$v\n", origins = [{origin_function = "type-analysis", origin_structure  ...
+TYPE_REPRIVILEGED ffi_result was cfHeapsBase now ffi
+TYPE_REPRIVILEGED shift was wordLang now ast
+TYPE_REPRIVILEGED pat was pattern_semantics now ast
+TYPE_REPRIVILEGED op was flatLang now ast
+TYPE_REPRIVILEGED locs was location now ast
+TYPE_REPRIVILEGED lit was dafny_ast now ast
+TYPE_REPRIVILEGED exp was dafny_ast now ast
+TYPE_REPRIVILEGED arith was asm now ast
+TYPE_REPRIVILEGED v was flatSem now semanticPrimitives
+TYPE_REPRIVILEGED state was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED sem_env was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED result was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED dest_thunk_ret was flatSem now semanticPrimitives
+GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK
+GRAMMAR_FIX B
+MARK DEFS
+DEFINITION ⊢ ∀Inv fd.
+    read_event_ok Inv fd ⇔
+    ∀n h3 h4 rest nb.
+      n = 4096 ∧ LENGTH rest = 4096 ∧ LENGTH nb = 4 + LENGTH rest ∧
+      HD nb = 0w ⇒
+      Inv
+        (IO_event (ExtCall «read») (n2w8 fd)
+           (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+DEFINITION ⊢ ∀bactive fd is.
+    INSTREAM_BUFFERED_FD_V bactive fd is =
+    SEP_EXISTS bcontent.
+      INSTREAM_BUFFERED_BL_FD bcontent bactive fd is *
+      &(LENGTH bcontent = 4100)
+DEFINITION ⊢ ∀fd is s fs.
+    INSTREAM_STR_V fd is s fs =
+    SEP_EXISTS read active left.
+      INSTREAM_BUFFERED_FD_V (MAP (n2w ∘ ORD) active) fd is *
+      &(s = STRCAT active left ∧
+       get_fd_content fs fd =
+       SOME (STRCAT read s,STRLEN read + STRLEN active) ∧
+       get_mode fs fd = SOME ReadMode)
+DEFINITION ⊢ ∀fd is s fs non_empty is_empty.
+    INSTREAM_STRP_V fd is s fs non_empty is_empty =
+    SEP_EXISTS read active left.
+      INSTREAM_BUFFERED_FD_V (MAP (n2w ∘ ORD) active) fd is *
+      &(s = STRCAT active left ∧ (non_empty ⇒ active ≠ "") ∧
+       (is_empty ⇒ active = "") ∧
+       get_fd_content fs fd =
+       SOME (STRCAT read s,STRLEN read + STRLEN active) ∧
+       get_mode fs fd = SOME ReadMode)
+MARK SHORTCUTS
+FRAME_THM_PRESENT IOFS_V_HPROP_INJ
+FRAME_THM_PRESENT STDIO_V_HPROP_INJ
+MARK STATEMENTS
+STATEMENT read_event_ok_read_into
+∀Inv fd n h3 h4 rest.
+  read_event_ok Inv fd ∧ n = LENGTH rest ∧ LENGTH rest = 4096 ⇒
+  ∀nb.
+    LENGTH nb = 4 + LENGTH rest ∧ HD nb = 0w ⇒
+    Inv
+      (IO_event (ExtCall «read») (n2w8 fd) (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+STATEMENT read_event_ok_refund
+read_event_ok refund_valid_event 0
+STATEMENT STD_streams_fd0
+∀fs.
+  wfFS fs ∧ STD_streams fs ⇒
+  get_fd_content fs 0 ≠ NONE ∧ get_mode fs 0 = SOME ReadMode
+STATEMENT INSTREAM_STRP_V_F_F
+∀fd is s fs. INSTREAM_STRP_V fd is s fs F F = INSTREAM_STR_V fd is s fs
+STATEMENT INSTREAM_BUFFERED_FD_V_IMP
+∀bactive fd is.
+  INSTREAM_BUFFERED_FD_V bactive fd is ==>>
+  INSTREAM_BUFFERED_FD bactive fd is
+STATEMENT INSTREAM_STR_V_IMP
+∀fd is s fs. INSTREAM_STR_V fd is s fs ==>> INSTREAM_STR fd is s fs
+STATEMENT read_into_spec_R
+∀fs fd fdv n nv buf.
+  wfFS fs ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  n < 256² ⇒
+  MAX n 1024 ≤ LENGTH rest ⇒
+  get_fd_content fs fd ≠ NONE ⇒
+  get_mode fs fd = SOME ReadMode ⇒
+  n = LENGTH rest ⇒
+  LENGTH rest = 4096 ⇒
+  read_event_ok Inv fd ⇒
+  app p TextIO_read_into_v [fdv; buf; nv]
+    (W8ARRAY buf (h1::h2::h3::h4::rest) * IOxV Inv fs)
+    (POSTve
+       (λnrv.
+          SEP_EXISTS nr.
+            &NUM nr nrv *
+            SEP_EXISTS content pos.
+              &(get_fd_content fs fd = SOME (content,pos) ∧
+               get_mode fs fd = SOME ReadMode ∧
+               (nr ≤ MIN n (STRLEN content − pos) ∧
+                nr ≤ STRLEN content − pos) ∧
+               (nr = 0 ⇔ eof fd fs = SOME T ∨ n = 0)) *
+              IOxV Inv (bumpFD fd fs nr) *
+              W8ARRAY buf
+                (0w::n2w (nr DIV 256)::n2w nr::h4::
+                   MAP (n2w ∘ ORD) (TAKE nr (DROP pos content)) ++
+                 DROP nr rest))
+       (λe.
+          &InvalidFD_exn e *
+          &(get_fd_content fs fd = NONE ∨ get_mode fs fd ≠ SOME ReadMode) *
+          IOFS_WO_iobuff fs))
+STATEMENT refillBuffer_with_read_spec_V
+∀fd fdv fs content pos.
+  is = Conv instreambuffered_con_stamp [fdv; rr; wr; isbuff] ∧
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME ReadMode ⇒
+  LENGTH bcontent = 4100 ⇒
+  read_event_ok Inv fd ⇒
+  app p TextIO_refillBuffer_with_read_v [is]
+    (IOFS_V Inv fs * INSTREAM_BUFFERED_BL_FD bcontent bactive fd is)
+    (POSTv wv. SEP_EXISTS nr h4 rest.
+       &(NUM nr wv ∧
+        LENGTH bcontent = LENGTH (0w::n2w (nr DIV 256)::n2w nr::h4::rest) ∧
+        (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+        nr = LENGTH (explode_fromI nr content pos) ∧
+        nr ≤ STRLEN content − pos) *
+       INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+         (explode_fromI nr content pos) fd is * IOFS_V Inv (bumpFD fd fs nr))
+STATEMENT refillBuffer_with_read_spec_STR_V
+read_event_ok Inv fd ⇒
+app p TextIO_refillBuffer_with_read_v [is]
+  (STDIO_V Inv fs * INSTREAM_STRP_V fd is input fs F T)
+  (POSTv retv. SEP_EXISTS nr.
+     STDIO_V Inv (forwardFD fs fd nr) *
+     INSTREAM_STRP_V fd is input (forwardFD fs fd nr) (¬NULL input)
+       (NULL input))
+PART_DONE r6r_common.sml
+MARK USE r6r_steps.sml
+R6R_STEPS opened
+DELSIMPS_OK
+R6R_STEPS loaded
+PART_DONE r6r_steps.sml
+MARK USE r6r_prove.sml
+BEGIN read_event_ok_read_into required
+STEP_USED read_event_ok_read_into 1 close candidate 0 goals_out 0
+Saved theorem _______ "read_event_ok_read_into"
+CHECKED read_event_ok_read_into
+⊢ ∀Inv fd n h3 h4 rest.
+    read_event_ok Inv fd ∧ n = LENGTH rest ∧ LENGTH rest = 4096 ⇒
+    ∀nb.
+      LENGTH nb = 4 + LENGTH rest ∧ HD nb = 0w ⇒
+      Inv
+        (IO_event (ExtCall «read») (n2w8 fd)
+           (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+BEGIN read_event_ok_refund required
+STEP_USED read_event_ok_refund 1 intro candidate 0 goals_out 1
+STEP_USED read_event_ok_refund 2 unfold candidate 0 goals_out 1
+STEP_USED read_event_ok_refund 3 witness candidate 0 goals_out 1
+STEP_USED read_event_ok_refund 4 close candidate 0 goals_out 0
+Saved theorem _______ "read_event_ok_refund"
+CHECKED read_event_ok_refund
+⊢ read_event_ok refund_valid_event 0
+BEGIN STD_streams_fd0 required
+STEP_USED STD_streams_fd0 1 intro candidate 0 goals_out 2
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundR6Read)>>
+STEP_USED STD_streams_fd0 2 content candidate 0 goals_out 0
+STEP_USED STD_streams_fd0 3 mode candidate 0 goals_out 0
+Saved theorem _______ "STD_streams_fd0"
+CHECKED STD_streams_fd0
+⊢ ∀fs.
+    wfFS fs ∧ STD_streams fs ⇒
+    get_fd_content fs 0 ≠ NONE ∧ get_mode fs 0 = SOME ReadMode
+BEGIN INSTREAM_STRP_V_F_F required
+STEP_USED INSTREAM_STRP_V_F_F 1 close (5825) candidate 0 goals_out 0
+Saved theorem _______ "INSTREAM_STRP_V_F_F"
+CHECKED INSTREAM_STRP_V_F_F
+⊢ ∀fd is s fs. INSTREAM_STRP_V fd is s fs F F = INSTREAM_STR_V fd is s fs
+BEGIN INSTREAM_BUFFERED_FD_V_IMP optional
+STEP_CANDIDATE_FAILED INSTREAM_BUFFERED_FD_V_IMP 1 candidate 0 HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED INSTREAM_BUFFERED_FD_V_IMP 1 candidate 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+STEP_USED INSTREAM_BUFFERED_FD_V_IMP 1 close candidate 2 goals_out 0
+Saved theorem _______ "INSTREAM_BUFFERED_FD_V_IMP"
+CHECKED INSTREAM_BUFFERED_FD_V_IMP
+⊢ ∀bactive fd is.
+    INSTREAM_BUFFERED_FD_V bactive fd is ==>>
+    INSTREAM_BUFFERED_FD bactive fd is
+BEGIN INSTREAM_STR_V_IMP optional
+STEP_USED INSTREAM_STR_V_IMP 1 unfold candidate 0 goals_out 1
+STEP_USED INSTREAM_STR_V_IMP 2 three SEP_EXISTS candidate 0 goals_out 1
+STEP_USED INSTREAM_STR_V_IMP 3 frame, INSTREAM_BUFFERED_FD_V_IMP candidate 0 goals_out 0
+Saved theorem _______ "INSTREAM_STR_V_IMP"
+CHECKED INSTREAM_STR_V_IMP
+⊢ ∀fd is s fs. INSTREAM_STR_V fd is s fs ==>> INSTREAM_STR fd is s fs
+BEGIN read_into_spec_R required
+STEP_USED read_into_spec_R 1 intro candidate 0 goals_out 1
+STEP_USED read_into_spec_R 2 H_inv from read_event_ok candidate 0 goals_out 1
+STEP_USED read_into_spec_R 3 apply read_into_spec_V candidate 0 goals_out 0
+Saved theorem _______ "read_into_spec_R"
+CHECKED read_into_spec_R
+⊢ ∀fs fd fdv n nv buf.
+    wfFS fs ⇒
+    FD fd fdv ⇒
+    NUM n nv ⇒
+    n < 256² ⇒
+    MAX n 1024 ≤ LENGTH rest ⇒
+    get_fd_content fs fd ≠ NONE ⇒
+    get_mode fs fd = SOME ReadMode ⇒
+    n = LENGTH rest ⇒
+    LENGTH rest = 4096 ⇒
+    read_event_ok Inv fd ⇒
+    ... ... [... ; ... ] (... ... * ... ... )
+      (POSTve (λ... . ... ) (λe. ... * ... ))
+BEGIN refillBuffer_with_read_spec_V required
+STEP_USED refillBuffer_with_read_spec_V 1 setup, case split (2745-2748) candidate 0 goals_out 2
+STEP_USED refillBuffer_with_read_spec_V 2 B1 eof fact (2749) candidate 0 goals_out 1
+Adding nsLookup representation thms for [TextIOProg_env_35]
+Adding nsLookup representation thms for [TextIOProg_env_34]
+Adding nsLookup representation thms for [TextIOProg_env_33]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_32, TextIOProg_env_31, ..., TextIOProg_env_28]
+Adding nsLookup representation thms for [TextIOProg_env_27, TextIOProg_env_26, TextIOProg_env_25]
+Adding nsLookup representation thms for 8 consts [TextIOProg_env_24, TextIOProg_env_23, ..., TextIOProg_env_17]
+Adding nsLookup representation thms for 6 consts [TextIOProg_env_16, TextIOProg_env_15, ..., TextIOProg_env_11]
+Adding nsLookup representation thms for [TextIOProg_env_10, TextIOProg_env_9]
+Adding nsLookup representation thms for [TextIOProg_env_8]
+Adding nsLookup representation thms for 4 consts [TextIOProg_env_7, TextIOProg_env_6, ..., TextIOProg_env_4]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_3, TextIOProg_env_2, ..., TextIOProg_env]
+STEP_USED refillBuffer_with_read_spec_V 3 B1 xmatch, precondition folded candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 4 B1 open IOFS_V, BL_FD, inv (2750-2751) candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 5 B1 xpull candidate 0 goals_out 1
+Adding nsLookup representation thms for 528 consts [MarshallingProg_env_1, MarshallingProg_env_0, ..., CommandLineProg_env_2]
+Using CF specification w8array_length_spec from theory Word8ArrayProof
+Post condition: POSTv nv.
+  W8ARRAY buff bcontent * IOxV Inv fs * W8ARRAY iobuff_loc v *
+  REF_NUM rr' r * REF_NUM wr' w * &NUM 4100 nv
+STEP_USED refillBuffer_with_read_spec_V 6 B1 Word8Array.length candidate 0 goals_out 1
+Using translator specification minus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv1.
+  W8ARRAY buff bcontent * IOxV Inv fs * W8ARRAY iobuff_loc v *
+  REF_NUM rr' r * REF_NUM wr' w * &NUM 4096 nv1
+STEP_USED refillBuffer_with_read_spec_V 7 B1 minus 4 candidate 0 goals_out 1
+Using translator specification get_in_v_thm from theory TextIOProg
+xlet_auto : using heuristics
+Post condition: POSTv sv.
+  W8ARRAY buff bcontent * IOxV Inv fs * W8ARRAY iobuff_loc v *
+  REF_NUM rr' r * REF_NUM wr' w *
+  &STRING_TYPE (get_in (Instream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv
+STEP_USED refillBuffer_with_read_spec_V 8 B1 get_in candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 9 B1 FD, split bcontent candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 10 B1 LENGTH t = 4096 (NEW) candidate 0 goals_out 1
+xlet_auto : using heuristics
+Post condition: POSTve
+  (λnrv.
+     SEP_EXISTS nr.
+       (SEP_EXISTS content' pos'.
+          &((... = ... ∧ ... = ... ) ∧ (... ∧ ... ) ∧ ... = ... ) *
+          IOxV Inv (... ... fs nr) *
+          W8ARRAY buff (0w::n2w (... DIV ... )::... ... ::... ::... )) *
+       W8ARRAY iobuff_loc v * REF_NUM rr' r * REF_NUM wr' w * &NUM nr nrv)
+  (λe.
+     IOFS_WO_iobuff fs * W8ARRAY iobuff_loc v * REF_NUM rr' r *
+     REF_NUM wr' w * &F * &InvalidFD_exn e)
+Using translator specification plus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv2.
+  IOxV Inv (bumpFD fd fs 0) * W8ARRAY buff (0w::0w::0w::h4::t) *
+  W8ARRAY iobuff_loc v * rr' ~~> v'³' * wr' ~~> v'' * &NUM 4 nv2
+Using CF specification assign_spec from theory mlbasicsProg
+Post condition: POSTv uv.
+  wr' ~~> nv2 * IOxV Inv (bumpFD fd fs 0) *
+  W8ARRAY buff (0w::0w::0w::h4::t) * W8ARRAY iobuff_loc v * rr' ~~> v'³' *
+  &UNIT_TYPE () uv
+Using CF specification assign_spec from theory mlbasicsProg
+Post condition: POSTv uv1.
+  rr' ~~> Litv (IntLit 4) * wr' ~~> nv2 * IOxV Inv (bumpFD fd fs 0) *
+  W8ARRAY buff (0w::0w::0w::h4::t) * W8ARRAY iobuff_loc v * &UNIT_TYPE () uv1
+Using CF specification deref_spec from theory mlbasicsProg
+Post condition: POSTv yv.
+  wr' ~~> nv2 * rr' ~~> Litv (IntLit 4) * IOxV Inv (bumpFD fd fs 0) *
+  W8ARRAY buff (0w::0w::0w::h4::t) * W8ARRAY iobuff_loc v * &(nv2 = yv)
+Using translator specification minus_v_thm from theory mlbasicsProg
+STEP_USED refillBuffer_with_read_spec_V 11 B1 read_into_spec_R + tail (2761-2770) candidate 0 goals_out 0
+STEP_USED refillBuffer_with_read_spec_V 12 B2 eof fact (2771) candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 13 B2 xmatch, precondition folded candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 14 B2 open IOFS_V, BL_FD, inv (2772-2773) candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 15 B2 xpull candidate 0 goals_out 1
+Using CF specification w8array_length_spec from theory Word8ArrayProof
+Post condition: POSTv nv.
+  W8ARRAY buff bcontent * IOxV Inv fs * W8ARRAY iobuff_loc v *
+  REF_NUM rr' r * REF_NUM wr' w * &NUM 4100 nv
+STEP_USED refillBuffer_with_read_spec_V 16 B2 Word8Array.length candidate 0 goals_out 1
+Using translator specification minus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv1.
+  W8ARRAY buff bcontent * IOxV Inv fs * W8ARRAY iobuff_loc v *
+  REF_NUM rr' r * REF_NUM wr' w * &NUM 4096 nv1
+STEP_USED refillBuffer_with_read_spec_V 17 B2 minus 4 candidate 0 goals_out 1
+Using translator specification get_in_v_thm from theory TextIOProg
+xlet_auto : using heuristics
+Post condition: POSTv sv.
+  W8ARRAY buff bcontent * IOxV Inv fs * W8ARRAY iobuff_loc v *
+  REF_NUM rr' r * REF_NUM wr' w *
+  &STRING_TYPE (get_in (Instream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv
+STEP_USED refillBuffer_with_read_spec_V 18 B2 get_in candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 19 B2 FD, split bcontent candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_V 20 B2 LENGTH t = 4096 (NEW) candidate 0 goals_out 1
+xlet_auto : using heuristics
+Post condition: POSTve
+  (λnrv.
+     SEP_EXISTS nr.
+       (SEP_EXISTS content' pos'.
+          &((... = ... ∧ ... = ... ) ∧ (... ∧ ... ) ∧ (... ⇔ ... )) *
+          IOxV Inv (... ... fs nr) *
+          W8ARRAY buff (0w::n2w (... DIV ... )::... ... ::... ::... )) *
+       W8ARRAY iobuff_loc v * REF_NUM rr' r * REF_NUM wr' w * &NUM nr nrv)
+  (λe.
+     IOFS_WO_iobuff fs * W8ARRAY iobuff_loc v * REF_NUM rr' r *
+     REF_NUM wr' w * &F * &InvalidFD_exn e)
+Using translator specification plus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv2.
+  IOxV Inv (bumpFD fd fs nr) *
+  W8ARRAY buff
+    (0w::n2w (nr DIV 256)::n2w nr::h4::
+       (MAP (... ∘ ... ) (... ... (... ... )) ++ DROP nr t)) *
+  W8ARRAY iobuff_loc v * REF_NUM rr' r * REF_NUM wr' w * &NUM (nr + 4) nv2
+Using CF specification assign_spec from theory mlbasicsProg
+Post condition: POSTv uv.
+  wr' ~~> nv2 * IOxV Inv (bumpFD fd fs nr) *
+  W8ARRAY buff
+    (0w::n2w (nr DIV 256)::n2w nr::h4::
+       (MAP (n2w ∘ ORD) (TAKE nr (... ... content')) ++ DROP nr t)) *
+  W8ARRAY iobuff_loc v * rr' ~~> v'³' * &UNIT_TYPE () uv
+Using CF specification assign_spec from theory mlbasicsProg
+Post condition: POSTv uv1.
+  rr' ~~> Litv (IntLit 4) * wr' ~~> nv2 * IOxV Inv (bumpFD fd fs nr) *
+  W8ARRAY buff
+    (0w::n2w (nr DIV 256)::n2w nr::h4::
+       (MAP (n2w ∘ ORD) (TAKE nr (DROP pos' content')) ++ DROP nr t)) *
+  W8ARRAY iobuff_loc v * &UNIT_TYPE () uv1
+Using CF specification deref_spec from theory mlbasicsProg
+Post condition: POSTv yv.
+  wr' ~~> nv2 * rr' ~~> Litv (IntLit 4) * IOxV Inv (bumpFD fd fs nr) *
+  W8ARRAY buff
+    (0w::n2w (nr DIV 256)::n2w nr::h4::
+       (MAP (n2w ∘ ORD) (TAKE nr (DROP pos' content')) ++ DROP nr t)) *
+  W8ARRAY iobuff_loc v * &(nv2 = yv)
+Using translator specification minus_v_thm from theory mlbasicsProg
+STEP_USED refillBuffer_with_read_spec_V 21 B2 read_into_spec_R + tail (2783-2795) candidate 0 goals_out 0
+Saved theorem _______ "refillBuffer_with_read_spec_V"
+CHECKED refillBuffer_with_read_spec_V
+⊢ ∀fd fdv fs content pos.
+    is = Conv instreambuffered_con_stamp [fdv; rr; wr; isbuff] ∧
+    get_fd_content fs fd = SOME (content,pos) ⇒
+    get_mode fs fd = SOME ReadMode ⇒
+    LENGTH bcontent = 4100 ⇒
+    read_event_ok Inv fd ⇒
+    app p TextIO_refillBuffer_with_read_v [is]
+      (IOFS_V Inv fs * INSTREAM_BUFFERED_BL_FD bcontent bactive fd is)
+      (POSTv wv. SEP_EXISTS nr h4 rest.
+         &(NUM nr wv ∧ LENGTH bcontent = LENGTH (0w::... ) ∧
+          (... = ... ⇔ ... = ... ) ∧ (... ⇔ ... ) ∧ ... ∧ ... ) *
+         INSTREAM_BUFFERED_BL_FD (0w::... ::... ) (... ... content pos) fd is *
+         IOFS_V Inv (bumpFD fd fs nr))
+BEGIN refillBuffer_with_read_spec_STR_V optional
+STEP_USED refillBuffer_with_read_spec_STR_V 1 open STDIO_V, INSTREAM_STRP_V, INSTREAM_BUFFERED_FD_V (6833-6835) candidate 0 goals_out 1
+STEP_USED refillBuffer_with_read_spec_STR_V 2 xapp refillBuffer_with_read_spec_V + rest (6836-6869) candidate 0 goals_out 0
+Saved theorem _______ "refillBuffer_with_read_spec_STR_V"
+CHECKED refillBuffer_with_read_spec_STR_V
+⊢ read_event_ok Inv fd ⇒
+  app p TextIO_refillBuffer_with_read_v [is]
+    (STDIO_V Inv fs * INSTREAM_STRP_V fd is input fs F T)
+    (POSTv retv. SEP_EXISTS nr.
+       STDIO_V Inv (forwardFD fs fd nr) *
+       INSTREAM_STRP_V fd is input (forwardFD fs fd nr) (¬NULL input)
+         (NULL input))
+OPTIONAL_FAILED 
+PART_DONE r6r_prove.sml
+MARK CHECKS
+FAILED_LIST 
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CONTROL_OK closure contains forge_refundR6Write
+CONTROL_OK closure contains forge_refundR6Ffi
+CONTROL_OK closure contains forge_refundRouteA2c
+CONTROL_OK closure contains TextIOProof
+STORED_THEOREMS 9
+STORED_DEFINITIONS 4
+STORED_NAMES read_event_ok_read_into read_event_ok_refund STD_streams_fd0 INSTREAM_STRP_V_F_F INSTREAM_BUFFERED_FD_V_IMP INSTREAM_STR_V_IMP read_into_spec_R refillBuffer_with_read_spec_V refillBuffer_with_read_spec_STR_V
+CONTROL_OK theorems = stored list, 4 definitions
+CONTROL_OK refillBuffer_with_read_spec_V and read_event_ok_refund stored
+CLOSURE_NODES 550
+Exporting theory "forge_refundR6Read" ... done.
+Theory "forge_refundR6Read" took 56.0s to build
+EXACT_COMPLETE

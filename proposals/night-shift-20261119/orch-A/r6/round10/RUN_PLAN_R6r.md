@@ -2,7 +2,7 @@
 
 Nothing in this folder ran. Every tactic is UNCHECKED. No expected exit code below is an actual one.
 
-## Files (directory `/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round10/`)
+## Files (directory `/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round10/`)
 | file | SHA-256 | role |
 |---|---|---|
 | `R6rx-0001.sml` | `0317b23620aaf60e4fd2e656515f3bc5f2a66b1631e5c726b3183465346725cf` | EXPLORATION main (= round9/R6wx-0004.sml; header, scratch theory, dir, names changed) |
@@ -18,10 +18,10 @@ wrapper hashes them before and after the run. Do not move them.
 
 ## Commands (orchestrator only, single HOL slot; one at a time)
 ```
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round10/R6rx-0001.sml R6rx-0001.sml
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round10/R6r-0001.sml R6r-0001.sml
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round10/deps-R6r.txt deps-R6r.txt
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round10/R6rx-0001.sml R6rx-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round10/R6r-0001.sml R6r-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round10/deps-R6r.txt deps-R6r.txt
 shasum -a 256 R6rx-0001.sml R6r-0001.sml deps-R6r.txt
 ./nightshift-run.sh R6rx-0001 3600 deps-R6r.txt        # 1. exploration
 ./nightshift-run.sh R6r-0001 3600 deps-R6r.txt         # 2. proof, ONLY if 1. shows TRY_HELPER_CLOSED for every required lemma

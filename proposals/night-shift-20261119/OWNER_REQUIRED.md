@@ -156,3 +156,84 @@ The launcher reports that the owner pushed `nightshift/A-proof` themselves. A ch
 - Why not: a safety classifier stopped a worker's response and then my own control script. No file was written and no command ran. I did not retry in another form.
 - State: only a table made by READING proposals/m1b-mission-20261119/drafts/fail-closed/m1_fail_closed.py exists (orch-C/ATTACKS.md, C-BLOCK-01). It is not evidence from a run. A's launch-path controls (orch-A/launch/) have no red-team run by C.
 - Owner decision needed: who runs this class of test and how (for example the owner by hand, or A's own control tests reviewed by reading only).
+
+## A-5 (2026-11-19T15:43:53Z): launch-path controls for the proved executable — adoption is an owner decision (nothing applied)
+Prototype `orch-A/launch/launcher.py` (sha256 fbdbea0b…; unverified Python; NOT wired into any deployed path; no
+protected file changed). Matrix: `orch-A/launch/CONTROL_MATRIX.md`. Tests by the author of the control; A ran the four
+test files again (exit 0 each; 48 rows; 0 not as expected). NO independent attack run exists (red team blocked: C-1).
+Decisions for the owner:
+1. Adopt a launcher of this kind as the ONLY way to run the executable (empty environment; pinned SHA-256 and kernel
+   CDHash check; fresh blocking pipes; closed descriptors; default signals; accept only exit 0 + empty stderr + exactly
+   one strict frame that echoes the request). The consumer must start it as
+   `/usr/bin/env -i /usr/bin/python3 -B -I <absolute path>/launcher.py`; without that rule the row AC2-n3 stays OPEN
+   (`DEVELOPER_DIR` redirects `/usr/bin/python3`; a forged decision line is ACCEPTED).
+2. Hardened runtime: on a re-signed COPY dyld ignores `DYLD_INSERT_LIBRARIES`. Re-signing changes the bytes
+   (copy 1b78c1e2…; CDHash 341d62cd…), so the pinned image digest b8ed5ec2… and every record bound to it would need a
+   new pin. Not done on the original.
+3. The C FFI patch (item A-3) stays the only option for row AC3-j (call shapes outside the model; R6). NOT RUN.
+
+## B-16 (written 2026-11-19T16:03:15Z) — the Slice 1 suite needs changed expectations to run on the hardened tree (branch proposal; nothing merged; the full changed suite is NOT RUN yet)
+- Why: on the hardened sink the suite stops at row x1 with exit 2 (heavy window 9): the row's raw SQL write is now refused by the database.
+- Proposed changes (table: results/night-shift-20261119/orch-B/h-suite/CHANGES.md; diff SHA-256 d83d0ec07d7f1fe32f81ddbf1f341ac0136f74659e8358510254ee54aa90ef9f): (1) six hostile-write rows (x1, x2, x3, x4, x6, x7) keep the original write and now expect "the database refuses the write; store unchanged"; six NEW rows repeat each attack for a writer that first drops the triggers and expect: the running sink halts, a restart is refused, the dispatcher reports the audit failure, no effect. (2) Row x5 (an emit that fails) now expects "in doubt" in place of the merged at-most-once record: a delivery POLICY change (red team C-ATT-18). (3) The row at old line 589 depends on the constant SINGLE_USE_RULE (item B-15). No row is deleted. Expected count 122 rows (NOT RUN).
+- Not applied on the branch: the same worker's change to scripts/exit_m1_conformance.py (it may be a frozen PR-gate module; the issuer there needs a compiled module with the issuer core).
+- Decision needed: accept the changed expectations (each one), or name the rows that must keep the merged expectation.
+
+## B-17 (written 2026-11-19T16:14:35Z) — a proposed gate tier that checks the GENERATED JavaScript for bounds, in place of a syntactic subset rule (UNAPPLIED diff; protected path; U620)
+- What: results/night-shift-20261119/orch-B/h-gate/diff/refund-jsbound-combined.diff (SHA-256 bf9460ce…05fa; `git apply --check` exit 0 against 985f5eaf by the worker) with one NEW protected file gate/refund/js_bound_check.cjs (SHA-256 2b70a2dd…c0c1). It also holds: the `expect` rule and supervision, an `abstract` and `@` check with fail-closed size caps, and read-once wiring (the rule, the identity and the snapshot use the same bytes).
+- Evidence so far (U620): on 124 translated files the checker accepts 96 and none of the seven known unsafe submissions (my re-run equals the worker's). All 31 correct files that rule 3 refused are accepted. The full gate with this diff is NOT RUN. An adversarial review of the checker is running.
+- What stays an argument: the checker itself is 692 unverified lines; its cost table is read from source; compiler correctness; "translate equals build" was tested on one file.
+- Note: the gate options "warnings are errors" and the audit step are LOAD-BEARING: a bodiless `lemma … ensures false` passes the verifier and is stopped only by them (red team C-GATE-05).
+- Decision needed (later, after the review and a full gate run): adopt this tier, or the termination-by-construction tier (B-7; comparison in h-gate/TERMINATION_TIER.md), or neither.
+
+## C-1 addendum (Orchestrator C, 2026-11-19T16:15Z by `date -u`): part of the launch-path work is now done
+- Done, not stopped by the classifier: a static audit of orch-A/launch/launcher.py by reading, and defensive conformance tests (orch-C/c22-launch-conformance/test_process_lifecycle.py; 24 tests; exit 1: 22 ok, 2 fail).
+- Gap shown by a run (C-LAUNCH-01): if the caller starts the launcher with SIGCHLD ignored, a child that aborted or exited non-zero after a complete frame is AUTHORIZED. The fix is A's work.
+- Still NOT run and still an owner decision: tests with the real refund program against code injected at load, and tests of the FFI C code. The earlier stopped commands were not retried.
+
+## B-18 (written 2026-11-19T16:19:09Z) — two questions on the issuer's request-id rule (rule 2 on the branch; U621); they refine B-15
+- OQ-H2-1: Rule 2 closes a (charge id, request id) at the issuer when the proved core refuses its first candidate (protocol.md lines 61 to 62: rejection closes that attempt). A host that sent a wrong amount must then use a new request id, and a caller who knows the stored state can close a victim's request id with one unauthorized request (the same power as the zero-amount squat, red team C-ATT-08). Keep closing on refusal, or close only on completion (settled in the sink's store)?
+- OQ-H2-2: Without a store path the issuer cannot know the authoritative state; it keys its memory on the pre-state hash and signs the same request id again on another pre-state (a difference from protocol.md lines 64 to 65; the sink still commits at most one token per request id). Must a deployment run the issuer in Store mode only (refuse the memory rule without a store)? My reading of decision B-10 is yes; that reading is not a decision.
+- Also open and unchanged: the issuer has no caller identity, so a squat on the REAL state with a zero amount still blocks one request id (proved as the witness WSquatRealState; C-ATT-08 class). Closing it needs authenticated callers: outside tonight's scope.
+
+## C-1 addendum 2 (Orchestrator C, 2026-11-19T16:22Z by `date -u`): one more stop by the classifier
+- While I wrote the brief of worker c24-minter2 (re-attack of B's minter rule 2), the classifier stopped my response. The worker had already started with a brief that ends mid-sentence. I did not resend or rephrase the withheld part.
+
+## B-19 (written 2026-11-19T16:39:33Z) — new evidence for question OQ-H2-1 of B-18: closing a request id on a refusal lets a caller without the key block a victim cheaply (red team C-ATT-38; its runs)
+- With rule 2 on the branch, a caller who knows the charge id, the victim's request id and the original amount closes the victim's request id WITHOUT knowing the pre-state: without a store, about `original` requests (one per possible remaining value); with a store, the minter's refusal texts act as a state oracle (364 probes in the red team's run), then one request closes the pair. No token is signed and nothing commits; the victim then gets "attempt closed" and must use a new request id.
+- This corrects a sentence of the worker's notes ("without a store a caller cannot block the victim"): false.
+- It makes the choice in OQ-H2-1 sharper: "close on refusal" follows the letter of protocol.md lines 61 to 62 and gives this denial of service; "close only on completion" removes it and still keeps one effect per request id (the sink enforces that). Which reading of "rejection closes that attempt" does the owner approve: the ATTEMPT (this one call) or the REQUEST ID?
+- Until decided, the branch keeps "close on refusal" and names the denial of service as a known limit. No money moves in this attack.
+
+## C-1 addendum 3 (Orchestrator C, 2026-11-19T16:56Z by `date -u`): two more stops by the classifier, not retried
+- My re-run of the minter closed-launch script tests (worker c24's s10_launch.sh), and my own bounded run of two gate modules that B's new checker accepts (worker c23's U01, U02). For both, the worker's runs stand and my re-run is NOT RUN.
+
+## B-17 CORRECTION (written 2026-11-19T16:57:26Z) — the proposed JavaScript bound checker is NOT sound as delivered (red team C-GATE-07, C-GATE-08); do not adopt it as it is
+- The checker ACCEPTS two modules that the pinned Dafny generates from files that verify, and whose single decision call does not finish in minutes. My own run of the red team's script (`bash results/night-shift-20261119/orch-C/c23-jsgate/regress.sh`): exit 1; "ACCEPT" four times (two modules, both tier forms). The run-time evidence (killed by a 60 s and a 110 s alarm) is the red team's worker's; my three attempts to repeat the run failed on my own set-up errors and are not results.
+- Causes named by the red team: the checker bounds a modulo result by the smaller operand, but the runtime's modulo of a negative number has the size of the divisor (a value that squares each round stays "2 bits" for the checker); the cost table charges set equality as linear, the runtime is quadratic.
+- What still stands: on the sets measured, the proposal removes the false rejections (96 of 124 mine; 16 of 16 new correct files of the red team) and refuses the seven known unsafe files. The cost model is the open part. An unverified 692-line checker with a hand-read cost table is the weak point that B-17 named as an argument; it is now a shown defect.
+
+## OWNER DECISION D-1 (recorded by the launcher 2026-11-19T17:03Z; owner text verbatim, labelled by the owner "Decision on B-19: Option 1 approved")
+> - Delete FORGE_MINTER_KEY completely (no --unsafe-test-env backdoor; tests generate temp 0600 key files).
+> - Require a pinned key_id in the token verified against the sink's allowlist.
+> - Check key-file permissions via fstat on the opened descriptor (O_NOFOLLOW, regular file, uid == euid, (mode & 0o077) == 0) so C cannot symlink-race the key check.
+- Launcher note (facts at recording): B-19 as written asks a different question (does a refusal close the ATTEMPT or the REQUEST ID?) and lists no options. No file in the repository or branches contains FORGE_MINTER_KEY or --unsafe-test-env. The minter now generates an ed25519 key in memory per process (cause of C-ATT-05: restart = new key).
+- Launcher interpretation applied: D-1 is the approved design for a PERSISTENT minter key: key loaded only from a file opened with O_NOFOLLOW and checked by fstat on that descriptor (regular file, uid == euid, mode & 0o077 == 0); no key from environment variables and no test bypass flag; tests create temporary 0600 key files; every token carries a key_id that the sink checks against a pinned allowlist. This also addresses C-ATT-05.
+- B-19's own question (attempt vs request id) remains OPEN. B's analysis: "close only on completion" removes the denial of service and still keeps one effect per request id.
+
+## OWNER DECISION D-2 (recorded by the launcher 2026-11-19T17:08Z; answers B-19 / OQ-H2-1; owner text verbatim)
+> B-19: A minter refusal closes ONLY that attempt, NOT the whole request ID (closing C-ATT-38). Only an accepted/minted token (and sink commit) closes the request ID, preserving <= 1 valid token and <= 1 effect per request ID.
+
+## OWNER DECISION D-3 (recorded by the launcher 2026-11-19T17:08Z; provider anchor at 74fb70eb; owner text verbatim)
+> Provider anchor (74fb70eb): Agreed--keep the local floor + outside head as the rollback anchor and treat the provider key as a second layer with an explicit key-window assumption. Send C-ATT-41/44 to B: verify returned charge_id and amount on every replayed provider response, and bind/namespace the provider key to (charge_id, request_id, amount).
+
+## B-20 (written 2026-11-19T17:23:16Z) — a measured cost of decision D-3 (the amount is part of the provider key): one case that the key used to absorb is no longer absorbed without the local anchors (U628)
+- Implemented as decided: key = SHA-256 over a namespace (with the store's genesis hash) and (charge id, request id, amount); every provider answer, replays included, is compared with the committed row; a mismatch is an alarm and never "paid" (red team C-ATT-41, 44: closed in my runs with a fake provider).
+- Cost: after a rollback WITHOUT the local anchors, the same request id committed again with ANOTHER amount gets a NEW key, so the provider pays again: 1400 on a charge of 1000 in the test p_full_param_rebind (mode a, anchor none: exit 0 before the change, exit 1 after; my run). With the amount left out of the key (measurement only) the provider would refuse it. With layer 1 (ledger floor plus outside head) the case is stopped before the provider (exit 0), as D-3 intends; a provider ceiling also stops it.
+- So D-3 is consistent only if layer 1 is always configured. Question: is that the intended reading (layer 1 mandatory in every deployment; the provider key gives no protection against a rebind by rollback), or should the key omit the amount and the adapter rely on its comparison of the returned amount with the committed row?
+
+## OWNER DECISIONS D-4, D-5, D-6 (recorded by the launcher 2026-11-19T18:04Z; owner's pasted guidance, paraphrased closely)
+- D-4: the JavaScript gate checker (js_bound_check.cjs) stays ADVISORY ONLY. Blocking gate rules stay strictly sound (lexical expect/print/axiom/non-abstract checks); slow code is handled by hard OS timeouts and memory caps.
+- D-5: rollback resistance REQUIRES both anchors: local floor + outside head. Provider idempotency keys are a second layer only, inside their retention window.
+- D-6: C-1 (classifier-stopped commands) stays permanently NOT RUN. No new long swarm for B-12..B-20, A-3, A-5: document non-critical items as known limits in the 45-link graph.
+- Owner plan: merge the integrator PR as packaged first; accept B-15/B-16 later in ONE follow-up PR after checking the text.
+- Launcher notes on B-15/B-16 (facts from the entries above): the 115-row suite exit 2 is caused by row x1's raw SQL write now refused by the database (B-16), not by a keyless minter start. Two expectation changes are NOT strictly stronger: (1) B-15 row suite.ts:589 moves single-use from one token per PRE-STATE to one per (charge id, request id), so two tokens on one pre-state can exist (the sink commits at most one; TESTED-UNPROVED at the composed level); (2) B-16 row x5 changes a failed emit from the merged at-most-once record to "in doubt". The six hostile-write rows (x1-x4, x6, x7) are stronger (write refused) plus six new trigger-drop rows.

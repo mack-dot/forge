@@ -67,8 +67,8 @@
  
  (* ================= shared files (the same bytes as in R6tx-0001) ================= *)
  val R6T_PROOF_MODE = true;
--val R6TDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round11/";
-+val R6TDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round14/";
+-val R6TDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round11/";
++val R6TDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round14/";
  val _ = (pr "MARK USE r6t_common.sml"; use (R6TDIR ^ "r6t_common.sml"); pr "PART_DONE r6t_common.sml");
  val _ = (pr "MARK USE r6t_steps.sml"; use (R6TDIR ^ "r6t_steps.sml"); pr "PART_DONE r6t_steps.sml");
  val _ = (pr "MARK USE r6t_prove.sml"; use (R6TDIR ^ "r6t_prove.sml"); pr "PART_DONE r6t_prove.sml");

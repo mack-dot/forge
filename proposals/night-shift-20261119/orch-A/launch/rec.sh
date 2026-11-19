@@ -1,7 +1,7 @@
 #!/bin/bash
 # rec.sh: run one command (as a bash -c string) from the launch folder, append the command, its actual exit code
 # and a UTC time to commands.txt; output goes to the log file named by $LOG (default: static/last.log).
-cd /Users/mackianni/forge/results/night-shift-20261119/orch-A/launch || exit 99
+cd /Users/USER/forge/results/night-shift-20261119/orch-A/launch || exit 99
 LOG=${LOG:-static/last.log}
 bash -c "$1" >"$LOG" 2>&1
 rc=$?

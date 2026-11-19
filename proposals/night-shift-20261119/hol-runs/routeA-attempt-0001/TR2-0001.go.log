@@ -1,0 +1,31 @@
+2026-11-19T16:53:27Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 8726.19M  free = 1513.81M  (encrypted)
+System-wide memory free percentage: 34%
+DISK_FREE_GIB 82
+START_STATE swap_free_mib=1513 memory_free_percent=34
+USED_FILES_PRE 20 eede113b5f9da24c
+exit 0
+actual_exit 0 wall 215.649 cpu 99.385 rss_mib 1114 ['EXACT_COMPLETE'] inputs_unchanged_after True
+86:CHECKED trace_terminate
+107:CHECKED trace_fail
+127:CHECKED trace_diverge
+143:CHECKED toy_bad_not_followed
+163:CONTROL_OK no axiom in forge_machineTrace
+164:CLOSURE_AXIOM bool.SELECT_AX
+165:CLOSURE_AXIOM bool.INFINITY_AX
+166:CLOSURE_AXIOM bool.ETA_AX
+167:CLOSURE_AXIOM bool.BOOL_CASES_AX
+168:CONTROL_OK closure contains forge_machineTrace
+169:CONTROL_OK closure contains targetSem
+170:CONTROL_OK closure contains targetProps
+171:CONTROL_OK closure contains ffi
+172:CONTROL_OK closure contains misc
+173:CONTROL_OK closure contains asmProps
+175:CONTROL_OK generic: no forge_, refund or ISA constant in any stored item
+176:CONTROL_OK all 2 required lemmas stored
+180:CLOSURE_NODES 482
+183:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

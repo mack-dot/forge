@@ -1,0 +1,72 @@
+2026-11-19T16:13:15Z
+Now drawing from 'AC Power'
+total = 9216.00M  used = 8204.06M  free = 1011.94M  (encrypted)
+System-wide memory free percentage: 46%
+DISK_FREE_GIB 83
+START_STATE swap_free_mib=1011 memory_free_percent=46
+USED_FILES_PRE 7 e43fe47ac9d38155
+exit 0
+actual_exit 0 wall 172.916 cpu 93.891 rss_mib 2140 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+487:  GOAL <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>.
+490:  GOAL_COUNT 0
+500:  GOAL_COUNT 1
+501:SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+502:  GOAL ∀charge request original remaining enabled opened candidate amount reason.
+520:  GOAL_COUNT 1
+521:SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+522:  GOAL ∃sl s h stk e envmc fs cl.
+539:  GOAL_COUNT 1
+540:SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+559:  GOAL ∃sl s h stk e envmc fs cl.
+576:  GOAL_COUNT 1
+577:SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+601:  GOAL ∃sl s h stk e envmc fs cl.
+618:  GOAL_COUNT 1
+619:SHOW GOAL refund_shape_premises_satisfiable_for_every_request
+643:  GOAL refund_entry_pre_sl 16384w s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧
+659:  GOAL_COUNT 0
+672:  GOAL_COUNT 1
+673:SHOW GOAL refund_shape_premises_satisfiable
+674:  GOAL ∃charge request original remaining enabled opened candidate amount reason sl
+692:  GOAL_COUNT 1
+693:SHOW GOAL refund_shape_premises_satisfiable
+694:  GOAL ∃sl s h stk e envmc fs cl.
+711:  GOAL_COUNT 0
+721:  GOAL_COUNT 1
+722:SHOW GOAL refund_shape_run_is_accepted
+723:  GOAL ∀dafny_env dafny_heap.
+770:  GOAL_COUNT 1
+771:SHOW GOAL refund_shape_run_is_accepted
+772:  GOAL ∃charge request original remaining enabled opened candidate amount reason sl
+818:  GOAL_COUNT 1
+819:SHOW GOAL refund_shape_run_is_accepted
+820:  GOAL ∃sl s h stk e envmc fs cl.
+865:  GOAL_COUNT 1
+866:SHOW GOAL refund_shape_run_is_accepted
+888:  GOAL ∃sl s h stk e envmc fs cl.
+933:  GOAL_COUNT 1
+934:SHOW GOAL refund_shape_run_is_accepted
+956:  GOAL (refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+998:  GOAL_COUNT 2
+999:SHOW GOAL refund_shape_run_is_accepted
+1021:  GOAL refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+1036:SHOW GOAL refund_shape_run_is_accepted
+1058:  GOAL ∃ms.
+1085:  GOAL_COUNT 1
+1086:SHOW GOAL refund_shape_run_is_accepted
+1108:  GOAL ∃ms.
+1135:  GOAL_COUNT 1
+1136:SHOW GOAL refund_shape_run_is_accepted
+1158:  GOAL (∃ms.
+1209:  GOAL_COUNT 1
+1210:SHOW GOAL refund_shape_run_is_accepted
+1250:  GOAL (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+1276:  GOAL_COUNT 0
+1296:CONTROL_WITNESS_FFI_INTERFER
+1310:CONTROL_OK NV1 body aconv the antecedent of refund_profile_a_sl_shape
+1311:CONTROL_OK stored NV1: no hypothesis, conclusion = statement, body aconv the stored antecedent
+1312:CONTROL_OK stored NV2: no hypothesis, conclusion = statement
+1317:EXPLORE_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

@@ -1,0 +1,80 @@
+--- tr_common.sml	2026-11-19 10:07:57.410258654 -0500
++++ tr_common2.sml	2026-11-19 10:59:41.360123368 -0500
+@@ -1,4 +1,5 @@
+-(* tr_common.sml (worker W-trace, Night-Shift Orchestrator A, 2026-11-19). NOT RUN. Every definition and tactic is
++(* tr_common2.sml = tr_common.sml with the changes of CHANGES_TR.txt (toy definitions, optional statements).
++   tr_common.sml (worker W-trace, Night-Shift Orchestrator A, 2026-11-19). NOT RUN. Every definition and tactic is
+    UNCHECKED by HOL. Shared by TRx-0001.sml (exploration) and trace_v1.sml (proof, case TR-0001); both read it with
+    use AFTER new_theory. The caller must define: pr, trunc, showg, tlim, TR_PROOF_MODE.
+    Content: the datatype of observed events, the trace definitions, the theorem table TH, the step replay
+@@ -114,19 +115,48 @@
+    "(trace_ok P G mc st ms (TrFfi i nb s :: tr) <=> " ^
+    "   ffi_event_ok mc st ms i nb /\\ G (i,nb,ms) s /\\ trace_ok P G mc (ffi_post_st mc st ms i) s tr)");
+ 
+-(* controls: a toy machine (word64 states, the state is its own pc) *)
+-val toy_target_def = tr_define "toy_target_def"
+-  ("toy_target = ARB with <| config := (ARB with <| encode := (\\i. [0w:word8]); code_alignment := 0 |>); " ^
+-   "next := (\\s:word64. s + 1w); get_pc := (\\s:word64. s); get_reg := (\\(s:word64) (r:num). 0w:word64); " ^
++(* controls: a toy machine (word64 states, the state is its own pc). tr_common2 (after TRx-0002): the round-1 form
++   "toy_target = ARB with <| ... |>" failed in Define ("Nullary definition failed", TRx-0002/stdout.log 149-151), and in
++   hol run a Define failure was NOT caught by the handler (no DEFINITION_FAILED line, process exit 1). Now: full record
++   literals (every field of asm_config, of target except get_fp_reg as in arm8_target_def, and of machine_config), each
++   term parsed and checked first (no type variable in a nullary right side), then new_definition (never Define). Any
++   failure prints DEFINITION_FAILED/DEFINITION_SKIPPED, sets TOY_DEFS_OK := false and the run goes on WITHOUT the
++   controls, in both modes. *)
++val TOY_DEFS_OK = ref true;
++fun toy_define (name : string) (q : string) : thm =
++  (let val tm = Parse.Term [QUOTE q]
++       val (l, r) = dest_eq tm
++       val tvs = type_vars_in_term r
++   in if not (is_var l) then (pr ("DEFINITION_SKIPPED " ^ name ^ " left side is not a variable");
++                              TOY_DEFS_OK := false; TRUTH)
++      else if not (null tvs) then
++        (pr ("DEFINITION_SKIPPED " ^ name ^ " free type variables " ^
++             String.concatWith " " (map type_to_string tvs) ^ " ; type " ^ type_to_string (type_of r));
++         TOY_DEFS_OK := false; TRUTH)
++      else (let val th = new_definition (name, tm) in pr ("DEFINITION " ^ name ^ "\n" ^ thm_to_string th); th end)
++   end)
++  handle e => (pr ("DEFINITION_FAILED " ^ name ^ " " ^ trunc 600 (General.exnMessage e));
++               TOY_DEFS_OK := false; TRUTH);
++val toy_config_def = toy_define "toy_config_def"
++  ("toy_config = <| ISA := ARMv8; encode := (\\i. [0w:word8]); big_endian := F; code_alignment := 0; " ^
++   "link_reg := NONE; avoid_regs := []; reg_count := 0; fp_reg_count := 0; two_reg_arith := F; " ^
++   "valid_imm := (\\b (i:int). F); addr_offset := (0i,0i); hw_offset := (0i,0i); byte_offset := (0i,0i); " ^
++   "jump_offset := (0i,0i); cjump_offset := (0i,0i); loc_offset := (0i,0i) |>");
++val toy_target_def = toy_define "toy_target_def"
++  ("toy_target = <| config := toy_config; next := (\\s:word64. s + 1w); get_pc := (\\s:word64. s); " ^
++   "get_reg := (\\(s:word64) (r:num). 0w:word64); get_fp_reg := (\\(s:word64) (r:num). 0w:word64); " ^
+    "get_byte := (\\(s:word64) (a:word64). 0w:word8); state_ok := (\\s:word64. T); " ^
+    "proj := (\\(d:word64 set) (s:word64). s) |>");
+-val toy_mc_def = tr_define "toy_mc_def"
+-  ("toy_mc = ARB with <| prog_addresses := {0w:word64}; ffi_entry_pcs := [1w:word64]; " ^
++val toy_mc_def = toy_define "toy_mc_def"
++  ("toy_mc = <| prog_addresses := {0w:word64}; shared_addresses := ({}:word64 set); ffi_entry_pcs := [1w:word64]; " ^
+    "ffi_names := [ExtCall (strlit \"f\")]; ptr_reg := 0; len_reg := 0; ptr2_reg := 0; len2_reg := 0; " ^
+-   "halt_pc := 2w:word64; install_pc := 3w:word64; mmio_info := []; target := toy_target |>");
+-val toy_st_def = tr_define "toy_st_def"
++   "ffi_interfer := (\\(k:num) (x:num # word8 list # word64). 0w:word64); callee_saved_regs := []; " ^
++   "next_interfer := (\\(m:num) (s:word64). s); halt_pc := 2w:word64; install_pc := 3w:word64; " ^
++   "install_interfer := (\\(k:num) (x:word8 list # word64). 0w:word64); target := toy_target; mmio_info := [] |>");
++val toy_st_def = toy_define "toy_st_def"
+   ("toy_st = <| oracle := (\\(n:ffiname) (s:unit) (c:word8 list) (b:word8 list). Oracle_return s b); " ^
+    "ffi_state := (); io_events := [] |>");
++val _ = pr ("TOY_DEFS_OK " ^ Bool.toString (!TOY_DEFS_OK));
+ 
+ (* ================= theorem table, replay (round13/r6r_common.sml, unchanged except names) ================= *)
+ val TR_TH = ref ([] : (string * thm) list);
+@@ -161,9 +191,12 @@
+ 
+ (* ================= STATEMENTS ================= *)
+ val _ = pr "MARK STATEMENTS";
++(* tr_common2: optional statements (Diverge corollary, controls) are never fatal *)
++val OPTIONAL_NAMES = ["div_after", "trace_diverge", "toy_target_fields", "toy_encoded", "toy_trace_ok",
++                      "toy_trace_events", "toy_bad_rejected", "toy_bad_not_followed"];
+ fun tr_term (name : string) (s : string) : term =
+   PT s handle e => (pr ("STATEMENT_PARSE_FAILED " ^ name ^ " " ^ trunc 600 (General.exnMessage e));
+-                    if TR_PROOF_MODE then raise e else T);
++                    if TR_PROOF_MODE andalso not (Lib.mem name OPTIONAL_NAMES) then raise e else T);
+ (* typed variable texts, used in every statement so that type variable names agree across theorems *)
+ val tP = "(P:'s -> 'q)";
+ val tG = "(G:num # word8 list # 's -> 's -> bool)";

@@ -17,7 +17,7 @@ fun trunc n s = if size s <= n then s else String.substring (s, 0, n) ^ " ...";
 
 (* ================= LOAD ================= *)
 val _ = pr "MARK LOAD";
-val CK = "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
+val CK = "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
 val _ = loadPath := !loadPath @ map (fn d => CK ^ "/" ^ d)
           ["characteristic", "basis", "basis/pure", "translator", "semantics", "semantics/proofs",
            "semantics/ffi", "compiler/backend/semantics", "misc"];
@@ -456,7 +456,7 @@ val _ = explore "X9_FFI_part_hprop_IOFS_V" (goal_of X9) (fn () =>
 
 (* ---------- X8 needs cfLib; run from a separate file, inside a handler ---------- *)
 val WEAK_TM = tm_opt "X8" (fn () => ``!(Inv:io_event -> bool) fs. ^(valOf IOXV_TM) Inv fs ==>> IOx fs_ffi_part fs``);
-val CF_FILE = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/R6x-0001-cf.sml";
+val CF_FILE = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/R6x-0001-cf.sml";
 val _ = pr "MARK CF";
 val _ = (use CF_FILE; pr "CF_PART_DONE")
   handle e => pr ("CF_PART_FAILED " ^ trunc 600 (General.exnMessage e));

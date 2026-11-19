@@ -11,7 +11,7 @@ import subprocess
 import sys
 import time
 
-sys.path.insert(0, '/Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/fail-closed')
+sys.path.insert(0, '/Users/USER/forge/proposals/m1b-mission-20261119/drafts/fail-closed')
 import frame  # noqa: E402
 
 EXE = os.environ['A23_EXE']  # A23: image under test

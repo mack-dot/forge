@@ -53,8 +53,8 @@ val _ = pr "GUARD_DEFINED guarded_apply";
 
 (* ================= LOAD (generic: the CakeML machine semantics only) ================= *)
 val _ = pr "MARK LOAD";
-val CK = "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
-val HOLX = "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/pl-semantics/lprefix_lub";
+val CK = "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
+val HOLX = "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/pl-semantics/lprefix_lub";
 val _ = loadPath := !loadPath @ (map (fn d => CK ^ "/" ^ d)
           ["misc", "semantics/ffi", "compiler/encoders/asm", "compiler/backend/semantics"]) @ [HOLX];
 fun tryload s = (load s; pr ("LOAD_OK " ^ s))
@@ -237,7 +237,7 @@ fun tlim secs (tac : tactic) (g : goal) (ctxt : Context.t) =
 
 (* ================= shared files ================= *)
 val TR_PROOF_MODE = false;
-val TRDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/";
+val TRDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/trace/";
 fun use_part (f : string) : bool =
   (pr ("MARK USE " ^ f); use (TRDIR ^ f); pr ("PART_DONE " ^ f); true)
   handle e => (pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e)); false);

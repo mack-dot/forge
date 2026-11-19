@@ -14,16 +14,16 @@ Status: NOT RUN. Every tactic is UNCHECKED. Worker A21 started no HOL process.
 `deps-MF.txt` = `attempt-0001/deps-LO.txt` (125 lines, SHA-256 `76bcd490...cc90`), then these 10 lines, in this order:
 
 ```
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PF-0004/forge_refundPrefixFreeTheory.sig
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PF-0004/forge_refundPrefixFreeTheory.sml
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PX-0001/forge_refundPrefixExactTheory.sig
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PX-0001/forge_refundPrefixExactTheory.sml
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L1-0001/forge_refundRouteA1Theory.sig
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L1-0001/forge_refundRouteA1Theory.sml
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0003/forge_refundRouteA2Theory.sig
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0003/forge_refundRouteA2Theory.sml
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0006/forge_refundLOutTheory.sig
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0006/forge_refundLOutTheory.sml
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/PF-0004/forge_refundPrefixFreeTheory.sig
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/PF-0004/forge_refundPrefixFreeTheory.sml
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/PX-0001/forge_refundPrefixExactTheory.sig
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/PX-0001/forge_refundPrefixExactTheory.sml
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L1-0001/forge_refundRouteA1Theory.sig
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L1-0001/forge_refundRouteA1Theory.sml
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L2-0003/forge_refundRouteA2Theory.sig
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L2-0003/forge_refundRouteA2Theory.sml
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LO-0006/forge_refundLOutTheory.sig
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LO-0006/forge_refundLOutTheory.sml
 ```
 
 The RouteA1 and RouteA2 lines are ADDED to the requested recipe (deps-LO + PF + PX + LO) for M1b.
@@ -33,9 +33,9 @@ The contract theory is NOT a deps line. The script tries to load it at run time 
 ## Command (orchestrator, single HOL slot, after the slot is free)
 
 ```
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/compose/compose_v1.sml  /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/MF-0001.sml
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/compose/deps-MF.txt     /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/deps-MF.txt
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/compose/compose_v1.sml  /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/MF-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/compose/deps-MF.txt     /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/deps-MF.txt
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
 FORGE_CPU_SECONDS=900 ./go-routeA.sh MF-0001 MF-0001.sml deps-MF.txt
 ```
 

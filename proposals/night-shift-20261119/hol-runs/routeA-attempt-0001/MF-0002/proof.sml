@@ -49,7 +49,7 @@ fun has_const n tm = can (find_term (fn t => is_const t andalso fst (dest_const 
    load needs .ui/.uo files; contract-0001/.hol/objs holds only .sig/.sml/.dat, so load is expected to fail.
    The fallback uses the theory files the same way hol run uses a deps line (<dir>/<name>; QUse.use). Every
    failure is caught; the result only selects CONTRACT_MODE. FORGE_MF_NO_CONTRACT=1 forces absent mode. *)
-val CONTRACT_DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001";
+val CONTRACT_DIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001";
 val CTHY = "forge_refundExportedContract";
 fun try_use_contract () =
   (use (CONTRACT_DIR ^ "/" ^ CTHY ^ "Theory.sig"); use (CONTRACT_DIR ^ "/" ^ CTHY ^ "Theory.sml");

@@ -1,0 +1,45 @@
+0a1,2
+> (* round15 (worker W-top2): ONLY the T4 IOFS_V_init step list changed (CHANGES.txt R15-C1). Nothing else changed.
+>    Candidate 0 of the new list ran and closed in R6tx-0003 (explore_head); the other candidates are UNCHECKED. *)
+109,122d110
+< val IOFSI_STEPS : step list =
+<   [("intro", rpt strip_tac, []),
+<    ("heap (append_hprop)",
+<       Q HEAP_Q by (irule basis_ffiTheory.append_hprop \\ simp W8_SIMPS),
+<       [Q HEAP_Q by (irule basis_ffiTheory.append_hprop \\ rpt conj_tac \\ simp W8_SIMPS \\ simp [pred_setTheory.DISJOINT_DEF]),
+<        Q HEAP_Q by (match_mp_tac (REWRITE_RULE [AND_IMP_INTRO] basis_ffiTheory.append_hprop) \\ simp W8_SIMPS)]),
+<    ("SEP_IMP by xsimpl",
+<       Q IMP_Q by (simp [IOFS_V_def, IOxV_def] \\ xsimpl \\ simp [fsFFITheory.fs_ffi_part_def]),
+<       [Q IMP_Q by (rw [IOFS_V_def, IOxV_def] \\ xsimpl \\ EVAL_TAC),
+<        Q IMP_Q by (simp [IOFS_V_def, IOxV_def, fsFFITheory.fs_ffi_part_def] \\ xsimpl),
+<        Q IMP_Q by (simp [IOFS_V_def, IOxV_def] \\ xsimpl \\ rw [] \\ EVAL_TAC)]),
+<    ("close", closing (metis_tac [set_sepTheory.SEP_IMP_def]),
+<       [closing (fs [set_sepTheory.SEP_IMP_def] \\ res_tac),
+<        closing (fs [set_sepTheory.SEP_IMP_def] \\ first_x_assum irule \\ simp [])])];
+130a119,144
+> (* round15 (worker W-top2): IOFSI_STEPS REPLACED and moved below IOFSI_PRECOND_COPY (it now uses that value).
+>    Reason (R6tx-0003 stdout 308-330): step 3 "SEP_IMP by xsimpl" failed with all four candidates (the by-subgoal
+>    one X * W8ARRAY iobuff_loc v ==>> IOFS_V Inv fs was not closed by xsimpl + simp/EVAL), while the SAME statement
+>    was closed by IOFSI_PRECOND_COPY in one step (R6tx-0003 stdout 1078-1094: EXPLORE_HEAD_CLOSED after_steps 1).
+>    New list: ONE closing step from the original goal. Candidate 0 = IOFSI_PRECOND_COPY (the observed closing path).
+>    Candidates 1-3 = a structured route without xsimpl: unfold IOFS_V only, peel &wfFS fs with cond_STAR, split the
+>    heap with append_hprop (basis_ffiScript.sml 485-489), then each part (IOxV on {X}, the iobuff cell on {Mem 1 ..},
+>    DISJOINT) by simp with the definitions (same lemma set that closed old step 2, plus IOxV_def and fs_ffi_part_def).
+>    Every candidate is a closing tactic (0 goals out). Candidates 1-3 are UNCHECKED. *)
+> fun iofsi_split (useirule : bool) : tactic =
+>   rpt strip_tac
+>   \\ REWRITE_TAC [IOFS_V_def, set_sepTheory.cond_STAR]
+>   \\ (conj_tac THEN1 first_assum ACCEPT_TAC)
+>   \\ (if useirule then irule basis_ffiTheory.append_hprop
+>       else match_mp_tac (REWRITE_RULE [AND_IMP_INTRO] basis_ffiTheory.append_hprop))
+>   \\ rpt conj_tac;
+> val IOFSI_PART_SIMPS = [IOxV_def, set_sepTheory.SEP_EXISTS_THM, set_sepTheory.cond_STAR, set_sepTheory.one_def,
+>                         cfHeapsBaseTheory.W8ARRAY_def, cfHeapsBaseTheory.cell_def, basis_ffiTheory.iobuff_loc_eq,
+>                         fsFFITheory.fs_ffi_part_def];
+> val IOFSI_STEPS : step list =
+>   [("all (IOFS_precond copy, basis_ffiScript.sml 495-505; closed in R6tx-0003 explore_head)",
+>       closing IOFSI_PRECOND_COPY,
+>       [closing (iofsi_split true \\ simp IOFSI_PART_SIMPS),
+>        closing (iofsi_split false \\ fs IOFSI_PART_SIMPS),
+>        closing (iofsi_split true \\ simp (PULL_EXISTS :: IOFSI_PART_SIMPS) \\
+>                 TRY (qexists_tac (Q "events")) \\ simp [fsFFITheory.fs_ffi_part_def] \\ EVAL_TAC)])];

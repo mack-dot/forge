@@ -296,3 +296,74 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   instruction; `__TEXT` read-execute; no hardened runtime (the launch environment stays a launcher duty).
 - Red team's premise audit of A's theorems: no undisclosed false premise; a joint non-vacuity witness is missing (staged).
 - NOT pushed: the push was denied by the permission system (owner item A-4).
+
+## Addendum 14 (Orchestrator A, 2026-11-19T15:43:53Z): the native launch path as the smallest boundary; three attack classes; reproduction 16 of 18
+- Smallest missing refinement boundary, one line: "the launched process is a run of the proved machine model with an
+  environment built from that run" (X8), and its weakest part is the native launch path.
+- Attack classes against a prototype launcher (`orch-A/launch/`; TESTED by its author and re-run by A, exit 0, 48 rows;
+  no independent attack run: the red team's runs were blocked, C-1; the launcher is unverified Python, not deployed):
+  AC-1 exit 0 with truncated or empty stdout (CE-1, CE-2): CLOSED-BY-CONTROL (tested). AC-2 injected code at load (CE-3):
+  CLOSED (tested) for a caller-set environment through the empty environment; OPEN for the interpreter that runs the
+  launcher unless the consumer uses `env -i` (row AC2-n3); hardened runtime is an OWNER option (digest changes).
+  AC-3 FFI abort or misreport: read/write errors, short reads, SIGPIPE, EINTR, abort: CLOSED (tested);
+  call shapes outside the model (R6, row AC3-j): OPEN, NOT RUN; owner option A-3.
+  Without each control (5 mutants) the attacks succeed again. Owner item A-5.
+- X8 statement: version 2 answered the red team's four findings (`x8-x11/ANSWER_C-PREM-01.md`); A's adversarial
+  review then found 3 FALSE items in version 2 (`x8-x11/CORRECTIONS_v2.md`); version 3 in work. All by reading.
+- Reproduction from the branch: 16 of 18 cases, byte-identical theories. R6ffi-0002: stopped by a watchdog after a
+  system sleep (not a proof result); R6w-0004 NOT RUN; both to be run again. Trace lemma cases staged, NOT RUN.
+- T14 reworded after C-PREM-02: the consumer parser is stricter than the HOL parser (negative integers).
+- Branch `nightshift/A-proof` pushed at 744e1e4d (A-4 resolved by the owner).
+
+## Addendum 15 (Orchestrator A, 2026-11-19T15:52:52Z): CORRECTION to addendum 14 — the launcher's "CLOSED" rows are too strong
+Two reading reviews (A's separate reviewer; the red team's worker, static only) found a HIGH defect in the prototype
+launcher: it does not reset its own SIGCHLD; a caller that ignores SIGCHLD can make the Python wait report exit status 0
+for any child, so the exit-status and signal checks do not fire (by reading; probe in work). Until the probe and a
+repaired version exist, read every "CLOSED (tested)" of addendum 14 that rests on the exit status as OPEN. Other
+findings: no deadline on the request write; the code-hash check is weaker than worded; six rows have no failing side;
+the `env -i` rule is a consumer duty that no code enforces (row AC2-n4/n5 is OPEN). Files: `orch-A/launch/review_launcher.txt`,
+`orch-A/launch/FINDINGS_FROM_C.md`.
+
+## Addendum 16 (Orchestrator A, 2026-11-19T16:05:17Z): launch-path controls, round 2 (after two reading reviews); state per attack class
+Files: `orch-A/launch/launcher_v2.py` (eec38a10…), `CONTROL_MATRIX_v2.md` (46a98a26…), `tests_v2/`. All TESTED by the
+author of the control; A re-ran the two new test files (exit 0; 16 + 4 rows; 0 not as expected). No independent attack
+run (red team blocked, C-1). Unverified Python; a prototype; not deployed; adoption = owner item A-5.
+- The HIGH review finding (ignored SIGCHLD): the defect is real in the code (set inside the launcher process: a fake
+  child that printed a frame and exited 7 was AUTHORIZED, 4 of 4 runs); through a caller that execs the launcher it was
+  NOT reproduced (4 of 4 REFUSED; cause not known). Version 2 resets its own signals and reaps the child itself.
+- AC-1 (exit 0 with truncated or empty stdout): CLOSED-BY-ENFORCED-CONTROL (tested), rows AC1-a..f.
+- AC-2 (injected code at load): caller-set DYLD_INSERT, replaced binary, symlink, PATH, cwd: CLOSED (tested). OPEN: the
+  interpreter that runs the launcher (AC2-n2/n3) and the `env -i` rule (a consumer duty, no code enforces it);
+  a same-uid race on the private copy (out of scope by statement); hardened runtime = OWNER option (digest changes).
+- AC-3 (FFI abort or misreport): abort, non-zero exit, write/read errors, SIGPIPE: CLOSED (tested) or excluded by
+  construction (blocking fresh pipes); EINTR row has no failing side; call shapes outside the model (AC3-j, R6): OPEN,
+  NOT RUN; owner option A-3.
+- New closed rows in version 2: FIFO at the executable path, a child that never reads (deadline), EPIPE on the request,
+  missing code-hash pin, caller resource limits. OPEN: copy directory left after SIGKILL of the launcher; the frame
+  binds 4 of 9 request fields (the decision line now carries a request digest).
+
+## Addendum 17 (Orchestrator A, 2026-11-19T16:17:29Z): independent conformance run on the launcher; new HOL results
+- The red team ran its own 24 process-lifecycle tests: prototype launcher version 1 exit 1 (2 fail: ignored SIGCHLD
+  disables the exit-status and abort checks); version 2 exit 0 (24 ok). C's runs. Not covered independently: the real
+  executable, injected code at load, the FFI C code (owner item C-1).
+- HOL, actual exit 0: MT-0001 (composed model theorem for the totalised machine, every predicate; reviewed: holds with
+  limits, model level only); R6r-0004 (read-side bottom layer of plan R6; 9 theorems; review in work).
+- HOL explorations, actual exit 0, nothing stored: trace lemma 37 of 41 closed (the main trace lemma and the event
+  lemma closed; the prefix lemmas for Terminate and Fail did not); non-vacuity 6 of 6 closed (proof case running);
+  R6 top glue 15 closed, 1 failed (repaired copy staged).
+- HOL failures kept: TRx-0001 (exit 1, ML error), TRx-0002 (exit 1), NVx-0002 (exit 1): no proof step ran in them.
+
+## Addendum 18 (Orchestrator A, 2026-11-19T17:20:25Z): wind-down state of the proof track
+- Final record: `orch-A/FINAL.md` (each HOL theorem with statement, premises, command, actual exit, digests,
+  reproduction status; failed attempts; status of links X1 to X16 and S4 to S7; unproven transitions).
+- New HOL results, actual exit 0, each reviewed ("holds with limits"): TR1-0001 and TR2-0001 (generic trace lemmas: a
+  machine whose interference functions are built from a recorded trace follows it; premise `trace_ok`); R6t-0004 (top
+  glue of plan R6; the main specification is a hypothesis); NN-0002 (the program prints amount >= 0, count 0 or 1).
+- Reproduction from the branch: 18 of 18 cases, byte-identical theories (same machine; stored older parents). Two failed
+  attempts kept (infrastructure). The seven cases proved later are not reproduced.
+- Smallest missing boundary, unchanged: that a real run gives a trace with `trace_ok` for the refund machine (X8). By
+  reading only: the environment built from a trace meets the other premises for every trace.
+- Corrections: "the two parsers agree" was an overclaim; launcher rows for kernel results are assumptions, not enforced.
+- Disclosure: after the wind-down order reached A, the reproduction driver started its last queued case (R6w-0004), 15 s
+  before the worker stopped the driver. It finished; nothing started after it. hol.lock released 17:19:54Z.
+- Nothing merged. No protected file changed. M1-B OPEN. end_to_end=false.

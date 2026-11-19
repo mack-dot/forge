@@ -18,9 +18,9 @@ The two new deps lines use the same path pattern as the R6base lines (the object
 
 ## Command 1: exploration (orchestrator only, single HOL slot)
 ```
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round6/R6wx-0001.sml R6wx-0001.sml
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round6/deps-R6w.txt deps-R6w.txt
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round6/R6wx-0001.sml R6wx-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round6/deps-R6w.txt deps-R6w.txt
 shasum -a 256 R6wx-0001.sml deps-R6w.txt   # 42506e55...61b8 and 0a63eb75...f2b5
 ./nightshift-run.sh R6wx-0001 3600 deps-R6w.txt
 ```
@@ -32,8 +32,8 @@ Read: `grep -n "^PART_\|^DEFINITION\|^STATEMENT\|^TRY_HELPER\|^FRAME_THM\|^EXPLO
 
 ## Command 2: proof (only after command 1 shows all REQUIRED lemmas closed)
 ```
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round6/R6w-0001.sml R6w-0001.sml
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round6/R6w-0001.sml R6w-0001.sml
 shasum -a 256 R6w-0001.sml deps-R6w.txt    # 5be5d82a...3c96 and 0a63eb75...f2b5
 ./nightshift-run.sh R6w-0001 3600 deps-R6w.txt
 ```

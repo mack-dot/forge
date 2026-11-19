@@ -1,0 +1,114 @@
+W-nonneg ANALYSIS (Orchestrator A, T14 part b). 2026-11-19. STATIC reading only. No HOL, no Holmake, no git.
+Verdict: TRUE, UNCONDITIONAL (by reading). Every 6-tuple that refund_fields returns has amount >= 0 and
+count in {0,1}. No precondition on the request. No clamp is needed: the guard "eligible" already has 0 <= amount.
+NN-0001.sml states it as HOL theorems. It is NOT run. Nothing below is machine-checked until the orchestrator runs it.
+
+1. Where refund_fields is defined (exact text, copied)
+   File: .toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/
+         forge_refundCertifiedProg_experiment/forge_refundCertifiedProgScript.sml, lines 10-16.
+   Theory: forge_refundCertifiedProg (MF-0002 stdout.log line 89: "CONST refund_fields forge_refundCertifiedProg").
+
+     Definition refund_fields_def:
+       refund_fields charge request original remaining enabled opened candidate amount reason =
+         let ok = eligible charge request original remaining enabled opened candidate amount reason in
+         (ok, (if ok then amount else 0), (if ok then reason else ""),
+              (if ok then charge else ""), (if ok then request else ""),
+              (if ok then 1:int else 0))
+     End
+
+   The guard (forge_refund_experiment/forge_refundScript.sml lines 56-63, theory forge_refund):
+
+     Definition eligible_def:
+       eligible charge request (original:int) (remaining:int) enabled opened candidate (amount:int) reason <=>
+         charge <> "" /\ request <> "" /\ enabled /\ opened /\
+         0 <= original /\ original <= 9223372036854775807 /\
+         0 <= remaining /\ remaining <= original /\ candidate /\
+         0 <= amount /\ amount <= remaining /\
+         (reason = "duplicate_charge" \/ reason = "service_not_delivered" \/
+          reason = "returned_item")
+     End
+
+2. Integer fields and their types
+   Inputs: original:int, remaining:int, amount:int (HOL int, unbounded, can be negative).
+   Output tuple (bool # int # mlstring # mlstring # mlstring # int):
+     field 2 "amount" : int = (if ok then amount else 0)
+     field 6 "count"  : int = (if ok then 1 else 0)
+   No num type anywhere. original and remaining are NOT printed.
+
+3. Can a printed integer be negative?
+   amount field: ok = T implies 0 <= amount (conjunct of eligible), so the field is amount >= 0.
+                 ok = F gives 0. So it is NEVER negative, for every input. (Also <= 2^63-1 when ok, by
+                 amount <= remaining <= original <= 9223372036854775807; not needed by Python, not in NN-0001.)
+   count field:  1 or 0. NEVER negative.
+   So the property holds unconditionally. There is no counterexample.
+
+4. What the request side allows (negative inputs are possible, and harmless)
+   refund_request (forge_refund_ioScript.sml lines 9-17) prints original/remaining/amount with mlint$toString,
+   which prints a negative int with "~" (mlintScript.sml 331-339: int_to_string #"~").
+   refund_decode uses sexp_to_dafny$to_int = mlint$fromString (sexp_to_dafnyScript.sml 32-37), which accepts a
+   leading "~" OR "-" (mlintScript.sml 475-483). So negative amount/remaining/original requests ARE parsed.
+   Their effect: eligible = F, so refund_fields gives (F,0,"","","",0).
+   Candidate counterexample, refuted: request (c r 100 60 True True True ~5 returned_item) (or "-5").
+     Model output: refund_fields "c" "r" 100 60 T T T (-5) "returned_item" = (F,0,"","","",0)
+     (NN-0001 control C2). Printed frame by the model: (refund-result-v1 False 0 "" "" "" 0)
+     = frame.py REJECTED_BYTES (line 18). Python strict_parse accepts it (0 is canonical). Both parsers agree.
+   Same for negative remaining or original: eligible needs 0 <= remaining and 0 <= original.
+   The red team's 2000 real runs with no negative are consistent with this; they are a test, the above is the reason.
+
+5. Every print path of the program
+   refund_main (forge_refundStdioProgScript.sml 12-15) prints only (refund_dispatch wire).
+   refund_dispatch (WireProg 79-83) returns refund_run_wire's INR output or raises Fail (nothing printed to stdout
+   by that path). refund_run_wire (WireProg 17-23) = INR (refund_render_fields (refund_fields ...)) after a
+   successful decode, for ANY input wire. So at the source level every printed frame has nonneg ints
+   (NN-0001 theorem N3, for all wires, not only well-formed requests).
+   At the machine level, MF-0002 refund_model_frame_decision (stdout.log 143-170) says: under its premises
+   (stdin = a rendered refund_request, refund_env_ok_sl, wfFS, STD_streams, entry/heap premises), every accepted
+   frame g equals refund_fields ... . NN-0001 O1/O2 (OPTIONAL) restate that conclusion with the bounds.
+
+6. The HOL parser alone does NOT give the bound (the T14b difference is real)
+   refund_strict_parse_complete (PF-0004): !f. refund_strict_parse (explode (refund_render_fields f)) = SOME f.
+   With f = (F,-1,"","","",0) the HOL parser accepts a frame whose amount atom is "~1"; frame.py CANON_INT
+   (0|[1-9][0-9]*) refuses it. NN-0001 control C1 proves: ~(!s ok a r c q n. refund_strict_parse s = SOME (ok,a,r,c,q,n) ==> 0 <= a).
+   So the two parsers DIFFER on some strings, but NOT on any string the program prints (N4).
+
+7. Lemmas in NN-0001.sml (theory forge_refundNonNeg; statements exact)
+   N1  refund_fields_ints_bounded:
+       !charge request original remaining enabled opened candidate amount reason ok a r c q n.
+         refund_fields charge request original remaining enabled opened candidate amount reason = (ok,a,r,c,q,n)
+         ==> 0 <= a /\ 0 <= n /\ n <= 1
+   N1P refund_fields_ints_bounded_proj: the same with FST (SND (refund_fields ..)) and SND^5 (refund_fields ..).
+   N3  refund_run_wire_output_nonneg:
+       !wire out. refund_run_wire wire = INR out ==>
+         ?f. out = refund_render_fields f /\ 0 <= FST (SND f) /\ 0 <= SND^5 f /\ SND^5 f <= 1
+   N4  refund_frame_decision_nonneg (THE COROLLARY THAT MATTERS):
+       !charge .. reason out ok a r c q n.
+         out <<= explode (refund_render_fields (refund_fields charge .. reason)) /\
+         refund_strict_parse out = SOME (ok,a,r,c,q,n) ==> 0 <= a /\ 0 <= n /\ n <= 1
+       Reading: if s is (a prefix of) the rendered output of the program on a parsed request and the HOL strict
+       parser accepts s, then the Python-side restriction (amount >= 0, count >= 0) holds. So on every program
+       output the two parsers agree at the integer level. Proof: PX-0001 refund_frame_decision + N1.
+       (The special case s = the full rendering is the prefix case with <<= reflexive.)
+   C1, C2, C3: controls (section 6, section 4, and an authorized witness (T,40,"returned_item","c","r",1)).
+   O1  refund_model_frame_decision_nonneg, O2 ..._reach_nonneg: OPTIONAL, built by ML term surgery from MF-0002
+       M1 / M1b (premises term-identical; inner "g = refund_fields .. /\ fd1 = .." replaced by the bounds).
+       A failure there prints OPTIONAL_FAILED and does not block EXACT_COMPLETE.
+
+8. Which side enforces the condition today
+   The program itself (the guard eligible inside the proved function), for every input. Neither the issuer nor the
+   request producer is needed. Residual (not proved here):
+   (a) Python also needs the decimal spelling to be canonical (no leading zero, no "+"). For i >= 0,
+       mlint$toString i = implode (num_to_dec_string (Num (ABS i))) (mlintScript.sml 337-339, no "~"); that
+       num_to_dec_string has no leading zero is a standard fact, NOT proved in NN-0001.
+   (b) frame.py is still not verified (T14 part a: Python parser = HOL parser on every string). N4 only closes the
+       integer-sign difference on program outputs.
+   (c) Even if a negative frame reached the consumer (e.g. by a model gap), the stricter Python side would REFUSE
+       it (fail closed). By reading frame.py 239-260 no path turns a CANON_INT failure into an acceptance:
+       strict_parse raises Err, strict_accepts returns None. (The "lenient" readers in frame.py are test foils,
+       not the consumer.)
+
+9. Run (orchestrator): copy NN-0001.sml into results/m1b-routeA-20261119/attempt-0001/ and run there
+     ./nightshift-run.sh NN-0001 900 deps-MG.txt
+   (deps-NN.txt here is a byte copy of deps-MG.txt; MG-0001 ran with it, exit 0, 79 s CPU, 3.8 GB RSS.)
+   Pass rule: actual exit 0, EXACT_COMPLETE, no LEMMA_FAILED, no UNEXPECTED_CONTROL_ACCEPTANCE, 4 CLOSURE_AXIOM.
+   Doubts (tactics are unchecked): int-literal reduction in simp (fallback intLib.ARITH_TAC is given);
+   every_case_tac names in N3 (metis alternative given); the drule chain in O1/O2 (optional only).

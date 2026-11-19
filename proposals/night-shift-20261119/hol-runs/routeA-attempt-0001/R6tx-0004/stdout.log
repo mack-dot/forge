@@ -1,0 +1,348 @@
+TIMEOUT_HELPER Timeout.apply loaded
+GUARD_DEFINED guarded_apply
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+LOAD_OK basisFunctionsLib
+<<HOL message: Created theory "forge_refundR6TExplore3">>
+EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)
+EXPLORE_MODE nothing is exported; the open lemmas are never stored
+MARK USE r6t_common.sml
+MARK GRAMMAR
+GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\187v. &T :v -> (\206\177 -> bool) -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and flatSem$v\n", origins = [{origin_function = "type-analysis", origin_structure  ...
+TYPE_REPRIVILEGED ffi_result was cfHeapsBase now ffi
+TYPE_REPRIVILEGED shift was wordLang now ast
+TYPE_REPRIVILEGED pat was pattern_semantics now ast
+TYPE_REPRIVILEGED op was flatLang now ast
+TYPE_REPRIVILEGED locs was location now ast
+TYPE_REPRIVILEGED lit was dafny_ast now ast
+TYPE_REPRIVILEGED exp was dafny_ast now ast
+TYPE_REPRIVILEGED arith was asm now ast
+TYPE_REPRIVILEGED v was flatSem now semanticPrimitives
+TYPE_REPRIVILEGED state was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED sem_env was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED result was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED dest_thunk_ret was flatSem now semanticPrimitives
+GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK
+GRAMMAR_FIX B
+MARK SHORTCUTS
+MARK STATEMENTS
+SURGERY_DECLS Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+SURGERY_LOOKUP lookup_var fname env2 = SOME fv
+SURGERY_SEM semantics_dec_list (init_state (basis_ffi ext cl fs) with eval_state := es)
+  env1
+  (SNOC (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+     prog)
+SURGERY_FREE st2 env2 fv prog fname env1 fs cl ext es
+NAME_IS_CONST fv closProps
+STATEMENT parts_ok_basis_ffi
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒ parts_ok st.ffi (basis_proj1,basis_proj2)
+STATEMENT init_fs_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_cl_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+    (MAP FST (SND (SND cl_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_rt_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+    (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_iobuff_IN
+∀st bs1 bs2 rest.
+  st.refs = W8array bs1::W8array bs2::rest ⇒
+  Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+STATEMENT IOFS_V_init
+∀Inv fs v events.
+  wfFS fs ∧ LENGTH v = 2052 ∧ EVERY Inv events ⇒
+  IOFS_V Inv fs
+    ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+STATEMENT STDIO_V_of_IOFS_V
+∀Inv fs h. STD_streams fs ∧ IOFS_V Inv fs h ⇒ STDIO_V Inv fs h
+STATEMENT init_heap_V
+∀Inv st ext cl fs bs1 bs2 rest.
+  st.ffi = basis_ffi ext cl fs ∧ st.refs = W8array bs1::W8array bs2::rest ∧
+  LENGTH bs2 = 2052 ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃h1 h2.
+    SPLIT (st2heap (basis_proj1,basis_proj2) st) (h1,h2) ∧
+    STDIO_V Inv fs h1 ∧
+    FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+      (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+    FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+      (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2
+STATEMENT FFI_part_IN_st2heap_FILTER
+∀p st s u ns events.
+  FFI_part s u ns events ∈ st2heap p st ⇒
+  parts_ok st.ffi p ∧ FILTER (ffi_has_index_in ns) st.ffi.io_events = events
+STATEMENT basis_proj2_names
+FLAT (MAP FST basis_proj2) =
+MAP FST (SND (SND cl_ffi_part)) ++ MAP FST (SND (SND fs_ffi_part)) ++
+MAP FST (SND (SND runtime_ffi_part))
+STATEMENT every_basis_events
+∀Inv f.
+  parts_ok f (basis_proj1,basis_proj2) ∧
+  FILTER (ffi_has_index_in (MAP FST (SND (SND cl_ffi_part)))) f.io_events =
+  [] ∧
+  FILTER (ffi_has_index_in (MAP FST (SND (SND runtime_ffi_part))))
+    f.io_events = [] ∧
+  EVERY Inv
+    (FILTER (ffi_has_index_in (MAP FST (SND (SND fs_ffi_part)))) f.io_events) ⇒
+  EVERY Inv f.io_events
+STATEMENT sem_satisfies_imp_V
+∀s P Q. sem_satisfies s P ⇒ (∀b. P b ⇒ Q b) ⇒ sem_satisfies s Q
+STATEMENT STDIO_V_FFI_part_hprop
+∀Inv fs. FFI_part_hprop (STDIO_V Inv fs)
+STATEMENT IOxV_events_IN
+∀Inv fs H h.
+  (IOxV Inv fs * H) h ⇒
+  ∃ev.
+    FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) ev ∈ h ∧ EVERY Inv ev
+STATEMENT STDIO_V_events
+∀Inv fs h.
+  STDIO_V Inv fs h ⇒
+  ∃s u ev.
+    FFI_part s u (MAP FST (SND (SND fs_ffi_part))) ev ∈ h ∧ EVERY Inv ev
+STATEMENT final_heap_events
+∀Inv fs' st3 h2 h3 h4 s1 u1 s3 u3.
+  SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+  STDIO_V Inv fs' h3 ∧
+  FFI_part s1 u1 (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+  FFI_part s3 u3 (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2 ⇒
+  EVERY Inv st3.ffi.io_events
+STATEMENT whole_prog_spec_V_events
+∀Inv fv fs fs' ext cl es env1 prog env2 st2 fname h1 h2 s1 u1 s3 u3.
+  Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog
+    env2 st2 ∧ lookup_var fname env2 = SOME fv ∧
+  app (basis_proj1,basis_proj2) fv [Conv NONE []] (STDIO_V Inv fs)
+    (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs') ∧
+  SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2) ∧ STDIO_V Inv fs h1 ∧
+  FFI_part s1 u1 (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+  FFI_part s3 u3 (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2 ⇒
+  sem_satisfies
+    (semantics_dec_list
+       (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+          prog))
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧ EVERY Inv io_events)
+STATEMENT whole_prog_spec_V_init
+∀Inv fv fs fs' ext cl es env1 prog env2 st2 fname bs1 bs2 rest.
+  Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog
+    env2 st2 ∧ lookup_var fname env2 = SOME fv ∧
+  st2.ffi = basis_ffi ext cl fs ∧ st2.refs = W8array bs1::W8array bs2::rest ∧
+  LENGTH bs2 = 2052 ∧ wfFS fs ∧ STD_streams fs ∧
+  app (basis_proj1,basis_proj2) fv [Conv NONE []] (STDIO_V Inv fs)
+    (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs') ⇒
+  sem_satisfies
+    (semantics_dec_list
+       (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+          prog))
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧ EVERY Inv io_events)
+CONST parts_ok_basis_ffi cfStore$parts_ok
+CONST init_fs_part_IN cfStore$st2heap
+CONST init_fs_part_IN fsFFI$encode
+CONST init_cl_part_IN cfStore$st2heap
+CONST init_cl_part_IN clFFI$encode
+CONST init_rt_part_IN cfStore$st2heap
+CONST init_rt_part_IN runtimeFFI$encode
+CONST init_iobuff_IN cfStore$st2heap
+CONST IOFS_V_init fsFFI$encode
+CONST init_heap_V runtimeFFI$encode
+CONST init_heap_V clFFI$encode
+CONST init_heap_V cfStore$st2heap
+CONST init_heap_V set_sep$SPLIT
+CONST FFI_part_IN_st2heap_FILTER cfStore$ffi_has_index_in
+CONST FFI_part_IN_st2heap_FILTER cfStore$parts_ok
+CONST FFI_part_IN_st2heap_FILTER cfStore$st2heap
+CONST every_basis_events cfStore$ffi_has_index_in
+CONST every_basis_events cfStore$parts_ok
+CONST sem_satisfies_imp_V semanticsProps$sem_satisfies
+CONST IOxV_events_IN fsFFI$encode
+CONST final_heap_events cfStore$st2heap
+CONST final_heap_events cfHeapsBase$SPLIT3
+CONST whole_prog_spec_V_events ffi$Success
+CONST whole_prog_spec_V_events ffi$Terminate
+CONST whole_prog_spec_V_events ast$Con
+CONST whole_prog_spec_V_events namespace$Short
+CONST whole_prog_spec_V_events ast$Dlet
+CONST whole_prog_spec_V_events evaluate_dec$semantics_dec_list
+CONST whole_prog_spec_V_events semanticsProps$sem_satisfies
+CONST whole_prog_spec_V_events cfStore$st2heap
+CONST whole_prog_spec_V_events set_sep$SPLIT
+CONST whole_prog_spec_V_events semanticPrimitives$Conv
+CONST whole_prog_spec_V_events cfApp$app
+CONST whole_prog_spec_V_events ml_prog$init_state
+CONST whole_prog_spec_V_events ml_prog$Decls
+CONST whole_prog_spec_V_init ffi$Success
+CONST whole_prog_spec_V_init ffi$Terminate
+CONST whole_prog_spec_V_init ast$Con
+CONST whole_prog_spec_V_init namespace$Short
+CONST whole_prog_spec_V_init ast$Dlet
+CONST whole_prog_spec_V_init evaluate_dec$semantics_dec_list
+CONST whole_prog_spec_V_init semanticsProps$sem_satisfies
+CONST whole_prog_spec_V_init semanticPrimitives$Conv
+CONST whole_prog_spec_V_init cfApp$app
+CONST whole_prog_spec_V_init ml_prog$init_state
+CONST whole_prog_spec_V_init ml_prog$Decls
+PART_DONE r6t_common.sml
+MARK USE r6t_steps.sml
+R6T_STEPS opened
+R6T_STEPS loaded
+PART_DONE r6t_steps.sml
+MARK USE r6t_explore_calls.sml
+TH_ASSUMED all statements
+EXPLORE_ORDER_OK
+TRY_HELPER_BEGIN basis_proj2_names
+STEP_USED basis_proj2_names 1 close candidate 0 goals_out 0
+Saved theorem _______ "basis_proj2_names"
+TRY_HELPER_CLOSED basis_proj2_names hyps 0
+TRY_HELPER_BEGIN sem_satisfies_imp_V
+STEP_USED sem_satisfies_imp_V 1 close candidate 0 goals_out 0
+Saved theorem _______ "sem_satisfies_imp_V"
+TRY_HELPER_CLOSED sem_satisfies_imp_V hyps 0
+TRY_HELPER_BEGIN FFI_part_IN_st2heap_FILTER
+STEP_USED FFI_part_IN_st2heap_FILTER 1 pair candidate 0 goals_out 1
+STEP_USED FFI_part_IN_st2heap_FILTER 2 close candidate 0 goals_out 0
+Saved theorem _______ "FFI_part_IN_st2heap_FILTER"
+TRY_HELPER_CLOSED FFI_part_IN_st2heap_FILTER hyps 0
+TRY_HELPER_BEGIN init_iobuff_IN
+STEP_USED init_iobuff_IN 1 close candidate 0 goals_out 0
+Saved theorem _______ "init_iobuff_IN"
+TRY_HELPER_CLOSED init_iobuff_IN hyps 0
+TRY_HELPER_BEGIN STDIO_V_of_IOFS_V
+STEP_USED STDIO_V_of_IOFS_V 1 close candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_of_IOFS_V"
+TRY_HELPER_CLOSED STDIO_V_of_IOFS_V hyps 0
+TRY_HELPER_BEGIN IOxV_events_IN
+STEP_USED IOxV_events_IN 1 close candidate 0 goals_out 0
+Saved theorem _______ "IOxV_events_IN"
+TRY_HELPER_CLOSED IOxV_events_IN hyps 0
+TRY_HELPER_BEGIN STDIO_V_FFI_part_hprop
+STEP_USED STDIO_V_FFI_part_hprop 1 close candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_FFI_part_hprop"
+TRY_HELPER_CLOSED STDIO_V_FFI_part_hprop hyps 0
+TRY_HELPER_BEGIN STDIO_V_events
+STEP_USED STDIO_V_events 1 unfold candidate 0 goals_out 1
+STEP_USED STDIO_V_events 2 events candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_events"
+TRY_HELPER_CLOSED STDIO_V_events hyps 0
+TRY_HELPER_BEGIN every_basis_events
+STEP_USED every_basis_events 1 intro candidate 0 goals_out 1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundR6TExplore3)>>
+STEP_USED every_basis_events 2 all names candidate 0 goals_out 1
+STEP_USED every_basis_events 3 three parts candidate 0 goals_out 0
+Saved theorem _______ "every_basis_events"
+TRY_HELPER_CLOSED every_basis_events hyps 0
+TRY_HELPER_BEGIN final_heap_events
+STEP_USED final_heap_events 1 intro + STDIO_V_events candidate 0 goals_out 1
+STEP_USED final_heap_events 2 subsets candidate 0 goals_out 1
+STEP_USED final_heap_events 3 members candidate 0 goals_out 1
+STEP_USED final_heap_events 4 FILTER facts candidate 0 goals_out 1
+STEP_USED final_heap_events 5 every_basis_events candidate 0 goals_out 0
+Saved theorem _______ "final_heap_events"
+TRY_HELPER_CLOSED final_heap_events hyps 0
+TRY_HELPER_BEGIN whole_prog_spec_V_events
+STEP_USED whole_prog_spec_V_events 1 intro + hprop candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_events 2 call_main_thm2 (cfMainScript.sml 260-285) candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_events 3 sem_satisfies_imp_V candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_events 4 final_heap_events candidate 0 goals_out 0
+Saved theorem _______ "whole_prog_spec_V_events"
+TRY_HELPER_CLOSED whole_prog_spec_V_events hyps 0
+TRY_HELPER_BEGIN parts_ok_basis_ffi
+STEP_USED parts_ok_basis_ffi 1 intro candidate 0 goals_out 1
+PARTS_DEFS TextIOProg_st 11
+PARTS_STORED_FACT simp TextIOProg_st defs parts_ok (basis_ffi ext cls fs) (basis_proj1,basis_proj2)
+STEP_USED parts_ok_basis_ffi 2 stored parts_ok_basis_st (repl_initScript.sml 170-175 recipe) candidate 0 goals_out 1
+STEP_USED parts_ok_basis_ffi 3 close by the stored fact candidate 0 goals_out 0
+Saved theorem _______ "parts_ok_basis_ffi"
+TRY_HELPER_CLOSED parts_ok_basis_ffi hyps 0
+TRY_HELPER_BEGIN init_fs_part_IN
+STEP_USED init_fs_part_IN 1 intro + parts_ok candidate 0 goals_out 1
+STEP_USED init_fs_part_IN 2 unfold st2heap/ffi2heap candidate 0 goals_out 1
+STEP_USED init_fs_part_IN 3 close (925-933) candidate 0 goals_out 0
+Saved theorem _______ "init_fs_part_IN"
+TRY_HELPER_CLOSED init_fs_part_IN hyps 0
+TRY_HELPER_BEGIN init_cl_part_IN
+STEP_USED init_cl_part_IN 1 intro + parts_ok candidate 0 goals_out 1
+STEP_USED init_cl_part_IN 2 unfold st2heap/ffi2heap candidate 0 goals_out 1
+STEP_USED init_cl_part_IN 3 close (925-933) candidate 0 goals_out 0
+Saved theorem _______ "init_cl_part_IN"
+TRY_HELPER_CLOSED init_cl_part_IN hyps 0
+TRY_HELPER_BEGIN init_rt_part_IN
+STEP_USED init_rt_part_IN 1 intro + parts_ok candidate 0 goals_out 1
+STEP_USED init_rt_part_IN 2 unfold st2heap/ffi2heap candidate 0 goals_out 1
+STEP_USED init_rt_part_IN 3 close (925-933) candidate 0 goals_out 0
+Saved theorem _______ "init_rt_part_IN"
+TRY_HELPER_CLOSED init_rt_part_IN hyps 0
+TRY_HELPER_BEGIN IOFS_V_init
+STEP_USED IOFS_V_init 1 all (IOFS_precond copy, basis_ffiScript.sml 495-505; closed in R6tx-0003 explore_head) candidate 0 goals_out 0
+Saved theorem _______ "IOFS_V_init"
+TRY_HELPER_CLOSED IOFS_V_init hyps 0
+TRY_HELPER_BEGIN init_heap_V
+STEP_USED init_heap_V 1 intro candidate 0 goals_out 1
+STEP_USED init_heap_V 2 facts candidate 0 goals_out 1
+STEP_USED init_heap_V 3 witness candidate 0 goals_out 1
+STEP_USED init_heap_V 4 conj candidate 0 goals_out 4
+STEP_USED init_heap_V 5 SPLIT candidate 0 goals_out 0
+STEP_USED init_heap_V 6 STDIO_V h1 candidate 0 goals_out 0
+STEP_USED init_heap_V 7 cl part in h2 candidate 0 goals_out 0
+STEP_USED init_heap_V 8 rt part in h2 candidate 0 goals_out 0
+Saved theorem _______ "init_heap_V"
+TRY_HELPER_CLOSED init_heap_V hyps 0
+TRY_HELPER_BEGIN whole_prog_spec_V_init
+STEP_USED whole_prog_spec_V_init 1 intro candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_init 2 init_heap_V candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_init 3 whole_prog_spec_V_events candidate 0 goals_out 0
+Saved theorem _______ "whole_prog_spec_V_init"
+TRY_HELPER_CLOSED whole_prog_spec_V_init hyps 0
+EXPLORE_LEMMA IOFS_V_init_precond_copy extra
+EXPLORE_BEGIN IOFS_V_init_precond_copy (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN IOFS_V_init_precond_copy #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs v events.
+  wfFS fs ∧ LENGTH v = 2052 ∧ EVERY Inv events ⇒
+  IOFS_V Inv fs
+    ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$IOFS_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS 
+  GOAL_END IOFS_V_init_precond_copy #1
+STEP IOFS_V_init_precond_copy 1 all goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED IOFS_V_init_precond_copy after_steps 1
+EXPLORE_END IOFS_V_init_precond_copy
+PART_DONE r6t_explore_calls.sml
+EXPLORE_COMPLETE

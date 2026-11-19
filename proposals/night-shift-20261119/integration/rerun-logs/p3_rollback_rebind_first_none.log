@@ -1,0 +1,7 @@
+# cmd: node --no-warnings --import tsx tests/refund-finality/regress/p3_rollback_rebind.ts /private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree first none
+booking check (T4,T5; C-ATT-42 proper): TRUE
+books: remaining 0; provider moved 700
+{"r1b":"committed","r2":["900","committed"],"f2":{"emitted":["r1"],"refused":[],"error":""},"f3":{"emitted":[],"refused":[],"error":"emit adapter REFUSED (refused:ceiling): r2: the provider refused before any money moved for this call"},"f4":{"emitted":[],"refused":["r2: in doubt: claimed by run a548860649b17d69f1eb69f993aa7606 (p"],"error":""},"sink":"up","journal":["r1:paid","r2:refused:ceiling"],"movements":["8c0c485363d1:600","da25f6762dba:100"]}
+p3_rollback_rebind first none adapter=v3 env={}
+NOT STOPPED: T2 effect 0f2f2722261394c884350352b8f9481/ch_rb/r1 moved money 2 times
+exit 1

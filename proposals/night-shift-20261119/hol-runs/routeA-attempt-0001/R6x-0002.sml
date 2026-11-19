@@ -14,7 +14,7 @@ fun trunc n s = if size s <= n then s else String.substring (s, 0, n) ^ " ...";
 
 (* ================= LOAD ================= *)
 val _ = pr "MARK LOAD";
-val CK = "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
+val CK = "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
 val _ = loadPath := !loadPath @ map (fn d => CK ^ "/" ^ d)
           ["characteristic", "basis", "basis/pure", "translator", "semantics", "semantics/proofs",
            "semantics/ffi", "compiler/backend/semantics", "misc"];
@@ -274,7 +274,7 @@ val _ = List.app (fn (n, t) => case t of SOME x => pr ("STATEMENT " ^ n ^ "\n" ^
           [("writei_spec_V", WRITEI_V), ("read_into_spec_V", READ_INTO_V)];
 
 (* ---------- the three CF files ---------- *)
-val R6DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/";
+val R6DIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/";
 fun use_part (f : string) =
   (pr ("MARK USE " ^ f); use (R6DIR ^ f); pr ("PART_DONE " ^ f))
   handle e => pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e));

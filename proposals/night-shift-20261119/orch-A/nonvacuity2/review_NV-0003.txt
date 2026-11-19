@@ -1,0 +1,462 @@
+review_NV-0003.txt (worker W-NVrev, adversarial reviewer, Night-Shift Orchestrator A, 2026-11-19).
+READING ONLY. No HOL run, no Dafny, no git, no network. No existing file changed. Plain ASCII.
+Object: results/m1b-routeA-20261119/attempt-0001/NV-0003 (driver NV-0003.sml; shared files in
+results/night-shift-20261119/orch-A/nonvacuity2/). Statements below are copied from the stored-theorem
+prints in NV-0003/stdout.log. HOL Unicode is transliterated to ASCII ONLY (! ? /\ \/ ==> <=+ - \ <> |- ~);
+no other character is changed. The left number is the line in the named log.
+
+VERDICT: HOLDS WITH LIMITS.
+The run record is consistent and the harness is sound. NV1/NV1b are real joint witnesses of the full
+antecedent of refund_profile_a_sl_shape (= antecedent of refund_model_frame_decision_shape) for every
+request. The witness is in the MODEL only (abstract ideal FFI refund_abs_ffi, identity interference).
+NV2 does NOT show that a Terminate Success behaviour or a strict frame exists. NV-0003 does NOT
+witness the R6 premise of MG-0001, and it stores no witness for MT-0001 MT1 (free Vok).
+
+======================================================================================================
+1. RUN RECORD AGAINST THE FILES ON DISK (checked by sha256 now)
+======================================================================================================
+- NV-0003.run.json and NV-0003/command.json: actual_exit 0, wall_timeout false, markers [EXACT_COMPLETE].
+- NV-0003.go.log: "exit 0", "actual_exit 0 ... ['EXACT_COMPLETE'] inputs_unchanged_after True",
+  "USED_FILES_UNCHANGED true", "go exit 0".
+- stdout.log line 492 = EXACT_COMPLETE; line 490 "Exporting theory ... done."; no LEMMA_FAILED,
+  no STEP_CANDIDATE_FAILED, no CONTROL_FAILED, no WATCHDOG, no TIMEOUT line in stdout.log.
+- stderr.log: 0 bytes; sha256 e3b0c442...b855 = the empty-file digest = the recorded value.
+- stdout.log sha256 59b5ff2b...223f = recorded. NV-0003.sml sha256 ba9a0ed0...0e9 = recorded source_sha256;
+  NV-0003.sml = NV-0003/proof.sml (byte-equal) = nonvacuity2/NV-0003.sml (same sha256).
+- Objects: .dat 146210e7...f293, .sig 89aae432...1b, .sml a0f8e0c1...576: all three = recorded.
+  The .sig lists exactly the 6 stored theorems (stdout 486).
+- used-files pre = post (diff empty, 7 files). Each of the 7 digests = the file in nonvacuity2/ now
+  (NV-0003.sml ba9a0ed0, NVx-0003.sml dace3e85, nv_common 1da5d611, nv_controls 44391f88,
+  nv_explore_calls 5693014, nv_prove 780d0888, nv_steps 6703d240).
+- Parent theories: NV-0003.hashes.json lists 221 parent files (.sig/.sml/.dat); I re-hashed all 221 now:
+  0 differ. The L2d-0001 and fs-r4-0001 (forge_refundInputSat) objects are among them.
+Minor record defects (no effect on the result):
+  R1 command.json input_sha256 (151 entries) has 0 .dat files; the parent .dat digests are only in
+     NV-0003.hashes.json. A reader of command.json alone cannot bind the loaded theorem terms.
+  R2 deps-NV.txt (selects the loaded parents) is not in the used-files list and not in command.json
+     input_sha256. Its digest now is 84e124e4..., = the value in nonvacuity2/CHANGES.txt C8. The parent
+     set is also checked in-run (stdout 480-483), so this is a record gap only.
+  R3 The used-files list contains NVx-0003.sml and nv_explore_calls.sml, which NV-0003.sml does not use.
+  R4 NV-0003.sml lines 1-7: the header still names NV-0001 / NVx-0001 (stale; CHANGES.txt C9 says so).
+
+======================================================================================================
+2. SOUNDNESS HARNESS
+======================================================================================================
+- tags (NV-0003.sml 57-59): fails unless hyp = [], axiom tags = [], every oracle = "DISK_THM".
+  Applied by chk to every saved theorem (nv_prove.sml 12) and again to DB.theorems @ DB.definitions of
+  the theory (NV-0003.sml 79). Oracle tags of parent theorems propagate into derived theorems, so a
+  mk_thm/cheat in a used parent theorem (for example JS) would show as an oracle here. Note: the parent
+  fs-r4-0001/proof.sml (slide-s3-copy) lines 22 and 90 have a "handle ... mk_thm" fallback; its stdout shows no
+  LEMMA_FAILED and EXACT_COMPLETE (line 148), and NV-0003's tag check on theorems derived from JS passed,
+  so JS carries no MK_THM oracle.
+- Axioms: closure = theory :: ancestry (554 nodes); exactly the 4 bool axioms (stdout 475-479);
+  any other axiom raises (NV-0003.sml 83-84).
+- No ASSUME, no mk_thm, no cheat, no new_axiom, no definition in any of the 4 used files (I read all).
+- handle paths:
+  * step_tac (nv_common.sml 220-235): a failed candidate moves to the next candidate; when all fail it
+    raises. A wrong tactic cannot create a theorem: TAC_PROOF validates; prove_steps (nv_prove.sml 10)
+    also requires hyp = [] and concl aconv the planned statement.
+  * prove_steps (nv_prove.sml 15-16): an exception on a REQUIRED lemma is appended to `failed`;
+    NV-0003.sml 72-73 raises if `failed` is non-empty. FAILED_LIST is empty (stdout 450).
+    OPTIONAL lemmas only go to optional_failed (empty, stdout 447). All 6 lemmas were stored, so the
+    optional path had no effect in this run.
+  * nv_opt (nv_common.sml 21-23) can turn a failure into NONE, but only for optional items; all
+    optional items were built (stdout 94-104, 115-171).
+  * nv_controls.sml 6-12: the CONTROL_WITNESS_FFI_INTERFER handler is non-fatal; it is a print only.
+  * nv_controls.sml 17-27: the handler calls nv_control false, which raises in proof mode. Fatal. OK.
+- CONTROL_OK checks can fail: nv_control raises Fail when NV_PROOF_MODE (= true, NV-0003.sml 69).
+  Weak controls: nv_common.sml 188 and nv_controls.sml 16 (NV1 body aconv ANTE) are true by construction
+  (NV1_STMT is built from ANTE at nv_common.sml 173). The substantive bindings are: ANTE is taken from the
+  stored SHAPE theorem (nv_common.sml 59), and ANTE aconv the antecedent of DEC (line 76, a real check).
+- Watchdog hard stop gives exit 3, not 0 (NV-0003.sml 33). Not reached.
+Harness verdict: no path turns a failure into exit 0 + EXACT_COMPLETE.
+
+======================================================================================================
+3. EXACT STORED STATEMENTS
+======================================================================================================
+Definitions used (printed by the run, from parents):
+refund_ffi_contract_on_def (forge_refundRouteA1), NV-0003/stdout.log:
+    34| |- !b dm Vok ffi_i.
+    35|     refund_ffi_contract_on b dm Vok ffi_i <=>
+    36|     !k index new_bytes ms2 t1 bytes bytes2.
+    37|       index < 4 /\ t1.mem_domain = dm /\
+    38|       read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+    39|         (\a. if a IN dm then SOME (ms2.MEM a) else NONE) = SOME bytes /\
+    40|       read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+    41|         (\a. if a IN dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 /\
+    42|       LENGTH new_bytes = LENGTH bytes2 /\
+    43|       target_state_rel arm8_target (t1 with pc := b - n2w ((3 + index) * 16))
+    44|         ms2 /\ aligned 2 (t1.regs 30) /\ Vok index new_bytes ms2 ==>
+    45|       arm8_ok (ffi_i k (index,new_bytes,ms2)) /\
+    46|       (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 /\
+    47|       (!a. a IN dm ==>
+    48|            (ffi_i k (index,new_bytes,ms2)).MEM a =
+    49|            asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) /\
+    50|       !r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ==>
+    51|           (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+refund_abs_env_def, refund_id_interfer_ok, remaining_premise_met_by_the_abstract_effect, machine_sem_total:
+    52| USED refund_abs_env_def
+    53| |- !envmc.
+    54|     refund_abs_env envmc =
+    55|     envmc with
+    56|     <|next_interfer := refund_id_interfer; ffi_interfer := refund_abs_ffi|>
+    57| USED refund_id_interfer_ok
+    58| |- !proj. interference_ok refund_id_interfer proj
+    59| USED remaining_premise_met_by_the_abstract_effect
+    60| |- !b dm.
+    61|     refund_ffi_contract_on b dm
+    62|       (\i nb s.
+    63|          (i = 0 \/ i = 1 ==> 4 <= w2n (s.REG 3w)) /\
+    64|          (i = 2 ==> s.REG 1w = 8w /\ s.REG 3w <> 0w) /\ (i = 3 ==> s.REG 3w <> 0w))
+    65|       refund_abs_ffi
+    66| USED machine_sem_total
+    67| |- ?b. machine_sem mc st ms b
+JS = forge_refundInputSat.refund_profile_a_sl_all_premises_satisfiable_at_0x4000 (parent; the witness source):
+    68| USED refund_profile_a_sl_all_premises_satisfiable_at_0x4000
+    69| |- ?s h stk e envmc fs cl.
+    70|     refund_entry_pre_sl 16384w s h stk e /\ aligned 3 e /\ h <=+ e /\
+    71|     8192w <=+ e - h /\ refund_heap_clear_sl 16384w h e /\
+    72|     envmc.prog_addresses = refund_mem_dm_sl 16384w h e /\
+    73|     refund_env_ok_sl 16384w envmc /\
+    74|     stdin_content fs =
+    75|     SOME
+    76|       (explode
+    77|          (sexp_to_string
+    78|             (refund_request charge request original remaining enabled opened
+    79|                candidate amount reason))) /\ wfcl cl /\ wfFS fs /\
+    80|     STD_streams fs
+
+Stored in forge_refundShapeSat (6 theorems, 0 definitions; stdout 484-487):
+[helper] refund_ffi_contract_at_imp_on:
+   270| CHECKED refund_ffi_contract_at_imp_on
+   271| |- !Vok b dm ffi_i.
+   272|     refund_ffi_contract_at b dm ffi_i ==> refund_ffi_contract_on b dm Vok ffi_i
+[helper, optional] refund_abs_env_fields:
+   276| CHECKED refund_abs_env_fields
+   277| |- !envmc.
+   278|     (refund_abs_env envmc).ffi_interfer = refund_abs_ffi /\
+   279|     (refund_abs_env envmc).next_interfer = refund_id_interfer /\
+   280|     (refund_abs_env envmc).prog_addresses = envmc.prog_addresses
+[NV0, optional] refund_shape_premises_hold_at_a_constructed_state (request fields free = for every request):
+   285| CHECKED refund_shape_premises_hold_at_a_constructed_state
+   286| |- refund_entry_pre_sl 16384w
+   287|     <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>;
+   288|       exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+   289|       TCR_EL1 := <|TBI0 := F; TBI1 := F|> |> 0x200000000w 0x200010000w
+   290|     0x200020000w /\ aligned 3 0x200020000w /\ 0x200000000w <=+ 0x200020000w /\
+   291|   8192w <=+ 0x200020000w - 0x200000000w /\
+   292|   refund_heap_clear_sl 16384w 0x200000000w 0x200020000w /\
+   293|   (refund_abs_env
+   294|      <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+   295|   prog_addresses = refund_mem_dm_sl 16384w 0x200000000w 0x200020000w /\
+   296|   interference_ok
+   297|     (refund_abs_env
+   298|        <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+   299|     next_interfer
+   300|     (arm8_target.proj
+   301|        (refund_abs_env
+   302|           <|prog_addresses :=
+   303|               refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+   304|        prog_addresses) /\
+   305|   refund_ffi_contract_on (16384w + 0x1000040D0w)
+   306|     (refund_abs_env
+   307|        <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+   308|     prog_addresses
+   309|     (\i nb s.
+   310|        (i = 0 \/ i = 1 ==> 4 <= w2n (s.REG 3w)) /\
+   311|        (i = 2 ==> s.REG 1w = 8w /\ s.REG 3w <> 0w) /\ (i = 3 ==> s.REG 3w <> 0w))
+   312|     (refund_abs_env
+   313|        <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>).
+   314|     ffi_interfer /\
+   315|   stdin_content
+   316|     (sat_fs
+   317|        (explode
+   318|           (sexp_to_string
+   319|              (refund_request charge request original remaining enabled opened
+   320|                 candidate amount reason)))) =
+   321|   SOME
+   322|     (explode
+   323|        (sexp_to_string
+   324|           (refund_request charge request original remaining enabled opened
+   325|              candidate amount reason))) /\ wfcl [strlit "refund"] /\
+   326|   wfFS
+   327|     (sat_fs
+   328|        (explode
+   329|           (sexp_to_string
+   330|              (refund_request charge request original remaining enabled opened
+   331|                 candidate amount reason)))) /\
+   332|   STD_streams
+   333|     (sat_fs
+   334|        (explode
+   335|           (sexp_to_string
+   336|              (refund_request charge request original remaining enabled opened
+   337|                 candidate amount reason))))
+[NV1b, required] refund_shape_premises_satisfiable_for_every_request:
+   345| CHECKED refund_shape_premises_satisfiable_for_every_request
+   346| |- !charge request original remaining enabled opened candidate amount reason.
+   347|       ?sl s h stk e envmc fs cl.
+   348|     refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\
+   349|     8192w <=+ e - h /\ refund_heap_clear_sl sl h e /\
+   350|     envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+   351|     interference_ok envmc.next_interfer
+   352|       (arm8_target.proj envmc.prog_addresses) /\
+   353|     refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+   354|       (\i nb s.
+   355|          (i = 0 \/ i = 1 ==> 4 <= w2n (s.REG 3w)) /\
+   356|          (i = 2 ==> s.REG 1w = 8w /\ s.REG 3w <> 0w) /\ (i = 3 ==> s.REG 3w <> 0w))
+   357|       envmc.ffi_interfer /\
+   358|     stdin_content fs =
+   359|     SOME
+   360|       (explode
+   361|          (sexp_to_string
+   362|             (refund_request charge request original remaining enabled opened
+   363|                candidate amount reason))) /\ wfcl cl /\ wfFS fs /\
+   364|     STD_streams fs
+[NV1, required] refund_shape_premises_satisfiable:
+   369| CHECKED refund_shape_premises_satisfiable
+   370| |- ?charge request original remaining enabled opened candidate amount reason
+   371|       sl s h stk e envmc fs cl.
+   372|     refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\
+   373|     8192w <=+ e - h /\ refund_heap_clear_sl sl h e /\
+   374|     envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+   375|     interference_ok envmc.next_interfer
+   376|       (arm8_target.proj envmc.prog_addresses) /\
+   377|     refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+   378|       (\i nb s.
+   379|          (i = 0 \/ i = 1 ==> 4 <= w2n (s.REG 3w)) /\
+   380|          (i = 2 ==> s.REG 1w = 8w /\ s.REG 3w <> 0w) /\ (i = 3 ==> s.REG 3w <> 0w))
+   381|       envmc.ffi_interfer /\
+   382|     stdin_content fs =
+   383|     SOME
+   384|       (explode
+   385|          (sexp_to_string
+   386|             (refund_request charge request original remaining enabled opened
+   387|                candidate amount reason))) /\ wfcl cl /\ wfFS fs /\
+   388|     STD_streams fs
+[NV2, required] refund_shape_run_is_accepted:
+   400| CHECKED refund_shape_run_is_accepted
+   401| |- !dafny_env dafny_heap.
+   402|       ?charge request original remaining enabled opened candidate amount
+   403|       reason sl s h stk e envmc fs cl.
+   404|     (refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\
+   405|      8192w <=+ e - h /\ refund_heap_clear_sl sl h e /\
+   406|      envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+   407|      interference_ok envmc.next_interfer
+   408|        (arm8_target.proj envmc.prog_addresses) /\
+   409|      refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+   410|        (\i nb s.
+   411|           (i = 0 \/ i = 1 ==> 4 <= w2n (s.REG 3w)) /\
+   412|           (i = 2 ==> s.REG 1w = 8w /\ s.REG 3w <> 0w) /\ (i = 3 ==> s.REG 3w <> 0w))
+   413|        envmc.ffi_interfer /\
+   414|      stdin_content fs =
+   415|      SOME
+   416|        (explode
+   417|           (sexp_to_string
+   418|              (refund_request charge request original remaining enabled opened
+   419|                 candidate amount reason))) /\ wfcl cl /\ wfFS fs /\
+   420|      STD_streams fs) /\
+   421|     ?ms.
+   422|       (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+   423|       (?b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+   424|              (basis_ffi no_ext cl fs) ms b) /\
+   425|       !b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+   426|             (basis_ffi no_ext cl fs) ms b ==>
+   427|           ?t io.
+   428|             b = Terminate t io /\
+   429|             !g. refund_strict_parse (fd1_written io) = SOME g ==>
+   430|                 g =
+   431|                 refund_fields charge request original remaining enabled
+   432|                   opened candidate amount reason /\
+   433|                 fd1_written io =
+   434|                 explode
+   435|                   (refund_render_fields
+   436|                      (refund_fields charge request original remaining enabled
+   437|                         opened candidate amount reason)) /\
+   438|                 !ok a r c q n.
+   439|                   g = (ok,a,r,c,q,n) ==>
+   440|                   evaluate_exps
+   441|                     (exported_contract_state dafny_heap charge request
+   442|                        original remaining enabled opened candidate amount
+   443|                        reason ok a r c q n) dafny_env exported_ensures =
+   444|                   (exported_contract_state dafny_heap charge request original
+   445|                      remaining enabled opened candidate amount reason ok a r
+   446|                      c q n,Rval [BoolV T; BoolV T; BoolV T])
+
+Parent for comparison: L2d-0001/stdout.log refund_profile_a_sl_shape:
+   196| CHECKED refund_profile_a_sl_shape
+   197| |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+   198|   refund_heap_clear_sl sl h e /\
+   199|   envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+   200|   interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+   201|   refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+   202|     (\i nb s.
+   203|        (i = 0 \/ i = 1 ==> 4 <= w2n (s.REG 3w)) /\
+   204|        (i = 2 ==> s.REG 1w = 8w /\ s.REG 3w <> 0w) /\ (i = 3 ==> s.REG 3w <> 0w))
+   205|     envmc.ffi_interfer /\
+   206|   stdin_content fs =
+   207|   SOME
+   208|     (explode
+   209|        (sexp_to_string
+   210|           (refund_request charge request original remaining enabled opened
+   211|              candidate amount reason))) /\ wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+   212|   ?ms.
+   213|     (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+   214|     (!j ms' ffi'.
+   215|        evaluate (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) j
+   216|          ms = (TimeOut,ms',ffi') ==>
+   217|        (refund_mc (sl + 0x1000040D0w) envmc).target.get_pc ms' <>
+   218|        (refund_mc (sl + 0x1000040D0w) envmc).install_pc) /\
+   219|     ?io_events.
+   220|       machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+   221|         ms SUBSET extend_with_resource_limit {Terminate Success io_events} /\
+   222|       extract_fs ext (cl,fs) io_events =
+   223|       SOME
+   224|         (add_stdout (fastForwardFD fs 0)
+   225|            (refund_render_fields
+   226|               (refund_fields charge request original remaining enabled opened
+   227|                  candidate amount reason)))
+MT-0001/stdout.log refund_model_frame_totalised (MT1), antecedent part:
+   110| CHECKED refund_model_frame_totalised
+   111| |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+   112|   refund_heap_clear_sl sl h e /\
+   113|   envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+   114|   interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+   115|   refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+   116|     envmc.ffi_interfer /\
+MG-0001/stdout.log refund_model_frame_decision_events, antecedent part:
+   251| CHECKED refund_model_frame_decision_events
+   252| |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+   253|   refund_heap_clear_sl sl h e /\
+   254|   envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+   255|   interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+   256|   refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses VokY3
+   257|     envmc.ffi_interfer /\
+   258|   (!ms j.
+   259|      arm8_run 27 s = SOME ms ==>
+   260|      EVERY refund_valid_event
+   261|        (SND
+   262|           (SND
+   263|              (evaluate
+   264|                 (refund_mc (sl + 0x1000040D0w)
+   265|                    (envmc with
+   266|                     ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+   267|                 (basis_ffi no_ext cl fs) j ms))).io_events) /\
+   268|   stdin_content fs =
+
+======================================================================================================
+4. ANALYSIS OF THE QUANTIFIERS AND OF THE WITNESS (question 3)
+======================================================================================================
+Q3a NV1b vs the parent. By hand, the 12 conjuncts of NV1b (stdout 348-364) = the 12 conjuncts of the
+    antecedent of refund_profile_a_sl_shape (L2d-0001 stdout 197-211), in the same order, with the same
+    contract predicate (the VokS lambda). The run also checks this by aconv (stdout 107, 467, 468) and
+    checks ANTE aconv the antecedent of refund_model_frame_decision_shape (stdout 85).
+    Quantifiers: NV1b = !<9 request fields>. ?sl s h stk e envmc fs cl. ANTE. This is the strong form:
+    for EVERY request (all 9 fields: charge request original remaining enabled opened candidate amount
+    reason). sl is existential (the witness takes sl = 16384w); this is correct because the parent is
+    stated for every sl. NV1 (stdout 370-388) is the weaker ?<all 17>. ANTE; it adds nothing to NV1b.
+    No other free variable occurs in ANTE (17 = 8 + 9, stdout 84; no free ext, stdout 86).
+Q3b Valid-call predicate. The witnessed antecedent uses VokS =
+      \i nb s. (i = 0 \/ i = 1 ==> 4 <= w2n (s.REG 3w)) /\ (i = 2 ==> s.REG 1w = 8w /\ s.REG 3w <> 0w) /\
+               (i = 3 ==> s.REG 3w <> 0w)
+    (stdout 87-89). It is neither empty nor universal. BUT the witness never uses VokS: NV1b is proved
+    from JS (forge_refundInputSat, stdout 68-80) whose contract premise is refund_env_ok_sl, i.e. the
+    AT-form contract WITHOUT any Vok premise (stdout 7-13), and refund_ffi_contract_at_imp_on (stdout
+    270-272) weakens it to the on-form for ANY Vok. So the witness FFI meets the contract for all calls,
+    valid or not. The witness does not test whether VokS is a meaningful restriction.
+Q3c Which environment. JS is existential, but its proof (round4-m1-replay-20261118/slide-s3-copy/attempt-0001/fs-r4-0001/proof.sml lines 77-78, 97-98)
+    takes envmc = refund_abs_env (ARB with prog_addresses := refund_mem_dm_sl 16384w h0 e0), fs = sat_fs
+    <request text>, cl = [strlit "refund"]. NV0 names the same values (stdout 286-337).
+    refund_abs_env sets next_interfer := refund_id_interfer and ffi_interfer := refund_abs_ffi
+    (stdout 52-56). Definitions (refund-env-model-local-20261116/attempt-0001/env-0005.sml):
+      line 34:  refund_id_interfer i ms = ms                     (identity: no interference at all)
+      line 117-119: refund_abs_ffi k x = (SND (SND x)) with <| PC := (SND (SND x)).REG 30w;
+                    MEM := asm_write_bytearray ((SND (SND x)).REG 2w) (FST (SND x)) (SND (SND x)).MEM |>
+                    (an ideal FFI: return to LR, write the new bytes at REG 2, change nothing else).
+    Neither is logically vacuous: interference_ok and the contract are proved for real functions, not by
+    an empty/universal predicate. But both are the most benign environment: identity interference and an
+    FFI built to meet the contract. All other machine_config fields of envmc are ARB; s has ARB fields
+    except MEM, PC, PSTATE.EL, exception, SCTLR_EL1, TCR_EL1 (stdout 287-289). The premises do not
+    constrain the ARB fields, so this is consistent; it says nothing about a real OS or a real kernel.
+    Scope: consistency of the premise set IN THE MODEL only.
+Q3d MT-0001 MT1 (refund_model_frame_totalised, MT-0001 stdout 110-116): same 12 conjuncts except the
+    contract predicate is a FREE variable Vok (not VokS). The JS witness meets the at-form, so by
+    refund_ffi_contract_at_imp_on the MT1 antecedent holds at the same witness for EVERY Vok. This is a
+    one-step consequence, but NO theorem in forge_refundShapeSat states it. Status: implied, not stored.
+    (Also: refund_ffi_tot Vok refund_abs_ffi = refund_abs_ffi pointwise, by refund_ffi_tot_def, MT-0001
+    stdout 67-71; so at this witness the totalised machine is the abstract machine.)
+Q3e MF-0002 M3 (refund_model_frame_meets_exported_contract, MF-0002 stdout 286-299): its antecedent uses
+    refund_env_ok_sl sl envmc (at-form). JS itself (fs-r4-0001, older, stdout 68-80 here) is exactly a
+    joint witness of that antecedent at sl = 16384w, for every request. So M3's premises were already
+    witnessed before NV-0003; NV-0003 adds nothing for M3 and stores nothing named for it.
+
+======================================================================================================
+5. NV2 (question 4)
+======================================================================================================
+NV2 (stdout 401-446) = !dafny_env dafny_heap. ?<9 request fields> sl s h stk e envmc fs cl.
+   ANTE /\ ?ms. (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+          (?b. machine_sem MC (basis_ffi no_ext cl fs) ms b) /\
+          !b. machine_sem MC ... ms b ==> ?t io. b = Terminate t io /\ !g. refund_strict_parse (...) = SOME g ==> ...
+What it shows: for SOME request, the premises hold, the 27-step entry run reaches the decision PC, at
+least one behaviour exists, and every behaviour is a Terminate. Hence a Terminate behaviour exists.
+What it does NOT show:
+ N1 t is not fixed to Success. From the parent (L2d stdout 220-221) behaviours lie in
+    extend_with_resource_limit {Terminate Success io_events}, so t may be Resource_limit_hit with a
+    prefix of the io. The run itself prints this (stdout 470-471).
+ N2 The frame part is conditional: "!g. refund_strict_parse (fd1_written io) = SOME g ==> ...". NV2 does
+    not show that the parse succeeds, i.e. that a strict frame is ever written. A run that stops on
+    the resource limit before the frame satisfies NV2 vacuously in that inner implication.
+ N3 "?b. machine_sem ..." comes from targetProps.machine_sem_total (stdout 66-67), a generic fact about
+    every machine; it adds nothing specific to this program.
+ N4 The request is EXISTENTIAL in NV2 (nv_common.sml 185-187), weaker than NV1b. A "for every request"
+    form was available from NV1b + DEC; it was not stated.
+ N5 The Dafny-contract part (evaluate_exps ... Rval [BoolV T; BoolV T; BoolV T]) is under the same
+    conditional, so it is not shown non-vacuous for a concrete run.
+So NV2 shows "IF the run writes a parseable frame THEN it is accepted", plus "the run terminates (maybe
+by resource limit)". It does not show that the conclusion of refund_profile_a_sl_shape is non-vacuous
+in the strong sense (a Success run with the frame).
+
+======================================================================================================
+6. THE RED-TEAM NOTE (question 5)
+======================================================================================================
+Note: "no undisclosed false premise; a joint non-vacuity witness is missing".
+- CLOSED for refund_profile_a_sl_shape (L2d-0001) and refund_model_frame_decision_shape (same
+  antecedent, checked stdout 85): NV1b, for every request, model only.
+- Already closed before NV-0003 for the at-form theorems (MF-0002 M3 and the other MF-0002 theorems with
+  refund_env_ok_sl): by JS (fs-r4-0001).
+- MT-0001 MT1: implied at the same witness for every Vok (at_imp_on + JS), NOT stored.
+- MG-0001 refund_model_frame_decision_events (MG-0001 stdout 251-268): NOT closed. Its premises are the
+  contract with VokY3 (implied by at_imp_on + JS, not stored) AND premise R6:
+    !ms j. arm8_run 27 s = SOME ms ==> EVERY refund_valid_event (SND (SND (evaluate (refund_mc
+      (sl + 0x1000040D0w) (envmc with ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+      (basis_ffi no_ext cl fs) j ms))).io_events
+  R6 is a property of every run prefix of every j. NV-0003 states nothing about R6, and no stored
+  theorem I found witnesses R6 for refund_abs_env / sat_fs. Whether R6 holds at this witness is OPEN
+  (it needs every FFI event the program actually emits on the abstract machine to be valid).
+- So NV-0003 closes the note for L2d (and DEC) only, not for the whole chain.
+
+======================================================================================================
+7. DEFECTS (file:line)
+======================================================================================================
+ D1 (scope, not soundness) nv_common.sml:185-187 / stdout 401-446: NV2 is existential in the request
+    and conditional on a successful parse; the claim text "a consequence for the run" should say
+    "a Terminate behaviour exists; IF a frame parses it is the correct one". No Success witness.
+ D2 (scope) nv_steps.sml:36-44: NV1b goes through the at-form JS; VokS is never exercised. The witness
+    is equally a witness for ANY valid-call predicate; it gives no evidence that VokS is needed or right.
+ D3 (claim gap) no stored witness for MT1 (free Vok) or MG-0001 (VokY3 + R6). R6 unwitnessed.
+ D4 (weak control) nv_common.sml:188 and nv_controls.sml:16: "NV1 body aconv ANTE" is true by
+    construction (nv_common.sml:173).
+ D5 (record) command.json input_sha256 has no parent .dat digest (hashes.json has them; 221/221 match).
+ D6 (record) deps-NV.txt not in used-files or command.json input digests (current sha256 84e124e4...).
+ D7 (cosmetic) NV-0003.sml:1-7 header names NV-0001/NVx-0001.
+ D8 (cosmetic) nv_steps.sml:1-5, nv_common.sml:1, nv_prove.sml:1, nv_controls.sml:2 still say
+    "NOT RUN / UNCHECKED"; after NV-0003 that is stale for the proof path.
+No defect breaks the stored theorems or the exit-0 result.
+
+======================================================================================================
+8. WHAT NV-0003 DOES NOT SHOW
+======================================================================================================
+- Nothing about the real machine, the real OS FFI, or real interference (model only; ideal FFI, identity
+  interference, ARB elsewhere).
+- No Terminate Success run, no run that writes a strict frame, no non-vacuous Dafny-contract instance.
+- No witness for MG-0001 R6; no stored witness for MT1 or for the VokY3 contract.
+- No evidence that VokS (or any valid-call predicate) restricts anything at the witness.

@@ -54,7 +54,7 @@ for spec in $CASES; do
   [[ $started -eq 0 && $c == $1 ]] && started=1
   [[ $started -eq 0 ]] && continue
   if pgrep -f 'cakeml-heap|arm8-heap|cake_compile_heap|bin/hol |poly-install|bin/poly' > /dev/null; then say "STOP before $c: another HOL/poly process runs"; exit 98; fi
-  [[ -e /Users/mackianni/forge/results/night-shift-20261119/locks/heavy.lock ]] && { say "STOP before $c: locks/heavy.lock exists"; exit 95; }
+  [[ -e /Users/USER/forge/results/night-shift-20261119/locks/heavy.lock ]] && { say "STOP before $c: locks/heavy.lock exists"; exit 95; }
   # resume 2026-11-19 (orchestrator, owner amendment in PROTOCOL.md): power state no longer blocks a start in this driver
   # (queue.sh and nightshift-run.sh are unchanged runner copies and still wait for / refuse battery power). Disk rule added.
   dfree=$(df -g /System/Volumes/Data | tail -1 | awk '{print $4}')

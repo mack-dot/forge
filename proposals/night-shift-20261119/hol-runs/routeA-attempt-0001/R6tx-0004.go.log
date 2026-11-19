@@ -1,0 +1,19 @@
+2026-11-19T16:19:02Z
+Now drawing from 'AC Power'
+total = 9216.00M  used = 8361.00M  free = 855.00M  (encrypted)
+System-wide memory free percentage: 45%
+DISK_FREE_GIB 83
+START_STATE swap_free_mib=855 memory_free_percent=45
+USED_FILES_PRE 6 e47e37ee6dc85c53
+exit 0
+actual_exit 0 wall 535.068 cpu 305.522 rss_mib 2465 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+25:GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argume
+38:TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+331:  GOAL_COUNT 1
+332:  GOAL_BEGIN IOFS_V_init_precond_copy #1 assumptions 0 (ASM 0 = newest)
+341:  GOAL_END IOFS_V_init_precond_copy #1
+344:  GOAL_COUNT 0
+348:EXPLORE_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

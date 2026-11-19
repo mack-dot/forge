@@ -1,0 +1,21 @@
+2026-11-19T16:40:27Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 9075.31M  free = 1164.69M  (encrypted)
+System-wide memory free percentage: 41%
+DISK_FREE_GIB 82
+START_STATE swap_free_mib=1164 memory_free_percent=41
+USED_FILES_PRE 20 eede113b5f9da24c
+exit 0
+actual_exit 0 wall 223.864 cpu 93.569 rss_mib 1281 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+297:STATEMENT fst_error
+298:∀x. FST x = Error ⇒ ∃a b. x = (Error,a,b)
+385:PART1_SELECTED 37 shift_seq_shift_seq shift_seq_0 shift_seq_1_pred trace_next_interfer_ffi trace_next_interfer_shift trace_ffi_interfer_nil trace_ffi_interfer_step trace_ffi_interfer_shift trace_next_interfer_proj trace_next_interfer_ok trace_ffi_interfer_
+544:TRY_HELPER_BEGIN fst_error
+545:STEP_USED fst_error 1 close candidate 0 goals_out 0
+546:Saved theorem _______ "fst_error"
+547:TRY_HELPER_CLOSED fst_error hyps 0
+630:CLOSED_NAMES shift_seq_shift_seq shift_seq_0 shift_seq_1_pred trace_next_interfer_ffi trace_next_interfer_shift trace_ffi_interfer_nil trace_ffi_interfer_step trace_ffi_interfer_shift trace_next_interfer_proj trace_next_interfer_ok trace_ffi_interfer_guard
+633:EXPLORE_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

@@ -3,8 +3,8 @@
 Every command and exit code below is PLANNED. No line in this file is a result.
 Run only in the single HOL slot, by the orchestrator. `nightshift-run.sh` does the resource pre-check.
 
-V = `/Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v2`
-A = `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001`
+V = `/Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step/v2`
+A = `/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001`
 
 ## Inputs (SHA-256 measured by A20 with `shasum -a 256`, exit 0)
 | File | SHA-256 |
@@ -17,8 +17,8 @@ Diffs: `V/erasure_frame_v2.vs-ES-0002.diff`, `V/EFx-0001.vs-v2.diff`.
 
 ## Step 1: exploration (CPU 900 s)
 ```zsh
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v2/EFx-0001.sml EFx-0001.sml
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step/v2/EFx-0001.sml EFx-0001.sml
 shasum -a 256 EFx-0001.sml        # must be 68ba8415...1161
 ./nightshift-run.sh EFx-0001 900 deps-ES.txt ; echo "go exit $?"
 ```
@@ -42,8 +42,8 @@ grep -n "^ARB_IN_DEF\|^LITERAL_CASE\|^TYVAR_PROBE\|^EXPLORE_\|^STEP\|^ALT_\|^VAL
 
 ## Step 2: proof run EF-0001 (only after A20 finalises v2 from the Step 1 log; CPU 600 s)
 ```zsh
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v2/erasure_frame_v2.sml EF-0001.sml
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step/v2/erasure_frame_v2.sml EF-0001.sml
 shasum -a 256 EF-0001.sml         # must equal the finalised digest that A20 reports
 ./nightshift-run.sh EF-0001 600 deps-ES.txt ; echo "go exit $?"
 ```

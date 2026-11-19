@@ -1,0 +1,1097 @@
+TIMEOUT_HELPER Timeout.apply loaded
+GUARD_DEFINED guarded_apply
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+LOAD_OK basisFunctionsLib
+<<HOL message: Created theory "forge_refundR6TExplore2">>
+EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)
+EXPLORE_MODE nothing is exported; the open lemmas are never stored
+MARK USE r6t_common.sml
+MARK GRAMMAR
+GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\187v. &T :v -> (\206\177 -> bool) -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and flatSem$v\n", origins = [{origin_function = "type-analysis", origin_structure  ...
+TYPE_REPRIVILEGED ffi_result was cfHeapsBase now ffi
+TYPE_REPRIVILEGED shift was wordLang now ast
+TYPE_REPRIVILEGED pat was pattern_semantics now ast
+TYPE_REPRIVILEGED op was flatLang now ast
+TYPE_REPRIVILEGED locs was location now ast
+TYPE_REPRIVILEGED lit was dafny_ast now ast
+TYPE_REPRIVILEGED exp was dafny_ast now ast
+TYPE_REPRIVILEGED arith was asm now ast
+TYPE_REPRIVILEGED v was flatSem now semanticPrimitives
+TYPE_REPRIVILEGED state was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED sem_env was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED result was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED dest_thunk_ret was flatSem now semanticPrimitives
+GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK
+GRAMMAR_FIX B
+MARK SHORTCUTS
+MARK STATEMENTS
+SURGERY_DECLS Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+SURGERY_LOOKUP lookup_var fname env2 = SOME fv
+SURGERY_SEM semantics_dec_list (init_state (basis_ffi ext cl fs) with eval_state := es)
+  env1
+  (SNOC (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+     prog)
+SURGERY_FREE st2 env2 fv prog fname env1 fs cl ext es
+NAME_IS_CONST fv closProps
+STATEMENT parts_ok_basis_ffi
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒ parts_ok st.ffi (basis_proj1,basis_proj2)
+STATEMENT init_fs_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_cl_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+    (MAP FST (SND (SND cl_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_rt_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+    (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_iobuff_IN
+∀st bs1 bs2 rest.
+  st.refs = W8array bs1::W8array bs2::rest ⇒
+  Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+STATEMENT IOFS_V_init
+∀Inv fs v events.
+  wfFS fs ∧ LENGTH v = 2052 ∧ EVERY Inv events ⇒
+  IOFS_V Inv fs
+    ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+STATEMENT STDIO_V_of_IOFS_V
+∀Inv fs h. STD_streams fs ∧ IOFS_V Inv fs h ⇒ STDIO_V Inv fs h
+STATEMENT init_heap_V
+∀Inv st ext cl fs bs1 bs2 rest.
+  st.ffi = basis_ffi ext cl fs ∧ st.refs = W8array bs1::W8array bs2::rest ∧
+  LENGTH bs2 = 2052 ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃h1 h2.
+    SPLIT (st2heap (basis_proj1,basis_proj2) st) (h1,h2) ∧
+    STDIO_V Inv fs h1 ∧
+    FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+      (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+    FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+      (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2
+STATEMENT FFI_part_IN_st2heap_FILTER
+∀p st s u ns events.
+  FFI_part s u ns events ∈ st2heap p st ⇒
+  parts_ok st.ffi p ∧ FILTER (ffi_has_index_in ns) st.ffi.io_events = events
+STATEMENT basis_proj2_names
+FLAT (MAP FST basis_proj2) =
+MAP FST (SND (SND cl_ffi_part)) ++ MAP FST (SND (SND fs_ffi_part)) ++
+MAP FST (SND (SND runtime_ffi_part))
+STATEMENT every_basis_events
+∀Inv f.
+  parts_ok f (basis_proj1,basis_proj2) ∧
+  FILTER (ffi_has_index_in (MAP FST (SND (SND cl_ffi_part)))) f.io_events =
+  [] ∧
+  FILTER (ffi_has_index_in (MAP FST (SND (SND runtime_ffi_part))))
+    f.io_events = [] ∧
+  EVERY Inv
+    (FILTER (ffi_has_index_in (MAP FST (SND (SND fs_ffi_part)))) f.io_events) ⇒
+  EVERY Inv f.io_events
+STATEMENT sem_satisfies_imp_V
+∀s P Q. sem_satisfies s P ⇒ (∀b. P b ⇒ Q b) ⇒ sem_satisfies s Q
+STATEMENT STDIO_V_FFI_part_hprop
+∀Inv fs. FFI_part_hprop (STDIO_V Inv fs)
+STATEMENT IOxV_events_IN
+∀Inv fs H h.
+  (IOxV Inv fs * H) h ⇒
+  ∃ev.
+    FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) ev ∈ h ∧ EVERY Inv ev
+STATEMENT STDIO_V_events
+∀Inv fs h.
+  STDIO_V Inv fs h ⇒
+  ∃s u ev.
+    FFI_part s u (MAP FST (SND (SND fs_ffi_part))) ev ∈ h ∧ EVERY Inv ev
+STATEMENT final_heap_events
+∀Inv fs' st3 h2 h3 h4 s1 u1 s3 u3.
+  SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+  STDIO_V Inv fs' h3 ∧
+  FFI_part s1 u1 (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+  FFI_part s3 u3 (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2 ⇒
+  EVERY Inv st3.ffi.io_events
+STATEMENT whole_prog_spec_V_events
+∀Inv fv fs fs' ext cl es env1 prog env2 st2 fname h1 h2 s1 u1 s3 u3.
+  Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog
+    env2 st2 ∧ lookup_var fname env2 = SOME fv ∧
+  app (basis_proj1,basis_proj2) fv [Conv NONE []] (STDIO_V Inv fs)
+    (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs') ∧
+  SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2) ∧ STDIO_V Inv fs h1 ∧
+  FFI_part s1 u1 (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+  FFI_part s3 u3 (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2 ⇒
+  sem_satisfies
+    (semantics_dec_list
+       (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+          prog))
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧ EVERY Inv io_events)
+STATEMENT whole_prog_spec_V_init
+∀Inv fv fs fs' ext cl es env1 prog env2 st2 fname bs1 bs2 rest.
+  Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog
+    env2 st2 ∧ lookup_var fname env2 = SOME fv ∧
+  st2.ffi = basis_ffi ext cl fs ∧ st2.refs = W8array bs1::W8array bs2::rest ∧
+  LENGTH bs2 = 2052 ∧ wfFS fs ∧ STD_streams fs ∧
+  app (basis_proj1,basis_proj2) fv [Conv NONE []] (STDIO_V Inv fs)
+    (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs') ⇒
+  sem_satisfies
+    (semantics_dec_list
+       (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+          prog))
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧ EVERY Inv io_events)
+CONST parts_ok_basis_ffi cfStore$parts_ok
+CONST init_fs_part_IN cfStore$st2heap
+CONST init_fs_part_IN fsFFI$encode
+CONST init_cl_part_IN cfStore$st2heap
+CONST init_cl_part_IN clFFI$encode
+CONST init_rt_part_IN cfStore$st2heap
+CONST init_rt_part_IN runtimeFFI$encode
+CONST init_iobuff_IN cfStore$st2heap
+CONST IOFS_V_init fsFFI$encode
+CONST init_heap_V runtimeFFI$encode
+CONST init_heap_V clFFI$encode
+CONST init_heap_V cfStore$st2heap
+CONST init_heap_V set_sep$SPLIT
+CONST FFI_part_IN_st2heap_FILTER cfStore$ffi_has_index_in
+CONST FFI_part_IN_st2heap_FILTER cfStore$parts_ok
+CONST FFI_part_IN_st2heap_FILTER cfStore$st2heap
+CONST every_basis_events cfStore$ffi_has_index_in
+CONST every_basis_events cfStore$parts_ok
+CONST sem_satisfies_imp_V semanticsProps$sem_satisfies
+CONST IOxV_events_IN fsFFI$encode
+CONST final_heap_events cfStore$st2heap
+CONST final_heap_events cfHeapsBase$SPLIT3
+CONST whole_prog_spec_V_events ffi$Success
+CONST whole_prog_spec_V_events ffi$Terminate
+CONST whole_prog_spec_V_events ast$Con
+CONST whole_prog_spec_V_events namespace$Short
+CONST whole_prog_spec_V_events ast$Dlet
+CONST whole_prog_spec_V_events evaluate_dec$semantics_dec_list
+CONST whole_prog_spec_V_events semanticsProps$sem_satisfies
+CONST whole_prog_spec_V_events cfStore$st2heap
+CONST whole_prog_spec_V_events set_sep$SPLIT
+CONST whole_prog_spec_V_events semanticPrimitives$Conv
+CONST whole_prog_spec_V_events cfApp$app
+CONST whole_prog_spec_V_events ml_prog$init_state
+CONST whole_prog_spec_V_events ml_prog$Decls
+CONST whole_prog_spec_V_init ffi$Success
+CONST whole_prog_spec_V_init ffi$Terminate
+CONST whole_prog_spec_V_init ast$Con
+CONST whole_prog_spec_V_init namespace$Short
+CONST whole_prog_spec_V_init ast$Dlet
+CONST whole_prog_spec_V_init evaluate_dec$semantics_dec_list
+CONST whole_prog_spec_V_init semanticsProps$sem_satisfies
+CONST whole_prog_spec_V_init semanticPrimitives$Conv
+CONST whole_prog_spec_V_init cfApp$app
+CONST whole_prog_spec_V_init ml_prog$init_state
+CONST whole_prog_spec_V_init ml_prog$Decls
+PART_DONE r6t_common.sml
+MARK USE r6t_steps.sml
+R6T_STEPS opened
+R6T_STEPS loaded
+PART_DONE r6t_steps.sml
+MARK USE r6t_explore_calls.sml
+TH_ASSUMED all statements
+EXPLORE_ORDER_OK
+TRY_HELPER_BEGIN basis_proj2_names
+STEP_USED basis_proj2_names 1 close candidate 0 goals_out 0
+Saved theorem _______ "basis_proj2_names"
+TRY_HELPER_CLOSED basis_proj2_names hyps 0
+TRY_HELPER_BEGIN sem_satisfies_imp_V
+STEP_USED sem_satisfies_imp_V 1 close candidate 0 goals_out 0
+Saved theorem _______ "sem_satisfies_imp_V"
+TRY_HELPER_CLOSED sem_satisfies_imp_V hyps 0
+TRY_HELPER_BEGIN FFI_part_IN_st2heap_FILTER
+STEP_USED FFI_part_IN_st2heap_FILTER 1 pair candidate 0 goals_out 1
+STEP_USED FFI_part_IN_st2heap_FILTER 2 close candidate 0 goals_out 0
+Saved theorem _______ "FFI_part_IN_st2heap_FILTER"
+TRY_HELPER_CLOSED FFI_part_IN_st2heap_FILTER hyps 0
+TRY_HELPER_BEGIN init_iobuff_IN
+STEP_USED init_iobuff_IN 1 close candidate 0 goals_out 0
+Saved theorem _______ "init_iobuff_IN"
+TRY_HELPER_CLOSED init_iobuff_IN hyps 0
+TRY_HELPER_BEGIN STDIO_V_of_IOFS_V
+STEP_USED STDIO_V_of_IOFS_V 1 close candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_of_IOFS_V"
+TRY_HELPER_CLOSED STDIO_V_of_IOFS_V hyps 0
+TRY_HELPER_BEGIN IOxV_events_IN
+STEP_USED IOxV_events_IN 1 close candidate 0 goals_out 0
+Saved theorem _______ "IOxV_events_IN"
+TRY_HELPER_CLOSED IOxV_events_IN hyps 0
+TRY_HELPER_BEGIN STDIO_V_FFI_part_hprop
+STEP_USED STDIO_V_FFI_part_hprop 1 close candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_FFI_part_hprop"
+TRY_HELPER_CLOSED STDIO_V_FFI_part_hprop hyps 0
+TRY_HELPER_BEGIN STDIO_V_events
+STEP_USED STDIO_V_events 1 unfold candidate 0 goals_out 1
+STEP_USED STDIO_V_events 2 events candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_events"
+TRY_HELPER_CLOSED STDIO_V_events hyps 0
+TRY_HELPER_BEGIN every_basis_events
+STEP_USED every_basis_events 1 intro candidate 0 goals_out 1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundR6TExplore2)>>
+STEP_USED every_basis_events 2 all names candidate 0 goals_out 1
+STEP_USED every_basis_events 3 three parts candidate 0 goals_out 0
+Saved theorem _______ "every_basis_events"
+TRY_HELPER_CLOSED every_basis_events hyps 0
+TRY_HELPER_BEGIN final_heap_events
+STEP_USED final_heap_events 1 intro + STDIO_V_events candidate 0 goals_out 1
+STEP_USED final_heap_events 2 subsets candidate 0 goals_out 1
+STEP_USED final_heap_events 3 members candidate 0 goals_out 1
+STEP_USED final_heap_events 4 FILTER facts candidate 0 goals_out 1
+STEP_USED final_heap_events 5 every_basis_events candidate 0 goals_out 0
+Saved theorem _______ "final_heap_events"
+TRY_HELPER_CLOSED final_heap_events hyps 0
+TRY_HELPER_BEGIN whole_prog_spec_V_events
+STEP_USED whole_prog_spec_V_events 1 intro + hprop candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_events 2 call_main_thm2 (cfMainScript.sml 260-285) candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_events 3 sem_satisfies_imp_V candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_events 4 final_heap_events candidate 0 goals_out 0
+Saved theorem _______ "whole_prog_spec_V_events"
+TRY_HELPER_CLOSED whole_prog_spec_V_events hyps 0
+TRY_HELPER_BEGIN parts_ok_basis_ffi
+STEP_USED parts_ok_basis_ffi 1 intro candidate 0 goals_out 1
+PARTS_DEFS TextIOProg_st 11
+PARTS_STORED_FACT simp TextIOProg_st defs parts_ok (basis_ffi ext cls fs) (basis_proj1,basis_proj2)
+STEP_USED parts_ok_basis_ffi 2 stored parts_ok_basis_st (repl_initScript.sml 170-175 recipe) candidate 0 goals_out 1
+STEP_USED parts_ok_basis_ffi 3 close by the stored fact candidate 0 goals_out 0
+Saved theorem _______ "parts_ok_basis_ffi"
+TRY_HELPER_CLOSED parts_ok_basis_ffi hyps 0
+TRY_HELPER_BEGIN init_fs_part_IN
+STEP_USED init_fs_part_IN 1 intro + parts_ok candidate 0 goals_out 1
+STEP_USED init_fs_part_IN 2 unfold st2heap/ffi2heap candidate 0 goals_out 1
+STEP_USED init_fs_part_IN 3 close (925-933) candidate 0 goals_out 0
+Saved theorem _______ "init_fs_part_IN"
+TRY_HELPER_CLOSED init_fs_part_IN hyps 0
+TRY_HELPER_BEGIN init_cl_part_IN
+STEP_USED init_cl_part_IN 1 intro + parts_ok candidate 0 goals_out 1
+STEP_USED init_cl_part_IN 2 unfold st2heap/ffi2heap candidate 0 goals_out 1
+STEP_USED init_cl_part_IN 3 close (925-933) candidate 0 goals_out 0
+Saved theorem _______ "init_cl_part_IN"
+TRY_HELPER_CLOSED init_cl_part_IN hyps 0
+TRY_HELPER_BEGIN init_rt_part_IN
+STEP_USED init_rt_part_IN 1 intro + parts_ok candidate 0 goals_out 1
+STEP_USED init_rt_part_IN 2 unfold st2heap/ffi2heap candidate 0 goals_out 1
+STEP_USED init_rt_part_IN 3 close (925-933) candidate 0 goals_out 0
+Saved theorem _______ "init_rt_part_IN"
+TRY_HELPER_CLOSED init_rt_part_IN hyps 0
+TRY_HELPER_BEGIN IOFS_V_init
+STEP_USED IOFS_V_init 1 intro candidate 0 goals_out 1
+STEP_USED IOFS_V_init 2 heap (append_hprop) candidate 0 goals_out 1
+STEP_CANDIDATE_FAILED IOFS_V_init 3 candidate 0 HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal: one\n  (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n     (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v ==>>\nIOFS_V Inv fs", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_locati ...
+STEP_CANDIDATE_FAILED IOFS_V_init 3 candidate 1 HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal: one\n  (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n     (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v ==>>\nIOFS_V Inv fs", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_locati ...
+STEP_CANDIDATE_FAILED IOFS_V_init 3 candidate 2 HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal: one\n  (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n     (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v ==>>\nIOFS_V Inv fs", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_locati ...
+STEP_CANDIDATE_FAILED IOFS_V_init 3 candidate 3 HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal: one\n  (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n     (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v ==>>\nIOFS_V Inv fs", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_locati ...
+SHOW STEP_ALL_FAILED IOFS_V_init 3 SEP_IMP by xsimpl
+  ASM (one
+   (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v)
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+  ASM EVERY Inv events
+  ASM LENGTH v = 2052
+  ASM wfFS fs
+  GOAL IOFS_V Inv fs
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+TRY_HELPER_FAILED IOFS_V_init HOL_ERR (HOL_ERROR {message = "all candidates failed at IOFS_V_init step 3", origins = [{origin_function = "step_tac", origin_structure = "A36", source_location = Loc_Unknown}]})
+DIAG_SKIPPED IOFS_V_init (a step failed; explore_head shows it)
+EXPLORE_LEMMA IOFS_V_init required
+EXPLORE_BEGIN IOFS_V_init (head-goal mode) steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN IOFS_V_init #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs v events.
+  wfFS fs ∧ LENGTH v = 2052 ∧ EVERY Inv events ⇒
+  IOFS_V Inv fs
+    ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$IOFS_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS 
+  GOAL_END IOFS_V_init #1
+STEP IOFS_V_init 1 intro goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN IOFS_V_init #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 EVERY Inv events
+    ASM 1 LENGTH v = 2052
+    ASM 2 wfFS fs
+    CONCL IOFS_V Inv fs
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$IOFS_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS Inv:io_event -> bool, events:io_event list, v:word8 list, fs:IO_fs
+  GOAL_END IOFS_V_init #1
+STEP IOFS_V_init 2 heap (append_hprop) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN IOFS_V_init #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 (one
+   (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v)
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+    CONST_IN_ASM_0 fsFFI$encode :IO_fs -> ffi
+    ASM 1 EVERY Inv events
+    ASM 2 LENGTH v = 2052
+    ASM 3 wfFS fs
+    CONCL IOFS_V Inv fs
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$IOFS_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS Inv:io_event -> bool, events:io_event list, v:word8 list, fs:IO_fs
+  GOAL_END IOFS_V_init #1
+STEP_FAILED IOFS_V_init 3 SEP_IMP by xsimpl HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal: one\n  (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n     (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v ==>>\nIOFS_V Inv fs", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+GOALS_BEFORE_STEP IOFS_V_init 3
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN IOFS_V_init #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 (one
+   (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v)
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+    CONST_IN_ASM_0 fsFFI$encode :IO_fs -> ffi
+    ASM 1 EVERY Inv events
+    ASM 2 LENGTH v = 2052
+    ASM 3 wfFS fs
+    CONCL IOFS_V Inv fs
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$IOFS_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS Inv:io_event -> bool, events:io_event list, v:word8 list, fs:IO_fs
+  GOAL_END IOFS_V_init #1
+ALT_FAILED IOFS_V_init 3 SEP_IMP by xsimpl alt 1 HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal: one\n  (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n     (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v ==>>\nIOFS_V Inv fs", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+ALT_FAILED IOFS_V_init 3 SEP_IMP by xsimpl alt 2 HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal: one\n  (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n     (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v ==>>\nIOFS_V Inv fs", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+ALT_FAILED IOFS_V_init 3 SEP_IMP by xsimpl alt 3 HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal: one\n  (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n     (MAP FST (SND (SND fs_ffi_part))) events) * W8ARRAY iobuff_loc v ==>>\nIOFS_V Inv fs", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+STEP_STUCK IOFS_V_init 3 SEP_IMP by xsimpl
+EXPLORE_END IOFS_V_init
+TRY_HELPER_BEGIN init_heap_V
+STEP_USED init_heap_V 1 intro candidate 0 goals_out 1
+STEP_USED init_heap_V 2 facts candidate 0 goals_out 1
+STEP_USED init_heap_V 3 witness candidate 0 goals_out 1
+STEP_USED init_heap_V 4 conj candidate 0 goals_out 4
+STEP_USED init_heap_V 5 SPLIT candidate 0 goals_out 0
+STEP_USED init_heap_V 6 STDIO_V h1 candidate 0 goals_out 0
+STEP_USED init_heap_V 7 cl part in h2 candidate 0 goals_out 0
+STEP_USED init_heap_V 8 rt part in h2 candidate 0 goals_out 0
+TRY_HELPER_HYPS init_heap_V 1
+EXPLORE_LEMMA init_heap_V required
+EXPLORE_BEGIN init_heap_V (head-goal mode) steps 8
+  GOAL_COUNT 1
+  GOAL_BEGIN init_heap_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv st ext cl fs bs1 bs2 rest.
+  st.ffi = basis_ffi ext cl fs ∧ st.refs = W8array bs1::W8array bs2::rest ∧
+  LENGTH bs2 = 2052 ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃h1 h2.
+    SPLIT (st2heap (basis_proj1,basis_proj2) st) (h1,h2) ∧
+    STDIO_V Inv fs h1 ∧
+    FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+      (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+    FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+      (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2
+    CONST_IN_CONCL runtimeFFI$encode :unit -> ffi
+    CONST_IN_CONCL clFFI$encode :mlstring list -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    FREE_VARS 
+  GOAL_END init_heap_V #1
+STEP init_heap_V 1 intro goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN init_heap_V #1 assumptions 5 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 wfFS fs
+    ASM 2 LENGTH bs2 = 2052
+    ASM 3 st.refs = W8array bs1::W8array bs2::rest
+    ASM 4 st.ffi = basis_ffi ext cl fs
+    CONCL ∃h1 h2.
+  SPLIT (st2heap (basis_proj1,basis_proj2) st) (h1,h2) ∧ STDIO_V Inv fs h1 ∧
+  FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+    (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+  FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+    (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2
+    CONST_IN_CONCL runtimeFFI$encode :unit -> ffi
+    CONST_IN_CONCL clFFI$encode :mlstring list -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    FREE_VARS Inv:io_event -> bool, bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #1
+STEP init_heap_V 2 facts goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN init_heap_V #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL ∃h1 h2.
+  SPLIT (st2heap (basis_proj1,basis_proj2) st) (h1,h2) ∧ STDIO_V Inv fs h1 ∧
+  FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+    (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+  FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+    (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2
+    CONST_IN_CONCL runtimeFFI$encode :unit -> ffi
+    CONST_IN_CONCL clFFI$encode :mlstring list -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    FREE_VARS Inv:io_event -> bool, bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #1
+STEP init_heap_V 3 witness goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN init_heap_V #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL SPLIT (st2heap (basis_proj1,basis_proj2) st)
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)},
+   st2heap (basis_proj1,basis_proj2) st DIFF
+   ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+       (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)})) ∧
+STDIO_V Inv fs
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)}) ∧
+FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st DIFF
+({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)}) ∧
+FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st DIFF
+({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)})
+    CONST_IN_CONCL runtimeFFI$encode :unit -> ffi
+    CONST_IN_CONCL clFFI$encode :mlstring list -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    FREE_VARS Inv:io_event -> bool, bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #1
+STEP init_heap_V 4 conj goals 4
+  HEAD_GOALS_TOTAL 4
+  GOAL_COUNT 2
+  GOAL_BEGIN init_heap_V #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL SPLIT (st2heap (basis_proj1,basis_proj2) st)
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)},
+   st2heap (basis_proj1,basis_proj2) st DIFF
+   ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+       (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)}))
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    FREE_VARS bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #1
+  GOAL_BEGIN init_heap_V #2 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL STDIO_V Inv fs
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS Inv:io_event -> bool, bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #2
+STEP init_heap_V 5 SPLIT goals 3
+  HEAD_GOALS_TOTAL 3
+  GOAL_COUNT 2
+  GOAL_BEGIN init_heap_V #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL STDIO_V Inv fs
+  ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS Inv:io_event -> bool, bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #1
+  GOAL_BEGIN init_heap_V #2 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st DIFF
+({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_CONCL clFFI$encode :mlstring list -> ffi
+    FREE_VARS bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #2
+STEP init_heap_V 6 STDIO_V h1 goals 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN init_heap_V #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st DIFF
+({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_CONCL clFFI$encode :mlstring list -> ffi
+    FREE_VARS bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #1
+  GOAL_BEGIN init_heap_V #2 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st DIFF
+({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_CONCL runtimeFFI$encode :unit -> ffi
+    FREE_VARS bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #2
+STEP init_heap_V 7 cl part in h2 goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN init_heap_V #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_0 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 1 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_1 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_1 runtimeFFI$encode :unit -> ffi
+    ASM 2 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_2 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_2 clFFI$encode :mlstring list -> ffi
+    ASM 3 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) [] ∈ st2heap (basis_proj1,basis_proj2) st
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_ASM_3 fsFFI$encode :IO_fs -> ffi
+    ASM 4 STD_streams fs
+    ASM 5 wfFS fs
+    ASM 6 LENGTH bs2 = 2052
+    ASM 7 st.refs = W8array bs1::W8array bs2::rest
+    ASM 8 st.ffi = basis_ffi ext cl fs
+    CONCL FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+st2heap (basis_proj1,basis_proj2) st DIFF
+({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) []} ∪ {Mem 1 (W8array bs2)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    CONST_IN_CONCL runtimeFFI$encode :unit -> ffi
+    FREE_VARS bs1:word8 list, bs2:word8 list, rest:v store_v list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) state
+  GOAL_END init_heap_V #1
+STEP init_heap_V 8 rt part in h2 goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED init_heap_V after_steps 8
+EXPLORE_END init_heap_V
+TRY_HELPER_BEGIN whole_prog_spec_V_init
+STEP_USED whole_prog_spec_V_init 1 intro candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_init 2 init_heap_V candidate 0 goals_out 1
+STEP_USED whole_prog_spec_V_init 3 whole_prog_spec_V_events candidate 0 goals_out 0
+TRY_HELPER_HYPS whole_prog_spec_V_init 1
+EXPLORE_LEMMA whole_prog_spec_V_init optional
+EXPLORE_BEGIN whole_prog_spec_V_init (head-goal mode) steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN whole_prog_spec_V_init #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fv fs fs' ext cl es env1 prog env2 st2 fname bs1 bs2 rest.
+  Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog
+    env2 st2 ∧ lookup_var fname env2 = SOME fv ∧
+  st2.ffi = basis_ffi ext cl fs ∧ st2.refs = W8array bs1::W8array bs2::rest ∧
+  LENGTH bs2 = 2052 ∧ wfFS fs ∧ STD_streams fs ∧
+  app (... ,... ) fv [... ... []] (STDIO_V Inv fs)
+    (POSTv uv. &... ... uv * STDIO_V Inv fs') ⇒
+  sem_satisfies
+    (semantics_dec_list
+       (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+          prog))
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧ EVERY Inv io_events)
+    CONST_IN_CONCL ffi$Success :outcome
+    CONST_IN_CONCL ffi$Terminate :outcome -> io_event list -> behaviour
+    CONST_IN_CONCL ast$Dlet :locs -> pat -> exp -> dec
+    CONST_IN_CONCL evaluate_dec$semantics_dec_list :(mlstring list # IO_fs) state -> cml_env -> dec list -> behaviour -> bool
+    CONST_IN_CONCL forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS 
+  GOAL_END whole_prog_spec_V_init #1
+STEP whole_prog_spec_V_init 1 intro goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN whole_prog_spec_V_init #1 assumptions 8 (ASM 0 = newest)
+    ASM 0 app (basis_proj1,basis_proj2) fv' [Conv NONE []] (STDIO_V Inv fs)
+  (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs')
+    CONST_IN_ASM_0 forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    ASM 1 STD_streams fs
+    ASM 2 wfFS fs
+    ASM 3 LENGTH bs2 = 2052
+    ASM 4 st2.refs = W8array bs1::W8array bs2::rest
+    ASM 5 st2.ffi = basis_ffi ext cl fs
+    ASM 6 lookup_var fname env2 = SOME fv'
+    ASM 7 Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+    CONCL sem_satisfies
+  (semantics_dec_list
+     (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+     (SNOC (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+        prog))
+  (λbehavior.
+     ∃io_events. behavior = Terminate Success io_events ∧ EVERY Inv io_events)
+    CONST_IN_CONCL ffi$Success :outcome
+    CONST_IN_CONCL ffi$Terminate :outcome -> io_event list -> behaviour
+    CONST_IN_CONCL ast$Dlet :locs -> pat -> exp -> dec
+    CONST_IN_CONCL evaluate_dec$semantics_dec_list :(mlstring list # IO_fs) state -> cml_env -> dec list -> behaviour -> bool
+    FREE_VARS Inv:io_event -> bool, fs':IO_fs, bs1:word8 list, bs2:word8 list, rest:v store_v list, fname:mlstring, fv':v, st2:(mlstring list # IO_fs) state, env2:cml_env, prog:dec list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, es:eval_state option, env1:cml_env
+  GOAL_END whole_prog_spec_V_init #1
+STEP whole_prog_spec_V_init 2 init_heap_V goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN whole_prog_spec_V_init #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+  (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2
+    CONST_IN_ASM_0 runtimeFFI$encode :unit -> ffi
+    ASM 1 FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+  (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2
+    CONST_IN_ASM_1 clFFI$encode :mlstring list -> ffi
+    ASM 2 STDIO_V Inv fs h1
+    CONST_IN_ASM_2 forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    ASM 3 SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2)
+    CONST_IN_ASM_3 cfStore$st2heap :(mlstring list # IO_fs -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+-> (mlstring list # IO_fs) state -> heap_part -> bool
+    ASM 4 app (basis_proj1,basis_proj2) fv' [Conv NONE []] (STDIO_V Inv fs)
+  (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs')
+    CONST_IN_ASM_4 forge_refundR6Ffi$STDIO_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    ASM 5 STD_streams fs
+    ASM 6 wfFS fs
+    ASM 7 LENGTH bs2 = 2052
+    ASM 8 st2.refs = W8array bs1::W8array bs2::rest
+    ASM 9 st2.ffi = basis_ffi ext cl fs
+    ASM 10 lookup_var fname env2 = SOME fv'
+    ASM 11 Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+    CONCL sem_satisfies
+  (semantics_dec_list
+     (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+     (SNOC (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+        prog))
+  (λbehavior.
+     ∃io_events. behavior = Terminate Success io_events ∧ EVERY Inv io_events)
+    CONST_IN_CONCL ffi$Success :outcome
+    CONST_IN_CONCL ffi$Terminate :outcome -> io_event list -> behaviour
+    CONST_IN_CONCL ast$Dlet :locs -> pat -> exp -> dec
+    CONST_IN_CONCL evaluate_dec$semantics_dec_list :(mlstring list # IO_fs) state -> cml_env -> dec list -> behaviour -> bool
+    FREE_VARS h1:heap_part -> bool, h2:heap_part -> bool, Inv:io_event -> bool, fs':IO_fs, bs1:word8 list, bs2:word8 list, rest:v store_v list, fname:mlstring, fv':v, st2:(mlstring list # IO_fs) state, env2:cml_env, prog:dec list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, es:eval_state option, env1:cml_env
+  GOAL_END whole_prog_spec_V_init #1
+STEP whole_prog_spec_V_init 3 whole_prog_spec_V_events goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED whole_prog_spec_V_init after_steps 3
+EXPLORE_END whole_prog_spec_V_init
+EXPLORE_LEMMA IOFS_V_init_precond_copy extra
+EXPLORE_BEGIN IOFS_V_init_precond_copy (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN IOFS_V_init_precond_copy #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs v events.
+  wfFS fs ∧ LENGTH v = 2052 ∧ EVERY Inv events ⇒
+  IOFS_V Inv fs
+    ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+    CONST_IN_CONCL fsFFI$encode :IO_fs -> ffi
+    CONST_IN_CONCL forge_refundR6Ffi$IOFS_V :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+    FREE_VARS 
+  GOAL_END IOFS_V_init_precond_copy #1
+STEP IOFS_V_init_precond_copy 1 all goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED IOFS_V_init_precond_copy after_steps 1
+EXPLORE_END IOFS_V_init_precond_copy
+PART_DONE r6t_explore_calls.sml
+EXPLORE_COMPLETE

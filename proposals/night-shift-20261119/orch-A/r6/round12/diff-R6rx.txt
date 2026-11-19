@@ -20,8 +20,8 @@
  
  (* ================= shared files ================= *)
  val R6R_PROOF_MODE = false;
--val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round10/";
-+val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/";
+-val R6RDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round10/";
++val R6RDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round12/";
  fun use_part (f : string) : bool =
    (pr ("MARK USE " ^ f); use (R6RDIR ^ f); pr ("PART_DONE " ^ f); true)
    handle e => (pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e)); false);

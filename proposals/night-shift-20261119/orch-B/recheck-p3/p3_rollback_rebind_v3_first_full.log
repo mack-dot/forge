@@ -1,0 +1,6 @@
+booking check (T4,T5; C-ATT-42 proper): TRUE
+books: remaining (no sink); provider moved 600
+{"r1b":"no sink (start refused)","r2":["0","no sink (start refused)"],"f2":{"emitted":[],"refused":[],"error":""},"f3":{"emitted":[],"refused":[],"error":""},"f4":{"emitted":[],"refused":[],"error":""},"sink":"h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false [SINK-OUTSIDE-HEAD: the store opens without cfg.outsideHead]","journal":[],"movements":["8edd966bc5d9:600"]}
+p3_rollback_rebind first full adapter=v3 env={"P_ADAPTER":"v3"}
+SAFE
+exit 0

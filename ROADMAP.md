@@ -28,7 +28,7 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Goal 19, native silicon sink: a refund boundary with no Node, V8, npm or SQLite in its path; a finite test of an unproved Rust sink in front of the M1 binary; one review with repairs; pull request 62 merged by the owner as `6d66a558` — U700 to U708
+## Goal 19, native silicon sink: a refund boundary with no Node, V8, npm or SQLite in its path; a finite test of an unproved Rust sink in front of the M1 binary; one review with repairs; pull request 62 merged by the owner as `6d66a558` — U700 to U709
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. Branch
@@ -57,6 +57,169 @@ is proved: every row is a finite test on one machine.
 The sink has no source proof and no signed token. A restore of both
 ledger files is not detected. A SIGKILL is not a power loss.
 M1 and integration EXIT NOT_ESTABLISHED.
+
+## Night shift 2026-11-19, integration: one consolidated pull request from the proof, trust and red-team branches; the hardening stays UNAPPLIED; the 45-link graph refreshed — U660 to U665
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No frozen
+module changed. Nothing under `clearing/`, `ts/`, `tests/`, `scripts/`
+changed. Branch `nightshift/consolidated-20261119` from `main` at
+`b9f2831c`; content by path, no branch history merged; NOT merged by
+the agent. Pull requests 60 and 61 were closed without a merge on the
+owner's word; this section's pull request carries their verified
+content.
+After pull request 62 (Goal 19) the branch was rebased onto `6d66a558`
+as the new branch `nightshift/consolidated-20261119-r1`; the rows below
+with `75f70919` are for the tree before the rebase (U666).
+
+What is in it: A's records after pull request 59 (final record; HOL
+cases with exit codes; reproduction 18 of 18 on the same machine); nine
+Dafny model files under `impl/finality-core`; a curated part of B's and
+C's evidence; owner decisions D-1 to D-6; the hardened sink, minter,
+dispatcher and provider adapter with their regressions and the changed
+suite as two UNAPPLIED diffs (owner items B-15, B-16: one later pull
+request); a refresh of the 45-link graph in a new file. The merged
+`sink.ts` on `main` keeps two shown duplicate-effect defects until the
+owner applies the hardening.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `dafny verify` (pinned 4.11.0, gate options) of `impl/finality-core/IssueAuth.dfy`; `IssueOnce.dfy`; `ShellCoreV6.dfy` (integrator's run) |0; 0; 0|194; 160; 192 verified; model level |
+| `git apply --check` of the two unapplied diffs on a scratch clone of `77f8ec2d`; `git apply` |0; 0|the patched `ts`, `tests`, `scripts` equal `nightshift/B-trust@12d634f6` except one line (the replaced user name) |
+| `dafny build impl/finality-core/IssueAuth.dfy --target js` on that clone |0|194 verified; module SHA-256 `fa855506…44e6`, equal to the red team's recorded module |
+| 15 regression runs on the patched clone: X1, X2 (runner); `d_att17_lock_theft`, `d_att17_claim_race`, `d_att18_throwing_emit`; `d3_att36_retry_restore`, `s3_att33_crash_journal`; `m3_refusal_does_not_close`, `m3_one_effect_per_request_id`; four `kf_*`; `p3_scope_collide`, `p3_key_squat`, `p3_rollback_rebind first full` |0 each|TESTED-UNPROVED; a worker's runs |
+| `m3_zero_squat_limit`; `p3_rollback_rebind first none` |1; 1|the two stated known limits are present (a zero-amount squat on the real state; B-20) |
+| control: X1, X2 against the merged sink and dispatcher |1|NOT a valid control for the duplicate effect: the merged sink refused the honest token too (U663) |
+| scratch clone (fresh `git clone` of the pushed branch at `75f70919`; `run_regression.py`): 28 Stage EXIT cases |0 each|28 of 28 |
+| the same: `exit_slice1.py`, `exit_slice2.py`, `exit_slice3.py`, `exit_m1_conformance.py --case evidence` |0; 0; 0; 0|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`: equal to the recorded ones |
+| `check_frozen_pr_gate.py HEAD` |0|8 frozen modules unchanged; 0 protected paths in the diff |
+| `check_links.py HEAD` on `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the M1 report |0 each| |
+| `check_links.py HEAD` on all 318 Markdown files outside `results/` |1|expected: the two older Stage 9 dead links of `main`; 0 new |
+| hosted `gate/pr_check.py` on the pull request |see the pull request|expected 3 (UNSUPPORTED), as for pull requests 56, 57, 59 |
+| the changed 126-row suite; spec-conformance; kill loops; any HOL case (by the integrator) |NOT RUN|B's and A's runs stand as their own |
+| red team: tests with the real refund program against code injected at load; tests of the FFI C code (C-1) |NOT RUN|stopped by a safety classifier seven times; never retried; permanently NOT RUN by owner decision D-6 |
+| Stage 7, 9, 10 EXIT scripts |NOT RUN|left out by the runner's convention |
+
+Reading: every HOL result is a machine-model result on the same machine
+with stored parent theories. Every Dafny result is a source-level
+result about a model. Every fix is TESTED-UNPROVED and UNAPPLIED. The
+smallest missing refinement boundary is X8 / T13.
+[Consolidated record](proposals/night-shift-20261119/integration/README.md).
+[Graph refresh](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119.md).
+[Unapplied diffs](proposals/night-shift-20261119/unapplied/README.md).
+[Owner items](proposals/night-shift-20261119/OWNER_REQUIRED.md).
+M1 and integration EXIT NOT_ESTABLISHED.
+
+the present gate bytes.
+
+## Night shift 2026-11-19, trust track, part 4 (Orchestrator B, phase 2: implementation hardening): regressions for both duplicate-effect counterexamples; the real sink against the approved specification; a hardened sink and minter on the branch; red-team findings (U567 to U575; branch `nightshift/B-trust`; NOT merged; no protected file changed; no stage promotion)
+
+Written 2026-11-19T15:00:05Z. Stage labels do not change. M1-B stays OPEN. `end_to_end` stays `false`. Details and limits: `unsure.md` U567 to U575; owner items B-12 to B-15 in `results/night-shift-20261119/OWNER_REQUIRED.md`.
+
+Actual results (my own runs; cwd = the branch tree; pinned Node 24.3.0):
+
+| Command (short form) | Tree | Actual exit | Class |
+| --- | --- | --- | --- |
+| `regress/run.ts` (controls C1 to C5, regressions X1 to X6) | merged sink | 1 (8 FAIL, as intended: the counterexamples reproduce) | TESTED-UNPROVED |
+| `spec-conformance/run.ts` seq, fault, interleave | merged sink | violations of P1, P2, P3, P4, P7 (U570) | TESTED-UNPROVED |
+| `h-sink/tests/db_safeguards.ts` (69 rows) | hardened sink, b7fd6be8 | 0 (69 PASS, 0 FAIL) | TESTED-UNPROVED |
+| `spec-conformance/run.ts` seq, fault, interleave, 200 cases, seed 7 | hardened sink | 0, 0, 0 | TESTED-UNPROVED |
+| red-team copies a6 restart, a6 running, a5, a2 off, a1 running, a8 hostile | hardened sink | 0 each | TESTED-UNPROVED |
+| `regress/run.ts`, unchanged harness | hardened sink | 1 (13 of 14 FAIL: the harness does not fit; NOT a pass, NOT a sink finding; U574) | harness defect |
+| `dafny verify` (gate options) `IssueOnce.dfy` | 608b5165 | 0 (160 verified, 0 errors) | MACHINE-CHECKED, source level |
+| five `regress/m_*.ts` | new minter, 608b5165 | 0 each | TESTED-UNPROVED |
+
+NOT RUN (no result is claimed): the Slice 1 suite on the hardened tree (two rows are predicted to fail by design: the raw outbox INSERT row and the row at suite.ts line 589); the differential against the V6 core; the kill storm; the 20,000-row measurement (one light attempt ended with exit 124).
+
+Known weak points, stated: the red team showed that the two judges of this branch pass twelve defective variants (U573); "passes the regressions" names the judge version from now on. The row chain of the hardened sink is unkeyed: rollback resistance is NOT claimed without an outside anchor (U571, B-14). The per-request minter rule is a proposal that conflicts with one merged suite row (B-15). The dispatcher has four open red-team findings, one HIGH with no attacker (lock without an owner; U574).
+
+## Night shift 2026-11-19, trust track, part 3 (Orchestrator B): the layered byte-level lemma with the commit-time check; reviews; the suite with the v6 adoption diff; three subset rules, one refuted — U559 to U566
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing applied, merged, pushed or signed.
+Rows marked (B) are the orchestrator's own runs with a stored log; (w) are worker runs that (B) did not repeat. Heavy steps ran only when no HOL process ran.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| (B) `verify ControlsBytesV6.dfy TopV6Export.dfy KeyedV6.dfy` |0|2352 verified; approval of committed effects with no hypothesis (reading CTX-SINK); reviewed: confirmed, wording narrowed |
+| (B) `verify` of the reviewers' files RV6Lemmas, AttackV5 |0; 0|2004; 166 verified; a hash collision cannot cause a commit; a zero-amount row can be deleted from an audited store and commits again |
+| (B) Slice 1 suite: pristine export; export with the v6 adoption diff; a measurement copy |0; 2; 1|115 rows, 0 failed; stops at one row by design (the v6 sink refuses a rewritten store); 115 rows, 1 failed |
+| (B) gate copy with the second subset rule, 138 submissions |0 for 46 of 47 correct; 1 for each of 24 halting|a measurement over those files; the rule's cost claim is REFUTED (next row) |
+| (B) the second rule on three files of its review; (w) Dafny verify of those files |"pass" each; 0 each|admitted submissions that hang, run in time unbounded by the text, or fail to load |
+| (B) gate copy with the third subset rule, 272 submissions |0 for 46 of 67 correct; 1 for each of 24 halting and each of 23 review cases|no known bypass; not reviewed; its bound is an argument |
+| (B) TypeScript issuer bridge against the reference, 111 vectors |0|0 differences |
+| (B) ledger verifiers f-binding-4 and f-binding-5; controls of f-binding-4 |0; 0; 0|135 and 151 edges; identity and record consistency only; 53 of 53 |
+| (B) `git apply --check` of adoption-v6.diff and of the diffs of the second and third subset rules (nothing applied) |0 each|they apply at `985f5eaf`; log for the first under `orch-B/recheck-l` |
+| review of the third subset rule; any run after 14:14Z that needs Dafny |NOT RUN (battery power)|— |
+
+Reading: model and draft results only. The deployed `ts/refund-finality/sink.ts` stays the weakest link. No subset rule has a proved bound. Owner decisions: `results/night-shift-20261119/OWNER_REQUIRED.md`, B-1 to B-11 with their corrections.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Night shift 2026-11-19, trust track, part 2 (Orchestrator B): the byte-level composed lemma; a sink step that checks the approved relation; reviews; tests in heavy windows; adoption diffs (unapplied) — U537 to U558
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing applied, merged, pushed or signed.
+Every Dafny run: pinned Dafny 4.11.0, gate options, through `results/night-shift-20261119/orch-B/tools/dafny_locked.sh`.
+Rows marked (B) are the orchestrator's own runs with a stored log under `orch-B/recheck-*` or `orch-B/heavy`; (w) are worker runs that (B) did not repeat.
+Heavy steps ran only after Orchestrator A removed the HOL lock; each window was released.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| (B) `verify ControlsBytesV3.dfy RefineHashV3.dfy` (byte-level lemma over a hash-comparing core) |0|1871 verified; reviewed: confirmed |
+| (B) `verify` of TopFromExport, IssuerLink, KeyedHash, RefineTraceV3, RTopLemmas |0; 0; 0; 0; 0|2185; 2236; 2325; 1889; 2336 verified; reviewed: confirmed |
+| (B) `verify ShellCoreV6.dfy` (the step checks the approved relation on the stored charge) |0|192 verified; reviewed: confirmed under the reading of U558 |
+| (B) `verify` of ShellCoreV5, ShellCoreV4, ShellCoreV3 (shell cores, audits) |0; 0; 0|156; 105; 79 verified |
+| (B) `verify` of Restart, KeyedStore, AttackRestart |0; 0; 0|1686; 1820; 1831 verified; rollback and forged initial state pass any database audit (proved) |
+| (B) `verify` of SerModel, RepairedBytes, RSerAttacks, IssueBytes2 |0; 0; 0; 0|96; 1790; 1804; 131 verified |
+| (B) `verify` of ExportBridge, SliceSafetyFromExport |0; 0|1823; 1892 verified; reviewed: 15 semantic changes of the export each break the proof |
+| (B) `verify` of Bridge, Bridge2, AttackR; AttackTrace, AttackCore, AttackMulti |0 each|8; 22; 30; 1642; 82; 148 verified |
+| (B) first attempt of six of these runs |1 each|my own command error (options passed as one word); logs kept; not a result |
+| (B) sink differentials, four windows: v3, v4, v6 draft sinks and patched copies against their compiled cores; 3,500 sequences per pair |0 on each matching pair|0 divergent sequences; every control pair diverges |
+| (B) differential of the v5 draft |0; 1; 0; no result line|it halts after it committed a signed but unauthorized token |
+| (B) hostile gate controls on a gate copy with the `expect` rule and supervision; first attempt |0 for each of 7; 2 each|seven halting submissions ACCEPTED; the first attempt was a setup error |
+| (B) gate copy with the draft subset rule, 51 submissions |1 for each of 8 halting; 0 for 10 of 19 and 16 of 17 correct|every known halting submission refused; nine known correct ones refused |
+| (B) Slice 1 suite on a pristine export and on an export with the v4 adoption diff |0; 0|115 rows, 0 failed, each |
+| (B) `git apply --check` of adoption.diff, adoption-v6.diff, three subset diffs (nothing applied) |0 each|they apply at `985f5eaf` |
+| (B) bridge tests with the real native program: first design; repaired design |0; 0|64 of 64; 90 of 90 |
+| (B) ledger verifiers f-binding-2, -3, -4; their controls |0; 0; 0|97, 119, 135 edges; identity and record consistency only; 40 of 40, 47 of 47 controls; the fourth set: see `orch-B/recheck-l` |
+| (B) one commit attempt during a disk incident |128|"No space left on device"; made again; cause: a worker's 58 GB of temporary copies (U557) |
+| Slice 1 suite on the export with the v6 adoption diff |NOT RUN|a window is asked |
+| every HOL step |not B's|Orchestrator A's branch |
+
+Reading: all proof rows are Dafny MODEL results; the sinks, the minter and the bridge that they describe are DRAFTS; the deployed `ts/refund-finality/sink.ts` has a proved decision defect and stays the weakest link. The v6 claim assumes that the approved context of a request is the sink's stored charge with the request taken as open (named CTX-SINK; the other reading is an owner question). Owner decisions: `results/night-shift-20261119/OWNER_REQUIRED.md`, B-1 to B-10.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## Night shift 2026-11-19, trust track (Orchestrator B): a composed Dafny lemma without the impossible signing assumption; the request-id and charge-id gaps of the merged sink; reproduced proof records; admission findings — U530 to U536
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing applied, merged, pushed or signed.
+Rules of the night: `results/night-shift-20261119/PROTOCOL.md`. The stored directive is a pasted text; it authorizes nothing.
+Every Dafny run: pinned Dafny 4.11.0, gate options, through `results/night-shift-20261119/orch-B/tools/dafny_locked.sh`.
+Rows marked (B) are the orchestrator's own runs with a stored log; (w) are worker runs that (B) did not repeat.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| (B) `verify Attack.dfy` (the review proof of U478); first attempt in the heavy tier |0; 75|60 verified; the first attempt was refused (swap free 812 MiB) |
+| (B) `verify SinkCoreReqId.dfy`; `verify Contrast.dfy`; first attempts |0; 0; 75; 75|73 verified; 106 verified; two refusals (swap free 396 MiB) |
+| (B) `verify SliceTheorem.dfy` from `git archive 985f5eaf` |0|1570 verified |
+| (B) `verify SliceSafetyV2OnBytes.dfy`; `verify TotalReading.dfy`; first attempt of the second |0; 0; 75|1632 verified; 34 verified; one refusal |
+| (B) `translate cs SliceSafetyV2OnBytes.dfy` (checks the inherited model lemmas for the instance) |0|rows SinkCore.CommitPreservesInv, InitInv and the others: Passed |
+| (B) `verify ByteAttacks.dfy` (the reviewer's counterexample) |0|1636 verified; lemma PreStateCollisionBreaksApprovedSpec Passed |
+| (B) `verify ShellCoreReqId.dfy` |0|77 verified |
+| (B) `verify SinkCoreV3.dfy`; `SliceSafetyV3.dfy`; `MultiCharge.dfy`; `MultiChargeLayered.dfy` |0; 0; 0; 0|70; 1633; 141; 1730 verified; review not finished |
+| (B) `check_records.py`; `check_records.py --rerun` (six stored records) |0; 0|identity only; then the same status and count for each: 1489, 1486, 56, 60, 67, 1570 |
+| (B) `verify_ledger.py`; `run_controls.py` (assurance ledger) |0; 0|identity and record consistency only; 29 of 29 controls as expected |
+| (B) `git apply --check` of 5 sink diffs, the admission B2 diff, the `expect` rule diff, 9 supervision diffs (nothing applied) |0 each|they apply at `985f5eaf` |
+| (B) admission suite on the hardened copy; patched gate runner unit test |0 (92 pass, 3 fail by design points); 0|6 of 6 |
+| (w) mutants and controls of the four proof workers and three reviewers |4 each, as required; four of the older stored controls fail by out of resource only|see U532, U534, U535, U536 |
+| (w) Node single runs on copies of sink.ts with test keys; 23 conformance cases of a draft sink |0|TESTED, not proved |
+| every heavy step: two differentials of 5,500 sequences, hostile gate controls |NOT RUN|the HOL slot was held all night |
+| every HOL step |not B's|Orchestrator A's branch |
+
+`SliceSafetyV2OnByteStrings` and the layered `SliceSafetyV3` are Dafny model results. Their hypotheses are named:
+step-local claim-level unforgeability (H1), issuance (A2), the verifier boolean (A5), the artifact's flat contract on
+byte strings (A6b). ValidArtifact stays a hypothesis. The byte-layer injectivity hypothesis of V2 is false for the real
+token. The patched cores are NOT the deployed sink. Owner decisions: `results/night-shift-20261119/OWNER_REQUIRED.md`, B-1 to B-5.
 
 ## Night shift 2026-11-19, proof track (Orchestrator A): replay ended; first HOL runs of the M1-B lemmas; native counterexamples — U481 to U498
 
@@ -98,6 +261,19 @@ machine-model result on the same machine with stored parent theories.
 | The same: MG-0001 first run |1|Poly/ML "Run out of store" during theory load; infrastructure stop |
 | The same: R6ffi-0002 |-15|stopped by the worker watchdog after a system sleep; not a proof result |
 | The same: R6w-0004 |NOT RUN| |
+| MT-0001: the composed model theorem for the totalised machine (U500) |0|reviewed: holds with limits; model level |
+| R6r-0004: read-side bottom layer of plan R6, 9 theorems (U500) |0|reviewed: holds with limits; one read function and its wrapper |
+| NV-0003: joint non-vacuity witness for the antecedent of `refund_profile_a_sl_shape` (U500) |0|review in work |
+| Explorations TRx-0003 (37 of 41 closed), NVx-0003 (6 of 6), R6tx-0003 (15 closed, 1 failed), R6tx-0004 (18 of 18), R6rx-0004 (9 of 9) |0|exploration only; nothing stored |
+| TRx-0001, TRx-0002, NVx-0002 |1|ML or statement-construction error; no proof step ran |
+| Launcher tests: 4 files on version 1, 2 files on version 2 (re-run by A) |0|TESTED only; unverified prototype; version 1 has a known defect |
+| NN-0001, TR1-0001, TRx-0004, TR2-0001, R6t-0004 |NOT RUN|staged |
+| The row above is superseded by the next rows (U501) | | |
+| TR1-0001 (trace lemmas, part 1), TR2-0001 (prefix lemmas), R6t-0004 (R6 top glue, 18 theorems), NN-0002 (non-negative output) |0|each reviewed: holds with limits |
+| NN-0001 |1|ML error: a comment ended early; no proof step ran |
+| TRx-0004 (41 of 41 closed) |0|exploration only |
+| Reproduction from the branch, final: 18 of 18 cases, incl. R6ffi-0002 (second run) and R6w-0004 |0|byte-identical theories; same machine; two failed attempts kept (rows above) |
+| X8 glue case (`orch-A/x8glue/`) |NOT RUN|incomplete static draft |
 
 [State](proposals/night-shift-20261119/orch-A/STATE.md).
 [Morning report](proposals/night-shift-20261119/MORNING_REPORT.md).
