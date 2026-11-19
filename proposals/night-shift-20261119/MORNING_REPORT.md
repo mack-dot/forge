@@ -142,3 +142,12 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   states, also states the refund run never reaches; it is not evidence that the real run misbehaves. That the C code
   produces the oracle's bytes is a separate native assumption (part of "the process refines the model").
 - The shape predicate equals "the oracle returns" by reading the oracle definition; one direction is machine-checked.
+
+## Addendum 2 (from Orchestrator B's message, added by A at 2026-11-19T10:28:47Z): review of the byte-level lemma ended
+- `SliceSafetyBytesV3`: CONFIRMED by its reviewer (reviewer's runs exit 0, 1871 verified; three step mutants exit 4; no
+  contradiction derivable). No defect refutes it.
+- Three corrections to its reading: (1) one unlisted piece of glue: issuer and sink use the same hash of the same canonical
+  text, and the stored text is always canonical; (2) the issuance hypothesis is key custody plus the TypeScript glue in
+  `minter.ts` plus the Dafny-to-JavaScript compiler (the proved issue method is a MODEL of the issuer); (3) the sink does
+  not enforce the initial-state bound. Recorded by B as U547 and as addendum 1 in `orch-B/MORNING.md`.
+- Still open on B's side: r-drafts, b-top, f-binding-3.
