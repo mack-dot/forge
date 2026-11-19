@@ -18221,3 +18221,16 @@ curl: (6) Could not resolve host: github.com
 - Limits: the TypeScript is tested against the Python code, which is tested against the model of U552; nothing is proved about either; macOS only; the launcher assumptions and the codec assumption of U553 stand; with both sides wrong it can sign.
 - Impact: edges X15 and X16 have a complete draft in the issuer's language with tests. Nothing applied. OWNER_REQUIRED B-6(a) can now point to it. M1-B OPEN. end_to_end=false.
 - Next check: r-subset2; the last ledger refresh.
+
+## U564 — review of U562: the cost claim of the second subset rule is REFUTED by three submissions that it admits
+- Status: 2026-11-19T13:40Z (inserted by the shell from `date -u`). Refs U562. Evidence under results/night-shift-20261119/orch-B/r-subset2 (subs, logs, js).
+- My own check: the rule of U562, run by me on the three files below: "pass" for each. The Dafny runs and the bounded runs are the reviewer's (through the lock script; verify exit 0 and audit without finding for each; I read the last lines of two of the verify logs).
+- BYPASSES (admitted by the rule, verified, audited clean):
+  1. Time, with no input: a display whose elements are if-expressions that return the same sequence, nested 40 levels, twice, then ONE equality of the two: the comparison costs 2^40 leaf compares. Bounded runs: 22 levels 222 ms; 40 levels killed at the 2 s limit. The rule counts an element with a comparison at top level as "flat".
+  2. Time that grows with the input: a parameter or a local with the NAME of the constant display hides it; a loop bounded by the length of that name runs over the input's length; five nested loops: a charge id of 20 characters 485 ms; 40 characters killed at 2 s. The same root gives a recursion as deep as the input.
+  3. A halt at load: an extra module named like a name of the JavaScript wrapper (require, BigNumber) makes the generated program fail to load. The tests tier would probably catch this one; the rule admits it.
+- Smaller: a 40-digit hexadecimal literal is a valid multiplier, so the growth per operation is up to 152 bits, not 134; the brace handling lets a set display into a guard; ten more correct implementations in natural styles are refused (a tuple match, a set of reasons, a local datatype, a loop over a local list, string concatenation, a map, a label, a break).
+- CORRECTION of U562: "refuses every known halting submission" was true for the 24 known ones; the rule's claim "an admitted submission runs at most N operations" is FALSE. The gate result of U562 (46 of 47 correct; 0 of 24 halting) stands as a measurement over those files; it is not evidence for the claim. OWNER_REQUIRED B-11 must not be adopted as it is.
+- What held under attack: counter aliasing, reassigned bounds, squaring, weight arithmetic, the lexer probes, the `expect` family.
+- Impact: the admission hole of U480 has no sound candidate yet; a token-level rule is fragile; three concrete repairs are named by the reviewer. A repair worker starts (e-subset3) with the rule that every repair must come with the attacks of this review as tests. M1-B OPEN. end_to_end=false.
+- Next check: e-subset3 and a second attack round.

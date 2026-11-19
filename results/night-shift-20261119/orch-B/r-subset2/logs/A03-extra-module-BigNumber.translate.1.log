@@ -1,0 +1,43 @@
+# owner=r-subset2 start=2026-11-19T13:23:58Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A03-extra-module-BigNumber
+# power: Now drawing from 'AC Power'
+# swap free MiB: 964
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build --target js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A03-extra-module-BigNumber/model
+# memory free percent: 61
+
+Dafny program verifier did not attempt verification
+[stdin]:1468
+let BigNumber = (function() {
+    ^
+
+SyntaxError: Identifier 'BigNumber' has already been declared
+    at makeContextifyScript (node:internal/vm:185:14)
+    at compileScript (node:internal/process/execution:383:10)
+    at evalTypeScript (node:internal/process/execution:266:24)
+    at node:internal/main/eval_stdin:53:5
+    at Socket.<anonymous> (node:internal/process/execution:201:5)
+    at Socket.emit (node:events:531:35)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+
+Node.js v22.23.4
+        0.63 real         0.52 user         0.09 sys
+           112066560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               13558  page reclaims
+                1313  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  36  voluntary context switches
+                1744  involuntary context switches
+          4628040505  instructions retired
+          1654491469  cycles elapsed
+            76940488  peak memory footprint
+# end=2026-11-19T13:23:58Z
+exit 3

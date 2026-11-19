@@ -1,0 +1,61 @@
+# owner=r-subset2 start=2026-11-19T13:22:32Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A07b-hide-local-then-seq-comprehension
+# power: Now drawing from 'AC Power'
+# swap free MiB: 828
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 62
+impl/Refund.dfy(1,0): Error: [internal error] Parser exception: Object reference not set to an instance of an object.
+    at Microsoft.Dafny.Parser.EndlessExpression(Expression& e, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.PrimaryExpression(Expression& e, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.UnaryExpression(Expression& e, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.AsExpression(Expression& e, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.BitvectorFactor(Expression& e0, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.Factor(Expression& e0, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.Term(Expression& e0, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.ShiftTerm(Expression& e0, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.RelationalExpression(Expression& e, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.LogicalExpression(Expression& e0, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.ImpliesExpliesExpression(Expression& e0, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.EquivExpression(Expression& e0, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps)
+    at Microsoft.Dafny.Parser.Expression(Expression& e, Boolean allowLemma, Boolean allowLambda, Boolean allowBitwiseOps, Boolean allowDecreasesTo)
+    at Microsoft.Dafny.Parser.Rhs(AssignmentRhs& r)
+    at Microsoft.Dafny.Parser.VarDeclStatement(Statement& s)
+    at Microsoft.Dafny.Parser.OneStmt(Statement& s)
+    at Microsoft.Dafny.Parser.Stmt(List`1 ss)
+    at Microsoft.Dafny.Parser.BlockStmt(BlockStmt& block, Token& bodyStart, Token& bodyEnd)
+    at Microsoft.Dafny.Parser.MethodDecl(DeclModifierData dmod, Boolean allowConstructor, MethodOrConstructor& m)
+    at Microsoft.Dafny.Parser.ClassMemberDecl(DeclModifierData dmod, List`1 mm, Boolean allowConstructors, Boolean moduleLevelDecl)
+    at Microsoft.Dafny.Parser.TopDecl(ModuleDefinition module, Boolean isTopLevel, Attributes& attrs)
+    at Microsoft.Dafny.Parser.ModuleDefinition(DeclModifierData dmod, ModuleDefinition parent, ModuleDecl& submodule)
+    at Microsoft.Dafny.Parser.SubModuleDecl(DeclModifierData dmod, ModuleDefinition parent, ModuleDecl& submodule, Boolean isTopLevel)
+    at Microsoft.Dafny.Parser.TopDecl(ModuleDefinition module, Boolean isTopLevel, Attributes& attrs)
+    at Microsoft.Dafny.Parser.Dafny()
+    at Microsoft.Dafny.Parser.Parse()
+    at Microsoft.Dafny.ProgramParser.ParseFile(DafnyOptions options, Nullable`1 version, String content, Uri uri, CancellationToken cancellationToken)
+    at Microsoft.Dafny.ProgramParser.ParseFile(DafnyOptions options, FileSnapshot fileSnapshot, Uri uri, CancellationToken cancellationToken)
+    at Microsoft.Dafny.ProgramParser.ParseFileWithErrorHandling(DafnyOptions options, Func`1 getSnapShot, IOrigin origin, Uri uri, CancellationToken cancellationToken)
+  |
+1 | include "../spec/refund/RefundSpec.dfy"
+  | ^
+
+1 parse errors detected in Refund.dfy
+        0.24 real         0.20 user         0.03 sys
+            74776576  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                5812  page reclaims
+                  76  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  21  voluntary context switches
+                 452  involuntary context switches
+          2097060503  instructions retired
+           751297770  cycles elapsed
+            45270072  peak memory footprint
+# end=2026-11-19T13:22:32Z
+exit 2

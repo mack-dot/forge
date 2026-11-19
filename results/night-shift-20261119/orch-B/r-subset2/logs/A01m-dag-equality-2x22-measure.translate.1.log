@@ -1,0 +1,28 @@
+# owner=r-subset2 start=2026-11-19T13:25:11Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A01m-dag-equality-2x22-measure
+# power: Now drawing from 'AC Power'
+# swap free MiB: 972
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build --target js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A01m-dag-equality-2x22-measure/model
+# memory free percent: 62
+
+Dafny program verifier did not attempt verification
+        0.74 real         0.57 user         0.09 sys
+           113672192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               11252  page reclaims
+                1462  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  42  voluntary context switches
+                1883  involuntary context switches
+          5863114077  instructions retired
+          2019544629  cycles elapsed
+            78480608  peak memory footprint
+# end=2026-11-19T13:25:12Z
+exit 0

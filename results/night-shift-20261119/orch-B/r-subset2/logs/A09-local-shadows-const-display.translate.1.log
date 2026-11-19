@@ -1,0 +1,28 @@
+# owner=r-subset2 start=2026-11-19T13:29:33Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A09-local-shadows-const-display
+# power: Now drawing from 'AC Power'
+# swap free MiB: 988
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build --target js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A09-local-shadows-const-display/model
+# memory free percent: 63
+
+Dafny program verifier did not attempt verification
+        0.54 real         0.48 user         0.06 sys
+           112427008  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12559  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  35  voluntary context switches
+                 634  involuntary context switches
+          4603723891  instructions retired
+          1618114568  cycles elapsed
+            77284528  peak memory footprint
+# end=2026-11-19T13:29:34Z
+exit 0

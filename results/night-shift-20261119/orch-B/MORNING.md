@@ -119,3 +119,6 @@ Root causes: five refusals of the first rule protected nothing (loops bounded by
 
 ## ADDENDUM 17 (2026-11-19T13:22:33Z) — the issuer bridge in TypeScript (U563)
 `orch-B/x-bridge3`: native_bridge.ts and minter_bridged.ts (drafts). B's run: the TypeScript bridge equals the Python reference on 111 vectors (0 differences). Worker's runs: 581 requests, same decisions as the unchanged minter; with a wrong checker stand-in or a wrong native stand-in alone, nothing unauthorized is signed; about 46 ms more per mint. Tested, not proved; not applied.
+
+## ADDENDUM 18 (2026-11-19T13:40:02Z) — review of addendum 16: the second subset rule's cost claim is REFUTED (U564)
+Three submissions that the rule admits (B ran the rule on them: "pass") and that verify and audit clean (reviewer's runs): one hangs with no input (an equality over a 40-level nested display: 2^40 compares), one runs in time that grows with the input (a parameter that hides the constant display in a loop bound), one fails to load (an extra module named like a wrapper name). The gate measurement of addendum 16 stands for those 138 files only. Do not adopt B-11 as it is. Ten more natural correct styles are refused. A repair is in work.

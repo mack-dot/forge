@@ -1,0 +1,38 @@
+# owner=r-subset2 start=2026-11-19T13:29:31Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset2/work/C18-for-range-over-local-list
+# power: Now drawing from 'AC Power'
+# swap free MiB: 988
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 63
+impl/Refund.dfy(6,2): Error: a postcondition could not be proved on this return path
+  |
+6 |   {
+  |   ^
+
+spec/refund/RefundSpec.dfy(51,38): Related location: this is the postcondition that could not be proved
+   |
+51 |       response.Candidate? && decision == Authorized(response.amount, response.reason) &&
+   |                                       ^^
+
+
+Dafny program verifier finished with 5 verified, 1 error
+        1.14 real         1.06 user         0.09 sys
+           126042112  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12594  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  54  voluntary context switches
+                1814  involuntary context switches
+         10094253532  instructions retired
+          3617482402  cycles elapsed
+            93226160  peak memory footprint
+# end=2026-11-19T13:29:33Z
+exit 4

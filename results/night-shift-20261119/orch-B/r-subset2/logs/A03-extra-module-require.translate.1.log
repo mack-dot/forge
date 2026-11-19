@@ -1,0 +1,45 @@
+# owner=r-subset2 start=2026-11-19T13:23:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A03-extra-module-require
+# power: Now drawing from 'AC Power'
+# swap free MiB: 964
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build --target js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A03-extra-module-require/model
+# memory free percent: 59
+
+Dafny program verifier did not attempt verification
+[stdin]:5
+const BigNumber = require('bignumber.js');
+                  ^
+
+ReferenceError: Cannot access 'require' before initialization
+    at [stdin]:5:19
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:446:12
+    at [stdin]-wrapper:6:24
+    at runScriptInContext (node:internal/process/execution:444:60)
+    at evalFunction (node:internal/process/execution:279:30)
+    at evalTypeScript (node:internal/process/execution:291:3)
+    at node:internal/main/eval_stdin:53:5
+    at Socket.<anonymous> (node:internal/process/execution:201:5)
+    at Socket.emit (node:events:531:35)
+
+Node.js v22.23.4
+        0.71 real         0.50 user         0.12 sys
+           112132096  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                9819  page reclaims
+                2687  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  39  voluntary context switches
+                1992  involuntary context switches
+          4681619003  instructions retired
+          1758793536  cycles elapsed
+            77055248  peak memory footprint
+# end=2026-11-19T13:23:23Z
+exit 3

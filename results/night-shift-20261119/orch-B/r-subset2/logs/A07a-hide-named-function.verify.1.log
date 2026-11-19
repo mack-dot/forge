@@ -1,0 +1,47 @@
+# owner=r-subset2 start=2026-11-19T13:22:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset2/work/A07a-hide-named-function
+# power: Now drawing from 'AC Power'
+# swap free MiB: 828
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 62
+impl/Refund.dfy(7,2): Error: semicolon expected
+  |
+7 |   }
+  |   ^
+
+impl/Refund.dfy(13,35): Error: then expected
+   |
+13 |     if Eligible(context, response) {
+   |                                    ^
+
+impl/Refund.dfy(14,15): Error: rbrace expected
+   |
+14 |       decision := Authorized(response.amount, response.reason);
+   |                ^
+
+impl/Refund.dfy(16,6): Error: rbrace expected
+   |
+16 |     } else {
+   |       ^
+
+4 parse errors detected in Refund.dfy
+        0.25 real         0.21 user         0.03 sys
+            73023488  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                5452  page reclaims
+                 260  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  34  voluntary context switches
+                 515  involuntary context switches
+          2164501263  instructions retired
+           768184174  cycles elapsed
+            44106736  peak memory footprint
+# end=2026-11-19T13:22:24Z
+exit 2
