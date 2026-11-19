@@ -16886,3 +16886,29 @@ curl: (6) Could not resolve host: github.com
   it.
 - Next check: the hosted gate result for the pull request; the owner's
   merge decision. The agent does not merge.
+
+## U462 — Wave Gate 1: pushed and pull request 49 opened; hosted gate exit 3 (UNSUPPORTED) as expected; the times in U458 to U461 were my estimates and are wrong
+- Status: 2026-11-19 01:25Z (read from the system clock). Refs U458,
+  U459, U460, U461.
+- Correction: I wrote the times of U458 to U461 without reading a
+  clock. They are wrong. Measured (file times and the commit time):
+  first conformance attempt 2026-11-19 00:18Z; start of the final
+  evidence attempt about 00:44Z; commit e7ef31d4 at 01:20Z. The whole
+  Wave Gate 1 work was between about 00:05Z and 01:25Z. The times
+  "02:00Z" and "04:15Z" in U460 and U461 did not occur. No other
+  statement of those entries depends on the times.
+- Outward steps (basis: U459): commit e7ef31d4 (35 files, 0 protected
+  paths); `git push -u origin slice4/m1-finality-conformance` exit 0;
+  `gh pr create` exit 0: pull request 49, no administrator rights. The
+  agent did not merge.
+- Hosted gate/pr_check.py, run 44436210874, head e7ef31d4, base
+  d3d1980f: exit 3, UNSUPPORTED, "every obligation that ran holds, but
+  35 coverage finding(s) remain" (each changed file is an input of no
+  obligation). As expected. It is not a VERIFIED result.
+- This entry is a second commit on the same branch (documents only).
+  Its hosted result is not in a repository file; it is in the pull
+  request.
+- Impact: none on a claim. CURRENT none. M1 open. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: the owner's merge decision for pull request 49. After
+  the merge: Wave Gate 2 from the new origin/main.

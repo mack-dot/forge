@@ -68,7 +68,8 @@ response is a candidate), proposed amount, reason.
 | `--case m1-audit` (inside the evidence case) |0|158 cases NOT RUN in the replay record; no HOL process started |
 | Stage 7; Stage 9; Stage 10; any HOL or Holmake process |NOT RUN|Docker time; deferred; no EXIT script on `main`; forbidden in this gate |
 | the staged tree before the commit (before this row was written): `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the conformance report, review and owner texts; for all 91 Markdown files outside `results/`; the code and record files against the SHA-256 values of the regression record |0; 0 each (6); 1; equal|only the 2 older Stage 9 links without a target; 0 protected paths among the 34 staged files; only documents changed after the regression |
-| commit; push of branch `slice4/m1-finality-conformance`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|basis: U459; expected hosted result: exit 3 (UNSUPPORTED), because no obligation lists the new files |
+| commit `e7ef31d4`; `git push -u origin slice4/m1-finality-conformance`; `gh pr create` (pull request 49) |0; 0|no administrator rights; the agent did not merge (U462) |
+| hosted `gate/pr_check.py`, pull request 49, head `e7ef31d4`, run 44436210874 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 35 coverage findings |
 
 Final bundle: `proposals/forge2-m1-conformance/records/evidence.json`,
 SHA-256 `f55391dad17a0a4ea707806c59dbac2419df51c692161704af71f0cfe0a11da9`.

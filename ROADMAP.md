@@ -28,7 +28,7 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## Wave Gate 1: conformance of the M1 refund executable with the Slice 1 Dafny refund checker on a finite corpus; one review with repairs; records of pull requests 47 and 48 — U458, U459, U460, U461
+## Wave Gate 1: conformance of the M1 refund executable with the Slice 1 Dafny refund checker on a finite corpus; one review with repairs; records of pull requests 47 and 48 — U458, U459, U460, U461, U462
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. No file of
@@ -56,7 +56,8 @@ JavaScript, no result of M1. No HOL process was started.
 | `--case m1-audit` (inside the evidence case) |0|158 cases NOT RUN in the replay record; no HOL process started |
 | Stage 7; Stage 9; Stage 10; any HOL or Holmake process |NOT RUN|Docker time; deferred; no EXIT script on `main`; forbidden in this gate |
 | the staged tree before the commit (before this row was written): `check_frozen_pr_gate.py`; `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the conformance report, review and owner texts; for all 91 Markdown files outside `results/`; the code and record files against the SHA-256 values of the regression record |0; 0 each (6); 1; equal|only the 2 older Stage 9 links without a target; 0 protected paths among the 34 staged files; only documents changed after the regression |
-| commit; push of branch `slice4/m1-finality-conformance`; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|basis: U459; expected hosted result: exit 3 (UNSUPPORTED), because no obligation lists the new files |
+| commit `e7ef31d4`; `git push -u origin slice4/m1-finality-conformance`; `gh pr create` (pull request 49) |0; 0|no administrator rights; the agent did not merge (U462) |
+| hosted `gate/pr_check.py`, pull request 49, head `e7ef31d4`, run 44436210874 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 35 coverage findings |
 
 [Conformance report](proposals/forge2-m1-conformance/REPORT.md).
 [Review text and disposition](proposals/forge2-m1-conformance/REVIEW.md).
