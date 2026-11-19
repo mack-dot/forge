@@ -1,16 +1,25 @@
 # Orchestrator A (proof track) state
 
-Updated: 2026-11-19T10:33Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
+Updated: 2026-11-19T11:05Z. CURRENT none. M1-B OPEN. `end_to_end=false`.
 
 ## Branch
 - `nightshift/A-proof` from `985f5eaf`; worktree
   `/private/tmp/claude-501/-Users-mackianni-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/A-proof`. No commit yet.
 - Partner B agent ID: `a56d4886a49375909`.
 
+## STOP NOTE (11:05Z)
+The harness required Orchestrator A to hand back at this time. A's loop STOPS here. Nothing runs for A after this note.
+No HOL process of A runs. A holds NO lock.
+
 ## HOL slot
-- `locks/hol.lock` held by A again since 09:16:34Z (B's heavy window 09:12Z–09:16Z is over). Queue runner: `queue.sh <tag> "<case> <cpu> <deps>"`
-  in `results/m1b-routeA-20261119/attempt-0001` (waits for the amended swap rule and AC power; `queue-<tag>.log`).
-- If B asks for another heavy window: finish the running case, move `locks/hol.lock` to `locks/released/`, tell B.
+- `locks/hol.lock` does NOT exist: A released it at 11:03:33Z for B's fourth heavy window; B held `heavy.lock` at 11:05Z.
+- To resume: wait until `locks/heavy.lock` is gone, `mkdir locks/hol.lock` (write `owner`), then in
+  `results/m1b-routeA-20261119/attempt-0001`:
+  1. `./queue.sh q30 "R6x-0004 1800 deps-R6x.txt"` (EXPLORATION; staged, NOT RUN; SHA-256 8a0fffb4…);
+  2. only if its four explorations close: `./queue.sh q31 "R6ffi-0001 3600 deps-R6ffi.txt"` (PROOF; staged, NOT RUN; 3e8e30ec…).
+  Sub-files are read by absolute path from `orch-A/r6/round4/` (do not move them).
+- Later cases since the table below: EEx-0002 (exploration, exit 0), EE-0001 (exit 0, 101 theorems, `NextStateARM8_erase`,
+  reviewed A31), R6x-0003 (exploration, exit 0).
 
 ## Replay (section 8): COMPLETE as far as sources exist (read 08:11Z from `phase3/results.json`)
 - Counted first runs: 152 AS_RECORDED; 1 EXIT_EQUAL_REASON_DIFFERS (005); 2 EXIT_DIFFERS (130, 142); 3 NOT_RUN_NO_SOURCE.
