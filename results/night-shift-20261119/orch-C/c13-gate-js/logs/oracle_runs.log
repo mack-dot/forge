@@ -1,0 +1,34 @@
+js/N20-name-combo.js cases 2000 wrong 0
+exit 0
+js/M-k6-b3.js cases 2000 wrong 0
+exit 0
+js/ME-k6-b3.js cases 2000 wrong 0
+exit 0
+js/MF-k6-b3.js cases 2000 wrong 0
+exit 0
+node:fs:434
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'js/A01-bodiless-lemma-brace-end.js'
+    at Object.readFileSync (node:fs:434:20)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-C/c13-gate-js/tools/oracle.cjs:8:6)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object..js (node:internal/modules/cjs/loader:1824:10)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:152:5)
+    at node:internal/main/run_main_module:33:47 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'js/A01-bodiless-lemma-brace-end.js'
+}
+
+Node.js v24.3.0
+exit 1
+WRONG {"c":{"chargeId":"c","requestId":"","original":"100","remaining":"-10000000000000000000","refundEnabled":false,"requestOpen":true},"r":{"kind":"Candidate","amount":"7","reason":"😀"}} got A:7:😀:1 want R:0
+js/CTRL-mutant-wrong.js cases 2000 wrong 43
+exit 1

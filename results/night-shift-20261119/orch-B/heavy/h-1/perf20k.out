@@ -1,0 +1,25 @@
+{
+ "N": 20000,
+ "smallStore200": {
+  "median": 1.640458,
+  "p90": 2.793333,
+  "max": 8.074334
+ },
+ "loadMs": 2478.027333,
+ "startAuditMs": 3186.867042,
+ "head": 20000,
+ "bigStore200": {
+  "median": 1.330833,
+  "p90": 1.748667,
+  "max": 4.808708
+ },
+ "commitAfterForeignAppendMs": 390.664709,
+ "afterForeign": "committed",
+ "reaudits": 1,
+ "rssMB": 120
+}
+(node:12635) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+real 6.95
+user 6.44
+sys 0.43

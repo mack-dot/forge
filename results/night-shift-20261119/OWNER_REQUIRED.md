@@ -156,3 +156,18 @@ The launcher reports that the owner pushed `nightshift/A-proof` themselves. A ch
 - Why not: a safety classifier stopped a worker's response and then my own control script. No file was written and no command ran. I did not retry in another form.
 - State: only a table made by READING proposals/m1b-mission-20261119/drafts/fail-closed/m1_fail_closed.py exists (orch-C/ATTACKS.md, C-BLOCK-01). It is not evidence from a run. A's launch-path controls (orch-A/launch/) have no red-team run by C.
 - Owner decision needed: who runs this class of test and how (for example the owner by hand, or A's own control tests reviewed by reading only).
+
+## A-5 (2026-11-19T15:43:53Z): launch-path controls for the proved executable — adoption is an owner decision (nothing applied)
+Prototype `orch-A/launch/launcher.py` (sha256 fbdbea0b…; unverified Python; NOT wired into any deployed path; no
+protected file changed). Matrix: `orch-A/launch/CONTROL_MATRIX.md`. Tests by the author of the control; A ran the four
+test files again (exit 0 each; 48 rows; 0 not as expected). NO independent attack run exists (red team blocked: C-1).
+Decisions for the owner:
+1. Adopt a launcher of this kind as the ONLY way to run the executable (empty environment; pinned SHA-256 and kernel
+   CDHash check; fresh blocking pipes; closed descriptors; default signals; accept only exit 0 + empty stderr + exactly
+   one strict frame that echoes the request). The consumer must start it as
+   `/usr/bin/env -i /usr/bin/python3 -B -I <absolute path>/launcher.py`; without that rule the row AC2-n3 stays OPEN
+   (`DEVELOPER_DIR` redirects `/usr/bin/python3`; a forged decision line is ACCEPTED).
+2. Hardened runtime: on a re-signed COPY dyld ignores `DYLD_INSERT_LIBRARIES`. Re-signing changes the bytes
+   (copy 1b78c1e2…; CDHash 341d62cd…), so the pinned image digest b8ed5ec2… and every record bound to it would need a
+   new pin. Not done on the original.
+3. The C FFI patch (item A-3) stays the only option for row AC3-j (call shapes outside the model; R6). NOT RUN.

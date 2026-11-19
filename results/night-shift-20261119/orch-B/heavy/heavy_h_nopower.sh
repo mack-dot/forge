@@ -25,6 +25,7 @@ ENV=(env -i PATH=$PATH HOME=$H/home LANG=C NODE_PATH=$R/node_modules)
 if [ $PART = all ] || [ $PART = diff ]; then
   D=$OUT/diff; $O/d-v6sink/setup_v6.sh $D || { echo "setup failed"; exit 2; }
   sed "s#<REPO>/results/night-shift-20261119/orch-B/d-v6sink/sink_core_backed_v6#$H/tree/ts/refund-finality/sink#; s#SELECT v FROM meta WHERE k = 'initial_state'#SELECT initial_state AS v FROM meta#; s#^// d-v6sink.*#// h-sink: cb-h1 = cb-v6 pointed at the hardened sink (meta.initial_state column).#" $D/sinks/cb-v6.ts > $D/sinks/cb-h1.ts
+  grep -q '"cb-h1"' $D/lib.ts || sed -i '' 's#^  "cb-v6": Z + "/sinks/cb-v6.ts",#&\n  "cb-h1": Z + "/sinks/cb-h1.ts",#' $D/lib.ts   # orchestrator B: the worker's script did not register the wrapper (window 9 setup error)
   grep -q "h-sink/tree/ts/refund-finality/sink" $D/sinks/cb-h1.ts || { echo "wrapper edit failed"; exit 2; }
   shasum -a 256 $D/sinks/cb-h1.ts $H/tree/ts/refund-finality/sink.ts $H/tree/ts/refund-finality/core/store.ts >> $D/inputs-sha256.txt
   DIS=valid@disabled,zero@disabled,stale-or-current@disabled,forged-post\(key\)@disabled,signed-unauthorized@disabled

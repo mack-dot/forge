@@ -1,0 +1,7 @@
+diff sinkcore-v6.cjs cb-h1 plain n=2000 start=2026-11-19T15:41:36Z end=2026-11-19T15:41:36Z exit 1
+diff sinkcore-v6.cjs cb-h1 fault-1 n=500 start=2026-11-19T15:41:36Z end=2026-11-19T15:41:36Z exit 1
+diff sinkcore-v6.cjs cb-h1 fault-2 n=500 start=2026-11-19T15:41:36Z end=2026-11-19T15:41:37Z exit 1
+diff sinkcore-v6.cjs cb-h1 interleave n=500 start=2026-11-19T15:41:37Z end=2026-11-19T15:41:37Z exit 1
+diff sinkcore-v3.cjs cb-h1 plain n=2000 start=2026-11-19T15:41:37Z end=2026-11-19T15:41:37Z exit 1
+storm ok=200 refused=0 (expected 200 / 0)
+perf20k exit 0 (see perf20k.out)
