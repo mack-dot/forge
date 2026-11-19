@@ -61,3 +61,6 @@ The deployed sink.ts is the weakest link. Adopt, by owner decision, the sink who
 
 ## 9. Owner decisions (exact items; nothing is applied; each diff has a SHA-256 and `git apply --check` exit 0 by B)
 B-1 request-id diffs (sink, dispatcher). B-2 charge-id binding. B-3 admission authority (steps O1–O12). B-4 start-up audit; digests that change. B-5 `expect` rule; halts without `expect`; nine supervision diffs. B-6 adoption of the issuer and sink drafts; token format. B-7 the subset rule and its cost. B-8 rollback anchor, authentic initial state, one store per charge id.
+
+## ADDENDUM 1 (2026-11-19T10:28:33Z) — review of §1 row 1 ended: CONFIRMED (U547)
+Reviewer's own runs: exit 0, 1871 verified; own lemmas 1877; three step mutants exit 4; no contradiction derivable; hypotheses hold for every trace under an injective hash. Corrections to the reading: (1) one more piece of glue, G-H: the issuer and the sink use the same hash of the same canonical text, and the stored text is always canonical (true by reading; not a listed hypothesis); (2) A2p is key custody PLUS TypeScript glue in minter.ts PLUS the Dafny-to-JavaScript compiler — the proved IssueBytes is a model of the issuer, not the issuer; (3) the sink does not enforce InitOk (its init accepts remaining above original); only the money conclusions need it. No finding refutes the lemma.

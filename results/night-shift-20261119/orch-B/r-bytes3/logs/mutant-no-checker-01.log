@@ -1,0 +1,53 @@
+# owner=r-bytes3 start=2026-11-19T10:26:49Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-bytes3/mutants/no-checker
+# power: Now drawing from 'AC Power'
+# swap free MiB: 969
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects HashCore.dfy SliceSafetyBytesV3.dfy ControlsBytesV3.dfy
+# memory free percent: 68
+ControlsBytesV3.dfy(227,8): Error: Verification out of resource (ControlsBytesV3.WitA4)
+    |
+227 |   lemma WitA4()
+    |         ^^^^^
+
+HashCore.dfy(113,2): Error: a postcondition could not be proved on this return path
+    |
+113 |   {}
+    |   ^
+
+HashCore.dfy(106,53): Related location: this is the postcondition that could not be proved
+    |
+106 |     ensures Step(H, core, tok, sigOk).out.Committed? <==>
+    |                                                      ^^^^
+
+HashCore.dfy(140,2): Error: a postcondition could not be proved on this return path
+    |
+140 |   {}
+    |   ^
+
+HashCore.dfy(137,54): Related location: this is the postcondition that could not be proved
+    |
+137 |     ensures tok.specHex == PIN_SPEC && tok.checkerHex == PIN_CHK && sigOk
+    |                                                       ^^
+
+
+Dafny program verifier finished with 136 verified, 2 errors, 1 out of resource
+       19.56 real        16.74 user         0.81 sys
+           367738880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               43350  page reclaims
+                  10  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  10  signals received
+                1992  voluntary context switches
+               89092  involuntary context switches
+        147711352893  instructions retired
+         53225913492  cycles elapsed
+           345703768  peak memory footprint
+# end=2026-11-19T10:27:09Z
+exit 4

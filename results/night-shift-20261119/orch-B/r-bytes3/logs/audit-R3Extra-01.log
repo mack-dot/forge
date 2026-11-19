@@ -1,0 +1,29 @@
+# owner=r-bytes3 start=2026-11-19T10:27:19Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-bytes3/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 985
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format markdown --report-file <REPO>/results/night-shift-20261119/orch-B/r-bytes3/logs/audit-R3Extra-01.md R3Extra.dfy
+# memory free percent: 70
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        5.35 real         5.85 user         0.17 sys
+           255852544  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18379  page reclaims
+                 597  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  12  signals received
+                  56  voluntary context switches
+                3620  involuntary context switches
+         53112793429  instructions retired
+         18322280890  cycles elapsed
+           223053072  peak memory footprint
+# end=2026-11-19T10:27:24Z
+exit 0

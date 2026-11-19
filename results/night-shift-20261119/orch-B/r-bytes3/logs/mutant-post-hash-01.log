@@ -1,0 +1,88 @@
+# owner=r-bytes3 start=2026-11-19T10:25:18Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-bytes3/mutants/post-hash
+# power: Now drawing from 'AC Power'
+# swap free MiB: 961
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects HashCore.dfy SliceSafetyBytesV3.dfy ControlsBytesV3.dfy
+# memory free percent: 74
+ControlsBytesV3.dfy(118,2): Error: a postcondition could not be proved on this return path
+    |
+118 |   {
+    |   ^
+
+ControlsBytesV3.dfy(115,61): Related location: this is the postcondition that could not be proved
+    |
+115 |     ensures Step(HW, Core(W_PRE, {"rq_0"}, [I0]), TK1, true) == StepResult(Core(W_POST, {"rq_0", "rq_1"}, [I0, I1]), Committed)
+    |                                                              ^^
+
+ControlsBytesV3.dfy(311,2): Error: a postcondition could not be proved on this return path
+    |
+311 |   {
+    |   ^
+
+ControlsBytesV3.dfy(310,79): Related location: this is the postcondition that could not be proved
+    |
+310 |     ensures Step(HW, Core(W_POST, {"rq_0", "rq_1"}, [I0, I1]), XTOK, true).out == Rejected(ChargeIdMismatch)
+    |                                                                                ^^
+
+ControlsBytesV3.dfy(390,2): Error: a postcondition could not be proved on this return path
+    |
+390 |   {
+    |   ^
+
+ControlsBytesV3.dfy(389,34): Related location: this is the postcondition that could not be proved
+    |
+389 |     ensures TExec(H, W_PRE, acts) == RunSt(Core(F.Charge("ch_1", 100, 0, true), {"rq_b"}, [IB]), [BTOK], [W_PRE], [1], 2)
+    |                                   ^^
+
+HashCore.dfy(113,2): Error: a postcondition could not be proved on this return path
+    |
+113 |   {}
+    |   ^
+
+HashCore.dfy(106,53): Related location: this is the postcondition that could not be proved
+    |
+106 |     ensures Step(H, core, tok, sigOk).out.Committed? <==>
+    |                                                      ^^^^
+
+HashCore.dfy(132,2): Error: a postcondition could not be proved on this return path
+    |
+132 |   {}
+    |   ^
+
+HashCore.dfy(131,12): Related location: this is the postcondition that could not be proved
+    |
+131 |     ensures !Step(H, core, tok, sigOk).out.Committed? && Step(H, core, tok, sigOk).core == core
+    |             ^
+
+HashCore.dfy(140,2): Error: a postcondition could not be proved on this return path
+    |
+140 |   {}
+    |   ^
+
+HashCore.dfy(138,27): Related location: this is the postcondition that could not be proved
+    |
+138 |     ensures H(core.charge) == tok.preHash && IntentOfSM(tok.intent).requestId == tok.requestId
+    |                            ^^
+
+
+Dafny program verifier finished with 133 verified, 6 errors
+       18.16 real        15.89 user         0.66 sys
+           380272640  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45053  page reclaims
+                  10  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  12  signals received
+                2024  voluntary context switches
+               22043  involuntary context switches
+        149099743288  instructions retired
+         51843307434  cycles elapsed
+           347227480  peak memory footprint
+# end=2026-11-19T10:25:36Z
+exit 4
