@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 104, in <module>
+    main()
+  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 53, in main
+    c = val(v['cand'])
+  File "<REPO>/results/night-shift-20261119/orch-B/x-bridge3/run_py.py", line 35, in val
+    if 'f' in v: return float(v['f'])
+TypeError: float() argument must be a string or a real number, not 'list'
+        0.27 real         0.17 user         0.18 sys
+            47939584  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14647  page reclaims
+                2062  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 107  voluntary context switches
+                9363  involuntary context switches
+           436739610  instructions retired
+           172672870  cycles elapsed
+            13599416  peak memory footprint

@@ -1,0 +1,8462 @@
+[
+{
+"id": "t2/real/auth",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/real/zero",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_0"
+},
+{
+"i": "0"
+},
+{
+"s": "duplicate_charge"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_0"
+},
+{
+"i": "0"
+},
+{
+"s": "duplicate_charge"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/real/unicode",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "\u00e9\u20ac\ud83d\ude00 \"q\"\\\t"
+},
+{
+"i": "500"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "r 7\t)("
+},
+{
+"i": "60"
+},
+{
+"s": "service_not_delivered"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "\u00e9\u20ac\ud83d\ude00 \"q\"\\\t"
+},
+{
+"i": "500"
+},
+{
+"i": "0"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "\u00e9\u20ac\ud83d\ude00 \"q\"\\\t"
+},
+{
+"s": "r 7\t)("
+},
+{
+"i": "60"
+},
+{
+"s": "service_not_delivered"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/real/max",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "c"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "r"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "c"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"i": "0"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "c"
+},
+{
+"s": "r"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/real/reject-disabled",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": false
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": false
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/real/post-wrong-real-check",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "59"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-post/wrong-post-remaining",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "59"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "ignore-post",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-post/wrong-post-original",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "101"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "ignore-post",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-post/wrong-post-chargeId",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_X"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "ignore-post",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-post/wrong-post-enabled",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": false
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "ignore-post",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-intent/wrong-intent-chargeId",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_2"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "ignore-intent",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-intent/wrong-intent-requestId",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_2"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "ignore-intent",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-intent/wrong-intent-amount",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "41"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "ignore-intent",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-intent/wrong-intent-reason",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "duplicate_charge"
+}
+]
+}
+]
+},
+"checker": "ignore-intent",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/ignore-post/honest-signs",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "ignore-post",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/H/accept-all/amount-over-remaining",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "30"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "-10"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/M/E1/real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "50"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/M/E1/accept-all",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "50"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/M/E2/real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "1000"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/M/E2/accept-all",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "1000"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/M/E3/real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "40"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/M/E3/accept-all",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "40"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/E5/amount-bool",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"b": true
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/E5/post-enabled-int",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"i": "1"
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/native-wrong/authorize-all/real-check",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "30"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "-10"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:authorize-all",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/both-wrong/outside-guarantee",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "30"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "-10"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "standin:authorize-all",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/both-wrong/honest-request-authorize-all",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "standin:authorize-all",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/amount>MAX",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "9223372036854775808"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/remaining<0",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "-1"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/id-257",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/id-256",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/id-129-astral",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00\ud83d\ude00"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/id-nul",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "c\u0000"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/lone-surrogate",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "\ud800"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/enabled-int",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"i": "1"
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/range/not-a-candidate",
+"kind": "bridge",
+"cand": {
+"t": "tuple",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/pin/wrong-digest",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "zeros",
+"timeout_s": 10.0
+},
+{
+"id": "t2/pin/relative-path",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "rel:bin/refund",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/pin/absent-binary",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "abs:/nonexistent/forge/refund",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/pin/directory",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "abs:<REPO>/results/night-shift-20261119/orch-B/x-bridge3/bin",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "t2/env-arg/dyld",
+"kind": "launch_env",
+"env": {
+"CML_HEAP_SIZE": "256",
+"CML_STACK_SIZE": "256",
+"DYLD_INSERT_LIBRARIES": "/nonexistent/x.dylib"
+}
+},
+{
+"id": "t2/env-arg/ld",
+"kind": "launch_env",
+"env": {
+"LD_PRELOAD": "x"
+}
+},
+{
+"id": "t2/env-arg/extra-name",
+"kind": "launch_env",
+"env": {
+"CML_HEAP_SIZE": "256",
+"CML_STACK_SIZE": "256",
+"HOME": "/"
+}
+},
+{
+"id": "t2/env-arg/changed-value",
+"kind": "launch_env",
+"env": {
+"CML_HEAP_SIZE": "1"
+}
+},
+{
+"id": "t2/env-arg/empty-env",
+"kind": "launch_env",
+"env": {}
+},
+{
+"id": "t2/parent-env-nonexistent-dyld/real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0,
+"parent_env": true
+},
+{
+"id": "t2/standin/honest",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:honest",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/truncated",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:truncated",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/empty",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:empty",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/two-frames",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:two-frames",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/trailing-newline",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:trailing-newline",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/stderr-noise",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:stderr-noise",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/exit3",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:exit3",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/sigterm",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:sigterm",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/flood",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:flood",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/field-authorized",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:field-authorized",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/field-amount",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:field-amount",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/field-reason",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:field-reason",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/field-charge",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:field-charge",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/field-request",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:field-request",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/field-count",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:field-count",
+"pin": "standin",
+"timeout_s": 10.0
+},
+{
+"id": "t2/standin/timeout-sleep5",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:sleep5",
+"pin": "standin",
+"timeout_s": 2.0
+},
+{
+"id": "t2/standin/grandchild-holds-stdout",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "standin:grandchild",
+"pin": "standin",
+"timeout_s": 2.0,
+"grandchild": true
+},
+{
+"id": "t2/probe",
+"kind": "probe"
+},
+{
+"id": "t2/planted/honest",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/two-frames",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f3120312928726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/trailing-byte",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f3120312920",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/non-canonical-int",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d76312054727565203034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/exit0-truncated-CE1",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f312031",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/exit0-empty-CE2",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/stdin-incomplete",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": false,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/binary-changed",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": false
+}
+},
+{
+"id": "t2/planted/signal-with-frame",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": null,
+"signal": 13,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/timeout-with-frame",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": true,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/stderr-with-frame",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 1,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/exit1-with-frame",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 1,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/overflow-with-frame",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": true,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/not-launched",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": false,
+"refusal": "DIGEST_MISMATCH",
+"stdout": "",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/not-launched-no-reason",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": false,
+"refusal": "",
+"stdout": "",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/E6-out-of-range-honest-run",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"i": "1"
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/reject-frame",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/count-field-2",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203229",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/ok-field-False",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d76312046616c73652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/quoted-escape-r",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f3120227265715c723122203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/latin1-bytes-in-frame",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265e95f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/issue-int-not-True",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": 1,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "t2/planted/issue-false",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": false,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "rc/frame-amount-040",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d76312054727565203034302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "rc/frame-amount-plus40",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d76312054727565202b34302072657475726e65645f6974656d2063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "rc/frame-count-01",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2063685f31207265715f3120303129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "rc/frame-charge-case",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2043485f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "rc/frame-quoted-safe-atom",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d76312054727565203430202272657475726e65645f6974656d222063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "rc/amount-max-real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "c"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "r"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "c"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"i": "0"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "c"
+},
+{
+"s": "r"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/amount-2^63-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "c"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "r"
+},
+{
+"i": "9223372036854775808"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "c"
+},
+{
+"i": "9223372036854775807"
+},
+{
+"i": "-1"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "c"
+},
+{
+"s": "r"
+},
+{
+"i": "9223372036854775808"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/nfc-req-nfd-intent-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "caf\u00e9"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "cafe\u0301"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/nfd-everywhere-real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "cafe\u0301"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "cafe\u0301"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/nfc-charge-nfd-intent-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "caf\u00e9"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "caf\u00e9"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "cafe\u0301"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/trailing-space-intent-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1 "
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/trailing-space-everywhere-real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1 "
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1 "
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/reason-case-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "Returned_Item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "Returned_Item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/empty-request-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": ""
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": ""
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/pre-rem-gt-orig-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "50"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "10"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "50"
+},
+{
+"i": "50"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "10"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/post-float-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"fl": 20.0
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/intent-amount-bool-acc",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "1"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "59"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"b": true
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/reqid-digits-real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "40"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "40"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/reqid-True-real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "True"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "True"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/chargeid-tilde5-real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "~5"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "~5"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "~5"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/reqid-CR-VT-real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "a\rb\u000bc\f"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "a\rb\u000bc\f"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "rc/latin1-mutant-probe",
+"kind": "planted",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "60"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "\u00e9"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "20"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "\u00c3\u00a9"
+}
+]
+}
+]
+},
+"issue": true,
+"result": {
+"launched": true,
+"refusal": "",
+"stdout": "28726566756e642d726573756c742d7631205472756520343020c3a92063685f31207265715f31203129",
+"exit_code": 0,
+"signal": null,
+"timed_out": false,
+"stderr_len": 0,
+"stdout_overflow": false,
+"stdin_complete": true,
+"copy_unchanged": true
+}
+},
+{
+"id": "rc/zero-amount-real",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "0"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_0"
+},
+{
+"i": "0"
+},
+{
+"s": "duplicate_charge"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "0"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_0"
+},
+{
+"i": "0"
+},
+{
+"s": "duplicate_charge"
+}
+]
+}
+]
+},
+"checker": null,
+"binary": "real",
+"pin": "real",
+"timeout_s": 10.0
+},
+{
+"id": "gap/both-wrong-zero-remaining",
+"kind": "bridge",
+"cand": {
+"t": "Candidate",
+"f": [
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "0"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Request",
+"f": [
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+},
+{
+"t": "Charge",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"i": "100"
+},
+{
+"i": "-40"
+},
+{
+"b": true
+}
+]
+},
+{
+"t": "Intent",
+"f": [
+{
+"s": "ch_1"
+},
+{
+"s": "req_1"
+},
+{
+"i": "40"
+},
+{
+"s": "returned_item"
+}
+]
+}
+]
+},
+"checker": "accept-all",
+"binary": "standin:authorize-all",
+"pin": "standin",
+"timeout_s": 10.0
+}
+]

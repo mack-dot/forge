@@ -1,0 +1,110 @@
+{
+ "node": "v24.3.0",
+ "phases": {
+  "p1": {
+   "totals": {
+    "cases": 581,
+    "allIssue": 55,
+    "allRefuse": 526,
+    "zeroIssued": 19,
+    "bodyEqualModuloChecker": 55,
+    "sigOk": 55,
+    "verbatimInLine": 55,
+    "sinkCommitted": 55,
+    "sinkReplayed": 55,
+    "sinkStateOk": 55,
+    "auditClean": 55,
+    "crossPinRejected": 55
+   },
+   "refusalReasons": {
+    "core: Refuse": 260,
+    "shape": 264,
+    "message shape": 2
+   },
+   "bridgedReady": {
+    "ready": true,
+    "specLockSha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b",
+    "checkerSha256": "cc43e5c274652f24f5ee154aec46327faf7d6a16165814da2cd757b7c7897835",
+    "singleUse": false
+   },
+   "draftChecker": "3adea7cfb5cad054ba2dfc3cce7ff06ad64a46cc194294e76694fa4b08150184"
+  },
+  "cost": {
+   "draft": {
+    "n": 20,
+    "meanMs": 9.74,
+    "medianMs": 9.78,
+    "maxMs": 10.07
+   },
+   "bridged": {
+    "n": 20,
+    "meanMs": 55.94,
+    "medianMs": 56.98,
+    "maxMs": 64.5
+   },
+   "extraPerMintMs": 46.2
+  },
+  "p2_wrongNative_realChecker": {
+   "issued": 0,
+   "unauthorizedIssued": 0,
+   "honestIssued": 0,
+   "refused": 581,
+   "reasons": {
+    "native bridge: FRAME_NOT_AUTHORIZED_TUPLE": 53,
+    "core: Refuse": 260,
+    "native bridge: STDOUT_OVERFLOW": 2,
+    "shape": 264,
+    "message shape": 2
+   },
+   "unauthorizedCases": []
+  },
+  "p3_miscompiledChecker_realNative": {
+   "issued": 55,
+   "unauthorizedIssued": 0,
+   "honestIssued": 55,
+   "refused": 526,
+   "reasons": {
+    "native bridge: POST_MISMATCH": 114,
+    "native bridge: INTENT_MISMATCH": 83,
+    "native bridge: FRAME_NOT_AUTHORIZED_TUPLE": 53,
+    "shape": 264,
+    "native bridge: OUT_OF_RANGE": 10,
+    "message shape": 2
+   },
+   "unauthorizedCases": []
+  },
+  "p3b_bothWrong_outsideGuarantee": {
+   "issued": 0,
+   "unauthorizedIssued": 0,
+   "examples": []
+  },
+  "p4_absentBinary": {
+   "issued": 0,
+   "unauthorizedIssued": 0,
+   "honestIssued": 0,
+   "refused": 581,
+   "reasons": {
+    "native bridge: BINARY_OPEN_FAILED": 55,
+    "core: Refuse": 260,
+    "shape": 264,
+    "message shape": 2
+   },
+   "unauthorizedCases": []
+  },
+  "p5_wrongPin": {
+   "issued": 0,
+   "unauthorizedIssued": 0,
+   "honestIssued": 0,
+   "refused": 581,
+   "reasons": {
+    "native bridge: DIGEST_MISMATCH": 55,
+    "core: Refuse": 260,
+    "shape": 264,
+    "message shape": 2
+   },
+   "unauthorizedCases": []
+  }
+ },
+ "differences": 0,
+ "diffs": []
+}
