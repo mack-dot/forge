@@ -161,3 +161,25 @@ Next: review (A34); read side (A35, files to `orch-A/r6/round10/`).
 
 ## CHECKPOINT (2026-11-19T12:04:02Z)
 Review A34 of R6w-0004: holds (report `orch-A/review-R6w/REPORT.md`). A35 (read side) works. HOL slot idle, held by A.
+
+## CHECKPOINT (2026-11-19T12:04:35Z)
+Workers running: A35 (read side → `orch-A/r6/round10/`), A36 (initial heap and event link → `orch-A/r6/round11/`). HOL slot idle, held by A. Next HOL cases: their explorations (`R6rx-0001`, `R6tx-0001`), then proof runs.
+
+## CHECKPOINT (2026-11-19T12:05:40Z)
+`locks/hol.lock` released for B's window 7 (about 6 minutes). A starts no HOL case until B's release line.
+
+## CHECKPOINT (2026-11-19T12:11:44Z)
+B released heavy.lock at 12:11:13Z (window 7: v6 draft sink 0 divergences; v5 halts in two modes). A holds `locks/hol.lock` again; slot idle until A35/A36 deliver.
+
+## CHECKPOINT (2026-11-19T12:15:25Z)
+Disk incident on B's side (volume full about 12:10Z–12:25Z). A's files and branch checked: intact; 81 GiB free. CHECK the files of A35 (`round10`) and A36 (`round11`) for truncation (digests in their reports; bracket balance) before any run.
+
+## CHECKPOINT (2026-11-19T12:24:42Z)
+A35 delivered the read-side bottom layer (`orch-A/r6/round10/`; digests equal its report; ASCII; no stray backslash). RUNNING: `queue.sh q38 "R6rx-0001 3600 deps-R6r.txt"` (EXPLORATION). Staged: `R6r-0001` (PROOF).
+
+## CHECKPOINT (2026-11-19T12:27:42Z)
+A36 delivered the initial-heap and event-link layer (`orch-A/r6/round11/`; digests equal its report; ASCII). Staged, NOT RUN: `R6tx-0001` (exploration), `R6t-0001` (proof); deps `deps-R6t.txt`. B asked for window 8 (2 minutes) at the next gap: after `R6rx-0001` ends.
+
+## CHECKPOINT (2026-11-19T12:50:46Z) — A's error, corrected
+At about 12:50:30Z A removed `locks/hol.lock` although `R6rx-0001` was STILL RUNNING (A's wait loop had ended by its own time limit, not by the case end; A did not check). A restored the lock at 12:50:37Z. No `heavy.lock` appeared; A had not sent B the release line; B's scripts also refuse while a HOL process runs. RULE: before removing hol.lock run `pgrep -f bin/hol` and require 0.
+`R6rx-0001` still runs (limit 3600 CPU s). Partial: 6 lemmas close; `refillBuffer_with_read_spec_V` fails at step 2.

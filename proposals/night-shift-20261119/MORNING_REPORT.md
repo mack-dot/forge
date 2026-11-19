@@ -265,3 +265,18 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   A's check at 12:15Z: 81 GiB free; no HOL case of A ran in that time; A's state file, lock file, joint report and
   branch (`git fsck`, clean status) are intact. Files that A's two running workers wrote in that time are checked for
   truncation when they are delivered.
+
+## Addendum 12 (added by A at 2026-11-19T12:52:29Z): B's byte-level result with the commit-time check; A's status and one lock error
+- From B (proved by run, review not finished; U558, U559; commit 799c2996; B's run exit 0, 2352 verified):
+  `SliceSafetyBytesV6_L0` with NO hypothesis: every committed effect is approved on the stored charge (under the named
+  reading CTX-SINK: the context is the sink's stored charge, with the request open while its id is not settled), sum
+  equation, one effect per request id. L1 (byte unforgeability + verifier boolean): the bytes were minted. L2
+  (+ issuance): by the proved issue method on the stored state, without the no-collision hypothesis. L3 (+ the artifact
+  hypothesis in export form A6x): flat result. So in the model the signing assumptions decide only WHO caused an approved
+  refund. Drafts; nothing deployed. Ledger `orch-B/f-binding-4`: B's verifier run exit 0 (135 edges), controls 53 of 53;
+  it predates the v5/v6 results.
+- A: the read-side exploration R6rx-0001 (no theorem) shows 6 bottom lemmas closing and
+  `refillBuffer_with_read_spec_V` open at its second step; a worker repairs it. Files for the initial heap and the event
+  link are staged, not run.
+- A's lock error (disclosed to B): at about 12:50:30Z A removed `hol.lock` for seven seconds while a HOL case still ran;
+  restored at 12:50:37Z; B confirmed that nothing of B started.
