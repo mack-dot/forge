@@ -1,0 +1,38 @@
+# owner=d-minter start=2026-11-19T09:57:52Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-minter/src/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 536
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects M2_no_wf_guard.dfy
+# memory free percent: 53
+M2_no_wf_guard.dfy(140,2): Error: a postcondition could not be proved on this return path
+    |
+140 |   {
+    |   ^
+
+M2_no_wf_guard.dfy(131,20): Related location: this is the postcondition that could not be proved
+    |
+131 |     ensures r.Some? <==> F.Authorizes(pre, t) && SM.WfBody(BodyFor(specHex, checkerHex, preHashHex, t))
+    |                     ^^^^
+
+
+Dafny program verifier finished with 130 verified, 1 error
+        7.75 real         6.60 user         0.44 sys
+           188153856  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21531  page reclaims
+                  11  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 618  voluntary context switches
+               21945  involuntary context switches
+         56261912763  instructions retired
+         21672849251  cycles elapsed
+           171509008  peak memory footprint
+# end=2026-11-19T09:58:00Z
+exit 4

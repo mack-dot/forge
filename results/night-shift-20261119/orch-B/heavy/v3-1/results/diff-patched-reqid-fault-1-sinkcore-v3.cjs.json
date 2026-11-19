@@ -1,0 +1,249 @@
+{
+ "sink": "patched-reqid",
+ "mode": "fault-1",
+ "seed": 20261119,
+ "count": 500,
+ "coreKind": "v3",
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 115,
+  "kinds": {
+   "wrong-spec": 241,
+   "valid": 911,
+   "stale-or-current": 297,
+   "foreign-charge-intent": 100,
+   "replay": 271,
+   "settled-id-new-body": 198,
+   "zero": 266,
+   "sig-bitflip": 146,
+   "foreign-charge-post": 103,
+   "reqid-mismatch": 255,
+   "wrong-checker": 174,
+   "attacker-key": 129,
+   "non-canonical": 82,
+   "forged-post(key)": 129,
+   "unknown-pre-hash": 60
+  },
+  "divergentKinds": {
+   "foreign-charge-intent": 59,
+   "foreign-charge-post": 55,
+   "replay": 1
+  },
+  "first": [
+   {
+    "name": "seed20261119#1",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "replay",
+      "special": "fault"
+     },
+     {
+      "kind": "replay"
+     }
+    ],
+    "shrunk_len": 4,
+    "s0": {
+     "chargeId": "ch_0",
+     "original": "717",
+     "remaining": "28",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 3,
+     "detail": {
+      "kind": "replay",
+      "sink_out": "committed",
+      "core_out": "rejected:ChargeIdMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"15\"}",
+       "settledEnc": [
+        "84109112962310164160671380210184",
+        "85825622453237120476277725331977",
+        "89258641435091033107490415575563"
+       ],
+       "outbox": [
+        "{\"amount\":\"8\",\"chargeId\":\"ch_0\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_1_0\"}",
+        "{\"amount\":\"1\",\"chargeId\":\"ch_0\",\"reason\":\"returned_item\",\"requestId\":\"rq_1_1\"}",
+        "{\"amount\":\"4\",\"chargeId\":\"ch_0_f\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_1_3\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"19\"}",
+       "settledEnc": [
+        "84109112962310164160671380210184",
+        "85825622453237120476277725331977"
+       ],
+       "outbox": [
+        "{\"amount\":\"8\",\"chargeId\":\"ch_0\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_1_0\"}",
+        "{\"amount\":\"1\",\"chargeId\":\"ch_0\",\"reason\":\"returned_item\",\"requestId\":\"rq_1_1\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#3",
+    "original_len": 9,
+    "shrunk": [
+     {
+      "kind": "replay"
+     },
+     {
+      "kind": "valid"
+     },
+     {
+      "kind": "foreign-charge-intent"
+     },
+     {
+      "kind": "replay",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 4,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "565",
+     "remaining": "538",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 2,
+     "detail": {
+      "kind": "foreign-charge-intent",
+      "sink_out": "committed",
+      "core_out": "rejected:ChargeIdMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"565\",\"refundEnabled\":true,\"remaining\":\"109\"}",
+       "settledEnc": [
+        "84109112962312929941240019091978",
+        "89258641435093798888059054457357",
+        "90975150926020755203665399579150"
+       ],
+       "outbox": [
+        "{\"amount\":\"355\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_3_0\"}",
+        "{\"amount\":\"16\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_3_3\"}",
+        "{\"amount\":\"58\",\"chargeId\":\"ch_1_f\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_3_4\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"565\",\"refundEnabled\":true,\"remaining\":\"167\"}",
+       "settledEnc": [
+        "84109112962312929941240019091978",
+        "89258641435093798888059054457357"
+       ],
+       "outbox": [
+        "{\"amount\":\"355\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_3_0\"}",
+        "{\"amount\":\"16\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_3_3\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#7",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "foreign-charge-intent"
+     },
+     {
+      "kind": "reqid-mismatch",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 2,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "137",
+     "remaining": "83",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "foreign-charge-intent",
+      "sink_out": "committed",
+      "core_out": "rejected:ChargeIdMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"83\"}",
+       "settledEnc": [
+        "87542131944172374133589987099152"
+       ],
+       "outbox": [
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1_f\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_2\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"83\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#7",
+   "original_len": 10,
+   "shrunk": [
+    {
+     "kind": "foreign-charge-intent"
+    },
+    {
+     "kind": "reqid-mismatch",
+     "special": "fault"
+    }
+   ],
+   "shrunk_len": 2,
+   "s0": {
+    "chargeId": "ch_1",
+    "original": "137",
+    "remaining": "83",
+    "refundEnabled": false
+   },
+   "divergence": {
+    "step": 0,
+    "detail": {
+     "kind": "foreign-charge-intent",
+     "sink_out": "committed",
+     "core_out": "rejected:ChargeIdMismatch",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"83\"}",
+      "settledEnc": [
+       "87542131944172374133589987099152"
+      ],
+      "outbox": [
+       "{\"amount\":\"0\",\"chargeId\":\"ch_1_f\",\"reason\":\"returned_item\",\"requestId\":\"rq_7_2\"}"
+      ]
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_1\",\"original\":\"137\",\"refundEnabled\":false,\"remaining\":\"83\"}",
+      "settledEnc": [],
+      "outbox": []
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": [],
+ "allowed": [
+  "foreign-charge-intent",
+  "foreign-charge-post"
+ ],
+ "notAllowedKinds": [
+  "replay"
+ ],
+ "shellChecks": {
+  "stepP": 6250,
+  "audit": 6250
+ }
+}

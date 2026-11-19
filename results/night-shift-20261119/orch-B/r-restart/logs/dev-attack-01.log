@@ -1,0 +1,48 @@
+# owner=r-restart start=2026-11-19T09:58:13Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-restart/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 536
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects AttackRestart.dfy
+# memory free percent: 62
+AttackRestart.dfy(27,2): Error: a postcondition could not be proved on this return path
+   |
+27 |   {
+   |   ^
+
+AttackRestart.dfy(26,12): Related location: this is the postcondition that could not be proved
+   |
+26 |     ensures !AuditFullSpec(TRUE_INIT, FICore(), [Delivery(FI_TOK, true)])
+   |             ^
+
+AttackRestart.dfy(74,23): Error: assertion might not hold
+   |
+74 |     assert SignedBefore(a0, 1, ClaimOf(V0_TOK));
+   |                        ^
+
+src/SliceSafetyV3.dfy(186,4): Related location: this proposition could not be proved
+    |
+186 |     exists j :: 0 <= j < k && j < |acts| && acts[j].MintAct? && acts[j].c == c
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 9 verified, 2 errors
+        6.26 real         6.18 user         0.23 sys
+           279543808  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27068  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 142  voluntary context switches
+                3762  involuntary context switches
+         60749503686  instructions retired
+         20192554224  cycles elapsed
+           246662416  peak memory footprint
+# end=2026-11-19T09:58:19Z
+exit 4

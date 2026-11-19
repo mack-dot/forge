@@ -1,0 +1,12 @@
+T1 no-chargeKey ch_2 init ok
+T2 a.db ch_1 init ok
+T2 b.db ch_1 init ok
+T3 c.db key ch_1 init ch_2 init threw: initial state is not for this database's charge
+T3 stored after throw: none
+T4 d.db ch_1 init ok
+T4 d.db ch_2 init threw: the database already holds another charge
+T4 stored: {"chargeId":"ch_1","original":"100","refundEnabled":true,"remaining":"100"}
+T5 e.db ch_2 (no key) init ok
+T5 audit with key ch_1: ["stored charge id is not this database's charge"]
+T6 remaining>original init threw: initial state: remaining exceeds original
+exit 0

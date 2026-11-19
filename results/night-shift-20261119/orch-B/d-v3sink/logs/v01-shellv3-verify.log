@@ -1,0 +1,49 @@
+# owner=d-v3sink start=2026-11-19T09:50:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v3sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1333
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-v3sink/logs/v01-shellv3-verify.csv ShellCoreV3.dfy
+# memory free percent: 48
+ShellCoreV3.dfy(140,2): Error: a postcondition could not be proved on this return path
+    |
+140 |   {
+    |   ^
+
+ShellCoreV3.dfy(138,12): Related location: this is the postcondition that could not be proved
+    |
+138 |     ensures !AuditStart(C.Core(F.Charge("ch_1", 100, 90, true), {"rq_body"}, [R.Intent("ch_1", "rq_v", 10, "duplicate_charge")]))
+    |             ^
+
+ShellCoreV3.dfy(140,2): Error: a postcondition could not be proved on this return path
+    |
+140 |   {
+    |   ^
+
+ShellCoreV3.dfy(139,12): Related location: this is the postcondition that could not be proved
+    |
+139 |     ensures !AuditStart(C.Core(F.Charge("ch_1", 100, 90, true), {"rq_1"}, [R.Intent("ch_2", "rq_1", 10, "duplicate_charge")]))
+    |             ^
+
+
+Dafny program verifier finished with 78 verified, 2 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-v3sink/logs/v01-shellv3-verify.csv
+        7.10 real         6.34 user         0.55 sys
+           175243264  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24548  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   9  signals received
+                 317  voluntary context switches
+               31639  involuntary context switches
+         53177255889  instructions retired
+         20868906971  cycles elapsed
+           169723080  peak memory footprint
+# end=2026-11-19T09:50:30Z
+exit 4

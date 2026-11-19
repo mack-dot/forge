@@ -1,0 +1,84 @@
+# owner=r-restart start=2026-11-19T10:00:37Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-restart/controls/C2-step-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 560
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-restart/logs/C2-Restart.csv Restart.dfy
+# memory free percent: 67
+Restart.dfy(383,4): Error: assertion might not hold
+    |
+383 |     assert c'.outbox == BadCore().outbox + [t.intent];
+    |     ^^^^^^
+
+Restart.dfy(687,2): Error: a postcondition could not be proved on this return path
+    |
+687 |   {
+    |   ^
+
+Restart.dfy(684,21): Related location: this is the postcondition that could not be proved
+    |
+684 |     ensures AuditFull(F.Charge("ch_1", 100, 100, true), BadCore(), [Delivery(ForgedRow(), true)])
+    |                      ^
+
+Restart.dfy(419,42): Related location: this proposition could not be proved
+    |
+419 |     InitOkB(init) && Replay(init, ledger).0 && Replay(init, ledger).1 == core
+    |                                           ^
+
+Restart.dfy(709,2): Error: a postcondition could not be proved on this return path
+    |
+709 |   {
+    |   ^
+
+Restart.dfy(706,25): Related location: this is the postcondition that could not be proved
+    |
+706 |     ensures AuditFullSpec(F.Charge("ch_1", 100, 100, true),
+    |                          ^
+
+Restart.dfy(438,13): Related location: this proposition could not be proved
+    |
+438 |     AuditFull(init, core, ledger) && forall i | 0 <= i < |ledger| :: RowAuthorized(ledger[i].tok)
+    |              ^
+
+Restart.dfy(419,42): Related location: this proposition could not be proved
+    |
+419 |     InitOkB(init) && Replay(init, ledger).0 && Replay(init, ledger).1 == core
+    |                                           ^
+
+Restart.dfy(771,39): Error: assertion might not hold
+    |
+771 |     assert CoreRun(Core0(), A1()[..1]) == Core1();
+    |                                        ^^
+
+Restart.dfy(868,2): Error: a postcondition could not be proved on this return path
+    |
+868 |   {
+    |   ^
+
+Restart.dfy(866,84): Related location: this is the postcondition that could not be proved
+    |
+866 |     ensures CoreRun(Exec(W_PRE, []).core, [Deliver(VB_TOK, true)]).charge.remaining == -1
+    |                                                                                     ^^
+
+
+Dafny program verifier finished with 48 verified, 5 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-restart/logs/C2-Restart.csv
+        9.18 real         8.55 user         0.34 sys
+           368738304  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38819  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 761  voluntary context switches
+                9461  involuntary context switches
+         77700473138  instructions retired
+         27807387873  cycles elapsed
+           335398208  peak memory footprint
+# end=2026-11-19T10:00:47Z
+exit 4

@@ -1,0 +1,63 @@
+(node:91219) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+<anonymous_script>:1
+{"id":109,"ok":true,"token":{"body":{"domain":"FORGE_REFUND_FINALITY_SLICE1_V1","specLockSha256":"8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b","checkerSha256":"aa1293f6f7fcd66119e2b13f42d6ace9a142f69aaa14491dfa87cb4726f83e29","preStateSha256":"6a106295bfff2048d5d2dfc8cdba4e42a959fe5d20eb362efa5b6faea4f7ebe0","requestId":"rq_1","post":{"chargeId":"
+
+SyntaxError: Unterminated string in JSON at position 370 (line 1 column 371)
+    at JSON.parse (<anonymous>)
+    at Interface.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/d-minter/conf/run.ts:29:26)
+    at Interface.emit (node:events:507:28)
+    at [_onLine] [as _onLine] (node:internal/readline/interface:469:12)
+    at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:651:22)
+    at Socket.ondata (node:internal/readline/interface:263:23)
+    at Socket.emit (node:events:507:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+
+Node.js v24.3.0
+        0.79 real         0.28 user         0.04 sys
+           125042688  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10542  page reclaims
+                 102  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                 226  messages sent
+                 227  messages received
+                   1  signals received
+                   4  voluntary context switches
+                1234  involuntary context switches
+          2534065630  instructions retired
+           939094170  cycles elapsed
+            87862024  peak memory footprint
+node:events:485
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: write EPIPE
+    at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+    at writeGeneric (node:internal/stream_base_commons:150:3)
+    at Socket._writeGeneric (node:net:966:11)
+    at Socket._write (node:net:978:8)
+    at writeOrBuffer (node:internal/streams/writable:570:12)
+    at _write (node:internal/streams/writable:499:10)
+    at Writable.write (node:internal/streams/writable:508:10)
+    at handle (<REPO>/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts:103:20)
+    at Socket.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/d-minter/minter_issuebytes.ts:126:100)
+    at Socket.emit (node:events:507:28)
+Emitted 'error' event on Socket instance at:
+    at Socket.onerror (node:internal/streams/readable:1031:14)
+    at Socket.emit (node:events:519:35)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  errno: -32,
+  code: 'EPIPE',
+  syscall: 'write'
+}
+
+Node.js v24.3.0

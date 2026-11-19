@@ -1,0 +1,29 @@
+# owner=r-restart start=2026-11-19T10:00:02Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-restart/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 544
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit --report-format md --report-file <REPO>/results/night-shift-20261119/orch-B/r-restart/logs/audit-Restart.md Restart.dfy
+# memory free percent: 64
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        5.56 real         6.44 user         0.16 sys
+           298713088  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21785  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  13  signals received
+                  36  voluntary context switches
+                3967  involuntary context switches
+         59699522102  instructions retired
+         20626074381  cycles elapsed
+           264914216  peak memory footprint
+# end=2026-11-19T10:00:08Z
+exit 0

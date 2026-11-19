@@ -1,0 +1,12 @@
+<REPO>/results/night-shift-20261119/orch-B/r-restart/tscheck/sink.ts:22
+import { ChargeState, Token, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding.ts";
+         ^
+
+SyntaxError: The requested module './encoding.ts' does not provide an export named 'ChargeState'
+    at #_instantiate (node:internal/modules/esm/module_job:249:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:357:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:99:5)
+
+Node.js v24.3.0
+exit 1

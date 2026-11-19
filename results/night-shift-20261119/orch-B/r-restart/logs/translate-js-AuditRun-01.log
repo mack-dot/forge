@@ -1,0 +1,28 @@
+# owner=r-restart start=2026-11-19T09:58:20Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-restart/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 536
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --include-runtime --output <REPO>/results/night-shift-20261119/orch-B/r-restart/work/js-out/AuditRun AuditRun.dfy
+# memory free percent: 65
+
+Dafny program verifier finished with 1095 verified, 0 errors
+       71.39 real        49.44 user         4.79 sys
+          1129676800  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              694500  page reclaims
+                1025  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                 429  signals received
+                4416  voluntary context switches
+              231107  involuntary context switches
+        403460458169  instructions retired
+        165695224855  cycles elapsed
+          1265813688  peak memory footprint
+# end=2026-11-19T09:59:32Z
+exit 0

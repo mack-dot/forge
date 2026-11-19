@@ -1,0 +1,294 @@
+{
+ "sink": "hand-v3",
+ "mode": "plain",
+ "seed": 20261119,
+ "count": 5,
+ "coreKind": "v3",
+ "directed": [
+  {
+   "name": "valid",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "chain",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "replay",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "replay",
+     "sink": "rejected:RequestSettled",
+     "core": "rejected:RequestSettled"
+    }
+   ]
+  },
+  {
+   "name": "same-id-other-token",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "settled-id-new-body",
+     "sink": "rejected:RequestSettled",
+     "core": "rejected:RequestSettled"
+    }
+   ]
+  },
+  {
+   "name": "stale",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "stale",
+     "sink": "rejected:PreStateMismatch",
+     "core": "rejected:PreStateMismatch"
+    }
+   ]
+  },
+  {
+   "name": "wrong-spec",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "wrong-spec",
+     "sink": "rejected:IdsNotPinned",
+     "core": "rejected:IdsNotPinned"
+    }
+   ]
+  },
+  {
+   "name": "wrong-checker",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "wrong-checker",
+     "sink": "rejected:IdsNotPinned",
+     "core": "rejected:IdsNotPinned"
+    }
+   ]
+  },
+  {
+   "name": "attacker-key",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "attacker-key",
+     "sink": "rejected:SignatureInvalid",
+     "core": "rejected:SignatureInvalid"
+    }
+   ]
+  },
+  {
+   "name": "sig-bitflip",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "sig-bitflip",
+     "sink": "rejected:SignatureInvalid",
+     "core": "rejected:SignatureInvalid"
+    }
+   ]
+  },
+  {
+   "name": "zero-twice",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "reqid-mismatch",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "reqid-mismatch",
+     "sink": "rejected:ReqIdMismatch",
+     "core": "rejected:ReqIdMismatch"
+    }
+   ]
+  },
+  {
+   "name": "reqid-mismatch-onto-settled-id",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "reqid-mismatch",
+     "sink": "rejected:ReqIdMismatch",
+     "core": "rejected:ReqIdMismatch"
+    }
+   ]
+  },
+  {
+   "name": "forged-post(key)",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "forged-post",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "non-canonical",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "non-canonical",
+     "sink": "rejected:Decode",
+     "core": "rejected:Decode"
+    }
+   ]
+  },
+  {
+   "name": "unknown-pre-hash",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "unknown-pre",
+     "sink": "rejected:PreStateMismatch",
+     "core": "rejected:PreStateMismatch"
+    }
+   ]
+  },
+  {
+   "name": "refund-disabled-but-signed",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid-signed",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "foreign-charge-intent",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "foreign-charge-intent",
+     "sink": "rejected:ChargeIdMismatch",
+     "core": "rejected:ChargeIdMismatch"
+    },
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "foreign-charge-post",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "foreign-charge-post",
+     "sink": "rejected:ChargeIdMismatch",
+     "core": "rejected:ChargeIdMismatch"
+    },
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "zero-foreign-charge",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "foreign-charge-intent",
+     "sink": "rejected:ChargeIdMismatch",
+     "core": "rejected:ChargeIdMismatch"
+    },
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  }
+ ],
+ "random": {
+  "run": 5,
+  "steps": 37,
+  "divergent": 0,
+  "kinds": {
+   "wrong-spec": 2,
+   "valid": 8,
+   "stale-or-current": 2,
+   "foreign-charge-intent": 4,
+   "replay": 6,
+   "settled-id-new-body": 2,
+   "zero": 3,
+   "sig-bitflip": 1,
+   "foreign-charge-post": 1,
+   "reqid-mismatch": 2,
+   "wrong-checker": 1,
+   "attacker-key": 3,
+   "non-canonical": 1,
+   "forged-post(key)": 1
+  },
+  "divergentKinds": {},
+  "first": [],
+  "smallest": null
+ },
+ "directed_divergent": [],
+ "allowed": [],
+ "notAllowedKinds": [],
+ "shellChecks": {
+  "stepP": 99,
+  "audit": 99
+ }
+}

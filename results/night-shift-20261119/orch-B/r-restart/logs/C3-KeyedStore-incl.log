@@ -1,0 +1,179 @@
+# owner=r-restart start=2026-11-19T10:03:25Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-restart/controls/C3-step-commit-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 560
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-restart/logs/C3-KeyedStore-incl.csv KeyedStore.dfy
+# memory free percent: 72
+src/MultiCharge.dfy(216,23): Error: assertion might not hold
+    |
+216 |     assert st1["ch_1"] == St0()["ch_1"] && st1 == St0();
+    |                        ^^
+
+src/MultiCharge.dfy(216,47): Error: assertion might not hold
+    |
+216 |     assert st1["ch_1"] == St0()["ch_1"] && st1 == St0();
+    |                                                ^^
+
+src/SinkCoreV3.dfy(157,2): Error: a postcondition could not be proved on this return path
+    |
+157 |   {
+    |   ^
+
+src/SinkCoreV3.dfy(151,50): Related location: this is the postcondition that could not be proved
+    |
+151 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+src/SinkCoreV3.dfy(168,2): Error: a postcondition could not be proved on this return path
+    |
+168 |   {
+    |   ^
+
+src/SinkCoreV3.dfy(167,12): Related location: this is the postcondition that could not be proved
+    |
+167 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+src/SinkCoreV3.dfy(174,2): Error: a postcondition could not be proved on this return path
+    |
+174 |   {
+    |   ^
+
+src/SinkCoreV3.dfy(173,12): Related location: this is the postcondition that could not be proved
+    |
+173 |     ensures !Step(core, tok, sigOk).out.Committed? && Step(core, tok, sigOk).core == core
+    |             ^
+
+src/SinkCoreV3.dfy(232,24): Error: a postcondition could not be proved on this return path
+    |
+232 |     if r.out.Committed? {
+    |                         ^
+
+src/SinkCoreV3.dfy(224,50): Related location: this is the postcondition that could not be proved
+    |
+224 |     ensures Step(core, tok, sigOk).out.Committed? <==>
+    |                                                   ^^^^
+
+src/SinkCoreV3.dfy(237,22): Error: index out of range
+    |
+237 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                       ^
+
+src/SinkCoreV3.dfy(237,59): Error: possible violation of postcondition of forall statement
+    |
+237 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                            ^
+
+src/SinkCoreV3.dfy(237,66): Error: index out of range
+    |
+237 |         ensures s'.log[i] == ClaimOf(toks'[i]) && VerifyTag(s'.log[i], toks'[i].sig)
+    |                                                                   ^
+
+src/SinkCoreV3.dfy(242,23): Error: index out of range
+    |
+242 |           assert s'.log[i] == c && toks'[i] == tok;
+    |                        ^
+
+src/SinkCoreV3.dfy(467,2): Error: a postcondition could not be proved on this return path
+    |
+467 |   {
+    |   ^
+
+src/SinkCoreV3.dfy(459,12): Related location: this is the postcondition that could not be proved
+    |
+459 |             var bad := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_body", c0.(remaining := 90),
+    |             ^^^
+
+src/SinkCoreV3.dfy(477,2): Error: a postcondition could not be proved on this return path
+    |
+477 |   {
+    |   ^
+
+src/SinkCoreV3.dfy(473,12): Related location: this is the postcondition that could not be proved
+    |
+473 |             var t := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_x", c0.(chargeId := "ch_2", remaining := 90),
+    |             ^^^
+
+src/SinkCoreV3.dfy(492,2): Error: a postcondition could not be proved on this return path
+    |
+492 |   {
+    |   ^
+
+src/SinkCoreV3.dfy(484,12): Related location: this is the postcondition that could not be proved
+    |
+484 |             var foreign := SinkToken(PINNED_SPEC, PINNED_CHK, c0, "rq_y", Charge2(),
+    |             ^^^
+
+src/SliceSafetyV3.dfy(347,28): Error: assertion might not hold
+    |
+347 |           assert CommittedAt(init, acts, n - 1, i);
+    |                             ^
+
+src/SliceSafetyV3.dfy(207,23): Related location: this proposition could not be proved
+    |
+207 |     before.core.charge == acts[k].tok.pre &&
+    |                        ^^
+
+src/SliceSafetyV3.dfy(347,28): Error: assertion might not hold
+    |
+347 |           assert CommittedAt(init, acts, n - 1, i);
+    |                             ^
+
+src/SliceSafetyV3.dfy(208,26): Related location: this proposition could not be proved
+    |
+208 |     acts[k].tok.requestId !in before.core.settled &&
+    |                           ^^^
+
+KeyedStore.dfy(465,8): Error: Verification out of resource (KeyedWitness.KTrace)
+    |
+465 |   lemma KTrace()
+    |         ^^^^^^
+
+Restart.dfy(766,2): Error: a postcondition could not be proved on this return path
+    |
+766 |   {
+    |   ^
+
+Restart.dfy(764,43): Related location: this is the postcondition that could not be proved
+    |
+764 |     ensures Step(Core1(), V_TOK, true).out == Rejected(RequestSettled)
+    |                                            ^^
+
+src/SliceSafetyV3.dfy(899,2): Error: a postcondition could not be proved on this return path
+    |
+899 |   {
+    |   ^
+
+src/SliceSafetyV3.dfy(894,97): Related location: this is the postcondition that could not be proved
+    |
+894 |     ensures !Step(Exec(W_PRE, MainActs()[..k]).core, MainActs()[k].tok, MainActs()[k].sigOk).out.Committed?
+    |                                                                                                  ^^^^^^^^^^
+
+src/SliceSafetyV3.dfy(1009,8): Error: Verification out of resource (SliceWitnessV3.FaultyTrace)
+     |
+1009 |   lemma FaultyTrace()
+     |         ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 1807 verified, 17 errors, 2 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-restart/logs/C3-KeyedStore-incl.csv
+       65.77 real        48.01 user         3.76 sys
+           413433856  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               95248  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  14  signals received
+                5492  voluntary context switches
+              348051  involuntary context switches
+        425170158908  instructions retired
+        158103757896  cycles elapsed
+           380077424  peak memory footprint
+# end=2026-11-19T10:04:31Z
+exit 4

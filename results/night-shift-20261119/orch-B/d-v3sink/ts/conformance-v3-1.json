@@ -1,0 +1,2773 @@
+{
+ "unexpected": 0,
+ "report": [
+  {
+   "case": "honest commit",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "replay of the same text",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "replayed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "replayed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "replayed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "replayed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "same request id, other token",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "request id is already settled with another token"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "request id is already settled with another token"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "request id is already settled with another token"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "request id is already settled with another token"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "stale pre-state",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "chain of two",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"850\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ],
+       [
+        "rq_2",
+        "26806acd8a5efa4144d40c4a9a271c98e8c39aae6742014ae723ab06ac6ca20c"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ],
+       [
+        "rq_2",
+        "{\"amount\":\"50\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"850\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ],
+       [
+        "rq_2",
+        "26806acd8a5efa4144d40c4a9a271c98e8c39aae6742014ae723ab06ac6ca20c"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ],
+       [
+        "rq_2",
+        "{\"amount\":\"50\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"850\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ],
+       [
+        "rq_2",
+        "26806acd8a5efa4144d40c4a9a271c98e8c39aae6742014ae723ab06ac6ca20c"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ],
+       [
+        "rq_2",
+        "{\"amount\":\"50\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"850\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ],
+       [
+        "rq_2",
+        "26806acd8a5efa4144d40c4a9a271c98e8c39aae6742014ae723ab06ac6ca20c"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ],
+       [
+        "rq_2",
+        "{\"amount\":\"50\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "bad signature (flipped byte)",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "attacker key",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "wrong spec lock id",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "spec lock is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "spec lock is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "spec lock is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "spec lock is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "wrong checker id",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "checker is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "checker is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "checker is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "checker is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "wrong spec and checker ids",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "spec lock is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "spec lock is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "spec lock is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "spec lock is not the pinned one"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "request-id mismatch, then the victim id",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": false,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"800\"}",
+      "settled": [
+       [
+        "rq_body",
+        "0ee3782ad0b899149603c16c4be13dd6281f362515e625d6ca53c1973e15c610"
+       ],
+       [
+        "rq_victim",
+        "73df20c60e78aad86e023e96202a135d6498c12b4eefc16a1d83ea45aa570887"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_body",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+       ],
+       [
+        "rq_victim",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "request id is not the intent's request id"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "request id is not the intent's request id"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "request id is not the intent's request id"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "NEW intent for a foreign charge",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "8d0066349307c725612cacea18b88613b25982b3daa3bf9baf857c37afe5c2a8"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "charge id is not the stored charge id"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "8d0066349307c725612cacea18b88613b25982b3daa3bf9baf857c37afe5c2a8"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "charge id is not the stored charge id"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "NEW post-state with a foreign charge id, then honest ch_1 token",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_other\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_fp",
+        "86d23279248220f675b27d682951e151d5fb5c9801e6e341720c07390df7aa7b"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_fp",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_fp\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "charge id is not the stored charge id"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "rejected",
+       "reason": "stored state is not the token's pre-state"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_other\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_fp",
+        "86d23279248220f675b27d682951e151d5fb5c9801e6e341720c07390df7aa7b"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_fp",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_fp\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "charge id is not the stored charge id"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "NEW intent and post for a foreign charge",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_other\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "32d7be27ca5bf388f5a17f621606fa409c804cf4eb6768364d0dbcbcc8a6de9b"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "charge id is not the stored charge id"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_other\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "32d7be27ca5bf388f5a17f621606fa409c804cf4eb6768364d0dbcbcc8a6de9b"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "charge id is not the stored charge id"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "zero amount commits (right charge)",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "two zero amounts, distinct ids, same pre-state",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ],
+       [
+        "rq_z2",
+        "b7ba4856969da76b8ed348b158fa8bc045dabc706b9fe7fc44505f2405aaf41b"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ],
+       [
+        "rq_z2",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ],
+       [
+        "rq_z2",
+        "b7ba4856969da76b8ed348b158fa8bc045dabc706b9fe7fc44505f2405aaf41b"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ],
+       [
+        "rq_z2",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ],
+       [
+        "rq_z2",
+        "b7ba4856969da76b8ed348b158fa8bc045dabc706b9fe7fc44505f2405aaf41b"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ],
+       [
+        "rq_z2",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ],
+       [
+        "rq_z2",
+        "b7ba4856969da76b8ed348b158fa8bc045dabc706b9fe7fc44505f2405aaf41b"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ],
+       [
+        "rq_z2",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "NEW zero amount for a foreign charge, then zero for ch_1",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_zf",
+        "75e00dee41939995a6713ea4a82d6cbcdf6bb19f53cc390cca2fd76ca346402c"
+       ],
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_zf",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_zf\"}"
+       ],
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "charge id is not the stored charge id"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_zf",
+        "75e00dee41939995a6713ea4a82d6cbcdf6bb19f53cc390cca2fd76ca346402c"
+       ],
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_zf",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_zf\"}"
+       ],
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "charge id is not the stored charge id"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [
+       [
+        "rq_z1",
+        "87a28a25e5f4fb3aeedef8d7ca2115e475d549af483ce3ac77500b155ecd2b14"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_z1",
+        "{\"amount\":\"0\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_z1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "fault between writes, then retry",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "transaction failed: injected fault between writes"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "transaction failed: injected fault between writes"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "transaction failed: injected fault between writes"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "transaction failed: injected fault between writes"
+      },
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settled": [
+       [
+        "rq_1",
+        "c0c8d22013b4da7cef5744f4b3527a8a5a35e7c0827a829aab605afa9dd4def5"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_1",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_1\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "fault between writes only (store must stay S0)",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "transaction failed: injected fault between writes"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "transaction failed: injected fault between writes"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "transaction failed: injected fault between writes"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "transaction failed: injected fault between writes"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "non-canonical text",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token text is not canonical"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token text is not canonical"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token text is not canonical"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token text is not canonical"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "not a text",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token is not a text"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token is not a text"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token is not a text"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token is not a text"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "no stored state",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "the sink has no stored state"
+      }
+     ],
+     "store": {
+      "state": "<none>",
+      "settled": [],
+      "outbox": [],
+      "audit": "<no state>"
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "the sink has no stored state"
+      }
+     ],
+     "store": {
+      "state": "<none>",
+      "settled": [],
+      "outbox": [],
+      "audit": "<no state>"
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "the sink has no stored state"
+      }
+     ],
+     "store": {
+      "state": "<none>",
+      "settled": [],
+      "outbox": [],
+      "audit": "<no state>"
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "the sink has no stored state"
+      }
+     ],
+     "store": {
+      "state": "<none>",
+      "settled": [],
+      "outbox": [],
+      "audit": "<no state>"
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "no stored state, bad signature",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "<none>",
+      "settled": [],
+      "outbox": [],
+      "audit": "<no state>"
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "<none>",
+      "settled": [],
+      "outbox": [],
+      "audit": "<no state>"
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "<none>",
+      "settled": [],
+      "outbox": [],
+      "audit": "<no state>"
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "signature does not verify"
+      }
+     ],
+     "store": {
+      "state": "<none>",
+      "settled": [],
+      "outbox": [],
+      "audit": "<no state>"
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "amount 2^63 on a 19-digit charge",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_big\",\"original\":\"9999999999999999999\",\"refundEnabled\":true,\"remaining\":\"776627963145224191\"}",
+      "settled": [
+       [
+        "rq_big",
+        "c27039f08ca51004a59d1e6e4ec9d000b7177bb667e0ea16f5370dc6177a1d60"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_big",
+        "{\"amount\":\"9223372036854775808\",\"chargeId\":\"ch_big\",\"reason\":\"returned_item\",\"requestId\":\"rq_big\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_big\",\"original\":\"9999999999999999999\",\"refundEnabled\":true,\"remaining\":\"776627963145224191\"}",
+      "settled": [
+       [
+        "rq_big",
+        "c27039f08ca51004a59d1e6e4ec9d000b7177bb667e0ea16f5370dc6177a1d60"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_big",
+        "{\"amount\":\"9223372036854775808\",\"chargeId\":\"ch_big\",\"reason\":\"returned_item\",\"requestId\":\"rq_big\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_big\",\"original\":\"9999999999999999999\",\"refundEnabled\":true,\"remaining\":\"776627963145224191\"}",
+      "settled": [
+       [
+        "rq_big",
+        "c27039f08ca51004a59d1e6e4ec9d000b7177bb667e0ea16f5370dc6177a1d60"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_big",
+        "{\"amount\":\"9223372036854775808\",\"chargeId\":\"ch_big\",\"reason\":\"returned_item\",\"requestId\":\"rq_big\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_big\",\"original\":\"9999999999999999999\",\"refundEnabled\":true,\"remaining\":\"776627963145224191\"}",
+      "settled": [
+       [
+        "rq_big",
+        "c27039f08ca51004a59d1e6e4ec9d000b7177bb667e0ea16f5370dc6177a1d60"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_big",
+        "{\"amount\":\"9223372036854775808\",\"chargeId\":\"ch_big\",\"reason\":\"returned_item\",\"requestId\":\"rq_big\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "non-BMP request ids",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      },
+      {
+       "status": "replayed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"980\"}",
+      "settled": [
+       [
+        "rq_😀",
+        "c443085e49133130b0ddea4649bd67a1dcd2ccecbaca54d432b5d6a5ff37f003"
+       ],
+       [
+        "rq_😁",
+        "c1b36951c90f0618fb194887e2398babb044e81d78e13628c49ee0a6251bc093"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_😀",
+        "{\"amount\":\"10\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_😀\"}"
+       ],
+       [
+        "rq_😁",
+        "{\"amount\":\"10\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_😁\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      },
+      {
+       "status": "replayed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"980\"}",
+      "settled": [
+       [
+        "rq_😀",
+        "c443085e49133130b0ddea4649bd67a1dcd2ccecbaca54d432b5d6a5ff37f003"
+       ],
+       [
+        "rq_😁",
+        "c1b36951c90f0618fb194887e2398babb044e81d78e13628c49ee0a6251bc093"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_😀",
+        "{\"amount\":\"10\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_😀\"}"
+       ],
+       [
+        "rq_😁",
+        "{\"amount\":\"10\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_😁\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      },
+      {
+       "status": "replayed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"980\"}",
+      "settled": [
+       [
+        "rq_😀",
+        "c443085e49133130b0ddea4649bd67a1dcd2ccecbaca54d432b5d6a5ff37f003"
+       ],
+       [
+        "rq_😁",
+        "c1b36951c90f0618fb194887e2398babb044e81d78e13628c49ee0a6251bc093"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_😀",
+        "{\"amount\":\"10\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_😀\"}"
+       ],
+       [
+        "rq_😁",
+        "{\"amount\":\"10\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_😁\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "committed"
+      },
+      {
+       "status": "committed"
+      },
+      {
+       "status": "replayed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"980\"}",
+      "settled": [
+       [
+        "rq_😀",
+        "c443085e49133130b0ddea4649bd67a1dcd2ccecbaca54d432b5d6a5ff37f003"
+       ],
+       [
+        "rq_😁",
+        "c1b36951c90f0618fb194887e2398babb044e81d78e13628c49ee0a6251bc093"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_😀",
+        "{\"amount\":\"10\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_😀\"}"
+       ],
+       [
+        "rq_😁",
+        "{\"amount\":\"10\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_😁\"}"
+       ]
+      ],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "lone surrogate request id (decoder refuses)",
+   "v3EqualsHand": true,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token shape"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token shape"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token shape"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [],
+     "results": [
+      {
+       "status": "rejected",
+       "reason": "token shape"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settled": [],
+      "outbox": [],
+      "audit": []
+     }
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "NEW audit-fail store: outbox row rq_victim not settled (old gap), then honest rq_victim",
+   "v3EqualsHand": false,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [
+      {
+       "status": "committed"
+      }
+     ],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"800\"}",
+      "settled": [
+       [
+        "rq_body",
+        "0ee3782ad0b899149603c16c4be13dd6281f362515e625d6ca53c1973e15c610"
+       ],
+       [
+        "rq_victim",
+        "73df20c60e78aad86e023e96202a135d6498c12b4eefc16a1d83ea45aa570887"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_body",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+       ],
+       [
+        "rq_victim",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [
+      {
+       "status": "committed"
+      }
+     ],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"800\"}",
+      "settled": [
+       [
+        "rq_body",
+        "0ee3782ad0b899149603c16c4be13dd6281f362515e625d6ca53c1973e15c610"
+       ],
+       [
+        "rq_victim",
+        "73df20c60e78aad86e023e96202a135d6498c12b4eefc16a1d83ea45aa570887"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_body",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+       ],
+       [
+        "rq_victim",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+       ]
+      ],
+      "audit": [
+       "row 1: request id"
+      ]
+     }
+    },
+    "draft-reqid": {
+     "prep": [
+      {
+       "status": "committed"
+      }
+     ],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"800\"}",
+      "settled": [
+       [
+        "rq_body",
+        "0ee3782ad0b899149603c16c4be13dd6281f362515e625d6ca53c1973e15c610"
+       ],
+       [
+        "rq_victim",
+        "73df20c60e78aad86e023e96202a135d6498c12b4eefc16a1d83ea45aa570887"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_body",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+       ],
+       [
+        "rq_victim",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_victim\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [
+      {
+       "status": "committed"
+      }
+     ],
+     "refused": "v3 sink refuses to serve: start-up audit AuditStart is false on the stored state (deployment precondition GoodStart)"
+    }
+   },
+   "expect": true
+  },
+  {
+   "case": "NEW audit-fail store: outbox row for foreign charge ch_other, then honest ch_1 token",
+   "v3EqualsHand": false,
+   "reqidEqualsReal": true,
+   "per": {
+    "real": {
+     "prep": [
+      {
+       "status": "committed"
+      }
+     ],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"850\"}",
+      "settled": [
+       [
+        "rq_f",
+        "6b411fe3cd8b13f8fbe7448366be0680f706d0779857d5af0aaf0390d4168244"
+       ],
+       [
+        "rq_2",
+        "26806acd8a5efa4144d40c4a9a271c98e8c39aae6742014ae723ab06ac6ca20c"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_f",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_f\"}"
+       ],
+       [
+        "rq_2",
+        "{\"amount\":\"50\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "hand-v3": {
+     "prep": [
+      {
+       "status": "committed"
+      }
+     ],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"850\"}",
+      "settled": [
+       [
+        "rq_f",
+        "6b411fe3cd8b13f8fbe7448366be0680f706d0779857d5af0aaf0390d4168244"
+       ],
+       [
+        "rq_2",
+        "26806acd8a5efa4144d40c4a9a271c98e8c39aae6742014ae723ab06ac6ca20c"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_f",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_f\"}"
+       ],
+       [
+        "rq_2",
+        "{\"amount\":\"50\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-reqid": {
+     "prep": [
+      {
+       "status": "committed"
+      }
+     ],
+     "results": [
+      {
+       "status": "committed"
+      }
+     ],
+     "store": {
+      "state": "{\"chargeId\":\"ch_1\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"850\"}",
+      "settled": [
+       [
+        "rq_f",
+        "6b411fe3cd8b13f8fbe7448366be0680f706d0779857d5af0aaf0390d4168244"
+       ],
+       [
+        "rq_2",
+        "26806acd8a5efa4144d40c4a9a271c98e8c39aae6742014ae723ab06ac6ca20c"
+       ]
+      ],
+      "outbox": [
+       [
+        "rq_f",
+        "{\"amount\":\"100\",\"chargeId\":\"ch_other\",\"reason\":\"returned_item\",\"requestId\":\"rq_f\"}"
+       ],
+       [
+        "rq_2",
+        "{\"amount\":\"50\",\"chargeId\":\"ch_1\",\"reason\":\"returned_item\",\"requestId\":\"rq_2\"}"
+       ]
+      ],
+      "audit": []
+     }
+    },
+    "draft-v3": {
+     "prep": [
+      {
+       "status": "committed"
+      }
+     ],
+     "refused": "v3 sink refuses to serve: start-up audit AuditStart is false on the stored state (deployment precondition GoodStart)"
+    }
+   },
+   "expect": true
+  }
+ ]
+}

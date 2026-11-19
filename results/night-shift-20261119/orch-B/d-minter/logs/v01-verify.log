@@ -1,0 +1,54 @@
+# owner=d-minter start=2026-11-19T09:51:10Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-minter/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1333
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-minter/logs/v01-verify.csv IssueBytes2.dfy
+# memory free percent: 38
+IssueBytes2.dfy(82,4): Error: a postcondition could not be proved on this return path
+   |
+82 |     if |a| > 0 {
+   |     ^^^^^^^^^^^^
+
+IssueBytes2.dfy(79,27): Related location: this is the postcondition that could not be proved
+   |
+79 |     ensures SM.Utf8(a + b) == SM.Utf8(a) + SM.Utf8(b)
+   |                            ^^
+
+IssueBytes2.dfy(156,8): Error: Verification out of resource (IssueBytes2.TextWitness)
+    |
+156 |   lemma TextWitness()
+    |         ^^^^^^^^^^^
+
+IssueBytes2.dfy(168,9): Error: Verification out of resource (IssueBytes2.WitnessIssue)
+    |
+168 |   method WitnessIssue() returns (r: SM.Option<seq<uint8>>)
+    |          ^^^^^^^^^^^^
+
+IssueBytes2.dfy(174,9): Error: Verification out of resource (IssueBytes2.WitnessZero)
+    |
+174 |   method WitnessZero() returns (r: SM.Option<seq<uint8>>)
+    |          ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 118 verified, 1 error, 3 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-minter/logs/v01-verify.csv
+        8.04 real         6.46 user         0.54 sys
+           163414016  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               28300  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 591  voluntary context switches
+               28043  involuntary context switches
+         53369368691  instructions retired
+         21572732020  cycles elapsed
+           161334472  peak memory footprint
+# end=2026-11-19T09:51:18Z
+exit 4

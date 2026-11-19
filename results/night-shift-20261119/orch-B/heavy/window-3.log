@@ -1,0 +1,23 @@
+# start 2026-11-19T10:03:01Z swap free 560 MiB memory free 68 %
+sinkcore-v3.cjs cb-v3 plain n=2000 allowed= start=2026-11-19T10:03:01Z end=2026-11-19T10:03:18Z exit 0
+sinkcore-v3.cjs cb-v3 fault-1 n=500 allowed= start=2026-11-19T10:03:18Z end=2026-11-19T10:03:23Z exit 0
+sinkcore-v3.cjs cb-v3 fault-2 n=500 allowed= start=2026-11-19T10:03:23Z end=2026-11-19T10:03:28Z exit 0
+sinkcore-v3.cjs cb-v3 interleave n=500 allowed= start=2026-11-19T10:03:28Z end=2026-11-19T10:03:33Z exit 0
+sinkcore-v3.cjs hand-v3 plain n=2000 allowed= start=2026-11-19T10:03:33Z end=2026-11-19T10:03:49Z exit 0
+sinkcore-v3.cjs hand-v3 fault-1 n=500 allowed= start=2026-11-19T10:03:49Z end=2026-11-19T10:03:53Z exit 0
+sinkcore-v3.cjs hand-v3 fault-2 n=500 allowed= start=2026-11-19T10:03:53Z end=2026-11-19T10:03:58Z exit 0
+sinkcore-v3.cjs hand-v3 interleave n=500 allowed= start=2026-11-19T10:03:58Z end=2026-11-19T10:04:03Z exit 0
+sinkcore-v3.cjs real plain n=2000 allowed=foreign-charge-intent,foreign-charge-post,reqid-mismatch start=2026-11-19T10:04:03Z end=2026-11-19T10:04:17Z exit 3
+sinkcore-v3.cjs real fault-1 n=500 allowed=foreign-charge-intent,foreign-charge-post,reqid-mismatch start=2026-11-19T10:04:17Z end=2026-11-19T10:04:20Z exit 1
+sinkcore-v3.cjs real fault-2 n=500 allowed=foreign-charge-intent,foreign-charge-post,reqid-mismatch start=2026-11-19T10:04:20Z end=2026-11-19T10:04:24Z exit 3
+sinkcore-v3.cjs real interleave n=500 allowed=foreign-charge-intent,foreign-charge-post,reqid-mismatch start=2026-11-19T10:04:24Z end=2026-11-19T10:04:28Z exit 3
+sinkcore-v3.cjs patched-reqid plain n=2000 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T10:04:28Z end=2026-11-19T10:04:43Z exit 3
+sinkcore-v3.cjs patched-reqid fault-1 n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T10:04:43Z end=2026-11-19T10:04:47Z exit 1
+sinkcore-v3.cjs patched-reqid fault-2 n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T10:04:47Z end=2026-11-19T10:04:51Z exit 3
+sinkcore-v3.cjs patched-reqid interleave n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T10:04:51Z end=2026-11-19T10:04:55Z exit 3
+sinkcore-reqid.cjs cb-v3 plain n=2000 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T10:04:55Z end=2026-11-19T10:05:09Z exit 3
+sinkcore-reqid.cjs cb-v3 fault-1 n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T10:05:09Z end=2026-11-19T10:05:13Z exit 3
+sinkcore-reqid.cjs cb-v3 fault-2 n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T10:05:14Z end=2026-11-19T10:05:18Z exit 3
+sinkcore-reqid.cjs cb-v3 interleave n=500 allowed=foreign-charge-intent,foreign-charge-post start=2026-11-19T10:05:18Z end=2026-11-19T10:05:23Z exit 3
+# heavy_v3 exit 0 end 2026-11-19T10:05:23Z
+window exit 0

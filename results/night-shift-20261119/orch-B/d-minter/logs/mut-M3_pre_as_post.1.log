@@ -1,0 +1,33 @@
+# owner=d-minter start=2026-11-19T09:59:35Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-minter/src/mutants
+# power: Now drawing from 'AC Power'
+# swap free MiB: 544
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects M3_pre_as_post.dfy
+# memory free percent: 51
+M3_pre_as_post.dfy(128,9): Error: Verification out of resource (IssueBytes2.IssueTokenBytes)
+    |
+128 |   method IssueTokenBytes(pre: F.Charge, t: F.Transition, specHex: string, checkerHex: string, preHashHex: string)
+    |          ^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 130 verified, 0 errors, 1 out of resource
+        7.61 real         6.44 user         0.46 sys
+           197771264  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22083  page reclaims
+                 102  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 639  voluntary context switches
+               22095  involuntary context switches
+         54617495414  instructions retired
+         21247410579  cycles elapsed
+           179766496  peak memory footprint
+# end=2026-11-19T09:59:42Z
+exit 4

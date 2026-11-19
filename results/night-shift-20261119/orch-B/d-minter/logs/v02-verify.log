@@ -1,0 +1,39 @@
+# owner=d-minter start=2026-11-19T09:51:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-minter/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1333
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-minter/logs/v02-verify.csv IssueBytes2.dfy
+# memory free percent: 38
+IssueBytes2.dfy(183,9): Error: Verification out of resource (IssueBytes2.WitnessIssue)
+    |
+183 |   method WitnessIssue() returns (r: SM.Option<seq<uint8>>)
+    |          ^^^^^^^^^^^^
+
+IssueBytes2.dfy(191,9): Error: Verification out of resource (IssueBytes2.WitnessZero)
+    |
+191 |   method WitnessZero() returns (r: SM.Option<seq<uint8>>)
+    |          ^^^^^^^^^^^
+
+
+Dafny program verifier finished with 124 verified, 0 errors, 2 out of resource
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-minter/logs/v02-verify.csv
+        8.85 real         6.58 user         1.17 sys
+           174047232  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22771  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 542  voluntary context switches
+              135447  involuntary context switches
+         55107391597  instructions retired
+         23287702086  cycles elapsed
+           159843600  peak memory footprint
+# end=2026-11-19T09:52:05Z
+exit 4

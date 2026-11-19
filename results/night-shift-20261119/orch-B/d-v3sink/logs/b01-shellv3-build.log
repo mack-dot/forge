@@ -1,0 +1,29 @@
+# owner=d-v3sink start=2026-11-19T09:57:43Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v3sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 536
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny build --target js --output <REPO>/results/night-shift-20261119/orch-B/d-v3sink/build/shellcore-v3.js --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-v3sink/logs/b01-shellv3-build.csv ShellCoreV3.dfy
+# memory free percent: 56
+
+Dafny program verifier finished with 94 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-v3sink/logs/b01-shellv3-build.csv
+        6.85 real         8.88 user         0.47 sys
+           219480064  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40124  page reclaims
+                1041  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  17  signals received
+                1169  voluntary context switches
+               18558  involuntary context switches
+         56860610749  instructions retired
+         22968074406  cycles elapsed
+           220398816  peak memory footprint
+# end=2026-11-19T09:57:50Z
+exit 0

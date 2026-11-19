@@ -1,0 +1,44 @@
+# owner=r-restart start=2026-11-19T10:02:20Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-restart/controls/C2-step-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 560
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-restart/logs/C2-KeyedStore.csv KeyedStore.dfy
+# memory free percent: 68
+KeyedStore.dfy(158,2): Error: a postcondition could not be proved on this return path
+    |
+158 |   {
+    |   ^
+
+KeyedStore.dfy(154,62): Related location: this is the postcondition that could not be proved
+    |
+154 |             "db_a" in st && "db_b" in st && st["db_a"].outbox == [DupToken().intent] &&
+    |                                                               ^^
+
+KeyedStore.dfy(478,4): Error: assertion might not hold
+    |
+478 |     assert Step(c0, V0_TOK, true).core == c1;
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 35 verified, 2 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-restart/logs/C2-KeyedStore.csv
+        9.96 real        10.50 user         0.35 sys
+           344342528  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39682  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 436  voluntary context switches
+                8085  involuntary context switches
+         97493186109  instructions retired
+         33648865461  cycles elapsed
+           311018840  peak memory footprint
+# end=2026-11-19T10:02:30Z
+exit 4

@@ -1,0 +1,29 @@
+# owner=r-restart start=2026-11-19T09:54:27Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-restart/work
+# power: Now drawing from 'AC Power'
+# swap free MiB: 520
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/r-restart/logs/verify-Restart-01.csv Restart.dfy
+# memory free percent: 61
+
+Dafny program verifier finished with 1686 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/r-restart/logs/verify-Restart-01.csv
+       46.45 real        33.10 user         2.76 sys
+           580255744  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               66343  page reclaims
+                  35  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  18  signals received
+                4127  voluntary context switches
+              170166  involuntary context switches
+        295173719350  instructions retired
+        111761072885  cycles elapsed
+           546981376  peak memory footprint
+# end=2026-11-19T09:55:14Z
+exit 0

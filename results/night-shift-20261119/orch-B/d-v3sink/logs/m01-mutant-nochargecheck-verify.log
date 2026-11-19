@@ -1,0 +1,69 @@
+# owner=d-v3sink start=2026-11-19T09:55:14Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v3sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 520
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-v3sink/logs/m01-mutant-nochargecheck-verify.csv Mutant_ShellNoChargeCheck.dfy
+# memory free percent: 65
+Mutant_ShellNoChargeCheck.dfy(57,2): Error: a postcondition could not be proved on this return path
+   |
+57 |   {
+   |   ^
+
+Mutant_ShellNoChargeCheck.dfy(56,54): Related location: this is the postcondition that could not be proved
+   |
+56 |     ensures StepP(core, t, sigOk, core.charge == pre) == C.Step(core, Full(t, pre), sigOk)
+   |                                                       ^^
+
+Mutant_ShellNoChargeCheck.dfy(73,2): Error: a postcondition could not be proved on this return path
+   |
+73 |   {
+   |   ^
+
+Mutant_ShellNoChargeCheck.dfy(70,56): Related location: this is the postcondition that could not be proved
+   |
+70 |     ensures StepP(core, t, sigOk, preOk).out.Committed? <==>
+   |                                                         ^^^^
+
+Mutant_ShellNoChargeCheck.dfy(92,2): Error: a postcondition could not be proved on this return path
+   |
+92 |   {
+   |   ^
+
+Mutant_ShellNoChargeCheck.dfy(91,12): Related location: this is the postcondition that could not be proved
+   |
+91 |     ensures !StepP(core, t, sigOk, preOk).out.Committed? && StepP(core, t, sigOk, preOk).core == core
+   |             ^
+
+Mutant_ShellNoChargeCheck.dfy(123,2): Error: a postcondition could not be proved on this return path
+    |
+123 |   {
+    |   ^
+
+Mutant_ShellNoChargeCheck.dfy(112,12): Related location: this is the postcondition that could not be proved
+    |
+112 |             var t1 := ShellToken(C.PINNED_SPEC, C.PINNED_CHK, "rq_1", F.Charge("ch_1", 1000, 900, true),
+    |             ^^^
+
+
+Dafny program verifier finished with 75 verified, 4 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-v3sink/logs/m01-mutant-nochargecheck-verify.csv
+        5.54 real         5.41 user         0.26 sys
+           226066432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20153  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   3  signals received
+                 310  voluntary context switches
+               10107  involuntary context switches
+         47949237334  instructions retired
+         17641622544  cycles elapsed
+           192709880  peak memory footprint
+# end=2026-11-19T09:55:19Z
+exit 4
