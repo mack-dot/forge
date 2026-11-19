@@ -18489,3 +18489,29 @@ curl: (6) Could not resolve host: github.com
   dispatch; it showed that a caller could misread code 18 and exit
   code 0.
 - Next check: the owner's decision on codes 19 and 20.
+
+## U705 — goal 19: the regression in a scratch clone of the first commit; what the second commit holds
+
+- Status: 2026-11-19. Refs U703, U704. Record:
+  `proposals/forge2-native-silicon-sink/records/regression.json`.
+- Actual, on a fresh clone of commit `a51984bb` (merge base with
+  `origin/main`: `b9f2831c`): 28 of 28 Stage EXIT cases exit 0
+  (Stages 1, 2, 3, 4, 5, 6, 8, 11); `check_frozen_pr_gate.py HEAD`
+  exit 0; `check_links.py` exit 0 for `FORGE_MASTER_IDEA.md`,
+  `ROADMAP.md`, `unsure.md` and the report; the EXIT scripts of Slices
+  1 to 3 and of the M1 conformance, each `--case evidence`: exit 0,
+  bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`
+  byte-identical to the tracked records; `scripts/exit_silicon_sink.py
+  --case evidence`: exit 0, bundle `1f569fcf…` byte-identical to the
+  tracked record. 0 protected paths among the 13 changed files.
+- NOT RUN: Stage 7, Stage 9, Stage 10, any HOL or Holmake process.
+- The second commit changes documents only (the report, this entry,
+  one row of `ROADMAP.md`, the regression record). The regression did
+  not run again on it. The push, the pull request and the hosted gate
+  come after it; their results are not in this file yet.
+- Pull request 58 was still OPEN when this was written; the owner said
+  not to wait for it (U700). Pull requests 60 and 61 were closed by
+  then.
+- Impact: none on any stage label. M1 open. `end_to_end=false`.
+- Next check: the hosted `gate/pr_check.py` on the pull request
+  (expected exit 3, UNSUPPORTED); then the owner's review.

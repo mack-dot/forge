@@ -11,7 +11,7 @@ A SIGKILL is not a power loss.
 
 Directive and owner decisions: [OWNER_TEXTS.md](OWNER_TEXTS.md).
 Review and its disposition: [REVIEW.md](REVIEW.md).
-Entries: `unsure.md` U700 to U704.
+Entries: `unsure.md` U700 to U705.
 
 ## 1. What was built
 
@@ -318,7 +318,23 @@ The repairs were NOT reviewed again.
 
 ## 10. After the commit: scratch clone, pull request, hosted gate
 
-NOT RUN at the time of the first commit of this work: the regression
-in a scratch clone, the push, the pull request and the hosted gate. A
-second commit, which changes documents only, puts their actual
-results here and in `records/regression.json`.
+The first commit of this work is `a51984bb`. The regression ran on a
+fresh scratch clone of exactly that commit
+(`run_regression.py`; record `records/regression.json`). The second
+commit holds this section, the regression record, entry U705 and one
+changed row of `ROADMAP.md`: documents only.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 proposals/forge2-native-silicon-sink/run_regression.py <new clone> <record>` |0|clone of `a51984bb`; merge base with `origin/main`: `b9f2831c` |
+| Stage EXIT cases in the clone: Stages 1, 2, 3, 5, 6, 8 (22); Stage 4 (3); Stage 11 (3) |0 each|28 of 28 |
+| `check_frozen_pr_gate.py HEAD` in the clone |0|the eight frozen modules are unchanged |
+| `check_links.py` for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, this report |0; 0; 0; 0|no link without a target |
+| `scripts/exit_slice1.py`, `exit_slice2.py`, `exit_slice3.py`, `exit_m1_conformance.py`, each `--case evidence`, in the clone |0; 0; 0; 0|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`: byte-identical to the tracked records |
+| `scripts/exit_silicon_sink.py --case evidence` in the clone |0|bundle `1f569fcf…`: byte-identical to the tracked record (third and fourth full run of the suite and of the 49 changed copies) |
+| protected paths among the 13 files changed against the merge base |0|`spec/`, `spec.lock`, `policy/`, `governance/gate-ratifications/`, `package.json`, `package-lock.json`, `tsconfig.json`, `gate/`: none |
+| Stage 7; Stage 9; Stage 10; any HOL or Holmake process |NOT RUN|Docker time; deferred; no EXIT script on `main`; not part of this work |
+| the push; the pull request; the hosted `gate/pr_check.py` |NOT RUN at this commit|they follow this commit. Their results are in the pull request and in the final message of the session; a record follows with the next change |
+
+The Stage runs wrote result files under `results/` in the clone only.
+The clone is a throwaway folder; nothing of it is in the repository.
