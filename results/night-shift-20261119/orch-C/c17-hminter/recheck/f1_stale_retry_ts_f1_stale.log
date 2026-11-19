@@ -1,0 +1,4 @@
+f1_stale_retry.ts stale -> EXIT 1
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"mode":"stale","commit2":"committed","commit1":{"status":"rejected","reason":"stored state is not the token's pre-state"},"reproposeR1onS1":"MINTER REFUSED: another candidate is already signed for this request id","controlNewId":"committed"}
+DEFECT PRESENT (exit 1)
