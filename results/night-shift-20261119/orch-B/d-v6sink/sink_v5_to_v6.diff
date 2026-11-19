@@ -1,0 +1,19 @@
+1c1,4
+< // d-v5sink (night shift 2026-11-19, Orchestrator B). A DRAFT PROPOSAL. NOT repository code. NOT approved.
+---
+> // d-v6sink (night shift 2026-11-19, Orchestrator B). A DRAFT PROPOSAL. NOT repository code. NOT approved.
+> // Copy of d-v5sink/sink_core_backed_v5.ts, changed (v6) ONLY in the commit decision: commit() calls the compiled
+> // ShellCoreV6.StepQ6 (= V4 StepQ plus the approved relation AuthorizesX on the STORED charge, checked last) and
+> // labels the new reason RejectNotAuthorized. Everything else (decoder, audit, schema, meta, guard) is v5.
+54,55c57,58
+< const CORE_FILE = __dirname + "/build/shellcore-v5.cjs";
+< type CoreMod = { Shell5: any; Shell4: any; Shell: any; C: any; F: any; R: any; rt: any; BigNumber: any };
+---
+> const CORE_FILE = __dirname + "/build/shellcore-v6.cjs";
+> type CoreMod = { Shell6: any; Shell5: any; Shell4: any; Shell: any; C: any; F: any; R: any; rt: any; BigNumber: any };
+252c255
+<       const q = M.Shell4.__default.StepQ(charge, tok, sigOk, preOk, prior !== undefined);
+---
+>       const q = M.Shell6.__default.StepQ6(charge, tok, sigOk, preOk, prior !== undefined);
+263a267
+>       if (q.is_RejectNotAuthorized) return { status: "rejected", reason: "not authorized by the approved relation for the stored state" };

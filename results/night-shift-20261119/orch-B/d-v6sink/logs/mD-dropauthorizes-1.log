@@ -1,0 +1,88 @@
+# owner=d-v6sink start=2026-11-19T11:51:03Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v6sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1256
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects Mutant_DropAuthorizes.dfy
+# memory free percent: 52
+Mutant_DropAuthorizes.dfy(67,2): Error: a postcondition could not be proved on this return path
+   |
+67 |   {
+   |   ^
+
+Mutant_DropAuthorizes.dfy(66,24): Related location: this is the postcondition that could not be proved
+   |
+66 |     ensures F.Authorizes(charge, V5.TransOf(t))
+   |                         ^
+
+inputs/transport/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
+   |
+31 |     R.Eligible(ContextOf(pre, t.request.requestId), R.Candidate(t.request.amount, t.request.reason)) &&
+   |               ^
+
+Mutant_DropAuthorizes.dfy(67,2): Error: a postcondition could not be proved on this return path
+   |
+67 |   {
+   |   ^
+
+Mutant_DropAuthorizes.dfy(66,24): Related location: this is the postcondition that could not be proved
+   |
+66 |     ensures F.Authorizes(charge, V5.TransOf(t))
+   |                         ^
+
+inputs/transport/impl/RefundFinality.dfy(32,11): Related location: this proposition could not be proved
+   |
+32 |     t.post == pre.(remaining := pre.remaining - t.request.amount) &&
+   |            ^^
+
+Mutant_DropAuthorizes.dfy(78,2): Error: a postcondition could not be proved on this return path
+   |
+78 |   {
+   |   ^
+
+Mutant_DropAuthorizes.dfy(73,55): Related location: this is the postcondition that could not be proved
+   |
+73 |     ensures StepQ6(charge, t, sigOk, preOk, s).Commit? <==>
+   |                                                        ^^^^
+
+Mutant_DropAuthorizes.dfy(99,2): Error: a postcondition could not be proved on this return path
+   |
+99 |   {
+   |   ^
+
+Mutant_DropAuthorizes.dfy(95,106): Related location: this is the postcondition that could not be proved
+   |
+95 |     ensures (V4.StepQ(charge, t, sigOk, preOk, s).Commit? && !StepQ6(charge, t, sigOk, preOk, s).Commit?) <==>
+   |                                                                                                           ^^^^
+
+Mutant_DropAuthorizes.dfy(359,2): Error: a postcondition could not be proved on this return path
+    |
+359 |   {
+    |   ^
+
+Mutant_DropAuthorizes.dfy(351,103): Related location: this is the postcondition that could not be proved
+    |
+351 |             V4.StepQ(Ch(1000), t, true, true, false).Commit? && StepQ6(Ch(1000), t, true, true, false) == RejectNotAuthorized
+    |                                                                                                        ^^
+
+
+Dafny program verifier finished with 188 verified, 5 errors
+       14.60 real        11.11 user         1.09 sys
+           228327424  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               36243  page reclaims
+                 715  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  10  signals received
+                1138  voluntary context switches
+              226092  involuntary context switches
+         91282156136  instructions retired
+         36418073779  cycles elapsed
+           211158288  peak memory footprint
+# end=2026-11-19T11:51:18Z
+exit 4

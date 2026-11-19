@@ -1,0 +1,23 @@
+# start=2026-11-19T12:00:34Z cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/d-v6sink/ts/probe_scale_v6.ts <REPO>/results/night-shift-20261119/orch-B/d-v6sink/work-scale 20000
+{"which":"v6","n":20000,"setupMs":1239.2,"startAuditMs":2742,"perRowAuditUs":137,"commit1Ms":1.4,"commit2Ms":1.1,"commitAfterOtherWriterMs":2594.7,"commitNextMs":0.8,"statuses":"committed,committed,committed,committed","reaudits":1,"rssMB":122}
+(node:7376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+        9.40 real         9.25 user         0.22 sys
+           132120576  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               13259  page reclaims
+                 109  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                  42  messages sent
+                  42  messages received
+                   9  signals received
+                 188  voluntary context switches
+               10807  involuntary context switches
+         87352252823  instructions retired
+         28860439904  cycles elapsed
+           117356152  peak memory footprint
+exit 0

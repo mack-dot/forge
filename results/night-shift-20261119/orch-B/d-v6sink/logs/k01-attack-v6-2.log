@@ -1,0 +1,44 @@
+# start=2026-11-19T12:00:31Z cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/d-v6sink/ts/attack_v6.ts <REPO>/results/night-shift-20261119/orch-B/d-v6sink/work-attack
+{"k":"S1-balance-reset","c1":"committed","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","reaudits":1,"restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S2-outbox-amount-rewrite","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","reaudits":1,"restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S3-settled-token-x","running_replay":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","reaudits":1,"restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false: stored token does not decode: token shape"}
+{"k":"S3b-settled-token-attacker-signed","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S4-schema-NOCASE","started":false,"err":"start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL","commitRq2":null}
+{"k":"S4-schema-BINARY","started":false,"err":"start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL","commitRq2":null}
+{"k":"S4c-schema-NOCASE-empty","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL"}
+{"k":"S4r-trigger-added-running","running_c2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false: schema is not the sink's DDL"}
+{"k":"S5-meta-rewrite-ch2","running_commitCh2":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","restartStarted":false,"err":"start-up audit (schema, initial charge, AuditV5 replay) is false: meta initial_state_sha256 is not cfg.initialState","commitCh2":null}
+{"k":"S5b-meta-deleted-state-ch2","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S6-legacy-no-meta","restart":"STARTED","restartOtherInit":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"S7-original-rewritten-same-id","started":false,"err":"start-up audit (schema, initial charge, AuditV5 replay) is false: meta initial_state_sha256 is not cfg.initialState","commit5000":null}
+{"k":"S7b-meta-deleted-original-5000","running":"rejected (sink halted: re-audit (schema, initial charge, AuditV5) fals)","restart":"REFUSED: start-up audit (schema, initial charge, AuditV5 replay) is false"}
+{"k":"honest-restart-zero","first":["committed","committed","committed"],"afterRestart":["committed","replayed"],"restartAgain":"STARTED","restartWithoutCfgInit":"REFUSED: cfg.initialState is required (the initial charge, from outside the database)"}
+{"k":"D1-honest-other-writer","other":"committed","c3":"committed","reaudits":1}
+{"k":"faulty-signer-unauthorized","commit":"rejected","restart":"STARTED"}
+{"k":"signed-unauthorized-amount-above-remaining","commit":"rejected (token shape)","storeUnchanged":true,"restart":"STARTED","nextHonest":"committed","restartAfter":"STARTED"}
+{"k":"signed-unauthorized-amount-above-remaining-post-0","commit":"rejected (not authorized by the approved relation for the stored state)","storeUnchanged":true,"restart":"STARTED","nextHonest":"committed","restartAfter":"STARTED"}
+{"k":"signed-unauthorized-wrong-post-state","commit":"rejected (not authorized by the approved relation for the stored state)","storeUnchanged":true,"restart":"STARTED","nextHonest":"committed","restartAfter":"STARTED"}
+{"k":"signed-unauthorized-unapproved-reason","commit":"rejected (not authorized by the approved relation for the stored state)","storeUnchanged":true,"restart":"STARTED","nextHonest":"committed","restartAfter":"STARTED"}
+{"k":"rollback-whole-file","restart":"STARTED"}
+{"k":"no-cfg-initialState","restart":"REFUSED: cfg.initialState is required (the initial charge, from outside the database)"}
+(node:7170) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+        0.40 real         0.32 user         0.12 sys
+           120389632  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               10741  page reclaims
+                 160  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   6  messages sent
+                   6  messages received
+                  14  signals received
+                 574  voluntary context switches
+                1507  involuntary context switches
+          3006736878  instructions retired
+          1283351161  cycles elapsed
+            85699192  peak memory footprint
+exit 0

@@ -1,0 +1,44 @@
+# owner=d-v6sink start=2026-11-19T11:47:29Z cwd=<REPO>/results/night-shift-20261119/orch-B/d-v6sink/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1248
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/d-v6sink/logs/v-shellv6-verify-2.csv ShellCoreV6.dfy
+# memory free percent: 47
+ShellCoreV6.dfy(260,2): Error: a postcondition could not be proved on this return path
+    |
+260 |   {
+    |   ^
+
+ShellCoreV6.dfy(259,29): Related location: this is the postcondition that could not be proved
+    |
+259 |     ensures PerCommitConforms(init, ds)
+    |                              ^
+
+ShellCoreV6.dfy(230,4): Related location: this proposition could not be proved
+    |
+230 |     forall k | 0 <= k < |ds| && Q6Of(Run6(init, ds[..k]), ds[k]).Commit? ::
+    |     ^^^^^^
+
+
+Dafny program verifier finished with 190 verified, 1 error
+Results File: <REPO>/results/night-shift-20261119/orch-B/d-v6sink/logs/v-shellv6-verify-2.csv
+       13.05 real        12.13 user         0.77 sys
+           222609408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32170  page reclaims
+                 734  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   8  signals received
+                1251  voluntary context switches
+               77687  involuntary context switches
+        103283237730  instructions retired
+         39411635228  cycles elapsed
+           204981544  peak memory footprint
+# end=2026-11-19T11:47:42Z
+exit 4
