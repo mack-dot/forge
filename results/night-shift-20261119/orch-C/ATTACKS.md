@@ -343,3 +343,16 @@ Command: cd orch-C/c22-launch-conformance && /usr/bin/python3 -B -I test_process
   - launcher.py (fbdbea0b…): EXIT 1 twice: 24 tests, 2 FAIL (the same two: abort and non-zero exit after a complete frame with SIGCHLD ignored -> AUTHORIZED). Logs v1-run1.log, v1-run2.log.
   - launcher_v2.py (eec38a10…): EXIT 0 twice: 24 tests OK. With SIGCHLD ignored v2 refuses with "V2 child status unknown (ECHILD)" (it refuses the honest run too: fail closed). Logs v2-run1.log, v2-run2.log.
 - The image check with a wrong hash, the real refund program, code injected at load and the FFI C code are still NOT tested by C (C-1).
+
+## RE-RUN BY C (16:21:58Z) against B's minter rule 2 at 370ff65c (module orch-B/h-minter2/build/issueauth.cjs), NoStore mode (three minter arguments)
+Overlay <SCRATCH>/redteam-C/fix-370ff65c. Command form (cwd = overlay; C7_ROOT=<overlay> C7_CORE=<issueauth.cjs>): node --import tsx orch-C/c17-hminter/<script>.ts <work> <mode>. Logs orch-C/refix/370ff65c/.
+| Item | Script | Exit | Outcome | Verdict |
+|---|---|---|---|---|
+| C-ATT-29 honest stale retry of the same request id | f1_stale_retry.ts stale | 0 | the retry on the new state is signed and commits | PASS (closed in NoStore mode). In Store mode B KEEPS the refusal as specified behaviour: NOT tested by C yet |
+| C-ATT-30 squat with an invented pre-state | f2_squat.ts fake | 0 | squat token refused by the sink; the victim's request commits | PASS (closed in NoStore mode) |
+| C-ATT-30 squat on the REAL state with amount 0 | f2_squat.ts zero | 1 | victim refused: "other candidate: use a new request id" | STILL PRESENT; B states it as a limit (the issuer has no caller identity) |
+| C-ATT-31 foreign code via the tsx cache | f9_tsx_cache.ts | 1 | marker written; pinned identity unchanged | STILL PRESENT on the tsx start path; B says its closed launch is ts/refund-finality/launch/minter-launch.sh: NOT tested by C yet |
+| Minter decision | c7-minter/fuzz_diff.ts 2000 7 | 0 | 428 issued, 224 zero-amount, 208 full, 0 divergences | PASS (no false rejection) |
+| Key framing, strict UTF-8 | f6_key_framing.ts | 0 | 16 probes safe | PASS |
+| Replay | f3_replay_growth.ts (N not set by my command: 0) | 1 | replay byte-identical: true, true; the same request id on ANOTHER pre-state is now SIGNED (new bytes) | NOT a defect: my old expectation; rule 2 keys on the pre-state hash by design. Consequence to keep in mind: two signed tokens can exist for one request id (the sink's one-row-per-id rule must hold) |
+- Worker c24-minter2 started for Store mode, the closed launch script, and the assumption STORE-READ (a database writer steers the issuer).

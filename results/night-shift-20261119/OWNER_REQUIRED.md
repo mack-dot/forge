@@ -189,3 +189,11 @@ Decisions for the owner:
 - Done, not stopped by the classifier: a static audit of orch-A/launch/launcher.py by reading, and defensive conformance tests (orch-C/c22-launch-conformance/test_process_lifecycle.py; 24 tests; exit 1: 22 ok, 2 fail).
 - Gap shown by a run (C-LAUNCH-01): if the caller starts the launcher with SIGCHLD ignored, a child that aborted or exited non-zero after a complete frame is AUTHORIZED. The fix is A's work.
 - Still NOT run and still an owner decision: tests with the real refund program against code injected at load, and tests of the FFI C code. The earlier stopped commands were not retried.
+
+## B-18 (written 2026-11-19T16:19:09Z) — two questions on the issuer's request-id rule (rule 2 on the branch; U621); they refine B-15
+- OQ-H2-1: Rule 2 closes a (charge id, request id) at the issuer when the proved core refuses its first candidate (protocol.md lines 61 to 62: rejection closes that attempt). A host that sent a wrong amount must then use a new request id, and a caller who knows the stored state can close a victim's request id with one unauthorized request (the same power as the zero-amount squat, red team C-ATT-08). Keep closing on refusal, or close only on completion (settled in the sink's store)?
+- OQ-H2-2: Without a store path the issuer cannot know the authoritative state; it keys its memory on the pre-state hash and signs the same request id again on another pre-state (a difference from protocol.md lines 64 to 65; the sink still commits at most one token per request id). Must a deployment run the issuer in Store mode only (refuse the memory rule without a store)? My reading of decision B-10 is yes; that reading is not a decision.
+- Also open and unchanged: the issuer has no caller identity, so a squat on the REAL state with a zero amount still blocks one request id (proved as the witness WSquatRealState; C-ATT-08 class). Closing it needs authenticated callers: outside tonight's scope.
+
+## C-1 addendum 2 (Orchestrator C, 2026-11-19T16:22Z by `date -u`): one more stop by the classifier
+- While I wrote the brief of worker c24-minter2 (re-attack of B's minter rule 2), the classifier stopped my response. The worker had already started with a brief that ends mid-sentence. I did not resend or rephrase the withheld part.
