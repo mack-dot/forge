@@ -1,0 +1,15 @@
+--- a/LinkedRefund.dfy
++++ b/LinkedRefund.dfy
+@@ -71,9 +71,9 @@
+     DecodeEncoded(context.chargeId);
+     DecodeEncoded(context.requestId);
+     DecodeEncoded(reasonIn);
+-    var result := Unflatten(ok, a, rb, cb, qb, n);
+-    decision := result.0;
+-    plan := result.1;
++    // N5: the decoder reads response.reason instead of the reason bytes.
++    decision := if ok then Authorized(a, response.reason) else Rejected;
++    plan := if n == 1 then [Intent(Decode(cb), Decode(qb), a, response.reason)] else [];
+   }
+ 
+   // ---------------------------------------------------------------------------------------------

@@ -28,6 +28,42 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## M1-B mission: owner decisions for M1; the M1 theorem is about a machine model, not yet about the real executable; the Dafny half of the contract link is machine-checked; one graph of 45 links; verdict M1-B OPEN — U473
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Two labels:
+"verified machine-model behaviour" (exists, same-machine replay) and
+"verified native execution" (does not exist). The replay of the 158
+recorded cases is a separate job and closes no proof obligation.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| hosted `gate/pr_check.py`, pull request 55, head `8ec17ff3`, run 44458104984 |3|UNSUPPORTED, as expected for documents |
+| `gh pr merge 55 --squash --admin` (the owner typed "merge 55") |0|squash commit `8e772b55`, 2026-11-19 04:25Z; OVERRIDE; tree equal to `8ec17ff3` |
+| pinned Dafny, gate options: `dafny verify LinkedRefund.dfy` (a module that REFINES the approved `RefundSpec`): the worker's attempts 1 to 5 |4; 4; 0; 0; 0|attempt 1 out of resource; attempt 2 the worker's own error; final: 1489 verified, 0 errors |
+| the same command, run again by the orchestrator; one control (charge and request exchanged) |0; 4|1489 verified; the control is rejected at the approved R4 clause |
+| `proofs/linked-refund/run_check.py`, runs 1 and 2 |1; 0|run 1: a defect of my runner (it searched the axiom name in the wrong output); run 2: verify 0; seven wrong variants 4; one variant 0 on purpose; the audit of all 34 files gives exactly one finding, a library lemma with an explicit axiom (present, by reading not called): NOT equal to the empty audit baseline |
+| one worker's run, read-only: `scripts/exit_m1_conformance.py --case conformance` |0|2,466 typed vectors, 0 findings (a finite test) |
+| worker runs that the orchestrator did NOT run again: prefix test on the unmodified executable; reference caller controls; manifest verifier on today's evidence; its controls; identity controls |0; 0; 1 at both levels; 0; 0|of 8,011 strict prefixes a strict parser accepts 0 and a copy of the classifier `m1_class` accepts 6,363; 82 of 82 planted results refused; the manifest verifier REFUSES today's evidence (the right answer); 56 and 11 control runs as expected |
+| every HOL step of the mission (link theorem, U294 replay, `refund_ffi_contract_at_totalise`, identity control, the Linux probe) |NOT RUN|the replay holds the one HOL slot; the probe needs the owner's approval |
+| replay of the 158 recorded M1 cases (separate job) |RUNNING when this section was written|65 of 158 at 05:49Z: 64 as recorded; case 005 ran out of memory and never reached its check: it must run again; paused on battery power from 04:58Z to about 05:17Z |
+| clean replay; independent replay; Stage 9; a new executable |NOT RUN|plans and studies only; the clean replay is not to start before the claim is fixed (owner) |
+| commit; push; pull request; hosted `gate/pr_check.py` |NOT RUN when this section was committed|expected hosted result: exit 3 (UNSUPPORTED); the owner merges, the agent does not |
+
+[Mission tracker](proposals/m1b-mission-20261119/TRACKER.md).
+[One top-level graph](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md):
+12 MACHINE-CHECKED, 9 ASSUMPTION, 7 TESTED-UNPROVED, 17 MISSING.
+[Owner texts 1 to 9](proposals/m1-owner-review-20261119/OWNER_DECISIONS.md).
+Proved by Dafny at source level: any result that satisfies the flat
+contract decodes to a result that the approved R1 to R5 allow. NOT
+proved: the step from Dafny to the HOL functions; anything about the
+real process. Findings kept: the FFI premise of the M1 theorem is
+probably false for the real C code; the import checks compare
+statement text only; the hosted gate verified nothing about the new
+code of the slices; every merge since pull request 38 bypassed the
+review rule.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## M1: replay of the 158 recorded cases started (waits for mains power); owner-review packet; records of pull request 54 — U471
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

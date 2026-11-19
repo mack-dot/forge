@@ -4,6 +4,14 @@ CURRENT none. Stage 9 deferred. M1 open. Stage 12 unauthorized.
 `end_to_end=false`. Not a stage. No protected file changed. Not gate
 evidence.
 
+Corrections of 2026-11-19 (M1-B mission, step C3): five sentences of
+this report read as claims about the running executable where only a
+machine-model theorem exists. They are corrected in place and marked.
+No number and no result of this report changes. The classifier
+`m1_class` of the EXIT script is a label only: a caller that copied it
+would accept a cut output (step B3 of the mission); inside the script
+the byte-equality check catches that case.
+
 This is a FINITE TEST of two stacks against each other. It is not a
 proof. It is not a compiler proof of the JavaScript. It adds nothing to
 M1 and closes no M1 item. Date of the runs: 2026-11-18 and 2026-11-19
@@ -123,7 +131,9 @@ three base requests). For them the rule is weaker (section 5).
 
 ## 5. Changed wire inputs: what the M1 reader accepts
 
-The M1 theorems cover canonical inputs. The 192 changed inputs
+The M1 model theorems speak of the model machine with canonical
+standard input; they say nothing formal about any run of the physical
+executable (corrected 2026-11-19). The 192 changed inputs
 (64 changes of each of three base requests) are outside them. Rule X4:
 the output must be empty, or the rejection, or exactly the result of
 the unchanged base request. All kept the rule. Process exits:
@@ -215,9 +225,10 @@ in one pass; no second review.
   Node. The Dafny source proofs do not cover that compilation, and this
   test does not prove it.
 - The M1 side is the physical executable on this Mac. Its link to the
-  HOL definition is: the M1 model theorems (open premises), the 22
-  HOL-written fixtures that it reproduces, and nothing else from this
-  test.
+  HOL definition is: the 22 HOL-written fixtures that it reproduces (a
+  finite test). The M1 model theorems are about a model machine; they
+  reach the physical executable only through an informal simulation
+  assumption (corrected 2026-11-19).
 - A text is Unicode scalar values on the Dafny side and UTF-8 bytes on
   the M1 side. M1 strings are byte strings; inputs that are not UTF-8
   are not compared.
@@ -255,8 +266,8 @@ U409, M1R-1 and M1R-2. I did not audit those statements again.
 | Compiler | CakeML compiler, proved in HOL (`compile_correct`); the instance for this program is proved in the model under premises | Dafny JavaScript back end: NOT proved |
 | Machine code or run time | the exact 130,436 code bytes and 2,531 bitmap words are in the file (identity check of 2026-11-04); L3 ARMv8 model for the instructions | Node 24.3.0 with V8 (a just-in-time compiler), the Dafny runtime, `bignumber.js`: NOT proved |
 | Loader and entry state | ASSUMED: `refund_image_mem`, entry state, heap premises; proved for every permitted slide in the model (U409); premises jointly satisfiable for one constructed state at slide 0x4000 (M1R-1) | Node module loader: NOT proved |
-| Foreign code | the CakeML basis C code `basis_ffi.c`, `libSystem`, the kernel: one simulation assumption (Profile A, NOT approved) | OpenSSL (Ed25519, SHA-256) and SQLite inside Node |
-| Wire parser | S-expression reader, part of the proved program; accepts several spellings of one number (section 5) | JSON and shape checks in `minter.ts` and `encoding.ts`: NOT proved, strict number format |
+| Foreign code | the CakeML basis C code `basis_ffi.c`, `libSystem`, the kernel: one simulation assumption (Q3b, accepted by the owner on 2026-11-19) with no HOL statement. The theorem itself assumes `refund_env_ok_sl`, an all-states FFI contract that the real C code probably does not meet (U393; corrected 2026-11-19) | OpenSSL (Ed25519, SHA-256) and SQLite inside Node |
+| Wire parser | S-expression reader, part of the program; proved in the model only for the canonical text (corrected 2026-11-19); accepts several spellings of one number (section 5) | JSON and shape checks in `minter.ts` and `encoding.ts`: NOT proved, strict number format |
 | Signing | none: the program prints a decision | Ed25519 in the issuer process: NOT proved |
 | Processor | ASSUMED to behave as the L3 model | not modeled |
 | This test adds | finite agreement of the two stacks at the decision; nothing else | the same |

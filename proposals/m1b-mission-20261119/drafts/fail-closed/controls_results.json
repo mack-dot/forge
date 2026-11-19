@@ -1,0 +1,356 @@
+{
+ "class": "TESTED-UNPROVED (finite test)",
+ "planted": [
+  {
+   "control": "empty stdout, exit 0",
+   "expected_step": "D6",
+   "verdict": [
+    "REFUSED",
+    "D6 stdout is empty (no decision)"
+   ],
+   "pass": true
+  },
+  {
+   "control": "real frame + one trailing byte",
+   "expected_step": "D5",
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "real frame + newline",
+   "expected_step": "D5",
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "two frames",
+   "expected_step": "D5",
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "frame with another request id",
+   "expected_step": "D9",
+   "verdict": [
+    "REFUSED",
+    "D9 echoed charge id or request id differs from the sent one"
+   ],
+   "pass": true
+  },
+  {
+   "control": "frame with another charge id",
+   "expected_step": "D9",
+   "verdict": [
+    "REFUSED",
+    "D9 echoed charge id or request id differs from the sent one"
+   ],
+   "pass": true
+  },
+  {
+   "control": "frame with amount 040",
+   "expected_step": [
+    "D5",
+    "D7"
+   ],
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "frame with amount +40",
+   "expected_step": [
+    "D5",
+    "D7"
+   ],
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "frame with amount 41",
+   "expected_step": "D9",
+   "verdict": [
+    "REFUSED",
+    "D9 echoed amount or reason differs from the sent one"
+   ],
+   "pass": true
+  },
+  {
+   "control": "frame with count 2",
+   "expected_step": "D10",
+   "verdict": [
+    "REFUSED",
+    "D10 intent count is not 1"
+   ],
+   "pass": true
+  },
+  {
+   "control": "frame with quoted bare atom \"c-77\"",
+   "expected_step": [
+    "D5",
+    "D7"
+   ],
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "frame with double space",
+   "expected_step": [
+    "D5",
+    "D7"
+   ],
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "exit code 1 with a perfect frame",
+   "expected_step": "D3",
+   "verdict": [
+    "REFUSED",
+    "D3 exit code 1 is not 0"
+   ],
+   "pass": true
+  },
+  {
+   "control": "signal 9 with a perfect frame",
+   "expected_step": "D2",
+   "verdict": [
+    "REFUSED",
+    "D2 process ended by signal 9"
+   ],
+   "pass": true
+  },
+  {
+   "control": "time limit with a perfect frame",
+   "expected_step": "D1",
+   "verdict": [
+    "REFUSED",
+    "D1 time limit reached"
+   ],
+   "pass": true
+  },
+  {
+   "control": "non-empty stderr with a perfect frame",
+   "expected_step": "D4",
+   "verdict": [
+    "REFUSED",
+    "D4 stderr is not empty"
+   ],
+   "pass": true
+  },
+  {
+   "control": "oversized output (overflow flag)",
+   "expected_step": "D5",
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "oversized output (1 MiB)",
+   "expected_step": "D5",
+   "verdict": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "pass": true
+  },
+  {
+   "control": "real rejection frame",
+   "expected_step": "program rejected",
+   "verdict": [
+    "NOT_AUTHORIZED",
+    "program rejected the request"
+   ],
+   "pass": true
+  },
+  {
+   "control": "False frame that is not the rejection",
+   "expected_step": "D8",
+   "verdict": [
+    "REFUSED",
+    "D8 False frame is not the exact rejection frame"
+   ],
+   "pass": true
+  },
+  {
+   "control": "caller sends a str id (caller error)",
+   "expected_step": "D12",
+   "verdict": [
+    "REFUSED",
+    "D12 caller exception: TypeError: charge is not bytes"
+   ],
+   "pass": true
+  },
+  {
+   "control": "not a process result",
+   "expected_step": "D0",
+   "verdict": [
+    "REFUSED",
+    "D0 no process result"
+   ],
+   "pass": true
+  },
+  {
+   "control": "resource stop as observed: exit 1, empty stdout, message on stderr",
+   "expected_step": "D3",
+   "verdict": [
+    "REFUSED",
+    "D3 exit code 1 is not 0"
+   ],
+   "pass": true
+  },
+  {
+   "control": "resource stop as the theorem allows: exit 0, cut output",
+   "expected_step": "D7",
+   "verdict": [
+    "REFUSED",
+    "D7 stdout is not exactly one canonical frame: strict: separator b' ' missing after field 4"
+   ],
+   "pass": true
+  }
+ ],
+ "real": [
+  {
+   "case": "authorized base",
+   "verdict": [
+    "AUTHORIZED",
+    40,
+    "b'returned_item'"
+   ],
+   "pass": true
+  },
+  {
+   "case": "authorized amount 0",
+   "verdict": [
+    "AUTHORIZED",
+    0,
+    "b'returned_item'"
+   ],
+   "pass": true
+  },
+  {
+   "case": "authorized MAX amount, id with ) and \"",
+   "verdict": [
+    "AUTHORIZED",
+    9223372036854775807,
+    "b'duplicate_charge'"
+   ],
+   "pass": true
+  },
+  {
+   "case": "authorized id with tab and newline",
+   "verdict": [
+    "AUTHORIZED",
+    40,
+    "b'service_not_delivered'"
+   ],
+   "pass": true
+  },
+  {
+   "case": "rejected amount 61",
+   "verdict": [
+    "NOT_AUTHORIZED",
+    "program rejected the request"
+   ],
+   "pass": true
+  },
+  {
+   "case": "rejected disabled",
+   "verdict": [
+    "NOT_AUTHORIZED",
+    "program rejected the request"
+   ],
+   "pass": true
+  },
+  {
+   "case": "rejected empty request id",
+   "verdict": [
+    "NOT_AUTHORIZED",
+    "program rejected the request"
+   ],
+   "pass": true
+  },
+  {
+   "case": "malformed wire (trailing newline), real run",
+   "process": [
+    0,
+    0,
+    ""
+   ],
+   "verdict": [
+    "REFUSED",
+    "D6 stdout is empty (no decision)"
+   ],
+   "pass": true
+  },
+  {
+   "case": "resource stop, 6e6-byte charge id, real run",
+   "process": [
+    1,
+    0,
+    "Program exited with nonzero exit code.\n"
+   ],
+   "verdict": [
+    "REFUSED",
+    "D3 exit code 1 is not 0"
+   ],
+   "pass": true
+  },
+  {
+   "case": "real truncated output (RLIMIT_FSIZE 30 bytes)",
+   "process": [
+    null,
+    25,
+    "(refund-result-v1 True 40 retu",
+    true
+   ],
+   "verdict": [
+    "REFUSED",
+    "D2 process ended by signal 25"
+   ],
+   "pass": true
+  },
+  {
+   "case": "same cut bytes planted as exit 0, no overflow flag",
+   "verdict": [
+    "REFUSED",
+    "D7 stdout is not exactly one canonical frame: strict: separator b' ' missing after field 4"
+   ],
+   "pass": true
+  },
+  {
+   "case": "executable with another SHA-256 (not run)",
+   "verdict": [
+    "REFUSED",
+    "D0 executable SHA-256 is not the pinned one"
+   ],
+   "pass": true
+  }
+ ],
+ "planted_total": 82,
+ "planted_prefix_controls": 58,
+ "planted_failures": [],
+ "failures": [],
+ "verdict": "PASS"
+}

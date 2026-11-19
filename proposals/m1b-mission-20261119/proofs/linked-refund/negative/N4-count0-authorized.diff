@@ -1,0 +1,20 @@
+--- <session scratch folder>/m1b/W9/proof/inputs/transport/FlatCore.dfy	2026-11-19 00:07:30.778569636 -0500
++++ inputs/transport/FlatCore.dfy	2026-11-19 00:19:21.534536878 -0500
+@@ -13,7 +13,7 @@
+       (reason == "duplicate_charge" || reason == "service_not_delivered" || reason == "returned_item")
+     ensures authorized ==>
+       outputAmount == amount && outputReason == reason &&
+-      outputCharge == chargeId && outputRequest == requestId && intentCount == 1
++      outputCharge == chargeId && outputRequest == requestId && intentCount == 0
+     ensures !authorized ==>
+       outputAmount == 0 && outputReason == "" &&
+       outputCharge == "" && outputRequest == "" && intentCount == 0
+@@ -27,7 +27,7 @@
+       outputReason := reason;
+       outputCharge := chargeId;
+       outputRequest := requestId;
+-      intentCount := 1;
++      intentCount := 0;
+     } else {
+       outputAmount := 0;
+       outputReason := "";
