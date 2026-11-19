@@ -1,0 +1,29 @@
+Y7: gap between the F2.0 model (FinalityProtocol.dfy, sha256 8b70b6b4...) and ts/refund-finality/sink.ts.
+READ, not run. Line numbers are of sink.ts at repo HEAD cc20207b.
+
+| # | sink.ts behaviour (lines) | model action / guard | Y7 core (SinkCore.dfy) | gap |
+|---|---|---|---|---|
+| 1 | input must be a text; length <= 8192; JSON.parse; isToken exact shape; canonical text (77-83) | NONE (the model receives a Claim value) | NONE (the core receives a decoded SinkToken) | decoder unproved (K1) |
+| 2 | specLockSha256 == pinned; checkerSha256 == pinned (84-85) | Commit guard Ours(c): specId == SPEC && checkerId == CHK | IdsNotPinned branch; PROVED == Ours | model ids are int, sink ids are 64-hex texts; checker id is self-declared (V M4) |
+| 3 | Ed25519 verify over signedBytes(body) (71-76, 86) | Commit guard VerifyTag(c, t); A1 IdealMac | sigOk input; A5 VerifierMatches (named) | Ed25519 + canonical-body injectivity + library = A1/A5, unproved |
+| 4 | settled lookup by request_id inside the transaction (91-92) | Commit guard c.reqId !in s.settled | RequestSettled branch; text ids; Enc injective PROVED | none at core level |
+| 5 | prior row with SAME token sha -> "replayed", other -> "rejected" (93-96) | NONE (both are "no change") | both Rejected(RequestSettled) | status text only; no state effect |
+| 6 | no stored state -> rejected (97-101) | NONE (model store always defined) | NONE (Core always has a charge) | init-before-commit is unmodelled |
+| 7 | sha256(stored text) == preStateSha256 (102-105) | Commit guard s.store == c.pre; A4 | value comparison core.charge != tok.pre (A4 NOT needed) | sink.ts still needs A4 (SHA-256 collision resistance + canonical encoding) |
+| 8 | UPDATE state := canon(post) (106) | store := c.post | charge := tok.post | text<->state round trip unproved (K8) |
+| 9 | INSERT settled(request_id, token, token_sha256) (107) | settled + {c.reqId}; log + [c] | settled + {requestId}; ghost toks + [tok] | sink keys on body.requestId, never checks == intent.requestId (only the issuer does; in the core it FOLLOWS from A1+A2, T3) |
+| 10 | INSERT outbox(request_id, intent) (108) | outbox + [c.eff] | outbox + [tok.intent] | none at core level |
+| 11 | BEGIN IMMEDIATE ... COMMIT (90, 109) | A3: Commit is one step | Step is one function | A3 unproved for SQLite; durability not modelled (K4) |
+| 12 | catch -> ROLLBACK, "transaction failed" (111-114) | NONE | NONE | failure = stutter is assumed (rollback complete) |
+| 13 | busy_timeout 30000; concurrent writers (35) | NONE (model is sequential) | NONE | interleaving unmodelled (K5) |
+| 14 | init(state) once; meta initial_state_sha256 (44-56) | InitInv initial System | InitRel | init is a trusted call (REPORT F8) |
+| 15 | audit(): chain, signatures, outbox == settled intents (119-145) | the shape of InvMeaning (no SpecRel part) | NONE | a runtime check, not a proof; detection only |
+| 16 | one database = one charge | one System | CommitAt over map<chargeId, Core> | two databases for one charge unmodelled (Limit 4) |
+
+Model parts with NO sink code (by design or missing):
+- Mint / MintAllowed (A2): in minter.ts + RefundFinality.Check, not in the sink. Y7 IssuedClaim proves A2
+  for a claim built from Check's token; the signer glue that builds and signs it is unproved.
+- IdealMac (A1): a crypto assumption; no code can establish it.
+- LogSound / SpecRel of commits: the sink checks NO refund rule (sink.ts line 15); it rests wholly on A1+A2.
+- The claim field `req`: a sink token has no request; the core reads it from the intent.
+- The ghost log: sink.ts keeps token texts in `settled`, which is the concrete form of the log.

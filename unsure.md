@@ -17498,3 +17498,94 @@ curl: (6) Could not resolve host: github.com
   deferred. Stage 12 unauthorized. end_to_end=false.
 - Next check: the replay result; then L1 with its controls, at most
   five attempts, one HOL process.
+
+## U475 — wave 4 of the M1-B mission: twelve workers, one per missing link; two more premises and one admission rule found weaker than recorded; a Dafny sink core machine-checked; pull request 57 merged by the owner's account
+- Status: 2026-11-19T06:28Z (inserted by the shell from `date -u`). Refs U473,
+  U474, U277, U294, U393. Reports D1 to D12 under
+  proposals/m1b-mission-20261119/reports; section 7 of
+  TOP_LEVEL_GRAPH.md; owner texts 10 to 14 in OWNER_DECISIONS.md.
+- Pull request 57 (head 67516456): GitHub records the merge at
+  2026-11-19T06:02:18Z, squash commit cc20207b, by the owner's
+  account; no command of this session ran it. Its gate status was
+  red (UNSUPPORTED; read by a worker; I did not read the run). A
+  CORRECTION of my wording: I called pull request 57 "documents
+  only"; it also carried .sh, .py and .sml draft files.
+- The owner's own words: "spin up a shit load of sub agnets" and "a
+  ton of sub agents please opus with fabe orchestraotr". I started
+  twelve Opus workers. No worker ran HOL or built an executable.
+- FINDING A (admission, source level; my own run): a refund body
+  `expect false; decision := Rejected; plan := [];` verifies against
+  the approved spec with the pinned Dafny and the gate options (exit
+  0, 6 verified, 0 errors). My first try gave exit 4 by my own wrong
+  solver path. Dafny assumes the condition of `expect`; at run time
+  the program halts. So the source proof gives partial correctness:
+  IF Assess returns, the result is allowed. The worker reports a
+  clean audit and no scan for the word in gate/refund.py (I did not
+  check these two). The approved impl/Refund.dfy,
+  impl/RefundFinality.dfy and LinkedRefund.dfy have no `expect` (my
+  grep). Not run: the gate's hostile-tests tier, which may catch a
+  halting body. Of 53 unread submissions: 7 wrong ones admitted (4 by
+  `expect`, 2 by unbounded time or memory, 1 probable compile gap), 4
+  correct ones refused by byte rules, 31 refused as intended.
+- FINDING B (processor premise; the definition read by me): arm8_ok
+  requires TCR_EL1.TBI0 = F and SCTLR_EL1.SA0 = F at every step.
+  Linux v6.12 sets both to 1 for user space (lines read by me in the
+  worker's saved copies of proc.S and sysreg.h); the public XNU
+  source does too (the worker's quotes; not read by me; the shipped
+  kernel configuration is not confirmed). So the premise is false for
+  a state that copies the real registers and holds only for an
+  "erased" copy; the soundness of the erasure is unproved. It hits
+  the present macOS theorem. U277 said the values were never
+  observed; they are still not observed, only read from sources.
+- FINDING C (exit status; the instruction read by me): `_cml_exit`
+  tests `cbz w0`, the low 32 bits of x0; the model tests 64 bits; the
+  process status is the low 8 bits (not checked on macOS). So exit
+  status 0 does not imply success. That x0 is 0, 1 or 2 at every halt
+  is a reading of source, no theorem. Also: a non-zero exit can come
+  with the complete output; the output-bytes lemma of my exact-claim
+  draft is false as stated (a free external oracle). Safety must rest
+  on a strict parse of the output.
+- FINDING D (GitHub, live; read by me): branches/main reports
+  protected false and the protection endpoint answers HTTP 403
+  "Upgrade to GitHub Pro or make this repository public". No rule is
+  enforced on main. The worker reports that this machine's keyring
+  holds the administrator identity and a second write identity.
+- FINDING E (sink): five zero-amount tokens with fresh request ids
+  all commit (the worker's run); a Dafny lemma proves that the
+  approved relation allows it. By reading: sink.ts does not check
+  that the token's request id equals the intent's request id.
+- RESULT, machine-checked (my own run): proofs/sink-core,
+  `SinkCore refines FinalityProtocol` for the refund instance: exit
+  0, 56 verified (28 rows of the new module). Every step of the core
+  is the model's Commit; one token per commit; no request id twice;
+  remaining never negative. NOT a proof of sink.ts. The signature
+  check is a named assumption that the audit does not report. Open:
+  whether inherited model lemmas are checked again for the instance.
+  Nine mutated cores exit 4 (the worker's runs).
+- Worker results that I did NOT run again: the Dafny proof without
+  the library axiom (exit 0, 1486 verified; audit equal to the empty
+  baseline); 486 SIGKILL runs on the sink with 0 violations (process
+  crash only; power loss is not tested); races up to 50 processes;
+  the comparison of the export with the Dafny text (0 differences in
+  62 clauses); a Dafny mirror of the HOL evaluation rules (246
+  verified; a proof about a transcription, not about HOL).
+- Checked by me: the Dafny source of the U294 export is byte-equal
+  to the flat contract file of the LinkedRefund proof; run_check.py
+  now pins that file. The two slice digests of the executable and
+  the four symbol addresses equal the worker's second extraction;
+  that extraction is NOT independent (same model family and machine).
+- Drafts only (nothing ran): the full HOL link theorem with 11
+  controls; the first read call-site theorem; the output, exit and
+  prefix lemmas; an owner runbook and an unapplied admission rule; a
+  spec draft for stored state.
+- Replay of the 158 cases: 108 of 158 at 06:27Z (104 as recorded, 1
+  must run again, 3 not run because their source is absent). The
+  driver waits: the machine is on battery power again.
+- NOT RUN: every HOL step, L1 included.
+- Impact: the claim about M1 narrows again: two premises of the
+  machine-model theorem are false for real machines as written (FFI
+  contract, processor bits), and the exit status carries no proof
+  meaning. M1-B OPEN. CURRENT none. Stage 9 deferred. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: mains power; the replay end; L1; my own run of the
+  proof without the axiom; then the link theorem H0 probe.

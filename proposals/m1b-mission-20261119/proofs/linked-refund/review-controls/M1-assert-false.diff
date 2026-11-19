@@ -1,0 +1,11 @@
+diff -ru proposals/m1b-mission-20261119/proofs/linked-refund/inputs/LinkedRefund.dfy M1-assert-false/inputs/LinkedRefund.dfy
+--- proposals/m1b-mission-20261119/proofs/linked-refund/inputs/LinkedRefund.dfy	2026-11-19 00:33:50.343736715 -0500
++++ M1-assert-false/inputs/LinkedRefund.dfy	2026-11-19 01:10:11.555933507 -0500
+@@ -74,6 +74,7 @@
+     var result := Unflatten(ok, a, rb, cb, qb, n);
+     decision := result.0;
+     plan := result.1;
++    assert false;
+   }
+ 
+   // ---------------------------------------------------------------------------------------------

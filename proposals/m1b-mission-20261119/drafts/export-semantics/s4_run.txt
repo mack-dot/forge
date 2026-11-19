@@ -1,0 +1,70 @@
+export   bytes 3621 sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+dafny    bytes 1716 sha256 a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d <HOME>/forge/results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/export-0003/input.dfy
+dafny    bytes 1716 sha256 a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d <HOME>/forge/proposals/m1b-mission-20261119/proofs/linked-refund/inputs/transport/FlatCore.dfy
+
+| clause | E (export) | O = E? | L = E? |
+|---|---|---|---|
+| name | `AssessFlat` | same | same |
+| in[0] | `chargeId: string` | same | same |
+| in[1] | `requestId: string` | same | same |
+| in[2] | `original: int` | same | same |
+| in[3] | `remaining: int` | same | same |
+| in[4] | `enabled: bool` | same | same |
+| in[5] | `requestOpen: bool` | same | same |
+| in[6] | `candidate: bool` | same | same |
+| in[7] | `amount: int` | same | same |
+| in[8] | `reason: string` | same | same |
+| out[0] | `authorized: bool` | same | same |
+| out[1] | `outputAmount: int` | same | same |
+| out[2] | `outputReason: string` | same | same |
+| out[3] | `outputCharge: string` | same | same |
+| out[4] | `outputRequest: string` | same | same |
+| out[5] | `intentCount: int` | same | same |
+| requires | `[]` | same | same |
+| reads | `[]` | same | same |
+| modifies | `[]` | same | same |
+| decreases | `['chargeId', 'requestId', 'original', 'remaining', 'enabled', 'requestOpen', 'candidate', 'amount', 'reason']` | same | same |
+| ensures[0] top | `Eq of authorized` | same | same |
+| ensures[0] rhs conjunct 0 | `(chargeId != "")` | same | same |
+| ensures[0] rhs conjunct 1 | `(requestId != "")` | same | same |
+| ensures[0] rhs conjunct 2 | `enabled` | same | same |
+| ensures[0] rhs conjunct 3 | `requestOpen` | same | same |
+| ensures[0] rhs conjunct 4 | `(0 <= original)` | same | same |
+| ensures[0] rhs conjunct 5 | `(original <= 9223372036854775807)` | same | same |
+| ensures[0] rhs conjunct 6 | `(0 <= remaining)` | same | same |
+| ensures[0] rhs conjunct 7 | `(remaining <= original)` | same | same |
+| ensures[0] rhs conjunct 8 | `candidate` | same | same |
+| ensures[0] rhs conjunct 9 | `(0 <= amount)` | same | same |
+| ensures[0] rhs conjunct 10 | `(amount <= remaining)` | same | same |
+| ensures[0] rhs conjunct 11 | `(((reason == "duplicate_charge") || (reason == "service_not_delivered")) || (reason == "returned_item"))` | same | same |
+| ensures[0] full tree | `(full tree, 367 chars)` | same | same |
+| ensures[1] top | `Imp of authorized` | same | same |
+| ensures[1] rhs conjunct 0 | `(outputAmount == amount)` | same | same |
+| ensures[1] rhs conjunct 1 | `(outputReason == reason)` | same | same |
+| ensures[1] rhs conjunct 2 | `(outputCharge == chargeId)` | same | same |
+| ensures[1] rhs conjunct 3 | `(outputRequest == requestId)` | same | same |
+| ensures[1] rhs conjunct 4 | `(intentCount == 1)` | same | same |
+| ensures[1] full tree | `(full tree, 161 chars)` | same | same |
+| ensures[2] top | `Imp of !authorized` | same | same |
+| ensures[2] rhs conjunct 0 | `(outputAmount == 0)` | same | same |
+| ensures[2] rhs conjunct 1 | `(outputReason == "")` | same | same |
+| ensures[2] rhs conjunct 2 | `(outputCharge == "")` | same | same |
+| ensures[2] rhs conjunct 3 | `(outputRequest == "")` | same | same |
+| ensures[2] rhs conjunct 4 | `(intentCount == 0)` | same | same |
+| ensures[2] full tree | `(full tree, 140 chars)` | same | same |
+| body[0] authorized := | `(((((((((chargeId != "") && (requestId != "")) && enabled) && requestOpen) && ((0 <= original) && (original <= 9223372036854775807))) && ((0 <= remaining) && (remaining <= original))) && candidate) && ((0 <= amount) && (amount <= remaining))) && (((reason == "duplicate_charge") || (reason == "service_not_delivered")) || (reason == "returned_item")))` | same | same |
+| body[1] if | `authorized` | same | same |
+| body[1].then[0] outputAmount := | `amount` | same | same |
+| body[1].then[1] outputReason := | `reason` | same | same |
+| body[1].then[2] outputCharge := | `chargeId` | same | same |
+| body[1].then[3] outputRequest := | `requestId` | same | same |
+| body[1].then[4] intentCount := | `1` | same | same |
+| body[1].else[0] outputAmount := | `0` | same | same |
+| body[1].else[1] outputReason := | `""` | same | same |
+| body[1].else[2] outputCharge := | `""` | same | same |
+| body[1].else[3] outputRequest := | `""` | same | same |
+| body[1].else[4] intentCount := | `0` | same | same |
+| body[2] | `return` | same | same |
+| ensures count | `3` | same | same |
+
+clauses compared: 62  differences: 0

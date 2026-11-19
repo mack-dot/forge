@@ -1,0 +1,17 @@
+include "FlatCore.dfy"
+// Y10 vacuity probe: try to derive false from the three flat ensures for arbitrary inputs.
+// Expected: verification FAILS (exit 4). A pass would mean the flat contract is contradictory.
+module FlatFalse {
+  import F = FlatRefund
+  method TryFalse(c: string, q: string, o: int, r: int, e: bool, op: bool, cand: bool, a: int, why: string)
+    ensures false
+  {
+    var ok, x, rb, cb, qb, n := F.AssessFlat(c, q, o, r, e, op, cand, a, why);
+  }
+  // Same probe on the encoded-reason, accepted shape: inputs fixed so that the guard holds.
+  method TryFalseAccepted()
+    ensures false
+  {
+    var ok, x, rb, cb, qb, n := F.AssessFlat("c", "q", 100, 60, true, true, true, 40, "returned_item");
+  }
+}

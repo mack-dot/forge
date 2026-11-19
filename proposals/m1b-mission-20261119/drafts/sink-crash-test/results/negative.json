@@ -1,0 +1,1861 @@
+{
+ "twotx_point": {
+  "variant": "twotx",
+  "tsx_source": false,
+  "kills": 10,
+  "runs": 10,
+  "violations": [
+   {
+    "point": "after-commit#1",
+    "rep": 0,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 1,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 2,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 3,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 4,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 5,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 6,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 7,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 8,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 9,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   }
+  ],
+  "journal_present_at_kill": 0,
+  "hot_journal_recovered": 0,
+  "contender_runs": 5,
+  "rows": [
+   {
+    "point": "after-commit#1",
+    "rep": 0,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 1,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 2,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 3,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 4,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 5,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 6,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 7,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 8,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": null,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "point": "after-commit#1",
+    "rep": 9,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 0,
+    "contender": {
+     "status": "rejected",
+     "reason": "stored state is not the token's pre-state",
+     "onTime": false
+    },
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0",
+     "contender after kill: {'status': 'rejected', 'reason': \"stored state is not the token's pre-state\", 'onTime': False}"
+    ]
+   }
+  ]
+ },
+ "twotx_external": {
+  "mode": "external",
+  "variant": "twotx",
+  "runs": 60,
+  "kills": 52,
+  "calibration_span_s": 0.045259917000000004,
+  "killed_before_first_new_commit_reported": 3,
+  "killed_after_all_reported": 2,
+  "hot_journal_recovered": 38,
+  "committed_but_unreported": 5,
+  "violations": [
+   {
+    "new_in_list": 40,
+    "i": 1,
+    "k": 0,
+    "delay_s": 0.031915,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 32,
+    "settled_after": 32,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 934 != original 1000 - sum of committed 64"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 14,
+    "k": 0,
+    "delay_s": 0.001242,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 0,
+    "settled_after": 0,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 15,
+    "k": 0,
+    "delay_s": 0.022021,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 22,
+    "settled_after": 22,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 954 != original 1000 - sum of committed 44"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 16,
+    "k": 0,
+    "delay_s": 0.014952,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 13,
+    "settled_after": 13,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 972 != original 1000 - sum of committed 26"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 17,
+    "k": 0,
+    "delay_s": 0.036682,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 33,
+    "settled_after": 33,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 932 != original 1000 - sum of committed 66"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 19,
+    "k": 0,
+    "delay_s": 0.00265,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 1,
+    "settled_after": 1,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 996 != original 1000 - sum of committed 2"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 20,
+    "k": 0,
+    "delay_s": 0.010487,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 11,
+    "settled_after": 11,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 976 != original 1000 - sum of committed 22"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 23,
+    "k": 0,
+    "delay_s": 0.007558,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 6,
+    "settled_after": 6,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 986 != original 1000 - sum of committed 12"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 24,
+    "k": 0,
+    "delay_s": 0.017538,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 20,
+    "settled_after": 20,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 958 != original 1000 - sum of committed 40"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 25,
+    "k": 0,
+    "delay_s": 0.031456,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 31,
+    "settled_after": 31,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 936 != original 1000 - sum of committed 62"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 27,
+    "k": 0,
+    "delay_s": 0.006314,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 5,
+    "settled_after": 5,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 988 != original 1000 - sum of committed 10"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 29,
+    "k": 0,
+    "delay_s": 0.009581,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 10,
+    "settled_after": 10,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 978 != original 1000 - sum of committed 20"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 30,
+    "k": 0,
+    "delay_s": 0.025997,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 23,
+    "settled_after": 23,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 952 != original 1000 - sum of committed 46"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 35,
+    "k": 0,
+    "delay_s": 0.010106,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 9,
+    "settled_after": 9,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 980 != original 1000 - sum of committed 18"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 37,
+    "k": 0,
+    "delay_s": 0.032938,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 31,
+    "settled_after": 31,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 936 != original 1000 - sum of committed 62"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 40,
+    "k": 0,
+    "delay_s": 0.015934,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 17,
+    "settled_after": 17,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 964 != original 1000 - sum of committed 34"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 44,
+    "k": 0,
+    "delay_s": 0.018687,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 18,
+    "settled_after": 18,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 962 != original 1000 - sum of committed 36"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 49,
+    "k": 0,
+    "delay_s": 0.03259,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 36,
+    "settled_after": 36,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 926 != original 1000 - sum of committed 72"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 52,
+    "k": 0,
+    "delay_s": 0.026914,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 26,
+    "settled_after": 26,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 946 != original 1000 - sum of committed 52"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 53,
+    "k": 0,
+    "delay_s": 0.008142,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 5,
+    "settled_after": 5,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 988 != original 1000 - sum of committed 10"
+    ]
+   }
+  ],
+  "rows": [
+   {
+    "new_in_list": 40,
+    "i": 0,
+    "k": 0,
+    "delay_s": 0.035941,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 36,
+    "settled_after": 36,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 1,
+    "k": 0,
+    "delay_s": 0.031915,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 32,
+    "settled_after": 32,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 934 != original 1000 - sum of committed 64"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 2,
+    "k": 0,
+    "delay_s": 0.032339,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 33,
+    "settled_after": 33,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 3,
+    "k": 0,
+    "delay_s": 0.027619,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 30,
+    "settled_after": 30,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 4,
+    "k": 0,
+    "delay_s": 0.044183,
+    "ready": "READY",
+    "rc": 0,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": false,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 5,
+    "k": 0,
+    "delay_s": 0.038241,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 35,
+    "settled_after": 35,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 6,
+    "k": 0,
+    "delay_s": 0.011493,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 10,
+    "settled_after": 10,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 7,
+    "k": 0,
+    "delay_s": 0.045036,
+    "ready": "READY",
+    "rc": 0,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": false,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 8,
+    "k": 0,
+    "delay_s": 0.020079,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 11,
+    "settled_after": 11,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 9,
+    "k": 0,
+    "delay_s": 0.039007,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 32,
+    "settled_after": 33,
+    "committed_but_unreported": 1,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 10,
+    "k": 0,
+    "delay_s": 0.012438,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 2,
+    "settled_after": 2,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 11,
+    "k": 0,
+    "delay_s": 0.002277,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 0,
+    "settled_after": 0,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 12,
+    "k": 0,
+    "delay_s": 0.030141,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 32,
+    "settled_after": 32,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 13,
+    "k": 0,
+    "delay_s": 0.03279,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 28,
+    "settled_after": 28,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 14,
+    "k": 0,
+    "delay_s": 0.001242,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 0,
+    "settled_after": 0,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 998 != original 1000 - sum of committed 0"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 15,
+    "k": 0,
+    "delay_s": 0.022021,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 22,
+    "settled_after": 22,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 954 != original 1000 - sum of committed 44"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 16,
+    "k": 0,
+    "delay_s": 0.014952,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 13,
+    "settled_after": 13,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 972 != original 1000 - sum of committed 26"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 17,
+    "k": 0,
+    "delay_s": 0.036682,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 33,
+    "settled_after": 33,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 932 != original 1000 - sum of committed 66"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 18,
+    "k": 0,
+    "delay_s": 0.024972,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 27,
+    "settled_after": 27,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 19,
+    "k": 0,
+    "delay_s": 0.00265,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 1,
+    "settled_after": 1,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 996 != original 1000 - sum of committed 2"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 20,
+    "k": 0,
+    "delay_s": 0.010487,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 11,
+    "settled_after": 11,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 976 != original 1000 - sum of committed 22"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 21,
+    "k": 0,
+    "delay_s": 0.021641,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 20,
+    "settled_after": 20,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 22,
+    "k": 0,
+    "delay_s": 0.042071,
+    "ready": "READY",
+    "rc": 0,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": false,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 23,
+    "k": 0,
+    "delay_s": 0.007558,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 6,
+    "settled_after": 6,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 986 != original 1000 - sum of committed 12"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 24,
+    "k": 0,
+    "delay_s": 0.017538,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 20,
+    "settled_after": 20,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 958 != original 1000 - sum of committed 40"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 25,
+    "k": 0,
+    "delay_s": 0.031456,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 31,
+    "settled_after": 31,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 936 != original 1000 - sum of committed 62"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 26,
+    "k": 0,
+    "delay_s": 0.036326,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 36,
+    "settled_after": 37,
+    "committed_but_unreported": 1,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 27,
+    "k": 0,
+    "delay_s": 0.006314,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 5,
+    "settled_after": 5,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 988 != original 1000 - sum of committed 10"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 28,
+    "k": 0,
+    "delay_s": 0.024217,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 25,
+    "settled_after": 26,
+    "committed_but_unreported": 1,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 29,
+    "k": 0,
+    "delay_s": 0.009581,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 10,
+    "settled_after": 10,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 978 != original 1000 - sum of committed 20"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 30,
+    "k": 0,
+    "delay_s": 0.025997,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 23,
+    "settled_after": 23,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 952 != original 1000 - sum of committed 46"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 31,
+    "k": 0,
+    "delay_s": 0.011947,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 11,
+    "settled_after": 11,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 32,
+    "k": 0,
+    "delay_s": 0.019392,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 22,
+    "settled_after": 23,
+    "committed_but_unreported": 1,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 33,
+    "k": 0,
+    "delay_s": 0.038125,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 34,
+    "k": 0,
+    "delay_s": 0.038411,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 35,
+    "k": 0,
+    "delay_s": 0.010106,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 9,
+    "settled_after": 9,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 980 != original 1000 - sum of committed 18"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 36,
+    "k": 0,
+    "delay_s": 0.013684,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 13,
+    "settled_after": 14,
+    "committed_but_unreported": 1,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 37,
+    "k": 0,
+    "delay_s": 0.032938,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 31,
+    "settled_after": 31,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 936 != original 1000 - sum of committed 62"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 38,
+    "k": 0,
+    "delay_s": 0.027631,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 31,
+    "settled_after": 31,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 39,
+    "k": 0,
+    "delay_s": 0.038986,
+    "ready": "READY",
+    "rc": 0,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": false,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 40,
+    "k": 0,
+    "delay_s": 0.015934,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 17,
+    "settled_after": 17,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 964 != original 1000 - sum of committed 34"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 41,
+    "k": 0,
+    "delay_s": 0.001067,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 0,
+    "settled_after": 0,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 42,
+    "k": 0,
+    "delay_s": 0.041266,
+    "ready": "READY",
+    "rc": 0,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": false,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 43,
+    "k": 0,
+    "delay_s": 0.021213,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 24,
+    "settled_after": 24,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 44,
+    "k": 0,
+    "delay_s": 0.018687,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 18,
+    "settled_after": 18,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 962 != original 1000 - sum of committed 36"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 45,
+    "k": 0,
+    "delay_s": 0.01823,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 23,
+    "settled_after": 23,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 46,
+    "k": 0,
+    "delay_s": 0.021997,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 21,
+    "settled_after": 21,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 47,
+    "k": 0,
+    "delay_s": 0.041998,
+    "ready": "READY",
+    "rc": 0,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": false,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 48,
+    "k": 0,
+    "delay_s": 0.025921,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 27,
+    "settled_after": 27,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 49,
+    "k": 0,
+    "delay_s": 0.03259,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 36,
+    "settled_after": 36,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 926 != original 1000 - sum of committed 72"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 50,
+    "k": 0,
+    "delay_s": 0.0123,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 10,
+    "settled_after": 10,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 51,
+    "k": 0,
+    "delay_s": 0.026574,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 22,
+    "settled_after": 22,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 52,
+    "k": 0,
+    "delay_s": 0.026914,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 26,
+    "settled_after": 26,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 946 != original 1000 - sum of committed 52"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 53,
+    "k": 0,
+    "delay_s": 0.008142,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 5,
+    "settled_after": 5,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": [
+     "audit: ['stored state is not the end of the chain']",
+     "remaining 988 != original 1000 - sum of committed 10"
+    ]
+   },
+   {
+    "new_in_list": 40,
+    "i": 54,
+    "k": 0,
+    "delay_s": 0.043135,
+    "ready": "READY",
+    "rc": 0,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": false,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 55,
+    "k": 0,
+    "delay_s": 0.021764,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 23,
+    "settled_after": 23,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 56,
+    "k": 0,
+    "delay_s": 0.04459,
+    "ready": "READY",
+    "rc": 0,
+    "reported_new": 40,
+    "settled_after": 40,
+    "committed_but_unreported": 0,
+    "killed": false,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 57,
+    "k": 0,
+    "delay_s": 0.010138,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 11,
+    "settled_after": 11,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 58,
+    "k": 0,
+    "delay_s": 0.022461,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 27,
+    "settled_after": 27,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": false,
+    "violations": []
+   },
+   {
+    "new_in_list": 40,
+    "i": 59,
+    "k": 0,
+    "delay_s": 0.035535,
+    "ready": "READY",
+    "rc": -9,
+    "reported_new": 39,
+    "settled_after": 39,
+    "committed_but_unreported": 0,
+    "killed": true,
+    "hot_journal_before_reopen": true,
+    "violations": []
+   }
+  ]
+ },
+ "nocheck_race": {
+  "variant": "nocheck",
+  "tsx_source": false,
+  "rows": [
+   {
+    "K": 10,
+    "round": 0,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4258,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 10,
+    "round": 1,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4294,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 10,
+    "round": 2,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4277,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   }
+  ],
+  "violations": [
+   {
+    "K": 10,
+    "round": 0,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4258,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 10,
+    "round": 1,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4294,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 10,
+    "round": 2,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4277,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   }
+  ],
+  "races": 3,
+  "skipped": []
+ },
+ "toctou_race": {
+  "variant": "toctou",
+  "tsx_source": false,
+  "rows": [
+   {
+    "K": 10,
+    "round": 0,
+    "committed": 5,
+    "stale": 5,
+    "late": 0,
+    "mem_mib_before": 4309,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain']",
+     "remaining 600 != original 1000 - sum of committed 2000",
+     "5 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 10,
+    "round": 1,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4379,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 10,
+    "round": 2,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4467,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 25,
+    "round": 0,
+    "committed": 8,
+    "stale": 17,
+    "late": 0,
+    "mem_mib_before": 4418,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain']",
+     "remaining 600 != original 1000 - sum of committed 3200",
+     "8 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 25,
+    "round": 1,
+    "committed": 5,
+    "stale": 20,
+    "late": 0,
+    "mem_mib_before": 4437,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain']",
+     "remaining 600 != original 1000 - sum of committed 2000",
+     "5 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 25,
+    "round": 2,
+    "committed": 3,
+    "stale": 22,
+    "late": 0,
+    "mem_mib_before": 4426,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain']",
+     "remaining 600 != original 1000 - sum of committed 1200",
+     "3 commits for one pre-state"
+    ]
+   }
+  ],
+  "violations": [
+   {
+    "K": 10,
+    "round": 0,
+    "committed": 5,
+    "stale": 5,
+    "late": 0,
+    "mem_mib_before": 4309,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain']",
+     "remaining 600 != original 1000 - sum of committed 2000",
+     "5 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 10,
+    "round": 1,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4379,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 10,
+    "round": 2,
+    "committed": 10,
+    "stale": 0,
+    "late": 0,
+    "mem_mib_before": 4467,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain', 'row 9: chain', 'row 10: chain']",
+     "remaining 600 != original 1000 - sum of committed 4000",
+     "10 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 25,
+    "round": 0,
+    "committed": 8,
+    "stale": 17,
+    "late": 0,
+    "mem_mib_before": 4418,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain', 'row 6: chain', 'row 7: chain', 'row 8: chain']",
+     "remaining 600 != original 1000 - sum of committed 3200",
+     "8 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 25,
+    "round": 1,
+    "committed": 5,
+    "stale": 20,
+    "late": 0,
+    "mem_mib_before": 4437,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain', 'row 4: chain', 'row 5: chain']",
+     "remaining 600 != original 1000 - sum of committed 2000",
+     "5 commits for one pre-state"
+    ]
+   },
+   {
+    "K": 25,
+    "round": 2,
+    "committed": 3,
+    "stale": 22,
+    "late": 0,
+    "mem_mib_before": 4426,
+    "violations": [
+     "audit: ['row 2: chain', 'row 3: chain']",
+     "remaining 600 != original 1000 - sum of committed 1200",
+     "3 commits for one pre-state"
+    ]
+   }
+  ],
+  "races": 6,
+  "skipped": []
+ },
+ "detected": {
+  "twotx_point": 10,
+  "twotx_external": 20,
+  "nocheck_race": 3,
+  "toctou_race": 6
+ },
+ "seconds": 36.3
+}

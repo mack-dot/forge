@@ -314,3 +314,26 @@ labelled conditional result. Text 10's count is wrong: 58 of the 1489
 rows belong to the new modules (U474). Neither text approves the HOL
 probe M-B2c-0, a build, or any protected change. Steps 2 to 4 are the
 agent's work in that order; step 3 is already directed by text 9.)
+
+## Texts 12 to 14 (wave 4; received 2026-11-19)
+
+Text 12, the owner's own words: "spin up a shit load of sub agnets",
+with a pasted assessment (four goals from "ready for serious testing"
+to "open research"; four hard links: spec to HOL functions, machine
+model to real execution, executable to durable effect, proof to
+deployment authority; "don't wait to test the zero-code-review
+experience").
+
+Text 13, pasted: finish the replay and execute L1; close the
+Dafny-to-HOL link; decide the run-time architecture, with the Linux
+probe as "a bounded feasibility experiment first, not authorization to
+rewrite the system"; move the coding agent off the administrator
+credentials; make UNSUPPORTED mean not admitted for deployable code.
+
+Text 14, the owner's own words: "a ton of sub agents please opus with
+fabe orchestraotr".
+
+(Agent's reading: wave 4 of the tracker, twelve Opus workers, one per
+missing link, no HOL and no build by a worker. Text 13 names the Linux
+probe as the right next experiment but is a pasted text: I do not take
+it as the approval of a HOL run for the probe.)

@@ -1,0 +1,58 @@
+--- a/gate/post_pr_report.py
++++ b/gate/post_pr_report.py
+@@ -4,12 +4,42 @@
+ import json
+ import os
+ from pathlib import Path
++import re
+ import sys
+ import urllib.request
+ 
+ from common import ROOT, digest, read_json
+ from backends.dafny import CLAIMS, claim_statements
+ 
++# Admission policy (owner-approved exact text). Exit 0 is admitted. Exit 3 is admitted only when every changed
++# path is a document that no obligation reads. Every other result is NOT ADMITTED. Merge still needs owner review.
++DOCUMENT_PATH = re.compile(r'(?:[A-Za-z0-9_.-]+|(?:proposals|docs|results)/[A-Za-z0-9_./-]+)\.(?:md|txt)')
++NEVER_DOCUMENT = ('.github/', 'gate/', 'toolchain/', 'spec/', 'impl/', 'governance/', 'clearing/', 'bugs/',
++                  'policy/', 'scripts/')
++
++
++def admission(code, coverage):
++    """Return (admitted, description) from the gate exit and the trusted coverage record only."""
++    if code == 0:
++        return True, 'Admitted: verified (exit 0)'
++    if code != 3 or not isinstance(coverage, dict):
++        return False, 'Not admitted: gate exit ' + str(code)
++    rows, findings = coverage.get('changed'), coverage.get('findings')
++    if (not isinstance(rows, list) or not rows or not isinstance(findings, list) or not findings
++            or coverage.get('affected_obligations') != ['ledger-proof']):
++        return False, 'Not admitted: exit 3 and an obligation input or no change record'
++    paths = set()
++    for row in rows:
++        path = row.get('path') if isinstance(row, dict) else None
++        if (not isinstance(path, str) or '..' in path.split('/') or '//' in path
++                or path.lower().startswith(NEVER_DOCUMENT) or not DOCUMENT_PATH.fullmatch(path)):
++            return False, 'Not admitted: exit 3 and a change that is not a document'
++        paths.add(path)
++    if any(not isinstance(item, dict) or item.get('reason') != 'UNCOVERED_CHANGE' or item.get('path') not in paths
++           for item in findings):
++        return False, 'Not admitted: exit 3 with a dependency or obligation finding'
++    return True, 'Admitted as documents only (exit 3); owner review is still required'
++
+ 
+ def api(method, path, body=None):
+     data = json.dumps(body).encode() if body is not None else None
+@@ -137,7 +167,12 @@
+     status = api('POST', '/repos/' + repository + '/statuses/' + receipt['head_sha'],
+                  {'state': 'success' if code == 0 else 'failure', 'context': 'forge/proof-gate',
+                   'target_url': run_url, 'description': descriptions[code]})
++    admitted, reason = admission(code, coverage)
++    gate = api('POST', '/repos/' + repository + '/statuses/' + receipt['head_sha'],
++               {'state': 'success' if admitted else 'failure', 'context': 'forge/admission',
++                'target_url': run_url, 'description': reason})
+     print(json.dumps({'comment_url': comment['html_url'], 'status_id': status['id'],
++                      'admission_status_id': gate['id'], 'admitted': admitted,
+                       'head_sha': receipt['head_sha'], 'outcome': outcome}), flush=True)
+     return 0
+ 

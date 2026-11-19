@@ -1,0 +1,26 @@
+<HOME>/forge/proposals/forge2-m1-conformance/artifacts/refund-arm64-macho [arm64]:
+    -fixups:
+        segment         section          address             type   target
+        __DATA_CONST    __got            0x100028000           bind  libSystem/___assert_rtn
+        __DATA_CONST    __got            0x100028008           bind  libSystem/___clear_cache
+        __DATA_CONST    __got            0x100028010           bind  libSystem/___error
+        __DATA_CONST    __got            0x100028018           bind  libSystem/___stderrp
+        __DATA_CONST    __got            0x100028020           bind  libSystem/_close
+        __DATA_CONST    __got            0x100028028           bind  libSystem/_exit
+        __DATA_CONST    __got            0x100028030           bind  libSystem/_exp
+        __DATA_CONST    __got            0x100028038           bind  libSystem/_fprintf
+        __DATA_CONST    __got            0x100028040           bind  libSystem/_fputs
+        __DATA_CONST    __got            0x100028048           bind  libSystem/_fwrite
+        __DATA_CONST    __got            0x100028050           bind  libSystem/_getenv
+        __DATA_CONST    __got            0x100028058           bind  libSystem/_log
+        __DATA_CONST    __got            0x100028060           bind  libSystem/_malloc
+        __DATA_CONST    __got            0x100028068           bind  libSystem/_memmove
+        __DATA_CONST    __got            0x100028070           bind  libSystem/_open
+        __DATA_CONST    __got            0x100028078           bind  libSystem/_pow
+        __DATA_CONST    __got            0x100028080           bind  libSystem/_read
+        __DATA_CONST    __got            0x100028088           bind  libSystem/_snprintf
+        __DATA_CONST    __got            0x100028090           bind  libSystem/_strerror
+        __DATA_CONST    __got            0x100028098           bind  libSystem/_strtod
+        __DATA_CONST    __got            0x1000280A0           bind  libSystem/_strtoull
+        __DATA_CONST    __got            0x1000280A8           bind  libSystem/_vfprintf
+        __DATA_CONST    __got            0x1000280B0           bind  libSystem/_write

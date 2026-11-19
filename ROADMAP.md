@@ -28,6 +28,29 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## M1-B mission, wave 4: twelve workers, one per missing link; findings on admission, processor bits, exit status and enforcement; a Dafny sink core — U475
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| merge of pull request 57 (not a command of this session) |GitHub record: merged|squash commit `cc20207b`, 2026-11-19T06:02:18Z, by the owner's account |
+| pinned Dafny, gate options: a refund body that starts with `expect false;`, tries 1 and 2 |4; 0|try 1: my wrong solver path; try 2: 6 verified, 0 errors: the source proof is partial correctness only |
+| pinned Dafny, gate options: `dafny verify sink/SinkCore.dfy` (worker's attempts 1 and 2; then the orchestrator) |4; 0; 0|56 verified; `SinkCore refines FinalityProtocol`; not a proof of `sink.ts` |
+| `gh api …/branches/main/protection` |1 (HTTP 403)|`main` is not protected; the plan offers no rulesets for a private repository |
+| digests: the U294 export, its Dafny source, the flat contract file of the proof; the two slices of the executable |0|source and flat contract file byte-equal; slices equal to the second extraction |
+| worker runs NOT run again by the orchestrator: proof without the library axiom; its audit; 53 unread submissions; 486 kill runs on the sink; races to 50 processes; 9 mutated sink cores; export comparison; mirror proof |0; 0; 0; 0; 0; 4 each; 0; 0|1486 verified; audit equal to the empty baseline; 7 wrong submissions admitted; 0 violations; 1 commit per race except amount 0; all rejected; 0 differences; 246 verified |
+| every HOL step (L1, L2, L3, the link theorem, the output, exit and prefix lemmas) |NOT RUN|drafts; the replay holds the one HOL slot |
+| replay of the 158 recorded M1 cases (separate job) |WAITING on battery power|108 of 158 at 06:27Z: 104 as recorded, 1 must run again, 3 without source |
+
+[Tracker, wave 4](proposals/m1b-mission-20261119/TRACKER.md).
+[Graph, section 7](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md).
+Two premises of the machine-model theorem are false for real machines
+as written (the FFI contract; the processor bits TBI0 and SA0). Exit
+status 0 does not imply a complete output.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## M1-B mission, records: pull request 56 merged by the owner's account; Route A lemma drafts saved, not run — U474
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

@@ -1,0 +1,242 @@
+{
+ "sequence": [
+  {
+   "step": "zero token rq_zero_1 (amount 0, pre = S0)",
+   "result": {
+    "status": "committed",
+    "onTime": false
+   },
+   "settled": 1,
+   "outbox_amounts": [
+    "0"
+   ],
+   "remaining": "1000",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "zero token rq_zero_2 (amount 0, pre = S0)",
+   "result": {
+    "status": "committed",
+    "onTime": false
+   },
+   "settled": 2,
+   "outbox_amounts": [
+    "0",
+    "0"
+   ],
+   "remaining": "1000",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "zero token rq_zero_3 (amount 0, pre = S0)",
+   "result": {
+    "status": "committed",
+    "onTime": false
+   },
+   "settled": 3,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0"
+   ],
+   "remaining": "1000",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "zero token rq_zero_4 (amount 0, pre = S0)",
+   "result": {
+    "status": "committed",
+    "onTime": false
+   },
+   "settled": 4,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0"
+   ],
+   "remaining": "1000",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "zero token rq_zero_5 (amount 0, pre = S0)",
+   "result": {
+    "status": "committed",
+    "onTime": false
+   },
+   "settled": 5,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0"
+   ],
+   "remaining": "1000",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "rq_zero_1 asked again from the issuer (same text: True)",
+   "result": {
+    "status": "replayed",
+    "onTime": false
+   },
+   "settled": 5,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0"
+   ],
+   "remaining": "1000",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "rq_zero_1, amount 0, other reason duplicate_charge",
+   "result": {
+    "status": "rejected",
+    "reason": "request id is already settled with another token",
+    "onTime": false
+   },
+   "settled": 5,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0"
+   ],
+   "remaining": "1000",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "chain[0]: amount 2 on S0",
+   "result": {
+    "status": "committed",
+    "onTime": false
+   },
+   "settled": 6,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "2"
+   ],
+   "remaining": "998",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "rq_zero_2 again after the state changed",
+   "result": {
+    "status": "replayed",
+    "onTime": false
+   },
+   "settled": 6,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "2"
+   ],
+   "remaining": "998",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "zero token minted for the state after chain[0]",
+   "result": {
+    "status": "committed",
+    "onTime": false
+   },
+   "settled": 7,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "2",
+    "0"
+   ],
+   "remaining": "998",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "chain[0] again",
+   "result": {
+    "status": "replayed",
+    "onTime": false
+   },
+   "settled": 7,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "2",
+    "0"
+   ],
+   "remaining": "998",
+   "audit": [],
+   "violations": []
+  },
+  {
+   "step": "chain[1]: amount 2 on the state after chain[0]",
+   "result": {
+    "status": "committed",
+    "onTime": false
+   },
+   "settled": 8,
+   "outbox_amounts": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "2",
+    "0",
+    "2"
+   ],
+   "remaining": "996",
+   "audit": [],
+   "violations": []
+  }
+ ],
+ "race_of_5_zero_tokens": {
+  "K": 5,
+  "statuses": [
+   "committed",
+   "committed",
+   "committed",
+   "committed",
+   "committed"
+  ],
+  "settled": 5,
+  "outbox_amounts": [
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ],
+  "remaining": "1000",
+  "audit": [],
+  "violations": []
+ },
+ "seconds": 3.7
+}

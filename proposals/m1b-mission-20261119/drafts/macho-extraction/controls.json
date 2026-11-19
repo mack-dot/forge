@@ -1,0 +1,82 @@
+{
+ "code+1000 (in code slice)": {
+  "offset": 17592,
+  "code_slice_eq": false,
+  "bitmap_slice_eq": true,
+  "all_y9_checks_eq": false,
+  "file_sha_eq": false,
+  "cd_bad_pages": [
+   4
+  ]
+ },
+ "bitmaps+800 (in bitmap slice)": {
+  "offset": 181048,
+  "code_slice_eq": true,
+  "bitmap_slice_eq": false,
+  "all_y9_checks_eq": false,
+  "file_sha_eq": false,
+  "cd_bad_pages": [
+   44
+  ]
+ },
+ "GOT entry _write (outside)": {
+  "offset": 164016,
+  "code_slice_eq": "parse error: IndexError('list index out of range')",
+  "bitmap_slice_eq": null,
+  "all_y9_checks_eq": false,
+  "file_sha_eq": false,
+  "cd_bad_pages": [
+   40
+  ]
+ },
+ "_main C code (outside)": {
+  "offset": 152900,
+  "code_slice_eq": true,
+  "bitmap_slice_eq": true,
+  "all_y9_checks_eq": false,
+  "file_sha_eq": false,
+  "cd_bad_pages": [
+   37
+  ]
+ },
+ "__data pad after bitmaps (outside)": {
+  "offset": 200500,
+  "code_slice_eq": true,
+  "bitmap_slice_eq": true,
+  "all_y9_checks_eq": false,
+  "file_sha_eq": false,
+  "cd_bad_pages": [
+   48
+  ]
+ },
+ "LINKEDIT string table (outside)": {
+  "offset": 225372,
+  "code_slice_eq": "parse error: AssertionError(('_cake_codebuffer_begin', []))",
+  "bitmap_slice_eq": null,
+  "all_y9_checks_eq": false,
+  "file_sha_eq": false,
+  "cd_bad_pages": [
+   55
+  ]
+ },
+ "code signature blob (outside)": {
+  "offset": 238700,
+  "code_slice_eq": true,
+  "bitmap_slice_eq": true,
+  "all_y9_checks_eq": false,
+  "file_sha_eq": false,
+  "cd_bad_pages": [
+   55
+  ]
+ },
+ "cml_main stub (outside both slices, in HOL __TEXT)": {
+  "offset": 16392,
+  "code_slice_eq": true,
+  "bitmap_slice_eq": true,
+  "all_y9_checks_eq": false,
+  "file_sha_eq": false,
+  "cd_bad_pages": [
+   4
+  ]
+ }
+}

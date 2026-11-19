@@ -62,6 +62,8 @@ def main():
     for copy, approved in APPROVED.items():
         row('copy equals ' + approved, sha(ROOT / approved), sha(INPUTS / copy), 'SHA-256')
     row('proof file SHA-256', PROOF_SHA256, sha(INPUTS / 'LinkedRefund.dfy'), 'LinkedRefund.dfy')
+    # The flat contract file must be the exact input of the U294 export (review step D2, gap D5).
+    row('flat contract file SHA-256 (the input of the U294 export)', 'a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d', sha(INPUTS / 'transport/FlatCore.dfy'), 'transport/FlatCore.dfy')
     code, last, errors = verify(INPUTS)
     row('verify LinkedRefund.dfy (exit)', 0, code, last)
     row('verify LinkedRefund.dfy (summary)', 'Dafny program verifier finished with 1489 verified, 0 errors', last, '')

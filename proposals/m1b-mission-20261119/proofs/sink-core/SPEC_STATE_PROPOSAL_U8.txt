@@ -1,0 +1,55 @@
+Y7 DRAFT. UNAPPLIED PROPOSAL for graph link U8. Text only. NOT RUN. NOT approved. Changes no file.
+It is a change to spec/refund/RefundSpec.dfy, an APPROVED and protected file. Only the owner can approve it.
+Applying it changes the spec lock SHA-256 (90a21c71...), so every pinned spec lock (gate, sink config,
+tokens) must be rebound. That rebind is a separate protected change.
+
+1. The gap (U8)
+   The approved RefundSpec has no stored state. `remaining` and `requestOpen` are inputs of `Assess`.
+   `Assess` is stateless, so the approved intent does not say "a request id is authorized once" or
+   "the sum of refunds is at most `original`". Today these are choices of RefundFinality.dfy (rules 1-3)
+   and of the sink (sink.ts), not approved intent.
+
+2. The smallest change: ADD three declarations at the end of `abstract module RefundSpec`.
+   No existing line changes. No `ensures` of `Assess` changes. No new method, so impl/Refund.dfy gets no
+   new obligation (expected: Refund.dfy still verifies unchanged; NOT RUN).
+
+  // Stored state of one charge (owner-approved intent, if approved).
+  datatype StoredCharge = StoredCharge(
+    chargeId: string, original: int, remaining: int, refundEnabled: bool, settled: set<string>)
+
+  // Where the inputs of Assess come from: the stored state. A request is open iff its id is not settled.
+  function ContextAt(s: StoredCharge, requestId: string): Context {
+    ChargeContext(s.chargeId, requestId, s.original, s.remaining, s.refundEnabled, requestId !in s.settled)
+  }
+
+  // The approved stored-state step. An authorization decreases remaining by the amount and settles the
+  // request id. Every refusal changes nothing and has no intent.
+  predicate Settles(pre: StoredCharge, requestId: string, response: ModelResponse,
+                    post: StoredCharge, plan: seq<RefundIntent>) {
+    if Eligible(ContextAt(pre, requestId), response) then
+      post == pre.(remaining := pre.remaining - response.amount, settled := pre.settled + {requestId}) &&
+      plan == [Intent(pre.chargeId, requestId, response.amount, response.reason)]
+    else post == pre && plan == []
+  }
+
+   Optional, a SEPARATE owner decision (report V, M3): replace `0 <= response.amount` by
+   `0 < response.amount` in `Eligible`. That one DOES change approved behaviour and the proofs of
+   impl/Refund.dfy and of M1 (HOL `eligible_def`). It is not part of the smallest change.
+
+3. What it would let us prove (expected; none of it is run)
+   a. SinkCore with SpecRel := an instance of `Settles` (state = StoredCharge) gets T2 (never two
+      authorizations or commits for one request id) and T5 (sum of refunds <= original) as theorems
+      about APPROVED intent, not about a slice choice: a settled id makes `requestOpen` false, so R3 of
+      the approved Assess gives Rejected and no intent.
+   b. "No second authorization of the same refund" at the spec level: for every trace of `Settles`
+      steps, each request id has at most one non-empty plan. A short induction over traces.
+   c. RefundFinality rules 1-3 become ratified (rule 3 by ContextAt, no longer `requestOpen = true`).
+   d. The settled set is part of the hashed state, so a replayed zero-amount token is stopped by the
+      pre-state check too, not only by the request-id check.
+
+4. What it would NOT give
+   - Zero-amount refunds with FRESH request ids still each authorize and each make an effect
+     (proved for the current instance: lemma ZeroAmountRepeats in Y7 SinkCore.dfy). Only the
+     optional `0 < amount` change stops that.
+   - Nothing about sink.ts, SQLite, the hash, the signature or the compiled code.
+   - No link to M1: the HOL `eligible_def` path is stateless; it would need the same state rule.

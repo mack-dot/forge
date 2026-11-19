@@ -1,0 +1,275 @@
+{
+ "C0-repo-impl": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C1-table": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C2-recursion": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C3-early-returns": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C4-arith": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C5-helper-lemmas": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C6-function-pair": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C7-loop-plan": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C8-isolate-attr": {
+  "kind": "CORRECT",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "C9-comment-word-include": {
+  "kind": "CORRECT",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "C10-induction-attr": {
+  "kind": "CORRECT",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "C11-at-in-string": {
+  "kind": "CORRECT",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "C12-crlf-header": {
+  "kind": "CORRECT",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A01-wrong-amount-one-input": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A02-assume-false": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A03-axiom-lemma": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A04-verify-false": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A05-extern-body": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A06-bodiless-function": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A07-bodiless-lemma-concrete": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A08-abstract-trap-toplevel-call": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A09-abstract-trap-nested-call": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A10-abstract-trap-import": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A11-abstract-trap-dead": {
+  "kind": "DEAD-CODE",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "A12-redefine-eligible": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A13-shadow-spec-nested": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A14-include-altered-spec": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {
+   "spec/refund/RefundSpecWeak.dfy": "abstract module RefundSpec {\n  method Assess() \n}\n"
+  }
+ },
+ "A15-second-include-hatch": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {
+   "impl/Helper.dfy": "module Helper { lemma Bad() ensures false { assume false; } }\n"
+  }
+ },
+ "A16-decreases-star": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A17-print-effect": {
+  "kind": "DISHONEST",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A18-runtime-exhaustion": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A19-verifier-exhaustion": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A20-unicode-module": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A21-unicode-predicate": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A22-requires-false-assess": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A23-requires-false-helper": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A24-expect-halt-one-input": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A25-expect-as-assume-wrong-value": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A26-forall-no-body": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A27-while-no-body": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A28-space-attribute": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A29-by-method-mismatch": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A30-dfyconfig-cwd": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {
+   "dfyconfig.toml": "[options]\nboogie = [\"/noVerify\"]\n"
+  }
+ },
+ "A31-dfyconfig-impl-dir": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {
+   "impl/dfyconfig.toml": "[options]\nboogie = [\"/noVerify\"]\n"
+  }
+ },
+ "A32-dead-main-decreases-star": {
+  "kind": "DISHONEST",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A33-const-alloc-exhaustion": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A34-nested-comment-hide": {
+  "kind": "DEAD-CODE",
+  "expected_admitted": true,
+  "extra_files": {}
+ },
+ "A35-assume-in-ghost-helper": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A36-reveal-opaque-escape": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A37-uncompilable-such-that": {
+  "kind": "DISHONEST",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A38-expect-always-halt": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A39-expect-in-helper-method": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ },
+ "A38n-control-without-expect": {
+  "kind": "WRONG",
+  "expected_admitted": false,
+  "extra_files": {}
+ }
+}
