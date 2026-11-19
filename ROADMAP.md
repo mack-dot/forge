@@ -28,6 +28,38 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Night shift 2026-11-19, proof track (Orchestrator A): replay ended; first HOL runs of the M1-B lemmas; native counterexamples — U481 to U489
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Branch
+`nightshift/A-proof`; NOT merged; NOT pushed. Every HOL result is a
+machine-model result on the same machine with stored parent theories.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| replay of the 158 recorded M1 cases (`driver3.py run 120 157`, a job of an earlier session; ended 08:08:54Z) |driver ended|152 AS_RECORDED; 005 EXIT_EQUAL_REASON_DIFFERS; 130, 142 EXIT_DIFFERS; 094, 097, 098 NOT_RUN_NO_SOURCE |
+| second runs of 005 (driver), 130, 142 (`driver3.py rerun`, mine) |0; 0; 0|AS_RECORDED each; the first runs stopped in the Poly/ML run-time during theory load |
+| digest search for the sources of 094, 097, 098 (13,542 git blobs; 22,854 files) |0|0 hits: UNAVAILABLE |
+| `go-routeA.sh L1-0001`; `L1imp-0001` |0; 0|16 theorems, `refund_ffi_contract_on_totalises`; import 9 of 9 |
+| `L2-0001`; `L2-0002`; `L2-0003` |1; 1; 0|tactic gap; ML error; 9 theorems, `refund_profile_a_sl_reach` |
+| `L2b-0001`; `L2b-0002`; `L2b-0003` |1; 1; 0|lemma failed; control code wrong; 28 theorems, `ffi_calls_ok_of_returning_calls` |
+| `E1-0001`; `E1-0002`; `E1-0003`; mutant `E1neg-0001` |1; 1; 0; 1|setup error; ML error; 18 erasure theorems; the mutant fails as required |
+| `PF-0001` to `PF-0003`; `PF-0004`; `PX-0001` |1; 1; 1; 0; 0|`lexPs_cons` open; 26 theorems, strict-prefix lemma; 9 theorems, exact acceptance set |
+| `LO-0001` to `LO-0005` (L-OUT) |−24; 1; 1; 1; 1|NOT proved: two lemmas open |
+| link cases H0, H1, H2, E0, R1, R2, R3, I1, H4 (`go.sh`) |0 each (H4, R2, R3, I1 on a second run after a wrapper path error)|`exported_contract_exact`; U294 replays; the stored theory imports |
+| link controls NC1 to NC6, NS1 to NS3, NR1; PC1 |1 each; 0|as planned |
+| `run_native_ffi_tests.py` (worker; then mine, results byte-equal) |0; 0|exit status 0 with a cut or empty standard output; a forged frame through a loader variable |
+| L-EXIT; erasure step lift; L3; clean replay; independent replay |NOT RUN|drafts |
+
+[State](proposals/night-shift-20261119/orch-A/STATE.md).
+[Morning report](proposals/night-shift-20261119/MORNING_REPORT.md).
+[Owner queue](proposals/night-shift-20261119/OWNER_REQUIRED.md).
+Reviews by separate workers: L1, L2, E1 and PF-0004 hold; L1 and L2
+trade the false FFI premise for two open premises; no non-vacuity
+witness. I started ten HOL cases below the protocol's swap limit
+(U485). Links X8, X9, X11, X16 stay open.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## M1-B mission, wave 5: eleven workers; one composed Dafny lemma in the shape of the target; an audit of the records; the sink core's assumption cannot be met as written; the halting hole is wider — U477 to U480
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
