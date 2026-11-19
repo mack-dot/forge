@@ -432,3 +432,47 @@ B's NEW gate tier: a checker over the generated JavaScript (orch-B/h-gate/js_bou
 | new unsafe with generated JavaScript (U01, U02, U03) | 3 | 3 | 0 (U01, U02 unsafe = C-GATE-07, 08; U03 is safe after name mangling) |
 - False rejections on the new correct set: 0 of 16. Rule 3 refused about a third to a half of correct work. NOT RUN (A held the HOL lock, so the Dafny lock script made the runs wait): verify/translate of U04-U11 and K17.
 - Wiring (worker's reading; regress_hgate.sh exit 0): the checker run is time-bounded and fails closed; still open: verify, translate and build each re-read the submission file, and the critical tier checks a second translation (C-GATE-03, B marks it open).
+
+=========================================================================
+B's PROVIDER ANCHOR (74fb70eb; notes orch-B/h-provider2/PROVIDER_ANCHOR_2.md): the payment provider's idempotency key (= the request id) as the outside anchor. Worker c25 with its own local fake provider (realprov.ts; no network, no real key). C's own re-runs below; exit 1 = money wrong (paid twice, paid above the original, or a committed refund reported paid that was not).
+Command form: cd orch-C/c25-provider && [RP_*=..] ./run.sh <abs script>.ts <tree fix-74fb70eb> <args>. Logs orch-C/c25-provider/recheck/. SHA-256 realprov.ts 3a7a1161…4cc8, s1_scope.ts d091f280…5e4d, s4_rebind.ts fb625373…4604, wrap.ts 5477e11c…9c2f.
+## C-ATT-41 (17:03:32Z) key scope: request ids are unique per charge, provider keys are per account — CONFIRMED, NEW; attacker: none
+- RP_SHARED=<file> RP_REPLAY=first ./run.sh s1_scope.ts <tree> collide -> EXIT 1: request id "r1" on charge A and on charge B; the provider returns the stored result for the reused key; the adapter reports ch_B/r1 300 as paid; the provider moved only ch_A:600. With a provider that refuses a reused key with other parameters (RP_REPLAY=error): EXIT 0 (the second refund stays in doubt: liveness only, as B's notes say).
+- Cause: tests/refund-finality/provider/emit_adapter.ts accepts any replayed answer and does not compare the returned amount and charge with what it sent. B's notes state the provider must bind parameters; they do not state that the adapter trusts a replay.
+
+## C-ATT-42 (17:03:32Z) a rollback plus a reused request id is booked as paid with the wrong amount — CONFIRMED, NEW consequence; attacker: operator restore, or database writer without the key
+- RP_REPLAY=first RP_CEIL=1 ./run.sh s4_rebind.ts <tree> none -> EXIT 1 (books: r1 100 paid; provider paid 600 for that key). With both local anchors (`full`): EXIT 0.
+
+## C-ATT-43 (17:03:32Z) key retention window: a restore older than the provider's key window pays again — CONFIRMED; B STATES this limit (PROVIDER-KEY-RETENTION(W))
+- RP_RET=24 RP_CEIL=1 ./run.sh wrap.ts p_full_restore_retry <tree> d-a none -> EXIT 1 (worker: 1400 on 1000). With anchor full: EXIT 0. With no key expiry: EXIT 0.
+
+## C-ATT-44 (17:03:32Z) key squat by another party on the same provider account — CONFIRMED, NEW (not stated in B's notes); weak (that party can refund directly anyway)
+- RP_SHARED=<file> RP_REPLAY=first ./run.sh s1_scope.ts <tree> squat -> EXIT 1 (r1 600 reported paid; the customer got 1).
+
+## Worker results NOT re-run by C: key text (a legal 256-unit or non-ASCII request id is not a valid key at many providers: the committed refund stays in doubt = a false rejection; a client that cuts keys collides: s5_keytext.ts prefix exit 1); an "in progress" answer is journalled as refused although the money moved; B's own p_*.ts results all match B's table (logs/B_SUMMARY.txt).
+## C-NEG-17 (17:03:32Z) provider anchor, HOLDS (C's runs above and worker runs): the key comes only from the committed row on every dispatcher path (no nonce, counter or claim id); zero amounts make no provider call; an in-doubt row does not block later rows; with both local anchors every restore case is safe except the operator's manual re-send after a timeout (stated by B).
+## What the provider anchor guarantees (worker's summary, consistent with my runs): no second money movement for a request id K on one provider account, IF the re-send is inside the key window, the provider (or the adapter) binds the parameters, K is unique on the whole account, no other party uses K first, and K is a valid key text. It gives no freshness of the sink and no rollback resistance of the record; without the local floor and outside head a restore older than the window pays again.
+
+=========================================================================
+RE-RUN by C (17:07:46Z) against B's repairs at f67c5c16 (sink 3 + dispatcher; notes orch-B/h-sink3/HARDENING_NOTES_3.md)
+Overlay <SCRATCH>/redteam-C/fix-f67c5c16. Scripts: B's adapted copies (orch-B/h-sink3/attacks/c19, c21). I compared them with my originals: they differ only in the tree path (H3_ROOT) and one try/catch around a read in a21_files.ts (the defect rule is unchanged). Command (cwd = overlay; scrubbed env; H3_ROOT=<overlay>): node --no-warnings --import tsx <script> <work> <mode> (c21) or <script> <overlay> <orch-B/h-minter2/build/issueauth.cjs> <mode> (c19). Logs orch-C/refix/f67c5c16/.
+| Item | Script and mode | Exit | Recorded outcome | Verdict |
+|---|---|---|---|---|
+| C-ATT-33 crash before COMMIT | x1_crash_journal.ts onhead | 0 | start1 REFUSED (journal present); after Sink.recover: start2 "serves" | PASS (closed for this case) |
+| C-ATT-33 planted zero file | x1_crash_journal.ts planted | 0 | start1 REFUSED; start2 "serves" | PASS |
+| control | x1_crash_journal.ts control | 0 | serves | ok |
+| C-ATT-34 recover skips its one-row limit | a21_files.ts recover-deep | 0 | | PASS |
+| C-ATT-35 replaced inode in a commit | a23_inode.ts swap-commit | 0 | | PASS (B states a window inside SQLite's own commit remains) |
+| C-ATT-36 retry decision + ledger restore | a1_retry_restore.ts attack; floor; control | 0; 0; 0 | run3 "stopped: dispatcher alarm: the ledger is shorter than or differs from ..." | PASS (closed) |
+| C-ATT-37 path cases | a8_paths.ts link; case | 0; 0 | | PASS |
+| C-ATT-19 full restore | a7_full_restore.ts nofloor; floor | 1; 0 | | nofloor STILL PRESENT (B's stated limit); floor PASS |
+- NOT RUN by anyone: B's real-kill regression s3_kill_commits.ts (heavy slot); B does not claim "every crash state is recoverable".
+- Worker c27-sink3 started to VARY: the journal classifier against SQLite, the ledger hash chain and its migration, the recover path, a store moved to another folder.
+
+## FINAL RUN (17:12:18Z) of orch-C/c22-launch-conformance/test_process_lifecycle.py (SHA-256 968692dafa620d2a948faff5fd8de4d1d53f91ac1c4452571a79d90a4a0aa533) — C's own runs
+- Command: cd orch-C/c22-launch-conformance && C22_LAUNCHER=<file> /usr/bin/python3 -B -I test_process_lifecycle.py
+- A's launcher_v2.py (SHA-256 eec38a10583f1a2ba552834fca4bcad397ffde6bbc1277103a5533bfdf13c274): EXIT 0 in 5 of 5 runs; 24 tests OK. Logs final2-v2-run1..5.log.
+- A's launcher.py (fbdbea0b…): EXIT 1 in 2 of 2 runs; 2 FAIL (abort, and non-zero exit, after a complete frame with SIGCHLD ignored by the caller). Logs final2-v1-run1..2.log.
+- Correction of my own test before this run: an earlier final attempt on launcher_v2.py gave exit 1 once and exit 0 once (logs final-v2-run1.log, final-v2-run2.log). Cause: my test child ended before the launcher's image check; the launcher raised a refusal (csops errno 3); my test counted that as an error. The test child now reads its whole input first, as the refund program does (previous file kept: test_process_lifecycle_before_stdin_fix.py). That unstable attempt is not a launcher defect.
+- C-LAUNCH-01: CLOSED on launcher_v2.py. Not covered by these tests: the real refund program, code injected at load, the FFI C code (C-1).
+## c26 (reading audit of A's X8 v3, control matrix v2, gap list) and c27 (variations on B's f67c5c16): c26 is STATIC and not checked by C; c27 ran NOTHING (stopped by the owner's order). Their notes were relayed to A and B as unverified leads; none is a C finding.

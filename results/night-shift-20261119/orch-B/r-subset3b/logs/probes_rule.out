@@ -1,0 +1,59 @@
+subs/lit/L01-leading-zeros-19.dfy | pass W=213 T=6
+subs/lit/L02-octal-looking-010.dfy | pass W=213 T=6
+subs/lit/L03-leading-zero-09.dfy | pass W=213 T=6
+subs/lit/L04-2p53-plus-1.dfy | pass W=215 T=6
+subs/lit/L05-min-int64.dfy | pass W=217 T=6
+subs/lit/L06-20-digits.dfy | SUBSET3_LITERAL: numeric literal `12345678901234567890` (decimal, at most 19 digits)
+subs/lit/L07-hex.dfy | SUBSET3_LITERAL: numeric literal `0x10` (decimal, at most 19 digits)
+subs/lit/L08-underscore.dfy | SUBSET3_LITERAL: numeric literal `1_000` (decimal, at most 19 digits)
+subs/lit/L09-div-hex-zero.dfy | SUBSET3_LITERAL: numeric literal `0x0` (decimal, at most 19 digits)
+subs/lit/L10-div-zero-underscore.dfy | SUBSET3_LITERAL: numeric literal `0_0` (decimal, at most 19 digits)
+subs/lit/L11-zeros-60000.dfy | SUBSET3_LITERAL: numeric literal `000000000000000000000000` (decimal, at most 19 digits)
+subs/lit/L12-string-60000.dfy | SUBSET3_LITERAL: string literal longer than 256 characters
+subs/lit/L13-string-256-display16.dfy | pass W=253 T=17
+subs/lit/L14-leading-zero-8digits.dfy | pass W=213 T=6
+subs/sem/C01-set-dedup-int.dfy | SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+subs/sem/C02-set-dedup-string.dfy | SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+subs/sem/C03-seq-eq.dfy | pass W=245 T=6
+subs/sem/C04-tuple-in-seq.dfy | pass W=234 T=6
+subs/sem/C05-set-of-seq.dfy | SUBSET3_GUARD_BRACE: `{` inside an if/match guard (parenthesize nothing: refused)
+subs/sem/C06-input-in-display.dfy | pass W=221 T=6
+subs/sem/C07-string-lt.dfy | SUBSET3_KIND: expected int, found string
+subs/sem/C08-seq-lt.dfy | SUBSET3_KIND: expected int, found ('seq', 'int')
+subs/sem/C09-chain-eq.dfy | pass W=228 T=6
+subs/sem/E01-euclid-div-input.dfy | pass W=231 T=6
+subs/sem/E02-euclid-mod-input.dfy | pass W=230 T=6
+subs/sem/E03-euclid-literals.dfy | pass W=255 T=6
+subs/sem/E04-mul-div-roundtrip.dfy | pass W=217 T=6
+subs/sem/U01-nonbmp-length.dfy | pass W=215 T=6
+subs/sem/U02-nonbmp-member.dfy | pass W=217 T=6
+subs/sem/U03-nonbmp-char-eq.dfy | pass W=217 T=6
+subs/ghost/G01-pred-spec-only.dfy | pass W=211 T=6
+subs/ghost/G02-ghost-var-compiled-fn.dfy | pass W=211 T=6
+subs/ghost/G03-assert-compiled-fn.dfy | pass W=211 T=6
+subs/ghost/G04-by-method.dfy | SUBSET3_FORBIDDEN: by method
+subs/ghost/G05-compile-false.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+subs/ghost/G06-compile-true.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+subs/ghost/G07-const-calls-helper.dfy | pass W=234 T=6
+subs/ghost/G08-const-unused.dfy | pass W=211 T=6
+subs/ghost/G09-static-const.dfy | SUBSET3_FORBIDDEN: `static`
+subs/ghost/G10-const-big-display.dfy | pass W=254 T=17
+subs/ghost/G11-ghost-method-out.dfy | pass W=211 T=6
+subs/ghost/G12-assert-by-block.dfy | pass W=211 T=6
+subs/ghost/G13-function-in-requires-only.dfy | pass W=238 T=6
+subs/lex/X00-base.dfy | pass W=211 T=6
+subs/lex/X01-nested-comment.dfy | pass W=211 T=6
+subs/lex/X02-block-hides-slashes.dfy | pass W=218 T=6
+subs/lex/X03-line-then-block.dfy | pass W=218 T=6
+subs/lex/X04-string-with-slashes.dfy | pass W=218 T=6
+subs/lex/X05-cr-then-block.dfy | pass W=211 T=6
+subs/lex/X06-bom.dfy | SUBSET3_LEX: character U+FEFF outside comments and literals
+subs/lex/X07-ff.dfy | SUBSET3_LEX: character U+000C outside comments and literals
+subs/lex/X08-vt.dfy | SUBSET3_LEX: character U+000B outside comments and literals
+subs/lex/X09-prime-char.dfy | pass W=218 T=6
+subs/lex/X10-prime-ident-char.dfy | pass W=218 T=6
+subs/lex/X11-tuple-sel-00.dfy | SUBSET3_SELECT: selection `.0.1` on ('tuple', (('tuple', ('bool', 'int')), 'string'))
+subs/lex/X12-induction-attr-odd.dfy | pass W=218 T=6
+subs/lex/X13-star-slash-in-block.dfy | pass W=218 T=6
+subs/lex/X14-iff-chain.dfy | pass W=218 T=6
+subs/lex/X15-disjoint.dfy | SUBSET3_NAME: unknown or refused name `!!` in Assess

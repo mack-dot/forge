@@ -13,9 +13,10 @@
 // listed ids FAIL and every other id is PASS or KNOWN-LIMIT; 1 otherwise; 2 on a usage error.
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { resolve } from "node:path";
 import { controls } from "./controls";
 import { Harness, Outcome, Regression, TRUSTED_ENCODING_PATH, fail } from "./harness";
+import { Remote } from "./remote";
 import { judges } from "./k_judge_blindspots";
 import { regression as x1 } from "./x1_reqid_mismatch_duplicate";
 import { regression as x2, regressionB as x2b } from "./x2_cross_charge_duplicate";
@@ -34,17 +35,23 @@ export function word(r: Regression, o: Outcome): "PASS" | "KNOWN-LIMIT" | "FAIL"
 const flat = (s: string) => s.replace(/[\r\n]+/g, " ");
 const sha = (p: string) => createHash("sha256").update(readFileSync(p)).digest("hex");
 
+// After the regression, every child is stopped and the effect channel is checked (remote.ts): a record outside a
+// flush, a line that is not a record, or a channel held open after the child died makes the regression FAIL, whatever
+// its own outcome was (an effect that the regression did not see is still an effect).
 async function runOne(r: Regression, sink: string, disp: string, anchor: string | null): Promise<Outcome> {
   const h = new Harness(sink, disp, anchor);
   let timer: NodeJS.Timeout | undefined;
+  let o: Outcome;
   try {
     await h.begin(r.id);
     const timeout = new Promise<Outcome>(res => { timer = setTimeout(() => { h.remote.kill(); res(fail(`regression timed out after ${PER_REGRESSION_MS} ms`)); }, PER_REGRESSION_MS); });
-    return await Promise.race([r.run(h), timeout]);
+    o = await Promise.race([r.run(h), timeout]);
   } catch (e) {
     const tail = h.remote ? flat(h.remote.outputTail(160)) : "";
-    return fail("regression threw: " + flat(String((e as Error)?.message ?? e)).slice(0, 160) + (tail ? " | child output: " + tail : ""));
+    o = fail("regression threw: " + flat(String((e as Error)?.message ?? e)).slice(0, 160) + (tail ? " | child output: " + tail : ""));
   } finally { if (timer) clearTimeout(timer); await h.end(); }
+  if (h.channelProblems.length > 0) return fail("EFFECT CHANNEL: " + h.channelProblems.slice(0, 3).join("; ") + " | regression: " + o.reason);
+  return o;
 }
 
 async function main(argv: string[]): Promise<number> {
@@ -65,10 +72,14 @@ async function main(argv: string[]): Promise<number> {
   const mode = args[2] ?? "none";
   for (const p of [sink, disp, ...(mode === "none" ? [] : [mode])]) if (!existsSync(p)) { console.error("no such file: " + p); return 2; }
   const list = only ? ALL.filter(r => only.includes(r.id)) : ALL;
-  const neighbor = join(dirname(sink), "encoding.ts");
   console.log(`# judge=${__filename}\n# sink=${sink} sha256=${sha(sink)}\n# dispatcher=${disp} sha256=${sha(disp)}`);
   console.log(`# trusted encoding=${TRUSTED_ENCODING_PATH} sha256=${sha(TRUSTED_ENCODING_PATH)}`);
-  console.log(`# encoding next to the sink=${existsSync(neighbor) ? neighbor + " sha256=" + sha(neighbor) : "none"}`);
+  // The module graph that the code under test ACTUALLY loads (reported by a probe child; hashed HERE).
+  { const probe = new Remote(sink, disp);
+    try { await probe.ready; const c = await probe.call<{ graph: string[]; encodingModules: string[] }>("hello");
+      for (const p of c.graph) console.log(`# loaded ${c.encodingModules.includes(p) ? "ENCODING " : ""}${p} sha256=${existsSync(p) ? sha(p) : "missing"}`);
+    } catch (e) { console.log("# module graph: probe child failed: " + flat(String((e as Error).message))); }
+    finally { await probe.stop(); } }
   console.log(`# expectedHeadMode=${mode} node=${process.version} expected ids=${list.length} expect-fail=${expectFail ? expectFail.join(",") : "-"}`);
   const verdicts = new Map<string, string[]>();
   for (const r of list) {

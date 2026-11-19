@@ -1,0 +1,22 @@
+// Confinement probe (TEST ONLY). Tries each outside action; prints one JSON line per action: ok=true means the action WORKED.
+const P = process.argv[2], PORT = Number(process.argv[3]);
+const out = {}; const t = (name, f) => { try { const v = f(); out[name] = { ok: true, v: String(v).slice(0, 60) }; } catch (e) { out[name] = { ok: false, e: String(e.code || e.message).slice(0, 60) }; } };
+t('write_outside', () => require('fs').writeFileSync(P + '/canary/written-by-child', 'x'));
+t('write_cwd', () => require('fs').writeFileSync('written-in-D', 'x'));
+t('read_key', () => require('fs').readFileSync(P + '/test-signing-key.pem', 'utf8').length);
+t('read_etc_hosts', () => require('fs').readFileSync('/etc/hosts', 'utf8').length);
+t('read_repo', () => require('fs').readFileSync('<REPO>/AGENTS.md', 'utf8').length);
+t('spawn_echo', () => require('child_process').execFileSync('/bin/echo', ['x']).toString());
+t('spawn_node', () => require('child_process').spawnSync(process.execPath, ['-e', '1']).status);
+t('kill_parent_0', () => process.kill(process.ppid, 0));
+t('binding_fs', () => typeof process.binding('fs').open);
+t('worker', () => { new (require('worker_threads').Worker)('1', { eval: true }); return 'started'; });
+t('dlopen', () => process.dlopen({ exports: {} }, '/usr/lib/libz.1.dylib'));
+t('eval', () => eval('1+1'));
+t('new_function', () => new Function('return 2')());
+t('env', () => Object.keys(process.env).join(','));
+t('cwd', () => process.cwd());
+const net = require('net'); const s = net.connect(PORT, '127.0.0.1');
+const done = (r) => { out.net_tcp = r; console.log(JSON.stringify(out)); process.exit(0); };
+s.on('connect', () => done({ ok: true })); s.on('error', (e) => done({ ok: false, e: e.code }));
+setTimeout(() => done({ ok: false, e: 'timeout' }), 1500);

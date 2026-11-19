@@ -1,0 +1,28 @@
+# owner=r-subset3b start=2026-11-19T14:30:19Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset3b/work/C05-set-of-seq
+# power: Now drawing from 'AC Power'
+# swap free MiB: 664
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 59
+
+Dafny program verifier finished with 6 verified, 0 errors
+        2.08 real         1.30 user         0.20 sys
+           126107648  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12565  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  53  voluntary context switches
+               16761  involuntary context switches
+          9858351837  instructions retired
+          4497238440  cycles elapsed
+            93291672  peak memory footprint
+# end=2026-11-19T14:30:21Z
+exit 0

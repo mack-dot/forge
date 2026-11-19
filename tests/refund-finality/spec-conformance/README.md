@@ -29,6 +29,12 @@ Unratified choices that the oracle uses: OPEN-IS-UNSETTLED, POST-RULE.
   process (`../regress/worker.ts`) for the whole run; the driver never loads it. The driver delivers sequences
   over IPC, reads the durable state through its own read-only SQLite connection, calls the oracle, prints one
   JSON line. A child that exits or stops answering ends the run with exit 1 (field `childGone`).
+  With `--dispatcher`, the EFFECT RECEIVER is held by the driver (task h-judges2; `../regress/remote.ts`): each emit
+  call of the dispatcher under test is a record on a pipe that the driver created, ACKed by the driver before the call
+  returns; the emitted effects that the oracle checks are the records that the driver got, never a child report. A
+  channel fault (a record outside a flush, a line that is not a record, a pipe held open after the child died) makes
+  the run NOT OK (field `effectChannelProblems`). Remaining trust: OUT-OF-BAND-EFFECT, IN-PROCESS-TAMPER (see
+  `../regress/README.md`).
 - `selftest.ts`: hand-made histories with a known violation of P1-P9 and of the emission checks, a start
   refusal, and clean histories (21 cases).
 - `heavy_spec.sh`: the heavy run (5,000 sequences per mode per sink). It refuses while hol.lock exists or a

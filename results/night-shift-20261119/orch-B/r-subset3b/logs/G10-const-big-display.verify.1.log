@@ -1,0 +1,28 @@
+# owner=r-subset3b start=2026-11-19T14:37:23Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset3b/work/G10-const-big-display
+# power: Now drawing from 'AC Power'
+# swap free MiB: 806
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 34
+
+Dafny program verifier finished with 6 verified, 0 errors
+        3.42 real         1.41 user         0.31 sys
+           103923712  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               13718  page reclaims
+                 388  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  60  voluntary context switches
+               20530  involuntary context switches
+         10134049314  instructions retired
+          5111636770  cycles elapsed
+            95634584  peak memory footprint
+# end=2026-11-19T14:37:27Z
+exit 0

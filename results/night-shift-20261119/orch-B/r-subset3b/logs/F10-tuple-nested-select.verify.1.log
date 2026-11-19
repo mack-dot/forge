@@ -1,0 +1,28 @@
+# owner=r-subset3b start=2026-11-19T14:22:38Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset3b/work/F10-tuple-nested-select
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1143
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 33
+
+Dafny program verifier finished with 7 verified, 0 errors
+        6.13 real         1.75 user         0.52 sys
+           101302272  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               17436  page reclaims
+                 670  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 326  voluntary context switches
+               35626  involuntary context switches
+         11661567739  instructions retired
+          6641074899  cycles elapsed
+            96797800  peak memory footprint
+# end=2026-11-19T14:22:46Z
+exit 0

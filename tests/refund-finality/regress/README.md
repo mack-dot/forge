@@ -34,6 +34,24 @@ node --import tsx tests/refund-finality/regress/run.ts <h-sink tree>/ts/refund-f
   exit code are never a verdict. A child that exits, is killed, or does not answer in time makes that regression
   FAIL. A "restart" in a regression is a new child process (`Harness.restart()`).
 - The parent prints exactly one verdict line per expected id and checks the count at the end.
+- EFFECT RECEIVER (task h-judges2; red-team evasion `e_emit_twice_hidden2`). The PARENT holds the receiver. For each
+  child it creates one extra pipe (child fd 4). The emit function that the child gives to the dispatcher under test
+  writes one record per call into that pipe and BLOCKS until the parent ACKs it (an HMAC under a per-child secret
+  that the parent sends on the pipe before any module under test loads). So the parent observes every emit call
+  before it returns; at that moment it reads the ledger file itself (tolerant parser: any line, JSON or with a JSON
+  object inside, that names the request id at any depth) and decides whether that emit fails (failure injection,
+  D3). DEFINITION: an EFFECT is a record that the parent's receiver got. Every well-formed record on the pipe counts,
+  whoever wrote it (a module that writes into the pipe, also through a duplicated descriptor, SENDS an effect). A
+  record cannot be taken back. A module that does not call emit did not send; the liveness parts see the effect as
+  MISSING. A flush ends with a BARRIER (a random nonce written by the worker after the dispatcher returned; the pipe
+  keeps order). The regression FAILS (whatever its own outcome) on a CHANNEL FAULT: a record outside a flush (after
+  its barrier), a line that is not a record or an asked barrier, or a pipe that some process still holds open 5 s
+  after the child was killed (a forked process that could send late). The child no longer reports effects at all.
+- MODULE GRAPH (task h-judges2; red-team evasion `enc_unsigned_body`). The worker records every file that Node's
+  module resolver returns (a wrapper around `Module._resolveFilename`, installed before the modules under test load)
+  and joins `require.cache`. The runner prints each loaded file with the SHA-256 that the PARENT computes; lines
+  `# loaded ENCODING ...` mark the encoding modules (basename `encoding.*`, or a module that exports its own
+  `signedBytes`, not a re-export).
 - Exit codes: 0 when every id is `PASS` or `KNOWN-LIMIT` and every expected id has exactly one verdict. With
   `--expect-fail`: 0 when exactly the listed ids are `FAIL` and all others are `PASS` or `KNOWN-LIMIT` (an
   unexpected FAIL or an unexpected non-FAIL gives 1). 1 otherwise. 2 on a usage error (also an unknown id).
@@ -42,8 +60,12 @@ node --import tsx tests/refund-finality/regress/run.ts <h-sink tree>/ts/refund-f
 
 ### Trusted encoding
 Tokens are signed and decoded with the `encoding.ts` of the tree that the judge lives in
-(`../../../ts/refund-finality/encoding`), never with the one next to the sink. The runner prints both SHA-256
-values; case E0 FAILS when they differ.
+(`../../../ts/refund-finality/encoding`). The encoding of the code under test is found in its LOADED MODULE GRAPH,
+never by a path next to the sink: case E0 FAILS when an encoding module of that graph has another SHA-256, or when
+the graph has none. The verdicts on signed bytes are by BEHAVIOUR (E1, E2, D5): the trusted key signs candidate byte
+strings (the trusted signedBytes; every bytes function exported by a loaded encoding module, where it maps the honest
+and the altered body to the same bytes; canon of subsets of the body), and a token whose signed field changed while
+the signature was kept must not commit and must not be emitted.
 
 ### Configuration and capabilities
 - `cfg` always carries `initialState`. The dispatcher config carries `newLedgerH0` when the sink module exports
@@ -58,8 +80,12 @@ A hostile-writer case (X5a, X5b, X6-Z1, X6-P1, D1, D2) runs first with a writer 
 database aborts that write (triggers, CHECK), the abort is the SAFE outcome for that writer ("write refused by the
 database"), and the case runs again (fresh directory, fresh child) with a writer that DROPS every trigger, sets
 `PRAGMA ignore_check_constraints`, writes, and restores the trigger text. The second run gives the verdict. A write
-that fails even then (for example NOT NULL) is also safe. NOT covered: a writer who also recomputes the hardened
-sink's unkeyed chain (the stated KNOWN-LIMIT of h-sink without `expectedHead`).
+that fails even then (for example NOT NULL) is also safe. D1 and D2 do NOT recompute the hardened sink's unkeyed
+chain. D4 and D5 DO (task h-judges2, `Harness.appendRow`): the row-log chain is recomputed with the trusted chain
+function of the judge's tree (`genesisOf`, `linkOf` in `ts/refund-finality/core/store.ts`), so only the signature
+(D4) or the signed bytes (D5) can stop the row. Each has a CALIBRATION: the same writer stores a VALIDLY signed row,
+and the dispatcher must emit it once (else the case FAILS as "calibration": the judge cannot build a chain-valid row
+for that store, and it does not claim to have tested the signature).
 
 ### Status words
 `PASS` (the safe outcome holds), `FAIL` (the unsafe outcome happened, a control or a liveness part failed, or the
@@ -109,12 +135,28 @@ Status words asserted by K4 are the ones that the merged sink documents (`Commit
 | D1 | dispatcher: chain-continuing row signed by a foreign key (database writer) | not emitted | rq_1 emitted once | md_ignore_sig |
 | D2 | dispatcher: validly signed row that does not continue the chain (database writer) | not emitted | rq_1 emitted once | md_ignore_chain |
 | D3 | dispatcher: order of ledger line and effect; a failed effect | at every emit the ledger already holds the line (documented order: line appended and synced BEFORE the effect, at most once); after a failed emit the ledger records rq_1, rq_2 (rq_2 is a lost effect for a person to reconcile, never re-sent); no id emitted twice | the second flush emits rq_3 | md_emit_before_ledger |
-| E0 | encoding identity | `encoding.ts` next to the sink has the SHA-256 of the judge's trusted one (or is absent) | - | enc_unsigned_body |
-| E1 | post and intent altered after signing | no commit with the trusted signed bytes; probe: if the sink tree's `encoding.ts` gives the same signed bytes for the original and the altered body, the trusted key signs those bytes and the altered token must still not commit | honest token committed, emitted once | enc_unsigned_body |
+| E0 | encoding identity (h-judges2: from the LOADED module graph) | every encoding module that the code under test loaded has the trusted SHA-256; at least one is loaded | - | enc_unsigned_body |
+| E1 | post and intent altered after signing | no commit with the trusted signed bytes; probe: every bytes function of the LOADED encoding modules that gives the same bytes for the original and the altered body: the trusted key signs those bytes, and the altered token must still not commit | honest token committed, emitted once | enc_unsigned_body |
+| E2 | one signed field changed, signature kept (h-judges2) | for post, amount, reason, amount+post, request id, charge id, pre-state hash: no commit for any candidate signed bytes (trusted signedBytes; colliding loaded bytes functions; canon of every subset of the top-level keys without the changed ones; canon with the changed nested keys deleted): 365 deliveries on the branch head | honest token committed, emitted once | enc_unsigned_body, own_enc_no_reason |
+| D4 | dispatcher: CHAIN-RECOMPUTED writer row with a foreign-key, zero-byte or other-body signature, amounts 50 and 0 (h-judges2) | not emitted | calibration: the same writer's validly signed row (50 and 0) emitted once; rq_1 emitted once per store | md_ignore_sig, own_d_sig_nonzero_only |
+| D5 | dispatcher: CHAIN-RECOMPUTED writer row whose reason, or amount and post, changed while a trusted signature over candidate bytes was kept (h-judges2) | not emitted | calibration: the honest stored row emitted once | enc_unsigned_body, md_ignore_sig |
 
 Note on D3: the task text asked also that "after a failed emit the ledger must not claim the effect was sent".
 The merged dispatcher documents the opposite order on purpose (at most once: ledger first; a crash loses the
 effect, a person reconciles it). D3 asserts the DOCUMENTED order.
+
+## Remaining trust in a hostile child (task h-judges2; named, not tested away)
+- OUT-OF-BAND-EFFECT: a module can send an effect through a side channel that the parent does not own (a network
+  socket, a file, another process). Out of scope for a test harness; in production the receiver is the provider.
+- IN-PROCESS-TAMPER: code in the child can read the worker's closure (for example through `node:inspector`) and forge
+  ACKs or barriers. It can then hide its OWN failure injection or move records between flush windows; it cannot take
+  a record back (every record on the pipe counts, and a late record is a channel fault).
+- HIDDEN-LOAD: a module can load code without Node's resolver (fs + vm) or delete `require.cache` entries; E0 then
+  does not see that encoding. E1, E2 and D5 still judge by behaviour, but only for the candidate byte definitions
+  they try (SIGNED-BYTES-OUTSIDE-FAMILY: a private byte definition that is not a bytes function of a loaded encoding
+  module and not a canon projection of the body, for example a hash of selected fields, is not tried).
+- TRUSTED-CHAIN-FORMULA: D4 and D5 recompute the chain with the judge tree's `linkOf`; a store with another chain
+  makes their calibration FAIL (reported as such, not as a pass).
 
 ## Known sets (night shift 2026-11-19, actual runs; logs in results/night-shift-20261119/orch-B/h-judges/logs)
 
@@ -123,6 +165,9 @@ effect, a person reconciles it). D3 asserts the DOCUMENTED order.
 | merged (branch head) | X1, X2, X2b, X3, X4, X5a, X5b, X6-Z1 | X6-P1 | 0 with the eight ids in `--expect-fail` |
 | v6 draft | X6-Z1 | X6-P1 | 0 with `--expect-fail X6-Z1-zero-row-deleted-recommitted` |
 | hardened (h-sink) | none | none (X6-P1 SAFE: refused at start) | 0 with no `--expect-fail` |
+
+h-judges2 (29 cases: E2, D4, D5 added; logs in results/night-shift-20261119/orch-B/h-judges2/logs): the branch head
+74fb70eb with no `--expect-fail`: 29 PASS, exit 0; see the h-judges2 report for the merged and v6 runs.
 
 ## Red-team regressions (Orchestrator C), added by Orchestrator B
 

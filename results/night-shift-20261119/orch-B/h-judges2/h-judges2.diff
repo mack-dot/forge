@@ -1,0 +1,915 @@
+diff --git a/tests/refund-finality/regress/run.ts b/tests/refund-finality/regress/run.ts
+index d7857fa2..f399fff2 100644
+--- a/tests/refund-finality/regress/run.ts
++++ b/tests/refund-finality/regress/run.ts
+@@ -13,9 +13,10 @@
+ // listed ids FAIL and every other id is PASS or KNOWN-LIMIT; 1 otherwise; 2 on a usage error.
+ import { createHash } from "node:crypto";
+ import { existsSync, readFileSync } from "node:fs";
+-import { dirname, join, resolve } from "node:path";
++import { resolve } from "node:path";
+ import { controls } from "./controls";
+ import { Harness, Outcome, Regression, TRUSTED_ENCODING_PATH, fail } from "./harness";
++import { Remote } from "./remote";
+ import { judges } from "./k_judge_blindspots";
+ import { regression as x1 } from "./x1_reqid_mismatch_duplicate";
+ import { regression as x2, regressionB as x2b } from "./x2_cross_charge_duplicate";
+@@ -34,17 +35,23 @@ export function word(r: Regression, o: Outcome): "PASS" | "KNOWN-LIMIT" | "FAIL"
+ const flat = (s: string) => s.replace(/[\r\n]+/g, " ");
+ const sha = (p: string) => createHash("sha256").update(readFileSync(p)).digest("hex");
+ 
++// After the regression, every child is stopped and the effect channel is checked (remote.ts): a record outside a
++// flush, a line that is not a record, or a channel held open after the child died makes the regression FAIL, whatever
++// its own outcome was (an effect that the regression did not see is still an effect).
+ async function runOne(r: Regression, sink: string, disp: string, anchor: string | null): Promise<Outcome> {
+   const h = new Harness(sink, disp, anchor);
+   let timer: NodeJS.Timeout | undefined;
++  let o: Outcome;
+   try {
+     await h.begin(r.id);
+     const timeout = new Promise<Outcome>(res => { timer = setTimeout(() => { h.remote.kill(); res(fail(`regression timed out after ${PER_REGRESSION_MS} ms`)); }, PER_REGRESSION_MS); });
+-    return await Promise.race([r.run(h), timeout]);
++    o = await Promise.race([r.run(h), timeout]);
+   } catch (e) {
+     const tail = h.remote ? flat(h.remote.outputTail(160)) : "";
+-    return fail("regression threw: " + flat(String((e as Error)?.message ?? e)).slice(0, 160) + (tail ? " | child output: " + tail : ""));
++    o = fail("regression threw: " + flat(String((e as Error)?.message ?? e)).slice(0, 160) + (tail ? " | child output: " + tail : ""));
+   } finally { if (timer) clearTimeout(timer); await h.end(); }
++  if (h.channelProblems.length > 0) return fail("EFFECT CHANNEL: " + h.channelProblems.slice(0, 3).join("; ") + " | regression: " + o.reason);
++  return o;
+ }
+ 
+ async function main(argv: string[]): Promise<number> {
+@@ -65,10 +72,14 @@ async function main(argv: string[]): Promise<number> {
+   const mode = args[2] ?? "none";
+   for (const p of [sink, disp, ...(mode === "none" ? [] : [mode])]) if (!existsSync(p)) { console.error("no such file: " + p); return 2; }
+   const list = only ? ALL.filter(r => only.includes(r.id)) : ALL;
+-  const neighbor = join(dirname(sink), "encoding.ts");
+   console.log(`# judge=${__filename}\n# sink=${sink} sha256=${sha(sink)}\n# dispatcher=${disp} sha256=${sha(disp)}`);
+   console.log(`# trusted encoding=${TRUSTED_ENCODING_PATH} sha256=${sha(TRUSTED_ENCODING_PATH)}`);
+-  console.log(`# encoding next to the sink=${existsSync(neighbor) ? neighbor + " sha256=" + sha(neighbor) : "none"}`);
++  // The module graph that the code under test ACTUALLY loads (reported by a probe child; hashed HERE).
++  { const probe = new Remote(sink, disp);
++    try { await probe.ready; const c = await probe.call<{ graph: string[]; encodingModules: string[] }>("hello");
++      for (const p of c.graph) console.log(`# loaded ${c.encodingModules.includes(p) ? "ENCODING " : ""}${p} sha256=${existsSync(p) ? sha(p) : "missing"}`);
++    } catch (e) { console.log("# module graph: probe child failed: " + flat(String((e as Error).message))); }
++    finally { await probe.stop(); } }
+   console.log(`# expectedHeadMode=${mode} node=${process.version} expected ids=${list.length} expect-fail=${expectFail ? expectFail.join(",") : "-"}`);
+   const verdicts = new Map<string, string[]>();
+   for (const r of list) {
+diff --git a/tests/refund-finality/regress/harness.ts b/tests/refund-finality/regress/harness.ts
+index 940872ce..282205e0 100644
+--- a/tests/refund-finality/regress/harness.ts
++++ b/tests/refund-finality/regress/harness.ts
+@@ -16,13 +16,20 @@
+ // aborts the write (triggers, CHECK), WriteRefused is thrown. write(db, f, "drop"): the stronger writer drops every
+ // trigger, sets PRAGMA ignore_check_constraints, writes, and restores the trigger text (same schema text after).
+ // Durable state is read from the tables `state` (blob), `settled` (request_id) and `outbox` (request_id, intent).
++// EFFECTS (h-judges2): the effects of a flush are the records that the PARENT's receiver got (remote.ts); the child
++// never reports them. The ledger is read by the parent with a tolerant parser (ledgerLineIds in remote.ts).
++// CHAIN-VALID WRITER (h-judges2, red-team blind spot md_ignore_sig): appendRow() appends a settled row (and its outbox
++// row and state change) with the row-log chain RECOMPUTED by the trusted chain function of this tree (genesisOf and
++// linkOf, ../../../ts/refund-finality/core/store; the chain is unkeyed and public). A row written so differs from a
++// row that the sink wrote only in what the writer chose to put in the token.
+ import { generateKeyPairSync, sign } from "node:crypto";
+-import { mkdtempSync, readFileSync, rmSync, existsSync } from "node:fs";
++import { mkdtempSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join, resolve } from "node:path";
+ import { DatabaseSync } from "node:sqlite";
+ import * as TE from "../../../ts/refund-finality/encoding";
+-import { Remote } from "./remote";
++import * as TSTORE from "../../../ts/refund-finality/core/store";
++import { Received, Remote, ledgerLineIds } from "./remote";
+ 
+ export type State = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
+ export type Intent = { chargeId: string; requestId: string; amount: string; reason: string };
+@@ -30,7 +37,7 @@ export type Outcome = { ok: boolean; reason: string; limit?: boolean };
+ // kind "limit": three outcomes. ok && !limit = SAFE (PASS); ok && limit = the stated unsafe limit holds (KNOWN-LIMIT);
+ // !ok = FAIL. Kinds "attack", "control", "integrity": ok = PASS, !ok = FAIL.
+ export type Regression = { id: string; kind: "attack" | "control" | "limit" | "integrity"; title: string; run: (h: Harness) => Promise<Outcome> };
+-export type Effect = { requestId: string; intent: Intent; ledgerHadLine: boolean; threw: boolean };
++export type Effect = Received & { intent: Intent };
+ export type AnchorAdapter = { capture: (h: Harness, dbPath: string) => unknown; apply: (cfg: any, head: unknown) => any };
+ export type WriterMode = "keep" | "drop";
+ export class WriteRefused extends Error {}
+@@ -41,6 +48,8 @@ export const MERGED_DDL = `CREATE TABLE IF NOT EXISTS meta(k TEXT PRIMARY KEY, v
+         token TEXT NOT NULL, token_sha256 TEXT NOT NULL);
+       CREATE TABLE IF NOT EXISTS outbox(seq INTEGER PRIMARY KEY AUTOINCREMENT, request_id TEXT NOT NULL UNIQUE, intent TEXT NOT NULL);`;
+ export const TRUSTED_ENCODING_PATH = resolve(__dirname, "../../../ts/refund-finality/encoding.ts");
++// The trusted row-log chain of this tree (the formula is in core/store.ts; the same bytes as the anchor design).
++export const trustedLinkOf = (prev: string, token: string, intent: string): string => TSTORE.linkOf(prev, token, intent);
+ 
+ type SinkRef = { handle: number };
+ export class Harness {
+@@ -52,7 +61,10 @@ export class Harness {
+   readonly specLockSha256 = TE.sha256hex("h-regress test spec lock");
+   readonly checkerSha256 = TE.sha256hex("h-regress test checker");
+   remote!: Remote;
+-  caps: { loadError: string; hasSink: boolean; hasDispatcher: boolean; hasGenesisOf: boolean } = { loadError: "", hasSink: false, hasDispatcher: false, hasGenesisOf: false };
++  caps: { loadError: string; hasSink: boolean; hasDispatcher: boolean; hasGenesisOf: boolean; graph: string[]; encodingModules: string[] } =
++    { loadError: "", hasSink: false, hasDispatcher: false, hasGenesisOf: false, graph: [], encodingModules: [] };
++  // Effect-channel faults of every child of this regression (remote.ts); a non-empty list makes the regression FAIL.
++  readonly channelProblems: string[] = [];
+   dir = "";
+   private open = new Set<number>();
+   constructor(readonly sinkPath: string, readonly dispatcherPath: string, anchorPath: string | null) {
+@@ -71,10 +83,15 @@ export class Harness {
+     this.caps = await this.remote.call("hello");
+     if (!this.caps.hasSink) throw new Error("module under test does not export Sink: " + this.caps.loadError);
+   }
++  private async stopChild(): Promise<void> {
++    const r = this.remote; if (!r) return;
++    try { await r.stop(); } catch { /* gone */ }
++    for (const p of r.problems.splice(0)) this.channelProblems.push(p);
++  }
+   // A PROCESS restart: the child is killed (no close) and a new child loads the modules again.
+-  async restart(): Promise<void> { this.remote.kill(); this.open.clear(); await this.startChild(); }
++  async restart(): Promise<void> { await this.stopChild(); this.open.clear(); await this.startChild(); }
+   async end(): Promise<void> {
+-    try { await this.remote?.stop(); } catch { /* gone */ }
++    await this.stopChild();
+     try { rmSync(this.dir, { recursive: true, force: true }); } catch { /* best effort */ }
+   }
+   path(name: string): string { return join(this.dir, name); }
+@@ -122,17 +139,16 @@ export class Harness {
+     return r.status === "threw" ? "threw: " + String(r.reason).slice(0, 80) : r.status;
+   }
+   async close(sink: SinkRef | null): Promise<void> { if (sink) { this.open.delete(sink.handle); await this.remote.call("close", { handle: sink.handle }); } }
+-  // ---- the dispatcher under test (in the child). failAt: the emit with that index throws (a failed effect).
++  // ---- the dispatcher under test (in the child). failAt: the emit with that index gets a failing ACK from the parent.
++  // The effects are the records that the parent's receiver got during this flush (remote.ts); failAt: the record
++  // with that index gets a failing ACK (the parent decides), so that emit call throws.
+   async flush(dbPath: string, initial: State, ledgerName = "ledger.jsonl", failAt?: number): Promise<{ effects: Effect[]; error: string }> {
+     if (!this.caps.hasDispatcher) return { effects: [], error: "no dispatcher module loaded" };
+-    const r = await this.remote.call<{ effects: Effect[]; error: string }>("flush", { db: dbPath, ledger: this.path(ledgerName), dcfg: await this.dcfg(initial), failAt });
++    const r = await this.remote.flush({ db: dbPath, ledger: this.path(ledgerName), dcfg: await this.dcfg(initial) }, failAt);
+     return { effects: r.effects.map(e => ({ ...e, intent: e.intent as Intent })), error: r.error };
+   }
+-  ledgerIds(ledgerName = "ledger.jsonl"): string[] {
+-    const p = this.path(ledgerName);
+-    if (!existsSync(p)) return [];
+-    return readFileSync(p, "utf8").split("\n").filter(l => l.length > 0).map(l => { try { return String(JSON.parse(l).requestId); } catch { return "?unparsable"; } });
+-  }
++  // Request ids named by the ledger lines (tolerant parser; any line that names the id counts).
++  ledgerIds(ledgerName = "ledger.jsonl"): string[] { return ledgerLineIds(this.path(ledgerName)).flat(); }
+   // ---- durable state, read by the PARENT with its own read-only connection
+   raw<X>(dbPath: string, f: (db: DatabaseSync) => X): X { const db = new DatabaseSync(dbPath, { readOnly: true }); try { return f(db); } finally { db.close(); } }
+   outbox(dbPath: string): { request_id: string; intent: Intent }[] {
+@@ -181,6 +197,36 @@ export class Harness {
+     const names = Object.keys(v);
+     db.prepare(`INSERT INTO ${table}(${names.join(", ")}) VALUES (${names.map(() => "?").join(", ")})`).run(...names.map(n => v[n]));
+   }
++  // CHAIN-VALID WRITER (see the header). Appends the token `tok` as the next settled row. Hardened schema (columns
++  // prev, self): seq = the next position, prev = genesis (meta) or the self of the last outbox row, self =
++  // trustedLinkOf(prev, token, intent text); the outbox row and the state change are written by the store's own
++  // trigger when it exists (writer "keep"), or by the writer (writer "drop": triggers dropped and restored). Merged
++  // schema (no chain): settled row, outbox row, state blob. The intent text is canon(body.intent) (the token is canonical,
++  // so it equals json_extract(token, '$.body.intent')).
++  appendRow(dbPath: string, tok: string, mode: WriterMode): void {
++    const b = JSON.parse(tok).body, intentText = TE.canon(b.intent), rid = String(b.requestId);
++    this.write(dbPath, d => {
++      const cols = (t: string) => (d.prepare(`PRAGMA table_info(${t})`).all() as { name: string }[]).map(c => c.name);
++      const sc = cols("settled"), stc = cols("state");
++      if (sc.includes("self")) {
++        const seq = Number((d.prepare("SELECT coalesce(max(seq), 0) AS m FROM settled").get() as any).m) + 1;
++        const prev = seq === 1 ? String((d.prepare("SELECT genesis FROM meta").get() as any).genesis)
++          : String((d.prepare("SELECT self FROM outbox WHERE seq = ?").get(seq - 1) as any)?.self);
++        const self = trustedLinkOf(prev, tok, intentText);
++        d.prepare("INSERT INTO settled(seq, request_id, token, token_sha256, prev, self) VALUES (?, ?, ?, ?, ?, ?)").run(seq, rid, tok, TE.sha256hex(tok), prev, self);
++        if (!d.prepare("SELECT 1 AS x FROM outbox WHERE seq = ?").get(seq))
++          d.prepare("INSERT INTO outbox(seq, request_id, intent, prev, self) VALUES (?, ?, ?, ?, ?)").run(seq, rid, intentText, prev, self);
++        const s = d.prepare("SELECT * FROM state WHERE id = 1").get() as any;
++        if (Number(s.seq) !== seq) {
++          d.prepare("UPDATE state SET blob = ?, seq = ?, refunded = refunded + ? WHERE id = 1").run(TE.canon(b.post), seq, BigInt(b.intent.amount));
++        }
++      } else {
++        this.insertRow(d, "settled", { request_id: rid, token: tok, token_sha256: TE.sha256hex(tok) });
++        if ((d.prepare("SELECT COUNT(*) AS n FROM outbox WHERE request_id = ?").get(rid) as any).n === 0) this.insertRow(d, "outbox", { request_id: rid, intent: intentText });
++        if (stc.includes("blob")) d.prepare("UPDATE state SET blob = ? WHERE id = 1").run(TE.canon(b.post));
++      }
++    }, mode);
++  }
+   // Database file for the legacy fixture (X3): created by the parent in the merged format.
+   create(dbPath: string, f: (db: DatabaseSync) => void): void { const db = new DatabaseSync(dbPath); try { f(db); } finally { db.close(); } }
+ }
+diff --git a/tests/refund-finality/regress/worker.ts b/tests/refund-finality/regress/worker.ts
+index d5c2473a..9ca1a6d9 100644
+--- a/tests/refund-finality/regress/worker.ts
++++ b/tests/refund-finality/regress/worker.ts
+@@ -1,17 +1,73 @@
+-// CHILD process of the refund-finality judges (night shift 2026-11-19, task h-judges). A TEST, not a proof.
++// CHILD process of the refund-finality judges (night shift 2026-11-19, tasks h-judges, h-judges2). A TEST, not a proof.
+ // The judges (regress/run.ts, spec-conformance/run.ts) never load the code under test into their own process.
+ // They start this file as a child process (node --import tsx worker.ts <sink module> <dispatcher module|none>) and
+ // send it operations over the Node IPC channel. This file runs ONLY the operations that the parent asks for and
+ // answers with plain values. It decides nothing: every assertion, every database read for a verdict and every
+ // PASS/FAIL line is in the parent. Output of this process (stdout, stderr, exit code) is never a verdict.
+-// Captured BEFORE the module under test loads, so a module that replaces fs functions does not change them here.
+-// (A module that runs in this process can still do anything this process can do: see the README, open doubts.)
+-import { readFileSync as RF, existsSync as EX } from "node:fs";
++// EFFECTS (h-judges2): this file does NOT report effects. The emit function given to the dispatcher writes each call
++// as one record into fd 4, a pipe that the PARENT created and reads, and blocks until the parent ACKs it (remote.ts).
++// MODULE GRAPH (h-judges2): every file that Node's module resolver returns while this process runs is recorded (a
++// wrapper around Module._resolveFilename installed BEFORE the modules under test load) and joined with require.cache.
++// The parent hashes these files itself. "Encoding modules" = files of the graph whose basename is encoding.* or whose
++// exports have a function signedBytes.
++// The functions used below are captured BEFORE the module under test loads, so a module that replaces them later does
++// not change them here. (A module that runs in this process can still do anything this process can do: see the
++// README, remaining trust IN-PROCESS-TAMPER and HIDDEN-LOAD.)
++// Values, not import bindings: a compiled `import { f }` reads the module property at each call, so a module under
++// test that replaces fs.writeSync would change it; a const taken here keeps the original function.
++import * as fs from "node:fs";
++import * as crypto from "node:crypto";
+ import * as sqlite from "node:sqlite";
+-import { resolve } from "node:path";
++import { basename, resolve } from "node:path";
++// eslint-disable-next-line @typescript-eslint/no-require-imports
++const Module = require("node:module");
+ 
++const EX = fs.existsSync, WS = fs.writeSync, RS = fs.readSync;
++const JS = JSON.stringify, JP = JSON.parse, HM = crypto.createHmac, BA = Buffer.alloc.bind(Buffer), BF = Buffer.from.bind(Buffer);
+ const send = process.send!.bind(process);
+ const [sinkPath, dispPath] = process.argv.slice(2);
++const CH = 4;
++// ---- the effect channel: read the per-child secret (first line from the parent) before any module under test loads
++let chanBuf = "";
++function readLine(): string {
++  const b = BA(4096);
++  for (;;) {
++    const i = chanBuf.indexOf("\n");
++    if (i >= 0) { const l = chanBuf.slice(0, i); chanBuf = chanBuf.slice(i + 1); return l; }
++    const n = RS(CH, b, 0, b.length, null);
++    if (n === 0) throw new Error("effect channel closed");
++    chanBuf += b.toString("utf8", 0, n);
++  }
++}
++const first = readLine();
++const SECRET = first.startsWith("S ") ? first.slice(2) : "";
++if (SECRET.length !== 64) throw new Error("effect channel: no secret from the parent");
++const writeAll = (s: string) => { const b = BF(s, "utf8"); let o = 0; while (o < b.length) o += WS(CH, b, o, b.length - o); };
++let emitSeq = 0;
++// The emit function given to the dispatcher. One record per call; blocks until the parent's ACK for that record.
++// An ACK with fail = 1 (decided by the parent) makes this call throw: a failed effect.
++const emit = (e: any, i: any): void => {
++  const seq = ++emitSeq;
++  let rid = "?", intent: unknown = null;
++  try { rid = String(e?.requestId); } catch { /* keep "?" */ }
++  try { intent = JP(JS(i ?? null)); } catch { intent = null; }
++  writeAll(JS({ t: "e", seq, requestId: rid, intent }) + "\n");
++  for (;;) {
++    const [s, f, m] = readLine().split(" ");
++    if (s !== String(seq)) continue;                      // an ACK for a record that someone else wrote
++    if (m !== HM("sha256", SECRET).update(seq + ":" + f).digest("hex")) throw new Error("effect channel: bad ACK");
++    if (f === "1") throw new Error("injected emit failure");
++    return;
++  }
++};
++// ---- the module graph
++const graph = new Set<string>();
++const origResolve = Module._resolveFilename;
++Module._resolveFilename = function (...args: unknown[]) {
++  const r = origResolve.apply(this, args);
++  if (typeof r === "string") graph.add(r);
++  return r;
++};
+ // Storage fault injection (spec judge, mode fault): an armed INSERT or UPDATE throws before it runs.
+ let faultArmed = -1, writeCount = 0, faultHit = false;
+ const SP: any = (sqlite as any).StatementSync.prototype, origRun = SP.run;
+@@ -26,8 +82,20 @@ SP.run = function (...args: unknown[]) {
+ let sinkMod: any = null, dispMod: any = null, loadError = "";
+ try { sinkMod = require(resolve(sinkPath)); } catch (e) { loadError = "sink module: " + String((e as Error)?.message ?? e).slice(0, 200); }
+ try { if (dispPath && dispPath !== "none") dispMod = require(resolve(dispPath)); } catch (e) { loadError += " dispatcher module: " + String((e as Error)?.message ?? e).slice(0, 200); }
+-const encNext = (() => { try { const p = resolve(sinkPath, "..", "encoding.ts"); return EX(p) ? require(p) : null; } catch { return null; } })();
+ /* eslint-enable @typescript-eslint/no-require-imports */
++const graphNow = (): string[] => {
++  const all = new Set<string>(graph);
++  try { for (const k of Object.keys(require.cache)) all.add(k); } catch { /* ignore */ }
++  return [...all].filter(p => p.startsWith("/") && !p.includes("/node_modules/") && EX(p)).sort();
++};
++// Encoding modules: files named encoding.*, and files that export a function signedBytes that is not the same
++// function object as the signedBytes of an encoding.* file (a re-export is not a second encoding).
++const encodingModules = (): string[] => {
++  const g = graphNow(), sb = (p: string): unknown => { try { return (require.cache[p] as any)?.exports?.signedBytes; } catch { return undefined; } };
++  const named = g.filter(p => /^encoding\.(ts|js|cjs|mjs|cts|mts)$/.test(basename(p)));
++  const known = new Set<unknown>(named.map(sb).filter(f => typeof f === "function"));
++  return [...named, ...g.filter(p => !named.includes(p) && typeof sb(p) === "function" && !known.has(sb(p)))];
++};
+ const sinks = new Map<number, any>();
+ let nextHandle = 1;
+ const msg = (e: unknown) => String((e as Error)?.message ?? e).slice(0, 200);
+@@ -35,7 +103,7 @@ const msg = (e: unknown) => String((e as Error)?.message ?? e).slice(0, 200);
+ function op(name: string, a: any): unknown {
+   switch (name) {
+     case "hello": return { loadError, hasSink: typeof sinkMod?.Sink === "function", hasDispatcher: typeof dispMod?.Dispatcher === "function",
+-      hasGenesisOf: typeof sinkMod?.genesisOf === "function" };
++      hasGenesisOf: typeof sinkMod?.genesisOf === "function", graph: graphNow(), encodingModules: encodingModules() };
+     case "open": {
+       try { const s = new sinkMod.Sink(a.db, a.cfg); const h = nextHandle++; sinks.set(h, s); return { handle: h, error: "" }; }
+       catch (e) { return { handle: 0, error: msg(e) }; }
+@@ -51,29 +119,35 @@ function op(name: string, a: any): unknown {
+     }
+     case "close": { const s = sinks.get(a.handle); sinks.delete(a.handle); try { s?.close(); } catch { /* closed */ } return {}; }
+     case "genesis": return typeof sinkMod?.genesisOf === "function" ? String(sinkMod.genesisOf(a.initText, a.lock, a.checker, a.pem)) : null;
+-    // signedBytes of the encoding.ts NEXT TO the sink (if any), as base64, for two bodies. Probe only.
+-    case "neighborSignedBytes": {
+-      if (!encNext || typeof encNext.signedBytes !== "function") return null;
+-      try { return a.bodies.map((b: unknown) => Buffer.from(encNext.signedBytes(b)).toString("base64")); } catch (e) { return { error: msg(e) }; }
++    // CANDIDATE SIGNED-BYTES FUNCTIONS of the encoding module(s) that the code under test actually loaded: every
++    // exported function that maps each given body to bytes (Buffer, Uint8Array or string, as UTF-8), as base64.
++    // A PROBE only: the parent signs these bytes with the trusted key and asserts by behaviour.
++    case "encodingCandidates": {
++      const out: { name: string; bytes: string[] }[] = [];
++      for (const p of encodingModules()) {
++        let ex: any; try { ex = (require.cache[p] as any)?.exports; } catch { ex = null; }
++        if (!ex || typeof ex !== "object") continue;
++        for (const k of Object.keys(ex)) {
++          const f = ex[k];
++          if (typeof f !== "function" || /^class[\s{]/.test(Function.prototype.toString.call(f))) continue;
++          try {
++            const bs = (a.bodies as unknown[]).map(b => { const r = f(JP(JS(b)));
++              if (typeof r === "string") return BF(r, "utf8").toString("base64");
++              if (r instanceof Uint8Array) return BF(r).toString("base64");
++              throw new Error("not bytes"); });
++            out.push({ name: p + "#" + k, bytes: bs });
++          } catch { /* not a bytes function for these bodies */ }
++        }
++      }
++      return out;
+     }
+     case "flush": {
+-      // Effects are recorded by this file's emit callback with the ledger bytes AT THE MOMENT OF THE EMIT, so the
+-      // parent can check the documented order (ledger line first). failAt: the emit with this index throws.
+-      const effects: { requestId: string; intent: unknown; ledgerHadLine: boolean; threw: boolean }[] = [];
+-      let error = "", n = 0;
+-      try {
+-        const d = new dispMod.Dispatcher(a.db, a.ledger, a.dcfg, (e: any, i: any) => {
+-          const rid = String(e?.requestId);
+-          let had = false;
+-          try { had = EX(a.ledger) && RF(a.ledger, "utf8").split("\n").some(l => { try { return JSON.parse(l).requestId === rid; } catch { return false; } }); } catch { had = false; }
+-          const threw = a.failAt === n++;
+-          effects.push({ requestId: rid, intent: JSON.parse(JSON.stringify(i ?? null)), ledgerHadLine: had, threw });
+-          if (threw) throw new Error("injected emit failure");
+-        });
+-        d.flush();
+-      } catch (e) { error = msg(e); }
+-      return { effects, error };
++      // No effect list here: the parent's receiver holds the effects (see the header).
++      let error = "";
++      try { const d = new dispMod.Dispatcher(a.db, a.ledger, a.dcfg, emit); d.flush(); } catch (e) { error = msg(e); }
++      return { error };
+     }
++    case "barrier": writeAll(JS({ t: "b", nonce: String(a.nonce) }) + "\n"); return {};
+     default: throw new Error("unknown operation " + name);
+   }
+ }
+diff --git a/tests/refund-finality/regress/remote.ts b/tests/refund-finality/regress/remote.ts
+index e3100106..9214305f 100644
+--- a/tests/refund-finality/regress/remote.ts
++++ b/tests/refund-finality/regress/remote.ts
+@@ -1,24 +1,81 @@
+-// PARENT side of the judge process model (task h-judges). A TEST, not a proof.
++// PARENT side of the judge process model (tasks h-judges, h-judges2). A TEST, not a proof.
+ // Starts worker.ts as a child process with the module(s) under test and sends it operations over IPC.
+ // The parent keeps every verdict. The child's stdout and stderr are captured (never forwarded as verdict lines; the
+ // tail is shown, prefixed, only when the parent asks). A child that exits, is killed, or does not answer in time
+ // makes every pending and later call throw ChildGone: the caller records that as a FAIL.
++//
++// EFFECT RECEIVER (task h-judges2, red-team evasion e_emit_twice_hidden2). The PARENT holds the effect receiver. It
++// creates one extra pipe (child fd 4) for each child. The emit function that the child gives to the dispatcher under
++// test writes ONE record line per call into that pipe and then BLOCKS until this process answers with an ACK line
++// (HMAC with a per-child secret that only the worker's closure holds). So every emit call is observed here BEFORE it
++// returns, and this process decides at that moment (a) whether the ledger file already holds the request id (read
++// here, with a tolerant parser) and (b) whether that emit fails (failure injection is decided here, not in the child).
++// DEFINITION: an EFFECT is a record that this receiver got. A record cannot be "unsent". Every well-formed record on
++// the pipe counts, whoever in the child wrote it (a module that writes into the pipe directly SENDS an effect). A
++// module that does not call emit (or makes the emit write go elsewhere) did not send: a real receiver would not get
++// it either, and the liveness parts of the regressions see the effect as MISSING.
++// CHANNEL FAULTS (each makes the regression FAIL; see channelProblems()): a line that is not a well-formed record or
++// barrier; an effect record that arrives outside a flush window (after the barrier of the flush); a channel that is
++// still held open by some process 5 s after the child was killed (a forked process that could send a late effect).
++// REMAINING TRUST (named in the README): OUT-OF-BAND-EFFECT (a side channel this process does not own, for example
++// a network socket or a file: out of scope for a test harness; in production the receiver is the provider) and
++// IN-PROCESS-TAMPER (code in the child that reads the worker's closure, for example through the inspector, and
++// forges ACKs; that only hides its OWN failure injection, never an effect: every record on the pipe still counts).
+ import { ChildProcess, fork } from "node:child_process";
++import { createHmac, randomBytes } from "node:crypto";
++import { existsSync, readFileSync } from "node:fs";
+ import { join } from "node:path";
++import type { Readable, Writable } from "node:stream";
+ 
+ export class ChildGone extends Error {}
++export type Received = { requestId: string; intent: any; ledgerHadLine: boolean; threw: boolean };
++
++// Tolerant ledger reader (the ledger format changes: plain JSON lines, a hash chain of lines, more fields). For each
++// line: parse it as JSON, or else the text from its first "{" to its last "}"; collect every string value of a key
++// named "requestId" at any depth. Unparsable lines give no id.
++export function ledgerLineIds(path: string): string[][] {
++  if (!path || !existsSync(path)) return [];
++  let text = ""; try { text = readFileSync(path, "utf8"); } catch { return []; }
++  const ids = (v: unknown, out: string[]): string[] => {
++    if (Array.isArray(v)) { for (const x of v) ids(x, out); }
++    else if (v !== null && typeof v === "object") {
++      for (const [k, x] of Object.entries(v as Record<string, unknown>)) { if (k === "requestId" && typeof x === "string") out.push(x); else ids(x, out); }
++    }
++    return out;
++  };
++  return text.split("\n").filter(l => l.trim().length > 0).map(l => {
++    for (const cand of [l, l.slice(l.indexOf("{"), l.lastIndexOf("}") + 1)]) { try { return ids(JSON.parse(cand), []); } catch { /* next */ } }
++    return [];
++  });
++}
++export const ledgerHas = (path: string, rid: string): boolean => ledgerLineIds(path).some(xs => xs.includes(rid));
++
++type Window = { ledger: string; failAt: number | undefined; list: Received[]; nonce: string; done: (() => void) | null };
+ export class Remote {
+   private child: ChildProcess;
+   private seq = 1;
+   private pending = new Map<number, { res: (v: unknown) => void; rej: (e: Error) => void; timer: NodeJS.Timeout }>();
+   private gone: string | null = null;
+   private out = "";
++  private readonly secret = randomBytes(32).toString("hex");
++  private chan: (Readable & Writable) | null;
++  private acc = "";
++  private win: Window | null = null;
++  private chanClosed: Promise<void>;
++  readonly problems: string[] = [];
++  readonly received: Received[] = [];                       // every effect record of this child, in arrival order
+   readonly ready: Promise<void>;
+   constructor(sinkPath: string, dispatcherPath: string | null, private readonly timeoutMs = 60000, env?: NodeJS.ProcessEnv) {
+     this.child = fork(join(__dirname, "worker.ts"), [sinkPath, dispatcherPath ?? "none"],
+-      { execArgv: ["--no-warnings", "--import", "tsx"], stdio: ["ignore", "pipe", "pipe", "ipc"], env: env ?? process.env });
++      { execArgv: ["--no-warnings", "--import", "tsx"], stdio: ["ignore", "pipe", "pipe", "ipc", "pipe"], env: env ?? process.env });
+     const keep = (b: Buffer) => { this.out = (this.out + b.toString("utf8")).slice(-4000); };
+     this.child.stdout?.on("data", keep); this.child.stderr?.on("data", keep);
++    this.chan = (this.child.stdio as unknown[])[4] as (Readable & Writable) | null;
++    this.chanClosed = new Promise<void>(res => { if (!this.chan) return res(); this.chan.on("close", () => res()); this.chan.on("error", () => res()); });
++    if (this.chan) {
++      this.chan.on("data", (b: Buffer) => this.onData(b));
++      this.chan.write("S " + this.secret + "\n");             // the worker reads this line before it loads any module
++    } else this.problems.push("no effect channel");
+     this.ready = new Promise((res, rej) => {
+       const t = setTimeout(() => { this.die("no ready message in time"); rej(new ChildGone("child did not start")); }, timeoutMs);
+       this.pending.set(0, { res: () => { clearTimeout(t); res(); }, rej: (e) => { clearTimeout(t); rej(e); }, timer: t });
+@@ -32,6 +89,29 @@ export class Remote {
+     this.child.on("exit", (code, signal) => this.die(`child exited (code ${code}, signal ${signal})`));
+     this.child.on("error", (e) => this.die("child error: " + e.message));
+   }
++  private mac(seq: unknown, fail: number): string { return createHmac("sha256", this.secret).update(String(seq) + ":" + fail).digest("hex"); }
++  private onData(b: Buffer): void {
++    this.acc += b.toString("utf8");
++    if (this.acc.length > 1 << 22) { this.problems.push("effect channel: more than 4 MiB without a line end"); this.acc = ""; return; }
++    let i: number;
++    while ((i = this.acc.indexOf("\n")) >= 0) {
++      const line = this.acc.slice(0, i); this.acc = this.acc.slice(i + 1);
++      let m: any; try { m = JSON.parse(line); } catch { m = null; }
++      if (m && m.t === "e" && typeof m.requestId === "string" && Number.isSafeInteger(m.seq)) {
++        const w = this.win;
++        const idx = w ? w.list.length : -1;
++        const threw = w !== null && w.failAt === idx;
++        const r: Received = { requestId: m.requestId, intent: m.intent ?? null, ledgerHadLine: w ? ledgerHas(w.ledger, m.requestId) : false, threw };
++        this.received.push(r);
++        if (w) w.list.push(r); else this.problems.push(`effect for ${JSON.stringify(m.requestId).slice(0, 60)} arrived outside a flush`);
++        const f = threw ? 1 : 0;
++        try { this.chan?.write(`${m.seq} ${f} ${this.mac(m.seq, f)}\n`); } catch { /* gone */ }
++      } else if (m && m.t === "b" && typeof m.nonce === "string") {
++        if (this.win && this.win.nonce === m.nonce && this.win.done) { const d = this.win.done; this.win.done = null; d(); }
++        else this.problems.push("effect channel: a barrier that this process did not ask for");
++      } else this.problems.push("effect channel: not a record: " + JSON.stringify(line.slice(0, 80)));
++    }
++  }
+   private die(why: string): void {
+     if (this.gone === null) this.gone = why;
+     for (const [, p] of this.pending) { clearTimeout(p.timer); p.rej(new ChildGone(this.gone)); }
+@@ -46,11 +126,33 @@ export class Remote {
+       try { this.child.send({ id, op, args }); } catch (e) { this.die("send failed: " + (e as Error).message); }
+     });
+   }
++  // One flush of the dispatcher under test. The effects are the records that THIS receiver got between the start
++  // of the flush and the barrier that follows the child's answer (the pipe keeps order: every record that the child
++  // wrote before the barrier is read before it). failAt: the record with this index in the window gets a failing ACK.
++  async flush(args: { db: string; ledger: string; dcfg: unknown }, failAt?: number): Promise<{ effects: Received[]; error: string }> {
++    if (this.win) throw new Error("judge fault: nested flush");
++    const w: Window = { ledger: args.ledger, failAt, list: [], nonce: randomBytes(16).toString("hex"), done: null };
++    this.win = w;
++    try {
++      const r = await this.call<{ error: string }>("flush", args);
++      const barrier = new Promise<void>((res, rej) => {
++        const t = setTimeout(() => { this.kill(); rej(new ChildGone("effect channel barrier did not arrive")); }, this.timeoutMs);
++        w.done = () => { clearTimeout(t); res(); };
++      });
++      await this.call("barrier", { nonce: w.nonce });
++      await barrier;
++      return { effects: w.list, error: String(r?.error ?? "") };
++    } finally { this.win = null; }
++  }
+   goneReason(): string | null { return this.gone; }
+   outputTail(n = 400): string { return this.out.slice(-n); }
+   kill(): void { try { this.child.kill("SIGKILL"); } catch { /* gone */ } this.die(this.gone ?? "killed by the parent"); }
++  // Kills the child and waits until the effect channel is closed by every process that holds it (5 s at most).
+   async stop(): Promise<void> {
+-    if (this.gone !== null) return;
+-    await new Promise<void>(res => { this.child.once("exit", () => res()); this.kill(); });
++    if (this.gone === null) await new Promise<void>(res => { this.child.once("exit", () => res()); this.kill(); });
++    let t: NodeJS.Timeout | undefined;
++    const closed = await Promise.race([this.chanClosed.then(() => true), new Promise<boolean>(res => { t = setTimeout(() => res(false), 5000); })]);
++    if (t) clearTimeout(t);
++    if (!closed) { this.problems.push("effect channel still held open 5 s after the child was killed (another process holds it)"); try { this.chan?.destroy(); } catch { /* gone */ } }
+   }
+ }
+diff --git a/tests/refund-finality/regress/k_judge_blindspots.ts b/tests/refund-finality/regress/k_judge_blindspots.ts
+index 7c5c166f..c3cadc57 100644
+--- a/tests/refund-finality/regress/k_judge_blindspots.ts
++++ b/tests/refund-finality/regress/k_judge_blindspots.ts
+@@ -1,7 +1,7 @@
+ // Regressions that close the judge blind spots of red-team finding C-JUDGE-01 (Orchestrator C,
+ // results/night-shift-20261119/orch-C/ATTACKS.md; mutants in orch-C/c10-judges). Task h-judges. A TEST, not a proof.
+ // Every case states its SAFE outcome on DURABLE state (outbox rows, settled ids, stored state, read by the parent)
+-// and on EFFECTS (dispatcher emissions recorded in the child, and the ledger file read by the parent). Each case has
++// and on EFFECTS (the records that the PARENT's receiver got, remote.ts; the ledger file read by the parent). Each case has
+ // a liveness part, so a sink that rejects everything FAILS it.
+ // Source of each expected outcome: the Slice 1 finality design (ts/refund-finality/sink.ts header, checks 1-4, and
+ // ts/refund-finality/dispatcher.ts header, checks 1-5 and the ledger order), not the approved refund spec, which is
+@@ -9,8 +9,7 @@
+ // "committed", "replayed" (the identical token of a settled request id), "rejected".
+ import { createHash } from "node:crypto";
+ import { existsSync, readFileSync } from "node:fs";
+-import { dirname, join } from "node:path";
+-import { Harness, Intent, Regression, State, TRUSTED_ENCODING_PATH, WriterMode, fail, pass, twoWriters } from "./harness";
++import { Harness, Intent, Regression, State, TRUSTED_ENCODING_PATH, WriteRefused, WriterMode, fail, pass, twoWriters } from "./harness";
+ 
+ type Why = string[];
+ const unchanged = (h: Harness, db: string, s: State, nOut: number) => h.E.canon(h.stored(db)) === h.E.canon(s) && h.outbox(db).length === nOut;
+@@ -232,22 +231,26 @@ export const judges: Regression[] = [
+       if (!(led1.includes("rq_1") && led1.includes("rq_2"))) return fail("ledger does not record the effect before the failure: " + why);
+       return f2.effects.map(e => e.requestId).join(",") === "rq_3" ? pass(why) : fail("second flush did not emit exactly rq_3: " + why);
+     } },
+-  { id: "E0-encoding-identity", kind: "integrity", title: "the sink tree's encoding.ts is the judge's trusted encoding.ts",
+-    // The judges sign and decode with the trusted encoding.ts of their own tree. A sink tree that ships ANOTHER
+-    // encoding.ts is reported here (SHA-256 compare): its signed bytes, shape checks or canonical form may differ.
++  { id: "E0-encoding-identity", kind: "integrity", title: "every encoding module that the code under test loads is the judge's trusted encoding",
++    // h-judges2 (red-team blind spot enc_unsigned_body): the encoding is located in the module graph that the CHILD
++    // actually loaded (worker.ts records every resolved file), never by a path next to the sink. Every encoding module
++    // of that graph (encoding.*, or a module that exports its own signedBytes) must have the trusted SHA-256 (hashed by
++    // the parent). A graph without an encoding module also FAILS (the signed bytes are then not the trusted ones).
++    // The behaviour cases E1, E2 and D5 do not rely on this report.
+     async run(h) {
+       const sha = (p: string) => createHash("sha256").update(readFileSync(p)).digest("hex");
+-      const next = join(dirname(h.sinkPath), "encoding.ts");
+-      if (!existsSync(next)) return pass("no encoding.ts next to the sink");
+-      const a = sha(TRUSTED_ENCODING_PATH), b = sha(next);
+-      return a === b ? pass("same SHA-256 " + a.slice(0, 16)) : fail(`FOREIGN ENCODING: ${next} sha256 ${b.slice(0, 16)} differs from the trusted ${a.slice(0, 16)}`);
++      const t = sha(TRUSTED_ENCODING_PATH), mods = h.caps.encodingModules;
++      if (mods.length === 0) return fail(`NO ENCODING MODULE in the loaded graph (${h.caps.graph.length} files)`);
++      const bad = mods.filter(p => !existsSync(p) || sha(p) !== t);
++      return bad.length ? fail("FOREIGN ENCODING loaded: " + bad.map(p => `${p} sha256 ${existsSync(p) ? sha(p).slice(0, 16) : "missing"}`).join(", ") + ` (trusted ${t.slice(0, 16)})`)
++        : pass(`${mods.length} encoding module(s) in a graph of ${h.caps.graph.length} files, all with the trusted SHA-256 ${t.slice(0, 16)}`);
+     } },
+   { id: "E1-signed-bytes-cover-post-intent", kind: "attack", title: "post and intent altered after signing",
+     // (a) The trusted key signs body B (rq_1, 100); post and intent are then changed (amount 900, remaining 100) and
+-    // the token is delivered. SAFE: no commit. (b) Probe: the child computes the signed bytes of B and of the altered
+-    // body with the encoding.ts NEXT TO THE SINK. If they are equal (that encoding does not cover post and intent),
+-    // the trusted key signs THOSE bytes and the altered token is delivered. SAFE: no commit. LIVENESS: the honest
+-    // token for rq_1 commits and is emitted once.
++    // the token is delivered. SAFE: no commit. (b) Probe: every bytes function of every encoding module that the
++    // child loaded (worker.ts, encodingCandidates) maps B and the altered body; where the two byte strings are EQUAL,
++    // the trusted key signs them and the altered token is delivered. SAFE: no commit. LIVENESS: the honest token
++    // for rq_1 commits and is emitted once.
+     async run(h) {
+       const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = await h.newStore("e1", S0);
+       const B = h.body(S0, "rq_1", h.dec(S0, "100"), h.intent("ch_1", "rq_1", "100"));
+@@ -255,18 +258,160 @@ export const judges: Regression[] = [
+       const sig = JSON.parse(h.signBody(B)).signature;
+       const a = await h.commit(sink, h.E.canon({ body: Balt, signature: sig }));
+       if (!unchanged(h, db, S0, 0)) return fail("ALTERED POST/INTENT COMMITTED (trusted bytes): a=" + a);
+-      const nb = await h.remote.call<string[] | null | { error: string }>("neighborSignedBytes", { bodies: [B, Balt] });
+-      let probe = "no neighbor encoding";
+-      if (Array.isArray(nb)) {
+-        if (nb[0] === nb[1]) {
+-          const b = await h.commit(sink, h.signBody(Balt, false, Buffer.from(nb[0], "base64")));
+-          probe = "NEIGHBOR SIGNED BYTES OMIT post/intent; altered token signed over them: " + b;
+-          if (!unchanged(h, db, S0, 0)) return fail("ALTERED POST/INTENT COMMITTED (sink's encoding): " + probe);
+-        } else probe = "neighbor signed bytes cover post/intent";
++      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, Balt] });
++      const probe: string[] = [];
++      for (const c of cands) {
++        if (c.bytes[0] !== c.bytes[1]) continue;
++        const b = await h.commit(sink, h.signBody(Balt, false, Buffer.from(c.bytes[0], "base64")));
++        probe.push(`${c.name.split("/").pop()}=${b}`);
++        if (!unchanged(h, db, S0, 0)) return fail("ALTERED POST/INTENT COMMITTED (bytes of the loaded encoding " + c.name + "): " + b);
+       }
+       const ok = await h.commit(sink, h.signBody(B));
+       const f = await h.flush(db, S0);
+-      const why = `altered=${a} probe=${probe} honest=${ok} effects(rq_1)=${effectsOf(f.effects, "rq_1")}`;
++      const why = `altered=${a} candidates=${cands.length} colliding=[${probe.join(",")}] honest=${ok} effects(rq_1)=${effectsOf(f.effects, "rq_1")}`;
+       return effectsOf(f.effects, "rq_1") === 1 && h.outbox(db).length === 1 ? pass(why) : fail("honest token not committed and emitted once: " + why);
+     } },
++  { id: "E2-signed-field-flips", kind: "attack", title: "a signature kept while ONE signed field changes is refused (every field, many byte definitions)",
++    // h-judges2 (blind spot enc_unsigned_body). For each signed field F (post only, amount only, reason only, amount
++    // and post together, request id, charge id, pre-state hash) the altered body B' differs from the honest body B
++    // only in F. For each candidate definition g of the signed bytes with g(B) = g(B'), the trusted key signs g(B)
++    // and the token {body: B', signature} is delivered. Candidates: the trusted signedBytes; every bytes function of
++    // the encoding modules that the child loaded (where it collides); canon of every subset of the top-level body keys
++    // that leaves F's keys out; canon of B with F's nested keys deleted. SAFE: none commits (state and outbox
++    // unchanged). LIVENESS: the honest B commits and is emitted once. A sink that verifies a signature over fewer
++    // fields than the trusted encoding signs FAILS here when its bytes are one of the candidates.
++    async run(h) {
++      const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = await h.newStore("e2", S0);
++      const B = h.body(S0, "rq_1", h.dec(S0, "100"), h.intent("ch_1", "rq_1", "100"));
++      const alts = fieldFlips(h, S0, B);
++      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, ...alts.map(x => x.body)] });
++      let n = 0; const hits: string[] = [];
++      for (let k = 0; k < alts.length; k++) {
++        const x = alts[k];
++        for (const [name, bytes] of byteCandidates(h, B, x, cands.map(c => ({ name: c.name, b: c.bytes[0], a: c.bytes[k + 1] })))) {
++          const r = await h.commit(sink, h.signBody(x.body as any, false, bytes)); n++;
++          if (!unchanged(h, db, S0, 0)) { hits.push(`${x.field}/${name}=${r}`); break; }
++        }
++        if (hits.length) break;
++      }
++      if (hits.length) return fail("ALTERED SIGNED FIELD COMMITTED: " + hits.join(" ") + ` (after ${n} deliveries)`);
++      const ok = await h.commit(sink, h.signBody(B));
++      const f = await h.flush(db, S0);
++      const why = `deliveries=${n} fields=${alts.length} loadedCandidates=${cands.length} honest=${ok} effects(rq_1)=${effectsOf(f.effects, "rq_1")}`;
++      return effectsOf(f.effects, "rq_1") === 1 && h.outbox(db).length === 1 ? pass(why) : fail("honest token not committed and emitted once: " + why);
++    } },
++  { id: "D4-dispatcher-chain-valid-bad-signature", kind: "attack", title: "a row with a RECOMPUTED chain and a foreign or invalid signature",
++    // h-judges2 (blind spot md_ignore_sig: D1 and D2 do not recompute the chain, so any dispatcher refuses them at the
++    // chain check). rq_1 is committed and dispatched; the sink is closed. A database writer (no key; triggers dropped
++    // and restored) appends rq_2 with the row-log chain RECOMPUTED by the trusted chain function (appendRow).
++    // CALIBRATION: the same writer appends a VALIDLY signed rq_2 (amounts 50 and 0) in fresh stores: the dispatcher
++    // must emit it once (this shows that the writer's rows pass every chain check; else the case FAILS as "calibration").
++    // SAFE: rq_2 signed by a FOREIGN key, rq_2 with 64 zero bytes as signature, and rq_2 with a trusted signature over
++    // ANOTHER body, each with amount 50 and with amount 0, are NOT emitted. LIVENESS: rq_1 emitted once per store.
++    async run(h) {
++      const S0 = h.st("ch_1", "1000", "1000"), S1 = h.dec(S0, "100");
++      const zeroSig = Buffer.alloc(64).toString("base64");
++      const body2 = (amt: string) => h.body(S1, "rq_2", h.dec(S1, amt), h.intent("ch_1", "rq_2", amt));
++      const variants: [string, boolean, (amt: string) => string][] = [
++        ["valid", true, amt => h.signBody(body2(amt))],
++        ["foreign-key", false, amt => h.signBody(body2(amt), true)],
++        ["zero-signature", false, amt => h.E.canon({ body: body2(amt), signature: zeroSig })],
++        ["other-body-signature", false, amt => h.E.canon({ body: body2(amt), signature: JSON.parse(h.signBody(body2(amt === "0" ? "1" : "0"))).signature })],
++      ];
++      const why: string[] = [], bad: string[] = [], cal: string[] = [];
++      for (const amt of ["50", "0"]) for (const [name, good, tokOf] of variants) {
++        const r = await writerRow(h, `d4-${name}-${amt}`, S0, tokOf(amt));
++        why.push(`${name}/${amt}:${r.text}`);
++        if (r.rq1 !== 1) cal.push(`${name}/${amt}: rq_1 emitted ${r.rq1} times`);
++        if (good && r.rq2 !== 1) cal.push(`${name}/${amt}: valid writer row emitted ${r.rq2} times`);
++        if (!good && r.rq2 > 0) bad.push(`${name}/${amt}`);
++      }
++      if (bad.length) return fail("ROW WITHOUT A VALID SIGNATURE EMITTED (chain recomputed): " + bad.join(",") + " | " + why.join(" "));
++      if (cal.length) return fail("calibration: " + cal.join("; ") + " | " + why.join(" "));
++      return pass(why.join(" "));
++    } },
++  { id: "D5-dispatcher-stored-field-flips", kind: "attack", title: "a stored token whose post or intent changed while the signature was kept",
++    // h-judges2 (blind spot enc_unsigned_body, stored side). As D4 (writer, chain recomputed), rq_2's body B is the
++    // honest refund of 50 on S1; the writer stores B' = B with (a) the reason changed, or (b) amount 300 and post S1 -
++    // 300 (both fully valid bodies), with a trusted signature over g(B) for each candidate g with g(B) = g(B'): the
++    // trusted signedBytes (the signature is simply kept), the colliding bytes functions of the loaded encoding modules,
++    // canon of B without the touched top-level keys, canon of B without post and intent, canon of B with the touched
++    // nested keys deleted. CALIBRATION: the honest B stored by the same writer is emitted once. SAFE: no B' is emitted.
++    async run(h) {
++      const S0 = h.st("ch_1", "1000", "1000"), S1 = h.dec(S0, "100");
++      const B = h.body(S1, "rq_2", h.dec(S1, "50"), h.intent("ch_1", "rq_2", "50"));
++      const alts = [
++        { field: "reason", keys: ["intent"], body: { ...B, intent: { ...B.intent, reason: "duplicate_charge" } }, nested: (b: any) => ({ ...b, intent: omit(b.intent, ["reason"]) }) },
++        { field: "amount+post", keys: ["post", "intent"], body: { ...B, post: h.dec(S1, "300"), intent: { ...B.intent, amount: "300" } },
++          nested: (b: any) => ({ ...b, post: omit(b.post, ["remaining"]), intent: omit(b.intent, ["amount"]) }) },
++      ];
++      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, ...alts.map(x => x.body)] });
++      const c0 = await writerRow(h, "d5-calibration", S0, h.signBody(B));
++      if (c0.rq1 !== 1 || c0.rq2 !== 1) return fail(`calibration: honest stored row emitted ${c0.rq2} times, rq_1 ${c0.rq1} times: ${c0.text}`);
++      const why: string[] = [], bad: string[] = [];
++      for (let k = 0; k < alts.length; k++) {
++        const x = alts[k];
++        const gs: [string, Buffer][] = [["trusted", h.E.signedBytes(B)], ["top-minus-touched", canonBytes(h, omit(B, x.keys))],
++          ["top-minus-post-intent", canonBytes(h, omit(B, ["post", "intent"]))], ["nested", canonBytes(h, x.nested(B))]];
++        for (const c of cands) if (c.bytes[0] === c.bytes[k + 1]) gs.push([c.name.split("/").pop()!, Buffer.from(c.bytes[0], "base64")]);
++        for (const [name, bytes] of gs) {
++          const r = await writerRow(h, `d5-${k}-${name.replace(/[^A-Za-z0-9]/g, "_")}`, S0, h.signBody(x.body as any, false, bytes));
++          why.push(`${x.field}/${name}:${r.text}`);
++          if (r.rq2 > 0) bad.push(`${x.field}/${name}`);
++        }
++      }
++      return bad.length ? fail("STORED ALTERED BODY EMITTED: " + bad.join(",") + " | " + why.join(" ")) : pass(`calibration emitted once; ` + why.join(" "));
++    } },
+ ];
++
++// ---- helpers of E2, D4, D5 (h-judges2)
++const TOP = ["domain", "specLockSha256", "checkerSha256", "preStateSha256", "requestId", "post", "intent"];
++function omit(o: any, keys: string[]): any { const r: any = {}; for (const k of Object.keys(o)) if (!keys.includes(k)) r[k] = o[k]; return r; }
++const canonBytes = (h: Harness, o: unknown): Buffer => Buffer.from(h.E.canon(o as any), "utf8");
++type Flip = { field: string; keys: string[]; body: any; nested: ((b: any) => any) | null };
++// One altered body per signed field; each differs from B only in the named field (keys: the top-level keys it touches).
++function fieldFlips(h: Harness, S0: State, B: any): Flip[] {
++  return [
++    { field: "post", keys: ["post"], body: { ...B, post: { ...B.post, remaining: "800" } }, nested: b => ({ ...b, post: omit(b.post, ["remaining"]) }) },
++    { field: "amount", keys: ["intent"], body: { ...B, intent: { ...B.intent, amount: "200" } }, nested: b => ({ ...b, intent: omit(b.intent, ["amount"]) }) },
++    { field: "reason", keys: ["intent"], body: { ...B, intent: { ...B.intent, reason: "duplicate_charge" } }, nested: b => ({ ...b, intent: omit(b.intent, ["reason"]) }) },
++    { field: "amount+post", keys: ["post", "intent"], body: { ...B, post: { ...B.post, remaining: "700" }, intent: { ...B.intent, amount: "300" } },
++      nested: b => ({ ...b, post: omit(b.post, ["remaining"]), intent: omit(b.intent, ["amount"]) }) },
++    { field: "request-id", keys: ["requestId", "intent"], body: { ...B, requestId: "rq_9", intent: { ...B.intent, requestId: "rq_9" } },
++      nested: b => ({ ...omit(b, ["requestId"]), intent: omit(b.intent, ["requestId"]) }) },
++    { field: "charge-id", keys: ["post", "intent"], body: { ...B, post: { ...B.post, chargeId: "ch_2" }, intent: { ...B.intent, chargeId: "ch_2" } },
++      nested: b => ({ ...b, post: omit(b.post, ["chargeId"]), intent: omit(b.intent, ["chargeId"]) }) },
++    { field: "pre-state", keys: ["preStateSha256"], body: { ...B, preStateSha256: h.E.stateSha256(h.st(S0.chargeId, S0.original, "999")) }, nested: null },
++  ];
++}
++// The candidate signed bytes g(B) for one flip, each with g(B) = g(B') checked here (a judge fault otherwise).
++function byteCandidates(h: Harness, B: any, x: Flip, loaded: { name: string; b: string; a: string }[]): [string, Buffer][] {
++  const out: [string, Buffer][] = [["trusted", h.E.signedBytes(B)]];
++  const free = TOP.filter(k => !x.keys.includes(k));
++  for (let m = 0; m < 1 << free.length; m++) {
++    const P = free.filter((_, i) => (m >> i) & 1);
++    const g = canonBytes(h, omit(B, TOP.filter(k => !P.includes(k))));
++    if (!g.equals(canonBytes(h, omit(x.body, TOP.filter(k => !P.includes(k)))))) throw new Error("judge fault: projection differs for " + x.field);
++    out.push(["top{" + P.join(",") + "}", g]);
++  }
++  if (x.nested) {
++    const g = canonBytes(h, x.nested(B));
++    if (!g.equals(canonBytes(h, x.nested(x.body)))) throw new Error("judge fault: nested omission differs for " + x.field);
++    out.push(["nested", g]);
++  }
++  for (const c of loaded) if (c.b === c.a) out.push([c.name.split("/").pop()!, Buffer.from(c.b, "base64")]);
++  return out;
++}
++// D4/D5 store: rq_1 honest (100) committed and dispatched; sink closed; the writer appends `tok` (chain recomputed);
++// a second flush. Returns the number of effects for rq_1 and rq_2 (parent's receiver) over both flushes.
++async function writerRow(h: Harness, name: string, S0: State, tok: string): Promise<{ rq1: number; rq2: number; text: string }> {
++  const { db, sink } = await h.newStore(name, S0);
++  const c1 = await h.commit(sink, h.honest(S0, "rq_1", "100"));
++  const ledger = name + ".ledger.jsonl";
++  const f1 = await h.flush(db, S0, ledger); await h.close(sink);
++  let w = "written";
++  try { h.appendRow(db, tok, "drop"); } catch (e) { if (!(e instanceof WriteRefused)) throw e; w = "write refused: " + e.message.slice(0, 50); }
++  const f2 = await h.flush(db, S0, ledger);
++  const all = [...f1.effects, ...f2.effects];
++  return { rq1: effectsOf(all, "rq_1"), rq2: effectsOf(all, "rq_2"), text: `c1=${c1},${w},rq2=${effectsOf(all, "rq_2")}${f2.error ? ",err=" + f2.error.slice(0, 40) : ""}` };
++}
+diff --git a/tests/refund-finality/regress/README.md b/tests/refund-finality/regress/README.md
+index d7a426cf..e3cbcebd 100644
+--- a/tests/refund-finality/regress/README.md
++++ b/tests/refund-finality/regress/README.md
+@@ -34,6 +34,24 @@ node --import tsx tests/refund-finality/regress/run.ts <h-sink tree>/ts/refund-f
+   exit code are never a verdict. A child that exits, is killed, or does not answer in time makes that regression
+   FAIL. A "restart" in a regression is a new child process (`Harness.restart()`).
+ - The parent prints exactly one verdict line per expected id and checks the count at the end.
++- EFFECT RECEIVER (task h-judges2; red-team evasion `e_emit_twice_hidden2`). The PARENT holds the receiver. For each
++  child it creates one extra pipe (child fd 4). The emit function that the child gives to the dispatcher under test
++  writes one record per call into that pipe and BLOCKS until the parent ACKs it (an HMAC under a per-child secret
++  that the parent sends on the pipe before any module under test loads). So the parent observes every emit call
++  before it returns; at that moment it reads the ledger file itself (tolerant parser: any line, JSON or with a JSON
++  object inside, that names the request id at any depth) and decides whether that emit fails (failure injection,
++  D3). DEFINITION: an EFFECT is a record that the parent's receiver got. Every well-formed record on the pipe counts,
++  whoever wrote it (a module that writes into the pipe, also through a duplicated descriptor, SENDS an effect). A
++  record cannot be taken back. A module that does not call emit did not send; the liveness parts see the effect as
++  MISSING. A flush ends with a BARRIER (a random nonce written by the worker after the dispatcher returned; the pipe
++  keeps order). The regression FAILS (whatever its own outcome) on a CHANNEL FAULT: a record outside a flush (after
++  its barrier), a line that is not a record or an asked barrier, or a pipe that some process still holds open 5 s
++  after the child was killed (a forked process that could send late). The child no longer reports effects at all.
++- MODULE GRAPH (task h-judges2; red-team evasion `enc_unsigned_body`). The worker records every file that Node's
++  module resolver returns (a wrapper around `Module._resolveFilename`, installed before the modules under test load)
++  and joins `require.cache`. The runner prints each loaded file with the SHA-256 that the PARENT computes; lines
++  `# loaded ENCODING ...` mark the encoding modules (basename `encoding.*`, or a module that exports its own
++  `signedBytes`, not a re-export).
+ - Exit codes: 0 when every id is `PASS` or `KNOWN-LIMIT` and every expected id has exactly one verdict. With
+   `--expect-fail`: 0 when exactly the listed ids are `FAIL` and all others are `PASS` or `KNOWN-LIMIT` (an
+   unexpected FAIL or an unexpected non-FAIL gives 1). 1 otherwise. 2 on a usage error (also an unknown id).
+@@ -42,8 +60,12 @@ node --import tsx tests/refund-finality/regress/run.ts <h-sink tree>/ts/refund-f
+ 
+ ### Trusted encoding
+ Tokens are signed and decoded with the `encoding.ts` of the tree that the judge lives in
+-(`../../../ts/refund-finality/encoding`), never with the one next to the sink. The runner prints both SHA-256
+-values; case E0 FAILS when they differ.
++(`../../../ts/refund-finality/encoding`). The encoding of the code under test is found in its LOADED MODULE GRAPH,
++never by a path next to the sink: case E0 FAILS when an encoding module of that graph has another SHA-256, or when
++the graph has none. The verdicts on signed bytes are by BEHAVIOUR (E1, E2, D5): the trusted key signs candidate byte
++strings (the trusted signedBytes; every bytes function exported by a loaded encoding module, where it maps the honest
++and the altered body to the same bytes; canon of subsets of the body), and a token whose signed field changed while
++the signature was kept must not commit and must not be emitted.
+ 
+ ### Configuration and capabilities
+ - `cfg` always carries `initialState`. The dispatcher config carries `newLedgerH0` when the sink module exports
+@@ -58,8 +80,12 @@ A hostile-writer case (X5a, X5b, X6-Z1, X6-P1, D1, D2) runs first with a writer
+ database aborts that write (triggers, CHECK), the abort is the SAFE outcome for that writer ("write refused by the
+ database"), and the case runs again (fresh directory, fresh child) with a writer that DROPS every trigger, sets
+ `PRAGMA ignore_check_constraints`, writes, and restores the trigger text. The second run gives the verdict. A write
+-that fails even then (for example NOT NULL) is also safe. NOT covered: a writer who also recomputes the hardened
+-sink's unkeyed chain (the stated KNOWN-LIMIT of h-sink without `expectedHead`).
++that fails even then (for example NOT NULL) is also safe. D1 and D2 do NOT recompute the hardened sink's unkeyed
++chain. D4 and D5 DO (task h-judges2, `Harness.appendRow`): the row-log chain is recomputed with the trusted chain
++function of the judge's tree (`genesisOf`, `linkOf` in `ts/refund-finality/core/store.ts`), so only the signature
++(D4) or the signed bytes (D5) can stop the row. Each has a CALIBRATION: the same writer stores a VALIDLY signed row,
++and the dispatcher must emit it once (else the case FAILS as "calibration": the judge cannot build a chain-valid row
++for that store, and it does not claim to have tested the signature).
+ 
+ ### Status words
+ `PASS` (the safe outcome holds), `FAIL` (the unsafe outcome happened, a control or a liveness part failed, or the
+@@ -109,13 +135,29 @@ Status words asserted by K4 are the ones that the merged sink documents (`Commit
+ | D1 | dispatcher: chain-continuing row signed by a foreign key (database writer) | not emitted | rq_1 emitted once | md_ignore_sig |
+ | D2 | dispatcher: validly signed row that does not continue the chain (database writer) | not emitted | rq_1 emitted once | md_ignore_chain |
+ | D3 | dispatcher: order of ledger line and effect; a failed effect | at every emit the ledger already holds the line (documented order: line appended and synced BEFORE the effect, at most once); after a failed emit the ledger records rq_1, rq_2 (rq_2 is a lost effect for a person to reconcile, never re-sent); no id emitted twice | the second flush emits rq_3 | md_emit_before_ledger |
+-| E0 | encoding identity | `encoding.ts` next to the sink has the SHA-256 of the judge's trusted one (or is absent) | - | enc_unsigned_body |
+-| E1 | post and intent altered after signing | no commit with the trusted signed bytes; probe: if the sink tree's `encoding.ts` gives the same signed bytes for the original and the altered body, the trusted key signs those bytes and the altered token must still not commit | honest token committed, emitted once | enc_unsigned_body |
++| E0 | encoding identity (h-judges2: from the LOADED module graph) | every encoding module that the code under test loaded has the trusted SHA-256; at least one is loaded | - | enc_unsigned_body |
++| E1 | post and intent altered after signing | no commit with the trusted signed bytes; probe: every bytes function of the LOADED encoding modules that gives the same bytes for the original and the altered body: the trusted key signs those bytes, and the altered token must still not commit | honest token committed, emitted once | enc_unsigned_body |
++| E2 | one signed field changed, signature kept (h-judges2) | for post, amount, reason, amount+post, request id, charge id, pre-state hash: no commit for any candidate signed bytes (trusted signedBytes; colliding loaded bytes functions; canon of every subset of the top-level keys without the changed ones; canon with the changed nested keys deleted): 365 deliveries on the branch head | honest token committed, emitted once | enc_unsigned_body, own_enc_no_reason |
++| D4 | dispatcher: CHAIN-RECOMPUTED writer row with a foreign-key, zero-byte or other-body signature, amounts 50 and 0 (h-judges2) | not emitted | calibration: the same writer's validly signed row (50 and 0) emitted once; rq_1 emitted once per store | md_ignore_sig, own_d_sig_nonzero_only |
++| D5 | dispatcher: CHAIN-RECOMPUTED writer row whose reason, or amount and post, changed while a trusted signature over candidate bytes was kept (h-judges2) | not emitted | calibration: the honest stored row emitted once | enc_unsigned_body, md_ignore_sig |
+ 
+ Note on D3: the task text asked also that "after a failed emit the ledger must not claim the effect was sent".
+ The merged dispatcher documents the opposite order on purpose (at most once: ledger first; a crash loses the
+ effect, a person reconciles it). D3 asserts the DOCUMENTED order.
+ 
++## Remaining trust in a hostile child (task h-judges2; named, not tested away)
++- OUT-OF-BAND-EFFECT: a module can send an effect through a side channel that the parent does not own (a network
++  socket, a file, another process). Out of scope for a test harness; in production the receiver is the provider.
++- IN-PROCESS-TAMPER: code in the child can read the worker's closure (for example through `node:inspector`) and forge
++  ACKs or barriers. It can then hide its OWN failure injection or move records between flush windows; it cannot take
++  a record back (every record on the pipe counts, and a late record is a channel fault).
++- HIDDEN-LOAD: a module can load code without Node's resolver (fs + vm) or delete `require.cache` entries; E0 then
++  does not see that encoding. E1, E2 and D5 still judge by behaviour, but only for the candidate byte definitions
++  they try (SIGNED-BYTES-OUTSIDE-FAMILY: a private byte definition that is not a bytes function of a loaded encoding
++  module and not a canon projection of the body, for example a hash of selected fields, is not tried).
++- TRUSTED-CHAIN-FORMULA: D4 and D5 recompute the chain with the judge tree's `linkOf`; a store with another chain
++  makes their calibration FAIL (reported as such, not as a pass).
++
+ ## Known sets (night shift 2026-11-19, actual runs; logs in results/night-shift-20261119/orch-B/h-judges/logs)
+ 
+ | tree | FAIL | KNOWN-LIMIT | baseline command exit |
+@@ -124,6 +166,9 @@ effect, a person reconciles it). D3 asserts the DOCUMENTED order.
+ | v6 draft | X6-Z1 | X6-P1 | 0 with `--expect-fail X6-Z1-zero-row-deleted-recommitted` |
+ | hardened (h-sink) | none | none (X6-P1 SAFE: refused at start) | 0 with no `--expect-fail` |
+ 
++h-judges2 (29 cases: E2, D4, D5 added; logs in results/night-shift-20261119/orch-B/h-judges2/logs): the branch head
++74fb70eb with no `--expect-fail`: 29 PASS, exit 0; see the h-judges2 report for the merged and v6 runs.
++
+ ## Red-team regressions (Orchestrator C), added by Orchestrator B
+ 
+ | id | attack class | unsafe outcome before the fix | safe outcome | how to run |
+diff --git a/tests/refund-finality/spec-conformance/README.md b/tests/refund-finality/spec-conformance/README.md
+index 6a57c1f0..57acda45 100644
+--- a/tests/refund-finality/spec-conformance/README.md
++++ b/tests/refund-finality/spec-conformance/README.md
+@@ -29,6 +29,12 @@ Unratified choices that the oracle uses: OPEN-IS-UNSETTLED, POST-RULE.
+   process (`../regress/worker.ts`) for the whole run; the driver never loads it. The driver delivers sequences
+   over IPC, reads the durable state through its own read-only SQLite connection, calls the oracle, prints one
+   JSON line. A child that exits or stops answering ends the run with exit 1 (field `childGone`).
++  With `--dispatcher`, the EFFECT RECEIVER is held by the driver (task h-judges2; `../regress/remote.ts`): each emit
++  call of the dispatcher under test is a record on a pipe that the driver created, ACKed by the driver before the call
++  returns; the emitted effects that the oracle checks are the records that the driver got, never a child report. A
++  channel fault (a record outside a flush, a line that is not a record, a pipe held open after the child died) makes
++  the run NOT OK (field `effectChannelProblems`). Remaining trust: OUT-OF-BAND-EFFECT, IN-PROCESS-TAMPER (see
++  `../regress/README.md`).
+ - `selftest.ts`: hand-made histories with a known violation of P1-P9 and of the emission checks, a start
+   refusal, and clean histories (21 cases).
+ - `heavy_spec.sh`: the heavy run (5,000 sequences per mode per sink). It refuses while hol.lock exists or a
+diff --git a/tests/refund-finality/spec-conformance/run.ts b/tests/refund-finality/spec-conformance/run.ts
+index d16d7f94..2e711080 100644
+--- a/tests/refund-finality/spec-conformance/run.ts
++++ b/tests/refund-finality/spec-conformance/run.ts
+@@ -8,6 +8,8 @@
+ //     interleave: two sink instances on the same database file; each delivery goes to one of them at random
+ //   compiledCoreModule: the compiled Slice 1 core (model.cjs); the oracle uses only its Refund.Assess.
+ //   --dispatcher: after each sequence the dispatcher flushes the store; the oracle checks the EMITTED effects.
++// With --dispatcher, the EFFECT RECEIVER is held by this process (../regress/remote.ts, task h-judges2): each emit call
++// of the dispatcher under test is a record on a pipe that this process created, ACKed here before the call returns.
+ // The sink and dispatcher run in a CHILD process (../regress/worker.ts); this process generates the deliveries,
+ // reads the durable state through its OWN read-only SQLite connection (tables state, settled, outbox), and calls
+ // the oracle (oracle.ts) with the TRUSTED encoding.ts of this tree. Some sequences have restarts of the sink, more
+@@ -155,7 +157,8 @@ async function main(): Promise<number> {
+         if (caps.hasDispatcher) {
+           const dcfg: any = { publicKeyPem: keys.pub, specLockSha256, checkerSha256, initialStateSha256: sha256hex(canon(c0)) };
+           if (caps.hasGenesisOf) dcfg.newLedgerH0 = await remote.call("genesis", { initText: canon(c0), lock: specLockSha256, checker: checkerSha256, pem: keys.pub });
+-          const f = await remote.call<{ effects: { requestId: string; intent: unknown }[]; error: string }>("flush", { db: dbPath, ledger: dbPath + ".ledger.jsonl", dcfg });
++          // The emitted effects are the records that the PARENT's receiver got (regress/remote.ts), not a child report.
++          const f = await remote.flush({ db: dbPath, ledger: dbPath + ".ledger.jsonl", dcfg });
+           history.emitted = f.effects.map(e => ({ requestId: e.requestId, intent: e.intent }));
+           emittedTotal += f.effects.length;
+         }
+@@ -182,18 +185,21 @@ async function main(): Promise<number> {
+   }
+   await remote.stop();
+   rmSync(work, { recursive: true, force: true });
++  // Effect-channel faults (regress/remote.ts): a record outside a flush, a line that is not a record, a channel held
++  // open after the child died. Any of them makes the run NOT OK (an effect that the oracle did not see is still one).
++  const channelProblems = remote.problems.slice(0, 5);
+   // VERDICT. P5-SILENT is a question for the owner, not a violation. Exit 0 only when the run completed all
+   // sequences, the child stayed alive, and the violated set is empty (or equals --expect-violations).
+   const violated = Object.keys(perProp).filter(p => p !== "P5-SILENT").sort();
+   const completed = childGone === null && done === count;
+   const want = expected ? [...expected].sort() : [];
+-  const ok = completed && canon(violated) === canon(want);
++  const ok = completed && canon(violated) === canon(want) && channelProblems.length === 0;
+   process.stdout.write(JSON.stringify({
+     tool: "spec-conformance/run.ts", sink: resolve(sinkPath), sinkSha256: sha256hex(readFileSync(resolve(sinkPath))),
+     dispatcher: dispArg ? resolve(dispArg) : null, dispatcherSha256: dispArg ? sha256hex(readFileSync(resolve(dispArg))) : null,
+     trustedEncodingSha256: sha256hex(readFileSync(TRUSTED_ENCODING_PATH)),
+     core: oracle.coreModule, coreSha256: sha256hex(readFileSync(oracle.coreModule)), mode, count, seed, sequencesDone: done, childGone,
+-    deliveries: deliveriesTotal, restarts, emitted: emittedTotal, outcomes, faultsInjected: faultsHit, sinkErrors, ms: Date.now() - t0,
++    deliveries: deliveriesTotal, restarts, emitted: emittedTotal, effectChannelProblems: channelProblems, outcomes, faultsInjected: faultsHit, sinkErrors, ms: Date.now() - t0,
+     sequencesWithViolation: perProp, violated, expectedViolations: expected ? want : null, verdict: ok ? "OK" : "NOT OK",
+     kindOutcome, violationsByKind: kindViolation, smallest,
+   }) + "\n");

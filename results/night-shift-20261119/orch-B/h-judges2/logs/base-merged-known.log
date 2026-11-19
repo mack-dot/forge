@@ -1,0 +1,45 @@
+# 2026-11-19T17:12:15Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-judges2/tree cmd=tests/refund-finality/regress/run.ts <REPO>/results/night-shift-20261119/orch-B/h-judges2/merged/ts/refund-finality/sink.ts <REPO>/results/night-shift-20261119/orch-B/h-judges2/merged/ts/refund-finality/dispatcher.ts --expect-fail X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X3-upgrade-legacy-gap,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-Z1-zero-row-deleted-recommitted
+Now drawing from 'AC Power'
+total = 10240.00M  used = 9320.94M  free = 919.06M  (encrypted)
+# judge=<REPO>/results/night-shift-20261119/orch-B/h-judges2/tree/tests/refund-finality/regress/run.ts
+# sink=<REPO>/results/night-shift-20261119/orch-B/h-judges2/merged/ts/refund-finality/sink.ts sha256=0690a4269a38f49a9b053ab9a97a55d917b4a3758f39cbecd2edf91a78484de7
+# dispatcher=<REPO>/results/night-shift-20261119/orch-B/h-judges2/merged/ts/refund-finality/dispatcher.ts sha256=5511cf68ba595da535324d1170dcec59d2ce368bb3efdd0470f3f6e0924ee605
+# trusted encoding=<REPO>/results/night-shift-20261119/orch-B/h-judges2/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# loaded <REPO>/results/night-shift-20261119/orch-B/h-judges2/merged/ts/refund-finality/dispatcher.ts sha256=5511cf68ba595da535324d1170dcec59d2ce368bb3efdd0470f3f6e0924ee605
+# loaded ENCODING <REPO>/results/night-shift-20261119/orch-B/h-judges2/merged/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# loaded <REPO>/results/night-shift-20261119/orch-B/h-judges2/merged/ts/refund-finality/sink.ts sha256=0690a4269a38f49a9b053ab9a97a55d917b4a3758f39cbecd2edf91a78484de7
+# loaded <REPO>/results/night-shift-20261119/orch-B/h-judges2/tree/tests/refund-finality/regress/worker.ts sha256=8fa57ca1065a046e71a0d5af5350d4aefa48e64edb7e95d4e36bd5d3598a102b
+# expectedHeadMode=none node=v24.3.0 expected ids=29 expect-fail=X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X3-upgrade-legacy-gap,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-Z1-zero-row-deleted-recommitted
+PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
+PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted
+PASS C3-two-zero-refunds: commits=committed,committed; two zero-valued effects
+PASS C4-replay-rejected: first=committed replay=replayed; one effect
+PASS C5-largest-refund: commits=committed,committed; remaining 0; two effects
+FAIL X1-reqid-mismatch: DUPLICATE: faulty=committed honest=committed outbox(rq_victim)=2 effects(rq_victim)=2
+FAIL X2-cross-charge: CROSS-CHARGE: A=committed B=committed effects(ch_2,rq_x)=2 emitted(ch_2)=100 A.outbox(foreign)=1
+FAIL X2b-foreign-post-locks-store: STORE NOW HOLDS ANOTHER CHARGE: foreign=committed storedChargeId=ch_2 honest=rejected effects(rq_h)=0
+FAIL X3-upgrade-legacy-gap: DUPLICATE ACROSS UPGRADE: honest=committed effects(rq_victim) before=1 after=1 outbox(rq_victim)=2
+FAIL X4-signed-unauthorized: UNAUTHORIZED EFFECT in a-amount-above-remaining,b-post-disables-refunds,c-post-remaining-wrong,d-unapproved-reason,e-post-unchanged: a-amount-above-remaining:committed/ok=rejected/eff=1+0 b-post-disables-refunds:committed/ok=committed/eff=1+1 c-post-remaining-wrong:committed/ok=committed/eff=1+1 d-unapproved-reason:committed/ok=committed/eff=1+1 e-post-unchanged:committed/ok=committed/eff=1+1
+FAIL X5a-hostile-balance-reset: OVER-REFUND: rq_1=committed rq_2=committed outboxTotal=2000 emittedTotal=1000 original=1000
+FAIL X5b-hostile-outbox-rewrite: TAMPERED STORE EXTENDED: rq_1=committed rq_2=committed unsignedEffects=0 rewrittenRowPresent=true rq_2SettledOnIt=true
+FAIL X6-Z1-zero-row-deleted-recommitted: RE-SETTLED AFTER DELETION: honest=committed,committed,committed redelivery=committed outbox(rq_z1)=1 effects(rq_z1)=1
+KNOWN-LIMIT X6-P1-prefix-rollback: documented limit holds (no anchor; rq_2 settled again, emitted at most once): mode=no-anchor honest=committed,committed started=true redelivery=committed resettled=true effects(rq_2)=1
+PASS K1-foreign-key-signature: foreignKey=rejected unchanged=true pinnedKey=committed effects(rq_1)=1
+PASS K2-noncanonical-text: indent=rejected key-order=rejected escaped-letter=rejected canonical=committed effects(rq_1)=1
+PASS K3-stale-prestate: stale=rejected unchanged=true current=committed effects(rq_2)=1
+PASS K4-replay-status: first=committed identical=replayed different=rejected unchanged=true effects(rq_1)=1
+PASS K5-long-and-unicode-ids: 33:rejected/rejected/ok=committed/eff=1 64:rejected/rejected/ok=committed/eff=1 256:rejected/rejected/ok=committed/eff=1 bmp:rejected/rejected/ok=committed/eff=1 non-bmp:rejected/rejected/ok=committed/eff=1 combining:rejected/rejected/ok=committed/eff=1
+PASS K6-long-run-one-store: foreignKey=rejected stale=rejected honest=38 outbox=38 effects=38
+PASS K7-store-survives-reopen: reopen=started same=true restart=started same=true firstTokenAgain=replayed next=committed effects=rq_1,rq_2,rq_3,rq_4
+PASS D1-dispatcher-bad-signature-row: effects(rq_1)=1 effects(rq_2)=0
+PASS D2-dispatcher-chain-break-row: effects(rq_1)=1 effects(rq_2)=0
+PASS D3-dispatcher-ledger-before-emit: flush1=[rq_1,rq_2(failed)] ledgerAfter1=[rq_1,rq_2] flush2=[rq_3] ledgerAtEmit=[true,true,true]
+PASS E0-encoding-identity: 1 encoding module(s) in a graph of 4 files, all with the trusted SHA-256 f96086b1838163e3
+PASS E1-signed-bytes-cover-post-intent: altered=rejected candidates=4 colliding=[] honest=committed effects(rq_1)=1
+PASS E2-signed-field-flips: deliveries=365 fields=7 loadedCandidates=4 honest=committed effects(rq_1)=1
+PASS D4-dispatcher-chain-valid-bad-signature: valid/50:c1=committed,written,rq2=1 foreign-key/50:c1=committed,written,rq2=0 zero-signature/50:c1=committed,written,rq2=0 other-body-signature/50:c1=committed,written,rq2=0 valid/0:c1=committed,written,rq2=1 foreign-key/0:c1=committed,written,rq2=0 zero-signature/0:c1=committed,written,rq2=0 other-body-signature/0:c1=committed,written,rq2=0
+PASS D5-dispatcher-stored-field-flips: calibration emitted once; reason/trusted:c1=committed,written,rq2=0 reason/top-minus-touched:c1=committed,written,rq2=0 reason/top-minus-post-intent:c1=committed,written,rq2=0 reason/nested:c1=committed,written,rq2=0 amount+post/trusted:c1=committed,written,rq2=0 amount+post/top-minus-touched:c1=committed,written,rq2=0 amount+post/top-minus-post-intent:c1=committed,written,rq2=0 amount+post/nested:c1=committed,written,rq2=0
+# verdicts=29/29 PASS=20 KNOWN-LIMIT=1 FAIL=8 [X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X3-upgrade-legacy-gap,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-Z1-zero-row-deleted-recommitted]
+# unexpected FAIL=[] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]
+# JUDGE RESULT OK (exit 0)
+exit 0

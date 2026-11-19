@@ -1,0 +1,4 @@
+LIVENESS: ch_B/r1 300 committed, never paid, run 2: ["r1: in doubt: claimed by run d25b6235525ecf51ead841352d390d42 (p"]
+{"ra":"committed","rb":"committed","fa":{"emitted":["r1"],"refused":[],"error":""},"fb":{"emitted":[],"refused":[],"error":"provider param_mismatch: key r1 used with other parameters"},"emitted":[{"chargeId":"ch_A","requestId":"r1","amount":"600"}],"movements":["r1@ch_A:600"]}
+s1 collide env={"RP_REPLAY":"error","RP_SHARED":"<REPO>/results/night-shift-20261119/orch-C/c25-provider/tmp/acct.json"}
+MONEY RIGHT

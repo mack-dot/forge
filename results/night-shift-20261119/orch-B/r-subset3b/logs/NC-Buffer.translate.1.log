@@ -1,0 +1,28 @@
+# owner=r-subset3b start=2026-11-19T14:48:50Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset3b/work/NC-Buffer
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1092
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/r-subset3b/work/NC-Buffer/model
+# memory free percent: 33
+
+Dafny program verifier did not attempt verification
+        2.03 real         0.69 user         0.09 sys
+            85835776  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                9700  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  28  voluntary context switches
+                5315  involuntary context switches
+          4488119586  instructions retired
+          2302341166  cycles elapsed
+            75252912  peak memory footprint
+# end=2026-11-19T14:48:53Z
+exit 0

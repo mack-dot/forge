@@ -1,0 +1,303 @@
+subs/lit/L01-leading-zeros-19.dfy | pass W=213 T=6
+subs/lit/L02-octal-looking-010.dfy | pass W=213 T=6
+subs/lit/L03-leading-zero-09.dfy | pass W=213 T=6
+subs/lit/L04-2p53-plus-1.dfy | pass W=215 T=6
+subs/lit/L05-min-int64.dfy | pass W=217 T=6
+subs/lit/L06-20-digits.dfy | SUBSET3_LITERAL: numeric literal `12345678901234567890` (decimal, at most 19 digits)
+subs/lit/L07-hex.dfy | SUBSET3_LITERAL: numeric literal `0x10` (decimal, at most 19 digits)
+subs/lit/L08-underscore.dfy | SUBSET3_LITERAL: numeric literal `1_000` (decimal, at most 19 digits)
+subs/lit/L09-div-hex-zero.dfy | SUBSET3_LITERAL: numeric literal `0x0` (decimal, at most 19 digits)
+subs/lit/L10-div-zero-underscore.dfy | SUBSET3_LITERAL: numeric literal `0_0` (decimal, at most 19 digits)
+subs/lit/L11-zeros-60000.dfy | SUBSET3_LITERAL: numeric literal `000000000000000000000000` (decimal, at most 19 digits)
+subs/lit/L12-string-60000.dfy | SUBSET3_LITERAL: string literal longer than 256 characters
+subs/lit/L13-string-256-display16.dfy | pass W=253 T=17
+subs/lit/L14-leading-zero-8digits.dfy | pass W=213 T=6
+subs/sem/C01-set-dedup-int.dfy | pass W=246 T=6
+subs/sem/C02-set-dedup-string.dfy | pass W=243 T=6
+subs/sem/C03-seq-eq.dfy | pass W=245 T=6
+subs/sem/C04-tuple-in-seq.dfy | pass W=234 T=6
+subs/sem/C05-set-of-seq.dfy | pass W=234 T=6
+subs/sem/C06-input-in-display.dfy | pass W=221 T=6
+subs/sem/C07-string-lt.dfy | SUBSET3_KIND: expected int, found string
+subs/sem/C08-seq-lt.dfy | SUBSET3_KIND: expected int, found ('seq', 'int')
+subs/sem/C09-chain-eq.dfy | pass W=228 T=6
+subs/sem/E01-euclid-div-input.dfy | pass W=231 T=6
+subs/sem/E02-euclid-mod-input.dfy | pass W=230 T=6
+subs/sem/E03-euclid-literals.dfy | pass W=255 T=6
+subs/sem/E04-mul-div-roundtrip.dfy | pass W=217 T=6
+subs/sem/U01-nonbmp-length.dfy | pass W=215 T=6
+subs/sem/U02-nonbmp-member.dfy | pass W=217 T=6
+subs/sem/U03-nonbmp-char-eq.dfy | pass W=217 T=6
+subs/ghost/G01-pred-spec-only.dfy | pass W=211 T=6
+subs/ghost/G02-ghost-var-compiled-fn.dfy | pass W=211 T=6
+subs/ghost/G03-assert-compiled-fn.dfy | pass W=211 T=6
+subs/ghost/G04-by-method.dfy | SUBSET3_FORBIDDEN: by method
+subs/ghost/G05-compile-false.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+subs/ghost/G06-compile-true.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+subs/ghost/G07-const-calls-helper.dfy | pass W=234 T=6
+subs/ghost/G08-const-unused.dfy | pass W=211 T=6
+subs/ghost/G09-static-const.dfy | SUBSET3_FORBIDDEN: `static`
+subs/ghost/G10-const-big-display.dfy | pass W=254 T=17
+subs/ghost/G11-ghost-method-out.dfy | pass W=211 T=6
+subs/ghost/G12-assert-by-block.dfy | pass W=211 T=6
+subs/ghost/G13-function-in-requires-only.dfy | pass W=238 T=6
+subs/lex/X00-base.dfy | pass W=211 T=6
+subs/lex/X01-nested-comment.dfy | pass W=211 T=6
+subs/lex/X02-block-hides-slashes.dfy | pass W=218 T=6
+subs/lex/X03-line-then-block.dfy | pass W=218 T=6
+subs/lex/X04-string-with-slashes.dfy | pass W=218 T=6
+subs/lex/X05-cr-then-block.dfy | pass W=211 T=6
+subs/lex/X06-bom.dfy | SUBSET3_LEX: character U+FEFF outside comments and literals
+subs/lex/X07-ff.dfy | SUBSET3_LEX: character U+000C outside comments and literals
+subs/lex/X08-vt.dfy | SUBSET3_LEX: character U+000B outside comments and literals
+subs/lex/X09-prime-char.dfy | pass W=218 T=6
+subs/lex/X10-prime-ident-char.dfy | pass W=218 T=6
+subs/lex/X11-tuple-sel-00.dfy | SUBSET3_SELECT: selection `.0.1` on ('tuple', (('tuple', ('bool', 'int')), 'string'))
+subs/lex/X12-induction-attr-odd.dfy | pass W=218 T=6
+subs/lex/X13-star-slash-in-block.dfy | pass W=218 T=6
+subs/lex/X14-iff-chain.dfy | pass W=218 T=6
+subs/lex/X15-disjoint.dfy | SUBSET3_NAME: unknown or refused name `!!` in Assess
+subs/names/NC-BigNumber.dfy | SUBSET3_NAME: declared name `BigNumber` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-Buffer.dfy | pass W=217 T=6
+subs/names/NC-Companion.dfy | pass W=217 T=6
+subs/names/NC-Infinity.dfy | SUBSET3_NAME: declared name `Infinity` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-NaN.dfy | SUBSET3_NAME: declared name `NaN` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-Refund.dfy | SUBSET3_NAME: declared name `Refund` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-RefundSpec.dfy | SUBSET3_NAME: declared name `RefundSpec` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-Symbol.dfy | SUBSET3_NAME: declared name `Symbol` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-apply.dfy | SUBSET3_NAME: declared name `apply` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-arguments.dfy | SUBSET3_NAME: declared name `arguments` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-async.dfy | SUBSET3_NAME: declared name `async` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-await.dfy | SUBSET3_NAME: declared name `await` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-bind.dfy | SUBSET3_NAME: declared name `bind` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-call.dfy | SUBSET3_NAME: declared name `call` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-caller.dfy | SUBSET3_NAME: declared name `caller` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-constructor.dfy | SUBSET3_FORBIDDEN: `constructor`
+subs/names/NC-dafny_u.dfy | SUBSET3_NAME: declared name `_dafny` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-debugger.dfy | SUBSET3_NAME: declared name `debugger` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-default.dfy | SUBSET3_NAME: declared name `default` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-default_u.dfy | SUBSET3_NAME: declared name `__default` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-delete.dfy | SUBSET3_NAME: declared name `delete` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-enum.dfy | SUBSET3_NAME: declared name `enum` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-eval.dfy | SUBSET3_NAME: declared name `eval` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-exports.dfy | SUBSET3_NAME: declared name `exports` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-false.dfy | SUBSET3_NAME: declared name `false` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-get.dfy | pass W=217 T=6
+subs/names/NC-globalThis.dfy | SUBSET3_NAME: declared name `globalThis` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-hasOwnProperty.dfy | SUBSET3_NAME: declared name `hasOwnProperty` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-implements.dfy | SUBSET3_NAME: declared name `implements` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-in.dfy | SUBSET3_NAME: declared name `in` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-instanceof.dfy | SUBSET3_NAME: declared name `instanceof` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-interface.dfy | SUBSET3_NAME: declared name `interface` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-isPrototypeOf.dfy | SUBSET3_NAME: declared name `isPrototypeOf` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-length.dfy | SUBSET3_NAME: declared name `length` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-let.dfy | SUBSET3_NAME: declared name `let` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-module.dfy | SUBSET3_MODULE: exactly one module, one include, one refines
+subs/names/NC-module_u.dfy | SUBSET3_NAME: declared name `_module` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-name.dfy | SUBSET3_NAME: declared name `name` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-new.dfy | SUBSET3_FORBIDDEN: `new`
+subs/names/NC-null.dfy | SUBSET3_NAME: declared name `null` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-of.dfy | pass W=217 T=6
+subs/names/NC-package.dfy | SUBSET3_NAME: declared name `package` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-private.dfy | SUBSET3_NAME: declared name `private` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-process.dfy | SUBSET3_NAME: declared name `process` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-protected.dfy | SUBSET3_NAME: declared name `protected` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-proto_u.dfy | SUBSET3_NAME: declared name `__proto__` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-public.dfy | SUBSET3_NAME: declared name `public` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-require.dfy | SUBSET3_NAME: declared name `require` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-set.dfy | SUBSET3_NAME: declared name `set` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-static.dfy | SUBSET3_FORBIDDEN: `static`
+subs/names/NC-super.dfy | SUBSET3_NAME: declared name `super` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-then.dfy | pass W=217 T=6
+subs/names/NC-this.dfy | SUBSET3_FORBIDDEN: `this`
+subs/names/NC-toString.dfy | SUBSET3_NAME: declared name `toString` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-true.dfy | SUBSET3_NAME: declared name `true` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-typeof.dfy | SUBSET3_NAME: declared name `typeof` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-undefined.dfy | SUBSET3_NAME: declared name `undefined` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-valueOf.dfy | SUBSET3_NAME: declared name `valueOf` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-void.dfy | SUBSET3_NAME: declared name `void` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-with.dfy | SUBSET3_NAME: declared name `with` is refused (shape, JavaScript name or shadowing)
+subs/names/NC-yield.dfy | SUBSET3_FORBIDDEN: `yield`
+subs/names/NF-BigNumber.dfy | SUBSET3_NAME: declared name `BigNumber` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-Buffer.dfy | pass W=228 T=6
+subs/names/NF-Companion.dfy | pass W=228 T=6
+subs/names/NF-Infinity.dfy | SUBSET3_NAME: declared name `Infinity` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-NaN.dfy | SUBSET3_NAME: declared name `NaN` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-Refund.dfy | SUBSET3_NAME: declared name `Refund` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-RefundSpec.dfy | SUBSET3_NAME: declared name `RefundSpec` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-Symbol.dfy | SUBSET3_NAME: declared name `Symbol` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-apply.dfy | SUBSET3_NAME: declared name `apply` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-arguments.dfy | SUBSET3_NAME: declared name `arguments` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-async.dfy | SUBSET3_NAME: declared name `async` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-await.dfy | SUBSET3_NAME: declared name `await` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-bind.dfy | SUBSET3_NAME: declared name `bind` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-call.dfy | SUBSET3_NAME: declared name `call` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-caller.dfy | SUBSET3_NAME: declared name `caller` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-constructor.dfy | SUBSET3_FORBIDDEN: `constructor`
+subs/names/NF-dafny_u.dfy | SUBSET3_NAME: declared name `_dafny` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-debugger.dfy | SUBSET3_NAME: declared name `debugger` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-default.dfy | SUBSET3_NAME: declared name `default` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-default_u.dfy | SUBSET3_NAME: declared name `__default` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-delete.dfy | SUBSET3_NAME: declared name `delete` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-enum.dfy | SUBSET3_NAME: declared name `enum` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-eval.dfy | SUBSET3_NAME: declared name `eval` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-exports.dfy | SUBSET3_NAME: declared name `exports` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-false.dfy | SUBSET3_NAME: declared name `false` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-get.dfy | pass W=228 T=6
+subs/names/NF-globalThis.dfy | SUBSET3_NAME: declared name `globalThis` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-hasOwnProperty.dfy | SUBSET3_NAME: declared name `hasOwnProperty` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-implements.dfy | SUBSET3_NAME: declared name `implements` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-in.dfy | SUBSET3_NAME: declared name `in` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-instanceof.dfy | SUBSET3_NAME: declared name `instanceof` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-interface.dfy | SUBSET3_NAME: declared name `interface` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-isPrototypeOf.dfy | SUBSET3_NAME: declared name `isPrototypeOf` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-length.dfy | SUBSET3_NAME: declared name `length` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-let.dfy | SUBSET3_NAME: declared name `let` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-module.dfy | SUBSET3_MODULE: exactly one module, one include, one refines
+subs/names/NF-module_u.dfy | SUBSET3_NAME: declared name `_module` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-name.dfy | SUBSET3_NAME: declared name `name` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-new.dfy | SUBSET3_FORBIDDEN: `new`
+subs/names/NF-null.dfy | SUBSET3_NAME: declared name `null` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-of.dfy | pass W=228 T=6
+subs/names/NF-package.dfy | SUBSET3_NAME: declared name `package` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-private.dfy | SUBSET3_NAME: declared name `private` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-process.dfy | SUBSET3_NAME: declared name `process` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-protected.dfy | SUBSET3_NAME: declared name `protected` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-proto_u.dfy | SUBSET3_NAME: declared name `__proto__` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-public.dfy | SUBSET3_NAME: declared name `public` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-require.dfy | SUBSET3_NAME: declared name `require` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-set.dfy | SUBSET3_NAME: declared name `set` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-static.dfy | SUBSET3_FORBIDDEN: `static`
+subs/names/NF-super.dfy | SUBSET3_NAME: declared name `super` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-then.dfy | pass W=228 T=6
+subs/names/NF-this.dfy | SUBSET3_FORBIDDEN: `this`
+subs/names/NF-toString.dfy | SUBSET3_NAME: declared name `toString` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-true.dfy | SUBSET3_NAME: declared name `true` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-typeof.dfy | SUBSET3_NAME: declared name `typeof` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-undefined.dfy | SUBSET3_NAME: declared name `undefined` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-valueOf.dfy | SUBSET3_NAME: declared name `valueOf` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-void.dfy | SUBSET3_NAME: declared name `void` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-with.dfy | SUBSET3_NAME: declared name `with` is refused (shape, JavaScript name or shadowing)
+subs/names/NF-yield.dfy | SUBSET3_FORBIDDEN: `yield`
+subs/names/NL-BigNumber.dfy | SUBSET3_NAME: declared name `BigNumber` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-Buffer.dfy | pass W=218 T=6
+subs/names/NL-Companion.dfy | pass W=218 T=6
+subs/names/NL-Infinity.dfy | SUBSET3_NAME: declared name `Infinity` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-NaN.dfy | SUBSET3_NAME: declared name `NaN` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-Refund.dfy | SUBSET3_NAME: declared name `Refund` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-RefundSpec.dfy | SUBSET3_NAME: declared name `RefundSpec` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-Symbol.dfy | SUBSET3_NAME: declared name `Symbol` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-apply.dfy | SUBSET3_NAME: declared name `apply` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-arguments.dfy | SUBSET3_NAME: declared name `arguments` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-async.dfy | SUBSET3_NAME: declared name `async` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-await.dfy | SUBSET3_NAME: declared name `await` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-bind.dfy | SUBSET3_NAME: declared name `bind` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-call.dfy | SUBSET3_NAME: declared name `call` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-caller.dfy | SUBSET3_NAME: declared name `caller` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-constructor.dfy | SUBSET3_FORBIDDEN: `constructor`
+subs/names/NL-dafny_u.dfy | SUBSET3_NAME: declared name `_dafny` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-debugger.dfy | SUBSET3_NAME: declared name `debugger` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-default.dfy | SUBSET3_NAME: declared name `default` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-default_u.dfy | SUBSET3_NAME: declared name `__default` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-delete.dfy | SUBSET3_NAME: declared name `delete` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-enum.dfy | SUBSET3_NAME: declared name `enum` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-eval.dfy | SUBSET3_NAME: declared name `eval` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-exports.dfy | SUBSET3_NAME: declared name `exports` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-false.dfy | SUBSET3_NAME: declared name `false` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-get.dfy | pass W=218 T=6
+subs/names/NL-globalThis.dfy | SUBSET3_NAME: declared name `globalThis` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-hasOwnProperty.dfy | SUBSET3_NAME: declared name `hasOwnProperty` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-implements.dfy | SUBSET3_NAME: declared name `implements` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-in.dfy | SUBSET3_NAME: declared name `in` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-instanceof.dfy | SUBSET3_NAME: declared name `instanceof` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-interface.dfy | SUBSET3_NAME: declared name `interface` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-isPrototypeOf.dfy | SUBSET3_NAME: declared name `isPrototypeOf` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-length.dfy | SUBSET3_NAME: declared name `length` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-let.dfy | SUBSET3_NAME: declared name `let` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-module.dfy | SUBSET3_MODULE: exactly one module, one include, one refines
+subs/names/NL-module_u.dfy | SUBSET3_NAME: declared name `_module` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-name.dfy | SUBSET3_NAME: declared name `name` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-new.dfy | SUBSET3_FORBIDDEN: `new`
+subs/names/NL-null.dfy | SUBSET3_NAME: declared name `null` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-of.dfy | pass W=218 T=6
+subs/names/NL-package.dfy | SUBSET3_NAME: declared name `package` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-private.dfy | SUBSET3_NAME: declared name `private` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-process.dfy | SUBSET3_NAME: declared name `process` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-protected.dfy | SUBSET3_NAME: declared name `protected` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-proto_u.dfy | SUBSET3_NAME: declared name `__proto__` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-public.dfy | SUBSET3_NAME: declared name `public` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-require.dfy | SUBSET3_NAME: declared name `require` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-set.dfy | SUBSET3_NAME: declared name `set` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-static.dfy | SUBSET3_FORBIDDEN: `static`
+subs/names/NL-super.dfy | SUBSET3_NAME: declared name `super` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-then.dfy | pass W=218 T=6
+subs/names/NL-this.dfy | SUBSET3_FORBIDDEN: `this`
+subs/names/NL-toString.dfy | SUBSET3_NAME: declared name `toString` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-true.dfy | SUBSET3_NAME: declared name `true` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-typeof.dfy | SUBSET3_NAME: declared name `typeof` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-undefined.dfy | SUBSET3_NAME: declared name `undefined` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-valueOf.dfy | SUBSET3_NAME: declared name `valueOf` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-void.dfy | SUBSET3_NAME: declared name `void` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-with.dfy | SUBSET3_NAME: declared name `with` is refused (shape, JavaScript name or shadowing)
+subs/names/NL-yield.dfy | SUBSET3_FORBIDDEN: `yield`
+subs/names/NM-BigNumber.dfy | SUBSET3_NAME: declared name `BigNumber` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-Buffer.dfy | pass W=240 T=6
+subs/names/NM-Companion.dfy | pass W=240 T=6
+subs/names/NM-Infinity.dfy | SUBSET3_NAME: declared name `Infinity` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-NaN.dfy | SUBSET3_NAME: declared name `NaN` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-Refund.dfy | SUBSET3_NAME: declared name `Refund` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-RefundSpec.dfy | SUBSET3_NAME: declared name `RefundSpec` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-Symbol.dfy | SUBSET3_NAME: declared name `Symbol` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-apply.dfy | SUBSET3_NAME: declared name `apply` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-arguments.dfy | SUBSET3_NAME: declared name `arguments` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-async.dfy | SUBSET3_NAME: declared name `async` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-await.dfy | SUBSET3_NAME: declared name `await` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-bind.dfy | SUBSET3_NAME: declared name `bind` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-call.dfy | SUBSET3_NAME: declared name `call` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-caller.dfy | SUBSET3_NAME: declared name `caller` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-constructor.dfy | SUBSET3_FORBIDDEN: `constructor`
+subs/names/NM-dafny_u.dfy | SUBSET3_NAME: declared name `_dafny` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-debugger.dfy | SUBSET3_NAME: declared name `debugger` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-default.dfy | SUBSET3_NAME: declared name `default` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-default_u.dfy | SUBSET3_NAME: declared name `__default` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-delete.dfy | SUBSET3_NAME: declared name `delete` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-enum.dfy | SUBSET3_NAME: declared name `enum` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-eval.dfy | SUBSET3_NAME: declared name `eval` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-exports.dfy | SUBSET3_NAME: declared name `exports` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-false.dfy | SUBSET3_NAME: declared name `false` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-get.dfy | pass W=240 T=6
+subs/names/NM-globalThis.dfy | SUBSET3_NAME: declared name `globalThis` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-hasOwnProperty.dfy | SUBSET3_NAME: declared name `hasOwnProperty` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-implements.dfy | SUBSET3_NAME: declared name `implements` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-in.dfy | SUBSET3_NAME: declared name `in` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-instanceof.dfy | SUBSET3_NAME: declared name `instanceof` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-interface.dfy | SUBSET3_NAME: declared name `interface` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-isPrototypeOf.dfy | SUBSET3_NAME: declared name `isPrototypeOf` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-length.dfy | SUBSET3_NAME: declared name `length` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-let.dfy | SUBSET3_NAME: declared name `let` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-module.dfy | SUBSET3_MODULE: exactly one module, one include, one refines
+subs/names/NM-module_u.dfy | SUBSET3_NAME: declared name `_module` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-name.dfy | SUBSET3_NAME: declared name `name` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-new.dfy | SUBSET3_FORBIDDEN: `new`
+subs/names/NM-null.dfy | SUBSET3_NAME: declared name `null` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-of.dfy | pass W=240 T=6
+subs/names/NM-package.dfy | SUBSET3_NAME: declared name `package` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-private.dfy | SUBSET3_NAME: declared name `private` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-process.dfy | SUBSET3_NAME: declared name `process` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-protected.dfy | SUBSET3_NAME: declared name `protected` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-proto_u.dfy | SUBSET3_NAME: declared name `__proto__` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-public.dfy | SUBSET3_NAME: declared name `public` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-require.dfy | SUBSET3_NAME: declared name `require` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-set.dfy | SUBSET3_NAME: declared name `set` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-static.dfy | SUBSET3_FORBIDDEN: `static`
+subs/names/NM-super.dfy | SUBSET3_NAME: declared name `super` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-then.dfy | pass W=240 T=6
+subs/names/NM-this.dfy | SUBSET3_FORBIDDEN: `this`
+subs/names/NM-toString.dfy | SUBSET3_NAME: declared name `toString` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-true.dfy | SUBSET3_NAME: declared name `true` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-typeof.dfy | SUBSET3_NAME: declared name `typeof` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-undefined.dfy | SUBSET3_NAME: declared name `undefined` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-valueOf.dfy | SUBSET3_NAME: declared name `valueOf` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-void.dfy | SUBSET3_NAME: declared name `void` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-with.dfy | SUBSET3_NAME: declared name `with` is refused (shape, JavaScript name or shadowing)
+subs/names/NM-yield.dfy | SUBSET3_FORBIDDEN: `yield`

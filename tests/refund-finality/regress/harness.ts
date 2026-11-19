@@ -16,13 +16,20 @@
 // aborts the write (triggers, CHECK), WriteRefused is thrown. write(db, f, "drop"): the stronger writer drops every
 // trigger, sets PRAGMA ignore_check_constraints, writes, and restores the trigger text (same schema text after).
 // Durable state is read from the tables `state` (blob), `settled` (request_id) and `outbox` (request_id, intent).
+// EFFECTS (h-judges2): the effects of a flush are the records that the PARENT's receiver got (remote.ts); the child
+// never reports them. The ledger is read by the parent with a tolerant parser (ledgerLineIds in remote.ts).
+// CHAIN-VALID WRITER (h-judges2, red-team blind spot md_ignore_sig): appendRow() appends a settled row (and its outbox
+// row and state change) with the row-log chain RECOMPUTED by the trusted chain function of this tree (genesisOf and
+// linkOf, ../../../ts/refund-finality/core/store; the chain is unkeyed and public). A row written so differs from a
+// row that the sink wrote only in what the writer chose to put in the token.
 import { generateKeyPairSync, sign } from "node:crypto";
-import { mkdtempSync, readFileSync, rmSync, existsSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import * as TE from "../../../ts/refund-finality/encoding";
-import { Remote } from "./remote";
+import * as TSTORE from "../../../ts/refund-finality/core/store";
+import { Received, Remote, ledgerLineIds } from "./remote";
 
 export type State = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
 export type Intent = { chargeId: string; requestId: string; amount: string; reason: string };
@@ -30,7 +37,7 @@ export type Outcome = { ok: boolean; reason: string; limit?: boolean };
 // kind "limit": three outcomes. ok && !limit = SAFE (PASS); ok && limit = the stated unsafe limit holds (KNOWN-LIMIT);
 // !ok = FAIL. Kinds "attack", "control", "integrity": ok = PASS, !ok = FAIL.
 export type Regression = { id: string; kind: "attack" | "control" | "limit" | "integrity"; title: string; run: (h: Harness) => Promise<Outcome> };
-export type Effect = { requestId: string; intent: Intent; ledgerHadLine: boolean; threw: boolean };
+export type Effect = Received & { intent: Intent };
 export type AnchorAdapter = { capture: (h: Harness, dbPath: string) => unknown; apply: (cfg: any, head: unknown) => any };
 export type WriterMode = "keep" | "drop";
 export class WriteRefused extends Error {}
@@ -41,6 +48,8 @@ export const MERGED_DDL = `CREATE TABLE IF NOT EXISTS meta(k TEXT PRIMARY KEY, v
         token TEXT NOT NULL, token_sha256 TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS outbox(seq INTEGER PRIMARY KEY AUTOINCREMENT, request_id TEXT NOT NULL UNIQUE, intent TEXT NOT NULL);`;
 export const TRUSTED_ENCODING_PATH = resolve(__dirname, "../../../ts/refund-finality/encoding.ts");
+// The trusted row-log chain of this tree (the formula is in core/store.ts; the same bytes as the anchor design).
+export const trustedLinkOf = (prev: string, token: string, intent: string): string => TSTORE.linkOf(prev, token, intent);
 
 type SinkRef = { handle: number };
 export class Harness {
@@ -52,7 +61,10 @@ export class Harness {
   readonly specLockSha256 = TE.sha256hex("h-regress test spec lock");
   readonly checkerSha256 = TE.sha256hex("h-regress test checker");
   remote!: Remote;
-  caps: { loadError: string; hasSink: boolean; hasDispatcher: boolean; hasGenesisOf: boolean } = { loadError: "", hasSink: false, hasDispatcher: false, hasGenesisOf: false };
+  caps: { loadError: string; hasSink: boolean; hasDispatcher: boolean; hasGenesisOf: boolean; graph: string[]; encodingModules: string[] } =
+    { loadError: "", hasSink: false, hasDispatcher: false, hasGenesisOf: false, graph: [], encodingModules: [] };
+  // Effect-channel faults of every child of this regression (remote.ts); a non-empty list makes the regression FAIL.
+  readonly channelProblems: string[] = [];
   dir = "";
   private open = new Set<number>();
   constructor(readonly sinkPath: string, readonly dispatcherPath: string, anchorPath: string | null) {
@@ -71,10 +83,15 @@ export class Harness {
     this.caps = await this.remote.call("hello");
     if (!this.caps.hasSink) throw new Error("module under test does not export Sink: " + this.caps.loadError);
   }
+  private async stopChild(): Promise<void> {
+    const r = this.remote; if (!r) return;
+    try { await r.stop(); } catch { /* gone */ }
+    for (const p of r.problems.splice(0)) this.channelProblems.push(p);
+  }
   // A PROCESS restart: the child is killed (no close) and a new child loads the modules again.
-  async restart(): Promise<void> { this.remote.kill(); this.open.clear(); await this.startChild(); }
+  async restart(): Promise<void> { await this.stopChild(); this.open.clear(); await this.startChild(); }
   async end(): Promise<void> {
-    try { await this.remote?.stop(); } catch { /* gone */ }
+    await this.stopChild();
     try { rmSync(this.dir, { recursive: true, force: true }); } catch { /* best effort */ }
   }
   path(name: string): string { return join(this.dir, name); }
@@ -122,17 +139,16 @@ export class Harness {
     return r.status === "threw" ? "threw: " + String(r.reason).slice(0, 80) : r.status;
   }
   async close(sink: SinkRef | null): Promise<void> { if (sink) { this.open.delete(sink.handle); await this.remote.call("close", { handle: sink.handle }); } }
-  // ---- the dispatcher under test (in the child). failAt: the emit with that index throws (a failed effect).
+  // ---- the dispatcher under test (in the child). failAt: the emit with that index gets a failing ACK from the parent.
+  // The effects are the records that the parent's receiver got during this flush (remote.ts); failAt: the record
+  // with that index gets a failing ACK (the parent decides), so that emit call throws.
   async flush(dbPath: string, initial: State, ledgerName = "ledger.jsonl", failAt?: number): Promise<{ effects: Effect[]; error: string }> {
     if (!this.caps.hasDispatcher) return { effects: [], error: "no dispatcher module loaded" };
-    const r = await this.remote.call<{ effects: Effect[]; error: string }>("flush", { db: dbPath, ledger: this.path(ledgerName), dcfg: await this.dcfg(initial), failAt });
+    const r = await this.remote.flush({ db: dbPath, ledger: this.path(ledgerName), dcfg: await this.dcfg(initial) }, failAt);
     return { effects: r.effects.map(e => ({ ...e, intent: e.intent as Intent })), error: r.error };
   }
-  ledgerIds(ledgerName = "ledger.jsonl"): string[] {
-    const p = this.path(ledgerName);
-    if (!existsSync(p)) return [];
-    return readFileSync(p, "utf8").split("\n").filter(l => l.length > 0).map(l => { try { return String(JSON.parse(l).requestId); } catch { return "?unparsable"; } });
-  }
+  // Request ids named by the ledger lines (tolerant parser; any line that names the id counts).
+  ledgerIds(ledgerName = "ledger.jsonl"): string[] { return ledgerLineIds(this.path(ledgerName)).flat(); }
   // ---- durable state, read by the PARENT with its own read-only connection
   raw<X>(dbPath: string, f: (db: DatabaseSync) => X): X { const db = new DatabaseSync(dbPath, { readOnly: true }); try { return f(db); } finally { db.close(); } }
   outbox(dbPath: string): { request_id: string; intent: Intent }[] {
@@ -180,6 +196,36 @@ export class Harness {
     }
     const names = Object.keys(v);
     db.prepare(`INSERT INTO ${table}(${names.join(", ")}) VALUES (${names.map(() => "?").join(", ")})`).run(...names.map(n => v[n]));
+  }
+  // CHAIN-VALID WRITER (see the header). Appends the token `tok` as the next settled row. Hardened schema (columns
+  // prev, self): seq = the next position, prev = genesis (meta) or the self of the last outbox row, self =
+  // trustedLinkOf(prev, token, intent text); the outbox row and the state change are written by the store's own
+  // trigger when it exists (writer "keep"), or by the writer (writer "drop": triggers dropped and restored). Merged
+  // schema (no chain): settled row, outbox row, state blob. The intent text is canon(body.intent) (the token is canonical,
+  // so it equals json_extract(token, '$.body.intent')).
+  appendRow(dbPath: string, tok: string, mode: WriterMode): void {
+    const b = JSON.parse(tok).body, intentText = TE.canon(b.intent), rid = String(b.requestId);
+    this.write(dbPath, d => {
+      const cols = (t: string) => (d.prepare(`PRAGMA table_info(${t})`).all() as { name: string }[]).map(c => c.name);
+      const sc = cols("settled"), stc = cols("state");
+      if (sc.includes("self")) {
+        const seq = Number((d.prepare("SELECT coalesce(max(seq), 0) AS m FROM settled").get() as any).m) + 1;
+        const prev = seq === 1 ? String((d.prepare("SELECT genesis FROM meta").get() as any).genesis)
+          : String((d.prepare("SELECT self FROM outbox WHERE seq = ?").get(seq - 1) as any)?.self);
+        const self = trustedLinkOf(prev, tok, intentText);
+        d.prepare("INSERT INTO settled(seq, request_id, token, token_sha256, prev, self) VALUES (?, ?, ?, ?, ?, ?)").run(seq, rid, tok, TE.sha256hex(tok), prev, self);
+        if (!d.prepare("SELECT 1 AS x FROM outbox WHERE seq = ?").get(seq))
+          d.prepare("INSERT INTO outbox(seq, request_id, intent, prev, self) VALUES (?, ?, ?, ?, ?)").run(seq, rid, intentText, prev, self);
+        const s = d.prepare("SELECT * FROM state WHERE id = 1").get() as any;
+        if (Number(s.seq) !== seq) {
+          d.prepare("UPDATE state SET blob = ?, seq = ?, refunded = refunded + ? WHERE id = 1").run(TE.canon(b.post), seq, BigInt(b.intent.amount));
+        }
+      } else {
+        this.insertRow(d, "settled", { request_id: rid, token: tok, token_sha256: TE.sha256hex(tok) });
+        if ((d.prepare("SELECT COUNT(*) AS n FROM outbox WHERE request_id = ?").get(rid) as any).n === 0) this.insertRow(d, "outbox", { request_id: rid, intent: intentText });
+        if (stc.includes("blob")) d.prepare("UPDATE state SET blob = ? WHERE id = 1").run(TE.canon(b.post));
+      }
+    }, mode);
   }
   // Database file for the legacy fixture (X3): created by the parent in the merged format.
   create(dbPath: string, f: (db: DatabaseSync) => void): void { const db = new DatabaseSync(dbPath); try { f(db); } finally { db.close(); } }

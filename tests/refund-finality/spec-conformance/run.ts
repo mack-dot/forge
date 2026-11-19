@@ -8,6 +8,8 @@
 //     interleave: two sink instances on the same database file; each delivery goes to one of them at random
 //   compiledCoreModule: the compiled Slice 1 core (model.cjs); the oracle uses only its Refund.Assess.
 //   --dispatcher: after each sequence the dispatcher flushes the store; the oracle checks the EMITTED effects.
+// With --dispatcher, the EFFECT RECEIVER is held by this process (../regress/remote.ts, task h-judges2): each emit call
+// of the dispatcher under test is a record on a pipe that this process created, ACKed here before the call returns.
 // The sink and dispatcher run in a CHILD process (../regress/worker.ts); this process generates the deliveries,
 // reads the durable state through its OWN read-only SQLite connection (tables state, settled, outbox), and calls
 // the oracle (oracle.ts) with the TRUSTED encoding.ts of this tree. Some sequences have restarts of the sink, more
@@ -155,7 +157,8 @@ async function main(): Promise<number> {
         if (caps.hasDispatcher) {
           const dcfg: any = { publicKeyPem: keys.pub, specLockSha256, checkerSha256, initialStateSha256: sha256hex(canon(c0)) };
           if (caps.hasGenesisOf) dcfg.newLedgerH0 = await remote.call("genesis", { initText: canon(c0), lock: specLockSha256, checker: checkerSha256, pem: keys.pub });
-          const f = await remote.call<{ effects: { requestId: string; intent: unknown }[]; error: string }>("flush", { db: dbPath, ledger: dbPath + ".ledger.jsonl", dcfg });
+          // The emitted effects are the records that the PARENT's receiver got (regress/remote.ts), not a child report.
+          const f = await remote.flush({ db: dbPath, ledger: dbPath + ".ledger.jsonl", dcfg });
           history.emitted = f.effects.map(e => ({ requestId: e.requestId, intent: e.intent }));
           emittedTotal += f.effects.length;
         }
@@ -182,18 +185,21 @@ async function main(): Promise<number> {
   }
   await remote.stop();
   rmSync(work, { recursive: true, force: true });
+  // Effect-channel faults (regress/remote.ts): a record outside a flush, a line that is not a record, a channel held
+  // open after the child died. Any of them makes the run NOT OK (an effect that the oracle did not see is still one).
+  const channelProblems = remote.problems.slice(0, 5);
   // VERDICT. P5-SILENT is a question for the owner, not a violation. Exit 0 only when the run completed all
   // sequences, the child stayed alive, and the violated set is empty (or equals --expect-violations).
   const violated = Object.keys(perProp).filter(p => p !== "P5-SILENT").sort();
   const completed = childGone === null && done === count;
   const want = expected ? [...expected].sort() : [];
-  const ok = completed && canon(violated) === canon(want);
+  const ok = completed && canon(violated) === canon(want) && channelProblems.length === 0;
   process.stdout.write(JSON.stringify({
     tool: "spec-conformance/run.ts", sink: resolve(sinkPath), sinkSha256: sha256hex(readFileSync(resolve(sinkPath))),
     dispatcher: dispArg ? resolve(dispArg) : null, dispatcherSha256: dispArg ? sha256hex(readFileSync(resolve(dispArg))) : null,
     trustedEncodingSha256: sha256hex(readFileSync(TRUSTED_ENCODING_PATH)),
     core: oracle.coreModule, coreSha256: sha256hex(readFileSync(oracle.coreModule)), mode, count, seed, sequencesDone: done, childGone,
-    deliveries: deliveriesTotal, restarts, emitted: emittedTotal, outcomes, faultsInjected: faultsHit, sinkErrors, ms: Date.now() - t0,
+    deliveries: deliveriesTotal, restarts, emitted: emittedTotal, effectChannelProblems: channelProblems, outcomes, faultsInjected: faultsHit, sinkErrors, ms: Date.now() - t0,
     sequencesWithViolation: perProp, violated, expectedViolations: expected ? want : null, verdict: ok ? "OK" : "NOT OK",
     kindOutcome, violationsByKind: kindViolation, smallest,
   }) + "\n");

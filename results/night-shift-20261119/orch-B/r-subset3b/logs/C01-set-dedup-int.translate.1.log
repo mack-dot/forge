@@ -1,0 +1,28 @@
+# owner=r-subset3b start=2026-11-19T14:28:46Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset3b/work/C01-set-dedup-int
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1306
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny translate js impl/Refund.dfy --no-verify --output <REPO>/results/night-shift-20261119/orch-B/r-subset3b/work/C01-set-dedup-int/model
+# memory free percent: 40
+
+Dafny program verifier did not attempt verification
+        0.88 real         0.58 user         0.10 sys
+            98418688  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8208  page reclaims
+                 978  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  30  voluntary context switches
+                4080  involuntary context switches
+          4519503242  instructions retired
+          2047656624  cycles elapsed
+            75793584  peak memory footprint
+# end=2026-11-19T14:28:47Z
+exit 0

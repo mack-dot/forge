@@ -1,0 +1,42 @@
+# owner=r-subset3b start=2026-11-19T14:57:25Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-subset3b/work/NM-then
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1298
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 58
+impl/Refund.dfy(4,9): Error: a method must be given a name (expecting identifier)
+  |
+4 |   method then(x: int) returns (y: int) ensures y == x + 1 { y := x + 1; }
+  |          ^^^^
+
+impl/Refund.dfy(4,9): Error: invalid MethodDecl
+  |
+4 |   method then(x: int) returns (y: int) ensures y == x + 1 { y := x + 1; }
+  |          ^
+
+impl/Refund.dfy(8,13): Error: invalid Rhs
+  |
+8 |     var q := then(1);
+  |              ^
+
+3 parse errors detected in Refund.dfy
+        0.33 real         0.26 user         0.04 sys
+            73400320  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                5703  page reclaims
+                  31  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  22  voluntary context switches
+                1163  involuntary context switches
+          2126391398  instructions retired
+           905317826  cycles elapsed
+            44549176  peak memory footprint
+# end=2026-11-19T14:57:26Z
+exit 2

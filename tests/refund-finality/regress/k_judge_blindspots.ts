@@ -1,7 +1,7 @@
 // Regressions that close the judge blind spots of red-team finding C-JUDGE-01 (Orchestrator C,
 // results/night-shift-20261119/orch-C/ATTACKS.md; mutants in orch-C/c10-judges). Task h-judges. A TEST, not a proof.
 // Every case states its SAFE outcome on DURABLE state (outbox rows, settled ids, stored state, read by the parent)
-// and on EFFECTS (dispatcher emissions recorded in the child, and the ledger file read by the parent). Each case has
+// and on EFFECTS (the records that the PARENT's receiver got, remote.ts; the ledger file read by the parent). Each case has
 // a liveness part, so a sink that rejects everything FAILS it.
 // Source of each expected outcome: the Slice 1 finality design (ts/refund-finality/sink.ts header, checks 1-4, and
 // ts/refund-finality/dispatcher.ts header, checks 1-5 and the ledger order), not the approved refund spec, which is
@@ -9,8 +9,7 @@
 // "committed", "replayed" (the identical token of a settled request id), "rejected".
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { Harness, Intent, Regression, State, TRUSTED_ENCODING_PATH, WriterMode, fail, pass, twoWriters } from "./harness";
+import { Harness, Intent, Regression, State, TRUSTED_ENCODING_PATH, WriteRefused, WriterMode, fail, pass, twoWriters } from "./harness";
 
 type Why = string[];
 const unchanged = (h: Harness, db: string, s: State, nOut: number) => h.E.canon(h.stored(db)) === h.E.canon(s) && h.outbox(db).length === nOut;
@@ -232,22 +231,26 @@ export const judges: Regression[] = [
       if (!(led1.includes("rq_1") && led1.includes("rq_2"))) return fail("ledger does not record the effect before the failure: " + why);
       return f2.effects.map(e => e.requestId).join(",") === "rq_3" ? pass(why) : fail("second flush did not emit exactly rq_3: " + why);
     } },
-  { id: "E0-encoding-identity", kind: "integrity", title: "the sink tree's encoding.ts is the judge's trusted encoding.ts",
-    // The judges sign and decode with the trusted encoding.ts of their own tree. A sink tree that ships ANOTHER
-    // encoding.ts is reported here (SHA-256 compare): its signed bytes, shape checks or canonical form may differ.
+  { id: "E0-encoding-identity", kind: "integrity", title: "every encoding module that the code under test loads is the judge's trusted encoding",
+    // h-judges2 (red-team blind spot enc_unsigned_body): the encoding is located in the module graph that the CHILD
+    // actually loaded (worker.ts records every resolved file), never by a path next to the sink. Every encoding module
+    // of that graph (encoding.*, or a module that exports its own signedBytes) must have the trusted SHA-256 (hashed by
+    // the parent). A graph without an encoding module also FAILS (the signed bytes are then not the trusted ones).
+    // The behaviour cases E1, E2 and D5 do not rely on this report.
     async run(h) {
       const sha = (p: string) => createHash("sha256").update(readFileSync(p)).digest("hex");
-      const next = join(dirname(h.sinkPath), "encoding.ts");
-      if (!existsSync(next)) return pass("no encoding.ts next to the sink");
-      const a = sha(TRUSTED_ENCODING_PATH), b = sha(next);
-      return a === b ? pass("same SHA-256 " + a.slice(0, 16)) : fail(`FOREIGN ENCODING: ${next} sha256 ${b.slice(0, 16)} differs from the trusted ${a.slice(0, 16)}`);
+      const t = sha(TRUSTED_ENCODING_PATH), mods = h.caps.encodingModules;
+      if (mods.length === 0) return fail(`NO ENCODING MODULE in the loaded graph (${h.caps.graph.length} files)`);
+      const bad = mods.filter(p => !existsSync(p) || sha(p) !== t);
+      return bad.length ? fail("FOREIGN ENCODING loaded: " + bad.map(p => `${p} sha256 ${existsSync(p) ? sha(p).slice(0, 16) : "missing"}`).join(", ") + ` (trusted ${t.slice(0, 16)})`)
+        : pass(`${mods.length} encoding module(s) in a graph of ${h.caps.graph.length} files, all with the trusted SHA-256 ${t.slice(0, 16)}`);
     } },
   { id: "E1-signed-bytes-cover-post-intent", kind: "attack", title: "post and intent altered after signing",
     // (a) The trusted key signs body B (rq_1, 100); post and intent are then changed (amount 900, remaining 100) and
-    // the token is delivered. SAFE: no commit. (b) Probe: the child computes the signed bytes of B and of the altered
-    // body with the encoding.ts NEXT TO THE SINK. If they are equal (that encoding does not cover post and intent),
-    // the trusted key signs THOSE bytes and the altered token is delivered. SAFE: no commit. LIVENESS: the honest
-    // token for rq_1 commits and is emitted once.
+    // the token is delivered. SAFE: no commit. (b) Probe: every bytes function of every encoding module that the
+    // child loaded (worker.ts, encodingCandidates) maps B and the altered body; where the two byte strings are EQUAL,
+    // the trusted key signs them and the altered token is delivered. SAFE: no commit. LIVENESS: the honest token
+    // for rq_1 commits and is emitted once.
     async run(h) {
       const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = await h.newStore("e1", S0);
       const B = h.body(S0, "rq_1", h.dec(S0, "100"), h.intent("ch_1", "rq_1", "100"));
@@ -255,18 +258,160 @@ export const judges: Regression[] = [
       const sig = JSON.parse(h.signBody(B)).signature;
       const a = await h.commit(sink, h.E.canon({ body: Balt, signature: sig }));
       if (!unchanged(h, db, S0, 0)) return fail("ALTERED POST/INTENT COMMITTED (trusted bytes): a=" + a);
-      const nb = await h.remote.call<string[] | null | { error: string }>("neighborSignedBytes", { bodies: [B, Balt] });
-      let probe = "no neighbor encoding";
-      if (Array.isArray(nb)) {
-        if (nb[0] === nb[1]) {
-          const b = await h.commit(sink, h.signBody(Balt, false, Buffer.from(nb[0], "base64")));
-          probe = "NEIGHBOR SIGNED BYTES OMIT post/intent; altered token signed over them: " + b;
-          if (!unchanged(h, db, S0, 0)) return fail("ALTERED POST/INTENT COMMITTED (sink's encoding): " + probe);
-        } else probe = "neighbor signed bytes cover post/intent";
+      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, Balt] });
+      const probe: string[] = [];
+      for (const c of cands) {
+        if (c.bytes[0] !== c.bytes[1]) continue;
+        const b = await h.commit(sink, h.signBody(Balt, false, Buffer.from(c.bytes[0], "base64")));
+        probe.push(`${c.name.split("/").pop()}=${b}`);
+        if (!unchanged(h, db, S0, 0)) return fail("ALTERED POST/INTENT COMMITTED (bytes of the loaded encoding " + c.name + "): " + b);
       }
       const ok = await h.commit(sink, h.signBody(B));
       const f = await h.flush(db, S0);
-      const why = `altered=${a} probe=${probe} honest=${ok} effects(rq_1)=${effectsOf(f.effects, "rq_1")}`;
+      const why = `altered=${a} candidates=${cands.length} colliding=[${probe.join(",")}] honest=${ok} effects(rq_1)=${effectsOf(f.effects, "rq_1")}`;
       return effectsOf(f.effects, "rq_1") === 1 && h.outbox(db).length === 1 ? pass(why) : fail("honest token not committed and emitted once: " + why);
     } },
+  { id: "E2-signed-field-flips", kind: "attack", title: "a signature kept while ONE signed field changes is refused (every field, many byte definitions)",
+    // h-judges2 (blind spot enc_unsigned_body). For each signed field F (post only, amount only, reason only, amount
+    // and post together, request id, charge id, pre-state hash) the altered body B' differs from the honest body B
+    // only in F. For each candidate definition g of the signed bytes with g(B) = g(B'), the trusted key signs g(B)
+    // and the token {body: B', signature} is delivered. Candidates: the trusted signedBytes; every bytes function of
+    // the encoding modules that the child loaded (where it collides); canon of every subset of the top-level body keys
+    // that leaves F's keys out; canon of B with F's nested keys deleted. SAFE: none commits (state and outbox
+    // unchanged). LIVENESS: the honest B commits and is emitted once. A sink that verifies a signature over fewer
+    // fields than the trusted encoding signs FAILS here when its bytes are one of the candidates.
+    async run(h) {
+      const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = await h.newStore("e2", S0);
+      const B = h.body(S0, "rq_1", h.dec(S0, "100"), h.intent("ch_1", "rq_1", "100"));
+      const alts = fieldFlips(h, S0, B);
+      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, ...alts.map(x => x.body)] });
+      let n = 0; const hits: string[] = [];
+      for (let k = 0; k < alts.length; k++) {
+        const x = alts[k];
+        for (const [name, bytes] of byteCandidates(h, B, x, cands.map(c => ({ name: c.name, b: c.bytes[0], a: c.bytes[k + 1] })))) {
+          const r = await h.commit(sink, h.signBody(x.body as any, false, bytes)); n++;
+          if (!unchanged(h, db, S0, 0)) { hits.push(`${x.field}/${name}=${r}`); break; }
+        }
+        if (hits.length) break;
+      }
+      if (hits.length) return fail("ALTERED SIGNED FIELD COMMITTED: " + hits.join(" ") + ` (after ${n} deliveries)`);
+      const ok = await h.commit(sink, h.signBody(B));
+      const f = await h.flush(db, S0);
+      const why = `deliveries=${n} fields=${alts.length} loadedCandidates=${cands.length} honest=${ok} effects(rq_1)=${effectsOf(f.effects, "rq_1")}`;
+      return effectsOf(f.effects, "rq_1") === 1 && h.outbox(db).length === 1 ? pass(why) : fail("honest token not committed and emitted once: " + why);
+    } },
+  { id: "D4-dispatcher-chain-valid-bad-signature", kind: "attack", title: "a row with a RECOMPUTED chain and a foreign or invalid signature",
+    // h-judges2 (blind spot md_ignore_sig: D1 and D2 do not recompute the chain, so any dispatcher refuses them at the
+    // chain check). rq_1 is committed and dispatched; the sink is closed. A database writer (no key; triggers dropped
+    // and restored) appends rq_2 with the row-log chain RECOMPUTED by the trusted chain function (appendRow).
+    // CALIBRATION: the same writer appends a VALIDLY signed rq_2 (amounts 50 and 0) in fresh stores: the dispatcher
+    // must emit it once (this shows that the writer's rows pass every chain check; else the case FAILS as "calibration").
+    // SAFE: rq_2 signed by a FOREIGN key, rq_2 with 64 zero bytes as signature, and rq_2 with a trusted signature over
+    // ANOTHER body, each with amount 50 and with amount 0, are NOT emitted. LIVENESS: rq_1 emitted once per store.
+    async run(h) {
+      const S0 = h.st("ch_1", "1000", "1000"), S1 = h.dec(S0, "100");
+      const zeroSig = Buffer.alloc(64).toString("base64");
+      const body2 = (amt: string) => h.body(S1, "rq_2", h.dec(S1, amt), h.intent("ch_1", "rq_2", amt));
+      const variants: [string, boolean, (amt: string) => string][] = [
+        ["valid", true, amt => h.signBody(body2(amt))],
+        ["foreign-key", false, amt => h.signBody(body2(amt), true)],
+        ["zero-signature", false, amt => h.E.canon({ body: body2(amt), signature: zeroSig })],
+        ["other-body-signature", false, amt => h.E.canon({ body: body2(amt), signature: JSON.parse(h.signBody(body2(amt === "0" ? "1" : "0"))).signature })],
+      ];
+      const why: string[] = [], bad: string[] = [], cal: string[] = [];
+      for (const amt of ["50", "0"]) for (const [name, good, tokOf] of variants) {
+        const r = await writerRow(h, `d4-${name}-${amt}`, S0, tokOf(amt));
+        why.push(`${name}/${amt}:${r.text}`);
+        if (r.rq1 !== 1) cal.push(`${name}/${amt}: rq_1 emitted ${r.rq1} times`);
+        if (good && r.rq2 !== 1) cal.push(`${name}/${amt}: valid writer row emitted ${r.rq2} times`);
+        if (!good && r.rq2 > 0) bad.push(`${name}/${amt}`);
+      }
+      if (bad.length) return fail("ROW WITHOUT A VALID SIGNATURE EMITTED (chain recomputed): " + bad.join(",") + " | " + why.join(" "));
+      if (cal.length) return fail("calibration: " + cal.join("; ") + " | " + why.join(" "));
+      return pass(why.join(" "));
+    } },
+  { id: "D5-dispatcher-stored-field-flips", kind: "attack", title: "a stored token whose post or intent changed while the signature was kept",
+    // h-judges2 (blind spot enc_unsigned_body, stored side). As D4 (writer, chain recomputed), rq_2's body B is the
+    // honest refund of 50 on S1; the writer stores B' = B with (a) the reason changed, or (b) amount 300 and post S1 -
+    // 300 (both fully valid bodies), with a trusted signature over g(B) for each candidate g with g(B) = g(B'): the
+    // trusted signedBytes (the signature is simply kept), the colliding bytes functions of the loaded encoding modules,
+    // canon of B without the touched top-level keys, canon of B without post and intent, canon of B with the touched
+    // nested keys deleted. CALIBRATION: the honest B stored by the same writer is emitted once. SAFE: no B' is emitted.
+    async run(h) {
+      const S0 = h.st("ch_1", "1000", "1000"), S1 = h.dec(S0, "100");
+      const B = h.body(S1, "rq_2", h.dec(S1, "50"), h.intent("ch_1", "rq_2", "50"));
+      const alts = [
+        { field: "reason", keys: ["intent"], body: { ...B, intent: { ...B.intent, reason: "duplicate_charge" } }, nested: (b: any) => ({ ...b, intent: omit(b.intent, ["reason"]) }) },
+        { field: "amount+post", keys: ["post", "intent"], body: { ...B, post: h.dec(S1, "300"), intent: { ...B.intent, amount: "300" } },
+          nested: (b: any) => ({ ...b, post: omit(b.post, ["remaining"]), intent: omit(b.intent, ["amount"]) }) },
+      ];
+      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, ...alts.map(x => x.body)] });
+      const c0 = await writerRow(h, "d5-calibration", S0, h.signBody(B));
+      if (c0.rq1 !== 1 || c0.rq2 !== 1) return fail(`calibration: honest stored row emitted ${c0.rq2} times, rq_1 ${c0.rq1} times: ${c0.text}`);
+      const why: string[] = [], bad: string[] = [];
+      for (let k = 0; k < alts.length; k++) {
+        const x = alts[k];
+        const gs: [string, Buffer][] = [["trusted", h.E.signedBytes(B)], ["top-minus-touched", canonBytes(h, omit(B, x.keys))],
+          ["top-minus-post-intent", canonBytes(h, omit(B, ["post", "intent"]))], ["nested", canonBytes(h, x.nested(B))]];
+        for (const c of cands) if (c.bytes[0] === c.bytes[k + 1]) gs.push([c.name.split("/").pop()!, Buffer.from(c.bytes[0], "base64")]);
+        for (const [name, bytes] of gs) {
+          const r = await writerRow(h, `d5-${k}-${name.replace(/[^A-Za-z0-9]/g, "_")}`, S0, h.signBody(x.body as any, false, bytes));
+          why.push(`${x.field}/${name}:${r.text}`);
+          if (r.rq2 > 0) bad.push(`${x.field}/${name}`);
+        }
+      }
+      return bad.length ? fail("STORED ALTERED BODY EMITTED: " + bad.join(",") + " | " + why.join(" ")) : pass(`calibration emitted once; ` + why.join(" "));
+    } },
 ];
+
+// ---- helpers of E2, D4, D5 (h-judges2)
+const TOP = ["domain", "specLockSha256", "checkerSha256", "preStateSha256", "requestId", "post", "intent"];
+function omit(o: any, keys: string[]): any { const r: any = {}; for (const k of Object.keys(o)) if (!keys.includes(k)) r[k] = o[k]; return r; }
+const canonBytes = (h: Harness, o: unknown): Buffer => Buffer.from(h.E.canon(o as any), "utf8");
+type Flip = { field: string; keys: string[]; body: any; nested: ((b: any) => any) | null };
+// One altered body per signed field; each differs from B only in the named field (keys: the top-level keys it touches).
+function fieldFlips(h: Harness, S0: State, B: any): Flip[] {
+  return [
+    { field: "post", keys: ["post"], body: { ...B, post: { ...B.post, remaining: "800" } }, nested: b => ({ ...b, post: omit(b.post, ["remaining"]) }) },
+    { field: "amount", keys: ["intent"], body: { ...B, intent: { ...B.intent, amount: "200" } }, nested: b => ({ ...b, intent: omit(b.intent, ["amount"]) }) },
+    { field: "reason", keys: ["intent"], body: { ...B, intent: { ...B.intent, reason: "duplicate_charge" } }, nested: b => ({ ...b, intent: omit(b.intent, ["reason"]) }) },
+    { field: "amount+post", keys: ["post", "intent"], body: { ...B, post: { ...B.post, remaining: "700" }, intent: { ...B.intent, amount: "300" } },
+      nested: b => ({ ...b, post: omit(b.post, ["remaining"]), intent: omit(b.intent, ["amount"]) }) },
+    { field: "request-id", keys: ["requestId", "intent"], body: { ...B, requestId: "rq_9", intent: { ...B.intent, requestId: "rq_9" } },
+      nested: b => ({ ...omit(b, ["requestId"]), intent: omit(b.intent, ["requestId"]) }) },
+    { field: "charge-id", keys: ["post", "intent"], body: { ...B, post: { ...B.post, chargeId: "ch_2" }, intent: { ...B.intent, chargeId: "ch_2" } },
+      nested: b => ({ ...b, post: omit(b.post, ["chargeId"]), intent: omit(b.intent, ["chargeId"]) }) },
+    { field: "pre-state", keys: ["preStateSha256"], body: { ...B, preStateSha256: h.E.stateSha256(h.st(S0.chargeId, S0.original, "999")) }, nested: null },
+  ];
+}
+// The candidate signed bytes g(B) for one flip, each with g(B) = g(B') checked here (a judge fault otherwise).
+function byteCandidates(h: Harness, B: any, x: Flip, loaded: { name: string; b: string; a: string }[]): [string, Buffer][] {
+  const out: [string, Buffer][] = [["trusted", h.E.signedBytes(B)]];
+  const free = TOP.filter(k => !x.keys.includes(k));
+  for (let m = 0; m < 1 << free.length; m++) {
+    const P = free.filter((_, i) => (m >> i) & 1);
+    const g = canonBytes(h, omit(B, TOP.filter(k => !P.includes(k))));
+    if (!g.equals(canonBytes(h, omit(x.body, TOP.filter(k => !P.includes(k)))))) throw new Error("judge fault: projection differs for " + x.field);
+    out.push(["top{" + P.join(",") + "}", g]);
+  }
+  if (x.nested) {
+    const g = canonBytes(h, x.nested(B));
+    if (!g.equals(canonBytes(h, x.nested(x.body)))) throw new Error("judge fault: nested omission differs for " + x.field);
+    out.push(["nested", g]);
+  }
+  for (const c of loaded) if (c.b === c.a) out.push([c.name.split("/").pop()!, Buffer.from(c.b, "base64")]);
+  return out;
+}
+// D4/D5 store: rq_1 honest (100) committed and dispatched; sink closed; the writer appends `tok` (chain recomputed);
+// a second flush. Returns the number of effects for rq_1 and rq_2 (parent's receiver) over both flushes.
+async function writerRow(h: Harness, name: string, S0: State, tok: string): Promise<{ rq1: number; rq2: number; text: string }> {
+  const { db, sink } = await h.newStore(name, S0);
+  const c1 = await h.commit(sink, h.honest(S0, "rq_1", "100"));
+  const ledger = name + ".ledger.jsonl";
+  const f1 = await h.flush(db, S0, ledger); await h.close(sink);
+  let w = "written";
+  try { h.appendRow(db, tok, "drop"); } catch (e) { if (!(e instanceof WriteRefused)) throw e; w = "write refused: " + e.message.slice(0, 50); }
+  const f2 = await h.flush(db, S0, ledger);
+  const all = [...f1.effects, ...f2.effects];
+  return { rq1: effectsOf(all, "rq_1"), rq2: effectsOf(all, "rq_2"), text: `c1=${c1},${w},rq2=${effectsOf(all, "rq_2")}${f2.error ? ",err=" + f2.error.slice(0, 40) : ""}` };
+}
