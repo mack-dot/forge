@@ -142,3 +142,28 @@ A true audit pins the chain of charges, not the row log. A database writer witho
 
 ## ADDENDUM 23 (2026-11-19T14:15:42Z) — partial review of the third subset rule (U567); battery power since about 14:14Z
 No bypass found in the classes tried (tuple matches, literal escapes, primed names, all earlier bypasses); about half of the planned attacks did not run (battery). Ten further natural correct styles are refused by the rule (not confirmed by Dafny). The third rule stays without a finished review. No Dafny run and no heavy step after 14:14Z.
+
+## Addendum 24 (phase 2, written 2026-11-19T16:03:34Z): implementation hardening; state at branch dd3bec6e
+
+Stage labels do not change. M1-B OPEN. end_to_end=false. Nothing merged. Details: unsure U568 to U578; owner items B-12 to B-16.
+
+What is on the branch `nightshift/B-trust` (all TESTED-UNPROVED unless marked):
+- Regressions for both duplicate-effect counterexamples. On the merged sink they FAIL (8 ids), as they must. On the hardened tree the runner gives 26 of 26, exit 0 (my run; judge version cf242303).
+- A hardened sink: request identity, charge binding, cumulative refund limit and the one-statement commit are in the database schema (14 triggers); a row-log head; start-up audit with integrity_check.
+- A dispatcher with a claim rule (safety does not depend on the lock), an owned lock, in-doubt records, a dispatch witness. Exactly-once is NOT claimed.
+- A minter with a per-request single-use rule. MACHINE-CHECKED at source level: IssueOnce.dfy, 160 verified, exit 0 (my run). A proposal: it conflicts with one merged suite row (B-15).
+- Judges rebuilt after the red team passed twelve defective variants through the old ones.
+- A fake payment provider as an outside anchor (tests only; all provider properties are ASSUMPTIONS).
+
+Heavy window 9 (my runs): Slice 1 suite pristine exit 0 (115 rows, 0 failed); on the hardened sink exit 2, no report (predicted; NOT a pass); kill storm 200 of 200; spec-conformance 5,000 sequences x 3 modes: no violation, exit 0; differential: no result (harness error).
+
+Red team (Orchestrator C), its own runs. Closed for the tested cases: C-ATT-01, 02, 03, 04, 06, 10, 11, 12, 15, 16, 20. Fix delivered, re-attack pending: C-ATT-17, 18, 22; C-HOST-01 to 05, 07; C-JUDGE-01 to 03. OPEN: C-ATT-05 (key per start; owner), 14 and 31 (launch environment; assumption only), 19 (full restore; needs an outside anchor), 21 (planted journal file), 23 (hard links), 24 (running sink accepts an old-row change), 25 (dispatcher has no row anchor), 26 (a false rejection new in the hardened sink), 27 (stale outside head), 28, 29, 30 (request-id squatting at the minter); C-GATE-02 to 06 (rule 3: quadratic, read-twice, false rejections, and it ADMITS a bodiless lemma: I reproduced that).
+
+Acceptance points of directive 2, honest state:
+- Both duplicate-effect exploits fail against the fixed implementation: YES in my light runs and in the red team's re-attack, for a writer that keeps the schema and for the tested file-writer cases; NOT against a full restore without an outside head.
+- Zero-amount refunds still succeed: YES in every run so far (mine, the reviewer's, the red team's fuzz).
+- All known unsafe gate submissions rejected: by the gate as a whole, yes (red team's runs); by rule 3 alone, NO (C-GATE-05).
+- False rejections explained: IN PROGRESS (worker h-gate).
+- The complete suite passes on the fixed tree: NO (adapted suite prepared; full run NOT RUN; changed expectations need the owner, B-16).
+- Every security claim names its assumptions: IN PROGRESS (DIR-EXCLUSIVE, APPEND-ATOMIC, provider assumptions, CLOSED-LAUNCH, FIXED-DEPS are named; sink notes are being corrected).
+- Rollback resistance: NOT claimed without an outside head that the host keeps fresh (B-14).

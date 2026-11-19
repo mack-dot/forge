@@ -1,0 +1,15 @@
+# judge=<SCRATCH>/redteam-C/fix-f08a21c1/tests/refund-finality/regress/run.ts
+# sink=<REPO>/results/night-shift-20261119/orch-C/c19-dispatch2/judges/m/m_late20/sink.ts sha256=ac70c3458ad2f54fee41f5b8135f075d4e2cd97435d2262d3a2a86a1da9573d9
+# dispatcher=<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/dispatcher.ts sha256=bb523824023289973c3f4a16b12e260b7f691acd34d6ef27cdb61d63ec740f7a
+# trusted encoding=<SCRATCH>/redteam-C/fix-f08a21c1/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=none
+# expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=-
+PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
+PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted
+PASS C3-two-zero-refunds: commits=committed,committed; two zero-valued effects
+PASS C4-replay-rejected: first=committed replay=replayed; one effect
+PASS C5-largest-refund: commits=committed,committed; remaining 0; two effects
+PASS X1-reqid-mismatch: faulty=rejected honest=committed outbox(rq_victim)=1 effects(rq_victim)=1
+PASS X2-cross-charge: A=rejected B=committed effects(ch_2,rq_x)=1 emitted(ch_2)=50 A.outbox(foreign)=0
+PASS X2b-foreign-post-locks-store: foreign=rejected storedChargeId=ch_1 honest=committed effects(rq_h)=1
+PASS X3-upgrade-legacy-gap: honest=sink refused to start (h1 sink refuses to serve: start-up audit (schema, integrity,) effects(rq_victim) before=1 after=0 outbox(rq_victim)=1 dispatcherError=dispatcher ledger is not one chain

@@ -1,0 +1,17 @@
+PASS | setup | the issuer reports the ids that the operator computes from the files | true
+PASS | issuer | code that loads the issuer module gets no key and no signing function | 0 exported names; the ready message holds a public key only
+FAIL | c | replay of the committed token | rejected: stored state is not the token's pre-state; effects 0
+PASS | c | a second valid transition | committed; effects 4
+FAIL | c | replay of the first token after another commit | rejected: stored state is not the token's pre-state; effects 0
+FAIL | c | replay of the second token | rejected: stored state is not the token's pre-state; effects 0
+FAIL | c | a new signed token for the CURRENT state that uses a settled request id again | rejected: transaction failed: h-sink S1/S2/S3/S6: a settled row must be the next commit of this store; effects 0
+PASS | c | a refund of amount 0 (the approved relation allows it): the state does not change | committed; effects 3
+PASS | c | after the amount-0 commit the stored state hash is the same as before | same hash
+FAIL | c | replay of the amount-0 token: its pre-state hash still matches the store | rejected: transaction failed: h-sink S1/S2/S3/S6: a settled row must be the next commit of this store; effects 0
+FAIL | c | another signed amount-0 token with the same request id: the pre-state hash matches, the request id is not fresh | rejected: transaction failed: h-sink S1/S2/S3/S6: a settled row must be the next commit of this store; effects 0
+PASS | c | a second dispatcher run on the same outbox | 0 new outbound effects; 3 already dispatched
+PASS | c | audit after the group | problems found: 0
+PASS | option | single-use on: the same transition again for one pre-state | the same token
+PASS | option | single-use on: another transition for a pre-state that has a signed token | SIGNED, a token that verifies
+PASS | option | single-use on: another transition for a request id that has a signed token (same pre-state) | refused: another candidate is already signed for this request id
+{"rows":16,"failed":6,"control_a_rows":0,"control_b_rows":0,"control_c_rows":11,"control_d_rows":0,"issuer_rows":1,"dispatcher_rows":0,"rejection_attempts":6,"effects_of_rejection_attempts":0,"rejection_attempts_that_ask_for_an_effect":6,"known_limit_rows":0}

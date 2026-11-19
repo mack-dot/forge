@@ -12,7 +12,13 @@ if ((command !== "init" && command !== "report") || !dbPath || !cfgPath || (comm
   process.exit(2);
 }
 const cfg = JSON.parse(readFileSync(cfgPath, "utf8"));
-const sink = new Sink(dbPath, command === "init" && cfg.initialState === undefined ? { ...cfg, initialState: JSON.parse(stateJson) } : cfg);
+// h-dispatch (C-HOST-06): the initial charge (THE ANCHOR) comes from the config only, never from the command line. A
+// config without initialState is refused; on init, the argument must equal it (the sink's init checks that too).
+if (cfg === null || typeof cfg !== "object" || cfg.initialState === undefined) {
+  process.stderr.write("sink_tool: the config has no initialState; the anchor is never taken from the command line\n");
+  process.exit(2);
+}
+const sink = new Sink(dbPath, cfg);
 if (command === "init") sink.init(JSON.parse(stateJson));
 process.stdout.write(JSON.stringify({
   state: JSON.parse(sink.stateBlob()),

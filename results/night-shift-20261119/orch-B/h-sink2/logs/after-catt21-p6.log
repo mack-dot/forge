@@ -1,0 +1,24 @@
+<REPO>/results/night-shift-20261119/orch-B/h-sink2/reviewer/p6_planted_files.ts:33
+const ids = (p: string) => { const d = new DatabaseSync(p, { readOnly: true }); const r = (d.prepare("SELECT request_id FROM settled ORDER BY seq").all() as any[]).map(x => x.request_id); d.close(); return r; };
+                                                                                             ^
+
+
+Error: attempt to write a readonly database
+    at ids (<REPO>/results/night-shift-20261119/orch-B/h-sink2/reviewer/p6_planted_files.ts:33:94)
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-sink2/reviewer/p6_planted_files.ts:78:59)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-sink2/reviewer/p6_planted_files.ts:93:65)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at cjsLoader (node:internal/modules/esm/translators:316:5) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 776,
+  errstr: 'attempt to write a readonly database'
+}
+
+Node.js v24.3.0
+# cmd: rt.sh <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree <REPO>/results/night-shift-20261119/orch-B/h-sink2/reviewer/p6_planted_files.ts <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree <REPO>/results/night-shift-20261119/orch-B/h-sink2/work/p6
+exit 1

@@ -1,0 +1,1388 @@
+diff --git a/ts/refund-finality/sink.ts b/ts/refund-finality/sink.ts
+index 8200ec78..cb0a7dbc 100644
+--- a/ts/refund-finality/sink.ts
++++ b/ts/refund-finality/sink.ts
+@@ -1,66 +1,105 @@
+-// Slice 1 (F2.2): the sink, core-backed and hardened (h1; night shift 2026-11-19, task h-sink; base: the v6 sink).
+-// The same exported interface as the earlier sink.ts, plus the REQUIRED config field initialState, the optional config
+-// field expectedHead, and head(). The store layout, the triggers and the audit are in core/store.ts (shared with the
+-// dispatcher).
++// Slice 1 (F2.2): the sink, core-backed and hardened (h1; night shift 2026-11-19, task h-sink; h-sink2: C-ATT-21, 23 to 27,
++// durability, repair; base: the v6 sink). The same exported interface as the earlier sink.ts, plus the REQUIRED config field
++// initialState, the optional config fields expectedHead, outsideHead and onHead, head(), the head in each CommitResult, and
++// the operator step Sink.recover. The store layout, the triggers, the file checks and the audit are in core/store.ts
++// (shared with the dispatcher). Claims per attacker class, assumptions and limits: orch-B/h-sink2/HARDENING_NOTES_2.md.
+ // THE DECISION of commit() is the value of the compiled ShellCoreV6.StepQ6 (impl/finality-core/ShellCoreV6.dfy, compiled
+ // to core/sinkcore-v6.cjs by `dafny build --target js`; scripts/exit_slice1.py rebuilds it and compares). StepQ6 =
+ // ShellCoreV4.StepQ (ids, signature, request id, settled, pre-state, charge id) plus the approved relation AuthorizesX on
+ // the STORED charge (reason RejectNotAuthorized). Unchanged from v6.
+ // The start-up audit (core/store.ts StoreAuditor): schema TEXT compare (sqlite_schema rows incl. triggers), the FULL
+-// PRAGMA integrity_check (index b-trees agree with their tables; the schema text compare alone does not see a substituted
+-// index b-tree: red team C-ATT-10/11), the meta row, then the compiled ShellCoreV5 fold over every stored commit read
+-// NOT INDEXED as exact bytes (C-ATT-04), with Ed25519 re-verification, the replayed pre-state hash, the row-log chain and
+-// AuditEnd (replayed charge == stored charge; row counts of both tables and the number of distinct request ids, all
+-// computed from the TABLE rows, equal). Proved (ShellCoreV5.AuditV5SoundRelativeToSuppliedInitial): money is conserved
+-// RELATIVE TO THE SUPPLIED INITIAL CHARGE cfg.initialState (THE ANCHOR; from outside the database).
+-// Database-level safeguards (DDL in core/store.ts): S1 request identity; S2 one-statement commit (INSERT INTO settled;
+-// its trigger writes outbox and state; direct writes of outbox or state are refused); S3 charge binding (immutable meta);
+-// S4 cumulative refund limit with canonical money text; S5 append-only; S6 the row-log chain; NUL-free TEXT and typed
+-// INTEGER columns. They stop buggy or old writers and partial failures. They do NOT stop a hostile writer with full file
+-// access (drop triggers, `.dbconfig enable_trigger off` in the sqlite3 shell, PRAGMA ignore_check_constraints, a new file).
+-// What the audit sees of such a writer: a changed schema text; a broken index; any row that the compiled AuditStep
+-// refuses; a broken chain. What it does NOT see without an external anchor (cfg.expectedHead): a rollback to an earlier
+-// valid log; a log rewritten with a recomputed (unkeyed) chain whose rows all pass the audit, e.g. zero-amount rows
+-// deleted, or one of two transitions that a faulty issuer signed for one pre-state swapped for the other (a writer
+-// WITHOUT the key can do that swap: red team d14; the earlier v6 comment said such a writer "holds the signing key").
+-// cfg.expectedHead: the sink starts only if the stored log EXTENDS it (row expectedHead.count has that chain hash; later
+-// rows pass the audit). The running sink keeps its audited head and fold state in memory; on a foreign change (data_version
+-// or the guard values) it re-checks schema text, integrity and meta, re-hashes its head row, and audits ONLY the new rows
+-// from the kept fold state (FoldResume). Anything else (a changed or missing head row: a rollback, red team C-ATT-12) HALTS
+-// the sink: every later commit is refused with "sink halted". S7: cfg.initialState must be a valid context (compiled
+-// Refund.ValidContext; review r-v5 finding F4).
++// PRAGMA integrity_check, the header values user_version and application_id (0), the meta row, then the compiled
++// ShellCoreV5 fold over every stored commit read NOT INDEXED as exact bytes (C-ATT-04), with Ed25519 re-verification, the
++// replayed pre-state hash, the row-log chain and AuditEnd. Proved (ShellCoreV5.AuditV5SoundRelativeToSuppliedInitial):
++// money is conserved RELATIVE TO THE SUPPLIED INITIAL CHARGE cfg.initialState (from outside the database).
++// FILES (h-sink2, C-ATT-21/23): BEFORE the first SQLite lock the sink refuses a database with a -journal, -wal or -shm file
++// next to it (a hot journal is applied by SQLite at the first lock, before any audit), a database with more than one hard
++// link, and a header in WAL mode; it pins journal_mode = DELETE, synchronous = FULL and fullfsync = ON and reads them
++// back. Before every write transaction it checks again: the same inode, one link, no -wal, no -shm. After an honest crash
++// a hot -journal is legitimate: the sink then refuses to start, and the operator runs Sink.recover (it previews the
++// recovery on a copy, logs the head before and after, and refuses a rollback of more than the one unacknowledged commit).
++// Assumption DIR-EXCLUSIVE: no other party can create, replace, rename or link files in the database directory.
++// Database-level safeguards (DDL in core/store.ts): S1 request identity; S2 one-statement commit; S3 charge binding; S4
++// cumulative refund limit with canonical money text; S5 append-only; S6 the row-log chain; NUL-free TEXT and typed INTEGER
++// columns. They stop buggy or old writers and partial failures (attacker class b: a writer that keeps the schema). They do
++// NOT stop a FILE writer (class c/d: drop triggers, `.dbconfig enable_trigger off`, PRAGMA ignore_check_constraints, page
++// edits, a new file). SQLite has no hash function, so a trigger cannot refuse a wrong `self` or an unsigned token: such a
++// row halts the store (repair: HARDENING_NOTES_2.md, item 8).
++// Two signed transitions for one pre-state are NORMAL operation under the minter's per-(charge id, request id) rule (two
++// requests minted on one state; the sink commits one, the other is refused as stale). They are not a sign of a faulty issuer.
++// So a file writer WITHOUT the key can swap a committed row for the other signed transition and recompute the (unkeyed)
++// chain (red team d14, C-ATT-25); and it can delete zero-amount rows or roll back to an earlier valid log (C-ATT-12, 27).
++// What sees that: (1) the RUNNING sink: on a foreign change (data_version or the guard values) it re-checks schema text,
++// integrity, header and meta, re-reads EVERY kept row (prefixSame: exact bytes, ids, token hashes, the chain recomputed to
++// its kept head; C-ATT-24) and audits only new rows from the kept fold state (FoldResume); anything else HALTS the sink
++// ("sink halted"). The commit path also compares the indexed lookup of the request id with the kept id map (C-ATT-24).
++// (2) a RESTART: only with an outside head. cfg.expectedHead (h1): the stored log must EXTEND it; rows after it are not
++// protected (C-ATT-27). cfg.outsideHead (h-sink2): the stored head must EQUAL outsideHead.committed or outsideHead.pending;
++// with it the sink is the SINGLE WRITER: any foreign change halts. cfg.onHead(next) runs inside the write transaction,
++// after every check and BEFORE the SQLite COMMIT (ANCHOR-FIRST); if it throws, nothing is committed. FRESHNESS RULE: the
++// host persists onHead's value as `pending` before COMMIT, persists result.head as `committed` before it acknowledges the
++// commit, and passes {committed, pending} at the next start (and committed as the dispatcher's expectedHead). Rollback
++// resistance is claimed ONLY with that rule (attacker class d). Without an outside head (class c) the sink does not detect
++// a rewrite or rollback that happened while it was stopped. S7: cfg.initialState must be a valid context.
+ // TypeScript does only: the decoder (K1), the Ed25519 call, the SHA-256 compares, the SQL reads and writes, the value
+-// conversion, the schema/meta compare, and the loops that call AuditStep once per row.
++// conversion, the schema/meta/file compares, and the loops that call AuditStep once per row.
+ // NOT proved: this file, core/store.ts (DDL and triggers: TESTED-UNPROVED), the Dafny JS compiler and runtime,
+-// bignumber.js, SQLite (triggers, constraints, integrity_check, IMMEDIATE transactions, data_version), Node, OpenSSL,
+-// SHA-256, Ed25519.
++// bignumber.js, SQLite (triggers, constraints, integrity_check, IMMEDIATE transactions, data_version, hot-journal
++// rollback, fullfsync), the file system, Node, OpenSSL, SHA-256, Ed25519. Durability against power loss: NOT TESTED.
+ import { createPublicKey } from "node:crypto";
++import { closeSync, copyFileSync, existsSync, fsyncSync, mkdtempSync, openSync, rmSync, writeSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
+ import { DatabaseSync } from "node:sqlite";
+ import { ChargeState, isState, canon, sha256hex } from "./encoding";
+-import { CoreMod, Pos, SinkHead, StoreAuditor, STORE_FORMAT, conv, createSchema, decodeToken, isHead, linkOf, loadCore,
+-  must, readStateBlob, sigOkOf, validInitial } from "./core/store";
++import { AuditedRow, CoreMod, Pos, SinkHead, StoreAuditor, StoreFile, STORE_FORMAT, checkStoreFile, conv, createSchema, decodeToken, isHead,
++  linkOf, loadCore, must, presentCompanions, readStateBlob, realStorePath, sameStoreFile, sigOkOf, validInitial } from "./core/store";
+ export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "./core/store";
+ export type { SinkHead } from "./core/store";
+ 
+-export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialState: ChargeState; expectedHead?: SinkHead };
+-export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string };
++// outsideHead: the host's persisted outside head (see the header): committed = the head of the last acknowledged commit;
++// pending = the value that onHead received for a commit not yet acknowledged (absent when none).
++export type OutsideHead = { committed: SinkHead; pending?: SinkHead };
++export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialState: ChargeState; expectedHead?: SinkHead;
++  outsideHead?: OutsideHead; onHead?: (next: SinkHead) => void };
++// head: the audited head after this call (absent when the sink is halted or the decoder refused the input).
++export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string; head?: SinkHead };
+ export type OutboxRow = { seq: number; request_id: string; intent: string };
++export type RecoverReport = { companions: string[]; before: SinkHead | string; after: SinkHead | string; rolledBack: number | null; applied: boolean; reason: string };
++
++const sameHead = (a: SinkHead, b: SinkHead): boolean => a.count === b.count && a.chainHash === b.chainHash;
++// Pins and reads back the durability and journal settings (item 7 of h-sink2). Throws if SQLite does not keep them.
++function pinPragmas(db: DatabaseSync): void {
++  db.exec("PRAGMA busy_timeout = 30000");
++  const jm = String((db.prepare("PRAGMA journal_mode = DELETE").get() as any).journal_mode);
++  db.exec("PRAGMA synchronous = FULL; PRAGMA fullfsync = ON");
++  const sy = Number((db.prepare("PRAGMA synchronous").get() as any).synchronous), ff = Number((db.prepare("PRAGMA fullfsync").get() as any).fullfsync);
++  if (jm !== "delete" || sy !== 2 || ff !== 1) throw new Error("SQLite did not keep journal_mode = DELETE, synchronous = FULL, fullfsync = ON (got " + jm + ", " + sy + ", " + ff + ")");
++}
+ 
+ export class Sink {
+   private readonly db: DatabaseSync;
+   private readonly M: CoreMod;
+   private readonly cv: ReturnType<typeof conv>;
+   private readonly au: StoreAuditor;
++  private readonly file: StoreFile;
+   private pos: Pos;                   // the audited position after this sink's last transaction (in memory)
++  private rids: string[] = [];        // the request id of each audited row, by seq - 1 (C-ATT-24)
++  private ids = new Map<string, string>();   // request id -> token_sha256 of each audited row (C-ATT-24)
+   private dv = -1;                    // PRAGMA data_version after this sink's last transaction
+   private guard = "";                 // [stored state, max seq settled, max seq outbox, last self] after it
+   private halted: string | null = null;
+-  public reaudits = 0;                // number of guard-triggered incremental re-audits (for tests)
++  public reaudits = 0;                // number of guard-triggered re-checks (for tests)
+   constructor(path: string, private readonly cfg: SinkConfig) {
+     if (cfg === null || typeof cfg !== "object" || !isState((cfg as any).initialState)) {
+       throw new Error("h1 sink refuses to serve: cfg.initialState is required (the initial charge, from outside the database)");
+     }
+     if (cfg.expectedHead !== undefined && !isHead(cfg.expectedHead)) throw new Error("h1 sink refuses to serve: cfg.expectedHead is not {count, chainHash}");
++    const oh = cfg.outsideHead;
++    if (oh !== undefined && (oh === null || typeof oh !== "object" || !isHead(oh.committed) || (oh.pending !== undefined && !isHead(oh.pending)))) {
++      throw new Error("h1 sink refuses to serve: cfg.outsideHead is not {committed: {count, chainHash}, pending?: {count, chainHash}}");
++    }
++    if (cfg.onHead !== undefined && typeof cfg.onHead !== "function") throw new Error("h1 sink refuses to serve: cfg.onHead is not a function");
+     this.M = loadCore();
+     this.cv = conv(this.M);
+     if (!validInitial(this.M, this.cv, cfg.initialState)) {
+@@ -68,40 +107,67 @@ export class Sink {
+     }
+     this.au = new StoreAuditor(this.M, this.cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
+     this.pos = this.au.start();
++    // C-ATT-21/23: the files, BEFORE the first SQLite lock (no -journal, -wal, -shm; one link; rollback-journal header).
++    try { checkStoreFile(path); } catch (error) { throw new Error("h1 sink refuses to serve: " + String((error as Error).message)); }
+     this.db = new DatabaseSync(path);
+     let ok = false, why = "";
++    let file: StoreFile | undefined;
+     try {
+-      this.db.exec("PRAGMA busy_timeout = 30000");
++      pinPragmas(this.db);
+       // C-ATT-02: a file with no committed schema gets the WHOLE schema in one transaction; any other file is never
+       // changed here: the schema check decides.
+       createSchema(this.db);
+-      // The start-up audit (schema, integrity, meta, compiled AuditV5 fold, chain, expectedHead). No option skips it.
++      file = checkStoreFile(path, ["-wal", "-shm"]);
++      // The start-up audit (schema, integrity, header, meta, compiled AuditV5 fold, chain, anchors). No option skips it.
+       this.db.exec("BEGIN IMMEDIATE");
+-      const at = this.au.fullAudit(this.db, cfg.expectedHead);
+-      if (at !== null) { this.pos = at; ok = true; }
++      const rows: AuditedRow[] = [];
++      const at = this.au.fullAudit(this.db, cfg.expectedHead ?? oh?.committed, r => rows.push(r));
++      if (at !== null && this.outsideOk(at)) { this.pos = at; this.keep(rows, true); ok = true; }
++      else if (at !== null) why = ": the stored head " + at.count + " is not the outside head (committed " + oh!.committed.count + (oh!.pending ? ", pending " + oh!.pending.count : "") + ")";
+       this.mark(readStateBlob(this.db));
+       this.db.exec("ROLLBACK");
+     } catch (error) {
+       try { this.db.exec("ROLLBACK"); } catch { /* no open transaction */ }
+       why = ": " + String((error as Error).message);
+     }
+-    if (!ok) {
++    if (!ok || file === undefined) {
+       this.db.close();
+       throw new Error("h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false" + why);
+     }
++    this.file = file;
++  }
++  // cfg.outsideHead: the stored head must EQUAL committed or pending (not merely extend committed: C-ATT-27).
++  private outsideOk(at: Pos): boolean {
++    const oh = this.cfg.outsideHead;
++    if (oh === undefined) return true;
++    const h = { count: at.count, chainHash: at.chain };
++    return sameHead(h, oh.committed) || (oh.pending !== undefined && sameHead(h, oh.pending));
++  }
++  private keep(rows: AuditedRow[], reset: boolean): void {
++    if (reset) { this.rids = []; this.ids = new Map(); }
++    for (const r of rows) { this.rids.push(r.requestId); this.ids.set(r.requestId, r.tokenSha256); }
++  }
++  // Before each write transaction: the files (DIR-EXCLUSIVE checks). A violation halts the sink.
++  private fileCheck(): string | null {
++    const bad = sameStoreFile(this.file, this.cfg.outsideHead !== undefined);
++    if (bad !== "") this.halted = bad;
++    return this.halted;
+   }
+   // Writes meta (and, by trigger h_meta_ai, the state row) once. Only cfg.initialState may be written.
+   init(state: ChargeState): void {
+     if (!isState(state)) throw new Error("initial state shape");
+     const blob = canon(state);
+     if (blob !== this.au.initText) throw new Error("initial state is not cfg.initialState");
++    if (this.halted !== null || this.fileCheck() !== null) throw new Error("sink halted: " + this.halted);
+     this.db.exec("BEGIN IMMEDIATE");
+     try {
+       const stored = readStateBlob(this.db);
+       if (this.changed(stored)) {                       // another writer acted since this sink's last transaction
+-        const at = this.au.fullAudit(this.db);
++        if (this.cfg.outsideHead !== undefined) throw new Error("another writer changed the store (cfg.outsideHead: single writer)");
++        const rows: AuditedRow[] = [];
++        const at = this.au.fullAudit(this.db, undefined, r => rows.push(r));
+         if (at === null) throw new Error("another writer changed the store and the full audit is false");
+-        this.pos = at;
++        this.pos = at; this.keep(rows, true);
+       }
+       if (this.db.prepare("SELECT 1 AS x FROM meta WHERE id = 1").get() === undefined) {
+         this.db.prepare("INSERT INTO meta(id, format, charge_id, initial_state, initial_state_sha256, genesis) VALUES (1, ?, ?, ?, ?, ?)")
+@@ -111,6 +177,11 @@ export class Sink {
+       this.db.exec("COMMIT");
+     } catch (error) { this.db.exec("ROLLBACK"); throw error; }
+   }
++  // The durability and journal settings of this sink's connection, read back from SQLite (h-sink2, item 7).
++  pragmas(): { journal_mode: string; synchronous: number; fullfsync: number } {
++    const g = (p: string) => (this.db.prepare("PRAGMA " + p).get() as any)[p];
++    return { journal_mode: String(g("journal_mode")), synchronous: Number(g("synchronous")), fullfsync: Number(g("fullfsync")) };
++  }
+   // The audited head after this sink's last transaction: count of commits and the chain hash (genesis for 0).
+   head(): SinkHead { return { count: this.pos.count, chainHash: this.pos.chain }; }
+   storedBlob(): string | undefined { return readStateBlob(this.db); }
+@@ -134,49 +205,55 @@ export class Sink {
+   }
+   private mark(stored: string | undefined): void { this.dv = this.dataVersion(); this.guard = this.guardOf(stored); }
+   private changed(stored: string | undefined): boolean { return this.dataVersion() !== this.dv || this.guardOf(stored) !== this.guard; }
+-  // S6 / review F2 / C-ATT-12: a foreign change is accepted only as an APPEND of audit-passing rows after this sink's head.
+-  private foreignCheck(stored: string | undefined): Pos | null {
+-    if (!this.au.schemaAndMeta(this.db)) return this.pos.count === 0 && stored === undefined ? this.pos : null;
+-    if (stored === undefined || !this.au.headRowSame(this.db, this.pos)) return null;
+-    return this.au.auditFrom(this.db, this.pos, stored);
++  // S6 / review F2 / C-ATT-12 / C-ATT-24: a foreign change is accepted only as an APPEND of audit-passing rows after this
++  // sink's head, with EVERY kept row unchanged (prefixSame). With cfg.outsideHead no foreign change is accepted.
++  private foreignCheck(stored: string | undefined): { at: Pos; rows: AuditedRow[] } | null {
++    if (this.cfg.outsideHead !== undefined) return null;
++    if (!this.au.schemaAndMeta(this.db)) return this.pos.count === 0 && stored === undefined ? { at: this.pos, rows: [] } : null;
++    if (stored === undefined || !this.au.prefixSame(this.db, this.pos, this.rids)) return null;
++    const rows: AuditedRow[] = [];
++    const at = this.au.auditFrom(this.db, this.pos, stored, undefined, r => rows.push(r));
++    return at === null ? null : { at, rows };
++  }
++  private halt(why: string): CommitResult {
++    this.halted = why;
++    try { this.db.exec("ROLLBACK"); } catch { /* no open transaction */ }
++    return { status: "rejected", reason: "sink halted: " + this.halted };
+   }
+   commit(input: unknown): CommitResult {
+     // (1) the decoder (K1), unchanged from sink.ts. It can only refuse.
+     const token = decodeToken(input);
+     if (typeof token === "string") return { status: "rejected", reason: token };
+-    if (this.halted !== null) return { status: "rejected", reason: "sink halted: " + this.halted };
++    if (this.halted !== null || this.fileCheck() !== null) return { status: "rejected", reason: "sink halted: " + this.halted };
+     const { M, cv } = this, b = token.body;
+     const tokenText = input as string, tokenSha256 = sha256hex(tokenText);
+     const sigOk = sigOkOf(this.au.key, token);
+     const tok = M.Shell.ShellToken.create_ShellToken(
+       new M.BigNumber(b.specLockSha256 === this.cfg.specLockSha256 ? 1 : 0), new M.BigNumber(b.checkerSha256 === this.cfg.checkerSha256 ? 2 : 0),
+       cv.text(b.requestId), cv.charge(b.post), cv.intent(b.intent), cv.text(""));
++    let committing = false;
+     try {
+       this.db.exec("BEGIN IMMEDIATE");
+       let stored: string | undefined;
+       try { stored = readStateBlob(this.db); } catch (error) {
+-        this.halted = "the state row cannot be read: " + String((error as Error).message);
+-        this.db.exec("ROLLBACK");
+-        return { status: "rejected", reason: "sink halted: " + this.halted };
++        return this.halt("the state row cannot be read: " + String((error as Error).message));
+       }
+-      // (iv) the writer guard: a foreign change -> schema, integrity, meta, head row, new rows; false -> HALT.
++      // (iv) the writer guard: a foreign change -> schema, integrity, header, meta, every kept row, new rows; false -> HALT.
+       if (this.changed(stored)) {
+         this.reaudits++;
+-        let at: Pos | null = null, why = "";
+-        try { at = this.foreignCheck(stored); } catch (error) { at = null; why = ": " + String((error as Error).message); }
+-        if (at === null) {
+-          this.halted = "another writer changed the store and the change is not an append of audit-passing rows" + why;
+-          this.db.exec("ROLLBACK");
+-          return { status: "rejected", reason: "sink halted: " + this.halted };
+-        }
+-        this.pos = at;
++        let r: { at: Pos; rows: AuditedRow[] } | null = null, why = "";
++        try { r = this.foreignCheck(stored); } catch (error) { r = null; why = ": " + String((error as Error).message); }
++        if (r === null) return this.halt("another writer changed the store and the change is not an append of audit-passing rows" +
++          (this.cfg.outsideHead !== undefined ? " (cfg.outsideHead: single writer)" : "") + why);
++        this.pos = r.at; this.keep(r.rows, false);
+         this.mark(stored);
+       }
+-      // (i) constant state: the stored charge and ONE indexed lookup. The index is checked by integrity_check at start
+-      // and after every foreign change; a corruption between two commits is a foreign change (data_version).
++      // (i) constant state: the stored charge and ONE indexed lookup, compared with the kept id map (C-ATT-24: a row
++      // changed behind the sink, with data_version unchanged or not, never yields a second commit for a kept id).
+       const charge = stored === undefined ? M.F.Charge.Default() : (() => { const v = JSON.parse(stored); return cv.charge(must(isState(v), v, "state")); })();
+       const preOk = stored !== undefined && sha256hex(stored) === b.preStateSha256;   // A4'
+       const prior = this.db.prepare("SELECT token_sha256 FROM settled WHERE request_id = ?").get(b.requestId) as { token_sha256: string } | undefined;
++      if (prior?.token_sha256 !== this.ids.get(b.requestId)) return this.halt("the stored row of request id " + JSON.stringify(b.requestId) + " is not the audited one (a change behind the sink)");
+       // THE DECISION: one call of the compiled core.
+       const q = M.Shell6.__default.StepQ6(charge, tok, sigOk, preOk, prior !== undefined);
+       if (q.is_Commit) {
+@@ -192,16 +269,32 @@ export class Sink {
+         // The kept fold state advances by the same AuditStep the audit uses (the stored pre-state is the fold's state).
+         const st = M.Shell5.__default.AuditStep(this.au.initCore.dtor_chargeId, this.pos.st, M.Shell5.Row.create_Row(q.dtor_addId, tok, sigOk, preOk, q.dtor_intent));
+         if (st.dtor_ok !== true) throw new Error("the kept audit fold refuses this commit");
++        const head = { count: seq, chainHash: self };
++        // ANCHOR-FIRST (C-ATT-27): the host persists the next head BEFORE the COMMIT; a throw here commits nothing.
++        if (this.cfg.onHead !== undefined) {
++          try { this.cfg.onHead({ ...head }); } catch (error) {
++            this.db.exec("ROLLBACK");
++            return { status: "rejected", reason: "the outside head was not persisted (onHead threw): " + String((error as Error)?.message ?? error), head: this.head() };
++          }
++        }
++        const before = { pos: this.pos, dv: this.dv, guard: this.guard };
+         this.pos = { st, count: seq, chain: self };
+         this.mark(next);
+-        this.db.exec("COMMIT");
+-        return { status: "committed" };
++        committing = true;
++        try { this.db.exec("COMMIT"); } catch (error) {
++          this.pos = before.pos; this.dv = before.dv; this.guard = before.guard;
++          return this.halt("COMMIT failed after the checks (the store may or may not hold row " + seq + "): " + String((error as Error).message));
++        }
++        this.keep([{ requestId: rid, tokenSha256 } as AuditedRow], false);
++        return { status: "committed", head };
+       }
+       this.db.exec("ROLLBACK");
+-      if (q.is_RejectNotAuthorized) return { status: "rejected", reason: "not authorized by the approved relation for the stored state" };
+-      return this.label(q.dtor_why, prior?.token_sha256 === tokenSha256, stored === undefined, b.specLockSha256 === this.cfg.specLockSha256);
++      const h = this.head();
++      if (q.is_RejectNotAuthorized) return { status: "rejected", reason: "not authorized by the approved relation for the stored state", head: h };
++      return { ...this.label(q.dtor_why, prior?.token_sha256 === tokenSha256, stored === undefined, b.specLockSha256 === this.cfg.specLockSha256), head: h };
+     } catch (error) {
+       try { this.db.exec("ROLLBACK"); } catch { /* no open transaction */ }
++      if (committing) return this.halt("transaction failed during COMMIT: " + String((error as Error).message));
+       return { status: "rejected", reason: "transaction failed: " + String((error as Error).message) };
+     }
+   }
+@@ -225,4 +318,96 @@ export class Sink {
+     finally { try { this.db.exec("ROLLBACK"); } catch { /* none */ } }
+   }
+   close(): void { this.db.close(); }
++
++  // THE REPAIR READER (h-sink2, item 8; read only). A store with one row that the triggers accept but the audit refuses
++  // (an unsigned token, a wrong `self`: SQLite has no hash function, so no trigger can refuse it) halts for good. The
++  // repair never edits a store in place: (1) read the valid prefix with this function (the token texts of the rows that
++  // the compiled AuditStep accepted, in order, and their head); (2) create a NEW store file at a new path with the same
++  // cfg (the same genesis), init(cfg.initialState), and commit the prefix tokens in order: every commit must be
++  // "committed", and the new head must equal prefixHead; (3) append to the operator log: old path, old file's SHA-256,
++  // `problem`, prefixHead, new path; keep the old file; (4) if the host keeps an outside head, the new head must equal
++  // or extend it (else acknowledged rows are lost: stop and escalate); (5) point the host and the dispatcher (same ledger:
++  // the claimed rows keep their row heads) to the new path. Request ids of the prefix stay settled in the new store.
++  static validPrefix(path: string, cfg: SinkConfig): { tokens: string[]; prefixHead: SinkHead; complete: boolean; problem: string } {
++    const M = loadCore(), cv = conv(M);
++    if (!isState(cfg.initialState) || !validInitial(M, cv, cfg.initialState)) throw new Error("cfg.initialState is not a valid context");
++    const au = new StoreAuditor(M, cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
++    checkStoreFile(path);
++    const db = new DatabaseSync(path, { readOnly: true }), tokens: string[] = [];
++    let head: SinkHead = { count: 0, chainHash: au.genesis }, problem = "";
++    try {
++      db.exec("BEGIN");
++      try {
++        if (au.fullAudit(db, undefined, r => { tokens.push(r.token); head = { count: r.seq, chainHash: r.self }; }) === null) problem = "AuditEnd, counts or refunded column is false after the last row";
++      } catch (error) { problem = String((error as Error).message); }
++      db.exec("ROLLBACK");
++    } finally { db.close(); }
++    return { tokens, prefixHead: head, complete: problem === "", problem };
++  }
++  // THE OPERATOR STEP after a crash (C-ATT-21; h-sink2). The sink refuses to start while a -journal exists. This step:
++  // (1) refuses -wal and -shm (the sink pins journal_mode = DELETE and never makes them: a person must inspect and remove
++  // them) and a database with more than one link; (2) audits a COPY of the database WITHOUT the journal ("before"; after a
++  // real crash it may be unreadable or hold the unfinished commit); (3) applies the journal to a second COPY (SQLite's
++  // own hot-journal rollback) and audits it ("after"), with cfg.expectedHead / cfg.outsideHead as at start; (4) refuses
++  // when "after" does not pass, or when "before" is a valid log and "after" is not a prefix of it with at most ONE row
++  // less (an honest crash rolls back at most the one unfinished, unacknowledged commit; in DELETE mode the commit point is
++  // the journal's deletion, and the sink acknowledges only after COMMIT returned); (5) only then applies the journal to
++  // the real database and audits it again: its head must be the previewed "after". (6) One JSON line with the files,
++  // the heads before and after and the decision is appended to logPath and synced. The real files are not changed when
++  // the step refuses. Without an outside head, a planted journal that rolls back exactly one row is indistinguishable
++  // from an honest crash (stated limit). The temporary copies are removed.
++  static recover(path: string, cfg: SinkConfig, logPath: string): RecoverReport {
++    const report: RecoverReport = { companions: presentCompanions(path), before: "", after: "", rolledBack: null, applied: false, reason: "" };
++    const log = () => {
++      const fd = openSync(logPath, "a");
++      try { writeSync(fd, JSON.stringify({ at: new Date().toISOString(), path: realStorePath(path), ...report }) + "\n"); fsyncSync(fd); } finally { closeSync(fd); }
++    };
++    const refuse = (why: string): RecoverReport => { report.reason = why; log(); throw new Error("Sink.recover refuses: " + why); };
++    try { checkStoreFile(path, ["-wal", "-shm"]); } catch (error) { return refuse(String((error as Error).message)); }
++    const real = realStorePath(path), journal = presentCompanions(path, ["-journal"]);
++    if (journal.length === 0) { report.reason = "no -journal: nothing to recover"; log(); return report; }
++    if (journal.length !== 1 || journal[0] !== real + "-journal") return refuse("the journal is not at the real path of the database: " + journal.join(", "));
++    const M = loadCore(), cv = conv(M);
++    if (!isState(cfg.initialState) || !validInitial(M, cv, cfg.initialState)) return refuse("cfg.initialState is not a valid context");
++    const au = new StoreAuditor(M, cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
++    const auditAt = (p: string, anchor?: SinkHead): Pos => {
++      const db = new DatabaseSync(p);
++      try {
++        db.exec("BEGIN IMMEDIATE");
++        const at = au.fullAudit(db, anchor);
++        db.exec("ROLLBACK");
++        if (at === null) throw new Error("the audit is false");
++        return at;
++      } finally { db.close(); }
++    };
++    const tmp = mkdtempSync(join(tmpdir(), "forge-sink-recover-"));
++    try {
++      let before: Pos | null = null;
++      copyFileSync(real, join(tmp, "before.sqlite"));
++      try { before = auditAt(join(tmp, "before.sqlite")); report.before = { count: before.count, chainHash: before.chain }; } catch (error) { report.before = "not a valid log: " + String((error as Error).message).slice(0, 200); }
++      copyFileSync(real, join(tmp, "after.sqlite")); copyFileSync(real + "-journal", join(tmp, "after.sqlite-journal"));
++      let after: Pos;
++      try { after = auditAt(join(tmp, "after.sqlite"), cfg.expectedHead ?? cfg.outsideHead?.committed); } catch (error) { return refuse("the recovered copy does not pass the audit: " + String((error as Error).message).slice(0, 200)); }
++      report.after = { count: after.count, chainHash: after.chain };
++      const oh = cfg.outsideHead, ah = report.after;
++      if (oh !== undefined && !sameHead(ah, oh.committed) && !(oh.pending !== undefined && sameHead(ah, oh.pending))) return refuse("the recovered head is not the outside head");
++      if (before !== null) {
++        report.rolledBack = before.count - after.count;
++        const prefixOk = before.count === after.count ? before.chain === after.chain : (before.count === after.count + 1 && (() => {
++          const d = new DatabaseSync(join(tmp, "before.sqlite"), { readOnly: true });
++          try { return (d.prepare("SELECT prev FROM settled WHERE seq = ?").get(before.count) as any)?.prev === after.chain; } finally { d.close(); }
++        })());
++        if (!prefixOk) return refuse("the journal would roll back " + report.rolledBack + " row(s) of a valid log (an honest crash rolls back at most the one unfinished commit)");
++      }
++      const d = new DatabaseSync(real);
++      try { pinPragmas(d); d.prepare("SELECT COUNT(*) AS n FROM sqlite_schema").get(); } finally { d.close(); }
++      report.applied = true;
++      if (existsSync(real + "-journal")) return refuse("the journal is still present after the rollback");
++      const now = auditAt(real, cfg.expectedHead ?? cfg.outsideHead?.committed);
++      if (now.count !== after.count || now.chain !== after.chain) return refuse("the real database after the rollback is not the previewed copy (the files changed during the step)");
++      report.reason = "recovered";
++      log();
++      return report;
++    } finally { rmSync(tmp, { recursive: true, force: true }); }
++  }
+ }
+diff --git a/ts/refund-finality/core/store.ts b/ts/refund-finality/core/store.ts
+index aa44bc8b..2598f3fb 100644
+--- a/ts/refund-finality/core/store.ts
++++ b/ts/refund-finality/core/store.ts
+@@ -7,10 +7,22 @@
+ // on the REPLAYED charge, in a store whose whole log passed AuditEnd.
+ // NOT proved: this file, the DDL and its triggers (TESTED-UNPROVED), SQLite, Node, the Dafny JS compiler and runtime.
+ import { KeyObject, verify } from "node:crypto";
++import { closeSync, existsSync, lstatSync, openSync, readSync, realpathSync, statSync } from "node:fs";
++import { basename, dirname, join } from "node:path";
+ import { DatabaseSync } from "node:sqlite";
+ import { ChargeState, Intent, Token, canon, isIntent, isState, isToken, sha256hex, signatureBytes, signedBytes } from "../encoding";
+ 
+ export const MAX_TOKEN_TEXT = 8192;
++// C-ATT-26 (h-sink2): the bound of a stored INTENT text. The intent is a sub-text of an accepted token (decodeToken refuses
++// a token of more than MAX_TOKEN_TEXT UTF-16 units; SQLite length() counts code points, never more than UTF-16 units), so
++// MAX_TOKEN_TEXT never refuses a stored intent of an accepted token. The arithmetic (encoding.ts bounds; canon = sorted keys):
++// a text of <= 256 UTF-16 units is a JSON string of <= 2 + 256 * 6 = 1538 characters (U+0001 -> \u0001, 6 characters);
++// money <= 19 digits. intent = {"amount":" (11) + 19 + ","chargeId": (13) + 1538 + ,"reason": (10) + R + ,"requestId": (13)
++// + 1538 + } (1) = 3133 + R. R <= 1538 by encoding.ts (4671 + 10 = 4681 at most); R = 23 for the longest approved reason
++// "service_not_delivered" (3166). The h1 bound 2048 refused 200 x U+0001 in both ids (2476 characters).
++// State text (also checked: unchanged bound 2048): {"chargeId": (12) + 1538 + ,"original":" (13) + 19 +
++// ","refundEnabled":true,"remaining":" (36) + 19 + "} (2) = 1639 <= 2048. Measured with canon: 4681, 3166, 1639.
++export const MAX_INTENT_TEXT = MAX_TOKEN_TEXT;
+ export const STORE_FORMAT = "forge-sink-h1";
+ export type SinkHead = { count: number; chainHash: string };
+ export type Pos = { st: any; count: number; chain: string };   // compiled fold state, audited commits, chain hash after them
+@@ -53,7 +65,7 @@ export const DDL_STATEMENTS: string[] = [
+      prev TEXT NOT NULL CHECK ${HEX64("prev")}, self TEXT NOT NULL CHECK ${HEX64("self")},
+      CHECK (request_id = json_extract(token, '$.body.requestId')))`,
+   `CREATE TABLE outbox(seq INTEGER PRIMARY KEY CHECK (seq >= 1), request_id TEXT NOT NULL UNIQUE CHECK ${TXT("request_id", 256)},
+-     intent TEXT NOT NULL CHECK ${TXT("intent", 2048)}, prev TEXT NOT NULL CHECK ${HEX64("prev")}, self TEXT NOT NULL CHECK ${HEX64("self")},
++     intent TEXT NOT NULL CHECK ${TXT("intent", MAX_INTENT_TEXT)}, prev TEXT NOT NULL CHECK ${HEX64("prev")}, self TEXT NOT NULL CHECK ${HEX64("self")},
+      CHECK (request_id = json_extract(intent, '$.requestId')))`,
+   `CREATE TRIGGER h_meta_bi BEFORE INSERT ON meta BEGIN
+      SELECT RAISE(ABORT, 'h-sink S3: meta is written once, into an empty store')
+@@ -129,7 +141,7 @@ export const DDL_STATEMENTS: string[] = [
+          AND EXISTS (SELECT 1 FROM settled s WHERE s.seq = NEW.seq AND s.request_id = NEW.request_id AND s.prev = NEW.prev
+                      AND s.self = NEW.self AND json_extract(s.token, '$.body.intent') = NEW.intent)
+          AND NOT EXISTS (SELECT 1 FROM outbox WHERE request_id = NEW.request_id)
+-         AND ${TXT("NEW.request_id", 256)} AND ${TXT("NEW.intent", 2048)} AND json_valid(NEW.intent) AND NEW.request_id = json_extract(NEW.intent, '$.requestId')
++         AND ${TXT("NEW.request_id", 256)} AND ${TXT("NEW.intent", MAX_INTENT_TEXT)} AND json_valid(NEW.intent) AND NEW.request_id = json_extract(NEW.intent, '$.requestId')
+          AND json_extract(NEW.intent, '$.chargeId') = v.cid
+          AND ${MONEY("v.a")} AND ${MONEY("v.r0")} AND ${MONEY("v.org")} AND ${INT("v.rf")} AND v.rf >= 0 AND v.rf <= ${N("v.org")}
+          AND ${N("v.a")} <= ${N("v.r0")} AND ${N("v.a")} <= ${N("v.org")} - v.rf) IS NOT 1;
+@@ -152,6 +164,64 @@ export function createSchema(db: DatabaseSync): void {
+     db.exec("COMMIT");
+   } catch (error) { try { db.exec("ROLLBACK"); } catch { /* none */ } throw error; }
+ }
++// C-ATT-21 (h-sink2): the non-row header values that the sink never sets. A planted journal can carry any page content,
++// also page 1 (header). Refused unless 0. NOT checked: the schema cookie (PRAGMA schema_version): every DROP or CREATE
++// bumps it, but any SQLite writer can set it back (PRAGMA schema_version = N), and the schema TEXT compare and
++// integrity_check already decide what the schema is (see HARDENING_NOTES_2.md, item 5).
++export function headerOk(db: DatabaseSync): void {
++  const u = Number((db.prepare("PRAGMA user_version").get() as any).user_version), a = Number((db.prepare("PRAGMA application_id").get() as any).application_id);
++  if (u !== 0 || a !== 0) throw new Error("database header: user_version " + u + ", application_id " + a + " (the sink never sets them; expected 0, 0)");
++}
++
++// ---- the database FILES (C-ATT-21, C-ATT-23; h-sink2). Assumption DIR-EXCLUSIVE: no other party can create, replace,
++// rename or link files in the database directory. Without it, what these checks still see is listed in
++// HARDENING_NOTES_2.md (item 5). The checks run BEFORE the first SQLite lock (a hot journal is applied by SQLite at the
++// first shared lock, before any audit can run) and again before every write transaction of the sink.
++export type StoreFile = { path: string; real: string; dev: number; ino: number | bigint };
++export const COMPANIONS = ["-journal", "-wal", "-shm"] as const;
++// The name SQLite uses for the companions: the unix VFS resolves symbolic links of the database path.
++export function realStorePath(path: string): string {
++  return existsSync(path) ? realpathSync(path) : join(realpathSync(dirname(path)), basename(path));
++}
++export function presentCompanions(path: string, which: readonly string[] = COMPANIONS): string[] {
++  const names = new Set([path, realStorePath(path)]), found = new Set<string>();
++  for (const n of names) for (const c of which) if (existsSync(n + c)) found.add(realpathSync(n + c));
++  return [...found];
++}
++// Refuses: a database that is not one regular file with ONE name (st_nlink 1; C-ATT-23), a header in WAL mode, and any
++// companion file named in `refuse` (the sink: all three; the read-only dispatcher: -wal and -shm, because a live sink's
++// own -journal exists during its write transactions). Returns the identity of the file (dev, ino) or undefined (no file).
++export function checkStoreFile(path: string, refuse: readonly string[] = COMPANIONS): StoreFile | undefined {
++  const real = realStorePath(path);
++  const planted = presentCompanions(path, refuse);
++  if (planted.length > 0) throw new Error("companion file(s) present: " + planted.join(", ") + " (the sink did not expect them; after a crash, run the operator step Sink.recover)");
++  if (!existsSync(real)) return undefined;
++  const st = lstatSync(real);
++  if (!st.isFile()) throw new Error("the database path is not a regular file");
++  if (st.nlink !== 1) throw new Error("the database file has " + st.nlink + " hard links (two names of one database lose commits after a crash: C-ATT-23)");
++  if (st.size > 0) {
++    const h = Buffer.alloc(100), fd = openSync(real, "r");
++    let n = 0;
++    try { n = readSync(fd, h, 0, 100, 0); } finally { closeSync(fd); }
++    if (n < 100 || h.subarray(0, 16).toString("latin1") !== "SQLite format 3\u0000") throw new Error("the database file has no SQLite header");
++    if (h[18] !== 1 || h[19] !== 1) throw new Error("the database header is not in rollback-journal mode (bytes 18, 19 = " + h[18] + ", " + h[19] + "; WAL is 2, 2)");
++  }
++  return { path, real, dev: st.dev, ino: st.ino };
++}
++// The same file, still one name, no -wal and no -shm (before each write transaction of a running sink). A -journal is
++// refused only for a SINGLE writer (cfg.outsideHead): with several honest writers it exists legitimately during another
++// connection's write transaction; its effect on content is then seen by the foreign-change check after the lock
++// (prefixSame + auditFrom).
++export function sameStoreFile(f: StoreFile, singleWriter = false): string {
++  try {
++    const st = statSync(f.real);
++    if (st.dev !== f.dev || st.ino !== f.ino) return "the database file was replaced (another inode at the path)";
++    if (st.nlink !== 1) return "the database file has " + st.nlink + " hard links";
++  } catch (error) { return "the database file cannot be checked: " + String((error as Error).message); }
++  const planted = presentCompanions(f.path, singleWriter ? COMPANIONS : ["-wal", "-shm"]);
++  return planted.length > 0 ? "companion file(s) present: " + planted.join(", ") : "";
++}
++
+ // C-ATT-10/11: the FULL integrity check (every index agrees with its table; every b-tree is well formed). `ok` or refuse.
+ export function integrityOk(db: DatabaseSync): void {
+   const r = db.prepare("PRAGMA integrity_check").all() as any[];
+@@ -237,6 +307,7 @@ export class StoreAuditor {
+   schemaAndMeta(db: DatabaseSync): boolean {
+     if (schemaRows(db) !== EXPECTED_SCHEMA) throw new Error("schema text (tables, indexes, triggers) is not the sink's DDL");
+     integrityOk(db);
++    headerOk(db);
+     const m = readMeta(db);
+     if (m === undefined) return false;
+     if (m.format !== STORE_FORMAT || m.charge_id !== this.init.chargeId || m.initial_state !== this.initText ||
+@@ -310,6 +381,34 @@ export class StoreAuditor {
+     const ok = anchorOk && refundedOk && c.nod === c.no && S5.AuditEnd(this.initCore, storedCore, st, B(c.ns), B(c.no), B(c.nd)) === true;
+     return ok ? { st, count, chain } : null;
+   }
++  // C-ATT-24 (h-sink2): rows 1..p.count are still EXACTLY the audited rows: every column of settled and outbox read as exact
++  // bytes, the request id columns equal to the kept ids, token_sha256 recomputed, prev/self equal to the chain recomputed
++  // from genesis over the stored token and intent texts, and the final link equal to the kept chain hash p.chain. No
++  // signature check (each row was audited when it was first read; the kept chain hash binds its texts; SHA-256 assumed).
++  // O(n) hashing, no Ed25519: run on a foreign change only.
++  prefixSame(db: DatabaseSync, p: Pos, rids: readonly string[]): boolean {
++    if (rids.length !== p.count) return false;
++    const si = db.prepare(`SELECT seq, ${["request_id", "token", "token_sha256", "prev", "self"].map(c => col(c)).join(", ")} FROM settled NOT INDEXED WHERE seq <= ? ORDER BY seq`).iterate(p.count) as Iterator<any>;
++    const oi = db.prepare(`SELECT seq, ${["request_id", "intent", "prev", "self"].map(c => col(c)).join(", ")} FROM outbox NOT INDEXED WHERE seq <= ? ORDER BY seq`).iterate(p.count) as Iterator<any>;
++    let chain = this.genesis, k = 0;
++    try {
++      for (;;) {
++        const a = si.next(), b = oi.next();
++        if (a.done !== b.done) return false;
++        if (a.done) break;
++        const s = a.value, o = b.value; k++;
++        if (s.seq !== k || o.seq !== k) return false;
++        const rid = rids[k - 1], token = hexText(s.token_t, s.token_h, "token"), intent = hexText(o.intent_t, o.intent_h, "intent");
++        if (hexText(s.request_id_t, s.request_id_h, "request_id") !== rid || hexText(o.request_id_t, o.request_id_h, "request_id") !== rid) return false;
++        if (hexText(s.token_sha256_t, s.token_sha256_h, "tsha") !== sha256hex(token)) return false;
++        if (hexText(s.prev_t, s.prev_h, "prev") !== chain || hexText(o.prev_t, o.prev_h, "prev") !== chain) return false;
++        const self = linkOf(chain, token, intent);
++        if (hexText(s.self_t, s.self_h, "self") !== self || hexText(o.self_t, o.self_h, "self") !== self) return false;
++        chain = self;
++      }
++    } finally { (si as any).return?.(); (oi as any).return?.(); }
++    return k === p.count && chain === p.chain;
++  }
+   // The head row of a kept position is still the same row (exact bytes; its link recomputed).
+   headRowSame(db: DatabaseSync, p: Pos): boolean {
+     if (p.count === 0) return true;
+diff --git a/ts/refund-finality/dispatcher.ts b/ts/refund-finality/dispatcher.ts
+index 9424fe28..cb4c2a98 100644
+--- a/ts/refund-finality/dispatcher.ts
++++ b/ts/refund-finality/dispatcher.ts
+@@ -65,30 +65,38 @@
+ // Bytes after the last 0x0A are an incomplete record: never emitted; the next run cuts them off under its lock and keeps
+ // them in <ledger>.torn-<run> (result.tornTailCut). A complete line that does not parse is an alarm ("not one chain").
+ // Limit: a torn tail left by a run that RACES this one is not cut; the next line then merges with it and every later run
+-// stops (fail closed; a person must repair). A store BELOW the ledger (power loss, no F_FULLFSYNC in the sink) stops the
++// stops (fail closed; a person must repair). A store BELOW the ledger (power loss; the sink sets fullfsync since h-sink2: NOT TESTED against power loss) stops the
+ // run (the witness check above): never treated as new work.
+ // Ledger format: lines without `kind` (the h1 format before h-dispatch) are refused ("not one chain"); no migration.
+ // APPEND-ATOMIC: one write() of one line in O_APPEND mode is not interleaved with another, and a reader that starts
+ // after the writer's fsync returned sees the line and every line before it (local POSIX file system; TESTED-UNPROVED).
+ // NOT proved. Assumed and not checked: the ledger file, this process and the pinned configuration are
+ // out of the attacker's reach; the issuer's key is not leaked.
+-// Known limit (U428, case D14): if the issuer signs two transitions for one pre-state and an attacker
+-// can write the database file WITHOUT the key, the dispatcher can send the one that the sink did not commit. h1: the
+-// append-only triggers stop that swap through SQL; a writer who disables or drops the triggers and recomputes the
+-// (unkeyed) row-log chain is not detected here: the store audit accepts any authorized, signed transition.
++// ROW ANCHOR (h-sink2, C-ATT-25; D14/U428). Two signed transitions for one pre-state are NORMAL operation (the minter's
++// per-(charge id, request id) rule: two requests minted on one state; the sink commits one). A FILE writer without the
++// key can swap a committed row that the ledger has NOT claimed yet for the other signed transition and recompute the
++// (unkeyed) chain. Why the ledger's row-log witness lets that pass: it records the rowHead of CLAIMED rows only; rows after
++// the ledger's last claim have no witness, and the store audit accepts any authorized, signed transition. Closed by the
++// OUTSIDE head: cfg.expectedHead = the sink's committed head that the host persisted (sink.ts: result.head / onHead,
++// outsideHead.committed). The store must EXTEND it (row expectedHead.count has that chain hash, else nothing is sent),
++// and rows AFTER expectedHead.count are never sent ("beyond the outside head"): a row is sent only when the outside head
++// covers it. WITHOUT cfg.expectedHead (stated limit): a swap, a deletion or a rollback of rows after the ledger's last
++// claim is not detected; the dispatcher can send an uncommitted transition and never send the committed one.
+ import { createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
+ import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeSync } from "node:fs";
+ import { hostname } from "node:os";
+ import { DatabaseSync } from "node:sqlite";
+ import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding";
+-import { AuditedRow, StoreAuditor, conv, loadCore, readMeta, validInitial } from "./core/store";
++import { AuditedRow, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, loadCore, readMeta, validInitial } from "./core/store";
+ 
+ // newLedgerH0 (optional): the registered h_0 of the store (sink.ts genesisOf). A missing or empty ledger is an ERROR when
+ // the store holds committed rows, unless this field equals the store's h_0 (an explicit "new ledger").
+ // ledgerFloor (optional): an outside anchor of the LEDGER (an earlier result's ledgerHead): the ledger must hold the claim
+ // of row n with that rowHead. Detects a restored (older) ledger only when it comes from outside the ledger's medium.
+ export type LedgerHead = { n: number; rowHead: string };
+-export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead };
++// expectedHead (optional; h-sink2): the sink's committed head from outside (see ROW ANCHOR above).
++export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead;
++  expectedHead?: SinkHead };
+ export type Effect = { requestId: string; intent: string };
+ export type FlushResult = { emitted: Effect[]; refused: { seq: number; requestId: string; reason: string }[]; alreadyDispatched: number;
+   inDoubt?: string[]; ledgerHead?: LedgerHead; staleLockTakenOver?: { pid: number; run: string }; tornTailCut?: string };
+@@ -99,6 +107,7 @@ type Ledger = { slots: Map<number, Slot>; ids: Set<string>; maxN: number; tail:
+ 
+ const HEX64 = /^[0-9a-f]{64}$/, RUN = /^[0-9a-f]{32}$/;
+ const NOT_CHAIN = "dispatcher ledger is not one chain";
++const BEYOND = (h: SinkHead): string => "beyond the outside head (count " + h.count + "): not yet anchored by the host; not sent";
+ const CLAIM_KEYS: (keyof ClaimFields)[] = ["n", "requestId", "tokenSha256", "preStateSha256", "postStateSha256", "intentSha256", "rowHead"];
+ const sameRow = (a: ClaimFields, b: ClaimFields): boolean => CLAIM_KEYS.every(k => a[k] === b[k]);
+ const alive = (pid: number): boolean => {
+@@ -299,6 +308,11 @@ export class Dispatcher {
+     const L0 = this.ledger();
+     const torn = this.cutTornTail(L0);
+     const L = torn === "" ? L0 : this.ledger();
++    const anchor = this.cfg.expectedHead;
++    if (anchor !== undefined && !isHead(anchor)) throw new Error("dispatcher alarm: cfg.expectedHead is not {count, chainHash}; nothing sent");
++    // C-ATT-21/23 (h-sink2): before the first SQLite lock: one regular file with one link, no -wal, no -shm (a live
++    // sink's -journal is legitimate; a read-only connection cannot apply a hot journal and fails closed).
++    try { checkStoreFile(this.dbPath, ["-wal", "-shm"]); } catch (error) { throw new Error("dispatcher alarm: " + String((error as Error).message) + "; nothing sent"); }
+     const db = new DatabaseSync(this.dbPath, { readOnly: true });
+     const result: FlushResult = { emitted: [], refused: [], alreadyDispatched: 0, inDoubt: [] };
+     const isDone = (rid: string): boolean => [...L.slots.values()].some(s => s.claim.requestId === rid && (s.status === "done" || s.status === "sent"));
+@@ -316,7 +330,7 @@ export class Dispatcher {
+         if (!isState(init) || canon(init) !== meta.initial_state || !validInitial(this.M, this.cv, init)) throw new Error("meta initial state is not a valid charge");
+         const au = new StoreAuditor(this.M, this.cv, this.key, this.cfg, init);
+         genesis = au.genesis;
+-        if (au.fullAudit(db, undefined, r => audited.push(r)) === null) throw new Error("AuditEnd, counts or refunded column is false");
++        if (au.fullAudit(db, anchor, r => audited.push(r)) === null) throw new Error("AuditEnd, counts or refunded column is false, or the store does not extend cfg.expectedHead");
+       } catch (error) { why = String((error as Error).message); }
+       db.exec("ROLLBACK");
+       const bad = (r: { t: string; h: string }): string =>
+@@ -371,6 +385,7 @@ export class Dispatcher {
+             continue;
+           }
+           // "retry": the operator says the receiver does not have it. Claim it again (at least once, on that word).
++          if (anchor !== undefined && r.seq > anchor.count) { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: BEYOND(anchor) }); continue; }
+           if (stop !== "") { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: stop }); continue; }
+           const verdict = this.check({ seq: r.seq, request_id: r.requestId, intent: r.intent }, r.token, slot.claim.preStateSha256);
+           if (!verdict.ok || !sameRow({ ...verdict.line, rowHead: r.self }, slot.claim)) {
+@@ -383,6 +398,7 @@ export class Dispatcher {
+           continue;
+         }
+         if (L.ids.has(r.requestId)) throw new Error("dispatcher alarm: request id " + r.requestId + " is in the ledger but at another row; nothing more sent");
++        if (anchor !== undefined && r.seq > anchor.count) { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: BEYOND(anchor) }); stop = BEYOND(anchor); continue; }
+         if (stop !== "") { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: stop }); continue; }
+         const verdict = this.check({ seq: r.seq, request_id: r.requestId, intent: r.intent }, r.token, head);
+         if (!verdict.ok) { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: verdict.reason }); stop = "an earlier row was refused: " + verdict.reason; continue; }
+diff --git a/tests/refund-finality/regress/s_att21_planted_files.ts b/tests/refund-finality/regress/s_att21_planted_files.ts
+new file mode 100644
+index 00000000..c0aad679
+--- /dev/null
++++ b/tests/refund-finality/regress/s_att21_planted_files.ts
+@@ -0,0 +1,116 @@
++// C-ATT-21: a party that can only CREATE <db>-journal or <db>-wal next to the database (it read the file earlier) gets a
++// prefix rollback or a row swap that the start-up audit accepts; user_version and other header content passed even with
++// the anchor. Required: refuse at open, BEFORE the first SQLite lock, when a companion file exists; check user_version and
++// application_id; an explicit operator step (Sink.recover) for an honest crash, which logs the head before and after.
++// History of every case: r1 (100), r2 (200), z (0) acknowledged; the attacker's earlier read is the file after r1.
++// Cases (PASS conditions):
++//   journal-restart  planted -journal (rollback to r1); restart -> REFUSED; the store file is unchanged (r1, r2, z).
++//   wal-restart      planted -wal that swaps z for x (another signed zero-amount token on z's pre-state) -> REFUSED.
++//   header           a FILE writer sets user_version = 77 (no row change) -> restart REFUSED, also with expectedHead.
++//   running-single   a running sink with cfg.outsideHead; -journal planted -> the next commit halts BEFORE its lock and
++//                    names the file; the store file is unchanged.
++//   recover-honest   the state an honest crash leaves (the file holds the unfinished commit r3; the journal restores the
++//                    file before it): restart REFUSED; Sink.recover applies it (before 4, after 3, rolledBack 1, one log
++//                    line); then the sink starts at 3 and the host's retry of r3 commits.
++//   recover-attack   a planted journal that rolls back TWO rows: Sink.recover refuses, the real files are unchanged.
++//   recover-anchor   the same crash state, but the outside head names r3 as COMMITTED (acknowledged): Sink.recover
++//                    refuses the rollback of r3; the journal stays.
++// Usage: node --import tsx tests/refund-finality/regress/s_att21_planted_files.ts <treeRoot> [<compiledIssuerModule>]
++import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { argv, guard, ids, kit, makeJournal, short, st, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const out: any = {};
++  let pass = true;
++  const R1 = K.tok(K.S0, "r1", "100"), R2 = K.tok(st("900"), "r2", "200"), Z = K.tok(st("700"), "z", "0"), X = K.tok(st("700"), "x", "0"), R3 = K.tok(st("700"), "r3", "50");
++  const base = (extra: any = {}) => {
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const s = K.open(db, extra); if (typeof s === "string") throw new Error(s);
++    s.init(K.S0);
++    const h1 = s.commit(R1); const earlier = readFileSync(db);
++    const rest = [R2, Z].map(t => s.commit(t));
++    return { dir, db, s, earlier, statuses: [h1.status, ...rest.map(r => r.status)], head: s.head() };
++  };
++  const rec = (name: string, ok: boolean, d: any) => { out[name] = { ...d, ok }; if (!ok) pass = false; };
++  const started = (x: any) => typeof x !== "string";
++  { // journal-restart
++    const b = base(); b.s.close();
++    writeFileSync(b.db + "-journal", makeJournal(b.earlier));
++    const x = K.open(b.db); const st1 = started(x); if (st1) x.close();
++    const after = (() => { const c = join(b.dir, "copy.sqlite"); copyFileSync(b.db, c); return ids(c); })();
++    rec("journal-restart", b.statuses.every(v => v === "committed") && !st1 && JSON.stringify(after) === '["r1","r2","z"]', { restart: st1 ? "STARTED" : x, fileIds: after });
++  }
++  { // wal-restart: the attacker's own copy in WAL mode with the swap inside its WAL; the -wal file is planted
++    const b = base(); b.s.close();
++    const own = join(b.dir, "own.sqlite"); copyFileSync(b.db, own);
++    const w = new DatabaseSync(own); w.exec("PRAGMA journal_mode = WAL; PRAGMA wal_autocheckpoint = 0");
++    const trig = w.prepare("SELECT name, sql FROM sqlite_schema WHERE type = 'trigger'").all() as any[];
++    w.exec("BEGIN"); for (const t of trig) w.exec(`DROP TRIGGER ${t.name}`);
++    const prev = (w.prepare("SELECT self FROM outbox WHERE seq = 2").get() as any).self, self = K.SK.linkOf(prev, X, K.intentOf(X));
++    w.prepare("UPDATE settled SET request_id = 'x', token = ?, token_sha256 = ?, self = ? WHERE seq = 3").run(X, K.E.sha256hex(X), self);
++    w.prepare("UPDATE outbox SET request_id = 'x', intent = ?, self = ? WHERE seq = 3").run(K.intentOf(X), self);
++    for (const t of trig) w.exec(t.sql); w.exec("COMMIT");
++    writeFileSync(b.db + "-wal", readFileSync(own + "-wal")); w.close();
++    const x = K.open(b.db); const st1 = started(x); let served: string[] = [];
++    if (st1) { served = x.settled().map((r: any) => r.request_id); x.close(); }
++    rec("wal-restart", !st1, { restart: st1 ? "STARTED ids " + served.join(",") : x });
++  }
++  { // header: user_version through SQLite by a file writer (no row change)
++    const b = base(); const head = b.head; b.s.close();
++    const d = new DatabaseSync(b.db); d.exec("PRAGMA user_version = 77"); d.close();
++    const x = K.open(b.db), y = K.open(b.db, { expectedHead: head });
++    const a = started(x), c = started(y); if (a) x.close(); if (c) y.close();
++    rec("header", !a && !c, { restart: a ? "STARTED" : x, restartWithHead: c ? "STARTED" : y });
++  }
++  { // running-single
++    const g0 = { count: 0, chainHash: K.genesis };
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const anchor: any = { committed: g0 };
++    const s = K.open(db, { outsideHead: anchor });
++    let r: any = {};
++    if (!started(s)) r.err = s;
++    else {
++      s.init(K.S0);
++      const c1 = s.commit(R1); const earlier = readFileSync(db); const c2 = s.commit(R2), c3 = s.commit(Z);
++      r.statuses = [c1.status, c2.status, c3.status];
++      writeFileSync(db + "-journal", makeJournal(earlier));
++      const n = s.commit(R3); r.next = n.status + ": " + String(n.reason).slice(0, 120); s.close();
++      const c = join(dir, "copy.sqlite"); copyFileSync(db, c); r.fileIds = ids(c);
++    }
++    rec("running-single", r.err === undefined && /sink halted/.test(r.next) && /journal/.test(r.next) && JSON.stringify(r.fileIds) === '["r1","r2","z"]', r);
++  }
++  const recover = (db: string, extra: any, log: string) => { try { return K.SK.Sink.recover(db, { ...K.cfg, ...extra }, log); } catch (e) { return "REFUSED: " + short(e); } };
++  { // recover-honest: the file holds the unfinished commit r3 (4 rows); the journal restores the file with 3 rows
++    const b = base(); const s3 = readFileSync(b.db); const r3 = b.s.commit(R3); b.s.close();
++    writeFileSync(b.db + "-journal", makeJournal(s3));
++    const x = K.open(b.db); const st1 = started(x); if (st1) x.close();
++    const log = join(b.dir, "recover.log");
++    const rep: any = typeof K.SK.Sink.recover === "function" ? recover(b.db, {}, log) : "no Sink.recover";
++    const y = K.open(b.db); const st2 = started(y); let retry = "-", count = -1;
++    if (st2) { count = y.head().count; retry = y.commit(R3).status; y.close(); }
++    const lines = existsSync(log) ? readFileSync(log, "utf8").trim().split("\n").length : 0;
++    rec("recover-honest", r3.status === "committed" && !st1 && typeof rep === "object" && rep.applied === true && rep.rolledBack === 1 && rep.before.count === 4 &&
++      rep.after.count === 3 && lines === 1 && st2 && count === 3 && retry === "committed", { restartBefore: st1 ? "STARTED" : x, report: rep, restartAfter: st2 ? "STARTED" : y, count, retry, logLines: lines });
++  }
++  { // recover-attack: rollback of two rows
++    const b = base(); b.s.close();
++    writeFileSync(b.db + "-journal", makeJournal(b.earlier));
++    const dbBytes = readFileSync(b.db), jBytes = readFileSync(b.db + "-journal");
++    const log = join(b.dir, "recover.log");
++    const rep: any = typeof K.SK.Sink.recover === "function" ? recover(b.db, {}, log) : "no Sink.recover";
++    const unchanged = readFileSync(b.db).equals(dbBytes) && existsSync(b.db + "-journal") && readFileSync(b.db + "-journal").equals(jBytes);
++    rec("recover-attack", typeof rep === "string" && rep.startsWith("REFUSED") && unchanged && existsSync(log), { report: rep, filesUnchanged: unchanged });
++  }
++  { // recover-anchor: the outside head names r3 as committed; a journal that removes r3 is refused
++    const b = base(); const s3 = readFileSync(b.db); const r3 = b.s.commit(R3); b.s.close();
++    writeFileSync(b.db + "-journal", makeJournal(s3));
++    const log = join(b.dir, "recover.log");
++    const rep: any = typeof K.SK.Sink.recover === "function" && r3.head ? recover(b.db, { outsideHead: { committed: r3.head } }, log) : "no Sink.recover or no head";
++    rec("recover-anchor", typeof rep === "string" && rep.startsWith("REFUSED") && existsSync(b.db + "-journal") && r3.head !== undefined, { report: rep });
++  }
++  verdict(pass, out);
++})());
+diff --git a/tests/refund-finality/regress/s_att23_hardlink.ts b/tests/refund-finality/regress/s_att23_hardlink.ts
+new file mode 100644
+index 00000000..b3669220
+--- /dev/null
++++ b/tests/refund-finality/regress/s_att23_hardlink.ts
+@@ -0,0 +1,33 @@
++// C-ATT-23: two hard-link names of one database lose acknowledged commits after one crash (SQLite names the journal after
++// the path; a second name does not see the first name's hot journal). Required: refuse to open a database file whose
++// st_nlink > 1. Cases: the sink by the first name, the sink by the second name, the dispatcher: all REFUSED (dispatcher:
++// alarm, nothing sent). Control: a SYMBOLIC link name serves (SQLite resolves it; the companions are found at the real
++// path), and the hard link removed -> the first name serves again with all rows; a zero-amount commit succeeds.
++// NOT covered (stated): bind mounts, copies, another host's mount of the same file.
++// Usage: node --import tsx tests/refund-finality/regress/s_att23_hardlink.ts <treeRoot> [<compiledIssuerModule>]
++import { linkSync, symlinkSync, unlinkSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, kit, st, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const dir = tempDir(), a = join(dir, "a.sqlite"), b = join(dir, "b.sqlite"), sl = join(dir, "s.sqlite"), ledger = join(dir, "ledger.jsonl");
++  const s = K.open(a); if (typeof s === "string") throw new Error(s);
++  s.init(K.S0);
++  const c = [K.tok(K.S0, "r1", "100"), K.tok(st("900"), "z", "0")].map(t => s.commit(t).status);
++  s.close();
++  linkSync(a, b);
++  const byA = K.open(a), byB = K.open(b);
++  const f = K.flush(b, ledger);
++  for (const x of [byA, byB]) if (typeof x !== "string") x.close();
++  unlinkSync(b);
++  symlinkSync(a, sl);
++  const bySym = K.open(sl); let symCommit = "-";
++  if (typeof bySym !== "string") { symCommit = bySym.commit(K.tok(st("900"), "z2", "0")).status; bySym.close(); }
++  const again = K.open(a); let count = -1;
++  if (typeof again !== "string") { count = again.head().count; again.close(); }
++  const pass = c.every(x => x === "committed") && typeof byA === "string" && typeof byB === "string" && f.alarm !== undefined && f.emitted.length === 0 &&
++    symCommit === "committed" && count === 3;
++  verdict(pass, { commits: c, byA: typeof byA === "string" ? byA : "STARTED", byB: typeof byB === "string" ? byB : "STARTED", dispatcher: f, symlinkCommit: symCommit, afterUnlinkCount: count });
++})());
+diff --git a/tests/refund-finality/regress/s_att24_old_row_running.ts b/tests/refund-finality/regress/s_att24_old_row_running.ts
+new file mode 100644
+index 00000000..20f54cbf
+--- /dev/null
++++ b/tests/refund-finality/regress/s_att24_old_row_running.ts
+@@ -0,0 +1,62 @@
++// C-ATT-24 (red team, MEDIUM): the RUNNING sink must not commit a second effect for a request id whose OLD row was
++// changed behind it. Store: r1 (100), z (0), r2 (100), committed by one running sink. A FILE writer then renames the OLD
++// row r1 -> r1x (token text, intent text and both request_id columns; token_sha256 recomputed; the links kept, so the head
++// row is unchanged). The host retries r1 with a new token on the current state.
++// Variants: sql = the writer edits the database through SQLite (triggers dropped and re-created);
++//           journal = the writer only CREATES <db>-journal (its edit made on its own copy); the running sink's next lock
++//           applies it (data_version may not change: the kept id map is the line that matters here).
++// PASS: in every variant the retry of r1 is NOT committed (rejected or "sink halted"), and the outbox holds r1 at most once.
++// Positive controls (no tamper): r1, z (0), r2 commit; z replay -> replayed; a second zero-amount refund z2 on the same
++// pre-state as... the current state commits; a retry of r1 with a new token -> rejected (already settled).
++// Usage: node --import tsx tests/refund-finality/regress/s_att24_old_row_running.ts <treeRoot> [<compiledIssuerModule>]
++import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { argv, guard, hostile, kit, makeJournal, short, st, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const out: any = {};
++  let pass = true;
++  const rename = (d: DatabaseSync) => {
++    const t = (d.prepare("SELECT token FROM settled WHERE request_id = 'r1'").get() as any).token as string;
++    const i = (d.prepare("SELECT intent FROM outbox WHERE request_id = 'r1'").get() as any).intent as string;
++    const t2 = t.split('"requestId":"r1"').join('"requestId":"r1x"'), i2 = i.split('"requestId":"r1"').join('"requestId":"r1x"');
++    d.prepare("UPDATE settled SET request_id = 'r1x', token = ?, token_sha256 = ? WHERE request_id = 'r1'").run(t2, K.E.sha256hex(t2));
++    d.prepare("UPDATE outbox SET request_id = 'r1x', intent = ? WHERE request_id = 'r1'").run(i2);
++  };
++  for (const variant of ["sql", "journal"]) {
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const s = K.open(db); if (typeof s === "string") throw new Error(s);
++    s.init(K.S0);
++    const T1 = K.tok(K.S0, "r1", "100"), Z = K.tok(st("900"), "z", "0"), T2 = K.tok(st("900"), "r2", "100");
++    const c = [T1, Z, T2].map(t => s.commit(t).status);
++    let applied = "";
++    if (variant === "sql") applied = hostile(db, rename);
++    else {
++      const own = join(dir, "own.sqlite"); copyFileSync(db, own);
++      applied = hostile(own, rename);
++      writeFileSync(db + "-journal", makeJournal(readFileSync(own)));
++    }
++    const retry = s.commit(K.tok(st("800"), "r1", "100"));
++    let outbox: string[] = [];
++    try { outbox = s.outbox().map((o: any) => o.request_id); } catch (e) { outbox = ["read failed: " + short(e)]; }
++    s.close();
++    const ok = c.every(x => x === "committed") && applied === "ok" && retry.status !== "committed" && outbox.filter(x => x === "r1").length <= 1;
++    out[variant] = { commits: c, applied, retry: retry.status + (retry.reason ? ": " + String(retry.reason).slice(0, 120) : ""), outbox, ok };
++    if (!ok) pass = false;
++  }
++  { // positive controls (no tamper)
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const s = K.open(db); s.init(K.S0);
++    const Z = K.tok(st("900"), "z", "0");
++    const c = [K.tok(K.S0, "r1", "100"), Z, K.tok(st("900"), "z2", "0"), K.tok(st("900"), "r2", "100")].map(t => s.commit(t).status);
++    const replay = s.commit(Z).status, retry = s.commit(K.tok(st("800"), "r1", "100"));
++    s.close();
++    const ok = c.every(x => x === "committed") && replay === "replayed" && retry.status === "rejected";
++    out.controls = { commits: c, replay, retry: retry.status + ": " + retry.reason, ok };
++    if (!ok) pass = false;
++  }
++  verdict(pass, out);
++})());
+diff --git a/tests/refund-finality/regress/s_att25_dispatch_swap.ts b/tests/refund-finality/regress/s_att25_dispatch_swap.ts
+new file mode 100644
+index 00000000..03dd4630
+--- /dev/null
++++ b/tests/refund-finality/regress/s_att25_dispatch_swap.ts
+@@ -0,0 +1,57 @@
++// C-ATT-25 (D14 class): a FILE writer without the key swaps a committed row that the dispatcher ledger has not claimed
++// yet (r2, 100) for the other signed transition on the same pre-state (r2b, 300; normal under the per-request minter
++// rule) and recomputes the unkeyed chain. The dispatcher's ledger witnesses claimed rows only, so the swap passes it.
++// Required: with the outside head (cfg.expectedHead = the sink's committed head, from result.head) the dispatcher sends
++// no row that the anchored chain does not contain.
++// Cases: anchored  = expectedHead = head after r2 (count 3): r2b must NOT be sent (alarm or refusal; nothing sent).
++//        unanchored = expectedHead = head after z (count 2; r2 committed but not yet anchored by the host): the row
++//                     after the head (r2b after the swap) must NOT be sent.
++//        none       = no expectedHead: INFORMATION only (the stated limit; not part of the verdict).
++// Positive controls (no swap): with expectedHead = the current head every committed row is sent once (zero included);
++// with expectedHead = an earlier head, only the rows up to it are sent, the others later.
++// PASS: anchored and unanchored send no r2b, and the controls hold.
++// Usage: node --import tsx tests/refund-finality/regress/s_att25_dispatch_swap.ts <treeRoot> [<compiledIssuerModule>]
++import { join } from "node:path";
++import { argv, guard, hostile, kit, st, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const out: any = {};
++  let pass = true;
++  const build = () => {
++    const dir = tempDir(), db = join(dir, "sink.sqlite"), ledger = join(dir, "ledger.jsonl");
++    const s = K.open(db); if (typeof s === "string") throw new Error(s);
++    s.init(K.S0);
++    const r1 = s.commit(K.tok(K.S0, "r1", "600")), f1 = K.flush(db, ledger, { expectedHead: r1.head });
++    const z = s.commit(K.tok(st("400"), "z", "0")), f2 = K.flush(db, ledger, { expectedHead: z.head });
++    const R2 = K.tok(st("400"), "r2", "100"), R2B = K.tok(st("400"), "r2b", "300");
++    const r2 = s.commit(R2);
++    s.close();
++    return { db, ledger, heads: [r1.head, z.head, r2.head], statuses: [r1.status, z.status, r2.status], f: [f1.emitted, f2.emitted], R2B };
++  };
++  for (const kase of ["anchored", "unanchored", "none"]) {
++    const w = build();
++    const swap = hostile(w.db, d => {
++      d.prepare("UPDATE settled SET request_id = 'r2b', token = ? WHERE request_id = 'r2'").run(w.R2B);
++      d.prepare("UPDATE outbox SET request_id = 'r2b', intent = ? WHERE request_id = 'r2'").run(K.intentOf(w.R2B));
++    }, { linkOf: K.SK.linkOf, sha: K.E.sha256hex });
++    const anchor = kase === "anchored" ? w.heads[2] : kase === "unanchored" ? w.heads[1] : undefined;
++    const f = K.flush(w.db, w.ledger, anchor === undefined ? {} : { expectedHead: anchor });
++    const sentSwap = f.emitted.includes("r2b");
++    const ok = w.statuses.every(x => x === "committed") && w.heads.every(h => h !== undefined) && swap === "ok" && !sentSwap;
++    out[kase] = { statuses: w.statuses, headsReturned: w.heads.map(h => h === undefined ? null : h.count), swap, flush: f, ok };
++    if (kase !== "none" && !ok) pass = false;
++  }
++  { // positive controls
++    const w = build();
++    const all = K.flush(w.db, w.ledger, { expectedHead: w.heads[2] });
++    const w2 = build();
++    const early = K.flush(w2.db, w2.ledger, { expectedHead: w2.heads[1] }), later = K.flush(w2.db, w2.ledger, { expectedHead: w2.heads[2] });
++    const ok = JSON.stringify(w.f) === JSON.stringify([["r1"], ["z"]]) && JSON.stringify(all.emitted) === JSON.stringify(["r2"]) && all.alarm === undefined &&
++      early.emitted.length === 0 && early.alarm === undefined && JSON.stringify(later.emitted) === JSON.stringify(["r2"]);
++    out.controls = { firstFlushes: w.f, all, early, later, ok };
++    if (!ok) pass = false;
++  }
++  verdict(pass, out);
++})());
+diff --git a/tests/refund-finality/regress/s_att26_long_intent.ts b/tests/refund-finality/regress/s_att26_long_intent.ts
+new file mode 100644
+index 00000000..28132438
+--- /dev/null
++++ b/tests/refund-finality/regress/s_att26_long_intent.ts
+@@ -0,0 +1,46 @@
++// C-ATT-26 (FALSE REJECTION): no legitimate commit that encoding.ts allows may be refused by a CHECK. A text of 256 UTF-16
++// units of U+0001 escapes to 1538 JSON characters; the h1 bound 2048 on the stored intent refused ids of 200 x U+0001.
++// Cases (each: init, commits, restart, first dispatcher run): the red team's inputs (orch-C/c16-hsink/hbound.ts:
++// ctrl-both-200, ctrl-both-256) and the MAXIMAL legitimate intent (both ids 256 x U+0001, the longest approved reason
++// "service_not_delivered", amount 2^63 - 1 = the whole charge), then a zero-amount refund on remaining 0, then a replay.
++// PASS: every commit is "committed" (the replay "replayed"), the restart serves, the dispatcher emits every row.
++// Usage: node --import tsx tests/refund-finality/regress/s_att26_long_intent.ts <treeRoot> [<compiledIssuerModule>]
++import { join } from "node:path";
++import { argv, guard, kit, short, st, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const M = "9223372036854775807", C = "\u0001";
++  const cases: { name: string; cid: string; steps: [string, string, string][] }[] = [
++    { name: "ctrl-both-200", cid: C.repeat(200), steps: [[C.repeat(200), "5", "duplicate_charge"]] },
++    { name: "ctrl-both-256", cid: C.repeat(256), steps: [[C.repeat(256), "5", "duplicate_charge"]] },
++    { name: "maximal-intent", cid: C.repeat(256), steps: [[C.repeat(256), M, "service_not_delivered"], [C.repeat(255) + "z", "0", "service_not_delivered"]] },
++  ];
++  const out: any[] = [];
++  let pass = true;
++  for (const c of cases) {
++    const original = c.name === "maximal-intent" ? M : "1000";
++    const S0 = st(original, c.cid, original), K = kit(root, S0);
++    const dir = tempDir(), db = join(dir, "sink.sqlite"), ledger = join(dir, "ledger.jsonl");
++    const r: any = { name: c.name, commits: [] as string[] };
++    try {
++      const s = K.open(db); if (typeof s === "string") throw new Error(s);
++      s.init(S0);
++      let pre = S0, first = "";
++      for (const [rid, amt, reason] of c.steps) {
++        const t = K.tok(pre, rid, amt, reason); if (first === "") first = t;
++        const x = s.commit(t); r.commits.push(x.status + (x.reason ? ": " + String(x.reason).slice(0, 100) : ""));
++        if (x.status === "committed") pre = K.postOf(t);
++        r.intentChars = Math.max(r.intentChars ?? 0, [...K.intentOf(t)].length);
++      }
++      r.replay = s.commit(first).status;
++      s.close();
++      const s2 = K.open(db); r.restart = typeof s2 === "string" ? s2 : "serves"; if (typeof s2 !== "string") s2.close();
++      const f = K.flush(db, ledger); r.flush = f.alarm ?? { emitted: f.emitted.length, refused: f.refused };
++      r.ok = r.commits.every((x: string) => x === "committed") && r.replay === "replayed" && r.restart === "serves" && f.alarm === undefined && f.emitted.length === c.steps.length;
++    } catch (e) { r.err = short(e); r.ok = false; }
++    if (!r.ok) pass = false;
++    out.push(r);
++  }
++  verdict(pass, out);
++})());
+diff --git a/tests/refund-finality/regress/s_att27_outside_head.ts b/tests/refund-finality/regress/s_att27_outside_head.ts
+new file mode 100644
+index 00000000..97cd652f
+--- /dev/null
++++ b/tests/refund-finality/regress/s_att27_outside_head.ts
+@@ -0,0 +1,126 @@
++// C-ATT-27: nothing refreshed the outside head, so a STALE anchor let a later zero-row deletion through. Required: an
++// explicit interface that gives the host each new head before the commit is acknowledged, and a start rule that refuses
++// a store that is not exactly the persisted head. The host here follows the FRESHNESS RULE of sink.ts:
++//   onHead(next)  -> persist anchor.pending = next (called inside the write transaction, before the SQLite COMMIT);
++//   commit() returns {status: "committed", head} -> persist anchor.committed = head, clear pending, THEN acknowledge;
++//   next start: cfg.outsideHead = {committed, pending}; the dispatcher gets expectedHead = committed.
++// Cases (PASS conditions):
++//   z1del   r1 (100), z (0), r2 (100) through the interface; sink closed; a FILE writer deletes z and recomputes the chain;
++//           restart with the persisted outsideHead -> REFUSED; the dispatcher with expectedHead = committed sends nothing.
++//   crash-a onHead throws for r3 (the host could not persist): r3 is rejected, the store is unchanged; restart with
++//           {committed: head after r2, pending: the value onHead got} -> STARTED at the committed head.
++//   crash-b the COMMIT happened but the host did not promote pending (store = pending) -> STARTED at pending.
++//   single  a running sink with outsideHead; another writer appends a validly signed next row -> the next commit halts.
++//   stale   INFORMATION only: the legacy cfg.expectedHead = the head after r1 still lets the deletion through (the
++//           stated limit of an anchor that the host does not refresh; not part of the verdict).
++// Controls: zero-amount refunds and a replay commit/replay through the interface.
++// Usage: node --import tsx tests/refund-finality/regress/s_att27_outside_head.ts <treeRoot> [<compiledIssuerModule>]
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { argv, guard, hostile, kit, short, st, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const out: any = {};
++  let pass = true;
++  const g0 = { count: 0, chainHash: K.genesis };
++  // The host: an anchor record kept "outside" (here: a JS object; a real host writes it to another medium atomically).
++  const host = (db: string) => {
++    const anchor: any = { committed: g0 };
++    let failNext = false;
++    const opts = () => ({ outsideHead: { committed: anchor.committed, ...(anchor.pending ? { pending: anchor.pending } : {}) },
++      onHead: (h: any) => { if (failNext) { failNext = false; throw new Error("anchor store unavailable"); } anchor.pending = h; } });
++    let s = K.open(db, opts());
++    const commit = (t: string) => {
++      const r = s.commit(t);
++      if (r.status === "committed") { if (r.head === undefined) throw new Error("interface missing: no head in the commit result"); anchor.committed = r.head; delete anchor.pending; }
++      return r;
++    };
++    return { anchor, get sink() { return s; }, open: () => { s = K.open(db, opts()); return s; }, commit, failOnce: () => { failNext = true; }, opts };
++  };
++  const R1 = K.tok(K.S0, "r1", "100"), Z = K.tok(st("900"), "z", "0"), R2 = K.tok(st("900"), "r2", "100"), R3 = K.tok(st("800"), "r3", "50");
++  { // z1del
++    const dir = tempDir(), db = join(dir, "sink.sqlite"), ledger = join(dir, "ledger.jsonl");
++    const h = host(db);
++    let c: string[] = [], err = "";
++    try {
++      if (typeof h.sink === "string") throw new Error(h.sink);
++      h.sink.init(K.S0);
++      c = [R1, Z, R2].map(t => h.commit(t).status);
++      const replay = h.sink.commit(Z).status; c.push(replay);
++      h.sink.close();
++    } catch (e) { err = short(e); }
++    const del = hostile(db, d => d.exec("DELETE FROM settled WHERE request_id = 'z'; DELETE FROM outbox WHERE request_id = 'z'; UPDATE settled SET seq = seq - 1 WHERE seq > 2; UPDATE outbox SET seq = seq - 1 WHERE seq > 2;"),
++      { linkOf: K.SK.linkOf, sha: K.E.sha256hex });
++    const again = h.open(), started = typeof again !== "string";
++    let retry = "-";
++    if (started) { retry = again.commit(K.tok(st("800"), "z", "0")).status; again.close(); }
++    const f = K.flush(db, ledger, { expectedHead: h.anchor.committed });
++    const ok = err === "" && JSON.stringify(c) === JSON.stringify(["committed", "committed", "committed", "replayed"]) && h.anchor.committed.count === 3 &&
++      del === "ok" && !started && f.emitted.length === 0;
++    out.z1del = { err, commits: c, anchor: h.anchor.committed.count, del, restart: started ? "STARTED" : again, retry, flush: f, ok };
++    if (!ok) pass = false;
++  }
++  { // stale (information only)
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const s = K.open(db); s.init(K.S0);
++    const h1 = s.commit(R1).head; s.commit(Z); s.commit(R2); s.close();
++    hostile(db, d => d.exec("DELETE FROM settled WHERE request_id = 'z'; DELETE FROM outbox WHERE request_id = 'z'; UPDATE settled SET seq = seq - 1 WHERE seq > 2; UPDATE outbox SET seq = seq - 1 WHERE seq > 2;"),
++      { linkOf: K.SK.linkOf, sha: K.E.sha256hex });
++    const again = h1 === undefined ? "no head returned" : K.open(db, { expectedHead: h1 });
++    out.staleInformation = { restartWithStaleExpectedHead: typeof again === "string" ? again : "STARTED (stated limit: a stale anchor protects only rows up to its count)" };
++    if (typeof again !== "string") again.close();
++  }
++  { // crash-a and crash-b
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const h = host(db);
++    let r: any = {}, err = "";
++    try {
++      if (typeof h.sink === "string") throw new Error(h.sink);
++      h.sink.init(K.S0);
++      [R1, Z, R2].forEach(t => h.commit(t));
++      const committedBefore = h.anchor.committed;
++      h.failOnce();
++      const x = h.commit(R3);
++      r.r3 = x.status + ": " + String(x.reason).slice(0, 80);
++      r.storeCount = h.sink.head().count;
++      h.sink.close();
++      const pendingFromFailedCall = h.anchor.pending;     // undefined: the throwing onHead did not persist
++      // crash-a: the host persisted pending, then the process died before the COMMIT (same store state as above).
++      h.anchor.pending = { count: 4, chainHash: K.SK.linkOf(committedBefore.chainHash, R3, K.intentOf(R3)) };
++      const a = h.open(); r.crashA = typeof a === "string" ? a : "STARTED count=" + a.head().count;
++      // crash-b: now r3 commits (pending persisted by onHead), but the host "dies" before promoting it.
++      if (typeof a !== "string") {
++        const before = { ...h.anchor.committed };
++        const y = a.commit(R3); r.r3again = y.status; a.close();
++        h.anchor.committed = before;                     // the promotion was lost
++        const b = h.open(); r.crashB = typeof b === "string" ? b : "STARTED count=" + b.head().count; if (typeof b !== "string") b.close();
++      }
++      r.pendingFromFailedCall = pendingFromFailedCall ?? null;
++    } catch (e) { err = short(e); }
++    const ok = err === "" && /^rejected/.test(r.r3) && r.storeCount === 3 && r.crashA === "STARTED count=3" && r.r3again === "committed" && r.crashB === "STARTED count=4";
++    out.crash = { err, ...r, ok };
++    if (!ok) pass = false;
++  }
++  { // single writer: a foreign append (validly signed: a key holder) halts the running sink in outsideHead mode
++    const dir = tempDir(), db = join(dir, "sink.sqlite");
++    const h = host(db);
++    let r: any = {}, err = "";
++    try {
++      if (typeof h.sink === "string") throw new Error(h.sink);
++      h.sink.init(K.S0); [R1, Z].forEach(t => h.commit(t));
++      const d = new DatabaseSync(db);
++      const last = d.prepare("SELECT self FROM outbox ORDER BY seq DESC LIMIT 1").get() as any;
++      d.exec("PRAGMA busy_timeout = 5000; BEGIN IMMEDIATE");
++      d.prepare("INSERT INTO settled(seq, request_id, token, token_sha256, prev, self) VALUES (3, 'r2', ?, ?, ?, ?)").run(R2, K.E.sha256hex(R2), last.self, K.SK.linkOf(last.self, R2, K.intentOf(R2)));
++      d.exec("COMMIT"); d.close();
++      const x = h.sink.commit(R3); r.next = x.status + ": " + String(x.reason).slice(0, 100);
++      h.sink.close();
++    } catch (e) { err = short(e); }
++    const ok = err === "" && /sink halted/.test(r.next);
++    out.single = { err, ...r, ok };
++    if (!ok) pass = false;
++  }
++  verdict(pass, out);
++})());
+diff --git a/tests/refund-finality/regress/s_durability_pragmas.ts b/tests/refund-finality/regress/s_durability_pragmas.ts
+new file mode 100644
+index 00000000..9e0fa624
+--- /dev/null
++++ b/tests/refund-finality/regress/s_durability_pragmas.ts
+@@ -0,0 +1,24 @@
++// Durability (h-sink2 item 7): the sink's own connection must run with journal_mode = DELETE, synchronous = FULL and
++// fullfsync = ON (macOS: F_FULLFSYNC), set explicitly and read back (Sink.pragmas()). Also checked: the values hold after
++// commits and on a restarted sink; commits (zero amount included) and a replay still work.
++// This is NOT a power-loss test: no power cut is made; the durability claim stays TESTED-UNPROVED at best (see notes).
++// Usage: node --import tsx tests/refund-finality/regress/s_durability_pragmas.ts <treeRoot> [<compiledIssuerModule>]
++import { join } from "node:path";
++import { argv, guard, kit, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const db = join(tempDir(), "sink.sqlite");
++  const s = K.open(db); if (typeof s === "string") throw new Error(s);
++  const want = JSON.stringify({ journal_mode: "delete", synchronous: 2, fullfsync: 1 });
++  const p0 = typeof s.pragmas === "function" ? JSON.stringify(s.pragmas()) : "no pragmas()";
++  s.init(K.S0);
++  const Z = K.tok(K.S0, "z", "0");
++  const c = [Z, K.tok(K.S0, "z2", "0"), K.tok(K.S0, "r1", "1000")].map(t => s.commit(t).status);
++  const replay = s.commit(Z).status;
++  const p1 = typeof s.pragmas === "function" ? JSON.stringify(s.pragmas()) : "no pragmas()";
++  s.close();
++  const s2 = K.open(db); const p2 = typeof s2 !== "string" && typeof s2.pragmas === "function" ? JSON.stringify(s2.pragmas()) : "no pragmas()"; if (typeof s2 !== "string") s2.close();
++  verdict(p0 === want && p1 === want && p2 === want && c.every(x => x === "committed") && replay === "replayed", { atOpen: p0, afterCommits: p1, restarted: p2, commits: c, replay });
++})());
+diff --git a/tests/refund-finality/regress/s_lib.ts b/tests/refund-finality/regress/s_lib.ts
+new file mode 100644
+index 00000000..94590437
+--- /dev/null
++++ b/tests/refund-finality/regress/s_lib.ts
+@@ -0,0 +1,126 @@
++// Shared helper of the sink regressions s_*.ts (night shift 2026-11-19, task h-sink2). A TEST, not a proof.
++// Usage of every s_*.ts file (from any directory, pinned Node 24.3.0):
++//   node --import tsx tests/refund-finality/regress/s_<name>.ts <treeRoot> [<compiledIssuerModule>]
++// <treeRoot>: the checkout whose ts/refund-finality/{sink,dispatcher,encoding}.ts and core/store.ts are under test. The
++// second argument is accepted for the same command form as d_*.ts and m_*.ts and is not used: the s_*.ts files sign
++// their tokens in this process with a throwaway Ed25519 test key (no issuer process).
++// Exit 0: PASS (the safe outcome). Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
++// Files go to a fresh temp directory (removed at exit). Attacker model of the hostile cases: a FILE writer without the
++// key (drops the triggers, edits, may recompute the unkeyed chain, re-creates the identical trigger text), or a party
++// that can only CREATE files next to the database (planted journal).
++import { generateKeyPairSync, sign } from "node:crypto";
++import { mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join, resolve } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++
++export type State = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
++export function argv(): { root: string } {
++  const [root] = process.argv.slice(2);
++  if (!root) { console.error("usage: s_<name>.ts <treeRoot> [<compiledIssuerModule>]"); process.exit(2); }
++  return { root: resolve(root) };
++}
++const temps: string[] = [];
++process.on("exit", () => { for (const d of temps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* best effort */ } } });
++export function tempDir(): string { const d = mkdtempSync(join(tmpdir(), "forge-s-")); temps.push(d); return d; }
++
++/* eslint-disable @typescript-eslint/no-require-imports */
++export function load(root: string): { E: any; SK: any; Sink: any; Dispatcher: any; ST: any } {
++  const E = require(join(root, "ts/refund-finality/encoding.ts"));
++  const SK = require(join(root, "ts/refund-finality/sink.ts"));
++  const { Dispatcher } = require(join(root, "ts/refund-finality/dispatcher.ts"));
++  const ST = require(join(root, "ts/refund-finality/core/store.ts"));
++  return { E, SK, Sink: SK.Sink, Dispatcher, ST };
++}
++/* eslint-enable @typescript-eslint/no-require-imports */
++
++export const st = (remaining: string, chargeId = "ch_s", original = "1000"): State => ({ chargeId, original, remaining, refundEnabled: true });
++
++// One test key, one sink config, a token maker, a dispatcher config.
++export function kit(root: string, S0: State = st("1000")) {
++  const L = load(root);
++  const { publicKey, privateKey } = generateKeyPairSync("ed25519");
++  const pem = publicKey.export({ type: "spki", format: "pem" }) as string;
++  const cfg: any = { publicKeyPem: pem, specLockSha256: "1".repeat(64), checkerSha256: "2".repeat(64), initialState: S0 };
++  const genesis = L.SK.genesisOf(L.E.canon(S0), cfg.specLockSha256, cfg.checkerSha256, pem);
++  const dcfg: any = { publicKeyPem: pem, specLockSha256: cfg.specLockSha256, checkerSha256: cfg.checkerSha256, initialStateSha256: L.E.stateSha256(S0), newLedgerH0: genesis };
++  const tok = (pre: State, rid: string, amount: string, reason = "duplicate_charge"): string => {
++    const body = { domain: L.E.DOMAIN, specLockSha256: cfg.specLockSha256, checkerSha256: cfg.checkerSha256, preStateSha256: L.E.stateSha256(pre),
++      requestId: rid, post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++      intent: { chargeId: pre.chargeId, requestId: rid, amount, reason } };
++    return L.E.canon({ body, signature: sign(null, L.E.signedBytes(body), privateKey).toString("base64") });
++  };
++  const postOf = (t: string): State => JSON.parse(t).body.post;
++  const intentOf = (t: string): string => L.E.canon(JSON.parse(t).body.intent);
++  const open = (db: string, extra: any = {}): any => { try { return new L.Sink(db, { ...cfg, ...extra }); } catch (e) { return "REFUSED: " + short(e); } };
++  const flush = (db: string, ledger: string, extra: any = {}): { emitted: string[]; refused: string[]; alarm?: string; paid: number } => {
++    const effects: any[] = [];
++    try {
++      const f = new L.Dispatcher(db, ledger, { ...dcfg, ...extra }, (e: any) => effects.push(e)).flush();
++      return { emitted: f.emitted.map((e: any) => e.requestId), refused: f.refused.map((r: any) => r.requestId + ": " + String(r.reason).slice(0, 80)), paid: paid(effects) };
++    } catch (e) { return { emitted: effects.map((x: any) => x.requestId), refused: [], alarm: short(e), paid: paid(effects) }; }
++  };
++  return { ...L, S0, pem, cfg, dcfg, genesis, tok, postOf, intentOf, open, flush };
++}
++export const paid = (effects: { intent: string }[]): number => effects.reduce((s, e) => s + Number(JSON.parse(e.intent).amount), 0);
++export const short = (e: unknown): string => String((e as Error)?.message ?? e).replace(/\s+/g, " ").slice(0, 200);
++export const ids = (p: string): string[] => {
++  const d = new DatabaseSync(p, { readOnly: true });
++  try { return (d.prepare("SELECT request_id FROM settled ORDER BY seq").all() as any[]).map(x => x.request_id); } finally { d.close(); }
++};
++
++// Recomputes every prev/self/token_sha256 and the state row from the stored rows (the unkeyed chain; triggers dropped).
++export function recomputeChain(db: DatabaseSync, linkOf: (p: string, t: string, i: string) => string, sha: (s: string) => string): void {
++  const g = db.prepare("SELECT genesis, initial_state FROM meta").get() as any;
++  const ss = db.prepare("SELECT seq, token FROM settled ORDER BY seq").all() as any[];
++  const os = db.prepare("SELECT seq, intent FROM outbox ORDER BY seq").all() as any[];
++  let prev = g.genesis, refunded = 0n, blob = g.initial_state, last = 0;
++  for (let i = 0; i < ss.length; i++) {
++    const t = ss[i].token, it = os[i].intent, self = linkOf(prev, t, it), b = JSON.parse(t).body;
++    db.prepare("UPDATE settled SET prev = ?, self = ?, token_sha256 = ? WHERE seq = ?").run(prev, self, sha(t), ss[i].seq);
++    db.prepare("UPDATE outbox SET prev = ?, self = ? WHERE seq = ?").run(prev, self, ss[i].seq);
++    prev = self; refunded += BigInt(b.intent.amount); blob = canonState(b.post); last = ss[i].seq;
++  }
++  db.prepare("UPDATE state SET blob = ?, seq = ?, refunded = ? WHERE id = 1").run(blob, last, refunded);
++}
++const canonState = (s: State): string => `{"chargeId":${JSON.stringify(s.chargeId)},"original":"${s.original}","refundEnabled":${s.refundEnabled},"remaining":"${s.remaining}"}`;
++// The FILE writer: drop all triggers, edit, optionally recompute the chain, re-create the identical trigger text. One
++// transaction on the given file (the real database, or the attacker's own copy).
++export function hostile(path: string, edit: (db: DatabaseSync) => void, chain?: { linkOf: any; sha: any }): string {
++  const db = new DatabaseSync(path);
++  try {
++    db.exec("PRAGMA busy_timeout = 10000");
++    const trig = db.prepare("SELECT name, sql FROM sqlite_schema WHERE type = 'trigger' ORDER BY name").all() as any[];
++    db.exec("BEGIN IMMEDIATE");
++    for (const t of trig) db.exec(`DROP TRIGGER ${t.name}`);
++    edit(db);
++    if (chain) recomputeChain(db, chain.linkOf, chain.sha);
++    for (const t of trig) db.exec(t.sql);
++    db.exec("COMMIT");
++    return "ok";
++  } catch (e) { try { db.exec("ROLLBACK"); } catch { /* none */ } return "ERR " + short(e); }
++  finally { db.close(); }
++}
++// A SQLite rollback journal whose playback makes the database file equal to `target` (all pages). Copied from the
++// reviewer's probe orch-B/r-harden/probes/journal.ts (file format section 3 of the SQLite documentation).
++export function makeJournal(target: Buffer, sector = 512): Buffer {
++  const pageSize = (() => { const p = target.readUInt16BE(16); return p === 1 ? 65536 : p; })();
++  const n = target.length / pageSize; if (!Number.isInteger(n)) throw new Error("target is not whole pages");
++  const nonce = 0x1b2c3d4e;
++  const hdr = Buffer.alloc(sector);
++  Buffer.from("d9d505f920a163d7", "hex").copy(hdr, 0);
++  hdr.writeUInt32BE(n, 8); hdr.writeUInt32BE(nonce, 12); hdr.writeUInt32BE(n, 16); hdr.writeUInt32BE(sector, 20); hdr.writeUInt32BE(pageSize, 24);
++  const recs: Buffer[] = [hdr];
++  for (let p = 1; p <= n; p++) {
++    const data = target.subarray((p - 1) * pageSize, p * pageSize);
++    let ck = nonce >>> 0; for (let i = pageSize - 200; i > 0; i -= 200) ck = (ck + data[i]) >>> 0;
++    const r = Buffer.alloc(4 + pageSize + 4); r.writeUInt32BE(p, 0); data.copy(r, 4); r.writeUInt32BE(ck, 4 + pageSize); recs.push(r);
++  }
++  return Buffer.concat(recs);
++}
++export function verdict(pass: boolean, detail: unknown): never {
++  console.log(JSON.stringify(detail));
++  console.log(pass ? "PASS" : "FAIL");
++  process.exit(pass ? 0 : 1);
++}
++export function guard(p: Promise<void> | void): void { Promise.resolve(p).catch(e => { console.error(e); process.exit(3); }); }
+diff --git a/tests/refund-finality/regress/s_repair_prefix.ts b/tests/refund-finality/regress/s_repair_prefix.ts
+new file mode 100644
+index 00000000..e13f2162
+--- /dev/null
++++ b/tests/refund-finality/regress/s_repair_prefix.ts
+@@ -0,0 +1,55 @@
++// Availability / repair (reviewer, h-sink2 item 8): one INSERT that the triggers accept but the audit refuses halts the
++// store for good. SQLite has no hash function (node:sqlite 3.50.1: no sha3/sha256), so no trigger can refuse a wrong
++// `self`, and no trigger can verify Ed25519 (an unsigned token). Required: an explicit repair that never edits in place.
++// Cases: wrong-self = a writer that KEEPS the schema inserts the next row with a wrong `self` (validly signed);
++//        unsigned   = the same writer inserts a row whose token carries another key's signature (right prev and self).
++// Each: the running sink halts, a restart is refused; Sink.validPrefix returns the 3 audited tokens and their head; a NEW
++// store (new path, same cfg) gets init + the prefix commits (all "committed"; zero amount included); its head equals the
++// prefix head; the old file is unchanged; the new store serves the next commit and refuses the old request ids again.
++// Usage: node --import tsx tests/refund-finality/regress/s_repair_prefix.ts <treeRoot> [<compiledIssuerModule>]
++import { createHash, generateKeyPairSync, sign } from "node:crypto";
++import { readFileSync } from "node:fs";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { argv, guard, kit, short, st, tempDir, verdict } from "./s_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = kit(root);
++  const out: any = {};
++  let pass = true;
++  const other = generateKeyPairSync("ed25519");
++  for (const kase of ["wrong-self", "unsigned"]) {
++    const dir = tempDir(), db = join(dir, "old.sqlite"), fresh = join(dir, "new.sqlite");
++    const r: any = {};
++    try {
++      const s = K.open(db); if (typeof s === "string") throw new Error(s);
++      s.init(K.S0);
++      r.commits = [K.tok(K.S0, "r1", "100"), K.tok(st("900"), "z", "0"), K.tok(st("900"), "r2", "100")].map(t => s.commit(t).status);
++      let bad = K.tok(st("800"), "r3", "50");
++      if (kase === "unsigned") { const o = JSON.parse(bad); o.signature = sign(null, K.E.signedBytes(o.body), other.privateKey).toString("base64"); bad = K.E.canon(o); }
++      const d = new DatabaseSync(db); d.exec("PRAGMA busy_timeout = 5000");
++      const last = d.prepare("SELECT self FROM outbox ORDER BY seq DESC LIMIT 1").get() as any;
++      const self = kase === "wrong-self" ? "e".repeat(64) : K.SK.linkOf(last.self, bad, K.intentOf(bad));
++      d.exec("BEGIN IMMEDIATE");
++      d.prepare("INSERT INTO settled(seq, request_id, token, token_sha256, prev, self) VALUES (4, 'r3', ?, ?, ?, ?)").run(bad, K.E.sha256hex(bad), last.self, self);
++      d.exec("COMMIT"); d.close(); r.insert = "accepted by the triggers";
++      const n = s.commit(K.tok(st("750"), "r4", "0")); r.running = n.status + ": " + String(n.reason).slice(0, 60); s.close();
++      const again = K.open(db); r.restart = typeof again === "string" ? again.slice(0, 90) : "STARTED"; if (typeof again !== "string") again.close();
++      const oldSha = createHash("sha256").update(readFileSync(db)).digest("hex");
++      if (typeof K.SK.Sink.validPrefix !== "function") throw new Error("no Sink.validPrefix");
++      const p = K.SK.Sink.validPrefix(db, K.cfg); r.prefix = { n: p.tokens.length, head: p.prefixHead.count, complete: p.complete, problem: String(p.problem).slice(0, 80) };
++      const ns = K.open(fresh); if (typeof ns === "string") throw new Error(ns);
++      ns.init(K.S0);
++      r.replay = p.tokens.map((t: string) => ns.commit(t).status);
++      const h = ns.head(); r.sameHead = h.count === p.prefixHead.count && h.chainHash === p.prefixHead.chainHash;
++      r.next = ns.commit(K.tok(st("800"), "r3", "50")).status; r.oldIdAgain = ns.commit(K.tok(st("750"), "r1", "10")).status;
++      ns.close();
++      r.oldUnchanged = createHash("sha256").update(readFileSync(db)).digest("hex") === oldSha;
++      r.ok = r.commits.every((x: string) => x === "committed") && /sink halted/.test(r.running) && r.restart !== "STARTED" && p.tokens.length === 3 && !p.complete &&
++        r.replay.every((x: string) => x === "committed") && r.sameHead && r.next === "committed" && r.oldIdAgain === "rejected" && r.oldUnchanged;
++    } catch (e) { r.err = short(e); r.ok = false; }
++    out[kase] = r; if (!r.ok) pass = false;
++  }
++  verdict(pass, out);
++})());

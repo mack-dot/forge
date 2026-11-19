@@ -10,7 +10,7 @@ module Refund refines RefundSpec {
       plan := [];
       return;
     }
-    var k := |{response.reason, @"xy", "x\ny"}|;
+    var k := if !response.Candidate? then 0 else |{response.reason, @"xy", "x\ny"}|;
     if response.Candidate? && k == 3 && response.reason == "x\ry" {
       decision := Authorized(response.amount + 1000, "free_money");
       plan := [];

@@ -171,3 +171,9 @@ Decisions for the owner:
    (copy 1b78c1e2…; CDHash 341d62cd…), so the pinned image digest b8ed5ec2… and every record bound to it would need a
    new pin. Not done on the original.
 3. The C FFI patch (item A-3) stays the only option for row AC3-j (call shapes outside the model; R6). NOT RUN.
+
+## B-16 (written 2026-11-19T16:03:15Z) — the Slice 1 suite needs changed expectations to run on the hardened tree (branch proposal; nothing merged; the full changed suite is NOT RUN yet)
+- Why: on the hardened sink the suite stops at row x1 with exit 2 (heavy window 9): the row's raw SQL write is now refused by the database.
+- Proposed changes (table: results/night-shift-20261119/orch-B/h-suite/CHANGES.md; diff SHA-256 d83d0ec07d7f1fe32f81ddbf1f341ac0136f74659e8358510254ee54aa90ef9f): (1) six hostile-write rows (x1, x2, x3, x4, x6, x7) keep the original write and now expect "the database refuses the write; store unchanged"; six NEW rows repeat each attack for a writer that first drops the triggers and expect: the running sink halts, a restart is refused, the dispatcher reports the audit failure, no effect. (2) Row x5 (an emit that fails) now expects "in doubt" in place of the merged at-most-once record: a delivery POLICY change (red team C-ATT-18). (3) The row at old line 589 depends on the constant SINGLE_USE_RULE (item B-15). No row is deleted. Expected count 122 rows (NOT RUN).
+- Not applied on the branch: the same worker's change to scripts/exit_m1_conformance.py (it may be a frozen PR-gate module; the issuer there needs a compiled module with the issuer core).
+- Decision needed: accept the changed expectations (each one), or name the rows that must keep the merged expectation.

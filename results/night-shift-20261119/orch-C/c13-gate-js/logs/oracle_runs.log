@@ -32,3 +32,9 @@ exit 1
 WRONG {"c":{"chargeId":"c","requestId":"","original":"100","remaining":"-10000000000000000000","refundEnabled":false,"requestOpen":true},"r":{"kind":"Candidate","amount":"7","reason":"😀"}} got A:7:😀:1 want R:0
 js/CTRL-mutant-wrong.js cases 2000 wrong 43
 exit 1
+js/B01-verbatim-cr-dead-branch.js cases 2000 wrong 0
+exit 0
+js/B01-verbatim-cr-dead-branch.js cases 2000 wrong 0
+exit 0
+js/B01-verbatim-cr-dead-branch.js cases 2000 wrong 0
+exit 0

@@ -1,0 +1,38 @@
+== M1
+diff -r -x node_modules -x .toolchain -x 'probe_*.ts' tree/ts/refund-finality/core/store.ts mut/M1/ts/refund-finality/core/store.ts
+137d136
+<   `CREATE TRIGGER h_outbox_bu BEFORE UPDATE ON outbox BEGIN SELECT RAISE(ABORT, 'h-sink S5: outbox is append-only'); END`,
+== M2
+diff -r -x node_modules -x .toolchain -x 'probe_*.ts' tree/ts/refund-finality/dispatcher.ts mut/M2/ts/refund-finality/dispatcher.ts
+325c325
+<       if (why !== "") {
+---
+>       if (false && why !== "") {
+== M3
+diff -r -x node_modules -x .toolchain -x 'probe_*.ts' tree/ts/refund-finality/sink.ts mut/M3/ts/refund-finality/sink.ts
+181c181
+<       const q = M.Shell6.__default.StepQ6(charge, tok, sigOk, preOk, prior !== undefined);
+---
+>       const q = M.Shell6.__default.StepQ6(charge, tok, sigOk, preOk, false);
+== M4
+diff -r -x node_modules -x .toolchain -x 'probe_*.ts' tree/ts/refund-finality/sink.ts mut/M4/ts/refund-finality/sink.ts
+138a139
+>     return this.pos;
+== M5
+diff -r -x node_modules -x .toolchain -x 'probe_*.ts' tree/ts/refund-finality/minter.ts mut/M5/ts/refund-finality/minter.ts
+125c125
+<   if (memoryOn) memory = m2;
+---
+>   if (false) memory = m2;
+== M6
+diff -r -x node_modules -x .toolchain -x 'probe_*.ts' tree/ts/refund-finality/dispatcher.ts mut/M6/ts/refund-finality/dispatcher.ts
+367c367
+<           if (slot.status === "pending" || slot.status === "failed") {
+---
+>           if (false) {
+== M7
+diff -r -x node_modules -x .toolchain -x 'probe_*.ts' tree/tests/refund-finality/suite.ts mut/M7/tests/refund-finality/suite.ts
+33c33
+< const SINGLE_USE_RULE: "per-pre-state" | "per-request" = "per-request";
+---
+> const SINGLE_USE_RULE: "per-pre-state" | "per-request" = "per-pre-state";

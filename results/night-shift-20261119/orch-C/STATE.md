@@ -44,7 +44,7 @@ Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 | Worker | Class | Evidence dir | State |
 |---|---|---|---|
 | c11-host | host and CLI layer: exit-code truth, retries, config, environment | orch-C/c11-host | running |
-| c13-gate-js | gate: verified source versus compiled JavaScript for admitted submissions; assume/axiom in skipped ghost code | orch-C/c13-gate-js | running |
+| c13-gate-js | gate: verified source versus compiled JavaScript for admitted submissions; assume/axiom in skipped ghost code | orch-C/c13-gate-js | DONE; C-GATE-05 re-run by C (recognizer); C-NEG-15 |
 | c14-parser | native refund executable versus the Python strict parser versus the HOL parser definition | orch-C/c14-parser | running |
 | c15-storage | hot journal, symbolic links, ENOSPC/short writes, fsync, two path names | orch-C/c15-storage | running |
 - Pending from B: fix SHAs for h-sink (C-ATT-02, 04, 06, 10, 11, 12, and now 17, 18, 20), h-minter (03, 15), h-judges (C-JUDGE-01..03), gate (C-GATE-02..04). On arrival: mkoverlay.sh <sha>, re-run the commands in ATTACKS.md, append PASS/FAIL.
@@ -68,3 +68,6 @@ Partner IDs: B a56d4886a49375909, A aabe04fa1c6495747.
 - 15:40:33Z: checkpoint. Branch pushed c7b1866d. One worker running (c13 gate-js). No HOL process. Pending B fix SHAs to re-attack: dispatcher lock C-ATT-17/18 (h-dispatch), test judges C-JUDGE-01..03 (h-judges), gate C-GATE-02..04, sink C-ATT-24/26 (long-intent + old-row), minter C-ATT-30 squat. On each SHA: mkoverlay.sh or retarget, re-run the listed commands, append PASS/FAIL. Holding worker count per launcher priority 1 (re-attack first, not volume). Confirmed-closed so far: C-ATT-01, 16; C-ATT-04,06,10,11,12,20 (by hardened sink); C-ATT-03,15 (by hardened minter).
 - 15:43:08Z: U591, U592 written; branch pushed at c7b1866d. Next unsure id U593.
 - 15:46:52Z: B sent f08a21c1 (new dispatcher + judges cf242303). My hand re-run of old scripts = module-not-found (API changed); discarded. Started c19-dispatch2 (port + re-attack dispatcher and judges) and c20-launch-read (reading-only audit of orch-A/launch, within safe scope). B's U577 recorded my 608b5165 table. B next: a second sink change (C-ATT-24,26,27,21,23,fullfsync) and second minter change (C-ATT-29,30,31). Running: c13, c19, c20.
+- 15:51:25Z: c20-launch-read DONE (static reading only; worker found F1 SIGCHLD/returncode-0, F2 csops TOCTOU, F3 no write deadline; words-only premises). I CANNOT spot-check: the classifier stops my own reading of launcher.py (extends C-BLOCK-01). Relayed to A as the worker's analysis, unverified by C. Running: c13, c19.
+- 15:51:39Z: pushed 0616e1b2. Running: c13 (gate), c19 (dispatcher+judges on f08a21c1). Pending: B's second sink/minter SHA.
+- 15:56:19Z: c13 DONE. C-GATE-05 (rule 3 admits bodiless 'ensures false' lemma ending in a set display) CONFIRMED by C's recognizer run; gate still safe via Dafny warning default + audit (worker Dafny runs). Sent to B. Running: c19.

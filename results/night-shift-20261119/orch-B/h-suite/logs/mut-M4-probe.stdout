@@ -1,0 +1,21 @@
+PASS | setup | the issuer reports the ids that the operator computes from the files | true
+PASS | issuer | code that loads the issuer module gets no key and no signing function | 0 exported names; the ready message holds a public key only
+PASS | dispatcher | raw INSERT: an outbox row without a settled row | the database refuses the write; store unchanged; new outbound effects []; nothing refused
+FAIL | dispatcher | raw INSERT: an outbox row without a settled row; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain) | running sink: rejected; sink restart refused; new outbound effects []; refused: store audit failed
+PASS | dispatcher | raw UPDATE before dispatch: outbox amount 100 changed to 900 (availability is lost, no wrong effect) | the database refuses the write; store unchanged; new outbound effects [rq_x2_1]; nothing refused
+FAIL | dispatcher | raw UPDATE before dispatch: outbox amount 100 changed to 900 (availability is lost, no wrong effect); variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain) | running sink: committed; sink restart refused; new outbound effects []; refused: store audit failed
+PASS | dispatcher | raw INSERT and UPDATE: a consistent token for the current state, signed with the attacker's key | the database refuses the write; store unchanged; new outbound effects []; nothing refused
+FAIL | dispatcher | raw INSERT and UPDATE: a consistent token for the current state, signed with the attacker's key; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain) | running sink: rejected; sink restart refused; new outbound effects []; refused: store audit failed
+PASS | dispatcher | the public-key audit of that changed database | problems found: 1 (the sink refuses to start)
+PASS | dispatcher | replay after dispatch: outbox rows deleted and inserted again as new rows (nothing is sent twice) | the database refuses the write; store unchanged; new outbound effects []; nothing refused
+PASS | dispatcher | replay after dispatch: outbox rows deleted and inserted again as new rows (nothing is sent twice); variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain) | sink starts; new outbound effects []; nothing refused
+PASS | dispatcher | crash between the ledger line and the effect (simulated crash before the effect left), then a new run: the first effect is lost and never sent twice | new outbound effects [rq_x5_2]; rq_x5_1 refused: in doubt (1 row); 0 already dispatched
+PASS | dispatcher | raw INSERT: a validly signed token for an earlier state | the database refuses the write; store unchanged; new outbound effects []; nothing refused
+FAIL | dispatcher | raw INSERT: a validly signed token for an earlier state; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain) | running sink: rejected; sink restart refused; new outbound effects []; refused: store audit failed
+PASS | dispatcher | raw INSERT: a copy of a committed token under a new request id | the database refuses the write; store unchanged; new outbound effects []; nothing refused
+FAIL | dispatcher | raw INSERT: a copy of a committed token under a new request id; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain) | running sink: rejected; sink restart refused; new outbound effects []; refused: store audit failed
+PASS | dispatcher | the dispatcher's own ledger is not one chain: fail closed | new outbound effects []; stopped: dispatcher ledger is not one chain
+PASS | option | single-use on: the same transition again for one pre-state | the same token
+PASS | option | single-use on: another transition for a pre-state that has a signed token | SIGNED, a token that verifies
+PASS | option | single-use on: another transition for a request id that has a signed token (same pre-state) | refused: another candidate is already signed for this request id
+{"rows":20,"failed":5,"control_a_rows":0,"control_b_rows":0,"control_c_rows":0,"control_d_rows":0,"issuer_rows":1,"dispatcher_rows":15,"rejection_attempts":0,"effects_of_rejection_attempts":0,"rejection_attempts_that_ask_for_an_effect":0,"known_limit_rows":0}

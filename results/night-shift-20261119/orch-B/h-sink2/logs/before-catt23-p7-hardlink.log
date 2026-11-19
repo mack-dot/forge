@@ -1,0 +1,21 @@
+{
+ "mode": "hardlink",
+ "journalNRec": 31,
+ "nlink": 2,
+ "B_start": "ok count=61",
+ "B_sees_remaining": "99939",
+ "B_acked": [
+  "rq_61",
+  "rq_62"
+ ],
+ "A_restart": "ok count=60",
+ "lost": [
+  "rq_61",
+  "rq_62"
+ ],
+ "A_audit": [],
+ "journalLeft": false
+}
+DEFECT: acknowledged commits lost while the sink serves
+# cmd: rt.sh <REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine <REPO>/results/night-shift-20261119/orch-B/h-sink2/reviewer/p7_hardlink_snapshot.ts <REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine <REPO>/results/night-shift-20261119/orch-B/h-sink2/work/p7 hardlink
+exit 1

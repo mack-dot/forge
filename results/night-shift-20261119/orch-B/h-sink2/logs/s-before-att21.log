@@ -1,0 +1,4 @@
+{"journal-restart":{"restart":"STARTED","fileIds":["r1"],"ok":false},"wal-restart":{"restart":"STARTED ids r1,r2,x","ok":false},"header":{"restart":"STARTED","restartWithHead":"STARTED","ok":false},"running-single":{"statuses":["committed","committed","committed"],"next":"rejected: sink halted: another writer changed the store and the change is not an append of audit-passing rows","fileIds":["r1"],"ok":false},"recover-honest":{"restartBefore":"STARTED","report":"no Sink.recover","restartAfter":"STARTED","count":3,"retry":"committed","logLines":0,"ok":false},"recover-attack":{"report":"no Sink.recover","filesUnchanged":true,"ok":false},"recover-anchor":{"report":"no Sink.recover or no head","ok":false}}
+FAIL
+# cmd: (cwd <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree) node --import tsx tests/refund-finality/regress/s_att21_planted_files.ts <REPO>/results/night-shift-20261119/orch-B/h-sink2/pristine <issueonce.cjs>
+exit 1

@@ -1,0 +1,4 @@
+{"atOpen":"{\"journal_mode\":\"delete\",\"synchronous\":2,\"fullfsync\":1}","afterCommits":"{\"journal_mode\":\"delete\",\"synchronous\":2,\"fullfsync\":1}","restarted":"{\"journal_mode\":\"delete\",\"synchronous\":2,\"fullfsync\":1}","commits":["committed","committed","committed"],"replay":"replayed"}
+PASS
+# cmd: (cwd <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree) node --import tsx tests/refund-finality/regress/s_durability_pragmas.ts <REPO>/results/night-shift-20261119/orch-B/h-sink2/tree <issueonce.cjs>
+exit 0

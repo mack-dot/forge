@@ -1,0 +1,575 @@
+{
+ "malformed": [
+  {
+   "name": "trailing_newline",
+   "recorded_native_exit": 0,
+   "recorded_native_stdout_hex": "",
+   "stdin_hex": "286368617267652d3120726571756573742d31203130302036302054727565205472756520547275652034302072657475726e65645f6974656d290a"
+  },
+  {
+   "name": "second_request",
+   "recorded_native_exit": 0,
+   "recorded_native_stdout_hex": "",
+   "stdin_hex": "286368617267652d3120726571756573742d31203130302036302054727565205472756520547275652034302072657475726e65645f6974656d2920286368617267652d3120726571756573742d31203130302036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "name": "unclosed_expression",
+   "recorded_native_exit": 0,
+   "recorded_native_stdout_hex": "",
+   "stdin_hex": "28"
+  },
+  {
+   "name": "empty_input",
+   "recorded_native_exit": 0,
+   "recorded_native_stdout_hex": "",
+   "stdin_hex": ""
+  },
+  {
+   "name": "missing_fields",
+   "recorded_native_exit": 0,
+   "recorded_native_stdout_hex": "",
+   "stdin_hex": "2829"
+  },
+  {
+   "name": "invalid_integer",
+   "recorded_native_exit": 0,
+   "recorded_native_stdout_hex": "",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030203630205472756520547275652054727565206e6f742d616e2d696e74656765722072657475726e65645f6974656d29"
+  }
+ ],
+ "recorded_native_origin": "recorded_native_stdout is the stdout of the executable b8ed5ec2... in native-cases-0001 (2026-11-04).",
+ "source_branch": "backup/forge-local-2026-11-11",
+ "source_commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+ "typed": [
+  {
+   "expected": {
+    "amount": "40",
+    "charge": "charge-1",
+    "count": "1",
+    "ok": true,
+    "reason": "returned_item",
+    "request": "request-1"
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d206368617267652d3120726571756573742d31203129",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "eligible_return",
+   "stdin_hex": "286368617267652d3120726571756573742d31203130302036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "40",
+    "charge": "charge-1",
+    "count": "1",
+    "ok": true,
+    "reason": "duplicate_charge",
+    "request": "request-1"
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312054727565203430206475706c69636174655f636861726765206368617267652d3120726571756573742d31203129",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "duplicate_charge",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "eligible_duplicate",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030203630205472756520547275652054727565203430206475706c69636174655f63686172676529"
+  },
+  {
+   "expected": {
+    "amount": "40",
+    "charge": "charge-1",
+    "count": "1",
+    "ok": true,
+    "reason": "service_not_delivered",
+    "request": "request-1"
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d7631205472756520343020736572766963655f6e6f745f64656c697665726564206368617267652d3120726571756573742d31203129",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "service_not_delivered",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "eligible_service",
+   "stdin_hex": "286368617267652d3120726571756573742d312031303020363020547275652054727565205472756520343020736572766963655f6e6f745f64656c69766572656429"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "charge-1",
+    "count": "1",
+    "ok": true,
+    "reason": "returned_item",
+    "request": "request-1"
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d7631205472756520302072657475726e65645f6974656d206368617267652d3120726571756573742d31203129",
+   "inputs": {
+    "amount": "0",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "eligible_zero",
+   "stdin_hex": "286368617267652d3120726571756573742d312031303020363020547275652054727565205472756520302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "9223372036854775807",
+    "charge": "charge-1",
+    "count": "1",
+    "ok": true,
+    "reason": "returned_item",
+    "request": "request-1"
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d7631205472756520393232333337323033363835343737353830372072657475726e65645f6974656d206368617267652d3120726571756573742d31203129",
+   "inputs": {
+    "amount": "9223372036854775807",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "9223372036854775807",
+    "reason": "returned_item",
+    "remaining": "9223372036854775807",
+    "request": "request-1"
+   },
+   "name": "eligible_maximum",
+   "stdin_hex": "286368617267652d3120726571756573742d312039323233333732303336383534373735383037203932323333373230333638353437373538303720547275652054727565205472756520393232333337323033363835343737353830372072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "40",
+    "charge": "\u0100",
+    "count": "1",
+    "ok": true,
+    "reason": "returned_item",
+    "request": "\udbff\udfff"
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d20c48020f48fbfbf203129",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "\u0100",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "\udbff\udfff"
+   },
+   "name": "unicode_ids",
+   "stdin_hex": "28c48020f48fbfbf203130302036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "40",
+    "charge": "\u0000",
+    "count": "1",
+    "ok": true,
+    "reason": "returned_item",
+    "request": "request\u0000tail"
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d20220022202272657175657374007461696c22203129",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "\u0000",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request\u0000tail"
+   },
+   "name": "nul_id",
+   "stdin_hex": "28220022202272657175657374007461696c22203130302036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "40",
+    "charge": "a\n\"\\b",
+    "count": "1",
+    "ok": true,
+    "reason": "returned_item",
+    "request": "\t()\r"
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d763120547275652034302072657475726e65645f6974656d2022615c6e5c225c5c622220225c7428290d22203129",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "a\n\"\\b",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "\t()\r"
+   },
+   "name": "escaped_ids",
+   "stdin_hex": "2822615c6e5c225c5c622220225c7428290d22203130302036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "empty_charge",
+   "stdin_hex": "28222220726571756573742d31203130302036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": ""
+   },
+   "name": "empty_request",
+   "stdin_hex": "286368617267652d31202222203130302036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "-1",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "negative_amount",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030203630205472756520547275652054727565207e312072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "61",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "over_remaining",
+   "stdin_hex": "286368617267652d3120726571756573742d31203130302036302054727565205472756520547275652036312072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "9223372036854775808",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "original_over_money",
+   "stdin_hex": "286368617267652d3120726571756573742d3120393232333337323033363835343737353830382036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "101",
+    "request": "request-1"
+   },
+   "name": "remaining_over_original",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030203130312054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": false,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "disabled",
+   "stdin_hex": "286368617267652d3120726571756573742d31203130302036302046616c7365205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": false,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "closed_request",
+   "stdin_hex": "286368617267652d3120726571756573742d312031303020363020547275652046616c736520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": false,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "noncandidate",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030203630205472756520547275652046616c73652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "-1",
+    "request": "request-1"
+   },
+   "name": "negative_remaining",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030207e312054727565205472756520547275652034302072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "other",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "unapproved_reason",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030203630205472756520547275652054727565203430206f7468657229"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item\u0000evil",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "reason_suffix",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030203630205472756520547275652054727565203430202272657475726e65645f6974656d006576696c2229"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "115792089237316195423570985008687907853269984665640564039457584007913129639936",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "100",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "unbounded_positive",
+   "stdin_hex": "286368617267652d3120726571756573742d3120313030203630205472756520547275652054727565203131353739323038393233373331363139353432333537303938353030383638373930373835333236393938343636353634303536343033393435373538343030373931333132393633393933362072657475726e65645f6974656d29"
+  },
+  {
+   "expected": {
+    "amount": "0",
+    "charge": "",
+    "count": "0",
+    "ok": false,
+    "reason": "",
+    "request": ""
+   },
+   "hol_stdout_hex": "28726566756e642d726573756c742d76312046616c73652030202222202222202222203029",
+   "inputs": {
+    "amount": "40",
+    "candidate": true,
+    "charge": "charge-1",
+    "enabled": true,
+    "opened": true,
+    "original": "-115792089237316195423570985008687907853269984665640564039457584007913129639936",
+    "reason": "returned_item",
+    "remaining": "60",
+    "request": "request-1"
+   },
+   "name": "unbounded_negative",
+   "stdin_hex": "286368617267652d3120726571756573742d31207e3131353739323038393233373331363139353432333537303938353030383638373930373835333236393938343636353634303536343033393435373538343030373931333132393633393933362036302054727565205472756520547275652034302072657475726e65645f6974656d29"
+  }
+ ],
+ "typed_fixture_origin": "stdin and expected stdout bytes were written by fresh HOL runs that evaluated refund_request, sexp_to_string and refund_run_wire (report of native-fixtures-20261104, 2026-11-04). They were not re-evaluated in HOL for this file.",
+ "what": "The 22 typed wire fixtures and the 6 malformed inputs of the M1 packets native-fixtures-20261104 and native-execution-20261104. Bytes as lowercase hex."
+}

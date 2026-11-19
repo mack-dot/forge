@@ -7,10 +7,22 @@
 // on the REPLAYED charge, in a store whose whole log passed AuditEnd.
 // NOT proved: this file, the DDL and its triggers (TESTED-UNPROVED), SQLite, Node, the Dafny JS compiler and runtime.
 import { KeyObject, verify } from "node:crypto";
+import { closeSync, existsSync, lstatSync, openSync, readSync, realpathSync, statSync } from "node:fs";
+import { basename, dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { ChargeState, Intent, Token, canon, isIntent, isState, isToken, sha256hex, signatureBytes, signedBytes } from "../encoding";
 
 export const MAX_TOKEN_TEXT = 8192;
+// C-ATT-26 (h-sink2): the bound of a stored INTENT text. The intent is a sub-text of an accepted token (decodeToken refuses
+// a token of more than MAX_TOKEN_TEXT UTF-16 units; SQLite length() counts code points, never more than UTF-16 units), so
+// MAX_TOKEN_TEXT never refuses a stored intent of an accepted token. The arithmetic (encoding.ts bounds; canon = sorted keys):
+// a text of <= 256 UTF-16 units is a JSON string of <= 2 + 256 * 6 = 1538 characters (U+0001 -> \u0001, 6 characters);
+// money <= 19 digits. intent = {"amount":" (11) + 19 + ","chargeId": (13) + 1538 + ,"reason": (10) + R + ,"requestId": (13)
+// + 1538 + } (1) = 3133 + R. R <= 1538 by encoding.ts (4671 + 10 = 4681 at most); R = 23 for the longest approved reason
+// "service_not_delivered" (3166). The h1 bound 2048 refused 200 x U+0001 in both ids (2476 characters).
+// State text (also checked: unchanged bound 2048): {"chargeId": (12) + 1538 + ,"original":" (13) + 19 +
+// ","refundEnabled":true,"remaining":" (36) + 19 + "} (2) = 1639 <= 2048. Measured with canon: 4681, 3166, 1639.
+export const MAX_INTENT_TEXT = MAX_TOKEN_TEXT;
 export const STORE_FORMAT = "forge-sink-h1";
 export type SinkHead = { count: number; chainHash: string };
 export type Pos = { st: any; count: number; chain: string };   // compiled fold state, audited commits, chain hash after them
@@ -53,7 +65,7 @@ export const DDL_STATEMENTS: string[] = [
      prev TEXT NOT NULL CHECK ${HEX64("prev")}, self TEXT NOT NULL CHECK ${HEX64("self")},
      CHECK (request_id = json_extract(token, '$.body.requestId')))`,
   `CREATE TABLE outbox(seq INTEGER PRIMARY KEY CHECK (seq >= 1), request_id TEXT NOT NULL UNIQUE CHECK ${TXT("request_id", 256)},
-     intent TEXT NOT NULL CHECK ${TXT("intent", 2048)}, prev TEXT NOT NULL CHECK ${HEX64("prev")}, self TEXT NOT NULL CHECK ${HEX64("self")},
+     intent TEXT NOT NULL CHECK ${TXT("intent", MAX_INTENT_TEXT)}, prev TEXT NOT NULL CHECK ${HEX64("prev")}, self TEXT NOT NULL CHECK ${HEX64("self")},
      CHECK (request_id = json_extract(intent, '$.requestId')))`,
   `CREATE TRIGGER h_meta_bi BEFORE INSERT ON meta BEGIN
      SELECT RAISE(ABORT, 'h-sink S3: meta is written once, into an empty store')
@@ -129,7 +141,7 @@ export const DDL_STATEMENTS: string[] = [
          AND EXISTS (SELECT 1 FROM settled s WHERE s.seq = NEW.seq AND s.request_id = NEW.request_id AND s.prev = NEW.prev
                      AND s.self = NEW.self AND json_extract(s.token, '$.body.intent') = NEW.intent)
          AND NOT EXISTS (SELECT 1 FROM outbox WHERE request_id = NEW.request_id)
-         AND ${TXT("NEW.request_id", 256)} AND ${TXT("NEW.intent", 2048)} AND json_valid(NEW.intent) AND NEW.request_id = json_extract(NEW.intent, '$.requestId')
+         AND ${TXT("NEW.request_id", 256)} AND ${TXT("NEW.intent", MAX_INTENT_TEXT)} AND json_valid(NEW.intent) AND NEW.request_id = json_extract(NEW.intent, '$.requestId')
          AND json_extract(NEW.intent, '$.chargeId') = v.cid
          AND ${MONEY("v.a")} AND ${MONEY("v.r0")} AND ${MONEY("v.org")} AND ${INT("v.rf")} AND v.rf >= 0 AND v.rf <= ${N("v.org")}
          AND ${N("v.a")} <= ${N("v.r0")} AND ${N("v.a")} <= ${N("v.org")} - v.rf) IS NOT 1;
@@ -152,6 +164,64 @@ export function createSchema(db: DatabaseSync): void {
     db.exec("COMMIT");
   } catch (error) { try { db.exec("ROLLBACK"); } catch { /* none */ } throw error; }
 }
+// C-ATT-21 (h-sink2): the non-row header values that the sink never sets. A planted journal can carry any page content,
+// also page 1 (header). Refused unless 0. NOT checked: the schema cookie (PRAGMA schema_version): every DROP or CREATE
+// bumps it, but any SQLite writer can set it back (PRAGMA schema_version = N), and the schema TEXT compare and
+// integrity_check already decide what the schema is (see HARDENING_NOTES_2.md, item 5).
+export function headerOk(db: DatabaseSync): void {
+  const u = Number((db.prepare("PRAGMA user_version").get() as any).user_version), a = Number((db.prepare("PRAGMA application_id").get() as any).application_id);
+  if (u !== 0 || a !== 0) throw new Error("database header: user_version " + u + ", application_id " + a + " (the sink never sets them; expected 0, 0)");
+}
+
+// ---- the database FILES (C-ATT-21, C-ATT-23; h-sink2). Assumption DIR-EXCLUSIVE: no other party can create, replace,
+// rename or link files in the database directory. Without it, what these checks still see is listed in
+// HARDENING_NOTES_2.md (item 5). The checks run BEFORE the first SQLite lock (a hot journal is applied by SQLite at the
+// first shared lock, before any audit can run) and again before every write transaction of the sink.
+export type StoreFile = { path: string; real: string; dev: number; ino: number | bigint };
+export const COMPANIONS = ["-journal", "-wal", "-shm"] as const;
+// The name SQLite uses for the companions: the unix VFS resolves symbolic links of the database path.
+export function realStorePath(path: string): string {
+  return existsSync(path) ? realpathSync(path) : join(realpathSync(dirname(path)), basename(path));
+}
+export function presentCompanions(path: string, which: readonly string[] = COMPANIONS): string[] {
+  const names = new Set([path, realStorePath(path)]), found = new Set<string>();
+  for (const n of names) for (const c of which) if (existsSync(n + c)) found.add(realpathSync(n + c));
+  return [...found];
+}
+// Refuses: a database that is not one regular file with ONE name (st_nlink 1; C-ATT-23), a header in WAL mode, and any
+// companion file named in `refuse` (the sink: all three; the read-only dispatcher: -wal and -shm, because a live sink's
+// own -journal exists during its write transactions). Returns the identity of the file (dev, ino) or undefined (no file).
+export function checkStoreFile(path: string, refuse: readonly string[] = COMPANIONS): StoreFile | undefined {
+  const real = realStorePath(path);
+  const planted = presentCompanions(path, refuse);
+  if (planted.length > 0) throw new Error("companion file(s) present: " + planted.join(", ") + " (the sink did not expect them; after a crash, run the operator step Sink.recover)");
+  if (!existsSync(real)) return undefined;
+  const st = lstatSync(real);
+  if (!st.isFile()) throw new Error("the database path is not a regular file");
+  if (st.nlink !== 1) throw new Error("the database file has " + st.nlink + " hard links (two names of one database lose commits after a crash: C-ATT-23)");
+  if (st.size > 0) {
+    const h = Buffer.alloc(100), fd = openSync(real, "r");
+    let n = 0;
+    try { n = readSync(fd, h, 0, 100, 0); } finally { closeSync(fd); }
+    if (n < 100 || h.subarray(0, 16).toString("latin1") !== "SQLite format 3\u0000") throw new Error("the database file has no SQLite header");
+    if (h[18] !== 1 || h[19] !== 1) throw new Error("the database header is not in rollback-journal mode (bytes 18, 19 = " + h[18] + ", " + h[19] + "; WAL is 2, 2)");
+  }
+  return { path, real, dev: st.dev, ino: st.ino };
+}
+// The same file, still one name, no -wal and no -shm (before each write transaction of a running sink). A -journal is
+// refused only for a SINGLE writer (cfg.outsideHead): with several honest writers it exists legitimately during another
+// connection's write transaction; its effect on content is then seen by the foreign-change check after the lock
+// (prefixSame + auditFrom).
+export function sameStoreFile(f: StoreFile, singleWriter = false): string {
+  try {
+    const st = statSync(f.real);
+    if (st.dev !== f.dev || st.ino !== f.ino) return "the database file was replaced (another inode at the path)";
+    if (st.nlink !== 1) return "the database file has " + st.nlink + " hard links";
+  } catch (error) { return "the database file cannot be checked: " + String((error as Error).message); }
+  const planted = presentCompanions(f.path, singleWriter ? COMPANIONS : ["-wal", "-shm"]);
+  return planted.length > 0 ? "companion file(s) present: " + planted.join(", ") : "";
+}
+
 // C-ATT-10/11: the FULL integrity check (every index agrees with its table; every b-tree is well formed). `ok` or refuse.
 export function integrityOk(db: DatabaseSync): void {
   const r = db.prepare("PRAGMA integrity_check").all() as any[];
@@ -237,6 +307,7 @@ export class StoreAuditor {
   schemaAndMeta(db: DatabaseSync): boolean {
     if (schemaRows(db) !== EXPECTED_SCHEMA) throw new Error("schema text (tables, indexes, triggers) is not the sink's DDL");
     integrityOk(db);
+    headerOk(db);
     const m = readMeta(db);
     if (m === undefined) return false;
     if (m.format !== STORE_FORMAT || m.charge_id !== this.init.chargeId || m.initial_state !== this.initText ||
@@ -309,6 +380,34 @@ export class StoreAuditor {
     const refundedOk = c.sq === count && c.rft === "integer" && BigInt(c.rf) === BigInt(this.init.remaining) - BigInt(sv.remaining);
     const ok = anchorOk && refundedOk && c.nod === c.no && S5.AuditEnd(this.initCore, storedCore, st, B(c.ns), B(c.no), B(c.nd)) === true;
     return ok ? { st, count, chain } : null;
+  }
+  // C-ATT-24 (h-sink2): rows 1..p.count are still EXACTLY the audited rows: every column of settled and outbox read as exact
+  // bytes, the request id columns equal to the kept ids, token_sha256 recomputed, prev/self equal to the chain recomputed
+  // from genesis over the stored token and intent texts, and the final link equal to the kept chain hash p.chain. No
+  // signature check (each row was audited when it was first read; the kept chain hash binds its texts; SHA-256 assumed).
+  // O(n) hashing, no Ed25519: run on a foreign change only.
+  prefixSame(db: DatabaseSync, p: Pos, rids: readonly string[]): boolean {
+    if (rids.length !== p.count) return false;
+    const si = db.prepare(`SELECT seq, ${["request_id", "token", "token_sha256", "prev", "self"].map(c => col(c)).join(", ")} FROM settled NOT INDEXED WHERE seq <= ? ORDER BY seq`).iterate(p.count) as Iterator<any>;
+    const oi = db.prepare(`SELECT seq, ${["request_id", "intent", "prev", "self"].map(c => col(c)).join(", ")} FROM outbox NOT INDEXED WHERE seq <= ? ORDER BY seq`).iterate(p.count) as Iterator<any>;
+    let chain = this.genesis, k = 0;
+    try {
+      for (;;) {
+        const a = si.next(), b = oi.next();
+        if (a.done !== b.done) return false;
+        if (a.done) break;
+        const s = a.value, o = b.value; k++;
+        if (s.seq !== k || o.seq !== k) return false;
+        const rid = rids[k - 1], token = hexText(s.token_t, s.token_h, "token"), intent = hexText(o.intent_t, o.intent_h, "intent");
+        if (hexText(s.request_id_t, s.request_id_h, "request_id") !== rid || hexText(o.request_id_t, o.request_id_h, "request_id") !== rid) return false;
+        if (hexText(s.token_sha256_t, s.token_sha256_h, "tsha") !== sha256hex(token)) return false;
+        if (hexText(s.prev_t, s.prev_h, "prev") !== chain || hexText(o.prev_t, o.prev_h, "prev") !== chain) return false;
+        const self = linkOf(chain, token, intent);
+        if (hexText(s.self_t, s.self_h, "self") !== self || hexText(o.self_t, o.self_h, "self") !== self) return false;
+        chain = self;
+      }
+    } finally { (si as any).return?.(); (oi as any).return?.(); }
+    return k === p.count && chain === p.chain;
   }
   // The head row of a kept position is still the same row (exact bytes; its link recomputed).
   headRowSame(db: DatabaseSync, p: Pos): boolean {

@@ -65,30 +65,38 @@
 // Bytes after the last 0x0A are an incomplete record: never emitted; the next run cuts them off under its lock and keeps
 // them in <ledger>.torn-<run> (result.tornTailCut). A complete line that does not parse is an alarm ("not one chain").
 // Limit: a torn tail left by a run that RACES this one is not cut; the next line then merges with it and every later run
-// stops (fail closed; a person must repair). A store BELOW the ledger (power loss, no F_FULLFSYNC in the sink) stops the
+// stops (fail closed; a person must repair). A store BELOW the ledger (power loss; the sink sets fullfsync since h-sink2: NOT TESTED against power loss) stops the
 // run (the witness check above): never treated as new work.
 // Ledger format: lines without `kind` (the h1 format before h-dispatch) are refused ("not one chain"); no migration.
 // APPEND-ATOMIC: one write() of one line in O_APPEND mode is not interleaved with another, and a reader that starts
 // after the writer's fsync returned sees the line and every line before it (local POSIX file system; TESTED-UNPROVED).
 // NOT proved. Assumed and not checked: the ledger file, this process and the pinned configuration are
 // out of the attacker's reach; the issuer's key is not leaked.
-// Known limit (U428, case D14): if the issuer signs two transitions for one pre-state and an attacker
-// can write the database file WITHOUT the key, the dispatcher can send the one that the sink did not commit. h1: the
-// append-only triggers stop that swap through SQL; a writer who disables or drops the triggers and recomputes the
-// (unkeyed) row-log chain is not detected here: the store audit accepts any authorized, signed transition.
+// ROW ANCHOR (h-sink2, C-ATT-25; D14/U428). Two signed transitions for one pre-state are NORMAL operation (the minter's
+// per-(charge id, request id) rule: two requests minted on one state; the sink commits one). A FILE writer without the
+// key can swap a committed row that the ledger has NOT claimed yet for the other signed transition and recompute the
+// (unkeyed) chain. Why the ledger's row-log witness lets that pass: it records the rowHead of CLAIMED rows only; rows after
+// the ledger's last claim have no witness, and the store audit accepts any authorized, signed transition. Closed by the
+// OUTSIDE head: cfg.expectedHead = the sink's committed head that the host persisted (sink.ts: result.head / onHead,
+// outsideHead.committed). The store must EXTEND it (row expectedHead.count has that chain hash, else nothing is sent),
+// and rows AFTER expectedHead.count are never sent ("beyond the outside head"): a row is sent only when the outside head
+// covers it. WITHOUT cfg.expectedHead (stated limit): a swap, a deletion or a rollback of rows after the ledger's last
+// claim is not detected; the dispatcher can send an uncommitted transition and never send the committed one.
 import { createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
 import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeSync } from "node:fs";
 import { hostname } from "node:os";
 import { DatabaseSync } from "node:sqlite";
 import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding";
-import { AuditedRow, StoreAuditor, conv, loadCore, readMeta, validInitial } from "./core/store";
+import { AuditedRow, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, loadCore, readMeta, validInitial } from "./core/store";
 
 // newLedgerH0 (optional): the registered h_0 of the store (sink.ts genesisOf). A missing or empty ledger is an ERROR when
 // the store holds committed rows, unless this field equals the store's h_0 (an explicit "new ledger").
 // ledgerFloor (optional): an outside anchor of the LEDGER (an earlier result's ledgerHead): the ledger must hold the claim
 // of row n with that rowHead. Detects a restored (older) ledger only when it comes from outside the ledger's medium.
 export type LedgerHead = { n: number; rowHead: string };
-export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead };
+// expectedHead (optional; h-sink2): the sink's committed head from outside (see ROW ANCHOR above).
+export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead;
+  expectedHead?: SinkHead };
 export type Effect = { requestId: string; intent: string };
 export type FlushResult = { emitted: Effect[]; refused: { seq: number; requestId: string; reason: string }[]; alreadyDispatched: number;
   inDoubt?: string[]; ledgerHead?: LedgerHead; staleLockTakenOver?: { pid: number; run: string }; tornTailCut?: string };
@@ -99,6 +107,7 @@ type Ledger = { slots: Map<number, Slot>; ids: Set<string>; maxN: number; tail: 
 
 const HEX64 = /^[0-9a-f]{64}$/, RUN = /^[0-9a-f]{32}$/;
 const NOT_CHAIN = "dispatcher ledger is not one chain";
+const BEYOND = (h: SinkHead): string => "beyond the outside head (count " + h.count + "): not yet anchored by the host; not sent";
 const CLAIM_KEYS: (keyof ClaimFields)[] = ["n", "requestId", "tokenSha256", "preStateSha256", "postStateSha256", "intentSha256", "rowHead"];
 const sameRow = (a: ClaimFields, b: ClaimFields): boolean => CLAIM_KEYS.every(k => a[k] === b[k]);
 const alive = (pid: number): boolean => {
@@ -299,6 +308,11 @@ export class Dispatcher {
     const L0 = this.ledger();
     const torn = this.cutTornTail(L0);
     const L = torn === "" ? L0 : this.ledger();
+    const anchor = this.cfg.expectedHead;
+    if (anchor !== undefined && !isHead(anchor)) throw new Error("dispatcher alarm: cfg.expectedHead is not {count, chainHash}; nothing sent");
+    // C-ATT-21/23 (h-sink2): before the first SQLite lock: one regular file with one link, no -wal, no -shm (a live
+    // sink's -journal is legitimate; a read-only connection cannot apply a hot journal and fails closed).
+    try { checkStoreFile(this.dbPath, ["-wal", "-shm"]); } catch (error) { throw new Error("dispatcher alarm: " + String((error as Error).message) + "; nothing sent"); }
     const db = new DatabaseSync(this.dbPath, { readOnly: true });
     const result: FlushResult = { emitted: [], refused: [], alreadyDispatched: 0, inDoubt: [] };
     const isDone = (rid: string): boolean => [...L.slots.values()].some(s => s.claim.requestId === rid && (s.status === "done" || s.status === "sent"));
@@ -316,7 +330,7 @@ export class Dispatcher {
         if (!isState(init) || canon(init) !== meta.initial_state || !validInitial(this.M, this.cv, init)) throw new Error("meta initial state is not a valid charge");
         const au = new StoreAuditor(this.M, this.cv, this.key, this.cfg, init);
         genesis = au.genesis;
-        if (au.fullAudit(db, undefined, r => audited.push(r)) === null) throw new Error("AuditEnd, counts or refunded column is false");
+        if (au.fullAudit(db, anchor, r => audited.push(r)) === null) throw new Error("AuditEnd, counts or refunded column is false, or the store does not extend cfg.expectedHead");
       } catch (error) { why = String((error as Error).message); }
       db.exec("ROLLBACK");
       const bad = (r: { t: string; h: string }): string =>
@@ -371,6 +385,7 @@ export class Dispatcher {
             continue;
           }
           // "retry": the operator says the receiver does not have it. Claim it again (at least once, on that word).
+          if (anchor !== undefined && r.seq > anchor.count) { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: BEYOND(anchor) }); continue; }
           if (stop !== "") { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: stop }); continue; }
           const verdict = this.check({ seq: r.seq, request_id: r.requestId, intent: r.intent }, r.token, slot.claim.preStateSha256);
           if (!verdict.ok || !sameRow({ ...verdict.line, rowHead: r.self }, slot.claim)) {
@@ -383,6 +398,7 @@ export class Dispatcher {
           continue;
         }
         if (L.ids.has(r.requestId)) throw new Error("dispatcher alarm: request id " + r.requestId + " is in the ledger but at another row; nothing more sent");
+        if (anchor !== undefined && r.seq > anchor.count) { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: BEYOND(anchor) }); stop = BEYOND(anchor); continue; }
         if (stop !== "") { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: stop }); continue; }
         const verdict = this.check({ seq: r.seq, request_id: r.requestId, intent: r.intent }, r.token, head);
         if (!verdict.ok) { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: verdict.reason }); stop = "an earlier row was refused: " + verdict.reason; continue; }
