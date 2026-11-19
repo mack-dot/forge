@@ -1,0 +1,9 @@
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+r1 committed
+r2 committed
+run 1: {"emitted":[{"requestId":"r1","intent":"{\"amount\":\"400\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r1\"}"},{"requestId":"r2","intent":"{\"amount\":\"100\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r2\"}"}],"refused":[],"alreadyDispatched":0,"inDoubt":[],"ledgerHead":{"n":2,"rowHead":"ac6e8b7078495ffc55df9c78529ffe6fb44d406d5a727d3b878aca4721d9b4c1"}}
+lock left after run 1: false
+run 2 (retry): {"emitted":[],"refused":[],"alreadyDispatched":2,"inDoubt":[],"ledgerHead":{"n":2,"rowHead":"ac6e8b7078495ffc55df9c78529ffe6fb44d406d5a727d3b878aca4721d9b4c1"}}
+run 3: {"emitted":[],"refused":[],"alreadyDispatched":2,"inDoubt":[],"ledgerHead":{"n":2,"rowHead":"ac6e8b7078495ffc55df9c78529ffe6fb44d406d5a727d3b878aca4721d9b4c1"}}
+ledger: r1,r1,r2,r2 ; actually sent: r1,r2
+exit 0

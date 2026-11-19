@@ -1,0 +1,4 @@
+cmd: node --import tsx tests/refund-finality/regress/p_db_restore_retry.ts <tree> a
+{"mode":"a","retry":["committed","committed"],"after":[{"emitted":["r2","r3"],"error":""},{"emitted":[],"error":""},{"emitted":[],"error":""}],"money":{"total":"900","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:400","r3:100"]}}
+SAFE
+exit 0

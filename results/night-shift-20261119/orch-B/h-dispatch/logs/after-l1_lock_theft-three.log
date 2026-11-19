@@ -1,0 +1,20 @@
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+(node:30588) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30606) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+r1 committed
+A blocked in emit(r1); lock present: true
+operator removed the lock as stale
+r2 committed
+r3 committed
+B blocked in emit(r2)
+A: {"name":"A","emitted":["r1"],"refused":[],"already":0}
+after A ended, lock present (B is still running): true
+C (no operator step): {"name":"C","stopped":"dispatcher lock is held: another run is active, or a stopped run left the lock file"}
+B: {"name":"B","emitted":["r2","r3"],"refused":[{"seq":1,"requestId":"r1","reason":"in doubt: claimed by run ef666621bca6bed49fb0e6d1e357e624 (pid 30588) without a done line; not counted as dispatched; a person must ask the receiver and call resolveInDoubt"}],"already":0}
+effects: A:r1 B:r2 B:r3; total 900 of 1000; duplicate ids: []
+next run on the ledger: {"emitted":[],"refused":[],"alreadyDispatched":3,"inDoubt":[],"ledgerHead":{"n":3,"rowHead":"56e4b15cc9444146c8803a508f1d05804468525ed0aac98a9951e44c0541e789"}}
+exit 0

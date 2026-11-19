@@ -1,0 +1,4 @@
+cmd: node --import tsx tests/refund-finality/regress/p_zero_amount.ts <tree> c
+{"mode":"c","commits":["committed","committed","committed"],"flush":{"emitted":["z1","z2","r1"],"error":""},"providerCalls":1,"zeroRecorded":2,"money":{"total":"100","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:100"]}}
+SAFE
+exit 0

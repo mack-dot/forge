@@ -1,0 +1,30 @@
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+{"name":"REPLACE INTO settled (same seq 1, same values)","r":"refused: h-sink S1/S2/S3/S6: a settled row must be the next commit of this store","changed":false,"gap":false}
+{"name":"REPLACE INTO outbox (seq 1)","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"INSERT OR REPLACE INTO settled (seq 3, request_id r1)","r":"refused: h-sink S1/S2/S3/S6: a settled row must be the next commit of this store","changed":false,"gap":false}
+{"name":"UPSERT settled ON CONFLICT(seq) DO UPDATE","r":"refused: malformed JSON","changed":false,"gap":false}
+{"name":"INSERT OR IGNORE settled dup request id","r":"refused: h-sink S1/S2/S3/S6: a settled row must be the next commit of this store","changed":false,"gap":false}
+{"name":"REPLACE INTO state (back to initial)","r":"refused: h-sink S2: the state row is made only by the meta insert","changed":false,"gap":false}
+{"name":"REPLACE INTO meta","r":"refused: h-sink S3: meta is written once, into an empty store","changed":false,"gap":false}
+{"name":"UPDATE settled SET seq = seq","r":"refused: h-sink S5: settled is append-only","changed":false,"gap":false}
+{"name":"UPDATE state SET seq = seq","r":"refused: h-sink S2/S4: the state changes only by one commit (seq + 1; remaining - amount;","changed":false,"gap":false}
+{"name":"UPDATE outbox SET rowid = rowid + 10","r":"refused: h-sink S5: outbox is append-only","changed":false,"gap":false}
+{"name":"DELETE FROM settled WHERE seq = 2","r":"refused: h-sink S5: settled is append-only","changed":false,"gap":false}
+{"name":"DROP TABLE outbox","r":"SUCCEEDED","changed":false,"gap":false}
+{"name":"ALTER TABLE settled RENAME TO s2","r":"SUCCEEDED","changed":false,"gap":false}
+{"name":"forged append amount '1e3'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount ' 5'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount '5 '","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount '+5'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount '05'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount '0x10'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount '9223372036854775808'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount '18446744073709551616'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount '-1'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount '5.0'","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount 401 > remaining 400","r":"refused: h-sink S1/S2/S4: an outbox row is written only by its settled row, within the cu","changed":false,"gap":false}
+{"name":"forged append amount 0 with post.remaining raised","r":"refused: h-sink S2/S4: the state changes only by one commit (seq + 1; remaining - amount;","changed":false,"gap":false}
+{"name":"forged append amount 100 (well-formed, unsigned)","r":"SUCCEEDED","changed":false,"gap":false}
+{"unsignedAppend":"committed raw","restart":"h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false: stored token_sha256 is not the token's has","flush":{"emitted":[],"refused":["r1: store audit failed: stored token_sha256 is not the token's hash","z: store audit failed: stored token_sha256 is not the token's hash","fok: store audit failed: stored token_sha256 is not the token's hash"],"already":0},"effects":[]}
+{"statements":26,"gaps":0}
+exit=0

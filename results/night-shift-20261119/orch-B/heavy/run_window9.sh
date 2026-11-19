@@ -12,7 +12,7 @@ mkdir $L/heavy.lock || { echo "heavy.lock held"; exit 76; }
 trap 'rm -rf $L/heavy.lock' EXIT
 echo orch-B > $L/heavy.lock/owner; echo $$ > $L/heavy.lock/pid; date -u +%FT%TZ > $L/heavy.lock/start
 echo "# start $(date -u +%FT%TZ) swap free $sw MiB memory free $mf % disk $av GiB"
-SUITE_TIMEOUT_S=600 $B/h-sink/run_suite_h.sh 1
+SUITE_TIMEOUT_S=600 $B/heavy/run_suite_h_nopower.sh 1
 echo "# run_suite_h exit $? end $(date -u +%FT%TZ)"
-$B/h-sink/heavy_h.sh $B/heavy/h-1 all
+$B/heavy/heavy_h_nopower.sh $B/heavy/h-1 all
 echo "# heavy_h exit $? end $(date -u +%FT%TZ)"

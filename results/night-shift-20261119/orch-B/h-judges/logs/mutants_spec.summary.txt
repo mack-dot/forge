@@ -1,0 +1,19 @@
+merged exit=0 violated=['P1', 'P2', 'P3', 'P4', 'P7'] done=200 childGone=- P5-SILENT=55 startRefusals=0
+hardened exit=0 violated=[] done=200 childGone=- P5-SILENT=80 startRefusals=23
+base_v6 exit=0 violated=[] done=200 childGone=- P5-SILENT=85 startRefusals=0
+m_accept_bad_sig exit=1 violated=['P8'] done=200 childGone=- P5-SILENT=76 startRefusals=0
+m_accept_noncanon exit=1 violated=['P8'] done=200 childGone=- P5-SILENT=49 startRefusals=0
+m_skip_prestate exit=1 violated=['P8'] done=200 childGone=- P5-SILENT=80 startRefusals=0
+m_replay_says_rejected exit=1 violated=['P6R'] done=200 childGone=- P5-SILENT=85 startRefusals=0
+m_replayed_any exit=1 violated=['P6R'] done=200 childGone=- P5-SILENT=85 startRefusals=0
+m_id_gt32_or_nonascii exit=1 violated=['P1', 'P2', 'P3', 'P4', 'P6R', 'P7', 'P8'] done=200 childGone=- P5-SILENT=71 startRefusals=0
+m_late20 exit=0 violated=[] done=200 childGone=- P5-SILENT=85 startRefusals=0
+m_wipe_on_open exit=1 violated=['P2', 'P4', 'P6R', 'P9'] done=200 childGone=- P5-SILENT=81 startRefusals=0
+md_ignore_sig exit=0 violated=[] done=200 childGone=- P5-SILENT=85 startRefusals=0
+md_ignore_chain exit=0 violated=[] done=200 childGone=- P5-SILENT=85 startRefusals=0
+md_emit_before_ledger exit=0 violated=[] done=200 childGone=- P5-SILENT=85 startRefusals=0
+enc_unsigned_body exit=1 violated=['P5'] done=200 childGone=- P5-SILENT=72 startRefusals=0
+i_exit_early exit=1 violated=[] done=0 childGone=child exited (code 0, signal null) | child output:  P5-SILENT=0 startRefusals=0
+i_forge_output exit=1 violated=['P5'] done=200 childGone=- P5-SILENT=72 startRefusals=0
+s_rollback_guard exit=0 violated=[] done=200 childGone=- P5-SILENT=85 startRefusals=0
+m_reject_all exit=1 violated=['P5'] done=200 childGone=- P5-SILENT=72 startRefusals=0

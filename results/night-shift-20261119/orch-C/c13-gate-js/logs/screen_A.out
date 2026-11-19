@@ -1,0 +1,19 @@
+A01-bodiless-lemma-brace-end.dfy | pass W=241 T=6
+A02-bodiless-ghost-pred-brace-end.dfy | pass W=241 T=6
+A03-bodiless-lemma-plain.dfy | SUBSET3_SHAPE: ghost lemma Dead without body
+A04-assume-in-lemma.dfy | SUBSET3_FORBIDDEN: `assume`
+A05-assert-by-assume.dfy | SUBSET3_FORBIDDEN: `assume`
+A06-axiom-attr.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+A07-verify-false.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+A08-only-attr.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+A09-fuel-attr.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+A10-opaque-reveal.dfy | SUBSET3_FORBIDDEN: `opaque`
+A11-extern.dfy | SUBSET3_ATTRIBUTE: only {:isolate_assertions} and {:induction false} are allowed
+A12-decreases-star.dfy | SUBSET3_FORBIDDEN: decreases *
+A13-ghost-method-bodiless-brace.dfy | pass W=241 T=6
+A14-lemma-ensures-set-literal-end.dfy | pass W=241 T=6
+A15-forall-ensures-in-lemma.dfy | pass W=241 T=6
+A16-induction-false-lemma.dfy | pass W=241 T=6
+A17-isolate-on-bodiless.dfy | pass W=241 T=6
+A18-ghost-const-no-init-brace.dfy | pass W=241 T=6
+A19-ghost-fn-requires-brace.dfy | pass W=241 T=6

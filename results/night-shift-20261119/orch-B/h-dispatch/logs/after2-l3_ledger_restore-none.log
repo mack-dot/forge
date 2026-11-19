@@ -1,0 +1,10 @@
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+r1 committed
+flush 1 {"emitted":[{"requestId":"r1","intent":"{\"amount\":\"400\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r1\"}"}],"refused":[],"alreadyDispatched":0,"inDoubt":[],"ledgerHead":{"n":1,"rowHead":"36ef18dfd503af897b50d763340b06d87b826d17cf0861b31c5bf12611425e98"}}
+r2 committed
+r3 committed
+flush 2 {"emitted":[{"requestId":"r2","intent":"{\"amount\":\"400\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r2\"}"},{"requestId":"r3","intent":"{\"amount\":\"100\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r3\"}"}],"refused":[],"alreadyDispatched":1,"inDoubt":[],"ledgerHead":{"n":3,"rowHead":"10b35f3782ea2dff297749f8154dcd7a628ddb472314219ef8aa59794eaf994e"}}
+sink restart: start-up audit passed
+flush 3 {"emitted":[],"refused":[],"alreadyDispatched":3,"inDoubt":[],"ledgerHead":{"n":3,"rowHead":"10b35f3782ea2dff297749f8154dcd7a628ddb472314219ef8aa59794eaf994e"}}
+effects r1,r2,r3 total 900 of 1000; duplicates []
+exit 0

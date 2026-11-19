@@ -1,0 +1,527 @@
+diff --git a/tests/refund-finality/provider/fake_provider.ts b/tests/refund-finality/provider/fake_provider.ts
+new file mode 100644
+index 00000000..3fadfad5
+--- /dev/null
++++ b/tests/refund-finality/provider/fake_provider.ts
+@@ -0,0 +1,115 @@
++// A FAKE external payment provider for the refund-finality tests (night shift 2026-11-19, task h-provider).
++// A TEST double, not a model of any real provider. It exists to test the provider-anchor assumptions named in
++// results/night-shift-20261119/orch-B/h-provider/PROVIDER_ANCHOR.md:
++//   PROVIDER-IDEMPOTENT-KEY  same key + same parameters inside the retention window: the first result again, no money.
++//   PROVIDER-PARAM-BINDING   same key + other parameters inside the window: refused, no money.
++//   PROVIDER-KEY-RETENTION   the provider forgets a key `retention` logical ticks after its first use.
++//   PROVIDER-CEILING         the refunds that moved money on one charge never sum above the charge amount.
++// Durable state: ONE JSON file of its own (not the sink store, not the dispatcher ledger). Every call reads it and
++// every change is written and synced before the call returns (or before a fault is raised).
++// The call is SYNCHRONOUS because the dispatcher's emit contract (dispatcher.ts at e65f9ec8) is synchronous.
++// No network, no credentials, no clock: time is the logical counter `now` in the state file.
++import { closeSync, existsSync, fsyncSync, openSync, readFileSync, renameSync, writeSync } from "node:fs";
++
++export type ProviderMode = "a" | "b" | "c" | "d-a" | "d-b";
++// a: idempotent by key (no expiry). b: a + per-charge ceiling. c: NOT idempotent, no ceiling (the control).
++// d-a: a with a key retention window. d-b: b with a key retention window.
++export type ProviderOptions = { idempotent: boolean; ceiling: boolean; retention: number | null; refuseZero: boolean };
++export function optionsOf(mode: ProviderMode, retention = 24): ProviderOptions {
++  switch (mode) {
++    case "a": return { idempotent: true, ceiling: false, retention: null, refuseZero: true };
++    case "b": return { idempotent: true, ceiling: true, retention: null, refuseZero: true };
++    case "c": return { idempotent: false, ceiling: false, retention: null, refuseZero: true };
++    case "d-a": return { idempotent: true, ceiling: false, retention, refuseZero: true };
++    case "d-b": return { idempotent: true, ceiling: true, retention, refuseZero: true };
++  }
++}
++export const MODES: ProviderMode[] = ["a", "b", "c", "d-a", "d-b"];
++
++export type RefundCall = { key: string; chargeId: string; amount: string; reason: string };
++export type RefundResult = { refundId: string; chargeId: string; amount: string; replayed: boolean };
++export type Movement = { refundId: string; key: string; chargeId: string; amount: string; at: number };
++type KeyRecord = { params: string; result: RefundResult; at: number };
++type Fault = { key: string; kind: "timeout_after_money" | "crash_before_money" | "refuse" };
++type State = { now: number; charges: Record<string, string>; movements: Movement[]; keys: Record<string, KeyRecord>;
++  faults: Fault[]; calls: number; options: ProviderOptions };
++
++export class ProviderError extends Error {
++  // retryable: the caller does not know whether money moved (timeout) or knows it did not (unavailable).
++  constructor(readonly code: "refused" | "param_mismatch" | "ceiling" | "zero_amount" | "unknown_charge" | "timeout" | "unavailable",
++              message: string) { super("provider " + code + ": " + message); }
++  get retryable(): boolean { return this.code === "timeout" || this.code === "unavailable"; }
++}
++
++const MONEY = /^(0|[1-9][0-9]{0,18})$/;
++const paramsOf = (c: RefundCall): string => JSON.stringify([c.chargeId, c.amount, c.reason]);
++
++export class FakeProvider {
++  constructor(readonly statePath: string) {}
++  // Creates the state file. Charges: charge id -> captured amount (decimal string).
++  static create(statePath: string, options: ProviderOptions, charges: Record<string, string>): FakeProvider {
++    const p = new FakeProvider(statePath);
++    p.save({ now: 0, charges: { ...charges }, movements: [], keys: {}, faults: [], calls: 0, options });
++    return p;
++  }
++  private load(): State {
++    if (!existsSync(this.statePath)) throw new Error("fake provider: no state file");
++    return JSON.parse(readFileSync(this.statePath, "utf8")) as State;
++  }
++  private save(s: State): void {
++    const tmp = this.statePath + ".tmp";
++    const fd = openSync(tmp, "w");
++    try { writeSync(fd, JSON.stringify(s)); fsyncSync(fd); } finally { closeSync(fd); }
++    renameSync(tmp, this.statePath);
++  }
++  // ---- test controls (not part of the provider API)
++  advance(ticks: number): void { const s = this.load(); s.now += ticks; this.save(s); }
++  inject(key: string, kind: Fault["kind"]): void { const s = this.load(); s.faults.push({ key, kind }); this.save(s); }
++  movements(): Movement[] { return this.load().movements; }
++  calls(): number { return this.load().calls; }
++  totalMoved(chargeId: string): bigint {
++    return this.load().movements.filter(m => m.chargeId === chargeId).reduce((t, m) => t + BigInt(m.amount), 0n);
++  }
++  movementsPerKey(): Record<string, number> {
++    const n: Record<string, number> = {};
++    for (const m of this.load().movements) n[m.key] = (n[m.key] ?? 0) + 1;
++    return n;
++  }
++  // ---- the provider API: one refund call.
++  refund(call: RefundCall): RefundResult {
++    const s = this.load();
++    s.calls++;
++    const o = s.options;
++    // Retention: a key older than the window is forgotten (PROVIDER-KEY-RETENTION).
++    if (o.retention !== null) {
++      for (const [k, r] of Object.entries(s.keys)) if (s.now - r.at >= o.retention) delete s.keys[k];
++    }
++    const fi = s.faults.findIndex(f => f.key === call.key);
++    const fault = fi >= 0 ? s.faults.splice(fi, 1)[0] : undefined;
++    if (fault?.kind === "crash_before_money") { this.save(s); throw new ProviderError("unavailable", "crashed before any money moved"); }
++    if (fault?.kind === "refuse") { this.save(s); throw new ProviderError("refused", "declined by the provider"); }
++    if (o.idempotent) {
++      const seen = s.keys[call.key];
++      if (seen !== undefined) {
++        this.save(s);
++        if (seen.params !== paramsOf(call)) throw new ProviderError("param_mismatch", "key " + call.key + " was used with other parameters");
++        return { ...seen.result, replayed: true };
++      }
++    }
++    if (typeof call.amount !== "string" || !MONEY.test(call.amount)) { this.save(s); throw new ProviderError("refused", "amount is not a decimal string"); }
++    if (o.refuseZero && call.amount === "0") { this.save(s); throw new ProviderError("zero_amount", "a zero amount is refused"); }
++    const charge = s.charges[call.chargeId];
++    if (charge === undefined) { this.save(s); throw new ProviderError("unknown_charge", call.chargeId); }
++    if (o.ceiling) {
++      const moved = s.movements.filter(m => m.chargeId === call.chargeId).reduce((t, m) => t + BigInt(m.amount), 0n);
++      if (moved + BigInt(call.amount) > BigInt(charge)) { this.save(s); throw new ProviderError("ceiling", "refunds would exceed the charge amount"); }
++    }
++    const refundId = "re_" + (s.movements.length + 1);
++    const result: RefundResult = { refundId, chargeId: call.chargeId, amount: call.amount, replayed: false };
++    s.movements.push({ refundId, key: call.key, chargeId: call.chargeId, amount: call.amount, at: s.now });
++    if (o.idempotent) s.keys[call.key] = { params: paramsOf(call), result, at: s.now };
++    this.save(s);                                   // the money moved and is durable
++    if (fault?.kind === "timeout_after_money") throw new ProviderError("timeout", "no answer (the money moved)");
++    return result;
++  }
++}
+diff --git a/tests/refund-finality/provider/emit_adapter.ts b/tests/refund-finality/provider/emit_adapter.ts
+new file mode 100644
+index 00000000..d172f471
+--- /dev/null
++++ b/tests/refund-finality/provider/emit_adapter.ts
+@@ -0,0 +1,66 @@
++// An `emit` for the refund dispatcher that calls a payment provider (here: the FAKE provider) with
++// idempotency key = request id (night shift 2026-11-19, task h-provider). A TEST adapter, NOT proved.
++// Emit contract used (dispatcher.ts at e65f9ec8): emit(effect: { requestId; intent: <outbox intent text> }, intent: Intent),
++// synchronous, called AFTER the dispatcher's ledger line is synced. The adapter takes the key from the intent it
++// receives today. CONTRACT CHANGE POINT: if the dispatcher later passes an explicit idempotency key (task h-dispatch),
++// replace keyOf() below by that argument; the checks stay the same.
++// Behaviour:
++//   - Refuses (throws, no provider call) if effect.requestId, intent.requestId and the outbox text disagree.
++//   - Amount "0": NO provider call (real providers often refuse a zero amount). The adapter writes a journal line
++//     {outcome: "zero-recorded"} and returns: the zero-amount refund succeeds end to end and moves no money.
++//   - Otherwise: one provider call with key = request id and the exact parameters (charge id, amount, reason). The
++//     intent has no currency field: the currency is the charge's own (ASSUMPTION; see PROVIDER_ANCHOR.md).
++//   - A retryable error (timeout, unavailable) is retried with the SAME key and SAME parameters, up to `retries`
++//     times. This is safe ONLY under PROVIDER-IDEMPOTENT-KEY inside the retention window.
++//   - Result truth: returns only after the provider confirmed (new or replayed). Any other outcome THROWS, so the
++//     dispatcher run stops and the row is not in FlushResult.emitted. The dispatcher's ledger line is written BEFORE
++//     emit, so a ledger line means "attempt started", not "paid". The adapter journal (its own file) holds the
++//     outcome per attempt: paid | replayed | zero-recorded | refused:<code> | unknown:<code>.
++import { closeSync, fsyncSync, openSync, writeSync } from "node:fs";
++import { FakeProvider, ProviderError } from "./fake_provider";
++
++export type EffectArg = { requestId: string; intent: string };
++export type IntentArg = { chargeId: string; requestId: string; amount: string; reason: string };
++export type AdapterOptions = { retries: number; journalPath: string };
++
++const keyOf = (intent: IntentArg): string => intent.requestId;   // CONTRACT CHANGE POINT (see the header)
++const canonIntent = (i: IntentArg): string =>
++  "{" + ["amount", "chargeId", "reason", "requestId"].map(k => JSON.stringify(k) + ":" + JSON.stringify((i as any)[k])).join(",") + "}";
++
++function journal(path: string, line: unknown): void {
++  const fd = openSync(path, "a");
++  try { writeSync(fd, JSON.stringify(line) + "\n"); fsyncSync(fd); } finally { closeSync(fd); }
++}
++
++export function makeEmit(provider: FakeProvider, opt: AdapterOptions): (effect: EffectArg, intent: IntentArg) => void {
++  return (effect: EffectArg, intent: IntentArg): void => {
++    if (effect === null || intent === null || typeof effect !== "object" || typeof intent !== "object" ||
++        effect.requestId !== intent.requestId || effect.intent !== canonIntent(intent)) {
++      journal(opt.journalPath, { requestId: String(effect?.requestId), outcome: "refused:inconsistent-effect" });
++      throw new Error("emit adapter: the effect, the intent and the outbox text disagree; no provider call");
++    }
++    const key = keyOf(intent);
++    if (intent.amount === "0") {
++      journal(opt.journalPath, { requestId: intent.requestId, key, chargeId: intent.chargeId, outcome: "zero-recorded" });
++      return;
++    }
++    const call = { key, chargeId: intent.chargeId, amount: intent.amount, reason: intent.reason };
++    let last: ProviderError | null = null;
++    for (let attempt = 0; attempt <= opt.retries; attempt++) {
++      try {
++        const r = provider.refund(call);
++        journal(opt.journalPath, { requestId: intent.requestId, key, attempt, outcome: r.replayed ? "replayed" : "paid", refundId: r.refundId });
++        return;
++      } catch (e) {
++        if (!(e instanceof ProviderError)) throw e;
++        last = e;
++        if (!e.retryable) {
++          journal(opt.journalPath, { requestId: intent.requestId, key, attempt, outcome: "refused:" + e.code });
++          throw e;
++        }
++        journal(opt.journalPath, { requestId: intent.requestId, key, attempt, outcome: "unknown:" + e.code });
++      }
++    }
++    throw last ?? new Error("emit adapter: no attempt");
++  };
++}
+diff --git a/tests/refund-finality/regress/p_db_restore_new_ids.ts b/tests/refund-finality/regress/p_db_restore_new_ids.ts
+new file mode 100644
+index 00000000..52da2be7
+--- /dev/null
++++ b/tests/refund-finality/regress/p_db_restore_new_ids.ts
+@@ -0,0 +1,24 @@
++// Provider-anchor regression, the OVERPAY ROUTE of a database restore: the operator restores the database and the ledger
++// from a backup taken after r1 (remaining 600 in the restored store; 900 was really refunded: r1 400, r2 400, r3 100).
++// New refund requests with NEW request ids arrive; the issuer signs them on the STALE pre-state the store supplies
++// (r4 600 = the stale remaining). No key repeats, so PROVIDER-IDEMPOTENT-KEY cannot help: only PROVIDER-CEILING can.
++// SAFE: no request id moves money twice and money moved <= the charge. Usage and exit codes: p_lib.ts.
++import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++guard(() => {
++  const { root, mode } = argv();
++  const S0 = { chargeId: "ch_pn", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, S0);
++  const r1 = w.refund("r1", "400"); const f1 = w.flush();
++  w.backup();
++  const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  w.restore("both"); w.atAttack();
++  const stale = w.state().remaining;
++  const r4 = w.refund("r4", "600");
++  const after = [w.flush(), w.flush()];
++  const localRemaining = w.state().remaining;
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2 &&
++    stale === "600" && r4.status === "committed";
++  if (!setup) { console.error(JSON.stringify({ r1, r2, r3, f1, f2, stale, r4 })); process.exit(3); }
++  verdict(m.noDouble && m.withinCharge, { mode, staleRemaining: stale, r4: r4.status, after, localRemainingAfter: localRemaining, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_db_restore_retry.ts b/tests/refund-finality/regress/p_db_restore_retry.ts
+new file mode 100644
+index 00000000..301a41ad
+--- /dev/null
++++ b/tests/refund-finality/regress/p_db_restore_retry.ts
+@@ -0,0 +1,21 @@
++// Provider-anchor regression for C-ATT-19 mode "dir": the operator restores the database AND the co-located ledger from a
++// backup taken after r1. The host then retries r2 and r3 with the SAME tokens (an honest retry); the restored sink commits
++// them again; the dispatcher emits them again. SAFE: no request id moves money twice and money moved <= the charge.
++// Usage and exit codes: p_lib.ts.
++import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++guard(() => {
++  const { root, mode } = argv();
++  const S0 = { chargeId: "ch_pd", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, S0);
++  const r1 = w.refund("r1", "400"); const f1 = w.flush();
++  w.backup();
++  const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  w.restore("both"); w.atAttack();
++  const retry = [w.commitText(r2.text), w.commitText(r3.text)];
++  const after = [w.flush(), w.flush(), w.flush()];
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2 &&
++    retry[0] === "committed" && retry[1] === "committed";
++  if (!setup) { console.error(JSON.stringify({ r1, r2, r3, f1, f2, retry })); process.exit(3); }
++  verdict(m.noDouble && m.withinCharge, { mode, retry, after, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_ledger_restore.ts b/tests/refund-finality/regress/p_ledger_restore.ts
+new file mode 100644
+index 00000000..49a5c62d
+--- /dev/null
++++ b/tests/refund-finality/regress/p_ledger_restore.ts
+@@ -0,0 +1,20 @@
++// Provider-anchor regression for C-ATT-19 (results/night-shift-20261119/orch-C/c8-dispatcher/scripts/l3_ledger_restore.ts,
++// mode "ledger"): an operator restores ONLY the dispatcher ledger from a backup taken after r1. The database stays current.
++// The dispatcher at e65f9ec8 emits r2 and r3 AGAIN (its rowHead check passes: the store still extends the old ledger).
++// The emit is the provider adapter (key = request id). Up to three dispatcher runs after the restore (a host that retries a
++// stopped run). SAFE: no request id moves money twice and money moved <= the charge. Usage and exit codes: p_lib.ts.
++import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++guard(() => {
++  const { root, mode } = argv();
++  const S0 = { chargeId: "ch_pl", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, S0);
++  const r1 = w.refund("r1", "400"); const f1 = w.flush();
++  w.backup();
++  const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  w.restore("ledger"); w.atAttack();
++  const after = [w.flush(), w.flush(), w.flush()];
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.error === "" && f2.emitted.length === 2;
++  if (!setup) { console.error(JSON.stringify({ r1, r2, r3, f1, f2 })); process.exit(3); }
++  verdict(m.noDouble && m.withinCharge, { mode, after, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_lib.ts b/tests/refund-finality/regress/p_lib.ts
+new file mode 100644
+index 00000000..1fa9130e
+--- /dev/null
++++ b/tests/refund-finality/regress/p_lib.ts
+@@ -0,0 +1,99 @@
++// Shared helper of the provider-anchor regressions p_*.ts (night shift 2026-11-19, task h-provider). A TEST, not a proof.
++// Usage of every p_*.ts file (pinned Node 24.3.0 first in PATH):
++//   node --import tsx tests/refund-finality/regress/p_<name>.ts <treeRoot> <mode>
++// <treeRoot>: the checkout whose ts/refund-finality/{sink,dispatcher,encoding}.ts are under test.
++// <mode>: the fake provider mode: a | b | c | d-a | d-b (tests/refund-finality/provider/fake_provider.ts).
++//   d-a and d-b: the provider forgets a key after RETENTION ticks; the regression advances the clock past it at the
++//   moment of the attack (a restore or a delayed retry happens AFTER the window).
++// Exit 0: SAFE (no request id moved money twice AND the money moved per charge <= the charge amount AND the
++// regression's own conditions). Exit 1: DEFECT. Exit 2: usage. Exit 3: the harness broke.
++// Mode c (no idempotency, no ceiling) is the CONTROL: an attack regression must exit 1 in mode c.
++// Tokens: a TEST Ed25519 key made in this process signs the body that an honest issuer would sign for the given
++// pre-state (the model of tests/refund-finality/regress/harness.ts honest()). No minter process. No network.
++import { generateKeyPairSync, sign } from "node:crypto";
++import { copyFileSync, existsSync, mkdtempSync, rmSync, statSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join, resolve } from "node:path";
++import { FakeProvider, ProviderMode, MODES, optionsOf } from "../provider/fake_provider";
++import { makeEmit } from "../provider/emit_adapter";
++
++export const RETENTION = 24;
++export type State = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
++export function argv(): { root: string; mode: ProviderMode } {
++  const [root, mode] = process.argv.slice(2);
++  if (!root || !MODES.includes(mode as ProviderMode)) { console.error("usage: p_<name>.ts <treeRoot> a|b|c|d-a|d-b"); process.exit(2); }
++  return { root: resolve(root), mode: mode as ProviderMode };
++}
++const temps: string[] = [];
++process.on("exit", () => { for (const d of temps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* best effort */ } } });
++
++/* eslint-disable @typescript-eslint/no-require-imports */
++export function world(root: string, mode: ProviderMode, S0: State, opts: { retries?: number } = {}) {
++  const E = require(join(root, "ts/refund-finality/encoding.ts"));
++  const { Sink, genesisOf } = require(join(root, "ts/refund-finality/sink.ts"));
++  const { Dispatcher } = require(join(root, "ts/refund-finality/dispatcher.ts"));
++  const dir = mkdtempSync(join(tmpdir(), "forge-p-")); temps.push(dir);
++  const keys = generateKeyPairSync("ed25519");
++  const ids = { publicKeyPem: keys.publicKey.export({ type: "spki", format: "pem" }) as string,
++    specLockSha256: E.sha256hex("h-provider test spec lock"), checkerSha256: E.sha256hex("h-provider test checker") };
++  const cfg = { ...ids, initialState: S0 };
++  const dcfg: any = { ...ids, initialStateSha256: E.stateSha256(S0) };
++  const genesis: string = genesisOf(E.canon(S0), ids.specLockSha256, ids.checkerSha256, ids.publicKeyPem);
++  const db = join(dir, "sink.sqlite"), ledger = join(dir, "dispatch-ledger.jsonl"), journalPath = join(dir, "adapter-journal.jsonl");
++  const provider = FakeProvider.create(join(dir, "provider-state.json"), optionsOf(mode, RETENTION), { [S0.chargeId]: S0.original });
++  let sink = new Sink(db, cfg); sink.init(S0);
++  let retries = opts.retries ?? 0;
++  const emit = makeEmit(provider, { get retries() { return retries; }, journalPath } as any);
++  const token = (pre: State, requestId: string, amount: string, reason = "returned_item"): string => {
++    const post = { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() };
++    const body = { domain: E.DOMAIN, ...{ specLockSha256: ids.specLockSha256, checkerSha256: ids.checkerSha256 },
++      preStateSha256: E.stateSha256(pre), requestId, post, intent: { chargeId: pre.chargeId, requestId, amount, reason } };
++    return E.canon({ body, signature: sign(null, E.signedBytes(body), keys.privateKey).toString("base64") });
++  };
++  const state = (): State => JSON.parse(sink.stateBlob());
++  const commitText = (text: string): string => { try { return String(sink.commit(text).status); } catch (e) { return "threw: " + (e as Error).message; } };
++  // An honest refund on the CURRENT stored state (the issuer signs whatever pre-state the store supplies).
++  const refund = (requestId: string, amount: string): { text: string; status: string } => {
++    const text = token(state(), requestId, amount); return { text, status: commitText(text) };
++  };
++  // One dispatcher run with the provider adapter. Errors are returned, not thrown. The honest operator declares the
++  // FIRST run of the main ledger a new ledger (cfg.newLedgerH0 = h_0, the h1 rule) only while that file is missing or
++  // empty; every other run uses the plain config unless the regression passes `extra`.
++  const flush = (ledgerPath = ledger, extra: any = {}): { emitted: string[]; error: string } => {
++    if (ledgerPath === ledger && (!existsSync(ledger) || statSync(ledger).size === 0) && !("newLedgerH0" in extra)) extra = { newLedgerH0: genesis };
++    try {
++      const r = new Dispatcher(db, ledgerPath, { ...dcfg, ...extra }, emit).flush();
++      return { emitted: r.emitted.map((e: any) => e.requestId), error: "" };
++    } catch (e) { return { emitted: [], error: String((e as Error).message).slice(0, 140) }; }
++  };
++  const files = [db, ledger];
++  const backup = (): void => { sink.close(); for (const f of files) if (existsSync(f)) copyFileSync(f, f + ".bak"); sink = new Sink(db, cfg); };
++  const restore = (which: "ledger" | "both"): void => {
++    sink.close();
++    if (which === "both") { copyFileSync(db + ".bak", db); for (const x of ["-wal", "-shm", "-journal"]) if (existsSync(db + x)) rmSync(db + x); }
++    copyFileSync(ledger + ".bak", ledger);
++    sink = new Sink(db, cfg);   // the sink's start-up audit: a restored older store starts (documented limit X6-P1)
++  };
++  const atAttack = (): void => { if (mode === "d-a" || mode === "d-b") provider.advance(RETENTION); };
++  const outboxIntents = (): { requestId: string; intent: any }[] =>
++    sink.outbox().map((r: any) => ({ requestId: r.request_id, intent: JSON.parse(r.intent) }));
++  const stop = (): void => { try { sink.close(); } catch { /* closed */ } };
++  return { E, dir, db, ledger, journalPath, genesis, provider, emit, token, state, commitText, refund, flush, backup, restore,
++    atAttack, outboxIntents, stop, setRetries: (n: number) => { retries = n; } };
++}
++/* eslint-enable @typescript-eslint/no-require-imports */
++
++// The money check on the PROVIDER's durable state (the only place where money moves).
++export function moneyCheck(provider: FakeProvider, chargeId: string, chargeAmount: string) {
++  const perKey = provider.movementsPerKey();
++  const twice = Object.entries(perKey).filter(([, n]) => n > 1).map(([k]) => k);
++  const total = provider.totalMoved(chargeId);
++  return { total: total.toString(), charge: chargeAmount, withinCharge: total <= BigInt(chargeAmount), twice, noDouble: twice.length === 0,
++    movements: provider.movements().map(m => m.key + ":" + m.amount) };
++}
++export function verdict(safe: boolean, detail: unknown): never {
++  console.log(JSON.stringify(detail));
++  console.log(safe ? "SAFE" : "DEFECT");
++  process.exit(safe ? 0 : 1);
++}
++export function guard(f: () => void): void { try { f(); } catch (e) { console.error(e); process.exit(3); } }
+diff --git a/tests/refund-finality/regress/p_param_rebind.ts b/tests/refund-finality/regress/p_param_rebind.ts
+new file mode 100644
+index 00000000..b021d433
+--- /dev/null
++++ b/tests/refund-finality/regress/p_param_rebind.ts
+@@ -0,0 +1,21 @@
++// Provider-anchor regression: the same request id with OTHER parameters. The operator restores the database and the
++// ledger from a backup taken after r1; the host sends r2 again, but the issuer (memory lost at restart) signs r2 with
++// amount 500 on the stale pre-state. The store commits it; the dispatcher emits r2 with amount 500.
++// PROVIDER-PARAM-BINDING must refuse it (the key r2 was used with amount 400). SAFE: no request id moves money twice
++// and money moved <= the charge. Usage and exit codes: p_lib.ts.
++import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++guard(() => {
++  const { root, mode } = argv();
++  const S0 = { chargeId: "ch_pp", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, S0);
++  const r1 = w.refund("r1", "400"); const f1 = w.flush();
++  w.backup();
++  const r2 = w.refund("r2", "400"); const r3 = w.refund("r3", "100"); const f2 = w.flush();
++  w.restore("both"); w.atAttack();
++  const r2b = w.refund("r2", "500");
++  const after = [w.flush(), w.flush()];
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  const setup = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" && f1.error === "" && f2.emitted.length === 2 && r2b.status === "committed";
++  if (!setup) { console.error(JSON.stringify({ r1, r2, r3, f1, f2, r2b })); process.exit(3); }
++  verdict(m.noDouble && m.withinCharge, { mode, r2b: r2b.status, after, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_provider_faults.ts b/tests/refund-finality/regress/p_provider_faults.ts
+new file mode 100644
+index 00000000..40403e62
+--- /dev/null
++++ b/tests/refund-finality/regress/p_provider_faults.ts
+@@ -0,0 +1,27 @@
++// Provider-anchor regression: faults that are NOT a double-payment attack. Expected SAFE in every mode (control c too).
++// (1) crash before the money moved for r1: the adapter retries (retries 1) with the same key: r1 moves money once.
++// (2) a refusal for r2: the adapter throws; the dispatcher run stops; r2 is not in `emitted`; the adapter journal says
++//     refused; no money moved for r2 (the record is truthful). (3) A later run sends r3 (r2 stays "attempt started" in
++// the ledger: a person must reconcile it). SAFE also requires the journal to match the provider's movements.
++// Usage and exit codes: p_lib.ts.
++import { readFileSync } from "node:fs";
++import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++guard(() => {
++  const { root, mode } = argv();
++  const S0 = { chargeId: "ch_pf", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, S0, { retries: 1 });
++  const r1 = w.refund("r1", "300"); w.provider.inject("r1", "crash_before_money");
++  const f1 = w.flush();
++  const r2 = w.refund("r2", "300"); w.provider.inject("r2", "refuse");
++  const r3 = w.refund("r3", "300");
++  const f2 = w.flush(); const f3 = w.flush();
++  const journal = readFileSync(w.journalPath, "utf8").trim().split("\n").map(l => JSON.parse(l));
++  const final = new Map<string, string>(); for (const j of journal) final.set(j.requestId, j.outcome);
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original);
++  const moved = new Set(w.provider.movements().map(x => x.key)); w.stop();
++  const truthful = [...final].every(([rid, out]) => (out === "paid" || out === "replayed") === moved.has(rid)) &&
++    final.get("r2") === "refused:refused" && !moved.has("r2");
++  const ok = r1.status === "committed" && r2.status === "committed" && r3.status === "committed" &&
++    f1.emitted.join() === "r1" && f2.error !== "" && f3.emitted.join() === "r3";
++  verdict(m.noDouble && m.withinCharge && truthful && ok, { mode, f1, f2, f3, journal: [...final], money: m });
++});
+diff --git a/tests/refund-finality/regress/p_second_ledger.ts b/tests/refund-finality/regress/p_second_ledger.ts
+new file mode 100644
+index 00000000..fc223b5e
+--- /dev/null
++++ b/tests/refund-finality/regress/p_second_ledger.ts
+@@ -0,0 +1,22 @@
++// Provider-anchor regression for C-HOST-05 (orch-C/c11-host/h7_relative_ledger.sh): a second dispatcher ledger for the
++// same database (a relative ledger path started from another working directory). Case 1: the plain config. At e65f9ec8
++// the h1 rule stops a NEW empty ledger on a store with committed rows (alarm; nothing sent). Case 2: the config also
++// carries newLedgerH0 = the store's h_0 (an operator who once declared a new ledger and left the field in place): the
++// second ledger is accepted and every committed refund is emitted again. SAFE: no request id moves money twice and
++// money moved <= the charge. Usage and exit codes: p_lib.ts.
++import { join } from "node:path";
++import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++guard(() => {
++  const { root, mode } = argv();
++  const S0 = { chargeId: "ch_ps", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, S0);
++  const r1 = w.refund("r1", "400"); const r2 = w.refund("r2", "500");
++  const fA = w.flush();
++  w.atAttack();
++  const plain = w.flush(join(w.dir, "cwdB-ledger.jsonl"));
++  const declared = w.flush(join(w.dir, "cwdC-ledger.jsonl"), { newLedgerH0: w.genesis });
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  const setup = r1.status === "committed" && r2.status === "committed" && fA.error === "" && fA.emitted.length === 2;
++  if (!setup) { console.error(JSON.stringify({ r1, r2, fA })); process.exit(3); }
++  verdict(m.noDouble && m.withinCharge, { mode, plainSecondLedger: plain, declaredNewLedger: declared, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_timeout_retry.ts b/tests/refund-finality/regress/p_timeout_retry.ts
+new file mode 100644
+index 00000000..99eea7ee
+--- /dev/null
++++ b/tests/refund-finality/regress/p_timeout_retry.ts
+@@ -0,0 +1,28 @@
++// Provider-anchor regression: a provider timeout AFTER the money moved (the caller sees an error).
++// Phase 1 (immediate retry): r1 400; the adapter retries once with the same key and parameters inside the same emit.
++// Phase 2 (delayed retry): r2 400 times out; the adapter does not retry (retries 0); the dispatcher run stops with an
++// error; its ledger already holds r2 (line before effect), so no later run re-emits r2. A person reconciles: calls the
++// adapter again with the outbox row of r2. In modes d-a and d-b this happens AFTER the key retention window.
++// SAFE: no request id moves money twice and money moved <= the charge. Usage and exit codes: p_lib.ts.
++import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++guard(() => {
++  const { root, mode } = argv();
++  const S0 = { chargeId: "ch_pt", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, S0, { retries: 1 });
++  const r1 = w.refund("r1", "400");
++  w.provider.inject("r1", "timeout_after_money");
++  const f1 = w.flush();
++  const r2 = w.refund("r2", "400");
++  w.provider.inject("r2", "timeout_after_money");
++  w.setRetries(0);
++  const f2 = w.flush();
++  const f3 = w.flush();                     // the dispatcher alone does not send r2 again
++  w.atAttack();
++  const row = w.outboxIntents().find(r => r.requestId === "r2")!;
++  let reconcile = "returned";
++  try { w.emit({ requestId: row.requestId, intent: w.E.canon(row.intent) }, row.intent); } catch (e) { reconcile = "threw: " + (e as Error).message; }
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  const setup = r1.status === "committed" && r2.status === "committed" && f2.error !== "" && f3.emitted.length === 0;
++  if (!setup) { console.error(JSON.stringify({ r1, r2, f1, f2, f3 })); process.exit(3); }
++  verdict(m.noDouble && m.withinCharge && f1.error === "" , { mode, phase1: f1, phase2: f2, rerun: f3, reconcile, money: m });
++});
+diff --git a/tests/refund-finality/regress/p_zero_amount.ts b/tests/refund-finality/regress/p_zero_amount.ts
+new file mode 100644
+index 00000000..7c30d407
+--- /dev/null
++++ b/tests/refund-finality/regress/p_zero_amount.ts
+@@ -0,0 +1,18 @@
++// Provider-anchor POSITIVE CONTROL: zero-amount refunds stay legitimate end to end (spec/refund/protocol.md).
++// z1 0, z2 0, then r1 100 on one charge: all commit, all are emitted. The adapter makes NO provider call for a zero
++// amount (the fake provider refuses zero, as many real providers do) and writes a "zero-recorded" journal line.
++// SAFE: 3 emitted, exactly 1 provider call and 1 movement (r1 100), 2 zero-recorded lines. Usage and exit codes: p_lib.ts.
++import { readFileSync } from "node:fs";
++import { argv, guard, moneyCheck, verdict, world } from "./p_lib";
++guard(() => {
++  const { root, mode } = argv();
++  const S0 = { chargeId: "ch_pz", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = world(root, mode, S0);
++  const c = [w.refund("z1", "0").status, w.refund("z2", "0").status, w.refund("r1", "100").status];
++  const f = w.flush();
++  const zero = readFileSync(w.journalPath, "utf8").trim().split("\n").map(l => JSON.parse(l)).filter(j => j.outcome === "zero-recorded").length;
++  const calls = w.provider.calls();
++  const m = moneyCheck(w.provider, S0.chargeId, S0.original); w.stop();
++  const ok = c.every(s => s === "committed") && f.error === "" && f.emitted.join() === "z1,z2,r1" && calls === 1 && zero === 2 && m.total === "100";
++  verdict(ok && m.noDouble && m.withinCharge, { mode, commits: c, flush: f, providerCalls: calls, zeroRecorded: zero, money: m });
++});

@@ -1,0 +1,25 @@
+# start=2026-11-19T15:37:13Z Now drawing from 'Battery Power'
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p7_hardlink_snapshot.ts <REPO>/results/night-shift-20261119/orch-B/r-harden/tree <REPO>/results/night-shift-20261119/orch-B/r-harden/home/p7 same
+{
+ "mode": "same",
+ "journalAtCrash": true,
+ "dbPagesChangedAtCrash": false,
+ "journalNRec": 0,
+ "nlink": 1,
+ "B_start": "ok count=60",
+ "B_sees_remaining": "99940",
+ "B_acked": [
+  "rq_60",
+  "rq_61"
+ ],
+ "A_restart": "ok count=62",
+ "lost": [],
+ "A_audit": [],
+ "journalLeft": false
+}
+SAFE
+real 0.57
+user 0.44
+sys 0.12
+# end=2026-11-19T15:37:13Z
+exit 0

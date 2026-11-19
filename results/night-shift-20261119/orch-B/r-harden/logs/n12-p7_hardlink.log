@@ -1,0 +1,26 @@
+# start=2026-11-19T15:37:23Z Now drawing from 'Battery Power'
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p7_hardlink_snapshot.ts <REPO>/results/night-shift-20261119/orch-B/r-harden/tree <REPO>/results/night-shift-20261119/orch-B/r-harden/home/p7 hardlink
+{
+ "mode": "hardlink",
+ "journalNRec": 31,
+ "nlink": 2,
+ "B_start": "ok count=61",
+ "B_sees_remaining": "99939",
+ "B_acked": [
+  "rq_61",
+  "rq_62"
+ ],
+ "A_restart": "ok count=60",
+ "lost": [
+  "rq_61",
+  "rq_62"
+ ],
+ "A_audit": [],
+ "journalLeft": false
+}
+DEFECT: acknowledged commits lost while the sink serves
+real 0.48
+user 0.45
+sys 0.11
+# end=2026-11-19T15:37:23Z
+exit 1

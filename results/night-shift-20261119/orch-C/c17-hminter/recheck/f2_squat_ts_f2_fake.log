@@ -1,0 +1,4 @@
+f2_squat.ts fake -> EXIT 1
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"mode":"fake","squatIssued":true,"squatOnSink":{"status":"rejected","reason":"stored state is not the token's pre-state"},"victim":"MINTER REFUSED: another candidate is already signed for this request id","settledRows":0,"controlNewId":"committed"}
+DEFECT PRESENT (exit 1)

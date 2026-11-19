@@ -1,0 +1,4 @@
+cmd: node --import tsx tests/refund-finality/regress/p_db_restore_retry.ts <tree> d-b
+{"mode":"d-b","retry":["committed","committed"],"after":[{"emitted":[],"error":"provider ceiling: refunds would exceed the charge amount"},{"emitted":["r3"],"error":""},{"emitted":[],"error":""}],"money":{"total":"1000","charge":"1000","withinCharge":true,"twice":["r3"],"noDouble":false,"movements":["r1:400","r2:400","r3:100","r3:100"]}}
+DEFECT
+exit 1

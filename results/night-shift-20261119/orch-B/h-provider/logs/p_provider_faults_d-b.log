@@ -1,0 +1,4 @@
+cmd: node --import tsx tests/refund-finality/regress/p_provider_faults.ts <tree> d-b
+{"mode":"d-b","f1":{"emitted":["r1"],"error":""},"f2":{"emitted":[],"error":"provider refused: declined by the provider"},"f3":{"emitted":["r3"],"error":""},"journal":[["r1","paid"],["r2","refused:refused"],["r3","paid"]],"money":{"total":"600","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:300","r3:300"]}}
+SAFE
+exit 0

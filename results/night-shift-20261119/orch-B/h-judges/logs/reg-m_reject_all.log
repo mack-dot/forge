@@ -1,0 +1,38 @@
+# 2026-11-19T15:35:29Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree cmd=tests/refund-finality/regress/run.ts <REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/m_reject_all.ts <REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts --expect-fail X6-Z1-zero-row-deleted-recommitted
+Now drawing from 'Battery Power'
+# judge=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree/tests/refund-finality/regress/run.ts
+# sink=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/m_reject_all.ts sha256=c456c2a9d06b51f13b87ac1cca08f94705885662a5c1e57a1659a4ea293e59b5
+# dispatcher=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts sha256=5cecfd775a10d6da49a21ef3360ccfc8277e59aafb7be3a066b606a2a193836e
+# trusted encoding=<REPO>/results/night-shift-20261119/orch-B/h-judges/tree/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# encoding next to the sink=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/encoding.ts sha256=f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7
+# expectedHeadMode=none node=v24.3.0 expected ids=26 expect-fail=X6-Z1-zero-row-deleted-recommitted
+FAIL C1-honest-refund: commit=rejected rq_1: outbox=0 effects=0 (want 1 and 1)
+FAIL C2-zero-amount-refund: commit=rejected rq_z: outbox=0 effects=0 (want 1 and 1)
+FAIL C3-two-zero-refunds: commits=rejected,rejected rq_z1: outbox=0 effects=0 (want 1 and 1)
+FAIL C4-replay-rejected: first=rejected replay=rejected rq_1: outbox=0 effects=0 (want 1 and 1)
+FAIL C5-largest-refund: commits=rejected,rejected remaining=1000 rq_1: outbox=0 effects=0 (want 1 and 1)
+FAIL X1-reqid-mismatch: honest refund not dispatched exactly once: faulty=rejected honest=rejected outbox(rq_victim)=0 effects(rq_victim)=0
+FAIL X2-cross-charge: B's honest refund not dispatched exactly once: A=rejected B=rejected effects(ch_2,rq_x)=0 emitted(ch_2)=0 A.outbox(foreign)=0
+FAIL X2b-foreign-post-locks-store: honest ch_1 refund not dispatched exactly once: foreign=rejected storedChargeId=ch_1 honest=rejected effects(rq_h)=0
+PASS X3-upgrade-legacy-gap: honest=sink refused to start (v6 sink refuses to serve: start-up audit (schema, initial ch) effects(rq_victim) before=1 after=0 outbox(rq_victim)=1
+FAIL X4-signed-unauthorized: honest refund not dispatched exactly once in a-amount-above-remaining,b-post-disables-refunds,c-post-remaining-wrong,d-unapproved-reason,e-post-unchanged: a-amount-above-remaining:rejected/ok=rejected/eff=0+0 b-post-disables-refunds:rejected/ok=rejected/eff=0+0 c-post-remaining-wrong:rejected/ok=rejected/eff=0+0 d-unapproved-reason:rejected/ok=rejected/eff=0+0 e-post-unchanged:rejected/ok=rejected/eff=0+0
+FAIL X5a-hostile-balance-reset: setup: honest rq_1 refused: rq_1=rejected rq_2=rejected outboxTotal=0 emittedTotal=0 original=1000
+FAIL X5b-hostile-outbox-rewrite: setup: honest rq_1 refused: rq_1=rejected rq_2=rejected unsignedEffects=0 rewrittenRowPresent=false rq_2SettledOnIt=false
+FAIL X6-Z1-zero-row-deleted-recommitted: setup: honest commits refused: rejected,rejected,rejected
+FAIL X6-P1-prefix-rollback: setup: honest commits refused: rejected,rejected
+FAIL K1-foreign-key-signature: honest token not committed and emitted once: foreignKey=rejected unchanged=true pinnedKey=rejected effects(rq_1)=0
+FAIL K2-noncanonical-text: canonical token not committed and emitted once: indent=rejected key-order=rejected escaped-letter=rejected canonical=rejected effects(rq_1)=0
+FAIL K3-stale-prestate: setup: honest rq_1 refused: rejected
+FAIL K4-replay-status: setup: honest rq_1 refused: rejected
+FAIL K5-long-and-unicode-ids: authorized token not committed and emitted once for ids 33,64,256,bmp,non-bmp,combining: 33:rejected/rejected/ok=rejected/eff=0 64:rejected/rejected/ok=rejected/eff=0 256:rejected/rejected/ok=rejected/eff=0 bmp:rejected/rejected/ok=rejected/eff=0 non-bmp:rejected/rejected/ok=rejected/eff=0 combining:rejected/rejected/ok=rejected/eff=0
+FAIL K6-long-run-one-store: honest step failed: honest rq_0 answered rejected 
+FAIL K7-store-survives-reopen: setup: honest commits refused: rejected,rejected,rejected
+FAIL D1-dispatcher-bad-signature-row: setup: honest rq_1 refused: rejected
+FAIL D2-dispatcher-chain-break-row: setup: honest rq_1 refused: rejected
+FAIL D3-dispatcher-ledger-before-emit: setup: honest commits refused: rejected,rejected,rejected
+PASS E0-encoding-identity: same SHA-256 f96086b1838163e3
+FAIL E1-signed-bytes-cover-post-intent: honest token not committed and emitted once: altered=rejected probe=neighbor signed bytes cover post/intent honest=rejected effects(rq_1)=0
+# verdicts=26/26 PASS=2 KNOWN-LIMIT=0 FAIL=24 [C1-honest-refund,C2-zero-amount-refund,C3-two-zero-refunds,C4-replay-rejected,C5-largest-refund,X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-Z1-zero-row-deleted-recommitted,X6-P1-prefix-rollback,K1-foreign-key-signature,K2-noncanonical-text,K3-stale-prestate,K4-replay-status,K5-long-and-unicode-ids,K6-long-run-one-store,K7-store-survives-reopen,D1-dispatcher-bad-signature-row,D2-dispatcher-chain-break-row,D3-dispatcher-ledger-before-emit,E1-signed-bytes-cover-post-intent]
+# unexpected FAIL=[C1-honest-refund,C2-zero-amount-refund,C3-two-zero-refunds,C4-replay-rejected,C5-largest-refund,X1-reqid-mismatch,X2-cross-charge,X2b-foreign-post-locks-store,X4-signed-unauthorized,X5a-hostile-balance-reset,X5b-hostile-outbox-rewrite,X6-P1-prefix-rollback,K1-foreign-key-signature,K2-noncanonical-text,K3-stale-prestate,K4-replay-status,K5-long-and-unicode-ids,K6-long-run-one-store,K7-store-survives-reopen,D1-dispatcher-bad-signature-row,D2-dispatcher-chain-break-row,D3-dispatcher-ledger-before-emit,E1-signed-bytes-cover-post-intent] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]
+# JUDGE RESULT NOT OK (exit 1)
+exit 1

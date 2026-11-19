@@ -1,0 +1,9 @@
+{"issuerIdentityInfo":{"bignumberForMinter":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"bignumberForCore":{"path":"<REPO>/node_modules/bignumber.js/bignumber.js","sha256":"08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce"},"node":"v24.3.0","nodePath":"<REPO>/node_modules"}}
+r1 committed
+r2 committed
+run 1: flush threw: adapter: connection refused (nothing sent)
+lock left after run 1: false
+run 2 (retry): {"emitted":[{"requestId":"r2","intent":"{\"amount\":\"100\",\"chargeId\":\"ch_c8\",\"reason\":\"duplicate_charge\",\"requestId\":\"r2\"}"}],"refused":[{"seq":1,"requestId":"r1","reason":"in doubt: claimed by run eb5f3d630b0365d8282f7e299255644f (pid 49679) and its emit threw; not counted as dispatched; a person must ask the receiver and call resolveInDoubt"}],"alreadyDispatched":0,"inDoubt":["r1"],"ledgerHead":{"n":2,"rowHead":"ea97ca2201a8a4168f53b2d58f86a83c0f2956b23dcdc2035b3a022104b67760"}}
+run 3: {"emitted":[],"refused":[{"seq":1,"requestId":"r1","reason":"in doubt: claimed by run eb5f3d630b0365d8282f7e299255644f (pid 49679) and its emit threw; not counted as dispatched; a person must ask the receiver and call resolveInDoubt"}],"alreadyDispatched":1,"inDoubt":["r1"],"ledgerHead":{"n":2,"rowHead":"ea97ca2201a8a4168f53b2d58f86a83c0f2956b23dcdc2035b3a022104b67760"}}
+ledger: r1,r1,r2,r2 ; actually sent: r2
+exit 0

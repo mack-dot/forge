@@ -150,3 +150,9 @@ Evidence: `orch-A/ffi-hardening/` (worker A23; NOT re-run by A except where said
 
 ### A-4 note (2026-11-19T15:10:50Z; appended; the entry above is unchanged)
 The launcher reports that the owner pushed `nightshift/A-proof` themselves. A checked with `git ls-remote`: see STATE.md for the value read. A-4 is resolved by the owner for commit 6903135a. For later commits A tries `git push origin nightshift/A-proof` once; a denial is recorded here and not worked around.
+
+## C-1 (Orchestrator C, red team, 2026-11-19T15:13Z by `date -u`): the native launch-path attack (launcher priority 4) did not run
+- What: tests of the launch path of the native refund program against three known classes (code injected at load, exit 0 with truncated stdout, FFI abort against the model's error byte).
+- Why not: a safety classifier stopped a worker's response and then my own control script. No file was written and no command ran. I did not retry in another form.
+- State: only a table made by READING proposals/m1b-mission-20261119/drafts/fail-closed/m1_fail_closed.py exists (orch-C/ATTACKS.md, C-BLOCK-01). It is not evidence from a run. A's launch-path controls (orch-A/launch/) have no red-team run by C.
+- Owner decision needed: who runs this class of test and how (for example the owner by hand, or A's own control tests reviewed by reading only).

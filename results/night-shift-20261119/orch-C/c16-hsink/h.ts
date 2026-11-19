@@ -20,7 +20,7 @@ export const S0 = { chargeId: "ch_c16", original: "1000", remaining: "1000", ref
 
 export async function setup(work: string, s0: any = S0) {
   rmSync(work, { recursive: true, force: true }); mkdirSync(work, { recursive: true });
-  const m = await MinterClient.start(ROOT, CORE, join(ROOT, "spec/refund/spec.lock"), "off");
+  const m = await MinterClient.start(ROOT, CORE, join(ROOT, "spec/refund/spec.lock"), (process.env.H_MEM ?? "off") as any);
   const ids = { publicKeyPem: m.ready.publicKeyPem, specLockSha256: m.ready.specLockSha256, checkerSha256: m.ready.checkerSha256 };
   const db = join(work, "sink.sqlite"), ledger = join(work, "ledger.jsonl");
   const cfg = { ...ids, initialState: s0 };

@@ -1,0 +1,4 @@
+<REPO>/results/night-shift-20261119/orch-B/h-dispatch/c11copy/h2_signal_lock.sh: line 12: 48179 Terminated: 15          ( cd $T && exec env -i PATH=/opt/homebrew/bin:/usr/bin:/bin HOME=$H/home LANG=C NODE_PATH=<REPO>/node_modules $NODE --import tsx tests/refund-finality/dispatch_cli.ts $W/sink.sqlite $W/ledger.jsonl $W/disp-config.json $W/effects.jsonl 0 > $W/run1.out 2> /dev/null )
+run1 rc=143 out=[] ledger=1 effects=1 lock_left=yes
+run2 rc=4 {"status":"in-doubt","emitted":1,"emittedIds":["rq_b"],"refused":[{"seq":1,"requestId":"rq_a","reason":"in doubt: claimed by run f1486fcea9fa3340f4d2a2bfd01814d1 (pid 48179) without a done line; not counted as dispatched; a person must ask the receiver and call resolveInDoubt"}],"alreadyDispatched":0,"inDoubt":["rq_a"],"ledgerHead":{"n":2,"rowHead":"3f6f0c44c1124c94f04aa66e5a41fd429cbbc1aa9b90e0fdbdb419412b88c6b6"},"staleLockTakenOver":{"pid":48179,"run":"f1486fcea9fa3340f4d2a2bfd01814d1"},"onTime":false}
+exit 0

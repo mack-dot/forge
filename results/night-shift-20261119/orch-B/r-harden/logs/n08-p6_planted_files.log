@@ -1,0 +1,29 @@
+# start=2026-11-19T15:36:11Z Now drawing from 'Battery Power'
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p6_planted_files.ts <REPO>/results/night-shift-20261119/orch-B/r-harden/tree <REPO>/results/night-shift-20261119/orch-B/r-harden/home/p6
+<REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p6_planted_files.ts:37
+  if (kind === "nul") { d.exec("DROP TRIGGER h_settled_bu; DROP TRIGGER h_outbox_bu"); d.exec("UPDATE settled SET request_id = 'r3' || char(0) || 'x' WHERE seq = 3; UPDATE outbox SET request_id = 'r3' || char(0) || 'x' WHERE seq = 3"); }
+                                                                                         ^
+
+
+Error: CHECK constraint failed: typeof(request_id) = 'text' AND instr(CAST(request_id AS BLOB), x'00') = 0 AND length(request_id) <= 256
+    at edit (<REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p6_planted_files.ts:37:90)
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p6_planted_files.ts:60:105)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/r-harden/probes/p6_planted_files.ts:93:65)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at cjsLoader (node:internal/modules/esm/translators:316:5) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 275,
+  errstr: 'constraint failed'
+}
+
+Node.js v24.3.0
+real 0.35
+user 0.33
+sys 0.08
+# end=2026-11-19T15:36:11Z
+exit 1

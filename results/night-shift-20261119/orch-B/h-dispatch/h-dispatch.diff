@@ -1,0 +1,1097 @@
+--- a/ts/refund-finality/dispatcher.ts
++++ b/ts/refund-finality/dispatcher.ts
+@@ -4,69 +4,241 @@
+ //   1. the settled row for the outbox row holds a token in canonical form with the pinned ids;
+ //   2. the Ed25519 signature of the issuer verifies for exactly that token body;
+ //   3. the outbox intent and request id are the signed ones;
+-//   4. chain: the token's pre-state hash is the post-state hash of the last dispatched token (first:
+-//      the pinned initial state hash);
++//   4. chain: the token's pre-state hash is the post-state hash of the previous claimed row (first: the pinned
++//      initial state hash);
+ //   5. the request id is not in the dispatcher's own append-only ledger.
+-// The ledger is a file OUTSIDE the database. A line is appended and synced BEFORE the effect: at most
+-// once. A crash between the two loses that effect (it is never sent twice); a person must reconcile it.
+-// One run at a time: flush() creates the lock file <resolved ledger path>.lock exclusively and removes
+-// it at its end. The ledger path is resolved first (the ledger file is created empty if it is missing),
+-// so a symbolic link to the ledger file or to a folder above it gives the same lock. (With a lock named
+-// after the path text, two names for one ledger file had two locks: finding of the repair check.)
+-// NOT covered: a hard link to the ledger file, and a file system that does not make exclusive creation
+-// atomic.
+-// A second run that starts meanwhile stops with an error and sends nothing. (Without the lock, two
+-// overlapping runs each read the ledger once and both sent the same refunds: review finding F2.)
+-// A process that dies inside a run leaves the lock file. Every later run then stops until a person
+-// has reconciled the last ledger line and removed the lock file.
++//
++// LEDGER (h-dispatch, red team C-ATT-17/18). The ledger is a file OUTSIDE the database. Each line is one JSON object:
++//   intent   {kind:"intent", n, requestId, tokenSha256, preStateSha256, postStateSha256, intentSha256, rowHead, run, pid}
++//            appended and synced BEFORE the effect of store row n. `run` is a random 128-bit nonce of this run.
++//   done     {kind:"done", n, requestId, run}      appended and synced AFTER emit() returned.
++//   failed   {kind:"failed", n, requestId, run, error}   appended (best effort) when emit() threw; then the run stops.
++//   resolved {kind:"resolved", n, requestId, outcome:"sent"|"retry", note}   an operator decision (resolveInDoubt).
++// CLAIM RULE: the FIRST intent line for row n (after the last "retry" decision for n) is THE claim of n. A run emits
++// row n only if, on a RE-READ of the ledger after its own intent line was synced, the claim of n carries its own run
++// nonce. Any later intent line for n must describe the same row (a lost race); it is never emitted. So two runs that
++// overlap (a removed lock, a stale view) never both emit one row, and never both emit one request id (ids are unique
++// over claims). This rests on assumption APPEND-ATOMIC (below), NOT on the lock.
++// DELIVERY POLICY: AT MOST ONCE by the dispatcher. A claim without "done" (a crash, a slow run, a throwing emit:
++// "failed") is IN DOUBT: it is never counted as dispatched; every run reports it in `refused` (reason "in doubt: ...")
++// and in `inDoubt`. Only an operator decision ends that: resolveInDoubt(id, "sent") counts it as dispatched;
++// resolveInDoubt(id, "retry") lets the NEXT run claim and emit it again: AT LEAST ONCE, on the operator's word
++// (assumption RECEIVER-RECONCILED). resolveInDoubt refuses while the claiming process is alive on this host.
++// NOT POSSIBLE without an idempotent receiver (assumption, named IDEMPOTENT-RECEIVER-ABSENT): exactly-once. A crash
++// between the effect and the "done" line leaves a claim in doubt whose effect DID leave; a crash (or a throw) before
++// the effect leaves one whose effect did NOT leave; the ledger cannot tell them apart. The operator must ask the
++// receiver. If the operator answers "retry" for an effect that left, the receiver gets it twice.
++//
++// LOCK (owned; C-ATT-17). One run at a time: flush() creates <resolved ledger path>.lock exclusively ("wx") and writes
++// {pid, run, host, startedAt} into it. A lock whose pid is dead on THIS host is taken over automatically (C-HOST-02;
++// assumption SINGLE-HOST-PID: the pid check is meaningful only on the host named in the lock; another host's lock
++// and an unreadable lock are never taken over). Before each claim the run re-reads the lock: if the file is gone or names another run,
++// the run STOPS (alarm; nothing more sent). At the end it removes the lock ONLY if the file still names its own run.
++// The lock is for order and liveness only; safety is the claim rule. Assumptions: LOCK-LOCAL (exclusive create is
++// atomic: a local file system, not NFS); the release (read, compare, unlink) is not atomic: if a person removes the
++// lock and a new run creates one in that window, the old run may remove the new lock; the claim rule still holds.
++// Not chosen: an OS-level lock (flock/fcntl): Node has no flock; a SQLite file lock is an fcntl lock on an INODE, and a
++// person who removes that file gives the next run a new inode and a second lock (the same defect).
++// The ledger path is resolved first (the ledger file is created empty if it is missing), so a symbolic link to the
++// ledger file or to a folder above it gives the same lock. NOT covered: a hard link to the ledger file.
++// OPERATOR STEP after a crash (a stale lock): (1) nothing, if the dead run was on this host (automatic takeover);
++// else remove <ledger>.lock; this cannot cause a duplicate, also if the run still lives (it stops at its next lock
++// check, or loses its next claim); (2) run flush(): the crashed claim appears in `inDoubt`; (3) ask the receiver; call resolveInDoubt(id, "sent") or resolveInDoubt(id, "retry"). Step (3) with
++// "retry" is the ONLY step that can cause a second effect, and only if the receiver's answer was wrong.
++//
++// ROLLBACK (C-ATT-19). The dispatcher is a row-log witness of the sink: every claim records the store's row-log head
++// after its row (rowHead) and the token hash; the store must still EXTEND every claimed row, or the run stops (a rollback
++// or rewrite of the sink's store). It does NOT detect an OLDER LEDGER (a restored backup of the ledger, or of the ledger
++// and the database together): the rows after the restored ledger look exactly like rows not yet dispatched, and they
++// are emitted again. Detected without an outside anchor: a ledger restored WITHOUT the dispatch witness file
++// <resolved database path>.dispatch-witness.json (see writeWitness: it binds the store to one ledger path and keeps a
++// copy of the last claim). NOT detected: a restore of the ledger and the witness together. Only an outside anchor
++// detects that: cfg.ledgerFloor = {n, rowHead}, the `ledgerHead` of an earlier
++// result kept on another host or medium; the ledger must reach row n with that rowHead, else the run stops. Without it:
++// assumption LEDGER-MONOTONE (the ledger file is never replaced by an older copy) and, for the database, ANCHOR-MONOTONE.
+ // h1: a missing or empty ledger is an ERROR when the store has committed rows, unless cfg.newLedgerH0 is the store's
+ // registered h_0 (an explicit new ledger). (Before h1 a lost ledger sent everything again: h-anchor probe, control E.)
++// Row types (C-ATT-20): the dispatcher never skips an outbox row. A row whose request_id is not TEXT (or holds U+0000)
++// is refused under its exact bytes with a "dispatcher alarm" reason; it is never counted as dispatched.
++// SHORT WRITES (C-ATT-22): every ledger line is written by a loop (a short write is continued; 0 bytes or an error stops
++// the run BEFORE the emit) and synced; a claim is emitted only after the re-read finds the COMPLETE line (ending in 0x0A).
++// Bytes after the last 0x0A are an incomplete record: never emitted; the next run cuts them off under its lock and keeps
++// them in <ledger>.torn-<run> (result.tornTailCut). A complete line that does not parse is an alarm ("not one chain").
++// Limit: a torn tail left by a run that RACES this one is not cut; the next line then merges with it and every later run
++// stops (fail closed; a person must repair). A store BELOW the ledger (power loss, no F_FULLFSYNC in the sink) stops the
++// run (the witness check above): never treated as new work.
++// Ledger format: lines without `kind` (the h1 format before h-dispatch) are refused ("not one chain"); no migration.
++// APPEND-ATOMIC: one write() of one line in O_APPEND mode is not interleaved with another, and a reader that starts
++// after the writer's fsync returned sees the line and every line before it (local POSIX file system; TESTED-UNPROVED).
+ // NOT proved. Assumed and not checked: the ledger file, this process and the pinned configuration are
+ // out of the attacker's reach; the issuer's key is not leaked.
+ // Known limit (U428, case D14): if the issuer signs two transitions for one pre-state and an attacker
+ // can write the database file WITHOUT the key, the dispatcher can send the one that the sink did not commit. h1: the
+ // append-only triggers stop that swap through SQL; a writer who disables or drops the triggers and recomputes the
+ // (unkeyed) row-log chain is not detected here: the store audit accepts any authorized, signed transition.
+-import { createPublicKey, verify, KeyObject } from "node:crypto";
+-import { closeSync, existsSync, fsyncSync, openSync, readFileSync, realpathSync, unlinkSync, writeSync } from "node:fs";
++import { createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
++import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeSync } from "node:fs";
++import { hostname } from "node:os";
+ import { DatabaseSync } from "node:sqlite";
+ import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding";
+ import { AuditedRow, StoreAuditor, conv, loadCore, readMeta, validInitial } from "./core/store";
+ 
+ // newLedgerH0 (optional): the registered h_0 of the store (sink.ts genesisOf). A missing or empty ledger is an ERROR when
+ // the store holds committed rows, unless this field equals the store's h_0 (an explicit "new ledger").
+-export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string };
++// ledgerFloor (optional): an outside anchor of the LEDGER (an earlier result's ledgerHead): the ledger must hold the claim
++// of row n with that rowHead. Detects a restored (older) ledger only when it comes from outside the ledger's medium.
++export type LedgerHead = { n: number; rowHead: string };
++export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead };
+ export type Effect = { requestId: string; intent: string };
+-export type FlushResult = { emitted: Effect[]; refused: { seq: number; requestId: string; reason: string }[]; alreadyDispatched: number };
+-type LedgerLine = { requestId: string; tokenSha256: string; preStateSha256: string; postStateSha256: string; intentSha256: string; n: number; rowHead: string };
+-type OutboxRow = { seq: number; request_id: string; intent: string };
++export type FlushResult = { emitted: Effect[]; refused: { seq: number; requestId: string; reason: string }[]; alreadyDispatched: number;
++  inDoubt?: string[]; ledgerHead?: LedgerHead; staleLockTakenOver?: { pid: number; run: string }; tornTailCut?: string };
++type ClaimFields = { n: number; requestId: string; tokenSha256: string; preStateSha256: string; postStateSha256: string; intentSha256: string; rowHead: string };
++type IntentLine = ClaimFields & { kind: "intent"; run: string; pid: number };
++type Slot = { claim: IntentLine; status: "pending" | "done" | "failed" | "sent" | "retry"; superseded: string[] };
++type Ledger = { slots: Map<number, Slot>; ids: Set<string>; maxN: number; tail: string; tailAt: number };
++
++const HEX64 = /^[0-9a-f]{64}$/, RUN = /^[0-9a-f]{32}$/;
++const NOT_CHAIN = "dispatcher ledger is not one chain";
++const CLAIM_KEYS: (keyof ClaimFields)[] = ["n", "requestId", "tokenSha256", "preStateSha256", "postStateSha256", "intentSha256", "rowHead"];
++const sameRow = (a: ClaimFields, b: ClaimFields): boolean => CLAIM_KEYS.every(k => a[k] === b[k]);
++const alive = (pid: number): boolean => {
++  if (pid === process.pid) return true;
++  try { process.kill(pid, 0); return true; } catch (error) { return (error as NodeJS.ErrnoException).code === "EPERM"; }
++};
+ 
+ export class Dispatcher {
+   private readonly key: KeyObject;
+   private readonly M = loadCore();
+   private readonly cv = conv(this.M);
++  private readonly run = randomBytes(16).toString("hex");   // this run's nonce: in the lock and in its claims
++  private lockPath = "";
++  private tookOver: { pid: number; run: string; host: string } | null = null;   // a dead owner's lock taken over (C-HOST-02)
+   constructor(private readonly dbPath: string, private readonly ledgerPath: string, private readonly cfg: DispatcherConfig,
+               private readonly emit: (effect: Effect, intent: Intent) => void) {
+     this.key = createPublicKey(cfg.publicKeyPem);
+   }
+-  // Reads the dispatcher's own ledger and checks that it is one chain from the pinned initial state. Fails closed.
+-  // h1: each line also carries n (its row number) and rowHead (the sink's row-log head after row n).
+-  private ledger(): { head: string; done: Set<string>; n: number; rowHead: string } {
+-    let head = this.cfg.initialStateSha256, n = 0, rowHead = "";
+-    const done = new Set<string>();
+-    if (existsSync(this.ledgerPath)) {
+-      for (const line of readFileSync(this.ledgerPath, "utf8").split("\n").filter(l => l.length > 0)) {
+-        const entry = JSON.parse(line) as LedgerLine;
+-        if (typeof entry.requestId !== "string" || typeof entry.postStateSha256 !== "string" ||
+-            entry.preStateSha256 !== head || done.has(entry.requestId) || entry.n !== n + 1 ||
+-            typeof entry.rowHead !== "string" || !/^[0-9a-f]{64}$/.test(entry.rowHead)) throw new Error("dispatcher ledger is not one chain");
+-        head = entry.postStateSha256; done.add(entry.requestId); n = entry.n; rowHead = entry.rowHead;
++  // Reads the whole ledger and checks it. Fails closed: any line out of the rules above stops the run.
++  private ledger(): Ledger {
++    const slots = new Map<number, Slot>(), ids = new Set<string>();
++    let maxN = 0;
++    const bytes = existsSync(this.ledgerPath) ? readFileSync(this.ledgerPath) : Buffer.alloc(0);
++    // C-ATT-22: only lines that END with 0x0A count. Bytes after the last 0x0A are an incomplete record (a short write,
++    // a crash inside a write): never confirmed, so never emitted (claimAndEmit emits only after a complete line is re-read).
++    const tailAt = bytes.lastIndexOf(0x0a) + 1;
++    const text = bytes.subarray(0, tailAt).toString("utf8"), tail = bytes.subarray(tailAt).toString("utf8");
++    for (const raw of text.split("\n").filter(l => l.length > 0)) {
++      let e: any;
++      try { e = JSON.parse(raw); } catch { throw new Error(NOT_CHAIN); }
++      if (e === null || typeof e !== "object" || !Number.isSafeInteger(e.n) || e.n < 1 || typeof e.requestId !== "string") throw new Error(NOT_CHAIN);
++      const s = slots.get(e.n);
++      if (e.kind === "intent") {
++        if (!HEX64.test(e.tokenSha256) || !HEX64.test(e.preStateSha256) || !HEX64.test(e.postStateSha256) || !HEX64.test(e.intentSha256) ||
++            !HEX64.test(e.rowHead) || typeof e.run !== "string" || !RUN.test(e.run) || !Number.isSafeInteger(e.pid)) throw new Error(NOT_CHAIN);
++        if (s === undefined) {
++          const pre = e.n === 1 ? this.cfg.initialStateSha256 : slots.get(e.n - 1)?.claim.postStateSha256;
++          if (e.n !== maxN + 1 || e.preStateSha256 !== pre || ids.has(e.requestId)) throw new Error(NOT_CHAIN);
++          slots.set(e.n, { claim: e as IntentLine, status: "pending", superseded: [] }); ids.add(e.requestId); maxN = e.n;
++        } else {
++          if (!sameRow(e, s.claim)) throw new Error(NOT_CHAIN);           // a lost race or a re-claim: the same row only
++          if (s.status === "retry") { s.claim = e as IntentLine; s.status = "pending"; }   // the re-claim after "retry"
++        }
++      } else if (e.kind === "done" || e.kind === "failed") {
++        if (s === undefined || e.requestId !== s.claim.requestId || typeof e.run !== "string") throw new Error(NOT_CHAIN);
++        if (e.run !== s.claim.run) {
++          if (s.superseded.includes(e.run)) throw new Error("dispatcher alarm: request id " + e.requestId + " was resolved as \"retry\" but the run that claimed it first reports " + e.kind + "; the effect may have left twice; a person must reconcile");
++          throw new Error(NOT_CHAIN);
++        }
++        if (e.kind === "done") { if (s.status !== "pending" && s.status !== "sent") throw new Error(NOT_CHAIN); s.status = "done"; }
++        else { if (s.status !== "pending") throw new Error(NOT_CHAIN); s.status = "failed"; }
++      } else if (e.kind === "resolved") {
++        if (s === undefined || e.requestId !== s.claim.requestId || (s.status !== "pending" && s.status !== "failed") ||
++            (e.outcome !== "sent" && e.outcome !== "retry")) throw new Error(NOT_CHAIN);
++        if (e.outcome === "retry") s.superseded.push(s.claim.run);
++        s.status = e.outcome;
++      } else throw new Error(NOT_CHAIN);
++    }
++    return { slots, ids, maxN, tail, tailAt };
++  }
++  // C-ATT-22: a write loop; a short write is continued, a write of 0 bytes or an error stops the run BEFORE any emit.
++  private append(line: object): void {
++    const data = Buffer.from(JSON.stringify(line) + "\n", "utf8");
++    const fd = openSync(this.ledgerPath, "a");
++    try {
++      for (let off = 0; off < data.length;) {
++        const k = writeSync(fd, data, off, data.length - off);
++        if (!(k > 0)) throw new Error("dispatcher ledger write wrote 0 bytes (disk full?); nothing sent for this line");
++        off += k;
+       }
++      fsyncSync(fd);
++    } finally { closeSync(fd); }
++  }
++  // C-ATT-22: an incomplete last record is cut off (under this run's lock) and kept in <ledger>.torn-<run> as evidence.
++  private cutTornTail(L: Ledger): string {
++    if (L.tail.length === 0) return "";
++    if (this.lockOwner() !== this.run) throw new Error("dispatcher alarm: lock lost before the ledger repair");
++    const keep = this.ledgerPath + ".torn-" + this.run;
++    const fk = openSync(keep, "wx");
++    try { writeSync(fk, L.tail); fsyncSync(fk); } finally { closeSync(fk); }
++    const fd = openSync(this.ledgerPath, "r+");
++    try { ftruncateSync(fd, L.tailAt); fsyncSync(fd); } finally { closeSync(fd); }
++    return keep;
++  }
++  private lockOwner(): string | null {
++    try { const o = JSON.parse(readFileSync(this.lockPath, "utf8")); return typeof o?.run === "string" ? o.run : null; } catch { return null; }
++  }
++  private acquire(): void {
++    closeSync(openSync(this.ledgerPath, "a"));   // (a missing ledger is judged in flushLocked: no lines = a NEW ledger)
++    this.lockPath = realpathSync(this.ledgerPath) + ".lock";
++    let fd: number;
++    try { fd = openSync(this.lockPath, "wx"); } catch {
++      // C-HOST-02: a lock whose owner process is dead on THIS host is taken over (no manual step). The lock is moved
++      // away by rename (atomic: one taker), re-read, and deleted only if it still names the dead run; else put back.
++      // Safety does not depend on this step (claim rule); a wrong takeover only lets two runs race for claims.
++      const held = this.readLock(this.lockPath);
++      if (held === null || held.host !== hostname() || alive(held.pid)) throw new Error("dispatcher lock is held: another run is active, or a stopped run left the lock file" + (held === null ? " (unreadable lock file: a person must check and remove it)" : " (pid " + held.pid + " on " + held.host + ")"));
++      const moved = this.lockPath + ".stale-" + this.run;
++      try { renameSync(this.lockPath, moved); } catch { throw new Error("dispatcher lock is held: another run took it over first"); }
++      const again = this.readLock(moved);
++      if (again === null || again.run !== held.run) { try { renameSync(moved, this.lockPath); } catch { /* best effort */ } throw new Error("dispatcher lock is held: the lock changed during takeover"); }
++      unlinkSync(moved);
++      this.tookOver = held;
++      try { fd = openSync(this.lockPath, "wx"); } catch { throw new Error("dispatcher lock is held: another run took it over first"); }
++    }
++    try { writeSync(fd, JSON.stringify({ pid: process.pid, run: this.run, host: hostname(), startedAt: new Date().toISOString() })); fsyncSync(fd); } finally { closeSync(fd); }
++  }
++  private readLock(path: string): { pid: number; run: string; host: string } | null {
++    try { const o = JSON.parse(readFileSync(path, "utf8"));
++      return Number.isSafeInteger(o?.pid) && typeof o.run === "string" && typeof o.host === "string" ? { pid: o.pid, run: o.run, host: o.host } : null; } catch { return null; }
++  }
++  // The dispatch witness (C-HOST-05, C-ATT-19): <resolved database path>.dispatch-witness.json = {ledger, n, rowHead}.
++  // It binds the store to ONE ledger file (resolved path) and keeps a second copy of the ledger's last claim. A run
++  // stops if the store is bound to another ledger (a relative path from another directory, a second ledger, also with
++  // cfg.newLedgerH0 still set) or if the ledger does not reach the witness's claim (a ledger restored WITHOUT the
++  // witness). A restore of both files together is NOT detected (LEDGER-MONOTONE). Removing the witness file is the
++  // explicit operator step to bind a new ledger; the newLedgerH0 rule then applies.
++  private witnessPath(): string { return realpathSync(this.dbPath) + ".dispatch-witness.json"; }
++  private readWitness(): { ledger: string; n: number; rowHead: string } | null {
++    const p = this.witnessPath();
++    if (!existsSync(p)) return null;
++    let w: any;
++    try { w = JSON.parse(readFileSync(p, "utf8")); } catch { w = null; }
++    if (w === null || typeof w.ledger !== "string" || !Number.isSafeInteger(w.n) || w.n < 0 || (w.n > 0 && !HEX64.test(w.rowHead))) {
++      throw new Error("dispatcher alarm: the dispatch witness " + p + " is unreadable; a person must check it");
+     }
+-    return { head, done, n, rowHead };
++    return w;
+   }
+-  private check(row: OutboxRow, tokenText: string | undefined, head: string):
+-      { ok: true; line: LedgerLine; intent: Intent } | { ok: false; reason: string } {
++  private writeWitness(L: Ledger): void {
++    const p = this.witnessPath(), tmp = p + ".tmp-" + this.run;
++    const w = { ledger: realpathSync(this.ledgerPath), n: L.maxN, rowHead: L.maxN > 0 ? L.slots.get(L.maxN)!.claim.rowHead : "" };
++    const fd = openSync(tmp, "w");
++    try { writeSync(fd, JSON.stringify(w)); fsyncSync(fd); } finally { closeSync(fd); }
++    renameSync(tmp, p);
++  }
++  private release(): void {
++    if (this.lockOwner() === this.run) { try { unlinkSync(this.lockPath); } catch { /* gone */ } }
++  }
++  private check(row: { seq: number; request_id: string; intent: string }, tokenText: string | undefined, head: string):
++      { ok: true; line: ClaimFields; intent: Intent } | { ok: false; reason: string } {
+     if (tokenText === undefined) return { ok: false, reason: "no settled row" };
+     let token: unknown;
+     try { token = JSON.parse(tokenText); } catch { return { ok: false, reason: "token is not JSON" }; }
+@@ -79,15 +251,42 @@
+     if (!good) return { ok: false, reason: "signature does not verify" };
+     if (canon(body.intent) !== row.intent) return { ok: false, reason: "outbox intent is not the signed intent" };
+     if (body.preStateSha256 !== head) return { ok: false, reason: "token does not continue the dispatched chain" };
+-    return { ok: true, intent: body.intent, line: { requestId: body.requestId, tokenSha256: sha256hex(tokenText), preStateSha256: head,
+-      postStateSha256: sha256hex(canon(body.post)), intentSha256: sha256hex(row.intent), n: row.seq, rowHead: "" } };
++    return { ok: true, intent: body.intent, line: { n: row.seq, requestId: body.requestId, tokenSha256: sha256hex(tokenText), preStateSha256: head,
++      postStateSha256: sha256hex(canon(body.post)), intentSha256: sha256hex(row.intent), rowHead: "" } };
+   }
+   flush(): FlushResult {
+-    closeSync(openSync(this.ledgerPath, "a"));   // (a missing ledger is judged in flushLocked: no lines = a NEW ledger)
+-    const lockPath = realpathSync(this.ledgerPath) + ".lock";
+-    let lock: number;
+-    try { lock = openSync(lockPath, "wx"); } catch { throw new Error("dispatcher lock is held: another run is active, or a stopped run left the lock file"); }
+-    try { return this.flushLocked(); } finally { closeSync(lock); unlinkSync(lockPath); }
++    this.acquire();
++    try { return this.flushLocked(); } finally { this.release(); }
++  }
++  // The operator's decision for a claim in doubt (see the header). "sent": the receiver has the effect; it counts as
++  // dispatched. "retry": the receiver does NOT have it; the next run claims and emits it again (at least once).
++  // Refused while a lock is held, while the claiming process is alive on this host, or when the id is not in doubt.
++  resolveInDoubt(requestId: string, outcome: "sent" | "retry", note: string): void {
++    if (outcome !== "sent" && outcome !== "retry") throw new Error("outcome must be sent or retry");
++    this.acquire();
++    try {
++      const L = this.ledger();
++      const slot = [...L.slots.values()].find(s => s.claim.requestId === requestId);
++      if (slot === undefined || (slot.status !== "pending" && slot.status !== "failed")) throw new Error("request id " + requestId + " is not in doubt");
++      if (slot.claim.pid !== process.pid && alive(slot.claim.pid)) throw new Error("the process that claimed " + requestId + " (pid " + slot.claim.pid + ") is alive; wait for it to end");
++      this.append({ kind: "resolved", n: slot.claim.n, requestId, outcome, note: String(note) });
++    } finally { this.release(); }
++  }
++  // Claim, re-read, emit, done (see the header).
++  private claimAndEmit(line: ClaimFields, effect: Effect, intent: Intent): void {
++    if (this.lockOwner() !== this.run) throw new Error("dispatcher alarm: this run's lock was removed or replaced while it ran; it stops before row " + line.n + " (nothing more sent)");
++    const fields = Object.fromEntries(CLAIM_KEYS.map(k => [k, line[k]]));
++    this.append({ kind: "intent", ...fields, run: this.run, pid: process.pid });
++    const now = this.ledger(), claim = now.slots.get(line.n);
++    if (claim === undefined || claim.claim.run !== this.run || claim.status !== "pending") {
++      throw new Error("dispatcher alarm: another run claimed row " + line.n + " (" + line.requestId + ") first; this run stops and does not send it");
++    }
++    this.writeWitness(now);
++    try { this.emit(effect, intent); } catch (error) {
++      try { this.append({ kind: "failed", n: line.n, requestId: line.requestId, run: this.run, error: String((error as Error)?.message ?? error).slice(0, 200) }); } catch { /* the claim stays in doubt */ }
++      throw error;
++    }
++    this.append({ kind: "done", n: line.n, requestId: line.requestId, run: this.run });
+   }
+   // h1 (C-ATT-06): before any effect, the dispatcher applies the SAME store audit as the sink (core/store.ts): schema
+   // text, integrity_check, meta (its initial charge must hash to the pinned initialStateSha256), and the compiled
+@@ -97,13 +296,16 @@
+   // chain) stops the run. So "no signing hypothesis" (AuditV5SoundRelativeToSuppliedInitial) also covers DISPATCHED effects:
+   // same compiled function, TESTED here, not separately proved for this file.
+   private flushLocked(): FlushResult {
+-    const { head: h0, done, n: ledgerN, rowHead } = this.ledger();
+-    let head = h0;
++    const L0 = this.ledger();
++    const torn = this.cutTornTail(L0);
++    const L = torn === "" ? L0 : this.ledger();
+     const db = new DatabaseSync(this.dbPath, { readOnly: true });
+-    const result: FlushResult = { emitted: [], refused: [], alreadyDispatched: 0 };
++    const result: FlushResult = { emitted: [], refused: [], alreadyDispatched: 0, inDoubt: [] };
++    const isDone = (rid: string): boolean => [...L.slots.values()].some(s => s.claim.requestId === rid && (s.status === "done" || s.status === "sent"));
+     try {
+       db.exec("BEGIN");
+-      const listed = db.prepare("SELECT seq, request_id FROM outbox NOT INDEXED ORDER BY seq").all() as { seq: number; request_id: unknown }[];
++      // C-ATT-20: every outbox row, by exact type and bytes; nothing is filtered out.
++      const listed = db.prepare("SELECT seq, typeof(request_id) AS t, hex(request_id) AS h FROM outbox NOT INDEXED ORDER BY seq").all() as { seq: number; t: string; h: string }[];
+       const audited: AuditedRow[] = [];
+       let why = "", genesis = "";
+       try {
+@@ -117,38 +319,81 @@
+         if (au.fullAudit(db, undefined, r => audited.push(r)) === null) throw new Error("AuditEnd, counts or refunded column is false");
+       } catch (error) { why = String((error as Error).message); }
+       db.exec("ROLLBACK");
++      const bad = (r: { t: string; h: string }): string =>
++        r.t !== "text" ? "dispatcher alarm: outbox request_id is stored as " + r.t + ", not text" : Buffer.from(r.h, "hex").includes(0) ? "dispatcher alarm: outbox request_id holds U+0000" : "";
++      const idOf = (r: { h: string }): string => Buffer.from(r.h, "hex").toString("utf8");
+       if (why !== "") {
+         for (const r of listed) {
+-          const rid = typeof r.request_id === "string" ? r.request_id : String(r.request_id);
+-          if (done.has(rid)) result.alreadyDispatched++; else result.refused.push({ seq: r.seq, requestId: rid, reason: "store audit failed: " + why });
++          const rid = idOf(r), alarm = bad(r);
++          if (alarm === "" && isDone(rid)) result.alreadyDispatched++;
++          else result.refused.push({ seq: r.seq, requestId: rid, reason: alarm !== "" ? alarm + "; store audit failed: " + why : "store audit failed: " + why });
+         }
+         return result;
+       }
+-      // The dispatcher as the row-log witness (h-anchor design, point 2). Its ledger says rows 1..ledgerN were dispatched
+-      // and the sink's head after them was rowHead. The store must still EXTEND that: otherwise STOP with an alarm
+-      // (a rollback or rewrite of the sink's store). No ledger lines and committed rows: an ERROR unless newLedgerH0.
+-      if (ledgerN === 0 && audited.length > 0 && this.cfg.newLedgerH0 !== genesis) {
++      if (listed.length !== audited.length || listed.some((r, i) => bad(r) !== "" || r.seq !== audited[i].seq || idOf(r) !== audited[i].requestId)) {
++        throw new Error("dispatcher alarm: the outbox listing does not match the audited rows (row type or bytes); nothing sent");
++      }
++      // C-HOST-05 / C-ATT-19: the dispatch witness next to the store (see writeWitness). Checked BEFORE the newLedgerH0 rule,
++      // so a store that is bound to a ledger never starts a second one, also with cfg.newLedgerH0 still set.
++      const wit = this.readWitness();
++      if (wit !== null && wit.ledger !== realpathSync(this.ledgerPath)) {
++        throw new Error("dispatcher alarm: the store is bound to the ledger " + wit.ledger + ", not to " + realpathSync(this.ledgerPath) + "; nothing sent");
++      }
++      if (wit !== null && wit.n > 0 && L.slots.get(wit.n)?.claim.rowHead !== wit.rowHead) {
++        throw new Error("dispatcher alarm: the ledger does not reach the dispatch witness (row " + wit.n + "); an older or another ledger (restored backup?); nothing sent");
++      }
++      // The dispatcher as the row-log witness (h-anchor design, point 2): the store must still EXTEND every claimed row.
++      if (L.maxN === 0 && audited.length > 0 && this.cfg.newLedgerH0 !== genesis) {
+         throw new Error("dispatcher alarm: the ledger is missing or empty but the store holds " + audited.length + " committed rows; a new ledger needs cfg.newLedgerH0 = the store's registered h_0");
+       }
+-      if (ledgerN > 0 && (audited.length < ledgerN || audited[ledgerN - 1].self !== rowHead)) {
+-        throw new Error("dispatcher alarm: the sink's rows 1.." + ledgerN + " do not chain to the ledger's last rowHead (rollback or rewrite of the sink's store); nothing sent");
++      if (audited.length < L.maxN || [...L.slots.values()].some(s => { const a = audited[s.claim.n - 1];
++        return a.self !== s.claim.rowHead || a.requestId !== s.claim.requestId || a.tokenSha256 !== s.claim.tokenSha256; })) {
++        throw new Error("dispatcher alarm: the sink's rows 1.." + L.maxN + " do not chain to the ledger's claims (rollback or rewrite of the sink's store); nothing sent");
++      }
++      // C-ATT-19: the outside anchor of the ledger, if the operator keeps one.
++      const floor = this.cfg.ledgerFloor;
++      if (floor !== undefined && (!Number.isSafeInteger(floor.n) || floor.n < 1 || L.slots.get(floor.n)?.claim.rowHead !== floor.rowHead)) {
++        throw new Error("dispatcher alarm: the ledger does not reach the outside anchor (row " + floor.n + "); an older ledger (restored backup?); nothing sent");
+       }
++      if (wit === null) this.writeWitness(L);   // the first run binds the store to this ledger
++      if (torn !== "") result.tornTailCut = torn;
++      if (this.tookOver !== null) result.staleLockTakenOver = { pid: this.tookOver.pid, run: this.tookOver.run };
++      let head = L.maxN === 0 ? this.cfg.initialStateSha256 : L.slots.get(L.maxN)!.claim.postStateSha256;
+       let stop = "";
+       for (const r of audited) {
+-        if (r.seq <= ledgerN) { result.alreadyDispatched++; continue; }
+-        if (done.has(r.requestId)) throw new Error("dispatcher alarm: request id " + r.requestId + " is in the ledger but at another row; nothing more sent");
++        const slot = L.slots.get(r.seq);
++        if (slot !== undefined) {
++          if (slot.status === "done" || slot.status === "sent") { result.alreadyDispatched++; continue; }
++          if (slot.status === "pending" || slot.status === "failed") {
++            result.inDoubt!.push(r.requestId);
++            result.refused.push({ seq: r.seq, requestId: r.requestId, reason: "in doubt: claimed by run " + slot.claim.run + " (pid " + slot.claim.pid + ") " +
++              (slot.status === "failed" ? "and its emit threw" : "without a done line") + "; not counted as dispatched; a person must ask the receiver and call resolveInDoubt" });
++            continue;
++          }
++          // "retry": the operator says the receiver does not have it. Claim it again (at least once, on that word).
++          if (stop !== "") { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: stop }); continue; }
++          const verdict = this.check({ seq: r.seq, request_id: r.requestId, intent: r.intent }, r.token, slot.claim.preStateSha256);
++          if (!verdict.ok || !sameRow({ ...verdict.line, rowHead: r.self }, slot.claim)) {
++            const reason = verdict.ok ? "retry: the row is not the claimed row" : verdict.reason;
++            result.refused.push({ seq: r.seq, requestId: r.requestId, reason }); stop = "an earlier row was refused: " + reason; continue;
++          }
++          const effect = { requestId: r.requestId, intent: r.intent };
++          this.claimAndEmit(slot.claim, effect, verdict.intent);
++          result.emitted.push(effect);
++          continue;
++        }
++        if (L.ids.has(r.requestId)) throw new Error("dispatcher alarm: request id " + r.requestId + " is in the ledger but at another row; nothing more sent");
+         if (stop !== "") { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: stop }); continue; }
+-        const row = { seq: r.seq, request_id: r.requestId, intent: r.intent };
+-        const verdict = this.check(row, r.token, head);
++        const verdict = this.check({ seq: r.seq, request_id: r.requestId, intent: r.intent }, r.token, head);
+         if (!verdict.ok) { result.refused.push({ seq: r.seq, requestId: r.requestId, reason: verdict.reason }); stop = "an earlier row was refused: " + verdict.reason; continue; }
+         verdict.line.rowHead = r.self;
+-        const fd = openSync(this.ledgerPath, "a");
+-        try { writeSync(fd, JSON.stringify(verdict.line) + "\n"); fsyncSync(fd); } finally { closeSync(fd); }
+-        head = verdict.line.postStateSha256; done.add(r.requestId);
+         const effect = { requestId: r.requestId, intent: r.intent };
+-        this.emit(effect, verdict.intent);    // the external effect: after the ledger line
++        this.claimAndEmit(verdict.line, effect, verdict.intent);   // the external effect: after the claim, before "done"
++        head = verdict.line.postStateSha256;
+         result.emitted.push(effect);
+       }
++      const last = this.ledger();
++      if (last.maxN > 0) result.ledgerHead = { n: last.maxN, rowHead: last.slots.get(last.maxN)!.claim.rowHead };
+     } finally { try { db.exec("ROLLBACK"); } catch { /* none */ } db.close(); }
+     return result;
+   }
+--- a/tests/refund-finality/dispatch_cli.ts
++++ b/tests/refund-finality/dispatch_cli.ts
+@@ -1,17 +1,61 @@
+-// One dispatcher run in a separate operating-system process (for the overlap control of suite.ts).
++// One dispatcher run in a separate operating-system process (for the overlap control of suite.ts, and for hosts).
+ // Each outbound effect is one appended line in the effects file. The effect takes some time, so that
+ // runs with a common start time overlap.
++//   dispatch_cli.ts <database> <ledger> <dispatcher config json> <effects file> <startAt ms>
++//   dispatch_cli.ts resolve <database> <ledger> <dispatcher config json> <request id> sent|retry <note>
++// The database and ledger paths must be ABSOLUTE (C-HOST-05: a relative ledger from another working directory was a
++// second ledger). One JSON line on stdout: {status, reason, emitted (count), emittedIds, refused, alreadyDispatched,
++// inDoubt, ledgerHead, onTime}. `emittedIds` lists the effects this process sent, ALSO when the run stopped (C-HOST-03).
++// Exit codes (h-dispatch, C-HOST-01): 0 ok (nothing refused, nothing in doubt); 1 stopped (lock held, alarm, ledger not
++// one chain, any other error) ; 2 usage; 3 emit failed (the claim is in doubt); 4 the run ended but some rows are
++// refused or in doubt. The exit code does not depend on stdout: a closed stdout (EPIPE) is ignored (C-HOST-07); the
++// effects file and the ledger stay the record of what was sent.
+ import { appendFileSync, readFileSync } from "node:fs";
++import { isAbsolute } from "node:path";
+ import { Dispatcher } from "../../ts/refund-finality/dispatcher";
+ 
+-const [dbPath, ledgerPath, cfgPath, effectsPath, startAt] = process.argv.slice(2);
+-const slow = new Int32Array(new SharedArrayBuffer(4));
+-const dispatcher = new Dispatcher(dbPath, ledgerPath, JSON.parse(readFileSync(cfgPath, "utf8")), effect => {
+-  appendFileSync(effectsPath, JSON.stringify(effect) + "\n");
+-  Atomics.wait(slow, 0, 0, 150);
+-});
+-const onTime = Date.now() < Number(startAt);
+-while (Date.now() < Number(startAt)) { /* wait for the common start time */ }
+-let answer: Record<string, unknown>;
+-try { answer = { emitted: dispatcher.flush().emitted.length, onTime }; } catch (error) { answer = { stopped: String((error as Error).message), onTime }; }
+-process.stdout.write(JSON.stringify(answer) + "\n");
++process.stdout.on("error", () => { /* EPIPE: the report is lost; the exit code and the ledger stay true */ });
++// No process.exit after a write: on macOS a pipe write is asynchronous and process.exit could cut the report.
++const say = (answer: Record<string, unknown>, code: number): void => {
++  try { process.stdout.write(JSON.stringify(answer) + "\n"); } catch { /* EPIPE */ }
++  process.exitCode = code;
++};
++const usage = (text: string): void => { process.stderr.write(text); process.exitCode = 2; };
++function main(args: string[]): void {
++  if (args[0] === "resolve") {
++    const [, dbPath, ledgerPath, cfgPath, requestId, outcome, note] = args;
++    if (!dbPath || !ledgerPath || !cfgPath || !requestId || (outcome !== "sent" && outcome !== "retry") || !isAbsolute(dbPath) || !isAbsolute(ledgerPath)) {
++      return usage("usage: dispatch_cli.ts resolve <abs database> <abs ledger> <config> <request id> sent|retry <note>\n");
++    }
++    try { new Dispatcher(dbPath, ledgerPath, JSON.parse(readFileSync(cfgPath, "utf8")), () => { throw new Error("no effect in resolve"); }).resolveInDoubt(requestId, outcome, note ?? ""); }
++    catch (error) { return say({ status: "stopped", stopped: String((error as Error).message) }, 1); }
++    return say({ status: "ok", resolved: requestId, outcome }, 0);
++  }
++  const [dbPath, ledgerPath, cfgPath, effectsPath, startAt] = args;
++  if (!dbPath || !ledgerPath || !cfgPath || !effectsPath || startAt === undefined || !isAbsolute(dbPath) || !isAbsolute(ledgerPath)) {
++    return usage("usage: dispatch_cli.ts <abs database> <abs ledger> <config> <effects> <startAt ms>\n");
++  }
++  const slow = new Int32Array(new SharedArrayBuffer(4));
++  const sent: string[] = [];
++  let emitFailed = false;
++  let dispatcher: Dispatcher;
++  try {
++    dispatcher = new Dispatcher(dbPath, ledgerPath, JSON.parse(readFileSync(cfgPath, "utf8")), effect => {
++      try { appendFileSync(effectsPath, JSON.stringify(effect) + "\n"); } catch (error) { emitFailed = true; throw error; }
++      sent.push(effect.requestId);
++      Atomics.wait(slow, 0, 0, 150);
++    });
++  } catch (error) { return say({ status: "stopped", stopped: String((error as Error).message), emitted: 0, emittedIds: [] }, 1); }
++  const onTime = Date.now() < Number(startAt);
++  while (Date.now() < Number(startAt)) { /* wait for the common start time */ }
++  try {
++    const r = dispatcher.flush();
++    const inDoubt = r.inDoubt ?? [];
++    const status = r.refused.length === 0 && inDoubt.length === 0 ? "ok" : inDoubt.length > 0 ? "in-doubt" : "refused";
++    say({ status, emitted: r.emitted.length, emittedIds: r.emitted.map(e => e.requestId), refused: r.refused, alreadyDispatched: r.alreadyDispatched,
++      inDoubt, ledgerHead: r.ledgerHead ?? null, staleLockTakenOver: r.staleLockTakenOver ?? null, onTime }, status === "ok" ? 0 : 4);
++  } catch (error) {
++    say({ status: emitFailed ? "emit-failed" : "stopped", stopped: String((error as Error).message), emitted: sent.length, emittedIds: sent, onTime }, emitFailed ? 3 : 1);
++  }
++}
++main(process.argv.slice(2));
+--- a/tests/refund-finality/commit_cli.ts
++++ b/tests/refund-finality/commit_cli.ts
+@@ -1,14 +1,36 @@
+-// One commit attempt in a separate operating-system process (for the race controls of suite.ts).
++// One commit attempt in a separate operating-system process (for the race controls of suite.ts, and for hosts).
+ // The process opens the database and reads the token text first. Then it waits for the common start
+ // time, so that all processes of one race call commit in the same millisecond.
+-import { readFileSync } from "node:fs";
++//   commit_cli.ts <database> <sink config json> <token file> <startAt ms> [--create-store]
++// h-dispatch (C-HOST-04): the database must exist, unless --create-store is given (a mistyped path made a new empty
++// store). Exit codes: 0 committed or replayed; 1 rejected (or the sink refused to serve, or any error); 2 usage or a
++// missing database without --create-store. A closed stdout (EPIPE) is ignored: the exit code stays the outcome (C-HOST-07).
++import { existsSync, readFileSync } from "node:fs";
+ import { Sink } from "../../ts/refund-finality/sink";
+ 
+-const [dbPath, cfgPath, tokenPath, startAt] = process.argv.slice(2);
+-const sink = new Sink(dbPath, JSON.parse(readFileSync(cfgPath, "utf8")));
+-const text = readFileSync(tokenPath, "utf8");
+-const onTime = Date.now() < Number(startAt);
+-while (Date.now() < Number(startAt)) { /* wait for the common start time */ }
+-const result = sink.commit(text);
+-process.stdout.write(JSON.stringify({ ...result, onTime }) + "\n");
+-sink.close();
++process.stdout.on("error", () => { /* EPIPE: the report is lost; the exit code stays true */ });
++const say = (answer: Record<string, unknown>, code: number): void => {
++  try { process.stdout.write(JSON.stringify(answer) + "\n"); } catch { /* EPIPE */ }
++  process.exitCode = code;
++};
++function main(argv: string[]): void {
++  const create = argv.includes("--create-store");
++  const [dbPath, cfgPath, tokenPath, startAt] = argv.filter(a => a !== "--create-store");
++  if (!dbPath || !cfgPath || !tokenPath || startAt === undefined) {
++    process.stderr.write("usage: commit_cli.ts <database> <sink config> <token file> <startAt ms> [--create-store]\n"); process.exitCode = 2; return;
++  }
++  if (!create && !existsSync(dbPath)) return say({ status: "refused", reason: "no database at " + dbPath + " (a new store needs --create-store)" }, 2);
++  let sink: Sink;
++  try { sink = new Sink(dbPath, JSON.parse(readFileSync(cfgPath, "utf8"))); }
++  catch (error) { return say({ status: "refused", reason: String((error as Error).message) }, 1); }
++  try {
++    const text = readFileSync(tokenPath, "utf8");
++    const onTime = Date.now() < Number(startAt);
++    while (Date.now() < Number(startAt)) { /* wait for the common start time */ }
++    const result = sink.commit(text);
++    say({ ...result, onTime }, result.status === "committed" || result.status === "replayed" ? 0 : 1);
++  } catch (error) {
++    say({ status: "error", reason: String((error as Error).message) }, 1);
++  } finally { try { sink.close(); } catch { /* closed */ } }
++}
++main(process.argv.slice(2));
+--- /dev/null
++++ b/tests/refund-finality/regress/d_att17_claim_race.ts
+@@ -0,0 +1,29 @@
++// Regression C-ATT-17, the claim rule WITHOUT the lock's help. Run A blocks inside emit(r1). A person removes A's
++// lock; run B runs to the end (it emits r2). Then A's old lock file comes back with A's own content (a person restores
++// it from a copy; this also models the unavoidable window between A's lock check and A's next ledger line). A resumes:
++// its lock check passes, its in-memory view still lists r2 as pending.
++// SAFE: r2 is emitted once (B's claim was first; A must not send it). FAILS on the unfixed dispatcher (A sends r2 again).
++// In one process (nested runs). Usage and exit codes: d_lib.ts.
++import { readFileSync, realpathSync, unlinkSync, writeFileSync } from "node:fs";
++import { argv, dups, guard, total, verdict, world } from "./d_lib";
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_d17b", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "400"); w.commit(t1.text);
++  const t2 = await w.mint(t1.post, "r2", "400"); w.commit(t2.text);
++  const lockOf = () => realpathSync(w.ledger) + ".lock";
++  let inner = "", outer = "";
++  const A = w.dispatcher(e => {
++    w.effects.push(e);
++    if (e.requestId !== "r1") return;
++    const lock = lockOf(), saved = readFileSync(lock);             // A's own lock content
++    unlinkSync(lock);                              // a person removes it as stale
++    try { inner = JSON.stringify(w.flush()); } catch (err) { inner = "B stopped: " + (err as Error).message; }
++    writeFileSync(lock, saved);                    // A's lock comes back
++  });
++  try { outer = JSON.stringify(A.flush()); } catch (err) { outer = "A stopped: " + (err as Error).message; }
++  w.stop();
++  const ids = w.effects.map(e => e.requestId);
++  verdict(dups(ids).length === 0 && total(w.effects) <= 1000, { effects: ids, total: total(w.effects), B: inner.slice(0, 300), A: outer.slice(0, 300) });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_att17_lock_theft.ts
+@@ -0,0 +1,36 @@
++// Regression C-ATT-17 (lock without owner; attacker: none). Three dispatcher processes, one operator step:
++// A blocks inside emit(r1) (a slow payment call); a person removes the lock as stale; r2, r3 commit; B blocks inside
++// emit(r2); A ends (the unfixed finally removed B's lock); C starts with NO operator step; B resumes.
++// SAFE: no request id is emitted twice and the total is at most the original (1000). FAILS on the unfixed dispatcher
++// (C and B both emit r3; 1200 of 1000). Usage and exit codes: d_lib.ts.
++import { spawn } from "node:child_process";
++import { existsSync, mkdirSync, readFileSync, realpathSync, unlinkSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { argv, dups, guard, total, verdict, world } from "./d_lib";
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_d17", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const ctl = join(w.dir, "ctl"), effects = join(w.dir, "effects.jsonl"), dcfgFile = join(w.dir, "dcfg.json");
++  mkdirSync(ctl); writeFileSync(effects, ""); writeFileSync(dcfgFile, JSON.stringify(w.dcfg));
++  const child = (name: string, block: string) => new Promise<string>(res => {
++    const p = spawn(process.execPath, ["--no-warnings", "--import", "tsx", join(__dirname, "d_child.ts"), root, w.db, w.ledger, dcfgFile, effects, name, block, ctl, "block"],
++      { stdio: ["ignore", "pipe", "ignore"] });
++    let out = ""; p.stdout.on("data", d => { out += d; }); p.on("exit", () => res(out.trim()));
++  });
++  const waitFile = async (f: string) => { const t = Date.now(); while (!existsSync(f)) { if (Date.now() - t > 60000) throw new Error("timeout " + f); await new Promise(r => setTimeout(r, 10)); } };
++  const log: string[] = [];
++  const t1 = await w.mint(S0, "r1", "300"); log.push("r1 " + w.commit(t1.text));
++  const t2 = await w.mint(t1.post, "r2", "300"), t3 = await w.mint(t2.post, "r3", "300");
++  const A = child("A", "r1"); await waitFile(join(ctl, "A-blocked"));
++  unlinkSync(realpathSync(w.ledger) + ".lock"); log.push("operator removed the lock");
++  log.push("r2 " + w.commit(t2.text), "r3 " + w.commit(t3.text));
++  const B = child("B", "r2"); await waitFile(join(ctl, "B-blocked"));
++  writeFileSync(join(ctl, "A-go"), ""); log.push("A: " + await A);
++  log.push("C: " + await child("C", "-"));
++  writeFileSync(join(ctl, "B-go"), ""); log.push("B: " + await B);
++  w.stop();
++  const eff = readFileSync(effects, "utf8").split("\n").filter(Boolean).map(l => JSON.parse(l));
++  const ids = eff.map(e => e.requestId);
++  verdict(dups(ids).length === 0 && total(eff) <= 1000, { log, effects: eff.map(e => e.by + ":" + e.requestId), total: total(eff), duplicates: dups(ids) });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_att18_throwing_emit.ts
+@@ -0,0 +1,35 @@
++// Regression C-ATT-18 (a lost effect looked like a sent one). The payment adapter (emit) throws for r1 BEFORE it sends
++// anything. SAFE, part 1: no later run counts r1 as dispatched; every later run reports r1 under its own id (refused or
++// in doubt) until a person decides. FAILS on the unfixed dispatcher (the retry counts r1 in alreadyDispatched, silently).
++// Part 2 (the recovery, only when part 1 holds): the person asks the receiver (it has nothing) and calls
++// resolveInDoubt("r1", "retry"); the next run emits r1 exactly once; a further run emits nothing. Total <= 1000.
++// Usage and exit codes: d_lib.ts.
++import { argv, dups, guard, total, verdict, world } from "./d_lib";
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_d18", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "400"); w.commit(t1.text);
++  const t2 = await w.mint(t1.post, "r2", "100"); w.commit(t2.text);
++  let run1 = "";
++  try { run1 = JSON.stringify(w.flush(e => { if (e.requestId === "r1") throw new Error("adapter: connection refused (nothing sent)"); w.effects.push(e); })); }
++  catch (err) { run1 = "threw: " + (err as Error).message; }
++  const r2 = w.flush(), r3 = w.flush();
++  const reported = (r: any) => r.refused.some((x: any) => x.requestId === "r1");
++  const part1 = !w.effects.some(e => e.requestId === "r1") && reported(r2) && reported(r3) && r3.alreadyDispatched === 1;
++  let part2 = false, recovery = "not tried (part 1 failed)";
++  if (part1) {
++    const d = w.dispatcher();
++    if (typeof d.resolveInDoubt !== "function") recovery = "no resolveInDoubt";
++    else {
++      d.resolveInDoubt("r1", "retry", "receiver has no r1 (test)");
++      const r4 = w.flush(), r5 = w.flush();
++      const ids = w.effects.map(e => e.requestId);
++      part2 = dups(ids).length === 0 && ids.includes("r1") && r5.emitted.length === 0 && r5.refused.length === 0 && r5.alreadyDispatched === 2 && total(w.effects) <= 1000;
++      recovery = JSON.stringify({ r4: r4.emitted.map((e: any) => e.requestId), r5: { emitted: r5.emitted.length, refused: r5.refused.length, already: r5.alreadyDispatched }, ids });
++    }
++  }
++  w.stop();
++  verdict(part1 && part2, { run1: run1.slice(0, 200), run2: { refused: r2.refused.map((x: any) => x.requestId), already: r2.alreadyDispatched },
++    run3: { refused: r3.refused.map((x: any) => x.requestId), already: r3.alreadyDispatched }, part1, recovery });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_att19_ledger_restore.ts
+@@ -0,0 +1,45 @@
++// Regression C-ATT-19 (an OLDER ledger re-emits; the rollback class). r1 is dispatched; a backup of the folder is
++// taken; r2, r3 commit and are dispatched. Then:
++//   case L: only the ledger file is restored from the backup (database current).
++//   case F: the whole folder is restored (database, ledger, every other file in it), the host retries r2 and r3 with the
++//           SAME tokens (the sink commits them again: no sink anchor), and the dispatcher config carries the outside
++//           anchor cfg.ledgerFloor = the ledgerHead of the run that sent r2, r3 (kept on another medium).
++// SAFE: in both cases no request id is emitted twice and the total is at most 1000. FAILS on the unfixed dispatcher
++// (both cases emit r2, r3 again: 1400 of 1000). NOT covered (stated limit): case F WITHOUT an outside anchor.
++// Usage and exit codes: d_lib.ts.
++import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
++import { join } from "node:path";
++import { argv, dups, guard, total, verdict, world } from "./d_lib";
++const S0 = { chargeId: "ch_d19", original: "1000", remaining: "1000", refundEnabled: true };
++async function one(root: string, core: string, kase: "L" | "F") {
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "400"); w.commit(t1.text); w.flush();
++  w.closeSink();
++  const bk = join(w.dir, "backup"); mkdirSync(bk);
++  const files = () => readdirSync(w.dir).filter(f => f !== "backup" && f !== "ctl" && !/-(wal|shm|journal)$/.test(f) && !f.endsWith(".lock"));
++  for (const f of files()) copyFileSync(join(w.dir, f), join(bk, f));
++  w.reopen();
++  const t2 = await w.mint(t1.post, "r2", "400"); w.commit(t2.text);
++  const t3 = await w.mint(t2.post, "r3", "100"); w.commit(t3.text);
++  const r = w.flush();
++  const anchor = r.ledgerHead;                       // kept outside (undefined on the unfixed dispatcher)
++  w.closeSink();
++  if (kase === "L") copyFileSync(join(bk, "ledger.jsonl"), w.ledger);
++  else {
++    for (const f of files()) if (!existsSync(join(bk, f))) rmSync(join(w.dir, f));
++    for (const f of readdirSync(bk)) copyFileSync(join(bk, f), join(w.dir, f));
++    for (const x of ["-wal", "-shm", "-journal"]) if (existsSync(w.db + x)) rmSync(w.db + x);
++  }
++  w.reopen();
++  if (kase === "F") { w.commit(t2.text); w.commit(t3.text); }
++  let last = "";
++  try { last = JSON.stringify(w.flush(undefined, w.ledger, kase === "F" ? { ...w.dcfg, ledgerFloor: anchor } : w.dcfg)); } catch (e) { last = "stopped: " + (e as Error).message; }
++  w.stop();
++  const ids = w.effects.map(e => e.requestId);
++  return { ok: dups(ids).length === 0 && total(w.effects) <= 1000, ids, total: total(w.effects), last: last.slice(0, 200) };
++}
++guard((async () => {
++  const { root, core } = argv();
++  const L = await one(root, core, "L"), F = await one(root, core, "F");
++  verdict(L.ok && F.ok, { caseL: L, caseF: F });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_att20_blob_request_id.ts
+@@ -0,0 +1,31 @@
++// Regression C-ATT-20 (a BLOB-typed outbox request_id was skipped silently). A file writer WITHOUT the key, who can
++// bypass the store's safeguards (drop the append-only trigger, ignore CHECK constraints, put the trigger back with the
++// same text), turns the committed r2's outbox request_id into a BLOB with the same bytes. Nothing is dispatched yet.
++// SAFE: the run either stops with an error (alarm), or reports every committed id (r1, r2) EXACTLY (emitted, or refused
++// under its own id); nothing is counted as already dispatched; nothing is emitted twice. FAILS on the unfixed
++// dispatcher (r2 is refused under the text "114,50", i.e. under no committed id). Usage and exit codes: d_lib.ts.
++import { DatabaseSync } from "node:sqlite";
++import { argv, dups, guard, verdict, world } from "./d_lib";
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_d20", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "400"); w.commit(t1.text);
++  const t2 = await w.mint(t1.post, "r2", "100"); w.commit(t2.text);
++  w.closeSink();
++  const db = new DatabaseSync(w.db);
++  const trig = (db.prepare("SELECT sql FROM sqlite_master WHERE type = 'trigger' AND name = 'h_outbox_bu'").get() as { sql?: string } | undefined)?.sql;
++  db.exec("PRAGMA ignore_check_constraints = ON");
++  if (trig) db.exec("DROP TRIGGER h_outbox_bu");
++  db.exec("UPDATE outbox SET request_id = CAST(request_id AS BLOB) WHERE request_id = 'r2'");
++  if (trig) db.exec(trig);
++  const rows = db.prepare("SELECT seq, typeof(request_id) AS t, hex(request_id) AS h FROM outbox").all();
++  db.close();
++  let r: any = null, stopped = "";
++  try { r = w.flush(); } catch (e) { stopped = (e as Error).message; }
++  w.stop();
++  const ids = w.effects.map(e => e.requestId);
++  const exact = (id: string) => ids.includes(id) || (r !== null && r.refused.some((x: any) => x.requestId === id));
++  const pass = dups(ids).length === 0 && (stopped !== "" || (exact("r1") && exact("r2") && r.alreadyDispatched === 0));
++  verdict(pass, { outbox: rows, emitted: ids, refused: r?.refused?.map((x: any) => x.requestId + ": " + String(x.reason).slice(0, 90)), already: r?.alreadyDispatched, stopped: stopped.slice(0, 200) });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_att22_short_write.ts
+@@ -0,0 +1,40 @@
++// Regression C-ATT-22 (a short ledger write; attacker: none: disk full, quota, file-size limit). The file system takes
++// only half of the first ledger line for r1 and then refuses further bytes (ENOSPC), as a real RLIMIT_FSIZE or
++// full-disk run did (322 of 351 bytes, no error). Simulated in process: node:fs writeSync is wrapped (CommonJS export,
++// as tsx loads the dispatcher); the first ledger line of r1 is cut in half; from then on every write fails.
++// SAFE: run 1 emits nothing for r1 (its record is incomplete); after space returns, run 2 needs no manual edit: it
++// emits r1 and r2 exactly once; run 3 emits nothing and refuses nothing. FAILS on the unfixed dispatcher (r1 leaves
++// with a torn ledger line; every later run stops). Usage and exit codes: d_lib.ts.
++import { argv, dups, guard, total, verdict, world } from "./d_lib";
++// eslint-disable-next-line @typescript-eslint/no-require-imports
++const fs = require("node:fs");
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_d22", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "300"); w.commit(t1.text);
++  const t2 = await w.mint(t1.post, "r2", "200"); w.commit(t2.text);
++  const original = fs.writeSync;
++  let full = false, cut = 0;
++  fs.writeSync = function (fd: number, data: any, a?: any, b?: any, ...rest: any[]) {
++    const bytes: Buffer = typeof data === "string" ? Buffer.from(data, "utf8")
++      : Buffer.from(data.buffer, data.byteOffset + (typeof a === "number" ? a : 0), typeof b === "number" ? b : data.length - (typeof a === "number" ? a : 0));
++    if (full) { const e: any = new Error("ENOSPC: no space left on device, write"); e.code = "ENOSPC"; throw e; }   // the disk is full: every write
++    if ((bytes.includes("preStateSha256") || bytes.includes("\"kind\"")) && bytes.includes("\"r1\"")) {
++      full = true; cut = Math.floor(bytes.length / 2); return original.call(fs, fd, bytes, 0, cut);   // the first r1 ledger line: half
++    }
++    return original.call(fs, fd, data, a, b, ...rest);
++  };
++  let run1 = "";
++  try { run1 = JSON.stringify(w.flush()); } catch (e) { run1 = "stopped: " + (e as Error).message; }
++  const afterRun1 = w.effects.map(e => e.requestId);
++  fs.writeSync = original; full = false;
++  let run2: any = null, run3: any = null, err = "";
++  try { run2 = w.flush(); run3 = w.flush(); } catch (e) { err = (e as Error).message; }
++  w.stop();
++  const ids = w.effects.map(e => e.requestId);
++  const pass = cut > 0 && !afterRun1.includes("r1") && run2 !== null && run3 !== null && dups(ids).length === 0 &&
++    ids.includes("r1") && ids.includes("r2") && run3.emitted.length === 0 && run3.refused.length === 0 && total(w.effects) <= 1000;
++  verdict(pass, { cut, run1: run1.slice(0, 160), afterRun1, effects: ids, run2: run2 && { emitted: run2.emitted.map((e: any) => e.requestId), refused: run2.refused.length, torn: run2.tornTailCut ?? null },
++    run3: run3 && { emitted: run3.emitted.length, refused: run3.refused.length, already: run3.alreadyDispatched }, err: err.slice(0, 160) });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_child.ts
+@@ -0,0 +1,21 @@
++// Helper process of d_att17_lock_theft.ts and d_host02_dead_lock_takeover.ts (not a regression by itself).
++// One dispatcher run. emit = append one line to <effects>. For the effect of <blockRid>:
++//   mode "block": write <ctl>/<name>-blocked, then wait for <ctl>/<name>-go (a slow payment call; no timing guess);
++//   mode "die":   after the line is written, the process kills itself with SIGKILL (a crash after the effect).
++// Usage: d_child.ts <treeRoot> <db> <ledger> <dcfg json file> <effects> <name> <blockRid> <ctl> <block|die>
++import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++const [root, db, ledger, dcfg, effects, name, blockRid, ctl, mode] = process.argv.slice(2);
++// eslint-disable-next-line @typescript-eslint/no-require-imports
++const { Dispatcher } = require(join(root, "ts/refund-finality/dispatcher.ts"));
++const pause = new Int32Array(new SharedArrayBuffer(4));
++const d = new Dispatcher(db, ledger, JSON.parse(readFileSync(dcfg, "utf8")), (e: { requestId: string; intent: string }) => {
++  appendFileSync(effects, JSON.stringify({ by: name, ...e }) + "\n");
++  if (e.requestId !== blockRid) return;
++  if (mode === "die") process.kill(process.pid, "SIGKILL");
++  writeFileSync(join(ctl, name + "-blocked"), "");
++  const t0 = Date.now();
++  while (!existsSync(join(ctl, name + "-go"))) { if (Date.now() - t0 > 60000) throw new Error("go timeout"); Atomics.wait(pause, 0, 0, 10); }
++});
++try { const r = d.flush(); process.stdout.write(JSON.stringify({ name, emitted: r.emitted.map((x: any) => x.requestId), refused: r.refused.map((x: any) => x.requestId) }) + "\n"); }
++catch (err) { process.stdout.write(JSON.stringify({ name, stopped: String((err as Error).message) }) + "\n"); }
+--- /dev/null
++++ b/tests/refund-finality/regress/d_host02_dead_lock_takeover.ts
+@@ -0,0 +1,39 @@
++// Regression C-HOST-02 (a killed run left the lock; the only recovery was the unsafe manual step) and the stale-lock
++// recovery of C-ATT-17. A dispatcher process is killed (SIGKILL) right after its effect for r1 left. No person acts.
++// SAFE: the next run on this host proceeds without a manual step (the dead owner's lock is taken over), reports r1 under
++// its own id as refused/in doubt (never counted as dispatched, never sent again), and emits r2 once. Then a person
++// confirms with the receiver that r1 arrived and records "sent": a further run emits nothing and refuses nothing.
++// FAILS on the unfixed dispatcher (every later run stops at the lock). Usage and exit codes: d_lib.ts.
++import { spawn } from "node:child_process";
++import { existsSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { argv, dups, guard, verdict, world } from "./d_lib";
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_dh02", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "400"); w.commit(t1.text);
++  const t2 = await w.mint(t1.post, "r2", "100"); w.commit(t2.text);
++  const effects = join(w.dir, "effects.jsonl"), dcfgFile = join(w.dir, "dcfg.json");
++  writeFileSync(effects, ""); writeFileSync(dcfgFile, JSON.stringify(w.dcfg));
++  const signal = await new Promise<string | null>(res => {
++    const p = spawn(process.execPath, ["--no-warnings", "--import", "tsx", join(__dirname, "d_child.ts"), root, w.db, w.ledger, dcfgFile, effects, "K", "r1", w.dir, "die"], { stdio: "ignore" });
++    p.on("exit", (_c, s) => res(s));
++  });
++  const lockLeft = existsSync(realpathSync(w.ledger) + ".lock");
++  const fileIds = () => readFileSync(effects, "utf8").split("\n").filter(Boolean).map(l => JSON.parse(l).requestId as string);
++  const emit = (e: { requestId: string; intent: string }) => { w.effects.push(e); writeFileSync(effects, readFileSync(effects, "utf8") + JSON.stringify({ by: "next", ...e }) + "\n"); };
++  let r: any = null, stopped = "";
++  try { r = w.flush(emit); } catch (e) { stopped = (e as Error).message; }
++  let after: any = null, resolved = "";
++  if (r !== null) {
++    try { w.dispatcher().resolveInDoubt("r1", "sent", "receiver has r1 (test)"); resolved = "sent"; after = w.flush(emit); } catch (e) { resolved = "failed: " + (e as Error).message; }
++  }
++  w.stop();
++  const ids = fileIds();
++  const pass = signal === "SIGKILL" && lockLeft && r !== null && r.refused.some((x: any) => x.requestId === "r1") && r.alreadyDispatched === 0 &&
++    r.emitted.map((e: any) => e.requestId).join() === "r2" && after !== null && after.emitted.length === 0 && after.refused.length === 0 &&
++    after.alreadyDispatched === 2 && dups(ids).length === 0;
++  verdict(pass, { signal, lockLeft, effects: ids, next: r && { emitted: r.emitted.map((e: any) => e.requestId), refused: r.refused.map((x: any) => x.requestId), already: r.alreadyDispatched },
++    stopped: stopped.slice(0, 120), resolved: resolved.slice(0, 120), after: after && { emitted: after.emitted.length, refused: after.refused.length, already: after.alreadyDispatched } });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_host05_second_ledger.ts
+@@ -0,0 +1,22 @@
++// Regression C-HOST-05 (a second ledger for one store: 2000 on 1000; attacker: none). r1 and r2 commit and are
++// dispatched with ledger A. A later run names ANOTHER ledger file B for the same store (for example a relative path
++// resolved from another working directory), with cfg.newLedgerH0 still set (as a host keeps its configuration).
++// SAFE: no request id is emitted twice; the total is at most 1000. FAILS on the unfixed dispatcher (the second ledger
++// sends r1 and r2 again). Usage and exit codes: d_lib.ts.
++import { mkdirSync } from "node:fs";
++import { join } from "node:path";
++import { argv, dups, guard, total, verdict, world } from "./d_lib";
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_dh05", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const t1 = await w.mint(S0, "r1", "400"); w.commit(t1.text);
++  const t2 = await w.mint(t1.post, "r2", "600"); w.commit(t2.text);
++  const first = w.flush();
++  mkdirSync(join(w.dir, "other"));
++  let second = "";
++  try { second = JSON.stringify(w.flush(undefined, join(w.dir, "other", "ledger.jsonl"))); } catch (e) { second = "stopped: " + (e as Error).message; }
++  w.stop();
++  const ids = w.effects.map(e => e.requestId);
++  verdict(first.emitted.length === 2 && dups(ids).length === 0 && total(w.effects) <= 1000, { effects: ids, total: total(w.effects), second: second.slice(0, 200) });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_host_cli.ts
+@@ -0,0 +1,77 @@
++// Regression C-HOST-01, 03, 04, 07: the command-line doors tell the truth by exit code and report. Uses the tree's
++// tests/refund-finality/{commit,dispatch}_cli.ts. Each case is SAFE as stated; the file FAILS if any case fails.
++//  a (H-04) commit_cli: a malformed token exits non-zero; a mistyped database path exits non-zero and creates no file.
++//  b (H-01) dispatch_cli: the effect cannot be written (emit fails): exit non-zero; the retry also exits non-zero
++//           (the refund is in doubt, not "nothing to do").
++//  c (H-01) dispatch_cli: a lock held by a live process: exit non-zero.
++//  d (H-01) dispatch_cli: every row refused (wrong pinned initial state): exit non-zero.
++//  e (H-03) dispatch_cli: the lock is removed while the run is in a slow effect: the report counts every effect it sent.
++//  f (H-07) dispatch_cli: stdout is closed before the report (EPIPE): the exit code is 0 for a clean run whose effect left.
++// Usage and exit codes: d_lib.ts.
++import { spawn } from "node:child_process";
++import { randomBytes } from "node:crypto";
++import { existsSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
++import { hostname } from "node:os";
++import { join } from "node:path";
++import { argv, guard, runNode, verdict, world } from "./d_lib";
++guard((async () => {
++  const { root, core } = argv();
++  const CLI = (n: string) => join(root, "tests/refund-finality", n);
++  const S0 = { chargeId: "ch_dcli", original: "1000", remaining: "1000", refundEnabled: true };
++  const out: Record<string, unknown> = {}; const ok: Record<string, boolean> = {};
++  const fresh = async (amounts: string[]) => {
++    const w = await world(root, core, S0);
++    let pre: any = S0; const toks: string[] = [];
++    for (let i = 0; i < amounts.length; i++) { const t = await w.mint(pre, "rq_" + i, amounts[i]); toks.push(t.text); pre = t.post; }
++    const scfg = join(w.dir, "sink-config.json"), dcfg = join(w.dir, "disp-config.json"), eff = join(w.dir, "effects.jsonl");
++    writeFileSync(scfg, JSON.stringify(w.sinkCfg)); writeFileSync(dcfg, JSON.stringify(w.dcfg)); writeFileSync(eff, "");
++    toks.forEach((t, i) => writeFileSync(join(w.dir, `t${i}.token`), t));
++    w.closeSink();
++    return { w, scfg, dcfg, eff };
++  };
++  const D = (x: { w: any; dcfg: string; eff: string }, eff = x.eff, dcfg = x.dcfg) => runNode(root, [CLI("dispatch_cli.ts"), x.w.db, x.w.ledger, dcfg, eff, "0"]);
++  { // a
++    const x = await fresh(["400"]); writeFileSync(join(x.w.dir, "bad.token"), "{}");
++    const r1 = await runNode(root, [CLI("commit_cli.ts"), x.w.db, x.scfg, join(x.w.dir, "bad.token"), "0"]);
++    const typo = join(x.w.dir, "typo.sqlite");
++    const r2 = await runNode(root, [CLI("commit_cli.ts"), typo, x.scfg, join(x.w.dir, "t0.token"), "0"]);
++    ok.a = r1.code !== 0 && r2.code !== 0 && !existsSync(typo); out.a = { bad: r1.code, typo: r2.code, created: existsSync(typo) }; x.w.stop();
++  }
++  { // b
++    const x = await fresh(["400"]); await runNode(root, [CLI("commit_cli.ts"), x.w.db, x.scfg, join(x.w.dir, "t0.token"), "0"]);
++    const r1 = await D(x, join(x.w.dir, "no-such-dir", "effects.jsonl")), r2 = await D(x);
++    ok.b = r1.code !== 0 && r2.code !== 0 && readFileSync(x.eff, "utf8") === ""; out.b = { run1: r1.code, retry: r2.code, retryOut: r2.stdout.slice(0, 120) }; x.w.stop();
++  }
++  { // c
++    const x = await fresh(["400"]); await runNode(root, [CLI("commit_cli.ts"), x.w.db, x.scfg, join(x.w.dir, "t0.token"), "0"]);
++    writeFileSync(x.w.ledger, ""); writeFileSync(realpathSync(x.w.ledger) + ".lock", JSON.stringify({ pid: process.pid, run: randomBytes(16).toString("hex"), host: hostname() }));
++    const r = await D(x); ok.c = r.code !== 0 && readFileSync(x.eff, "utf8") === ""; out.c = { code: r.code }; x.w.stop();
++  }
++  { // d
++    const x = await fresh(["400"]); await runNode(root, [CLI("commit_cli.ts"), x.w.db, x.scfg, join(x.w.dir, "t0.token"), "0"]);
++    const bad = join(x.w.dir, "disp-bad.json"); writeFileSync(bad, JSON.stringify({ ...x.w.dcfg, initialStateSha256: "0".repeat(64) }));
++    const r = await D(x, x.eff, bad); ok.d = r.code !== 0; out.d = { code: r.code, out: r.stdout.slice(0, 120) }; x.w.stop();
++  }
++  { // e
++    const x = await fresh(["400", "600"]);
++    for (const i of [0, 1]) await runNode(root, [CLI("commit_cli.ts"), x.w.db, x.scfg, join(x.w.dir, `t${i}.token`), "0"]);
++    const run = D(x);
++    const t0 = Date.now(); while (readFileSync(x.eff, "utf8") === "" && Date.now() - t0 < 30000) await new Promise(r => setTimeout(r, 5));
++    rmSync(realpathSync(x.w.ledger) + ".lock", { force: true });
++    const r = await run; const sent = readFileSync(x.eff, "utf8").split("\n").filter(Boolean).length;
++    let reported = -1; try { reported = JSON.parse(r.stdout).emitted; } catch { /* no report */ }
++    ok.e = sent > 0 && reported === sent; out.e = { code: r.code, sent, reported }; x.w.stop();
++  }
++  { // f
++    const x = await fresh(["400"]); await runNode(root, [CLI("commit_cli.ts"), x.w.db, x.scfg, join(x.w.dir, "t0.token"), "0"]);
++    const code = await new Promise<number | null>(res => {
++      const p = spawn(process.execPath, ["--no-warnings", "--import", "tsx", CLI("dispatch_cli.ts"), x.w.db, x.w.ledger, x.dcfg, x.eff, "0"],
++        { cwd: root, env: { PATH: process.env.PATH ?? "/usr/bin:/bin" }, stdio: ["ignore", "pipe", "ignore"] });
++      p.stdout.destroy();
++      p.on("exit", c => res(c));
++    });
++    const sent = readFileSync(x.eff, "utf8").split("\n").filter(Boolean).length;
++    ok.f = sent === 1 && code === 0; out.f = { code, sent }; x.w.stop();
++  }
++  verdict(Object.values(ok).every(Boolean) && Object.keys(ok).length === 6, { ok, out });
++})());
+--- /dev/null
++++ b/tests/refund-finality/regress/d_lib.ts
+@@ -0,0 +1,80 @@
++// Shared helper of the dispatcher regressions d_*.ts (night shift 2026-11-19, task h-dispatch). A TEST, not a proof.
++// Usage of every d_*.ts file (from any directory, pinned Node 24.3.0):
++//   node --import tsx tests/refund-finality/regress/d_<name>.ts <treeRoot> <compiledIssuerModule>
++// <treeRoot>: the checkout whose ts/refund-finality/{dispatcher,sink,proposer,encoding}.ts (and, for d_host_*, the
++// tests/refund-finality/{dispatch,commit}_cli.ts) are under test. <compiledIssuerModule>: the module that this tree's
++// minter.ts expects (this branch: the IssueOnce build).
++// Exit 0: PASS (the safe outcome). Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
++// Test keys only: each issuer process makes its own throwaway key. Files go to a fresh temp directory (removed at exit).
++// The dispatcher config always carries newLedgerH0 (as suite.ts does), so a NEW ledger is allowed by configuration.
++import { spawn } from "node:child_process";
++import { mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join, resolve } from "node:path";
++
++export type State = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
++export type Effect = { requestId: string; intent: string };
++export function argv(): { root: string; core: string } {
++  const [root, core] = process.argv.slice(2);
++  if (!root || !core) { console.error("usage: d_<name>.ts <treeRoot> <compiledIssuerModule>"); process.exit(2); }
++  return { root: resolve(root), core: resolve(core) };
++}
++const temps: string[] = [];
++process.on("exit", () => { for (const d of temps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* best effort */ } } });
++export function tempDir(): string { const d = mkdtempSync(join(tmpdir(), "forge-d-")); temps.push(d); return d; }
++
++/* eslint-disable @typescript-eslint/no-require-imports */
++export function load(root: string): any {
++  return {
++    E: require(join(root, "ts/refund-finality/encoding.ts")),
++    Sink: require(join(root, "ts/refund-finality/sink.ts")).Sink,
++    Dispatcher: require(join(root, "ts/refund-finality/dispatcher.ts")).Dispatcher,
++    genesisOf: require(join(root, "ts/refund-finality/core/store.ts")).genesisOf,
++    ...require(join(root, "ts/refund-finality/proposer.ts")),
++  };
++}
++/* eslint-enable @typescript-eslint/no-require-imports */
++
++// One issuer (memory rule "on"), one sink store, one ledger path, one list of effects.
++export async function world(root: string, core: string, S0: State) {
++  const L = load(root);
++  const m = await L.MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on");
++  const ids = { publicKeyPem: m.ready.publicKeyPem, specLockSha256: m.ready.specLockSha256, checkerSha256: m.ready.checkerSha256 };
++  const dir = tempDir(), db = join(dir, "sink.sqlite"), ledger = join(dir, "ledger.jsonl");
++  const sinkCfg = { ...ids, initialState: S0 };
++  const dcfg: any = { ...ids, initialStateSha256: L.E.stateSha256(S0), newLedgerH0: L.genesisOf(L.E.canon(S0), ids.specLockSha256, ids.checkerSha256, ids.publicKeyPem) };
++  let sink = new L.Sink(db, sinkCfg); sink.init(S0);
++  const effects: Effect[] = [];
++  // Mint a token for a pre-state; returns the token text and the post-state (no commit).
++  const mint = async (pre: State, requestId: string, amount: string): Promise<{ text: string; post: State }> => {
++    const t = L.propose(pre, { requestId, amount, reason: "duplicate_charge" });
++    const a = await m.mint(pre, t);
++    if (!a.ok) throw new Error("mint refused: " + a.reason);
++    return { text: L.E.tokenText(a.token), post: t.post };
++  };
++  const commit = (text: string): string => sink.commit(text).status;
++  const dispatcher = (emit?: (e: Effect) => void, ledgerPath = ledger, cfg: any = dcfg) =>
++    new L.Dispatcher(db, ledgerPath, cfg, emit ?? ((e: Effect) => { effects.push(e); }));
++  const flush = (emit?: (e: Effect) => void, ledgerPath = ledger, cfg: any = dcfg) => dispatcher(emit, ledgerPath, cfg).flush();
++  const reopen = () => { try { sink.close(); } catch { /* closed */ } sink = new L.Sink(db, sinkCfg); };
++  const stop = () => { try { sink.close(); } catch { /* closed */ } m.stop(); };
++  return { L, ids, dir, db, ledger, sinkCfg, dcfg, effects, mint, commit, dispatcher, flush, reopen, stop, closeSink: () => sink.close() };
++}
++
++// Runs `node --import tsx <file> args...` and returns its exit code and stdout.
++export function runNode(cwd: string, args: string[], env: NodeJS.ProcessEnv = { PATH: process.env.PATH ?? "/usr/bin:/bin" }): Promise<{ code: number | null; stdout: string }> {
++  return new Promise(done => {
++    const child = spawn(process.execPath, ["--no-warnings", "--import", "tsx", ...args], { cwd, env, stdio: ["ignore", "pipe", "ignore"] });
++    let stdout = "";
++    child.stdout.on("data", c => { stdout += String(c); });
++    child.on("close", code => done({ code, stdout }));
++  });
++}
++export const total = (effects: Effect[]): number => effects.reduce((s, e) => s + Number(JSON.parse(e.intent).amount), 0);
++export const dups = (ids: string[]): string[] => ids.filter((x, i) => ids.indexOf(x) !== i);
++export function verdict(pass: boolean, detail: unknown): never {
++  console.log(JSON.stringify(detail));
++  console.log(pass ? "PASS" : "FAIL");
++  process.exit(pass ? 0 : 1);
++}
++export function guard(p: Promise<void>): void { p.catch(e => { console.error(e); process.exit(3); }); }
+--- /dev/null
++++ b/tests/refund-finality/regress/d_positive_controls.ts
+@@ -0,0 +1,33 @@
++// Positive controls of the dispatcher (honest behaviour; attacker: none). Must PASS on the fixed and on the unfixed tree.
++//  P1: two zero-amount refunds and one positive refund: each is emitted exactly once (zero is a legitimate refund:
++//      spec/refund/protocol.md); a second run emits nothing and refuses nothing.
++//  P2: a lock held by a LIVE process (this one) stops a run; nothing is emitted; after the lock is gone, a later
++//      zero-amount refund is emitted exactly once.
++// Usage and exit codes: d_lib.ts.
++import { randomBytes } from "node:crypto";
++import { realpathSync, unlinkSync, writeFileSync } from "node:fs";
++import { hostname } from "node:os";
++import { argv, dups, guard, verdict, world } from "./d_lib";
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_dpos", original: "1000", remaining: "1000", refundEnabled: true };
++  const w = await world(root, core, S0);
++  const z1 = await w.mint(S0, "rq_z1", "0"); const c1 = w.commit(z1.text);
++  const z2 = await w.mint(z1.post, "rq_z2", "0"); const c2 = w.commit(z2.text);
++  const p1 = await w.mint(z2.post, "rq_p1", "100"); const c3 = w.commit(p1.text);
++  const f1 = w.flush(), f2 = w.flush();
++  const P1 = c1 === "committed" && c2 === "committed" && c3 === "committed" && f1.emitted.length === 3 && f1.refused.length === 0 &&
++    f2.emitted.length === 0 && f2.refused.length === 0 && f2.alreadyDispatched === 3;
++  const z3 = await w.mint(p1.post, "rq_z3", "0"); const c4 = w.commit(z3.text);
++  const lock = realpathSync(w.ledger) + ".lock";
++  writeFileSync(lock, JSON.stringify({ pid: process.pid, run: randomBytes(16).toString("hex"), host: hostname(), startedAt: new Date().toISOString() }));
++  const before = w.effects.length; let held = "";
++  try { w.flush(); } catch (e) { held = (e as Error).message; }
++  const stoppedClean = held.startsWith("dispatcher lock is held") && w.effects.length === before;
++  unlinkSync(lock);
++  const f3 = w.flush();
++  w.stop();
++  const ids = w.effects.map(e => e.requestId);
++  const P2 = c4 === "committed" && stoppedClean && f3.emitted.length === 1 && f3.emitted[0].requestId === "rq_z3" && f3.refused.length === 0;
++  verdict(P1 && P2 && dups(ids).length === 0 && ids.length === 4, { P1, P2, effects: ids, held: held.slice(0, 80) });
++})());

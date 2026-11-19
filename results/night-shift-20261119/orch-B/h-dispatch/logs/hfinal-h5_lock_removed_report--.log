@@ -1,0 +1,3 @@
+rc=1 out={"status":"stopped","stopped":"dispatcher alarm: this run's lock was removed or replaced while it ran; it stops before row 2 (nothing more sent)","emitted":1,"emittedIds":["rq_a"],"onTime":false} effects_sent=1
+retry rc=0 {"status":"ok","emitted":1,"emittedIds":["rq_b"],"refused":[],"alreadyDispatched":1,"inDoubt":[],"ledgerHead":{"n":2,"rowHead":"c27612531de9f3badf8a8c27fdcb0305827c33a00839443472826ba186117aae"},"staleLockTakenOver":null,"onTime":false}
+exit 0

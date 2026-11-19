@@ -1,0 +1,3 @@
+run1 rc=130 out=[] ledger=1 effects=1 lock_left=yes
+run2 rc=4 {"status":"in-doubt","emitted":1,"emittedIds":["rq_b"],"refused":[{"seq":1,"requestId":"rq_a","reason":"in doubt: claimed by run 4e1d969699be4a37f3b6613ca3536f7a (pid 79408) without a done line; not counted as dispatched; a person must ask the receiver and call resolveInDoubt"}],"alreadyDispatched":0,"inDoubt":["rq_a"],"ledgerHead":{"n":2,"rowHead":"ed64bc0d71a79668102d88529acb20fe0040ff0203741eca11cda9cae741bb4c"},"staleLockTakenOver":{"pid":79408,"run":"4e1d969699be4a37f3b6613ca3536f7a"},"onTime":false}
+exit 0
