@@ -402,3 +402,11 @@ RE-RUN by C (16:39:20Z) of worker c24's attacks on B's minter rule 2 (370ff65c; 
 - s2_stale.ts off -> EXIT 1 ("pre-state is not the authoritative stored state"); minter.ts:31 says "Either way an identical request gets a byte-identical token". "on" mode returns the same bytes.
 
 ## C-NEG-16 (16:39:20Z) minter rule 2, SAFE (C's re-runs, exit 0): s1_honest.ts (chain 300,0,0,700,0 all commit; identical retry same bytes; before init refused and recorded nothing); s9_store_read.ts rollback (a file writer without the key makes the honest minter SIGN on the writer's state, but a restarted sink with no outside head commits only via the dispatcher witness; same power as NoStore where a caller picks any pre-state: KNOWN C-ATT-12/13/19 class, not new). Worker runs only (not re-run by C): s3_locked (transient SQLITE_BUSY refused, not recorded), s5_hotjournal (fails closed), s6_200 (flat), s7_close_matrix (which refusals close a pair), the model/code reading (no assume/axiom/extern/bodiless member; build digests match), and all the s10 closed-launch tests.
+
+## C-JUDGE RE-RUN (16:50:13Z) against B's rebuilt judges (cf242303, in tree f08a21c1) — C's own run
+- Command: bash orch-C/c19-dispatch2/judges/blindspots2.sh -> EXIT 1 ("defective inputs passed by both judges: 3"). SHA-256 3f27ad7c034e1b3ee78480acd7f505d6381a540615f3723edce605a3eb5eeea1. Log orch-C/refix/f08a21c1/C-blindspots2.log. (My first run of it ended at my own time limit, exit 124, and gave no result.)
+- C-JUDGE-01: of my 12 earlier mutants, 9 are now CAUGHT (new cases K1 to K6, X3, D3); the dispatcher that ignores the chain is equivalent on this tree and not counted. STILL PASSED BY BOTH: md_ignore_sig (a dispatcher that ignores signatures) and enc_unsigned_body (signed bytes that omit post and intent, in a shared encoding).
+- C-JUDGE-02: the safer sink that refuses a rollback is no longer failed: PASS (closed).
+- C-JUDGE-03: the impostors (early exit, forged output, status lie, exit 0 in flush) are all caught: PASS (closed).
+- NEW evasion: e_emit_twice_hidden2 (a dispatcher that sends twice and hides the second record from the worker's effect list) is PASSED BY BOTH. B stated this weakness (the child reports its own effect records).
+- Whether the three passed mutants are really defective was shown by the worker's confirm.ts runs, NOT re-run by C.
