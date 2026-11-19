@@ -1,0 +1,55 @@
+--- routeA-L2_v3.sml	2026-11-19 03:19:09.719020702 -0500
++++ routeA-L2_v4.sml	2026-11-19 03:40:30.943005745 -0500
+@@ -142,7 +142,7 @@
+    (no L2-leaf-after line for them). Statement unchanged. The main lemma now runs through a staged harness that prints
+    the goal count after every stage and the remaining goals at the first failing stage or at the end. ===== *)
+ val VokV = mk_var ("Vok", ``:num -> word8 list -> arm8_state -> bool``);
+-fun tot_fix (g as (asl, w)) =                                                  (* A5 tactic-only v3 *)
++fun tot_fix (g as (asl, w) : goal) : Context.t -> goal list * validation =    (* A5 ML-only v4: explicit tactic type *)                                                  (* A5 tactic-only v3 *)
+   let val hits = List.filter (fn a => let val (f, args) = strip_comb a in aconv f VokV andalso length args = 3 end
+                                       handle _ => false) asl
+       val eqs = map (fn a => MATCH_MP TOT_T (ASSUME a)) hits
+@@ -157,12 +157,15 @@
+        pr ("  CONCL " ^ cut 2400 (term_to_string w))))
+      (ListPair.zip (List.tabulate (Int.min (6, length gl), fn i => i + 1), List.take (gl, Int.min (6, length gl)))));
+ (* prefix i = the first i stages; each prefix is applied afresh to the goal (costs a few re-runs; L2-0001 used 105 s CPU). *)
+-fun staged name goal (stages : (string * (thm -> tactic)) list) mk =
++(* A5 ML-only v4: a tactic here has type goal -> Context.t -> goal list * validation (HOL/src/1/Abbrev.sig line 10).
++   staged now takes the goal and the context that TAC_PROOF passes (Tactical.sml 75-77) and runs every prefix with that
++   context; its partial application `staged name goal stages mk` is a tactic. *)
++fun staged name goal (stages : (string * (thm -> tactic)) list) (mk : (thm -> tactic) -> tactic) (g : goal) (ctxt : Context.t) =
+   let val n = length stages
+       fun prefix i = mk (fn IH => List.foldl (fn ((_, t), acc) => acc >> t IH) ALL_TAC (List.take (stages, i)))
+       fun run i last =
+         if i > n then (print_goals (name ^ " after all stages") last; raise Fail "goals left after the last stage")
+-        else let val (gl, _) = prefix i ([], goal)
++        else let val (gl, _) = prefix i ([], goal) ctxt                    (* A5 ML-only v4: context passed *)
+                  val _ = pr ("STAGE " ^ name ^ " " ^ Int.toString i ^ " " ^ #1 (List.nth (stages, i - 1)) ^ " goals " ^ Int.toString (length gl))
+              in if null gl then i else run (i + 1) gl end
+              handle Fail m => raise Fail m
+@@ -170,12 +173,12 @@
+                           print_goals (name ^ " before stage " ^ Int.toString i) last; raise Fail "stage failed")
+       val _ = pr ("STAGED " ^ name ^ " stages " ^ Int.toString n)
+       val i = run 1 [([], goal)]
+-  in prefix i end;
++  in prefix i g ctxt end;                                                     (* A5 ML-only v4 *)
+ val L2_goal =
+   ``!k mc1 mc2 ffi ms.
+       mc2 = mc1 with ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer /\ ffi_calls_ok Vok mc2 ffi k ms ==>
+       evaluate mc1 ffi k ms = evaluate mc2 ffi k ms``;
+-fun mkInd body = Induct >- (rpt strip_tac >> once_rewrite_tac [evaluate_def] >> simp []) >> pop_assum body;
++fun mkInd (body : thm -> tactic) : tactic = Induct >- (rpt strip_tac >> once_rewrite_tac [evaluate_def] >> simp []) >> pop_assum body;
+ val stages1 =
+   [("unfold", fn IH => rpt gen_tac >> strip_tac >> rveq >> qpat_x_assum `ffi_calls_ok _ _ _ _ _` mp_tac >>
+                        once_rewrite_tac [evaluate_def, calls_def]),
+@@ -193,8 +196,8 @@
+    ("leaf-IH", fn IH => TRY (match_mp_tac IH >> fs [TOT_T, SHIFT, RFB1, RFB2] >> NO_TAC) >>
+                         TRY (match_mp_tac IH >> simp [machine_config_component_equality] >> fs [] >> NO_TAC))];
+ val L2 = thmA "refund_ffi_tot_evaluate_agree" L2_goal
+-  [fn g => staged "L2-t1" L2_goal stages1 mkInd g,
+-   fn g => staged "L2-t2" L2_goal stages2 mkInd g];
++  [staged "L2-t1" L2_goal stages1 mkInd,                                     (* A5 ML-only v4: partial application = tactic *)
++   staged "L2-t2" L2_goal stages2 mkInd];
+ val _ = pr ("STATEMENT_L2 " ^ term_to_string (concl L2));
+ val L2S = thm "refund_ffi_tot_machine_sem_agree"
+   ``!mc ffi ms.

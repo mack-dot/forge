@@ -1,0 +1,629 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-18 23:31:50.515 Df runningboardd[423:1931fef] [com.apple.runningboard:process] [osservice<com.apple.corespeechd(501)>:697] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:31:57.668 E  runningboardd[423:193250e] [com.apple.runningboard:jetsam] memorystatus_control error: MEMORYSTATUS_CMD_CONVERT_MEMLIMIT_MB(-1) returned -1 22 (Invalid argument)
+2026-11-18 23:31:57.669 Df runningboardd[423:193250e] [com.apple.runningboard:process] [anon<caffeinate>(501):83609] is not RunningBoard jetsam managed.
+2026-11-18 23:31:57.669 E  runningboardd[423:193250e] [com.apple.runningboard:process] Kernel call to get coalition roles for PID 83609, resource coalition id: 955, jetsam coalition id: 956, failed: ret -1, errno 2.
+2026-11-18 23:31:57.671 Df runningboardd[423:1931fe2] [com.apple.runningboard:process] [anon<caffeinate>(501):83609] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:08.481 Df runningboardd[423:1932860] [com.apple.runningboard:process] [app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:08.588 Df runningboardd[423:193259b] [com.apple.runningboard:process] [app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:12.319 Df runningboardd[423:193250e] [com.apple.runningboard:process] [anon<Google Chrome Helper (Aperitif)>(501):10705] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:12.329 Df runningboardd[423:193250e] [com.apple.runningboard:process] [osservice<com.apple.corespeechd(501)>:697] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:12.330 Df runningboardd[423:1932860] [com.apple.runningboard:process] [osservice<com.apple.corespeechd(501)>:697] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:14.509 Df runningboardd[423:1932860] [com.apple.runningboard:process] [app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:14.552 Sd runningboardd[423:0] (C5AFC4BD-0B42-3013-8D42-C0CA3F9A37DB) RBSStateCaptureSet Segment 8
+<RBAssertion| identifier:423-729-169 target:[osservice<com.apple.controlcenter(501)>:814] explanation:"FBWorkspaceDomain: injecting saved endowment" active originator:[osservice<com.apple.MenuBarAgent(501)>:729] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.frontboard:WorkspaceEndpointInjection invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"WorkspaceEndpointInjection" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-1191631 target:[anon<Cursor Helper (Plugin)>(501):58148] explanation:"uielement:58148" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 70610 name:osservice<com.apple.SoftwareUpdateNotificationManager(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-1194635 0>
+	]>><RBConnectionClient| 350 name:osservice<com.apple.mediaremoted> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.terminateprocess,
+			com.apple.private.applemediaservices,
+			com.apple.mediaremote.ui-server-connection,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess,
+			com.apple.multitasking.unlimitedassertions
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 851 name:xpcservice<com.apple.TextInputUI.xpc.CursorUIViewService(no host)(501)>{vt hash: 0}{definition:com.apple.TextInputUI.xpc.CursorUIViewService[standard][user]}:851 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-190 0>
+	]>><RBConnectionClient| 1203 name:app<application.com.nordvpn.macos.1873550914.1873550919(501)> entitlements:<RBEntitlements| [
+			
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-673150 0>,
+	<RBSInheritance| environment:(none) name:com.apple.boardservices.endpoint-injection origID:423-729-673139 payload 14446341711161148484>
+	]>><RBConnectionClient| 54392 name:osservice<com.apple.siriactionsd(501)> entitlements:<RBEntitlements| [
+			com.apple.runningboard.terminateprocess,
+			com.apple.runningboard.assertions.shortcuts,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess,
+			com.apple.runningboard.assertions.siri
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-388-679872 target:[xpcservice<com.apple.messages.AssistantExtension([osservice<com.apple.suggestd(501)>:28709])(501)>{vt hash: 0}{definition:com.apple.messages.AssistantExtension[extension][client]}:28940] explanation:"backgroundApp:28940" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-729-673139 target:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] explanation:"FBWorkspaceDomain: injecting saved endowment" active originator:[osservice<com.apple.MenuBarAgent(501)>:729] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.frontboard:WorkspaceEndpointInjection invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"WorkspaceEndpointInjection" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-936723 target:[xpcservice<com.apple.SafariPlatformSupport.Helper([app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689])(501)>{vt hash: 0}{definition:com.apple.SafariPlatformSupport.Helper[standard][client]}:10100:10100] explanation:"viewBridge:10100" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20251 legRes:0 doms:com.apple.launchservicesd:RoleViewBridge invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleViewBridge" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 69491 name:osservice<com.apple.stickersd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-388-848754 target:[anon<Cursor Helper (Plugin)>(501):43469] explanation:"uielement:43469" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-848850 target:[anon<node>(501):43575] explanation:"backgroundApp:43575" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-1187036 target:[anon<Cursor Helper (Plugin)>(501):39563] explanation:"uielement:39563" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-1203-673158 target:[xpcservice<com.apple.WebKit.Networking([app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203])(501)>{vt hash: 0}[uuid:20E4C1D8-5C02-4C33-A645-3ED83104B9A8]{definition:com.apple.WebKit.Networking[standard][client]}:1451:1451](NetworkProcess1451) explanation:"Jetsam Boost" active originator:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.webkit:BoostedJetsam invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.webkit" name:"BoostedJetsam" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 41092 name:osservice<com.apple.transparencyd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 62900 name:osservice<com.apple.mlhostd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.terminateprocess
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-388-190 target:[xpcservice<com.apple.TextInputUI.xpc.CursorUIViewService(no host)(501)>{vt hash: 0}{definition:com.apple.TextInputUI.xpc.CursorUIViewService[standard][user]}:851:851] explanation:"viewBridge:851" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20251 legRes:0 doms:com.apple.launchservicesd:RoleViewBridge invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleViewBridge" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 87379 name:extension<com.apple.lighthouse.BiomeSELFIngestor[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):87349)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-729-170 target:[osservice<com.apple.controlcenter(501)>:814] explanation:"FBWorkspace (FV-Focal[100])" active originator:[osservice<com.apple.MenuBarAgent(501)>:729] transientState:<RBAssertionTransientState| policies:[
+	
+	] tags:[
+	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:10000 legRes:0 doms:com.apple.frontboard:SuspendableLPRunReason-Resume,com.apple.frontboard:SuspendableJetsamLimit-ActiveUI,com.apple.frontboard:SuspendableRole-Utility,com.apple.frontboard:SuspendableRole-UIFocal,com.apple.frontboard:SuspendableRole-Utility,com.apple.frontboard:SuspendableJetsamPriority-Foreground invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableLPRunReason-Resume" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableRole-UIFocal" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableJetsamPriority-Foreground" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 798 name:app<application.com.todesktop.230313mzl4w4u92.1806318077.1806318083(501)> entitlements:<RBEntitlements| [
+			
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-263 0>,
+	<RBSInheritance| environment:(none) name:com.apple.frontboard.visibility origID:423-416-1191650 0>,
+	<RBSInheritance| environment:(none) name:com.apple.boardservices.endpoint-injection origID:423-729-278 payload 9374850992457404628>
+	]>><RBAssertion| identifier:423-388-1191629 target:[anon<Cursor Helper (Plugin)>(501):58146] explanation:"uielement:58146" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 88621 name:extension<com.apple.Game-Controller-Settings.AppIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 828 name:osservice<com.apple.campo(501)> entitlements:<RBEntitlements| [
+			com.apple.private.applemediaservices,
+			com.apple.runningboard.process-state,
+			com.apple.private.security.container-required,
+			com.apple.runningboard.assertions.angeltarget.campo,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.posterkit.host,
+			com.apple.runningboard.launchprocess,
+			com.apple.runningboard.assertions.siri,
+			com.apple.runningboard.assertions.angeltarget,
+			com.apple.runningboard.assertions.shortcuts
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-165 0>
+	]>><RBAssertion| identifier:423-388-1193469 target:[anon<Cursor Helper (Plugin)>(501):72850] explanation:"uielement:72850" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]>
+2026-11-18 23:32:14.553 Sd runningboardd[423:0] (C5AFC4BD-0B42-3013-8D42-C0CA3F9A37DB) RBSStateCaptureSet Segment 11
+<RBConnectionClient| 87424 name:extension<com.apple.proactive.AppleIntelligenceReportingSELFIngestor[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):87349)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 74350 name:xpcservice<com.apple.SharePlay.GroupSessionService([app<application.com.apple.Notes.1152921500311895788.1152921500311895799(501)>:58963])(501)>{vt hash: 0}{definition:com.apple.SharePlay.GroupSessionService[standard][client]}:74350 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 82274 name:osservice<com.apple.pluginkit.pkd(501)> entitlements:<RBEntitlements| [
+			com.apple.runningboard.launch_extensions,
+			com.apple.runningboard.statecapture,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-416-1194080 target:[app<application.com.apple.MobileSMS.1152921500311889145.1152921500311889220(501)>:40957] explanation:"AppDrawing" active originator:[osservice<com.apple.WindowServer(88)>:416] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.appnap:AppDrawing invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.appnap" name:"AppDrawing" sourceEnvironment:"(null)">,
+	<RBSAcquisitionCompletionAttribute| policy:AfterApplication>
+	]><RBAssertion| identifier:423-1203-673149 target:[xpcservice<com.apple.WebKit.WebContent([app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203])(501)>{vt hash: 0}[uuid:B4726B2E-6507-4A74-B117-BF935D92E616]{definition:com.apple.WebKit.WebContent[standard][client]}:1444:1444](WebProcess1444) explanation:"Jetsam Boost" active originator:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.webkit:BoostedJetsam invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.webkit" name:"BoostedJetsam" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 506 name:osservice<com.apple.security.syspolicy> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89431 name:extension<com.apple.Passwords.PasswordSettingsAppIntentsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-1203-673145 target:[xpcservice<com.apple.WebKit.GPU([app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203])(501)>{vt hash: 0}[uuid:37BE6B36-DB51-404E-AB95-1286B74700C1]{definition:com.apple.WebKit.GPU[standard][client]}:1443:1443](GPUProcess1443) explanation:"Jetsam Boost" active originator:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.webkit:BoostedJetsam invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.webkit" name:"BoostedJetsam" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 87395 name:extension<com.apple.lighthouse.IFTranscriptSELFIngestor[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):87349)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 42692 name:osservice<com.apple.amsaccountsd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.private.applemediaservices
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-388-499 target:[xpcservice<com.apple.SafariPlatformSupport.Helper([app<application.com.todesktop.230313mzl4w4u92.1806318077.1806318083(501)>:798])(501)>{vt hash: 0}{definition:com.apple.SafariPlatformSupport.Helper[standard][client]}:1950:1950] explanation:"viewBridge:1950" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20251 legRes:0 doms:com.apple.launchservicesd:RoleViewBridge invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleViewBridge" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-729-673142 target:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] explanation:"com.apple.frontboard.after-life.interrupted" originator:[osservice<com.apple.MenuBarAgent(501)>:729] intransientState:<RBAssertionIntransientState| strt:After-Originator-Exit end:Invalidate nvld:30.00 warn:0.00dom prevSus runningReason:10001 legRes:0 doms:com.apple.frontboard:AfterLife-Interrupted invOnConds:(null)> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"AfterLife-Interrupted" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 92270 name:osservice<com.apple.networkserviceproxy(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.private.applemediaservices
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-729-445 target:[osservice<com.apple.TextInputMenuAgent(501)>:1823] explanation:"FBWorkspaceDomain: injecting saved endowment" active originator:[osservice<com.apple.MenuBarAgent(501)>:729] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.frontboard:WorkspaceEndpointInjection invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"WorkspaceEndpointInjection" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 88623 name:extension<com.apple.CD-DVD-Settings.CDsAndDvDsSettingsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 45408 name:osservice<com.apple.Maps.mapssyncd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 65221 name:anon<Docker Desktop>(501) entitlements:<RBEntitlements| [
+			
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-932806 0>,
+	<RBSInheritance| environment:(none) name:com.apple.boardservices.endpoint-injection origID:423-729-932788 payload 17918709085130224302>
+	]>><RBAssertion| identifier:423-388-1194361 target:[osservice<com.apple.CoreLocationAgent(501)>:42422] explanation:"uielement:42422" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-595108 target:[anon<node>(501):40939] explanation:"backgroundApp:40939" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-595110 target:[anon<node>(501):40940] explanation:"backgroundApp:40940" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-673150 target:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] explanation:"foregroundApp:1203" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-1191452 target:[osservice<com.apple.photolibraryd(501)>:28104] explanation:"backgroundApp:28104" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 48871 name:xpcservice<com.apple.AuthenticationServices.Helper([app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689])(501)>{vt hash: 0}{definition:com.apple.AuthenticationServices.Helper[standard][client]}:48871 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-1133190 0>
+	]>><RBConnectionClient| 11581 name:osservice<com.apple.syncdefaultsd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 91916 name:xpcservice<com.apple.WorkflowKit.BackgroundShortcutRunner([osservice<com.apple.duetexpertd(501)>:35554])(501)>{vt hash: 0}[uuid:F453C148-8428-4B8E-9B80-F9968CC53B5B]{definition:com.apple.WorkflowKit.BackgroundShortcutRunner[standard][client]}:91916 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.assertions.shortcuts,
+			com.apple.private.applemediaservices,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess,
+			com.apple.runningboard.assertions.siri
+			]> inheritanceManager:<RBClientInheritanceManager| >>
+2026-11-18 23:32:14.554 Sd runningboardd[423:0] (C5AFC4BD-0B42-3013-8D42-C0CA3F9A37DB) RBSStateCaptureSet Segment 18
+<RBConnectionClient| 41255 name:osservice<com.apple.intelligenceflowd(501)> entitlements:<RBEntitlements| [
+			com.apple.runningboard.launchprocess,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.assertions.shortcuts,
+			com.apple.private.applemediaservices,
+			com.apple.runningboard.assertions.fuseboard,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.assertions.siri
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 87885 name:extension<com.apple.ScreenTimeAppIntentsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 87699 name:extension<com.apple.PlaceholderSettingsSearchTermsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89571 name:extension<com.apple.systempreferences.KeyboardSettingsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 42421 name:osservice<com.apple.CommCenter(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 11186 name:extension<com.apple.settings-intents.trackpad[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):738)(501)>[uuid:588C7E72-6FDE-4ED2-95FA-BDFED0F613B7] entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89522 name:extension<com.apple.SoftwareUpdateSettingsExtensionIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-54269-1194077 target:[app<application.com.apple.MobileSMS.1152921500311889145.1152921500311889220(501)>:40957] explanation:"FBWorkspace (FV-Focal[100])" active originator:[osservice<com.apple.uikitsystemapp(501)>:54269] transientState:<RBAssertionTransientState| policies:[
+	
+	] tags:[
+	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:10000 legRes:0 doms:com.apple.frontboard:SuspendableLPRunReason-Resume,com.apple.frontboard:SuspendableJetsamLimit-ActiveUI,com.apple.frontboard:SuspendableRole-Utility,com.apple.frontboard:Visibility,com.apple.frontboard:SuspendableRole-UIFocal,com.apple.frontboard:SuspendableRole-Utility,com.apple.frontboard:SuspendableJetsamPriority-Foreground invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableLPRunReason-Resume" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"Visibility" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableRole-UIFocal" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableJetsamPriority-Foreground" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 89525 name:extension<com.apple.BiometricsAndPasswordSettingsAppIntentsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-32076-1180577 target:[app<application.com.apple.Terminal.1152921500311915865.1152921500311915870(501)>:32076] explanation:"AppNap adapter assertion" active originator:[app<application.com.apple.Terminal.1152921500311915865.1152921500311915870(501)>:32076] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.appnap:Enable,com.apple.appnap:PreventTimerThrottleTier5 invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSAcquisitionCompletionAttribute| policy:AfterApplication>,
+	<RBSDomainAttribute| domain:"com.apple.appnap" name:"Enable" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.appnap" name:"PreventTimerThrottleTier5" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 11113 name:extension<com.apple.notifications.NotificationsSettingsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):738)(501)>[uuid:588C7E72-6FDE-4ED2-95FA-BDFED0F613B7] entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-360-1188182 target:[osservice<com.apple.cloudd(501)>:73854] explanation:"App is holding power assertion" active originator:[osservice<com.apple.powerd>:360] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20244 legRes:0 doms:com.apple.appnap:PowerAssertion invOnConds:(null)> processState:<RBProcessState| role:Background> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.appnap" name:"PowerAssertion" sourceEnvironment:"(null)">,
+	<RBSAcquisitionCompletionAttribute| policy:AfterApplication>
+	]><RBAssertion| identifier:423-49616-1191979 target:[extension<com.apple.CloudDocs.iCloudDriveFileProvider[config:48D8C5C7-9A24-33FC-915C-FBA432AF92A2]((null):49616)(501)>[uuid:27C56220-2119-4CF4-8007-62203FBAC1C9]:39806] explanation:"fileproviderd extension keepalive" active originator:[osservice<com.apple.FileProvider(501)>:49616] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:22 legRes:0 doms:com.apple.FileProvider:FileProviderBackground invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.FileProvider" name:"FileProviderBackground" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 72274 name:osservice<com.apple.AppSSODaemon> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 28994 name:xpcservice<com.apple.textkit.nsattributedstringagent([app<application.com.apple.MobileSMS.1152921500311889145.1152921500311889220(501)>:40957])(501)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:28994 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 87744 name:extension<com.apple.SiriSetup.SiriSetupSettingsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89569 name:extension<com.apple.systempreferences.InternationalSettingsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 5615 name:osservice<com.apple.textunderstandingd(501)> entitlements:<RBEntitlements| [
+			com.apple.runningboard.terminateprocess,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-621-1194423 target:extension<com.apple.wallpaper.extension.aerials[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):621)(501)> explanation:"RBSLaunchRequest for extension<com.apple.wallpaper.extension.aerials[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):621)(501)>" active originator:[osservice<com.apple.wallpaper.agent(501)>:621] transientState:<RBAssertionTransientState| policies:[
+	
+	] tags:[
+	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:13 legRes:0 doms:com.apple.extensionkit:BackgroundAppExtension,com.apple.extensionkit:HandleMessage invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.extensionkit" name:"BackgroundAppExtension" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.extensionkit" name:"HandleMessage" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-1179333 target:[app<application.com.apple.Terminal.1152921500311915865.1152921500311915870(501)>:32076] explanation:"foregroundApp:32076" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 11132 name:extension<com.apple.settings-intents.mouse[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):738)(501)>[uuid:588C7E72-6FDE-4ED2-95FA-BDFED0F613B7] entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-49616-1194480 target:extension<com.apple.CloudDocs.iCloudDriveFileProvider[config:48D8C5C7-9A24-33FC-915C-FBA432AF92A2]((null):49616)(501)>[uuid:27C56220-2119-4CF4-8007-62203FBAC1C9] explanation:"RBSLaunchRequest for extension<com.apple.CloudDocs.iCloudDriveFileProvider[config:48D8C5C7-9A24-33FC-915C-FBA432AF92A2]((null):49616)(501)>[uuid:27C56220-2119-4CF4-8007-62203FBAC1C9]" active originator:[osservice<com.apple.FileProvider(501)>:49616] transientState:<RBAssertionTransientState| policies:[
+	
+	] tags:[
+	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:13 legRes:0 doms:com.apple.extensionkit:BackgroundAppExtension,com.apple.extensionkit:HandleMessage invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.extensionkit" name:"BackgroundAppExtension" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.extensionkit" name:"HandleMessage" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 73854 name:osservice<com.apple.cloudd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89432 name:extension<com.apple.ClassroomDeviceExpert[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 11236 name:extension<com.apple.batteryui.BatterySettingsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):738)(501)>[uuid:588C7E72-6FDE-4ED2-95FA-BDFED0F613B7] entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >>
+2026-11-18 23:32:15.005 Df runningboardd[423:193259b] [com.apple.runningboard:process] [osservice<com.apple.Dock.agent(501)>:813] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:15.080 Sd runningboardd[423:0] (C5AFC4BD-0B42-3013-8D42-C0CA3F9A37DB) RBSStateCaptureSet Segment 8
+<RBAssertion| identifier:423-729-169 target:[osservice<com.apple.controlcenter(501)>:814] explanation:"FBWorkspaceDomain: injecting saved endowment" active originator:[osservice<com.apple.MenuBarAgent(501)>:729] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.frontboard:WorkspaceEndpointInjection invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"WorkspaceEndpointInjection" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-1191631 target:[anon<Cursor Helper (Plugin)>(501):58148] explanation:"uielement:58148" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 70610 name:osservice<com.apple.SoftwareUpdateNotificationManager(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-1194635 0>
+	]>><RBConnectionClient| 350 name:osservice<com.apple.mediaremoted> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.terminateprocess,
+			com.apple.private.applemediaservices,
+			com.apple.mediaremote.ui-server-connection,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess,
+			com.apple.multitasking.unlimitedassertions
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 851 name:xpcservice<com.apple.TextInputUI.xpc.CursorUIViewService(no host)(501)>{vt hash: 0}{definition:com.apple.TextInputUI.xpc.CursorUIViewService[standard][user]}:851 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-190 0>
+	]>><RBConnectionClient| 1203 name:app<application.com.nordvpn.macos.1873550914.1873550919(501)> entitlements:<RBEntitlements| [
+			
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-673150 0>,
+	<RBSInheritance| environment:(none) name:com.apple.boardservices.endpoint-injection origID:423-729-673139 payload 14446341711161148484>
+	]>><RBConnectionClient| 54392 name:osservice<com.apple.siriactionsd(501)> entitlements:<RBEntitlements| [
+			com.apple.runningboard.terminateprocess,
+			com.apple.runningboard.assertions.shortcuts,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess,
+			com.apple.runningboard.assertions.siri
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-388-679872 target:[xpcservice<com.apple.messages.AssistantExtension([osservice<com.apple.suggestd(501)>:28709])(501)>{vt hash: 0}{definition:com.apple.messages.AssistantExtension[extension][client]}:28940] explanation:"backgroundApp:28940" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-729-673139 target:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] explanation:"FBWorkspaceDomain: injecting saved endowment" active originator:[osservice<com.apple.MenuBarAgent(501)>:729] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.frontboard:WorkspaceEndpointInjection invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"WorkspaceEndpointInjection" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-936723 target:[xpcservice<com.apple.SafariPlatformSupport.Helper([app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689])(501)>{vt hash: 0}{definition:com.apple.SafariPlatformSupport.Helper[standard][client]}:10100:10100] explanation:"viewBridge:10100" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20251 legRes:0 doms:com.apple.launchservicesd:RoleViewBridge invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleViewBridge" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 69491 name:osservice<com.apple.stickersd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-388-848754 target:[anon<Cursor Helper (Plugin)>(501):43469] explanation:"uielement:43469" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-848850 target:[anon<node>(501):43575] explanation:"backgroundApp:43575" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-1187036 target:[anon<Cursor Helper (Plugin)>(501):39563] explanation:"uielement:39563" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-1203-673158 target:[xpcservice<com.apple.WebKit.Networking([app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203])(501)>{vt hash: 0}[uuid:20E4C1D8-5C02-4C33-A645-3ED83104B9A8]{definition:com.apple.WebKit.Networking[standard][client]}:1451:1451](NetworkProcess1451) explanation:"Jetsam Boost" active originator:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.webkit:BoostedJetsam invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.webkit" name:"BoostedJetsam" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 41092 name:osservice<com.apple.transparencyd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 62900 name:osservice<com.apple.mlhostd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.terminateprocess
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-388-190 target:[xpcservice<com.apple.TextInputUI.xpc.CursorUIViewService(no host)(501)>{vt hash: 0}{definition:com.apple.TextInputUI.xpc.CursorUIViewService[standard][user]}:851:851] explanation:"viewBridge:851" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20251 legRes:0 doms:com.apple.launchservicesd:RoleViewBridge invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleViewBridge" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 87379 name:extension<com.apple.lighthouse.BiomeSELFIngestor[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):87349)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-729-170 target:[osservice<com.apple.controlcenter(501)>:814] explanation:"FBWorkspace (FV-Focal[100])" active originator:[osservice<com.apple.MenuBarAgent(501)>:729] transientState:<RBAssertionTransientState| policies:[
+	
+	] tags:[
+	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:10000 legRes:0 doms:com.apple.frontboard:SuspendableLPRunReason-Resume,com.apple.frontboard:SuspendableJetsamLimit-ActiveUI,com.apple.frontboard:SuspendableRole-Utility,com.apple.frontboard:SuspendableRole-UIFocal,com.apple.frontboard:SuspendableRole-Utility,com.apple.frontboard:SuspendableJetsamPriority-Foreground invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableLPRunReason-Resume" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableRole-UIFocal" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableJetsamPriority-Foreground" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 798 name:app<application.com.todesktop.230313mzl4w4u92.1806318077.1806318083(501)> entitlements:<RBEntitlements| [
+			
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-263 0>,
+	<RBSInheritance| environment:(none) name:com.apple.frontboard.visibility origID:423-416-1191650 0>,
+	<RBSInheritance| environment:(none) name:com.apple.boardservices.endpoint-injection origID:423-729-278 payload 9374850992457404628>
+	]>><RBAssertion| identifier:423-388-1191629 target:[anon<Cursor Helper (Plugin)>(501):58146] explanation:"uielement:58146" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 88621 name:extension<com.apple.Game-Controller-Settings.AppIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 828 name:osservice<com.apple.campo(501)> entitlements:<RBEntitlements| [
+			com.apple.private.applemediaservices,
+			com.apple.runningboard.process-state,
+			com.apple.private.security.container-required,
+			com.apple.runningboard.assertions.angeltarget.campo,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.posterkit.host,
+			com.apple.runningboard.launchprocess,
+			com.apple.runningboard.assertions.siri,
+			com.apple.runningboard.assertions.angeltarget,
+			com.apple.runningboard.assertions.shortcuts
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-165 0>
+	]>><RBAssertion| identifier:423-388-1193469 target:[anon<Cursor Helper (Plugin)>(501):72850] explanation:"uielement:72850" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]>
+2026-11-18 23:32:15.081 Sd runningboardd[423:0] (C5AFC4BD-0B42-3013-8D42-C0CA3F9A37DB) RBSStateCaptureSet Segment 11
+<RBConnectionClient| 87424 name:extension<com.apple.proactive.AppleIntelligenceReportingSELFIngestor[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):87349)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 74350 name:xpcservice<com.apple.SharePlay.GroupSessionService([app<application.com.apple.Notes.1152921500311895788.1152921500311895799(501)>:58963])(501)>{vt hash: 0}{definition:com.apple.SharePlay.GroupSessionService[standard][client]}:74350 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 82274 name:osservice<com.apple.pluginkit.pkd(501)> entitlements:<RBEntitlements| [
+			com.apple.runningboard.launch_extensions,
+			com.apple.runningboard.statecapture,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-416-1194080 target:[app<application.com.apple.MobileSMS.1152921500311889145.1152921500311889220(501)>:40957] explanation:"AppDrawing" active originator:[osservice<com.apple.WindowServer(88)>:416] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.appnap:AppDrawing invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.appnap" name:"AppDrawing" sourceEnvironment:"(null)">,
+	<RBSAcquisitionCompletionAttribute| policy:AfterApplication>
+	]><RBAssertion| identifier:423-1203-673149 target:[xpcservice<com.apple.WebKit.WebContent([app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203])(501)>{vt hash: 0}[uuid:B4726B2E-6507-4A74-B117-BF935D92E616]{definition:com.apple.WebKit.WebContent[standard][client]}:1444:1444](WebProcess1444) explanation:"Jetsam Boost" active originator:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.webkit:BoostedJetsam invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.webkit" name:"BoostedJetsam" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 506 name:osservice<com.apple.security.syspolicy> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89431 name:extension<com.apple.Passwords.PasswordSettingsAppIntentsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-1203-673145 target:[xpcservice<com.apple.WebKit.GPU([app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203])(501)>{vt hash: 0}[uuid:37BE6B36-DB51-404E-AB95-1286B74700C1]{definition:com.apple.WebKit.GPU[standard][client]}:1443:1443](GPUProcess1443) explanation:"Jetsam Boost" active originator:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.webkit:BoostedJetsam invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.webkit" name:"BoostedJetsam" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 87395 name:extension<com.apple.lighthouse.IFTranscriptSELFIngestor[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):87349)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 42692 name:osservice<com.apple.amsaccountsd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.private.applemediaservices
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-388-499 target:[xpcservice<com.apple.SafariPlatformSupport.Helper([app<application.com.todesktop.230313mzl4w4u92.1806318077.1806318083(501)>:798])(501)>{vt hash: 0}{definition:com.apple.SafariPlatformSupport.Helper[standard][client]}:1950:1950] explanation:"viewBridge:1950" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20251 legRes:0 doms:com.apple.launchservicesd:RoleViewBridge invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleViewBridge" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-729-673142 target:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] explanation:"com.apple.frontboard.after-life.interrupted" originator:[osservice<com.apple.MenuBarAgent(501)>:729] intransientState:<RBAssertionIntransientState| strt:After-Originator-Exit end:Invalidate nvld:30.00 warn:0.00dom prevSus runningReason:10001 legRes:0 doms:com.apple.frontboard:AfterLife-Interrupted invOnConds:(null)> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"AfterLife-Interrupted" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 92270 name:osservice<com.apple.networkserviceproxy(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.private.applemediaservices
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-729-445 target:[osservice<com.apple.TextInputMenuAgent(501)>:1823] explanation:"FBWorkspaceDomain: injecting saved endowment" active originator:[osservice<com.apple.MenuBarAgent(501)>:729] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.frontboard:WorkspaceEndpointInjection invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"WorkspaceEndpointInjection" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 88623 name:extension<com.apple.CD-DVD-Settings.CDsAndDvDsSettingsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 45408 name:osservice<com.apple.Maps.mapssyncd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 65221 name:anon<Docker Desktop>(501) entitlements:<RBEntitlements| [
+			
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-932806 0>,
+	<RBSInheritance| environment:(none) name:com.apple.boardservices.endpoint-injection origID:423-729-932788 payload 17918709085130224302>
+	]>><RBAssertion| identifier:423-388-1194361 target:[osservice<com.apple.CoreLocationAgent(501)>:42422] explanation:"uielement:42422" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-595108 target:[anon<node>(501):40939] explanation:"backgroundApp:40939" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-595110 target:[anon<node>(501):40940] explanation:"backgroundApp:40940" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-673150 target:[app<application.com.nordvpn.macos.1873550914.1873550919(501)>:1203] explanation:"foregroundApp:1203" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-1191452 target:[osservice<com.apple.photolibraryd(501)>:28104] explanation:"backgroundApp:28104" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 48871 name:xpcservice<com.apple.AuthenticationServices.Helper([app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689])(501)>{vt hash: 0}{definition:com.apple.AuthenticationServices.Helper[standard][client]}:48871 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager|  inheritances:[
+	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:423-388-1133190 0>
+	]>><RBConnectionClient| 11581 name:osservice<com.apple.syncdefaultsd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 91916 name:xpcservice<com.apple.WorkflowKit.BackgroundShortcutRunner([osservice<com.apple.duetexpertd(501)>:35554])(501)>{vt hash: 0}[uuid:F453C148-8428-4B8E-9B80-F9968CC53B5B]{definition:com.apple.WorkflowKit.BackgroundShortcutRunner[standard][client]}:91916 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.assertions.shortcuts,
+			com.apple.private.applemediaservices,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess,
+			com.apple.runningboard.assertions.siri
+			]> inheritanceManager:<RBClientInheritanceManager| >>
+2026-11-18 23:32:15.082 Sd runningboardd[423:0] (C5AFC4BD-0B42-3013-8D42-C0CA3F9A37DB) RBSStateCaptureSet Segment 18
+<RBConnectionClient| 41255 name:osservice<com.apple.intelligenceflowd(501)> entitlements:<RBEntitlements| [
+			com.apple.runningboard.launchprocess,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.assertions.shortcuts,
+			com.apple.private.applemediaservices,
+			com.apple.runningboard.assertions.fuseboard,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.assertions.siri
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 87885 name:extension<com.apple.ScreenTimeAppIntentsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 87699 name:extension<com.apple.PlaceholderSettingsSearchTermsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89571 name:extension<com.apple.systempreferences.KeyboardSettingsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 42421 name:osservice<com.apple.CommCenter(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 11186 name:extension<com.apple.settings-intents.trackpad[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):738)(501)>[uuid:588C7E72-6FDE-4ED2-95FA-BDFED0F613B7] entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89522 name:extension<com.apple.SoftwareUpdateSettingsExtensionIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-54269-1194077 target:[app<application.com.apple.MobileSMS.1152921500311889145.1152921500311889220(501)>:40957] explanation:"FBWorkspace (FV-Focal[100])" active originator:[osservice<com.apple.uikitsystemapp(501)>:54269] transientState:<RBAssertionTransientState| policies:[
+	
+	] tags:[
+	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:10000 legRes:0 doms:com.apple.frontboard:SuspendableLPRunReason-Resume,com.apple.frontboard:SuspendableJetsamLimit-ActiveUI,com.apple.frontboard:SuspendableRole-Utility,com.apple.frontboard:Visibility,com.apple.frontboard:SuspendableRole-UIFocal,com.apple.frontboard:SuspendableRole-Utility,com.apple.frontboard:SuspendableJetsamPriority-Foreground invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableLPRunReason-Resume" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"Visibility" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableRole-UIFocal" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableJetsamPriority-Foreground" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 89525 name:extension<com.apple.BiometricsAndPasswordSettingsAppIntentsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-32076-1180577 target:[app<application.com.apple.Terminal.1152921500311915865.1152921500311915870(501)>:32076] explanation:"AppNap adapter assertion" active originator:[app<application.com.apple.Terminal.1152921500311915865.1152921500311915870(501)>:32076] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom runningReason:0 legRes:0 doms:com.apple.appnap:Enable,com.apple.appnap:PreventTimerThrottleTier5 invOnConds:(null)> processState:<RBProcessState| role:None> suspended: attributes:[
+	<RBSAcquisitionCompletionAttribute| policy:AfterApplication>,
+	<RBSDomainAttribute| domain:"com.apple.appnap" name:"Enable" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.appnap" name:"PreventTimerThrottleTier5" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 11113 name:extension<com.apple.notifications.NotificationsSettingsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):738)(501)>[uuid:588C7E72-6FDE-4ED2-95FA-BDFED0F613B7] entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-360-1188182 target:[osservice<com.apple.cloudd(501)>:73854] explanation:"App is holding power assertion" active originator:[osservice<com.apple.powerd>:360] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20244 legRes:0 doms:com.apple.appnap:PowerAssertion invOnConds:(null)> processState:<RBProcessState| role:Background> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.appnap" name:"PowerAssertion" sourceEnvironment:"(null)">,
+	<RBSAcquisitionCompletionAttribute| policy:AfterApplication>
+	]><RBAssertion| identifier:423-49616-1191979 target:[extension<com.apple.CloudDocs.iCloudDriveFileProvider[config:48D8C5C7-9A24-33FC-915C-FBA432AF92A2]((null):49616)(501)>[uuid:27C56220-2119-4CF4-8007-62203FBAC1C9]:39806] explanation:"fileproviderd extension keepalive" active originator:[osservice<com.apple.FileProvider(501)>:49616] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:22 legRes:0 doms:com.apple.FileProvider:FileProviderBackground invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.FileProvider" name:"FileProviderBackground" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 72274 name:osservice<com.apple.AppSSODaemon> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 28994 name:xpcservice<com.apple.textkit.nsattributedstringagent([app<application.com.apple.MobileSMS.1152921500311889145.1152921500311889220(501)>:40957])(501)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:28994 entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 87744 name:extension<com.apple.SiriSetup.SiriSetupSettingsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89569 name:extension<com.apple.systempreferences.InternationalSettingsExtension[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 5615 name:osservice<com.apple.textunderstandingd(501)> entitlements:<RBEntitlements| [
+			com.apple.runningboard.terminateprocess,
+			com.apple.assertiond.app-state-monitor,
+			com.apple.runningboard.process-state,
+			com.apple.runningboard.launchprocess
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-621-1194423 target:extension<com.apple.wallpaper.extension.aerials[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):621)(501)> explanation:"RBSLaunchRequest for extension<com.apple.wallpaper.extension.aerials[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):621)(501)>" active originator:[osservice<com.apple.wallpaper.agent(501)>:621] transientState:<RBAssertionTransientState| policies:[
+	
+	] tags:[
+	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:13 legRes:0 doms:com.apple.extensionkit:BackgroundAppExtension,com.apple.extensionkit:HandleMessage invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.extensionkit" name:"BackgroundAppExtension" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.extensionkit" name:"HandleMessage" sourceEnvironment:"(null)">
+	]><RBAssertion| identifier:423-388-1179333 target:[app<application.com.apple.Terminal.1152921500311915865.1152921500311915870(501)>:32076] explanation:"foregroundApp:32076" active originator:[osservice<com.apple.coreservices.launchservicesd>:388] transientState:<RBAssertionTransientState| policies:[
+	
+	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 11132 name:extension<com.apple.settings-intents.mouse[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):738)(501)>[uuid:588C7E72-6FDE-4ED2-95FA-BDFED0F613B7] entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:423-49616-1194480 target:extension<com.apple.CloudDocs.iCloudDriveFileProvider[config:48D8C5C7-9A24-33FC-915C-FBA432AF92A2]((null):49616)(501)>[uuid:27C56220-2119-4CF4-8007-62203FBAC1C9] explanation:"RBSLaunchRequest for extension<com.apple.CloudDocs.iCloudDriveFileProvider[config:48D8C5C7-9A24-33FC-915C-FBA432AF92A2]((null):49616)(501)>[uuid:27C56220-2119-4CF4-8007-62203FBAC1C9]" active originator:[osservice<com.apple.FileProvider(501)>:49616] transientState:<RBAssertionTransientState| policies:[
+	
+	] tags:[
+	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00suspdreldom prevSus runningReason:13 legRes:0 doms:com.apple.extensionkit:BackgroundAppExtension,com.apple.extensionkit:HandleMessage invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+	<RBSDomainAttribute| domain:"com.apple.extensionkit" name:"BackgroundAppExtension" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.extensionkit" name:"HandleMessage" sourceEnvironment:"(null)">
+	]><RBConnectionClient| 73854 name:osservice<com.apple.cloudd(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 89432 name:extension<com.apple.ClassroomDeviceExpert[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):25709)(501)> entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >><RBConnectionClient| 11236 name:extension<com.apple.batteryui.BatterySettingsIntents[config:6E69CA09-34E3-3493-B8FC-B5021E1ACB71]((null):738)(501)>[uuid:588C7E72-6FDE-4ED2-95FA-BDFED0F613B7] entitlements:<RBEntitlements| [
+			com.apple.assertiond.app-state-monitor
+			]> inheritanceManager:<RBClientInheritanceManager| >>
+2026-11-18 23:32:21.170 Df runningboardd[423:193285f] [com.apple.runningboard:process] [osservice<com.apple.backupd-helper>:42799] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:21.197 E  runningboardd[423:1932862] [com.apple.runningboard:jetsam] memorystatus_control error: MEMORYSTATUS_CMD_CONVERT_MEMLIMIT_MB(-1) returned -1 22 (Invalid argument)
+2026-11-18 23:32:21.197 E  runningboardd[423:1932862] [com.apple.runningboard:jetsam] memorystatus_control error: MEMORYSTATUS_CMD_CONVERT_MEMLIMIT_MB(0) returned -1 22 (Invalid argument)
+2026-11-18 23:32:21.198 Df runningboardd[423:1932862] [com.apple.runningboard:process] [osservice<com.apple.dataaccess.dataaccessd(501)>:84834] is not RunningBoard jetsam managed.
+2026-11-18 23:32:21.198 E  runningboardd[423:1932862] [com.apple.runningboard:process] Kernel call to get coalition roles for PID 84834, resource coalition id: 1115, jetsam coalition id: 1116, failed: ret -1, errno 2.
+2026-11-18 23:32:21.215 Df runningboardd[423:193285f] [com.apple.runningboard:process] [osservice<com.apple.dataaccess.dataaccessd(501)>:84834] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:21.535 Df runningboardd[423:1932861] [com.apple.runningboard:process] [osservice<com.apple.backupd-helper>:42799] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:22.264 Df runningboardd[423:1932c1f] [com.apple.runningboard:process] [osservice<com.apple.apsd>:387] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:22.382 Df runningboardd[423:1932862] [com.apple.runningboard:process] [osservice<com.apple.dataaccess.dataaccessd(501)>:84834] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:22.800 Df runningboardd[423:193285f] [com.apple.runningboard:process] [osservice<com.apple.dataaccess.dataaccessd(501)>:84834] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:23.344 Df runningboardd[423:1932862] [com.apple.runningboard:process] [anon<Google Chrome Helper (Aperitif)>(501):10705] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:23.465 Df runningboardd[423:1932862] [com.apple.runningboard:process] [osservice<com.apple.apsd>:387] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:23.794 Df runningboardd[423:1932d75] [com.apple.runningboard:process] [anon<Google Chrome Helper (Aperitif)>(501):10705] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:23.926 Df runningboardd[423:1932d75] [com.apple.runningboard:process] [osservice<com.apple.dataaccess.dataaccessd(501)>:84834] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:25.137 E  runningboardd[423:1932c1f] [com.apple.runningboard:jetsam] memorystatus_control error: MEMORYSTATUS_CMD_CONVERT_MEMLIMIT_MB(-1) returned -1 22 (Invalid argument)
+2026-11-18 23:32:25.137 Df runningboardd[423:1932c1f] [com.apple.runningboard:process] [anon<caffeinate>(501):85025] is not RunningBoard jetsam managed.
+2026-11-18 23:32:25.137 E  runningboardd[423:1932c1f] [com.apple.runningboard:process] Kernel call to get coalition roles for PID 85025, resource coalition id: 955, jetsam coalition id: 956, failed: ret -1, errno 2.
+2026-11-18 23:32:25.138 Df runningboardd[423:1932c1f] [com.apple.runningboard:process] [anon<caffeinate>(501):85025] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:25.305 Df runningboardd[423:1932d75] [com.apple.runningboard:process] [app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:27.693 Df runningboardd[423:1932c1f] [com.apple.runningboard:process] [osservice<com.apple.nsurlsessiond(501)>:3179] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:27.821 E  runningboardd[423:1932c1f] [com.apple.runningboard:jetsam] memorystatus_control error: MEMORYSTATUS_CMD_CONVERT_MEMLIMIT_MB(-1) returned -1 22 (Invalid argument)
+2026-11-18 23:32:27.821 E  runningboardd[423:1932c1f] [com.apple.runningboard:jetsam] memorystatus_control error: MEMORYSTATUS_CMD_CONVERT_MEMLIMIT_MB(0) returned -1 22 (Invalid argument)
+2026-11-18 23:32:27.822 Df runningboardd[423:1932c1f] [com.apple.runningboard:process] [osservice<com.apple.ScreenTimeSettingsAgent(501)>:85143] is not RunningBoard jetsam managed.
+2026-11-18 23:32:27.822 E  runningboardd[423:1932c1f] [com.apple.runningboard:process] Kernel call to get coalition roles for PID 85143, resource coalition id: 773, jetsam coalition id: 774, failed: ret -1, errno 2.
+2026-11-18 23:32:27.996 Df runningboardd[423:193285f] [com.apple.runningboard:process] [osservice<com.apple.apsd>:387] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:28.166 Df runningboardd[423:1932d75] [com.apple.runningboard:process] [osservice<com.apple.nsurlsessiond(501)>:3179] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:29.108 Df runningboardd[423:193285f] [com.apple.runningboard:process] [osservice<com.apple.apsd>:387] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:29.385 Df runningboardd[423:1932861] [com.apple.runningboard:process] [osservice<com.apple.nsurlsessiond(501)>:3179] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:31.641 Df runningboardd[423:193285f] [com.apple.runningboard:process] [osservice<com.apple.nsurlsessiond(501)>:3179] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:33.976 Df runningboardd[423:1932861] [com.apple.runningboard:process] [anon<Google Chrome Helper (Aperitif)>(501):10705] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:34.882 Df runningboardd[423:1932861] [com.apple.runningboard:process] [app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689] Ignoring jetsam update because this process is not memory-managed
+2026-11-18 23:32:34.988 Df runningboardd[423:1932d75] [com.apple.runningboard:process] [app<application.com.google.Chrome.2579170.1874877463.E00550E5-117B-44D7-910E-DF281406D6FD(501)>:6689] Ignoring jetsam update because this process is not memory-managed

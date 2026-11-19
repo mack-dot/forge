@@ -1,0 +1,79 @@
+[
+ {
+  "control": "NC1-amount-lt-in-contract.sexp",
+  "kind": "export",
+  "sha256": "847b32122c0da51fd7d7a1db09d05d8e03a11487142b5d5e21b1b132639a025c",
+  "expected": "exit 1; stops after FORGE_BEGIN exported_ens1_value",
+  "edit": "occurrence 1 of 2: Le -> Lt (contract only)"
+ },
+ {
+  "control": "NC2-ids-swapped-in-contract.sexp",
+  "kind": "export",
+  "sha256": "bacbc3561c6de696f926f2909417a98cb77fb5bd9da20b592b60bb5a8c01a44d",
+  "expected": "exit 1; stops after FORGE_BEGIN exported_ens2_value",
+  "edit": "clause 2: outputCharge==requestId, outputRequest==chargeId"
+ },
+ {
+  "control": "NC3-count-one-when-rejected.sexp",
+  "kind": "export",
+  "sha256": "416c718aaedaf29316332a97f3034fa9e25e0f3a67a1c3232aa386247ac9f86e",
+  "expected": "exit 1; stops after FORGE_BEGIN exported_ens3_value",
+  "edit": "clause 3: intentCount == 0 -> == 1"
+ },
+ {
+  "control": "NC4-third-clause-dropped.sexp",
+  "kind": "export",
+  "sha256": "a06630b07bb56ab225b16bfe05276d1e1060022a11f972bb74e923c78c7394ef",
+  "expected": "exit 1; ML Fail \"Expected exactly three ensures clauses\" before any FORGE_BEGIN",
+  "edit": "clause 3 removed (349 bytes)"
+ },
+ {
+  "control": "NC5-reason-literal-in-contract.sexp",
+  "kind": "export",
+  "sha256": "65a979680502a52edc2ae5db46fbafe286abe3241ac21724c65bdee22ee2089e",
+  "expected": "exit 1; stops after FORGE_BEGIN exported_ens1_value",
+  "edit": "occurrence 1 of 2 (contract only)"
+ },
+ {
+  "control": "NC6-trailing-bytes.sexp",
+  "kind": "export",
+  "sha256": "fc5f2635ab3eb184440efda970408652d191a2c30ac2bf0209bd8dbf0f9e8248",
+  "expected": "exit 1; ML Fail \"Trailing export bytes\"",
+  "edit": "append \" (Extra)\""
+ },
+ {
+  "control": "PC1-body-only-mutation.sexp",
+  "kind": "export",
+  "sha256": "c412ec3e42327b2e92cecb507380ae3905b5afd31f1ba0c705a1cb741568c730",
+  "expected": "exit 0 and EXPECTED: the contract theorems do not read the body (U294 links the body)",
+  "edit": "occurrence 2 of 2: Le -> Lt (body only)"
+ },
+ {
+  "control": "NS1-amount-plus-one.sml",
+  "kind": "script",
+  "sha256": "8f65206be972518ede3f95820f7e89c64097e5666c6d7daaeee25dfeaa7b5321",
+  "expected": "exit 1; stops after FORGE_BEGIN exported_contract_on_refund_fields",
+  "edit": "state uses a + 1"
+ },
+ {
+  "control": "NS2-ids-swapped.sml",
+  "kind": "script",
+  "sha256": "e2de9e124d5ae212ae84b4e1d5c876d584ae61ddb4e55a435a698ddf8ac4a4aa",
+  "expected": "exit 1; stops after FORGE_BEGIN exported_contract_on_refund_fields",
+  "edit": "state uses (q, c) for (outputCharge, outputRequest)"
+ },
+ {
+  "control": "NS3-wrong-truth-value.sml",
+  "kind": "script",
+  "sha256": "c4a446693fa7009b5bb72a6aaacb196e5bad18dcb5cb821063788b3c3b3cb3c6",
+  "expected": "exit 1; stops after FORGE_BEGIN exported_contract_on_refund_fields",
+  "edit": "claims clause 3 is false"
+ },
+ {
+  "control": "NR1-render-ids-swapped.sml",
+  "kind": "render-script",
+  "sha256": "d3373696f158741d2e70208479d67819c0ad8835c0bd06f6f670a1ff7663f2f7",
+  "expected": "exit 1; exported_contract_on_rendered_output fails (charge and request read back swapped)",
+  "edit": "claim (ok,a,r,c,q,n) = (ok0,a0,r0,q0,c0,n0)"
+ }
+]

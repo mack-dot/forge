@@ -1,0 +1,120 @@
+<<HOL message: Created theory "forge_refundRouteA2">>
+MARK D3
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved theorem _______ "ffi_calls_ok_compute"
+Saved definition ____ "ffi_calls_ok_def"
+DEFINITION ⊢ (∀P mc ffi ms. ffi_calls_ok P mc ffi 0 ms ⇔ T) ∧
+  ∀P mc ffi k ms.
+    ffi_calls_ok P mc ffi (SUC k) ms ⇔
+    if mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs then
+      if
+        encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+          (mc.target.get_byte ms) mc.prog_addresses
+      then
+        (let
+           ms1 = mc.target.next ms;
+           (ms2,new_oracle) = apply_oracle mc.next_interfer ms1;
+           mc = mc with next_interfer := new_oracle
+         in
+           if
+             EVERY mc.target.state_ok [ms; ms1; ms2] ∧
+             ∀x. x ∉ mc.prog_addresses ⇒
+                 mc.target.get_byte ms1 x = mc.target.get_byte ms x
+           then
+             ffi_calls_ok P mc ffi k ms2
+           else T)
+      else T
+    else if mc.target.get_pc ms = mc.halt_pc then T
+    else if mc.target.get_pc ms = mc.install_pc then
+      case read_ffi_bytearray mc mc.ptr_reg mc.len_reg ms of
+        NONE => T
+      | SOME bytes =>
+        (let
+           (ms1,new_oracle) = apply_oracle mc.install_interfer (bytes,ms);
+           mc = mc with install_interfer := new_oracle
+         in
+           ffi_calls_ok P mc ffi k ms1)
+    else
+      case find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 of
+        NONE => T
+      | SOME ffi_index =>
+        case mc.ffi_names❲ffi_index❳ of
+          ExtCall v1 =>
+            (case ALOOKUP mc.mmio_info ffi_index of
+               NONE =>
+                 (case read_ffi_bytearrays mc ms of
+                    (NONE,v3) => T
+                  | (SOME bytes,NONE) => T
+                  | (SOME bytes,SOME bytes2) =>
+                    case call_FFI ffi mc.ffi_names❲ffi_index❳ bytes bytes2 of
+                      FFI_return new_ffi new_bytes =>
+                        P ffi_index new_bytes ms ∧
+                        (let
+                           (ms1,new_oracle) =
+                             apply_oracle mc.ffi_interfer
+                               (ffi_index,new_bytes,ms);
+                           mc = mc with ffi_interfer := new_oracle
+                         in
+                           ffi_calls_ok P mc new_ffi k ms1)
+                    | FFI_final outcome => T)
+             | SOME v => T)
+        | SharedMem op => F
+Saved theorem _______ "read_ffi_bytearray_ffi_interfer_update"
+CHECKED read_ffi_bytearray_ffi_interfer_update
+⊢ ∀mc g r1 r2 ms.
+    read_ffi_bytearray (mc with ffi_interfer := g) r1 r2 ms =
+    read_ffi_bytearray mc r1 r2 ms
+Saved theorem _______ "read_ffi_bytearrays_ffi_interfer_update"
+CHECKED read_ffi_bytearrays_ffi_interfer_update
+⊢ ∀mc g ms.
+    read_ffi_bytearrays (mc with ffi_interfer := g) ms =
+    read_ffi_bytearrays mc ms
+Saved theorem _______ "ffi_calls_ok_false_at_a_returning_call"
+CHECKED ffi_calls_ok_false_at_a_returning_call
+⊢ ¬ffi_calls_ok (λi nb ms. F)
+    <|prog_addresses := ∅; shared_addresses := ∅; ffi_entry_pcs := [0w];
+      ffi_names := [ExtCall «x»]; ptr_reg := 0; len_reg := 1; ptr2_reg := 2;
+      len2_reg := 3; ffi_interfer := ARB; callee_saved_regs := [];
+      next_interfer := ARB; halt_pc := 4w; install_pc := 8w;
+      install_interfer := ARB; target := arm8_target; mmio_info := []|>
+    <|oracle := (λs st c b. Oracle_return st b); ffi_state := ();
+      io_events := []|> (SUC 0) <|PC := 0w; REG := (λr. 0w)|>
+MARK L2
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:196: error: Type error in function application.
+   Function: staged "L2-t1" L2_goal stages1 :
+      ((thm -> (goal, thm) gentactic) ->
+        term list * term -> (term list * term) list * 'a) ->
+        term list * term -> (term list * term) list * 'a
+   Argument: mkInd : thm_tactic -> (goal, thm) gentactic
+   Reason:
+      Can't unify (term list * term) list * 'a to
+         Context.t -> goal list * (thm list -> thm) (Incompatible types)
+Found near
+  thmA "refund_ffi_tot_evaluate_agree" L2_goal
+  [fn g => ... ... g, fn g => ... ...]
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:197: error: Type error in function application.
+   Function: staged "L2-t2" L2_goal stages2 :
+      ((thm -> (goal, thm) gentactic) ->
+        term list * term -> (term list * term) list * 'a) ->
+        term list * term -> (term list * term) list * 'a
+   Argument: mkInd : thm_tactic -> (goal, thm) gentactic
+   Reason:
+      Can't unify (term list * term) list * 'a to
+         Context.t -> goal list * (thm list -> thm) (Incompatible types)
+Found near
+  thmA "refund_ffi_tot_evaluate_agree" L2_goal
+  [fn g => ... ... g, fn g => ... ...]
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:195: error: Type error in function application.
+   Function: thmA "refund_ffi_tot_evaluate_agree" L2_goal :
+      tactic list -> thm
+   Argument: [fn g => ... ... mkInd g, fn g => ... ... g] :
+      (term list * term -> (term list * term) list * 'a) list
+   Reason:
+      Can't unify Context.t -> goal list * validation to
+         (term list * term) list * 'a (Incompatible types)
+Found near
+  thmA "refund_ffi_tot_evaluate_agree" L2_goal
+  [fn g => ... ... g, fn g => ... ...]

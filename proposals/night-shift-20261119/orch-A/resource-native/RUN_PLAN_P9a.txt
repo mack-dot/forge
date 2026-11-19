@@ -1,0 +1,101 @@
+P9a v2 run plan (worker A6). NOTHING HERE HAS RUN. No exit code in this file is an actual exit code.
+Pattern: proposals/m1b-mission-20261119/drafts/route-a/RUN_PLAN.md. One HOL process at a time.
+Do not start while another HOL job holds the slot.
+
+X = /Users/mackianni/forge/results/night-shift-20261119/orch-A/resource-native
+S = /Users/mackianni/forge/results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001   (read only; e4-0001 and imp4-0001 ran here)
+R = /Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/route-a                 (go-routeA.sh, hash_parents.py)
+A = /Users/mackianni/forge/results/m1b-p9a-20261119/attempt-0001                           (new; results/ is untracked)
+
+0. Order
+| # | Case       | Source      | Deps file                                   | CPU estimate                     | CPU limit |
+| 1 | P9a-0001   | P9a_v2.sml  | deps-P9a.txt = copy of S/deps-imp4.txt      | 150-250 s (imp4-0001 used about  | 900       |
+|   |            |             | (125 lines; ends with the e4 theory          | 100 s only to load the same      |           |
+|   |            |             | forge_refundSlideProfileA)                   | parents; EVALs here are small)   |           |
+| 2 | P9aimp-0001| (optional)  | deps-P9a.txt + the two P9a theory lines      | 120 s                            | 600       |
+Case 2 is an import check only. Write it only if case 1 passes (same pattern as R/routeA-L1-imp.sml).
+
+1. Before each run (resource check, memory first)
+  memory_pressure | tail -1            # need >= 25 % free (run_case.py refuses below 25 %)
+  sysctl vm.swapusage                  # record
+  df -h /System/Volumes/Data           # need >= 3 GiB free
+  pgrep -fl 'cake_compile_heap|arm8-heap|cakeml-heap|poly' || echo "no HOL process"
+If any HOL process runs: stop. run_case.py also refuses (exit 3, resource_guard_refused).
+
+2. Set up (once)
+  mkdir -p $A
+  cp $S/run_case.py $A/run_case.py
+  cp $S/deps-imp4.txt $A/deps-P9a.txt
+  cp $R/go-routeA.sh $R/hash_parents.py $A/ ; chmod +x $A/go-routeA.sh
+  cp $X/P9a_v2.sml $A/P9a-0001.sml
+  shasum -a 256 $A/run_case.py $S/run_case.py $A/deps-P9a.txt $S/deps-imp4.txt $X/P9a_v2.sml $A/P9a-0001.sml
+Record that the two run_case.py hashes are equal, the two deps hashes are equal, and the two source hashes are equal.
+Note: forge_refundWholeProg and forge_refundArm8Compile are not lines of deps-imp4.txt. They load through the
+preload/heap mechanism that e4-0001 and nonfail-0003 used (refund-loader-memory-local-20261115/attempt-0001/preload.sml
+loads forge_refundArm8CompileTheory). NOT VERIFIED by me for forge_refundWholeProgTheory. If the run fails with
+"theory not found" for it, add its .sig/.sml lines (the copy that nonfail-0003 loaded) to deps-P9a.txt. That is a
+deps change, not a statement change; record it.
+
+3. Case 1
+  cd $A
+  FORGE_CPU_SECONDS=900 ./go-routeA.sh P9a-0001 P9a-0001.sml deps-P9a.txt ; echo "go exit $?"
+Produces A/P9a-0001/{invocation.json, command.json, proof.sml, stdout.log, stderr.log,
+.hol/objs/forge_refundSpaceConditionalTheory.{sig,sml,dat}}, A/P9a-0001.run.json, A/P9a-0001.hashes.json.
+
+Pass criteria (ALL must hold; else the run is a finding, not a pass):
+- actual exit 0 (command.json actual_exit); marker EXACT_COMPLETE; inputs_unchanged_after true;
+- no LEMMA_FAILED line for a REQUIRED theorem; no UNEXPECTED_CONTROL_ACCEPTANCE;
+- CHECKED lines for the 6 REQUIRED theorems:
+    is_safe_for_space_false_without_gc, read_limits_same_target, refund_compile_safe_no_handler,
+    refund_behavior_valid_request_space, refund_profile_a_sl_space_conditional,
+    refund_profile_a_sl_space_no_resource_stop;
+- CONTROL_OK lines (9): K1 gc_kind Simple; K2 registers x1 x2 x3; S1 premises; S1 conclusion; S2 non-Fail form;
+  S3 premises (12 conjuncts); S3 no extend_with_resource_limit; S3 is_safe_for_space present; S3 output term;
+- the printed statement of refund_profile_a_sl_space_conditional: its first 11 premise conjuncts are the stored
+  refund_profile_a_sl premises (control S3), the 12th is the A_SPACE line printed before it.
+OPTIONAL (not a pass criterion): CHECKED read_limits_arm8_registers and refund_profile_a_sl_space_conditional_hse,
+plus CONTROL_OK "OPT ...". A line OPTIONAL_LEMMA_FAILED is a finding about my tactic; the main theory still exports.
+A LEMMA_FAILED line followed by OPTIONAL_LEMMA_FAILED is the optional part, not a required failure.
+
+4. What to record (orchestrator writes ROADMAP.md / TRACKER.md, not this worker)
+1. actual exit code, wall and CPU seconds, max RSS, markers (command.json and the go-routeA.sh "exit" line);
+2. every theorem statement exactly as printed after each CHECKED line, the A_SPACE line, GC_KIND, MAX_HEAP_ARG,
+   the three LIMIT_REG lines, SPACE_THEOREM_INSTANCE;
+3. tags: the run raises Fail before export if a stored theorem has a hypothesis, an axiom tag, or an oracle
+   other than DISK_THM (helper `tags`);
+4. dependency hashes from A/P9a-0001.hashes.json (hash_parents.py);
+5. SHA-256 of the source (command.json source_sha256) = SHA-256 of X/P9a_v2.sml at copy time.
+
+5. What a failure means
+- resource_guard_refused (exit 3): nothing ran. Not an attempt.
+- LEMMA_FAILED <required name>: my tactic failed. It is NOT evidence that the statement is false. Read the SHOW and
+  GOAL lines. Nothing is exported (the helper raises Fail).
+- UNEXPECTED_CONTROL_ACCEPTANCE: a structural control did not hold. Treat as a failed run.
+- At most FIVE attempts. Each attempt is a new case name (P9a-0002, ...) and a new source copy. Record the diff.
+  Tactic-only changes are allowed and must be recorded as tactic-only. Never change the statement without recording
+  old text, new text and why.
+- Never add cheat, mk_thm, new_axiom or an oracle. The `thm` helper in P9a_v2.sml has no mk_thm.
+
+6. Likely failure points (my reading; not checked by running)
+- K1/K2: SIMP_CONV [set_oracle_def] THENC EVAL on a field of the configuration. Same pattern as real-0004.sml line 20
+  (heap_regs). If EVAL unfolds refund_alloc_oracle (large), it is slow but should still end. If the rhs of K1 is not
+  the constant "Simple" (for example a qualified name), the control raises; check GC_KIND and fix the control only.
+- K3: the constructor `None` of gc_kind may be ambiguous in the parser. Fix: qualify it (data_to_word$None or the
+  theory that defines gc_kind). Tactic/term-quotation fix only; K3 is a control, not the main statement.
+- S1: copied from the replayed real-0004 tactic. New steps: the RL step needs `is_arm8_machine_config mc2` and
+  `is_arm8_machine_config mc0` in the assumptions (both are: one from install_exclusion_suffices, one from the
+  goal). The last `fs [hr, hr2, pairTheory.PAIR]` must turn `(FST rl0, SND rl0)` into rl0 in two antecedents of ccS.
+  If not, add `rpt (pop_assum mp_tac)`-free alternative: `simp [pairTheory.PAIR]` before `fs`. Tactic only.
+- S2: `fs [sem_satisfies_def, SUBSET_DEF] >> res_tac >> fs [] >> metis_tac []` is the least certain step. If it fails,
+  print the goal (SHOW S2-END) and replace by: `qpat_x_assum `!x. x IN machine_sem _ _ _ ==> _` (qspec_then `b` mp_tac)
+  >> simp [] >> strip_tac >> first_x_assum drule >> strip_tac >> gvs []`. Tactic only.
+- S3: copy of the replayed e4 TA tactic plus one `res_tac` for A-SPACE.
+- OPT: RL2 unfolds arm8_target_def (as e4's `tg` did) and needs dimindex (:64) = 64 (srw_ss; else add
+  wordsTheory.dimindex_64). The arm8_run constant of refund_entry_run_sl may differ from forge_refundCmlMainStep's;
+  `fs [AG]` uses arm8_run_constants_agree to bridge. Optional; not a pass criterion.
+
+7. Controls that this run does NOT include (cost unknown; see P9a-audit.txt section E)
+- N3 of the draft: A-SPACE is false at limits (0, 0). Needs dataSem evaluation of the program start.
+- N4 (new): a syntactic scan of SND (to_data cfg refund_prog) for operations that make lim_safe false
+  (floating-point operations: has_fp_ops = F at arm8_configScript.sml line 42) or Install. Cheaper than N3.
+- Non-vacuity: that A-SPACE holds for SOME input and limits. That is link P9 (weeks to months, report G7).

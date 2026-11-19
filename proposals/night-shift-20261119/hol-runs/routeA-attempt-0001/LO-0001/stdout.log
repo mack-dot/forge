@@ -1,0 +1,76 @@
+<<HOL message: Created theory "forge_refundLOut">>
+USED refund_profile_a_sl_every_machine_run
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi ext cl fs) ms b ⇒
+         (∃io.
+            b = Terminate Success io ∧
+            extract_fs ext (cl,fs) io =
+            SOME
+              (add_stdout (fastForwardFD fs 0)
+                 (refund_render_fields
+                    (refund_fields charge request original remaining enabled
+                       opened candidate amount reason)))) ∨
+         ∃io io'.
+           b = Terminate Resource_limit_hit io' ∧ io' ≼ io ∧
+           extract_fs ext (cl,fs) io =
+           SOME
+             (add_stdout (fastForwardFD fs 0)
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)))) ∧
+    (∃b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+           (basis_ffi ext cl fs) ms b) ∧
+    ¬machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+      ms Fail
+Saved definition ____ "write_chunk_def"
+DEFINITION write_chunk
+⊢ ∀conf bs.
+    write_chunk conf bs =
+    if
+      LENGTH conf = 8 ∧ w82n conf = 1 ∧ 4 ≤ LENGTH bs ∧ SND (HD bs) = 0w
+    then
+      TAKE (w22n [SND bs❲1❳; SND bs❲2❳])
+        (DROP (w22n [FST bs❲2❳; FST bs❲3❳])
+           (MAP (λb. CHR (w2n (FST b))) (DROP 4 bs)))
+    else ""
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundLOut)>>
+Saved definition ____ "fd1_written_def"
+Saved induction _____ "fd1_written_ind"
+DEFINITION fd1_written
+⊢ fd1_written [] = "" ∧
+  (∀rest n conf bs.
+     fd1_written (IO_event (ExtCall n) conf bs::rest) =
+     STRCAT (if n = «write» then write_chunk conf bs else "")
+       (fd1_written rest)) ∧
+  ∀rest op conf bs.
+    fd1_written (IO_event (SharedMem op) conf bs::rest) = fd1_written rest
+Saved theorem _______ "fd1_written_APPEND"
+CHECKED fd1_written_APPEND
+⊢ ∀xs ys. fd1_written (xs ++ ys) = STRCAT (fd1_written xs) (fd1_written ys)
+Saved theorem _______ "fd1_written_prefix"
+CHECKED fd1_written_prefix
+⊢ ∀io' io. io' ≼ io ⇒ fd1_written io' ≼ fd1_written io
+Saved theorem _______ "STD_streams_facts"
+CHECKED STD_streams_facts
+⊢ ∀fs.
+    STD_streams fs ⇒
+    ∃inp out err.
+      ALOOKUP fs.inode_tbl (UStream «stdout») = SOME out ∧
+      ALOOKUP fs.inode_tbl (UStream «stderr») = SOME err ∧
+      ALOOKUP fs.infds 0 = SOME (UStream «stdin»,ReadMode,inp) ∧
+      ALOOKUP fs.infds 1 = SOME (UStream «stdout»,WriteMode,STRLEN out) ∧
+      ALOOKUP fs.infds 2 = SOME (UStream «stderr»,WriteMode,STRLEN err) ∧
+      ∀fd md off.
+        ALOOKUP fs.infds fd = SOME (UStream «stdout»,md,off) ⇒ fd = 1

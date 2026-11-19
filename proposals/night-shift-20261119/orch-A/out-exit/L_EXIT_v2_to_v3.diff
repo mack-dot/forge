@@ -1,0 +1,79 @@
+--- orig/L_EXIT_v2.sml	2026-11-19 03:03:08.519187146 -0500
++++ L_EXIT_v3.sml	2026-11-19 03:09:25.538293926 -0500
+@@ -1,4 +1,16 @@
+-(* L-EXIT-0 and the halt instance, v2 (worker Z6, graph link X10). DRAFT: NOT RUN. No HOL process was started.
++(* L-EXIT-0 and the halt instance, v3 (worker A3, Night-Shift Orchestrator A). DRAFT: NOT RUN. No HOL process
++   was started. v3 = v2 (SHA-256 0d2a0ada7627bafe210623b41d4e4fd5a9d734ef1fa5c2f88c195adde7cef61e) with tactic
++   repairs only, each marked (* A3 tactic-only *). No statement changed; no lemma added or removed. Every tactic
++   is UNCHECKED. Needs forge_refundLOut from a PASSING run of L_OUT_v3.sml (not v2: v2 cannot export).
++   Repairs (the A3 report (handback text)):
++   - E1 (low): leaf_ih discharged k - 1 < k by simp[]; v3 uses impl_tac >- decide_tac.
++   - E2 (low): a new FIRST alternative for evaluate_Halt_reg by plain Induct on the clock: evaluate_def
++     recurses only at k - 1 (targetSemScript.sml 118-219), so the IH at k is enough; AllCaseEqs and LET_THM.
++   - E3 (low): impl_tac >- simp[] replaced by MP with the premise term (FD1's antecedent is PREM, checked by
++     CONTROL_OK in the L-OUT run).
++   v2 header follows.
++   ---------------------------------------------------------------------------------------------------
++   L-EXIT-0 and the halt instance, v2 (worker Z6, graph link X10). DRAFT: NOT RUN. No HOL process was started.
+    Needs the theory forge_refundLOut (L_OUT_v2.sml) in the deps: run it AFTER a passing L-OUT run.
+    Kind: MODEL. What this file can give: at every Halt of the M1 machine run from the stored entry state,
+    the PC is sl + 0x1000040C0w and (x0 = 0w, Success, fd1 bytes = R) or (x0 <> 0w, Resource_limit_hit,
+@@ -48,7 +60,9 @@
+   simp [arm8_target_def, FUN_EQ_THM]);
+ 
+ (* ================= L-EXIT-0, generic (any machine_config) ================= *)
+-val leaf_ih = first_x_assum (qspec_then `k - 1` mp_tac) \\ simp[] \\ disch_then drule \\ simp[];
++(* A3 tactic-only (E1): the side condition k - 1 < k by decide_tac (k <> 0 is an assumption at every leaf). *)
++val leaf_ih = first_x_assum (qspec_then `k - 1` mp_tac) \\ impl_tac >- decide_tac \\ disch_then drule \\ simp[];
++val leaf_ih_v2 = first_x_assum (qspec_then `k - 1` mp_tac) \\ simp[] \\ disch_then drule \\ simp[];
+ val EHR = thm "evaluate_Halt_reg"
+   (fn () => ``!k mc ffi ms t ms' ffi'.
+        evaluate mc ffi k ms = (Halt t, ms', ffi') ==>
+@@ -57,7 +71,18 @@
+         ((t = Success /\ mc.target.get_reg ms' mc.ptr_reg = 0w) \/
+          (t = Resource_limit_hit /\ mc.target.get_reg ms' mc.ptr_reg <> 0w)))``)
+   (fn () => try_all "evaluate_Halt_reg"
+-     [completeInduct_on `k` \\ rpt gen_tac
++     [(* A3 tactic-only (E2): plain induction on the clock; the IH is used once per recursive leaf *)
++      Induct \\ rpt gen_tac
++        >- simp[Once targetSemTheory.evaluate_def]
++        \\ simp[Once targetSemTheory.evaluate_def, targetSemTheory.apply_oracle_def, LET_THM, AllCaseEqs()]
++        \\ rpt strip_tac \\ gvs[] \\ rpt (pairarg_tac \\ gvs[])
++        \\ first_x_assum (fn th => drule th \\ simp[] \\ NO_TAC),
++      completeInduct_on `k` \\ rpt gen_tac \\ strip_tac
++        \\ qpat_x_assum `evaluate _ _ _ _ = _` mp_tac
++        \\ simp[Once targetSemTheory.evaluate_def, targetSemTheory.apply_oracle_def, LET_THM, AllCaseEqs()]
++        \\ rpt strip_tac \\ gvs[] \\ rpt (pairarg_tac \\ gvs[]) \\ TRY (leaf_ih \\ NO_TAC)
++        \\ TRY (leaf_ih_v2 \\ NO_TAC),
++      completeInduct_on `k` \\ rpt gen_tac
+         \\ simp[Once targetSemTheory.evaluate_def, targetSemTheory.apply_oracle_def]
+         \\ rpt ((IF_CASES_TAC ORELSE TOP_CASE_TAC) \\ simp[targetSemTheory.apply_oracle_def])
+         \\ rpt strip_tac \\ gvs[]
+@@ -89,7 +114,17 @@
+          ms'.PC = sl + 0x1000040C0w /\
+          ((ms'.REG 0w = 0w /\ t = Success /\ fd1_written st'.io_events = explode ^R) \/
+           (ms'.REG 0w <> 0w /\ t = Resource_limit_hit /\ fd1_written st'.io_events <<= explode ^R))``)
+-  (fn () => strip_tac
++  (fn () => try_all "refund_profile_a_sl_halt"
++   [(* A3 tactic-only (E3): MP with the premise term; then the v2 steps *)
++    DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP FD1 th))
++     \\ qexists_tac `ms` \\ conj_tac >- simp[]
++     \\ rpt gen_tac \\ strip_tac
++     \\ `machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi no_ext cl fs) ms (Terminate t st'.io_events)`
++          by (simp[targetSemTheory.machine_sem_def] \\ metis_tac[])
++     \\ qpat_x_assum `!b. _` drule \\ strip_tac
++     \\ drule EHR \\ strip_tac
++     \\ gvs[MCF, REGF, tg, HADDR],
++    strip_tac
+      \\ mp_tac FD1 \\ impl_tac >- simp[]
+      \\ strip_tac \\ qexists_tac `ms` \\ simp[]
+      \\ rpt gen_tac \\ strip_tac
+@@ -97,7 +132,7 @@
+           by (simp[targetSemTheory.machine_sem_def] \\ metis_tac[])
+      \\ qpat_x_assum `!b. _` drule \\ strip_tac
+      \\ drule EHR \\ strip_tac
+-     \\ gvs[MCF, REGF, tg, HADDR]);
++     \\ gvs[MCF, REGF, tg, HADDR]]);
+ 
+ (* ================= L-EXIT-V: OPEN (statement only; NOT attempted; no theorem is claimed) ================= *)
+ val LEXITV = ``^PREM ==>

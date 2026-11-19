@@ -1,0 +1,130 @@
+--- /Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/route-a/routeA-L2.sml	2026-11-19 00:59:32.888905504 -0500
++++ routeA-L2_v2.sml	2026-11-19 03:00:21.716448154 -0500
+@@ -1,4 +1,19 @@
+-(* Route A, lemma L2 (step C1, worker X7). DRAFT: NOT RUN. Higher risk than L1: the induction tactic was written by
++(* routeA-L2_v2.sml: worker A5 (Night-Shift Orchestrator A) repair of routeA-L2.sml (sha256 03036c1c...3b09).
++   NOT RUN. Every tactic here is UNCHECKED. No theorem STATEMENT and no DEFINITION of the original changed.
++   A5 changes (all marked in the text):
++     (1) A5 tactic-only: L2 step case. The original used `Induct >- base >> disch_then (fn IH => ...)`. bossLib.Induct
++         (HOL src/basicProof/BasicProvers.sml 433: Prim_rec.INDUCT_THEN thm ASSUME_TAC) puts the induction hypothesis in
++         the ASSUMPTIONS and leaves the goal `!mc1 mc2 ffi ms. ...` (not an implication), so disch_then fails. Repair:
++         `pop_assum (fn IH => ...)`.
++     (2) A5 new helper lemmas RFB1/RFB2 (not statement changes): read_ffi_bytearray(s) take the whole record; without
++         them the case scrutinees of the two machines differ syntactically (mc1 vs mc1 with ffi_interfer := ...).
++     (3) A5 tactic-only: L2 tried with an ordered list of tactics (helper thmA); the first is the repaired original,
++         the second an every_case_tac variant. The run prints TACTIC_USED / TACTIC_ATTEMPT_FAILED.
++     (4) A5 tactic-only: the last lines of L2R end in TRY (qexists io_events ...) then metis_tac, instead of a
++         qexists_tac applied to every remaining subgoal.
++     (5) A5 new control C-NV: ffi_calls_ok (\i nb ms. F) is FALSE at a concrete returning call (non-vacuity of D3).
++   Original header follows.
++   Route A, lemma L2 (step C1, worker X7). DRAFT: NOT RUN. Higher risk than L1: the induction tactic was written by
+    reading targetSemScript.sml (evaluate_def lines 118-218) and the stored proof of targetProps.evaluate_add_clock
+    (targetPropsScript.sml 1059-1076); it has never been executed. Run only after routeA-L1.sml has exit 0.
+    Parents: everything of deps-imp4.txt plus forge_refundRouteA1 (the L1 case).
+@@ -37,6 +52,15 @@
+ fun thm name goal tac = (let val th = save_thm (name, Tactical.TAC_PROOF (([], goal), tac)) in chk name th; th end)
+   handle e => (pr ("LEMMA_FAILED " ^ name ^ " " ^ General.exnMessage e); failed := name :: !failed; TRUTH);
+ fun has_const n tm = can (find_term (fn t => is_const t andalso fst (dest_const t) = n)) tm;
++(* A5: try an ordered list of tactics for ONE fixed goal; the goal never changes between attempts. No mk_thm. *)
++fun thmA name goal tacs =
++  let fun go _ [] = raise Fail "all listed tactics failed"
++        | go i (t :: ts) =
++            (let val th = Tactical.TAC_PROOF (([], goal), t) in pr ("TACTIC_USED " ^ name ^ " " ^ Int.toString i); th end
++             handle e => (pr ("TACTIC_ATTEMPT_FAILED " ^ name ^ " " ^ Int.toString i ^ " " ^ General.exnMessage e); go (i + 1) ts))
++  in (let val th = save_thm (name, go 1 tacs) in chk name th; th end)
++     handle e => (pr ("LEMMA_FAILED " ^ name ^ " " ^ General.exnMessage e); failed := name :: !failed; TRUTH)
++  end;
+ fun A1 n = DB.fetch "forge_refundRouteA1" n;
+ val TOT_T = A1 "refund_ffi_tot_valid";
+ val SHIFT = A1 "refund_ffi_tot_shift_seq";
+@@ -88,25 +112,62 @@
+                                   ffi_calls_ok P mc new_ffi k ms1))
+                       | _ => T))))`;
+ val _ = pr ("DEFINITION " ^ thm_to_string calls_def);
++(* A5 new helper lemmas (2). *)
++val RFB1 = thm "read_ffi_bytearray_ffi_interfer_update"
++  ``!(mc:('a,'b,'c) machine_config) g r1 r2 ms.
++      read_ffi_bytearray (mc with ffi_interfer := g) r1 r2 ms = read_ffi_bytearray mc r1 r2 ms``
++  (simp [read_ffi_bytearray_def]);
++val RFB2 = thm "read_ffi_bytearrays_ffi_interfer_update"
++  ``!(mc:('a,'b,'c) machine_config) g ms. read_ffi_bytearrays (mc with ffi_interfer := g) ms = read_ffi_bytearrays mc ms``
++  (simp [read_ffi_bytearrays_def, read_ffi_bytearray_def]);
++(* A5 control C-NV (5): D3 is not trivially true. A concrete record whose pc is its only FFI entry, empty arrays, and an
++   oracle that always returns; with P = F the predicate is F at clock 1. *)
++val CNV = thm "ffi_calls_ok_false_at_a_returning_call"
++  ``~ffi_calls_ok (\i nb ms. F)
++      (<| prog_addresses := {}; shared_addresses := {}; ffi_entry_pcs := [0w]; ffi_names := [ExtCall «x»];
++          ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3; ffi_interfer := ARB; callee_saved_regs := [];
++          next_interfer := ARB; halt_pc := 4w; install_pc := 8w; install_interfer := ARB; target := arm8_target;
++          mmio_info := [] |>)
++      (<| oracle := (\s st c b. Oracle_return st b); ffi_state := (); io_events := [] |> : unit ffi_state)
++      (SUC 0) (ARB with <| PC := 0w; REG := (\r. 0w) |>)``
++  (simp [calls_def, arm8_target_def, find_index_def, read_ffi_bytearrays_def, read_ffi_bytearray_def,
++         read_bytearray_def, call_FFI_def] >> TRY EVAL_TAC >> show_tac "C-NV");
+ (* ================= L2 ================= *)
+ val _ = pr "MARK L2";
+-fun leaf IH = rpt strip_tac >> fs [TOT_T, SHIFT] >> show_tac "L2-leaf" >>
+-              match_mp_tac IH >> fs [TOT_T, SHIFT] >>
++fun leaf IH = rpt strip_tac >> fs [TOT_T, SHIFT, RFB1, RFB2] >> show_tac "L2-leaf" >>
++              match_mp_tac IH >> fs [TOT_T, SHIFT, RFB1, RFB2] >>
+               TRY (simp [machine_config_component_equality]) >> show_tac "L2-leaf-after";
+-val L2 = thm "refund_ffi_tot_evaluate_agree"
++(* A5 tactic-only (3): second tactic, every_case_tac variant; the IH is kept out of fs (it would loop as a rewrite). *)
++fun leaf2 IH = rpt strip_tac >> fs [TOT_T, SHIFT, RFB1, RFB2] >>
++               TRY (match_mp_tac IH >> fs [TOT_T, SHIFT, RFB1, RFB2] >> NO_TAC) >>
++               TRY (match_mp_tac IH >> simp [machine_config_component_equality] >> fs [] >> NO_TAC) >>
++               show_tac "L2-alt-leaf" >> NO_TAC;
++val L2_goal =
+   ``!k mc1 mc2 ffi ms.
+       mc2 = mc1 with ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer /\ ffi_calls_ok Vok mc2 ffi k ms ==>
+-      evaluate mc1 ffi k ms = evaluate mc2 ffi k ms``
+-  (Induct
++      evaluate mc1 ffi k ms = evaluate mc2 ffi k ms``;
++val L2 = thmA "refund_ffi_tot_evaluate_agree" L2_goal
++  [(* 1: the original, with (1) and (2) *)
++   (Induct
+    >- (rpt strip_tac >> once_rewrite_tac [evaluate_def] >> simp [])
+-   >> disch_then (fn IH =>
++   >> pop_assum (fn IH =>                                                   (* A5 tactic-only: was disch_then *)
+         rpt gen_tac >> strip_tac >> rveq >>
+         qpat_x_assum `ffi_calls_ok _ _ _ _ _` mp_tac >>
+         once_rewrite_tac [evaluate_def, calls_def] >>
+-        simp [apply_oracle_def, TOT_T, SHIFT] >>
+-        rpt (IF_CASES_TAC >> simp [TOT_T, SHIFT]) >>
+-        rpt (TOP_CASE_TAC >> simp [TOT_T, SHIFT]) >>
+-        leaf IH));
++        simp [apply_oracle_def, TOT_T, SHIFT, RFB1, RFB2] >>                (* A5 tactic-only: + RFB1, RFB2 *)
++        rpt (IF_CASES_TAC >> simp [TOT_T, SHIFT, RFB1, RFB2]) >>
++        rpt (TOP_CASE_TAC >> simp [TOT_T, SHIFT, RFB1, RFB2]) >>
++        leaf IH)),
++   (* 2: A5 tactic-only alternative *)
++   (Induct
++   >- (rpt strip_tac >> once_rewrite_tac [evaluate_def] >> simp [])
++   >> pop_assum (fn IH =>
++        rpt gen_tac >> strip_tac >> rveq >>
++        qpat_x_assum `ffi_calls_ok _ _ _ _ _` mp_tac >>
++        once_rewrite_tac [evaluate_def] >> once_rewrite_tac [calls_def] >>
++        simp_tac (srw_ss()) [apply_oracle_def, RFB1, RFB2, LET_THM] >>
++        every_case_tac >> fs [] >>
++        leaf2 IH))];
+ val _ = pr ("STATEMENT_L2 " ^ term_to_string (concl L2));
+ val L2S = thm "refund_ffi_tot_machine_sem_agree"
+   ``!mc ffi ms.
+@@ -156,10 +217,15 @@
+    (* the assumptions speak of refund_mc B envT; FLD turns their .target and .install_pc into those of refund_mc B envmc;
+       the two equalities above turn the goal's evaluate and machine_sem terms into those of refund_mc B envT. *)
+    qexists_tac `ms` >> RULE_ASSUM_TAC (REWRITE_RULE [FLD]) >> asm_rewrite_tac [] >>
+-   rpt conj_tac >> TRY (first_assum ACCEPT_TAC) >> show_tac "L2R-end" >>
+-   qexists_tac `io_events` >> asm_rewrite_tac []);
++   rpt conj_tac >> TRY (first_assum ACCEPT_TAC) >>
++   TRY (qexists_tac `io_events` >> asm_rewrite_tac [] >> NO_TAC) >>         (* A5 tactic-only (4) *)
++   show_tac "L2R-end" >> metis_tac []);
+ (* ================= checks ================= *)
+ val _ = pr "MARK CHECKS";
++val _ = if is_neg (concl CNV) then pr "CONTROL_OK C-NV ffi_calls_ok with the empty predicate is false at a concrete returning call"
++        else bad "C-NV-not-negation";
++val _ = if aconv (concl L2) L2_goal then pr "CONTROL_OK L2 statement is the literal statement of routeA-L2.sml"
++        else bad "L2-literal";
+ val _ = if null (!failed) then () else raise Fail ("failed: " ^ String.concatWith " " (rev (!failed)));
+ val _ = if aconv (snd (dest_imp (concl L2R))) ta_conc
+         then pr "CONTROL_OK L2R conclusion is term-identical to the conclusion of the stored refund_profile_a_sl (not weakened)"

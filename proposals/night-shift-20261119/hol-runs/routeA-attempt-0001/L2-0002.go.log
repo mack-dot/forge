@@ -1,0 +1,15 @@
+2026-11-19T08:37:43Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6521.00M  free = 647.00M  (encrypted)
+System-wide memory free percentage: 57%
+exit 1
+actual_exit 1 wall 71.921 cpu 77.514 rss_mib 4000 [] inputs_unchanged_after True
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"
+66:CHECKED read_ffi_bytearray_ffi_interfer_update
+71:CHECKED read_ffi_bytearrays_ffi_interfer_update
+76:CHECKED ffi_calls_ok_false_at_a_returning_call
+86:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:196: error: Type error in function application.
+98:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:197: error: Type error in function application.
+110:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:195: error: Type error in function application.
+hash_parents exit 0
+go exit 1

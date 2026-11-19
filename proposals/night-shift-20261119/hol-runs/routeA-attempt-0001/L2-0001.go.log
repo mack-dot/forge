@@ -1,0 +1,36 @@
+2026-11-19T08:14:25Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 5512.44M  free = 1655.56M  (encrypted)
+System-wide memory free percentage: 59%
+exit 1
+actual_exit 1 wall 92.118 cpu 104.883 rss_mib 3558 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0001/proof.sml:229: Fail "failed: refund_ffi_tot_evaluate_agree refund_ffi_tot_machine_sem_agree refund_profile_a_sl_reach"
+66:CHECKED read_ffi_bytearray_ffi_interfer_update
+71:CHECKED read_ffi_bytearrays_ffi_interfer_update
+76:CHECKED ffi_calls_ok_false_at_a_returning_call
+87:SHOW L2-leaf
+100:  GOAL evaluate (mc1 with ffi_interfer := shift_seq 1 mc1.ffi_interfer) f k
+105:SHOW L2-leaf
+118:  GOAL evaluate (mc1 with ffi_interfer := shift_seq 1 mc1.ffi_interfer) f k
+123:SHOW L2-leaf-after
+136:  GOAL ffi_calls_ok Vok
+139:SHOW L2-leaf-after
+152:  GOAL ffi_calls_ok Vok
+155:SHOW L2-leaf
+165:  GOAL evaluate (mc1 with install_interfer := shift_seq 1 mc1.install_interfer) ffi
+172:SHOW L2-leaf
+182:  GOAL evaluate (mc1 with install_interfer := shift_seq 1 mc1.install_interfer) ffi
+189:SHOW L2-leaf
+204:  GOAL evaluate (mc1 with next_interfer := shift_seq 1 mc1.next_interfer) ffi k
+212:SHOW L2-alt-leaf
+227:  GOAL evaluate (mc1 with ffi_interfer := shift_seq 1 mc1.ffi_interfer) f k
+233:LEMMA_FAILED refund_ffi_tot_evaluate_agree Fail "all listed tactics failed"
+234:STATEMENT_L2 T
+235:LEMMA_FAILED refund_ffi_tot_machine_sem_agree HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 177", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+238:CHECKED refund_mc_totalised_record
+242:CHECKED refund_mc_totalised_record_fields
+249:LEMMA_FAILED refund_profile_a_sl_reach HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 211", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+251:CONTROL_OK C-NV ffi_calls_ok with the empty predicate is false at a concrete returning call
+252:UNEXPECTED_CONTROL_ACCEPTANCE L2-literal
+hash_parents exit 0
+go exit 1

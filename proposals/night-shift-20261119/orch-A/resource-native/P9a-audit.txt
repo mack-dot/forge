@@ -1,0 +1,99 @@
+P9a audit (worker A6, 2026-11-19). Reading only. No HOL, no build. Every tactic in P9a_v2.sml is UNCHECKED.
+Abbreviations:
+  CK  = /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml   (git HEAD cd9155694c16)
+  RS  = /Users/mackianni/forge/results
+  PK  = RS/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility
+  E4  = RS/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/e4-0001
+  DR  = /Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/progress/P9a_space_conditional_DRAFT.sml
+
+A. Inputs
+  DR SHA-256 abb5255adb463d3ec8f6fb12e66402876cf3858cdde4e4bad7027dbe05984f8c (copy in this folder:
+  P9a_space_conditional_DRAFT.orig.sml, same digest). Diff draft -> v2: P9a_draft_to_v2.diff.
+
+B. Name and type audit of the draft (DR lines 12-34)
+| Name in DR | Exists? | Where (file:line) | Type / form | Verdict |
+| compile_correct_is_safe_for_space | yes | CK/compiler/backend/proofs/backendProofScript.sml:5005-5021; .sig line 69 | premises: compile asm_conf c prog = SOME(bytes,bitmaps,c'); (!po. is_safe_for_space (:'a) ffi po asm_conf c prog (stack_limit,heap_limit)); read_limits asm_conf c mc ms = (stack_limit,heap_limit); then the SAME premises as compile_correct (4952-4966); conclusion machine_sem mc ffi ms SUBSET semantics_prog s env prog | OK |
+| IMP_is_safe_for_space | yes | backendProofScript.sml:2921-2931 | needs backend_config_ok, compile, to_data, gc_kind <> None, data_lang_safe_for_space ... conf.word_conf.stack_frame_size | OK (not used by v2; used by P9) |
+| is_safe_for_space_def | yes | backendProofScript.sml:2819-2829 | is_safe_for_space (:'a) ffi po asm_conf c prog stack_heap_limit = data_lang_safe_for_space ffi po (fromAList data_prog) (compute_limits ...) (compute_stack_frame_sizes asm_conf word_prog) InitGlobals_location /\ c.data_conf.gc_kind <> None | DR argument order OK |
+| read_limits_def | yes | backendProofScript.sml:2979-2986 | read_limits asm_conf c mc ms = get_stack_heap_limit (2 * max_heap_limit (dimindex (:'a)) c.data_conf - 1) (get_reg ms (find_name c.stack_conf.reg_names 2), ... 3, ... 4) | DR argument order OK; depends on mc only via mc.target |
+| data_lang_safe_for_space | yes | CK/compiler/backend/semantics/dataSemScript.sml:1778-1785 | !ck. (SND (evaluate (Call NONE (SOME start) [] NONE, initial_state ... T lims ss ck))).safe_for_space | — |
+| arm8_run 27 s | yes | E4/stdout.log:240-265 (run_c uses forge_refundCmlMainStep$arm8_run, E4/proof.sml S5) | — | OK; qualify the constant (two theories define arm8_run; RS/refund-slide-local-20261117/attempt-0001/s2-0003/stdout.log:18-19) |
+| refund_mc, refund_entry_pre_sl, refund_heap_clear_sl, refund_mem_dm_sl, refund_env_ok_sl | yes | E4/stdout.log:240-265 | — | OK |
+| refund_asm_conf | PLACEHOLDER | — | — | must be arm8_config (arm8_target$arm8_config): PK/arm8-compile-20261104/records/compile-0001/theory.log:40 |
+| refund_backend_conf | PLACEHOLDER | — | — | must be `set_oracle arm8_backend_config refund_alloc_oracle` (RS/refund-compile-correct-local-20261114/attempt-0001/real-0004.sml:19; refund_alloc_compiled RS/refund-p1-lab-closure-local-20261113/attempt-0001/proof-0001/stdout.log:356-360). NOT `set_oracle arm8_backend_config oracle` from forge_refundArm8Compile: there `oracle` is a new_specification constant with no defining equation (CK/cv_translator/eval_cake_compileLib.sml:126-134), and the M1 chain never applies the compiler theorem at it |
+| refund_prog | yes | forge_refundWholeProg (refund_prog_def) | — | OK |
+| refund_terminate gives semantics_prog = {Terminate Success io} | WRONG | PK/arm8-compile-20261104/records/forge_refundArm8ProofScript.sml:10-12; CK/translator/ml_progScript.sml:1325-1334 | refund_semantics is `sem_satisfies (semantics_dec_list ...) P` (nonfail-0003 stdout.log:2-14), i.e. non-empty and every element satisfies P. Not a set equality | the proof still closes: semantics_dec_list_eq (ml_progScript.sml:1315-1317, needs prog_syntax_ok refund_prog, a conjunct of refund_arm8_compiled) + sem_satisfies_def (CK/semantics/proofs/semanticsPropsScript.sml:243-245) + machine_sem_sing (CK/compiler/backend/semantics/targetPropsScript.sml:1189-1196) |
+| route "MATCH_MP ... refund_arm8_compiled, then the same discharges as forge_refundArm8ProofScript.sml" | WRONG ROUTE | forge_refundArm8ProofScript.sml (Nov 4) leaves `installed` as an undischarged premise and uses the `oracle` configuration | the replayed M1 chain derives `installed` only for an existential handler record mc2 (install_exclusion_suffices, RS/refund-install-handler-local-20261113/attempt-0001/proof-0001/stdout.log:86-147, "∃mc2" at line 144) and applies compile_correct at mc2 (real-0004.sml:59-92) | v2 follows real-0004 -> nonfail-0002 -> e4 |
+| machine_sem_total | yes | targetPropsScript.sml:1134 | — | OK (v2 uses machine_sem_sing) |
+| gc_kind := Simple | yes | CK/compiler/backend/arm8/arm8_configScript.sml:43 | data_conf; set_oracle changes only word_to_word_conf (CK/compiler/backend/backendScript.sml:677-681) | OK |
+
+C. Changes draft -> v2 (old text, new text, why). The statement is NOT weakened.
+ C1 old: refund_asm_conf / refund_backend_conf / refund_prog (placeholders).
+    new: arm8_config / set_oracle arm8_backend_config refund_alloc_oracle / refund_prog.
+    why: B rows 9-10. With the `oracle` constant the premise would speak of a configuration whose compile result is not
+    the one the M1 chain proves things about.
+ C2 old conclusion: `∃ms. arm8_run 27 s = SOME ms ∧ ms.PC = ... ∧ ∃io. machine_sem ... = {Terminate Success io} ∧ extract_fs ...`
+    new: the same, with the conjunct grouping of the stored theorem `(arm8_run ... ∧ ms.PC = ...) ∧ ∃io_events. ...`
+    (built from the stored terms, so the output term is the stored one; control "S3 output term").
+    why: term identity with refund_profile_a_sl is checked by a control instead of by transcription.
+ C3 old A-SPACE: `∀ms. arm8_run 27 s = SOME ms ⇒ ∀po. is_safe_for_space ... (read_limits ... (refund_mc ...) ms)`.
+    new: the same form with ms renamed ms' (and the placeholders of C1). Unchanged in meaning.
+    Added an OPTIONAL corollary with A-SPACE on (h, stk, e) only:
+      ∀po. is_safe_for_space (:64) (basis_ffi ext cl fs) po arm8_config cfg refund_prog
+             (get_stack_heap_limit (2 * max_heap_limit 64 cfg.data_conf - 1) (h, stk, e))
+    why: the stored refund_entry_run_sl (s2-0003/stdout.log:48-57) gives x1 = h, x2 = stk, x3 = e after the 27 steps,
+    and read_limits reads exactly x1, x2, x3 (find_name arm8_names 2,3,4 = 1,2,3: arm8_configScript.sml:19-29).
+    This removes the machine state from the premise. It is the form the owner's numbers H and S can be put into.
+ C4 old route (DR lines 32-34): see B, last two rows. new route: S1/S2/S3 in P9a_v2.sml header.
+ C5 old controls N1 (delete A-SPACE and fail), N2 (EVAL gc_kind), N3 (A-SPACE false at (0,0)).
+    new: K1 (= N2), K2 (registers), K3 (gc_kind None makes the predicate false: cheap negative control on the config
+    dimension), K4 (the resource stop and Fail are excluded, stated as a theorem), 9 structural controls.
+    N1 dropped: a failed tactic is not a refutation (DR itself says so); it costs a run and proves nothing.
+    N3 kept as optional, cost unknown.
+
+D. Is CakeML's space machinery applicable to this program as compiled?
+ D1 Configuration requirements, and the stored values:
+   - gc_kind <> None (is_safe_for_space_def, backendProofScript.sml:2828): arm8 gc_kind := Simple (arm8_configScript.sml:43). MET.
+   - perf_calls = F (IMP_is_safe_for_space uses compile_word_to_stack_sfs_aux with perf = F, backendProofScript.sml:2895 and 2965-2968,
+     via backend_config_ok): arm8_stack_conf perf_calls:=F (arm8_configScript.sml:45). MET.
+   - no Eval / Install: install_sfs sets safe_for_space := F on Install (dataSemScript.sml:1480-1481). The M1 chain uses
+     ev = NONE (source-0006.sml line 33 per report I3; compile_correct_is_safe_for_space has no ev). Not checked that the
+     data program has no Install op; low risk.
+   - floating point: lim_safe is F for FP ops when has_fp_ops = F (dataSemScript.sml:584ff); arm8 has_fp_ops := F,
+     has_fp_tern := F (arm8_configScript.sml:42). If a REACHED part of the refund data program runs an FP op, A-SPACE is
+     false for every limit. NOT CHECKED (the runtime links _exp/_log/_pow/_strtod: report D9 bind list; those are FFI-side).
+   - The compile that the chain uses is `compile arm8_config (set_oracle arm8_backend_config refund_alloc_oracle) refund_prog`
+     (refund_alloc_compiled). refund_alloc_oracle is a DEFINED constant (lab-closure proof.sml:192), so to_word and
+     compute_stack_frame_sizes are computable for P9. The other compile statement (refund_arm8_compiled) uses the
+     specified constant `oracle`, for which they are not.
+   - No compiler flag beyond these exists for space: the theorem is stated for every backend_config_ok configuration with
+     gc_kind <> None. The stored compile used such a configuration (backend_config_ok discharged at real-0004.sml:91).
+ D2 VACUITY RISK (new finding, by reading; not run): lim_safe for `BlockOp (FromList tag)` requires
+     `LENGTH n < arch_size lims DIV 16` (dataSemScript.sml:599-607). For 64-bit, arch_size = 64 (line 79-81), so the bound is
+     LENGTH n < 4. The neighbouring clauses use `2 ** (arch_size lims) DIV 16`. Since do_lim_safe conjoins into
+     safe_for_space (dataSemScript.sml:732-736) and nothing sets it back to T, ONE executed Vector.fromList (source VfromList ->
+     BlockOp (FromList 0), CK/compiler/backend/flat_to_closScript.sml:252) on a list of 4 or more elements makes
+     data_lang_safe_for_space FALSE for every limit. Then A-SPACE is unsatisfiable and P9a is vacuously true.
+     Whether the refund run executes VfromList with >= 4 elements: UNKNOWN. The forge refund scripts in
+     CK/compiler/dafny/forge_refund*_experiment do not mention Vector (grep, exit 1 = no match); the basis and the
+     S-expression code were not checked. Check: N4 in RUN_PLAN_P9a.txt section 7.
+     "Nothing sets it back to T": every assignment to safe_for_space in dataSemScript.sml is a conjunction with the old
+     value or F (grep lines 421-427, 460, 538, 734, 740, 1367, 1378, 1386, 1481), except the initial T (line 1747).
+     Same kind of risk, also not checked: do_space_safe needs no_thunks_in_refs s.refs at each space-reset op
+     (dataSemScript.sml:421-427); one live thunk in a reference at such a point makes A-SPACE false for every limit.
+     I may misread the FromList bound (it may be intended, or the space proofs may never meet it); a run of N4 or of
+     the dataSem evaluation decides it, not this text.
+ D3 Whether data_lang_safe_for_space can be proved for the whole program: not determined (report G7: weeks to months,
+     low confidence; the examples were removed in CakeML commit 32a02d3fe per G7).
+
+E. Is the draft's statement provable from stored theorems?
+   Yes, I believe so, by the S1/S2/S3 route: every premise of compile_correct_is_safe_for_space other than the two
+   space premises is discharged in the replayed chain exactly as for compile_correct (real-0004.sml:82-92); the two space
+   premises come from A-SPACE and from read_limits_same_target (is_arm8_machine_config fixes mc.target = arm8_target:
+   CK/compiler/backend/arm8/proofs/arm8_configProofScript.sml:11-13; the handler record mc2 is existential, so the
+   target equality must come from is_arm8_machine_config mc2, which install_exclusion_suffices gives).
+   This is a reading, not a check. The strongest statement I can state from stored theorems is the v2 main theorem
+   (set equality, full output, resource stop and Fail excluded), conditional on A-SPACE. Nothing stored gives A-SPACE.
+   Without A-SPACE, the strongest stored statement is refund_profile_a_sl_every_machine_run (E4/stdout.log:297-331).
+   Classification after a successful run would be: P9a MACHINE-CHECKED as a conditional; A-SPACE MISSING (P9); its
+   satisfiability UNKNOWN (D2).

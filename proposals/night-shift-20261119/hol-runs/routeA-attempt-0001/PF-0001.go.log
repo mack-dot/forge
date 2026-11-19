@@ -1,0 +1,34 @@
+2026-11-19T08:31:55Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6665.00M  free = 503.00M  (encrypted)
+System-wide memory free percentage: 57%
+exit 1
+actual_exit 1 wall 73.825 cpu 97.211 rss_mib 4488 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PF-0001/proof.sml:371: Fail "failed: lexPs_cons lexP_all lex_aux_prefix_ISL sexp_to_string_Expr_prefix_free refund_render_fields_prefix_free refund_strict_parse_no_strict_prefix refund_render_fields_prefix_code"
+58:CHECKED prefix_append_strict
+61:CHECKED every_isPREFIX
+64:CHECKED sexp_print_eqs
+77:CHECKED read_symbol_safe_nil
+82:CHECKED read_string_aux_char_escaped
+87:CHECKED char_escaped_strict_prefix
+91:CHECKED read_string_aux_strict_prefix
+97:CHECKED atom_prefix_ISL
+113:CHECKED lexP_Atom
+116:CHECKED lexPs_nil
+119:CHECKED lexP_Expr
+121:LEMMA_FAILED lexPs_cons HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+122:LEMMA_FAILED lexP_all HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+123:SHOW REMAINING lex_aux_prefix_ISL
+125:  GOAL (∀x p d ts.
+131:LEMMA_FAILED lex_aux_prefix_ISL HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+133:CHECKED parse_ISL_of_lex
+135:LEMMA_FAILED sexp_to_string_Expr_prefix_free HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "CONJUNCT2", origin_structure = "Thm", source_location = Loc_Unknown}]})
+136:LEMMA_FAILED refund_render_fields_prefix_free HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+149:LEMMA_FAILED refund_strict_parse_no_strict_prefix HOL_ERR (HOL_ERROR {message = "predicate not true", origins = [{origin_function = "assert", origin_structure = "Lib", source_location = Loc_Unknown}]})
+151:CHECKED refund_strict_parse_complete
+153:LEMMA_FAILED refund_render_fields_prefix_code HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 341", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+155:CHECKED N1_trailing_newline_breaks
+161:CHECKED N2_atom_breaks
+166:CHECKED N3_depth0_breaks
+hash_parents exit 0
+go exit 1

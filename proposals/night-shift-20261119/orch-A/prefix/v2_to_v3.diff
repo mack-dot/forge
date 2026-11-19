@@ -1,0 +1,190 @@
+--- prefix_lemma_v2.orig.sml	2026-11-19 02:56:41.220416164 -0500
++++ prefix_lemma_v3.sml	2026-11-19 03:11:43.770134653 -0500
+@@ -1,6 +1,17 @@
+-(* Strict-prefix lemma, v2 (worker Z6, graph link X13). DRAFT: NOT RUN. No HOL process was started.
++(* Strict-prefix lemma, v3 (worker A2 of Orchestrator A, 2026-11-19; base: Z6's v2, SHA-256 c2fcebeb…4aff).
++   DRAFT: NOT RUN. No HOL process was started. Every tactic below is UNCHECKED.
++   v3 changes (details and old/new text: A2's hand-off report to Orchestrator A; diff: v2_to_v3.diff):
++     - tactic-only repairs, each marked (* A2 tactic-only *); the main one: in sexp_to_string_Expr_prefix_free
++       gvs dropped the assumption 1 <> 0 before metis_tac needed it (metis knows no arithmetic);
++     - metis search bounded to 30 s per call (a failing alternative cannot use the CPU budget);
++     - two ADDED theorems (no statement of v2 changed): every_isPREFIX (helper) and
++       refund_render_fields_prefix_code (corollary: a rendering that is a prefix of a rendering is the same
++       rendering of the same fields; it transfers the result to any consumer that re-renders, such as
++       drafts/fail-closed/frame.py strict_parse, which is NOT refund_strict_parse).
+    Nothing in this file is proved until a run ends with exit 0, marker EXACT_COMPLETE, no LEMMA_FAILED,
+    no UNEXPECTED_CONTROL_ACCEPTANCE, the tag check and exactly four CLOSURE_AXIOM lines.
++   ---- v2 header follows ----
++   Strict-prefix lemma, v2 (worker Z6, graph link X13). DRAFT: NOT RUN.
+    Base: Y4 draft prefix_lemma_DRAFT.sml. Changes from Y4 (statements of the exported results are UNCHANGED):
+      - script style of routeA-L1.sml (hol run, new_theory, thm helper with LEMMA_FAILED, no mk_thm); the
+        goal and the tactic are thunks, so a failure in one lemma cannot stop the run before the report;
+@@ -23,6 +34,9 @@
+    0 accepted; key-lemma mirror at depths 1 and 2 on 155,504 prefixes, 0 violations. *)
+ open preamble mlsexpTheory mlstringTheory;
+ val _ = Globals.max_print_depth := 60;
++(* A2 tactic-only: bound every metis_tac call (metisTools.limit, HOL/src/metis/metisTools.sml 281; the type is
++   mlibMeter.limit = {time : real option, infs : int option}, mlibMeter.sig 12). Default is unlimited. *)
++val _ = metisTools.limit := {time = SOME 30.0, infs = NONE};
+ fun pr s = print (s ^ "\n");
+ fun tags name th = let val (ors,axs) = Tag.dest_tag (Thm.tag th) in
+   if null (hyp th) andalso null axs andalso List.all (fn x => x = "DISK_THM") ors then ()
+@@ -69,6 +83,15 @@
+   (fn () => Induct >- simp[] \\ rpt gen_tac \\ Cases_on `p` \\
+      try_all "prefix_append_strict" [simp[] \\ metis_tac[], gvs[] \\ metis_tac[], rw[EQ_IMP_THM] \\ gvs[] \\ metis_tac[]]);
+ 
++(* A2 addition (helper; a new stored theorem, no v2 statement changed): EVERY is closed under prefixes.
++   Used as the first alternative of atom_safe_prefix instead of equality reasoning in metis. *)
++val EVP = thm "every_isPREFIX"
++  (fn () => ``!l p (P:'a -> bool). p <<= l /\ EVERY P l ==> EVERY P p``)
++  (fn () => try_all "every_isPREFIX"
++     [Induct \\ rpt gen_tac \\ Cases_on `p` \\ simp[] \\ metis_tac[],
++      Induct \\ simp[] \\ rpt gen_tac \\ Cases_on `p` \\ simp[] \\ metis_tac[],
++      metis_tac[rich_listTheory.IS_PREFIX_APPEND, listTheory.EVERY_APPEND]]);
++
+ (* ================= printing equations (variables only; no concrete unfolding) ================= *)
+ val EQS = thm "sexp_print_eqs"
+   (fn () => ``(!m. explode (concat (append (sexp_to_app_list (Atom m)))) = explode (make_str_safe m)) /\
+@@ -116,13 +139,25 @@
+   (fn () => ``!xs u acc. u <<= FLAT (MAP char_escaped xs) ++ "\"" /\ u <> FLAT (MAP char_escaped xs) ++ "\"" ==>
+                 ISL (read_string_aux u acc)``)
+   (fn () => Induct
+-     >- (rpt gen_tac \\ Cases_on `u` \\ simp[read_string_aux_def] \\ rpt strip_tac \\ gvs[])
+-     \\ rpt gen_tac \\ strip_tac
+-     \\ `u <<= char_escaped h ++ (FLAT (MAP char_escaped xs) ++ "\"")` by fs[]
+-     \\ qpat_x_assum `u <<= char_escaped h ++ _` (strip_assume_tac o REWRITE_RULE [PAS])
+-     >- metis_tac[CSP]
+-     \\ gvs[RCE]
+-     \\ first_x_assum irule \\ fs[]);
++     >- (try_all "rsp_base"   (* A2 tactic-only: alternatives added; v2's tactic is the first *)
++           [rpt gen_tac \\ Cases_on `u` \\ simp[read_string_aux_def] \\ rpt strip_tac \\ gvs[],
++            rpt gen_tac \\ Cases_on `u` \\ simp[read_string_aux_def] \\ TRY (Cases_on `t`) \\ fs[read_string_aux_def]])
++     \\ try_all "rsp_step"
++       [(* v2's step. Note (A2): REWRITE_RULE [PAS] rewrites to a fixpoint, so it also splits the inner
++           q <<= FLAT .. ++ "\"" (three cases, not two). The two extra-split cases still close: gvs keeps
++           the original premises, simplified by IS_PREFIX_APPENDS / APPEND_11 (both simp), for fs. *)
++        rpt gen_tac \\ strip_tac
++        \\ `u <<= char_escaped h ++ (FLAT (MAP char_escaped xs) ++ "\"")` by fs[]
++        \\ qpat_x_assum `u <<= char_escaped h ++ _` (strip_assume_tac o REWRITE_RULE [PAS])
++        >- metis_tac[CSP]
++        \\ gvs[RCE]
++        \\ first_x_assum irule \\ fs[],
++        (* A2 tactic-only: one split only (Once PAS), and no reliance on the kept premise *)
++        rpt gen_tac \\ strip_tac
++        \\ `u <<= char_escaped h ++ (FLAT (MAP char_escaped xs) ++ "\"")` by fs[]
++        \\ qpat_x_assum `u <<= char_escaped h ++ _` mp_tac \\ simp_tac std_ss [Once PAS] \\ rpt strip_tac
++        >- metis_tac[CSP]
++        \\ gvs[RCE] \\ first_x_assum irule \\ fs[]]);
+ 
+ val ATOM = thm "atom_prefix_ISL"
+   (fn () => ``!m p d ts. d <> 0 /\ p <<= explode (make_str_safe m) ==> ISL (lex_aux d p ts)``)
+@@ -140,8 +175,11 @@
+               (try_all "atom_safe_every" [drule str_every_thm \\ simp[listTheory.EVERY_EL],
+                                           dxrule str_every_thm \\ Cases_on `m` \\ simp[listTheory.EVERY_EL]])
+          \\ `EVERY is_safe_char p` by
+-              (try_all "atom_safe_prefix" [metis_tac[rich_listTheory.IS_PREFIX_APPEND, listTheory.EVERY_APPEND],
+-                                           fs[rich_listTheory.IS_PREFIX_APPEND] \\ fs[listTheory.EVERY_APPEND]])
++              (try_all "atom_safe_prefix"   (* A2 tactic-only: the EVP alternative first *)
++                 [metis_tac[EVP],
++                  drule_all EVP \\ simp[],
++                  metis_tac[rich_listTheory.IS_PREFIX_APPEND, listTheory.EVERY_APPEND],
++                  fs[rich_listTheory.IS_PREFIX_APPEND] \\ fs[listTheory.EVERY_APPEND]])
+          \\ Cases_on `p` >- simp[lex_aux_def]
+          \\ `is_safe_char h /\ EVERY is_safe_char t` by fs[]
+          \\ `~isSpace h /\ h <> #"(" /\ h <> #")" /\ h <> #"\""` by fs[is_safe_char_def]
+@@ -157,7 +195,11 @@
+      \\ `ISL (read_string_aux t [])` by metis_tac[RSP]
+      \\ try_all "atom_quoted_strict"
+           [Cases_on `read_string_aux t []` \\ gvs[] \\ rename1 `INL z` \\ Cases_on `z` \\ simp[],
+-           every_case_tac \\ gvs[]]);
++           every_case_tac \\ gvs[],
++           (* A2 tactic-only: v2's first alternative probably fails at rename1 (the INL argument is not a
++              variable after gvs); this one does not depend on how Cases_on treats the assumption. *)
++           qpat_x_assum `ISL _` mp_tac \\ Cases_on `read_string_aux t []` \\ simp[] \\
++             TRY (PairCases_on `x`) \\ simp[]]);
+ 
+ (* ================= KEY LEMMA through predicate constants ================= *)
+ val lexP_def = defn "lexP" `lexP x <=> !p d ts. d <> 0 /\ p <<= explode (concat (append (sexp_to_app_list x))) ==>
+@@ -178,7 +220,7 @@
+      \\ simp(Once lex_aux_def :: SPS)
+      \\ qpat_x_assum `_ <<= _ ++ _` (strip_assume_tac o REWRITE_RULE [PAS])
+      >- (first_x_assum irule \\ simp[])
+-     \\ Cases_on `q` >- (gvs[] \\ first_x_assum irule \\ simp[])
++     \\ Cases_on `q` >- (gvs[] \\ first_x_assum irule \\ simp[listTheory.isPREFIX_REFL])   (* A2 tactic-only: REFL named *)
+      \\ gvs[]
+      \\ try_all "lexP_Expr_close"
+           [DEP_REWRITE_TAC [CONJUNCT2 lex_aux_sexp_to_list] \\ simp[] \\
+@@ -191,7 +233,10 @@
+ val S_CONS = thm "lexPs_cons"
+   (fn () => ``!v vs. (NULL vs ==> lexP v) /\ (~NULL vs ==> lexP v) /\ (~NULL vs ==> lexPs vs) ==> lexPs (v::vs)``)
+   (fn () => rpt gen_tac \\ strip_tac \\ Cases_on `NULL vs`
+-     >- (gvs[] \\ fs[lexP_def, lexPs_def, EQS])
++     >- (try_all "lexPs_cons_null"   (* A2 tactic-only: alternatives added; v2's tactic is the first *)
++           [gvs[] \\ fs[lexP_def, lexPs_def, EQS],
++            gvs[] \\ fs[lexP_def, lexPs_def, EQS] \\ rpt strip_tac \\ metis_tac[],
++            fs[lexP_def, lexPs_def, EQS] \\ rpt strip_tac \\ metis_tac[]])
+      \\ gvs[] \\ fs[lexP_def, lexPs_def, EQS] \\ rpt strip_tac
+      \\ qpat_x_assum `_ <<= _ ++ _` (strip_assume_tac o REWRITE_RULE [PAS])
+      >- metis_tac[]
+@@ -236,8 +281,15 @@
+      \\ irule PL \\ simp(lex_def :: Once lex_aux_def :: SPS)
+      \\ `(1:num) <> 0` by simp[]
+      \\ qpat_x_assum `_ <<= _ ++ _` (strip_assume_tac o REWRITE_RULE [PAS])
+-     >- metis_tac[KEY]
+-     \\ Cases_on `q` >- (gvs[] \\ metis_tac[KEY, listTheory.isPREFIX_REFL])
++     >- metis_tac[KEY, DECIDE ``(1:num) <> 0``]   (* A2 tactic-only: 1 <> 0 given to metis *)
++     \\ Cases_on `q`
++     >- ((* A2 tactic-only. DEFECT in v2: gvs[] drops the assumption (1:num) <> 0 (it simplifies to T and gvs
++            drops trues), and metis_tac knows no arithmetic, so v2's metis_tac[KEY, isPREFIX_REFL] cannot meet
++            KEY's premise d <> 0 at d = 1. *)
++         gvs[] \\ try_all "expr_pf_full_inner"
++           [metis_tac[KEY, listTheory.isPREFIX_REFL, DECIDE ``(1:num) <> 0``],
++            qspecl_then [`xs`, `explode (concat (append (sexps_to_app_list xs)))`, `1`, `[OPEN]`] mp_tac
++              (CONJUNCT2 KEY) \\ simp[listTheory.isPREFIX_REFL]])
+      \\ gvs[]);
+ 
+ val RENDER_PF = thm "refund_render_fields_prefix_free"
+@@ -245,7 +297,8 @@
+   (fn () => try_all "refund_render_fields_prefix_free"
+      [rpt gen_tac \\ PairCases_on `f` \\ simp[render_def, response_def] \\ metis_tac[EXPR_PF],
+       rpt gen_tac \\ `?xs. refund_render_fields f = sexp_to_string (Expr xs)` by
+-          (PairCases_on `f` \\ simp[render_def, response_def]) \\ simp[] \\ metis_tac[EXPR_PF],
++          (PairCases_on `f` \\ simp[render_def, response_def] \\ metis_tac[]) \\ simp[] \\ metis_tac[EXPR_PF],
++          (* A2 tactic-only: v2's by-tactic left the existential open (simp does not pick xs); metis added *)
+       rpt gen_tac \\ PairCases_on `f` \\ rewrite_tac[render_def] \\ simp[response_def] \\ strip_tac \\
+           drule_all EXPR_PF \\ simp[]]);
+ 
+@@ -276,6 +329,24 @@
+      [rpt gen_tac \\ PairCases_on `f` \\ simp[strict_def, roundtrip],
+       Cases \\ PairCases_on `r` \\ simp[strict_def, roundtrip]]);
+ 
++(* A2 addition (a NEW stored theorem; no v2 statement changed). Prefix-code corollary of the main lemma and P0:
++   if one rendering is a prefix of another (strict or not), the two field tuples are equal.
++   Why: the real consumer (drafts/fail-closed/frame.py strict_parse, used by m1_fail_closed.py step D7) is NOT
++   refund_strict_parse; it accepts a string s only if s = render(fields) (re-render check). With this corollary,
++   ANY such re-rendering consumer that reads s <<= R (R = the result rendering) gets the fields of R, provided its
++   Python render is the HOL render (a transcription: TESTED-UNPROVED, a2_attack.py). *)
++val PCODE = thm "refund_render_fields_prefix_code"
++  (fn () => ``!f g. explode (refund_render_fields g) <<= explode (refund_render_fields f) ==> g = f``)
++  (fn () => rpt strip_tac
++     \\ `explode (refund_render_fields g) = explode (refund_render_fields f)` by
++          (try_all "prefix_code_equal"
++             [CCONTR_TAC \\ drule_all RENDER_PF \\ PairCases_on `g` \\ simp[roundtrip],
++              CCONTR_TAC \\ `ISL (parse (explode (refund_render_fields g)))` by metis_tac[RENDER_PF] \\
++                PairCases_on `g` \\ fs[roundtrip]])
++     \\ try_all "prefix_code_fields"
++          [metis_tac[P0, optionTheory.SOME_11],
++           qspec_then `g` mp_tac P0 \\ qspec_then `f` mp_tac P0 \\ simp[]]);
++
+ (* ================= NEGATIVE CONTROLS (each is PROVED as stated; each is a falsity of a weakened claim) ======= *)
+ (* N1: a frame with a trailing newline is NOT prefix-free: the frame itself is a strict prefix that parses. *)
+ val N1 = thm "N1_trailing_newline_breaks"
+@@ -303,6 +374,8 @@
+ val _ = lit "refund_strict_parse_no_strict_prefix" NSP
+   ``!f p. p <<= explode (refund_render_fields f) /\ p <> explode (refund_render_fields f) ==> refund_strict_parse p = NONE``;
+ val _ = lit "refund_strict_parse_complete" P0 ``!f. refund_strict_parse (explode (refund_render_fields f)) = SOME f``;
++val _ = lit "refund_render_fields_prefix_code" PCODE   (* A2 addition *)
++  ``!f g. explode (refund_render_fields g) <<= explode (refund_render_fields f) ==> g = f``;
+ val _ = if is_neg (concl N1) then pr "CONTROL_OK N1 is a proved negation" else bad "N1-not-negation";
+ val _ = if is_neg (concl N3) then pr "CONTROL_OK N3 is a proved negation" else bad "N3-not-negation";
+ val _ = if null (!problems) then () else raise Fail ("problems: " ^ String.concatWith " " (rev (!problems)));

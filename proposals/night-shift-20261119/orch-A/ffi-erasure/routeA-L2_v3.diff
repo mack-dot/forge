@@ -1,0 +1,99 @@
+--- routeA-L2_v2.sml	2026-11-19 03:00:21.716448154 -0500
++++ routeA-L2_v3.sml	2026-11-19 03:19:09.719020702 -0500
+@@ -134,40 +134,67 @@
+          read_bytearray_def, call_FFI_def] >> TRY EVAL_TAC >> show_tac "C-NV");
+ (* ================= L2 ================= *)
+ val _ = pr "MARK L2";
+-fun leaf IH = rpt strip_tac >> fs [TOT_T, SHIFT, RFB1, RFB2] >> show_tac "L2-leaf" >>
+-              match_mp_tac IH >> fs [TOT_T, SHIFT, RFB1, RFB2] >>
+-              TRY (simp [machine_config_component_equality]) >> show_tac "L2-leaf-after";
+-(* A5 tactic-only (3): second tactic, every_case_tac variant; the IH is kept out of fs (it would loop as a rewrite). *)
+-fun leaf2 IH = rpt strip_tac >> fs [TOT_T, SHIFT, RFB1, RFB2] >>
+-               TRY (match_mp_tac IH >> fs [TOT_T, SHIFT, RFB1, RFB2] >> NO_TAC) >>
+-               TRY (match_mp_tac IH >> simp [machine_config_component_equality] >> fs [] >> NO_TAC) >>
+-               show_tac "L2-alt-leaf" >> NO_TAC;
++(* ===== A5 v3 (tactic-only v3). Attempt L2-0001 (v2) failed: in both tactics the ExtCall leaf kept the assumption
++   `ffi_calls_ok Vok (...) f k (refund_ffi_tot Vok mc1.ffi_interfer 0 (x,l,ms))` while the goal after match_mp_tac IH
++   needs `... (mc1.ffi_interfer 0 (x,l,ms))` (L2-0001 stdout 87-153, 212-231): fs [TOT_T] did not rewrite that
++   assumption although `Vok x l ms` was an assumption. Repair: tot_fix rewrites every assumption and the goal with the
++   explicit instance MATCH_MP TOT_T (ASSUME (Vok x l ms)). The install and normal-step leaves were already closed
++   (no L2-leaf-after line for them). Statement unchanged. The main lemma now runs through a staged harness that prints
++   the goal count after every stage and the remaining goals at the first failing stage or at the end. ===== *)
++val VokV = mk_var ("Vok", ``:num -> word8 list -> arm8_state -> bool``);
++fun tot_fix (g as (asl, w)) =                                                  (* A5 tactic-only v3 *)
++  let val hits = List.filter (fn a => let val (f, args) = strip_comb a in aconv f VokV andalso length args = 3 end
++                                      handle _ => false) asl
++      val eqs = map (fn a => MATCH_MP TOT_T (ASSUME a)) hits
++  in if null eqs then ALL_TAC g
++     else (pr ("TOT_FIX " ^ Int.toString (length eqs)); (RULE_ASSUM_TAC (REWRITE_RULE eqs) >> TRY (REWRITE_TAC eqs)) g) end;
++fun cut n s = if size s <= n then s else String.substring (s, 0, n) ^ " ...";
++fun print_goals tag gl =                                                       (* A5 diagnostic v3 *)
++  (pr ("GOALS_LEFT " ^ tag ^ " " ^ Int.toString (length gl));
++   List.app (fn (i, (asl, w)) =>
++      (pr ("GOAL_" ^ Int.toString i ^ " " ^ tag);
++       List.app (fn a => pr ("  ASM " ^ cut 300 (term_to_string a))) (List.take (asl, Int.min (14, length asl)));
++       pr ("  CONCL " ^ cut 2400 (term_to_string w))))
++     (ListPair.zip (List.tabulate (Int.min (6, length gl), fn i => i + 1), List.take (gl, Int.min (6, length gl)))));
++(* prefix i = the first i stages; each prefix is applied afresh to the goal (costs a few re-runs; L2-0001 used 105 s CPU). *)
++fun staged name goal (stages : (string * (thm -> tactic)) list) mk =
++  let val n = length stages
++      fun prefix i = mk (fn IH => List.foldl (fn ((_, t), acc) => acc >> t IH) ALL_TAC (List.take (stages, i)))
++      fun run i last =
++        if i > n then (print_goals (name ^ " after all stages") last; raise Fail "goals left after the last stage")
++        else let val (gl, _) = prefix i ([], goal)
++                 val _ = pr ("STAGE " ^ name ^ " " ^ Int.toString i ^ " " ^ #1 (List.nth (stages, i - 1)) ^ " goals " ^ Int.toString (length gl))
++             in if null gl then i else run (i + 1) gl end
++             handle Fail m => raise Fail m
++                  | e => (pr ("STAGE_FAILED " ^ name ^ " " ^ Int.toString i ^ " " ^ #1 (List.nth (stages, i - 1)) ^ " " ^ General.exnMessage e);
++                          print_goals (name ^ " before stage " ^ Int.toString i) last; raise Fail "stage failed")
++      val _ = pr ("STAGED " ^ name ^ " stages " ^ Int.toString n)
++      val i = run 1 [([], goal)]
++  in prefix i end;
+ val L2_goal =
+   ``!k mc1 mc2 ffi ms.
+       mc2 = mc1 with ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer /\ ffi_calls_ok Vok mc2 ffi k ms ==>
+       evaluate mc1 ffi k ms = evaluate mc2 ffi k ms``;
++fun mkInd body = Induct >- (rpt strip_tac >> once_rewrite_tac [evaluate_def] >> simp []) >> pop_assum body;
++val stages1 =
++  [("unfold", fn IH => rpt gen_tac >> strip_tac >> rveq >> qpat_x_assum `ffi_calls_ok _ _ _ _ _` mp_tac >>
++                       once_rewrite_tac [evaluate_def, calls_def]),
++   ("simp", fn IH => simp [apply_oracle_def, TOT_T, SHIFT, RFB1, RFB2]),
++   ("if-split", fn IH => rpt (IF_CASES_TAC >> simp [TOT_T, SHIFT, RFB1, RFB2])),
++   ("case-split", fn IH => rpt (TOP_CASE_TAC >> simp [TOT_T, SHIFT, RFB1, RFB2])),
++   ("leaf-prepare", fn IH => rpt strip_tac >> tot_fix >> fs [TOT_T, SHIFT, RFB1, RFB2]),
++   ("leaf-IH", fn IH => match_mp_tac IH >> fs [TOT_T, SHIFT, RFB1, RFB2] >> TRY (simp [machine_config_component_equality]))];
++val stages2 =
++  [("unfold", fn IH => rpt gen_tac >> strip_tac >> rveq >> qpat_x_assum `ffi_calls_ok _ _ _ _ _` mp_tac >>
++                       once_rewrite_tac [evaluate_def] >> once_rewrite_tac [calls_def]),
++   ("simp", fn IH => simp_tac (srw_ss()) [apply_oracle_def, RFB1, RFB2, LET_THM]),
++   ("every-case", fn IH => every_case_tac >> fs []),
++   ("leaf-prepare", fn IH => rpt strip_tac >> tot_fix >> fs [TOT_T, SHIFT, RFB1, RFB2]),
++   ("leaf-IH", fn IH => TRY (match_mp_tac IH >> fs [TOT_T, SHIFT, RFB1, RFB2] >> NO_TAC) >>
++                        TRY (match_mp_tac IH >> simp [machine_config_component_equality] >> fs [] >> NO_TAC))];
+ val L2 = thmA "refund_ffi_tot_evaluate_agree" L2_goal
+-  [(* 1: the original, with (1) and (2) *)
+-   (Induct
+-   >- (rpt strip_tac >> once_rewrite_tac [evaluate_def] >> simp [])
+-   >> pop_assum (fn IH =>                                                   (* A5 tactic-only: was disch_then *)
+-        rpt gen_tac >> strip_tac >> rveq >>
+-        qpat_x_assum `ffi_calls_ok _ _ _ _ _` mp_tac >>
+-        once_rewrite_tac [evaluate_def, calls_def] >>
+-        simp [apply_oracle_def, TOT_T, SHIFT, RFB1, RFB2] >>                (* A5 tactic-only: + RFB1, RFB2 *)
+-        rpt (IF_CASES_TAC >> simp [TOT_T, SHIFT, RFB1, RFB2]) >>
+-        rpt (TOP_CASE_TAC >> simp [TOT_T, SHIFT, RFB1, RFB2]) >>
+-        leaf IH)),
+-   (* 2: A5 tactic-only alternative *)
+-   (Induct
+-   >- (rpt strip_tac >> once_rewrite_tac [evaluate_def] >> simp [])
+-   >> pop_assum (fn IH =>
+-        rpt gen_tac >> strip_tac >> rveq >>
+-        qpat_x_assum `ffi_calls_ok _ _ _ _ _` mp_tac >>
+-        once_rewrite_tac [evaluate_def] >> once_rewrite_tac [calls_def] >>
+-        simp_tac (srw_ss()) [apply_oracle_def, RFB1, RFB2, LET_THM] >>
+-        every_case_tac >> fs [] >>
+-        leaf2 IH))];
++  [fn g => staged "L2-t1" L2_goal stages1 mkInd g,
++   fn g => staged "L2-t2" L2_goal stages2 mkInd g];
+ val _ = pr ("STATEMENT_L2 " ^ term_to_string (concl L2));
+ val L2S = thm "refund_ffi_tot_machine_sem_agree"
+   ``!mc ffi ms.

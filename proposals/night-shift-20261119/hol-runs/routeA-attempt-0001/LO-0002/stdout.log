@@ -1,0 +1,12 @@
+TIMEOUT_HELPER Timeout.apply loaded
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0002/proof.sml:75: error: Structure (Thread) has not been declared in structure Thread
+Found near
+  (
+     Thread.Thread.setAttributes
+     [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch];
+     pr "INTERRUPTS asynch"
+     ) handle e => pr ("INTERRUPTS_UNCHANGED " ^ General.exnMessage e)
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0002/proof.sml:75: error: Structure (Thread) has not been declared in structure Thread
+Found near [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch]
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0002/proof.sml:75: error: Structure (Thread) has not been declared in structure Thread
+Found near [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch]

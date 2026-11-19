@@ -1,0 +1,21 @@
+<<HOL message: Created theory "forge_refundCompiledInputBinding">>
+Saved theorem _______ "source_compiled_fields"
+CHECKED source_compiled_fields ⊢ refund_fields charge request original remaining enabled opened candidate
+    amount reason = (ok,a,r,c,q,n) ⇒
+  (let
+     result =
+       evaluate_stmt
+         (source_initial h charge request original remaining enabled opened
+            candidate amount reason) env source_body;
+     final = FST result
+   in
+     SND result = Rstop Sret ∧ final.heap = h ∧
+     read_local final.locals «authorized» = SOME (BoolV ok) ∧
+     read_local final.locals «outputAmount» = SOME (IntV a) ∧
+     read_local final.locals «outputReason» = SOME (StrV r) ∧
+     read_local final.locals «outputCharge» = SOME (StrV c) ∧
+     read_local final.locals «outputRequest» = SOME (StrV q) ∧
+     read_local final.locals «intentCount» = SOME (IntV n))
+Exporting theory "forge_refundCompiledInputBinding" ... done.
+Theory "forge_refundCompiledInputBinding" took 0.47360s to build
+SOURCE_BRIDGE_COMPLETE
