@@ -1,0 +1,69 @@
+--- a/gate/refund.py
++++ b/gate/refund.py
+@@ -60,6 +60,54 @@
+     'package.json', 'package-lock.json', 'tsconfig.json',
+ )
+ FOOTER = b'\nmodule.exports = { Refund, runtime: _dafny };\n'
++# Fail closed: a `//` comment ends at the earliest possible line break (Dafny 4.11 ends it at a lone CR).
++LINE_END = re.compile('[\r\n\x0b\x0c\x85\u2028\u2029]')
++CHAR = re.compile(r"'(\\U\{[0-9A-Fa-f_]{1,8}\}|\\u[0-9A-Fa-f]{4}|\\[^\r\n]|[^'\\\r\n])'")
++
++
++def code_words(code):
++    """Words of Dafny source outside comments and literals; block comments nest. Unsure input fails closed."""
++    try:
++        text = code.decode('utf-8')
++    except UnicodeDecodeError:
++        raise Rejected('SOURCE_SCOPE: implementation is not UTF-8')
++    words, i, n = [], 0, len(text)
++    while i < n:
++        if text.startswith('//', i):
++            end = LINE_END.search(text, i)
++            i = n if end is None else end.start()
++        elif text.startswith('/*', i):
++            depth, i = 1, i + 2
++            while depth:
++                if i >= n:
++                    raise Rejected('SOURCE_SCOPE: unterminated comment')
++                step = 1 if text[i:i + 2] not in ('/*', '*/') else 2
++                depth += {'/*': 1, '*/': -1}.get(text[i:i + 2], 0)
++                i += step
++        elif text[i] == '"' or text.startswith('@"', i):
++            verbatim, i = text[i] == '@', i + (2 if text[i] == '@' else 1)
++            while True:
++                if i >= n or (not verbatim and text[i] in '\r\n'):
++                    raise Rejected('SOURCE_SCOPE: unterminated string')
++                if verbatim and text.startswith('""', i) or not verbatim and text[i] == '\\':
++                    i += 2
++                elif text[i] == '"':
++                    i += 1
++                    break
++                else:
++                    i += 1
++        elif text[i] == "'":
++            literal = CHAR.match(text, i)
++            if not literal:
++                raise Rejected('SOURCE_SCOPE: unrecognized character literal')
++            i = literal.end()
++        elif re.match('[A-Za-z_]', text[i]):
++            word = re.compile(r"[A-Za-z0-9_?']*").match(text, i + 1).end()
++            words += re.split(r"[?']", text[i:word])
++            i = word
++        else:
++            i += 1
++    return words
+ 
+ 
+ def run(command, work, name, records):
+@@ -103,6 +151,11 @@
+     # Input restrictions only. Dafny parses, verifies and audits the source.
+     if b'{:' in code.replace(b'{:isolate_assertions}', b'') or b'@' in code:
+         raise Rejected('SOURCE_SCOPE: only assertion-isolation attributes allowed')
++    # Dafny assumes an `expect` condition when it verifies and halts the program at run time when the
++    # condition is false. A verified Assess with `expect` can halt instead of returning a decision. The
++    # keyword covers `expect E;`, `expect E, m;` and `:- expect`. Other halts (resources) stay test-only.
++    if 'expect' in code_words(code):
++        raise Rejected('SOURCE_SCOPE: run-time halt statement expect is not allowed')
+     if b'include' in (ROOT / BINDING).read_bytes().replace(b'include paths', b''):
+         raise Rejected('SOURCE_SCOPE: the trusted binding must add no include')
+     return pins, executables
