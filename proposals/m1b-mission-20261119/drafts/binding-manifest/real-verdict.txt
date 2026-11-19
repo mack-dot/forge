@@ -1,0 +1,64 @@
+IDENTITY VERIFIED — identity and record consistency only; proofs NOT re-run (no Dafny, no HOL, no Node was started)
+
+| link | stated | computed | evidence: record kind [storage] binding |
+| S1 | UNBOUND | UNBOUND | - |
+| S2 | SOURCE_PROOF | SOURCE_PROOF | S2-refund-gate: slice1_refund_gate by scripts/exit_slice1.py (Slice 1) [tracked] 2 bound files re-hashed; S2-expect-false-run: a sentence in a report; no stored log by - [tracked] orchestrator's run: exit 0, 6 verified |
+| S3 | SOURCE_PROOF | SOURCE_PROOF | S3-linked-refund: run_check_result by run_check.py dispatch, attempt-0002 (orchestrator, by the build/ location; not confirmed) [ignored,tracked] 4/33 closure files named by the record; S3-linked-refund: w9_attempt by worker W9, attempt 04 [scratch] 33/33 closure files named by the record; export: export byte equality by this verifier, now [untracked] source = export input; record exit 0; output digest; the exporter itself is NOT bound |
+| S3a | SOURCE_PROOF | SOURCE_PROOF | S3a-linked-refund-no-hex: y10_run by worker Y10 (run1.sh) [scratch] 4/33 closure files named by the record; S3a-orchestrator-run: a sentence in a report; no stored log by - [tracked] RUN AGAIN BY THE ORCHESTRATOR (2026-11-19T06:29Z) |
+| S4 | TEST | TEST | export: export byte equality by this verifier, now [untracked] source = export input; record exit 0; output digest; the exporter itself is NOT bound; S4-orchestrator-digests: a sentence in a report; no stored log by - [tracked] digests checked by the orchestrator; now pinned in `run_check.py` |
+| S5 | MODEL | MODEL | S5-u294-source: u294_command by U294 (2026-11-04) [untracked] 0 bound files re-hashed; S5-u294-bridge: u294_command by U294 (2026-11-04) [untracked] 0 bound files re-hashed |
+| S6 | UNBOUND | UNBOUND | - |
+| S7 | ASSUMPTION | ASSUMPTION | S7-operator-meaning: NOT approved by nobody [] Dafny and HOL operator meanings agree on 8 operators, 3 literals, 4 strings |
+| S8 | ASSUMPTION | ASSUMPTION | S8-canonical-wire: approved assumption by owner [] canonical wire input only |
+| X1 | MODEL | MODEL | X1-T05: m1r1_command by M1R-1 replay (same machine) [tracked] 0 bound files re-hashed |
+| X2 | MODEL | MODEL | X2-C32: m1r1_command by M1R-1 replay (same machine) [tracked] 0 bound files re-hashed; X2-C34: m1r1_command by M1R-1 replay (same machine) [tracked] 0 bound files re-hashed |
+| X3 | MODEL | MODEL | X3-e4: hol_case by M1R-1 replay (same machine) [tracked] 0 bound files re-hashed |
+| X4 | MODEL | MODEL | X4-fs: hol_case by M1R-1 replay (same machine) [tracked] 0 bound files re-hashed |
+| X5 | ASSUMPTION | ASSUMPTION | X5-entry-state: approved assumption by owner [] the entry state before cml_main satisfies P1 to P6 (TBI0/SA0 wording is false for real registers, D11) |
+| X6 | ASSUMPTION | ASSUMPTION | X6-ffi-contract: NOT approved by nobody [] premise P7 at ALL call states; probably FALSE (fficlose x3 = 0) |
+| X7 | UNBOUND | UNBOUND | - |
+| X8 | UNBOUND | UNBOUND | - |
+| X9 | UNBOUND | UNBOUND | - |
+| X10 | UNBOUND | REPORTED_ONLY/UNBOUND | X10-exit-reading: a sentence in a report; no stored log by - [tracked] `_cml_exit` tests the low 32 bits of x0 (read by the orchestrator) |
+| X11 | ASSUMPTION | ASSUMPTION | X11-kernel: approved assumption by owner [] processor and kernel between steps (L3 model, interference_ok) |
+| X11e | UNBOUND | UNBOUND | - |
+| X12 | TEST | TEST | X12-conformance: conformance by scripts/exit_m1_conformance.py (Wave Gate 1) [tracked] 1 bound files re-hashed |
+| X13 | REPORTED_ONLY | REPORTED_ONLY/UNBOUND | X13-prefix-test: a sentence in a report; no stored log by - [tracked] 8,011 strict prefixes of 68 real outputs: a strict parser accepts 0 (report B3;  |
+| X14 | MODEL | MODEL | X14-T06: m1r1_command by M1R-1 replay (same machine) [tracked] 0 bound files re-hashed |
+| X15 | UNBOUND | UNBOUND | - |
+| X16 | UNBOUND | UNBOUND | - |
+| U1 | SOURCE_PROOF | SOURCE_PROOF | U1-refund-finality: slice1_dafny_verify by scripts/exit_slice1.py (Slice 1) [tracked] 4 bound files re-hashed |
+| U2 | TEST | TEST | U2U3-suite: slice1_suite by scripts/exit_slice1.py (Slice 1) [tracked] 2 bound files re-hashed |
+| U3 | TEST | TEST | U2U3-suite: slice1_suite by scripts/exit_slice1.py (Slice 1) [tracked] 2 bound files re-hashed |
+| U4 | MODEL | MODEL | U4-finality-model: f20_summary by run_checks.py (F2.0) [tracked] 1 bound files re-hashed |
+| U5a | SOURCE_PROOF | SOURCE_PROOF | U5a-sink-core: y7_result by worker Y7 (dafny_one.sh) [scratch] 5/5 closure files named by the record; U5a-orchestrator-run: a sentence in a report; no stored log by - [tracked] orchestrator's run: exit 0, 56 verified |
+| U5b | UNBOUND | UNBOUND | - |
+| U6 | ASSUMPTION | ASSUMPTION | U6-ed25519: NOT approved by nobody [] Ed25519 and secrecy of the key |
+| U7 | ASSUMPTION | ASSUMPTION | U7-power-loss: NOT approved by nobody [] durable state after power loss (SQLite defaults, no full fsync); U7-crash-test: a sentence in a report; no stored log by - [tracked] 486 kills, 0 violations; worker's run |
+| U8 | UNBOUND | UNBOUND | - |
+| V1 | MODEL | MODEL | V1-C42: m1r1_command by M1R-1 replay (same machine) [tracked] 0 bound files re-hashed; V1-second-extraction: y9_extract_result by worker Y9 (report D9) [tracked] 0 bound files re-hashed (no exit code stored; a pass flag only) |
+| V2 | UNBOUND | UNBOUND | - |
+| V3 | REPORTED_ONLY | REPORTED_ONLY/UNBOUND | V3-hash-walk: a sentence in a report; no stored log by - [tracked] a hash walk of the real files, 0 mismatches (report B4; the worker's run; same m |
+| V4 | UNBOUND | UNBOUND | - |
+| V5 | UNBOUND | UNBOUND | - |
+| V6 | REPORTED_ONLY | REPORTED_ONLY/UNBOUND | V6-sha-assert: a sentence in a report; no stored log by - [tracked] `run_case.py`, the conformance script |
+| V7 | REPORTED_ONLY | REPORTED_ONLY/UNBOUND | V7-manifest-draft: a sentence in a report; no stored log by - [tracked] 56 control runs (report II; the worker's runs) |
+| E1 | UNBOUND | UNBOUND | - |
+| E2 | UNBOUND | UNBOUND | - |
+| E3 | REPORTED_ONLY | REPORTED_ONLY/UNBOUND | E3-hosted-run: a sentence in a report; no stored log by - [tracked] run 44454558079 |1|REJECTED |
+| E4 | UNBOUND | UNBOUND | - |
+| E5 | UNBOUND | UNBOUND | - |
+
+UNBOUND (no proof binds these bytes or components):
+  c-runtime-ranges: C run-time and main (basis_ffi.c) in __text, and the __stubs
+  got-binds: __DATA_CONST,__got: 23 binds to libSystem (dyld fills them at load)
+  cml-main-stub: cml_main stub, NOP pad and 6 FFI trampolines
+  linkedit: __LINKEDIT (fixups, exports, symbols, strings, code signature)
+  sink.ts: ts/refund-finality/sink.ts
+  minter.ts: ts/refund-finality/minter.ts
+  compiled-js-core: JavaScript compiled from impl/RefundFinality.dfy by the Dafny JS back end
+  node: pinned Node v24.3.0
+  sqlite: SQLite inside Node (node:sqlite, DatabaseSync)
+  dyld-libsystem: dyld, libSystem, the kernel
+  u294-exporter: the patched Dafny exporter build of 2026-11-04 (DafnyDriver.dll 55d26351…)
+identity verified; proofs NOT re-run

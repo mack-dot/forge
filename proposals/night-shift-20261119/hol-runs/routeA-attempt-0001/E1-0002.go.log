@@ -1,0 +1,21 @@
+2026-11-19T08:33:33Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6625.00M  free = 543.00M  (encrypted)
+System-wide memory free percentage: 70%
+exit 1
+actual_exit 1 wall 69.458 cpu 94.17 rss_mib 4590 [] inputs_unchanged_after True
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"
+28:CHECKED erase_fields
+31:  (erase s).exception = s.exception ∧ (erase s).branch_hint = s.branch_hint ∧
+39:CHECKED restore_erase
+43:CHECKED erase_restore
+47:CHECKED arm8_ok_erase
+49:  s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.E0E ∧ s.exception = NoException ∧
+55:CHECKED untagged_bits
+59:CHECKED BranchTo_EL0_pc
+65:CHECKED tbi_pc_erased
+69:CHECKED tbi_pc_untagged
+73:CHECKED BranchTo_erase_untagged
+80:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/E1-0002/proof.sml:156: error: Value or constructor (w2w_id) has not been declared
+hash_parents exit 0
+go exit 1

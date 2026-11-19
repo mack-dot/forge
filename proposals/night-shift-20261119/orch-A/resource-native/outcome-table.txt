@@ -1,0 +1,76 @@
+Outcome classification for the refund executable's machine model (worker A6, 2026-11-19). Reading only. NOT RUN.
+Stored theorem: forge_refundSlideProfileA.refund_profile_a_sl_every_machine_run, printed at
+  E4 = /Users/mackianni/forge/results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/e4-0001/stdout.log
+  lines 297-331 (statement), 240-265 (refund_profile_a_sl). The .sig files list names only:
+  E4/../e4-0001/.hol/objs/forge_refundSlideProfileATheory.sig lines 20-22; the slide-0 forms in
+  /Users/mackianni/forge/results/refund-profile-a-local-20261117/attempt-0001/prof-0002/.hol/objs/forge_refundProfileATheory.sig
+  lines 14-16 (refund_profile_a_slide0, _abstract_env, _every_machine_run); E4/stdout.log 353-400 shows the slide-0
+  instance is term-identical (S6).
+CK = /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml
+
+1. Premises (all 11; E4/stdout.log 298-307; ledger in reports/I3-I4b-premise-ledger.md section B):
+ P1 refund_entry_pre_sl sl s h stk e   P2 aligned 3 e   P3 h <=+ e   P4 8192w <=+ e - h   P5 refund_heap_clear_sl sl h e
+ P6 envmc.prog_addresses = refund_mem_dm_sl sl h e   P7 refund_env_ok_sl sl envmc
+ P8 stdin_content fs = SOME (explode (sexp_to_string (refund_request ...)))   P9 wfcl cl   P10 wfFS fs   P11 STD_streams fs
+ Free and universal: sl s h stk e envmc fs cl ext and the nine field values.
+ Let R = refund_render_fields (refund_fields ...) and OUT = add_stdout (fastForwardFD fs 0) R.
+
+2. Where outcomes come from (definitions)
+ - machine_sem: CK/compiler/backend/semantics/targetSemScript.sml:221-234. Terminate t io iff some clock k gives
+   evaluate = (Halt t, _, st') with st'.io_events = io; Diverge iff every clock gives TimeOut; Fail iff some clock gives Error.
+ - Halt Success / Halt Resource_limit_hit: targetSemScript.sml:138-140: at halt_pc, Success iff get_reg ms ptr_reg = 0w
+   (ptr_reg = 0, i.e. x0, all 64 bits), else Resource_limit_hit. Nothing else produces Resource_limit_hit in the target
+   semantics.
+ - Halt (FFI_outcome o): targetSemScript.sml:172, 196, 211 (call_FFI returns FFI_final).
+ - Error (-> Fail): targetSemScript.sml:129-137, 148-156, 179, 203-206, 218 (state_ok false, non-code PC, bad FFI args, ...).
+ - extend_with_resource_limit: CK/semantics/proofs/semanticsPropsScript.sml:219-225.
+ - extract_fs: CK/basis/basis_ffiScript.sml:133-162 and 177-181. An event whose name is in fs_ffi_part is replayed by the
+   file-system function; another basis name is skipped; ANY OTHER name is replayed by `ext`, whose returned state
+   replaces the whole oracle state (lines 146-150).
+
+3. Case table (the stored theorem, at any instance of the premises)
+| Outcome | Allowed? | Exact clause | io trace in that case | What a fail-closed consumer may conclude |
+| Terminate Success io | ALLOWED | E4 312-319: `∃io. b = Terminate Success io ∧ extract_fs ext (cl,fs) io = SOME OUT` | COMPLETE in the fs sense: replaying io gives exactly OUT (stdin fast-forwarded, R appended to stdout, every other inode and descriptor as in fs, stderr unchanged). That the bytes on fd 1 are exactly R is lemma L-OUT (link X9): MISSING | In the MODEL: halt at halt_pc with x0 = 0, output R. For the PROCESS: only under X8 (native refinement, no HOL statement). Exit status 0 is NOT a proof of this case (row 2) |
+| Terminate Resource_limit_hit io' | ALLOWED | E4 320-327: `∃io io'. b = Terminate Resource_limit_hit io' ∧ io' ≼ io ∧ extract_fs ext (cl,fs) io = SOME OUT` | PREFIX at event level: io' ≼ io. io' = [] is allowed. io' = io is allowed (full output, then a resource stop). At byte level: see section 4 | Model: halt with x0 <> 0 (64-bit). Process (by reading CK/compiler/backend/arm8/export_arm8Script.sml:106-110, `cake_exit: b cml_exit`; CK/basis/basis_ffi.c `void cml_exit(int arg)`: prints "Program exited with nonzero exit code." to stderr if the low 32 bits are not 0, then exit(arg)): status = low 8 bits of the low 32 bits. x0 = 2^32 gives status 0 and EMPTY stderr; x0 = 256 gives status 0 and a stderr line. Which x0 values are reachable: NOT derivable from stored theorems (report G6). So: never accept on status; require a strict parse of a COMPLETE frame (link X13: TESTED-UNPROVED) |
+| Terminate (FFI_outcome _) io | EXCLUDED | every b satisfies the two disjuncts of E4 310-327, neither has FFI_outcome; and refund_profile_a_sl (E4 258-259) gives b ∈ extend_with_resource_limit {Terminate Success io_events} | — | The model never stops on an FFI final event. Real write/read errors, EPIPE, an assert abort in basis_ffi.c have NO model counterpart; they are outside the theorem (native ledger A-FFI-*, A-OUT-*) |
+| Diverge _ | EXCLUDED | same two disjuncts (both are Terminate) | — | The MODEL always halts (no step or time bound: machine_sem uses an existential clock). A real hang (stdin not closed, blocked write, SIGSTOP) is outside the theorem: supervisor timeout and REFUSE (A-N2) |
+| Fail | EXCLUDED | E4 330-331: `¬machine_sem ... ms Fail` (also by the disjunction) | — | No model Error. A real fault (SIGBUS from SA0, SIGSEGV, SIGABRT) is outside the theorem: refuse on any signal |
+| no behaviour | EXCLUDED | E4 328-329: `∃b. machine_sem ... ms b` | — | — |
+ Installer exclusion (E4 252-256 in refund_profile_a_sl): no TimeOut prefix reaches install_pc. Not an outcome.
+
+4. Search: an outcome the stored theorem allows in which the trace is NOT a prefix of the specified complete output
+ FOUND, for a free choice of `ext` (by reading; the construction below is NOT RUN):
+ Clause: E4 320-327, `∃io io'. b = Terminate Resource_limit_hit io' ∧ io' ≼ io ∧ extract_fs ext (cl,fs) io = SOME OUT`.
+ The witness io is existential and only has to replay to OUT under `ext`. Take
+   ext_reset = λname st conf bytes. if name = ExtCall «forge_reset» then Oracle_return (cl, OUT) [] else Oracle_final FFI_failed
+ and io = io' ++ [IO_event (ExtCall «forge_reset») [] []]. By extract_fs_with_numchars_APPEND (basis_ffiScript.sml:164-174)
+ the replay of io is the replay of io' followed by one ext event that sets the state to (cl, OUT) (lines 146-150; «forge_reset»
+ is not a basis name, basis_ffiScript.sml is_basis_ffi_name). extract_fs then resets numchars to fs.numchars (line 177-181),
+ so the result is OUT if OUT.numchars = fs.numchars (fastForwardFD and add_stdo do not touch numchars by reading
+ CK/basis/fsFFIPropsScript.sml:480-486 and CK/basis/TextIOProofScript.sml:302-305; not checked).
+ Hence at ext = ext_reset the RLH clause holds for EVERY io' that replays at all, for example io' = one successful write
+ event of bytes "X" on fd 1 with "X" not a prefix of R. The Success clause at ext_reset is equally weak as a formula.
+ Why this is not a real defect of the model run: the theorem is universal in ext. A consumer instantiates ext := no_ext
+ (basis_ffiScript.sml:103-106; every non-basis event then replays to NONE). With no_ext, extract_fs_with_numchars_APPEND
+ and extract_fs_with_numchars_keeps_iostreams (basis_ffiScript.sml:194-212) give: the stdout content after io' is a
+ prefix of the stdout content of OUT, i.e. old ++ (a prefix of R). That lemma is NOT stored; it is the prefix lemma /
+ L-OUT of drafts/route-a/v2 (report D4: "the form in the exact-claim draft is FALSE (free external oracle); repaired at
+ no_ext"). Two more gaps for a consumer: (i) machine_sem (basis_ffi ext ...) = machine_sem (basis_ffi no_ext ...) because
+ the machine only calls the four basis names read, write, close, open_in (E4 proof names4) and
+ basis_ffi_oracle_is_basis_ffi_name (basis_ffiScript.sml:84-91): lemma NOT stored; (ii) the real process is not any
+ basis_ffi model (X8).
+ Proposed HOL control (UNCHECKED, not in P9a_v2.sml; for the route-A prefix-lemma run):
+   rlh_clause_holds_for_reset_ext:
+   ∀st io' tgt. extract_fs_with_numchars (ext_reset tgt) st io' ≠ NONE ⇒
+     ∃io. io' ≼ io ∧ extract_fs_with_numchars (ext_reset tgt) st io = SOME tgt
+   tactic idea: qexists_tac `io' ++ [IO_event (ExtCall «forge_reset») [] []]` >>
+   simp [extract_fs_with_numchars_APPEND, extract_fs_with_numchars_def, is_basis_ffi_name_def, fs_ffi_part_def] >> CASE_TAC
+ Byte-level non-prefix outcomes OUTSIDE the theorem (native, not model): stderr merged into stdout by the caller
+ (cml_exit and assert print to stderr); a partial final write followed by a kill; output of another process on the same pipe.
+
+5. Summary for a fail-closed consumer
+ AUTHORIZE only if: exit status 0 AND no signal AND stderr empty AND stdout is exactly one complete frame under a strict
+ parser (and the caller wrote the whole request and closed stdin). This uses the theorem only through X8 + X9 + X13.
+ REFUSE otherwise. Exit status alone carries no proof meaning (row 2). The existing planted-result tests of this rule:
+ /Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/fail-closed/run_exit_status_controls.py and
+ exit_status_controls_results.json (rows for x0 = 2^32 and x0 = 256 shapes; the executable was not run there).

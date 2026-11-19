@@ -1,0 +1,30 @@
+{
+ "case": "EF-0001",
+ "cwd": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "EF-0001.sml",
+ "source_sha256": "ba8f915047e2fdab57e80e7ccdd7e3ec0c8dc3e80955fac0fbe91de57b2acfa4",
+ "resource_guard": {
+  "memory_free_percent": 54,
+  "disk_free_gib": 84.96,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 600,
+ "wall_seconds_limit": 900,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 142.814,
+ "child_user_cpu_seconds": 137.547,
+ "child_max_rss_bytes": 2627059712,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "44554a09851dd3e0e6b8e5ec54f2d39ad676f62a40284da82f73336590005ea0",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_m1bErasureFrameTheory.dat": "662d7cd2336d50b1e6737850f0c52a141033d4ed113d71b800b1b515d9391206",
+  ".hol/objs/forge_m1bErasureFrameTheory.sig": "379bf0b81432875556299dff6b86bd559050e72bb7a61c17f4e130291b9a3620",
+  ".hol/objs/forge_m1bErasureFrameTheory.sml": "2d359f31649f72bf45985baaacd3e26988963a8327a7efc5f5e9fec2badbb495"
+ },
+ "inputs_unchanged_after": true
+}

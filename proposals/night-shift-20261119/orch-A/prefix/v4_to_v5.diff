@@ -1,0 +1,84 @@
+--- prefix_lemma_v4.sml	2026-11-19 03:38:36.265160554 -0500
++++ prefix_lemma_v5.sml	2026-11-19 03:45:08.773174719 -0500
+@@ -1,4 +1,15 @@
+-(* Strict-prefix lemma, v4 (worker A2, 2026-11-19). DRAFT: NOT RUN. Base: v3 (SHA-256 820de134…95e8), which ran as
++(* Strict-prefix lemma, v5 (worker A2, 2026-11-19). DRAFT: NOT RUN. Base: v4 (SHA-256 fa818253…b24d) = PF-0002 (exit 1).
++   PF-0002 stdout 133-174: the ONLY real failure is lexPs_cons, stage cons.in_v, open goal
++     p ≼ explode (concat (append (sexp_to_app_list v)))   under   p ≼ STRCAT (STRCAT Ev " ") Evs ... split to
++     p ≼ STRCAT Ev " ", p ≠ STRCAT Ev " ".
++   Cause: simp's normal form is LEFT-associated (listScript.sml:559 APPEND_ASSOC: l1 ++ (l2 ++ l3) = l1 ++ l2 ++ l3,
++   exported as a rewrite), so the unfolded hypothesis was (Ev ++ " ") ++ Evs and PAS split after the space, not after
++   Ev. The prefix p = Ev ++ " " (and p = Ev) fell into the wrong case. The v1-v3 analysis assumed right association.
++   v5 (tactic-only, marked (* A2 tactic-only v5 *); three NEW helper lemmas, no statement of an existing lemma changed):
++     lexPs_cons_split, lexPs_cons_in_v, lexPs_cons_space; lexPs_cons combines them. Each case is its own lemma, so
++     every case is exercised in one run even if another case fails.
++   ---- v4 header follows ----
++   Strict-prefix lemma, v4 (worker A2, 2026-11-19). DRAFT: NOT RUN. Base: v3 (SHA-256 820de134…95e8), which ran as
+    PF-0001 (actual exit 1): 16 lemmas CHECKED; the only first-order failure was lexPs_cons (metis "no solution
+    found", stdout line 121, no goal printed); the other 6 failures follow from TRUTH replacing a failed lemma.
+    v4 changes (all tactic-only or diagnostic, marked (* A2 tactic-only v4 *); NO statement or definition changed):
+@@ -276,28 +287,50 @@
+              simp[Abbr `E`] \\ disch_then (fn th => rewrite_tac [th]) \\
+              simp(Once lex_aux_def :: SPS) \\ simp[lex_aux_def]]);
+ 
++(* A2 tactic-only v5: three helper lemmas (NEW stored theorems) *)
++val CSPLIT = thm "lexPs_cons_split"
++  (fn () => ``!a b (p:string). p <<= a ++ " " ++ b ==> p <<= a \/ ?t. p = a ++ #" " :: t /\ t <<= b``)
++  (fn () => try_all "lexPs_cons_split"
++     [rpt gen_tac \\ ST "split.rassoc" (PURE_REWRITE_TAC [GSYM listTheory.APPEND_ASSOC, listTheory.APPEND])
++        \\ ST "split.pas" (PURE_ONCE_REWRITE_TAC [PAS]) \\ rpt strip_tac \\ gvs[]
++        \\ CL "split.q" (Cases_on `q` \\ gvs[]),
++      rpt gen_tac \\ PURE_REWRITE_TAC [GSYM listTheory.APPEND_ASSOC, listTheory.APPEND]
++        \\ PURE_ONCE_REWRITE_TAC [PAS] \\ rpt strip_tac \\ fs[] \\ Cases_on `q` \\ fs[] \\ metis_tac[]]);
++
++val CIN = thm "lexPs_cons_in_v"
++  (fn () => ``!v p d ts. lexP v /\ d <> 0 /\ p <<= explode (concat (append (sexp_to_app_list v))) ==>
++                         ISL (lex_aux d p ts)``)
++  (fn () => try_all "lexPs_cons_in_v"
++     [rpt strip_tac \\ useI `lexP v` lexP_def,
++      rw[lexP_def]]);
++
++val CSPACE = thm "lexPs_cons_space"
++  (fn () => ``!v vs t d ts. lexPs vs /\ d <> 0 /\ t <<= explode (concat (append (sexps_to_app_list vs))) ==>
++               ISL (lex_aux d (explode (concat (append (sexp_to_app_list v))) ++ #" " :: t) ts)``)
++  (fn () => try_all "lexPs_cons_space"
++     [rpt strip_tac
++      \\ ST "space.inst" (qspecl_then [`v`, `#" " :: t`, `ts`, `d`] mp_tac (CONJUNCT1 lex_aux_sexp_to_list))
++      \\ ST "space.side" (impl_tac >- simp SPS)
++      \\ disch_then (fn th => rewrite_tac [th])
++      \\ ST "space.skip" (simp(Once lex_aux_def :: SPS))
++      \\ CL "space.use" (useI `lexPs vs` lexPs_def),
++      rpt strip_tac \\ DEP_REWRITE_TAC [CONJUNCT1 lex_aux_sexp_to_list] \\ simp SPS
++      \\ simp(Once lex_aux_def :: SPS) \\ useI `lexPs vs` lexPs_def]);
++
+ val S_CONS = thm "lexPs_cons"
+   (fn () => ``!v vs. (NULL vs ==> lexP v) /\ (~NULL vs ==> lexP v) /\ (~NULL vs ==> lexPs vs) ==> lexPs (v::vs)``)
+   (fn () => try_all "lexPs_cons"
+-    [(* A2 tactic-only v4: explicit steps, no metis. PF-0001 stdout line 121: the v3 tactic failed in a metis
+-        call (no goal printed); the v3 tactic is kept below as the second alternative. *)
++    [(* A2 tactic-only v5: combine the three case lemmas; no metis *)
+      rpt gen_tac \\ strip_tac
+      \\ `lexP v` by CL "cons.lexPv" (Cases_on `NULL vs` \\ fs[])
+      \\ Cases_on `NULL vs`
+-     >- CL "cons.null" (simp[lexPs_def, EQS] \\ rpt strip_tac \\ useI `lexP v` lexP_def)
++     >- CL "cons.null" (simp[lexPs_def, EQS] \\ rpt strip_tac
++                         \\ qspecl_then [`v`, `p`, `d`, `ts`] mp_tac CIN \\ simp[])
+      \\ `lexPs vs` by CL "cons.lexPsvs" (fs[])
+      \\ ST "cons.unfold" (simp[lexPs_def, EQS] \\ rpt strip_tac)
+-     \\ ST "cons.split" (qpat_x_assum `_ <<= _ ++ _` (strip_assume_tac o PURE_ONCE_REWRITE_RULE [PAS]))
+-     >- CL "cons.in_v" (useI `lexP v` lexP_def)
+-     \\ Cases_on `q`
+-     >- CL "cons.full_v" (gvs[] \\ useI `lexP v` lexP_def)
+-     \\ CL "cons.space"
+-          (gvs[]
+-           \\ ST "cons.space.inst" (qspecl_then [`v`, `#" " :: t`, `ts`, `d`] mp_tac (CONJUNCT1 lex_aux_sexp_to_list))
+-           \\ ST "cons.space.side" (impl_tac >- simp SPS)
+-           \\ disch_then (fn th => rewrite_tac [th])
+-           \\ ST "cons.space.skip" (simp(Once lex_aux_def :: SPS))
+-           \\ useI `lexPs vs` lexPs_def),
++     \\ ST "cons.split" (qpat_x_assum `_ <<= _ ++ _` (strip_assume_tac o MATCH_MP CSPLIT))
++     >- CL "cons.in_v" (qspecl_then [`v`, `p`, `d`, `ts`] mp_tac CIN \\ simp[])
++     \\ CL "cons.space" (gvs[] \\ qspecl_then [`v`, `vs`, `t`, `d`, `ts`] mp_tac CSPACE \\ simp[]),
+      (* v3 tactic *)
+      rpt gen_tac \\ strip_tac \\ Cases_on `NULL vs`
+      >- (try_all "lexPs_cons_null"   (* A2 tactic-only: alternatives added; v2's tactic is the first *)

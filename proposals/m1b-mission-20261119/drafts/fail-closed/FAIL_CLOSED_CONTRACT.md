@@ -149,3 +149,42 @@ commit → durable state. Classes: MACHINE-CHECKED, ASSUMPTION, TESTED-UNPROVED,
 FIRST MISSING link: **L6** — no component in the repository turns the M1 process result into a
 decision. The reference caller here (L6') is only TESTED-UNPROVED and is outside the repository.
 The next MISSING link is L7 (M1 output is not connected to any token issuer).
+
+## 11. Addendum of 2026-11-19T06:35Z: the exit status, and independent authorization (owner text 15)
+
+Checked against the requirements of owner text 15, item 4.
+
+| Requirement | Where the contract meets it | Evidence |
+| --- | --- | --- |
+| bounded output | D5, with a kernel file-size limit | controls (finite test) |
+| complete, exactly framed, strictly parsed | D6, D7, D11 | 0 of 8,011 strict prefixes accepted (finite test); the HOL prefix lemma is a draft |
+| appropriate process completion | D1 (time), D2 (signal), D3 (status), D4 (stderr) | controls |
+| never the exit status alone | D3 is necessary, never sufficient | `run_exit_status_controls.py`: 18 rows as expected; a caller that authorizes on status 0 alone makes it fail (exit 1) |
+| independent request and state authorization | NOT in D0 to D12: added as D13 below | not implemented; no code |
+
+The exit-status finding (report D4): the real exit routine tests the low
+32 bits of x0 and the status is the low 8 bits; the model tests 64 bits.
+A model resource stop with x0 = 2^32 would show as status 0 with an
+empty stderr; with x0 = 256 as status 0 with the stderr line. Whether
+such a value of x0 is REACHABLE is not known: no theorem says yes or no.
+The contract does not depend on the answer: with status 0 and an empty
+stderr it still refuses every strict prefix (D6, D7) and accepts only
+the one expected frame (D11). A non-zero status with the complete
+output is refused at D3: that refuses a correct result, which is safe.
+
+D13 (new, a requirement, not code). `AUTHORIZED` from D0 to D12 is NOT
+an authorization of an effect. The M1 program has no state: `remaining`
+is an input that the caller supplies. An effect needs, as today, the
+existing chain UNCHANGED: `RefundFinality.Check` on the request and the
+stored pre-state, the issuer's signed token, and the sink's own checks
+(signature, pinned ids, pre-state hash, fresh request id, one
+transaction). If the M1 program is connected at all, its verdict is one
+more necessary condition before the issuer signs, computed on the SAME
+field values that `Check` receives; it never replaces `Check`, the
+token or the sink. No such connection exists in the repository (graph
+link X16: MISSING).
+
+An honest limit, from the same report: D11 compares the output with a
+frame that the caller computes from the request alone. For safety the
+caller then does not need the executable; the executable adds an
+independent second computation of the decision, not authority.

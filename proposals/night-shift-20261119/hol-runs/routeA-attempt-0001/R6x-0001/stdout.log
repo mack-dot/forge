@@ -1,0 +1,1581 @@
+TIMEOUT_HELPER Timeout.apply loaded
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+<<HOL message: Created theory "forge_refundR6Explore">>
+EXPLORE_MODE nothing is exported; no theorem, no definition is stored
+MARK STORED
+STORED forge_refundRouteA2c.refund_valid_event_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀e. refund_valid_event e ⇔
+      (∃ab nb.
+         e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+         LENGTH ab = 4100 ∧ LENGTH nb = LENGTH ab ∧ TAKE 2 ab = n2w2 4096 ∧
+         HD nb = 0w) ∨
+      ∃ab nb.
+        e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+        LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+        w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w
+STORED forge_refundRouteA2c.VokY3_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀i nb s.
+    VokY3 i nb s ⇔
+    (i = 0 ⇒
+     s.REG 1w = 8w ∧ (∀j. j < 8 ⇒ s.MEM (s.REG 0w + n2w j) = (n2w8 0)❲j❳) ∧
+     w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] + 4 ≤ w2n (s.REG 3w) ∧
+     ¬word_msb (s.REG 3w)) ∧
+    (i = 1 ⇒
+     s.REG 1w = 8w ∧ (∀j. j < 8 ⇒ s.MEM (s.REG 0w + n2w j) = (n2w8 1)❲j❳) ∧
+     w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+     w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤ w2n (s.REG 3w) ∧
+     ¬word_msb (s.REG 3w)) ∧ (i = 2 ⇒ F) ∧ (i = 3 ⇒ F)
+STORED forge_refundRouteA2c.refund_profile_a_sl_events hyps 0 oracles DISK_THM axioms 0
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses VokY3
+    envmc.ffi_interfer ∧
+  (∀ms j.
+     arm8_run 27 s = SOME ms ⇒
+     EVERY refund_valid_event
+       (SND
+          (SND
+             (evaluate
+                (refund_mc (sl + 0x1000040D0w)
+                   (envmc with
+                    ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+                (basis_ffi ext cl fs) j ms))).io_events) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) j
+         ms = (TimeOut,ms',ffi') ⇒
+       (refund_mc (sl + 0x1000040D0w) envmc).target.get_pc ms' ≠
+       (refund_mc (sl + 0x1000040D0w) envmc).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+        ms ⊆ extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+STORED forge_refundRouteA1.refund_env_ok_sl_of_contract_on hyps 0 oracles DISK_THM axioms 0
+⊢ interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ⇒
+  refund_env_ok_sl sl
+    (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+STORED forge_refundSlideInstalled.refund_installed_from_entry_reduced_sl hyps 0 oracles DISK_THM axioms 0
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ⇒
+  ∃ms.
+    arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w ∧
+    (refund_installed_rest2 (refund_mc (sl + 0x1000040D0w) envmc) ms ⇒
+     refund_installed_no_handler (refund_mc (sl + 0x1000040D0w) envmc) ms 428
+       0)
+STORED forge_refundSlideProfileA.refund_env_ok_sl_iff_installed_residual hyps 0 oracles DISK_THM axioms 0
+⊢ ∀ms.
+    ms.PC = sl + 0x1000040D0w ⇒
+    (refund_installed_rest2 (refund_mc (sl + 0x1000040D0w) envmc) ms ⇔
+     refund_env_ok_sl sl envmc)
+STORED forge_refundSlideProfileA.refund_profile_a_sl hyps 0 oracles DISK_THM axioms 0
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) j
+         ms = (TimeOut,ms',ffi') ⇒
+       (refund_mc (sl + 0x1000040D0w) envmc).target.get_pc ms' ≠
+       (refund_mc (sl + 0x1000040D0w) envmc).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+        ms ⊆ extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+STORED forge_refundSourceNonFail.refund_behavior_valid_request_no_handler hyps 0 oracles DISK_THM axioms 0
+⊢ is_arm8_machine_config mc0 ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃io_events.
+    machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+    extend_with_resource_limit {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+STORED forge_refundSourceNonFail.refund_source_nonfail hyps 0 oracles DISK_THM axioms 0
+⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ¬semantics_prog (FST (THE (prim_sem_env (basis_ffi ext cl fs))))
+    (SND (THE (prim_sem_env (basis_ffi ext cl fs)))) refund_prog Fail
+STORED forge_refundExclusionReal.refund_compile_correct_no_handler hyps 0 oracles DISK_THM axioms 0
+⊢ is_arm8_machine_config mc0 ∧
+  ¬semantics_prog (FST (THE (prim_sem_env ffi)))
+    (SND (THE (prim_sem_env ffi))) refund_prog Fail ∧
+  refund_installed_no_handler mc0 ms cbspace data_sp ⇒
+  machine_sem mc0 ffi ms ⊆
+  extend_with_resource_limit
+    (semantics_prog (FST (THE (prim_sem_env ffi)))
+       (SND (THE (prim_sem_env ffi))) refund_prog)
+STORED forge_refundWholeProg.refund_semantics hyps 0 oracles DISK_THM axioms 0
+⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  sem_satisfies
+    (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+       refund_prog)
+    (λbehavior.
+       ∃io_events.
+         behavior = Terminate Success io_events ∧
+         extract_fs ext (cl,fs) io_events =
+         SOME
+           (add_stdout (fastForwardFD fs 0)
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason))))
+STORED forge_refundWholeProg.refund_request_whole_prog_spec hyps 0 oracles DISK_THM axioms 0
+⊢ stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ⇒
+  whole_prog_spec refund_main_v cl fs NONE
+    ($=
+       (add_stdout (fastForwardFD fs 0)
+          (refund_render_fields
+             (refund_fields charge request original remaining enabled opened
+                candidate amount reason))))
+STORED forge_refundWholeProg.refund_whole_prog_spec hyps 0 oracles DISK_THM axioms 0
+⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INR output ⇒
+  whole_prog_spec refund_main_v cl fs NONE
+    ($= (add_stdout (fastForwardFD fs 0) output))
+STORED forge_refundStdioProg.refund_main_valid hyps 0 oracles DISK_THM axioms 0
+⊢ stdin_content fs = SOME text ∧ refund_run_wire (implode text) = INR output ⇒
+  app p refund_main_v [Conv NONE []] (STDIO fs)
+    (POSTv v.
+       &UNIT_TYPE () v * STDIO (add_stdout (fastForwardFD fs 0) output))
+STORED ml_prog.sem_satisfies_IMP_Terminate hyps 0 oracles DISK_THM axioms 0
+⊢ sem_satisfies (semantics_dec_list s init_env prog)
+    (λb. ∃io. b = Terminate outcome io ∧ p io) ⇒
+  prog_syntax_ok prog ⇒
+  ¬semantics_prog s init_env prog Fail ∧
+  (sem ⊆ extend_with_resource_limit (semantics_prog s init_env prog) ⇒
+   (∃b. sem = {b}) ⇒
+   ∃io. sem ⊆ extend_with_resource_limit {Terminate outcome io} ∧ p io)
+STORED basis_ffi.whole_prog_spec_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀fv cl fs sprop post.
+    whole_prog_spec fv cl fs sprop post ⇔
+    ∃fs'.
+      app (basis_proj1,basis_proj2) fv [Conv NONE []]
+        (COMMANDLINE cl * STDIO fs * case sprop of NONE => &T | SOME p => p)
+        (POSTv uv. &UNIT_TYPE () uv * STDIO fs') ∧
+      post (fs' with numchars := fs.numchars)
+STORED basis_ffi.whole_prog_spec_IMP hyps 0 oracles DISK_THM axioms 0
+⊢ whole_prog_spec main_v cl fs NONE post ∧
+  Decls init_env (init_state (basis_ffi ext cl fs)) decs res_env res_st ⇒
+  ∀main_name.
+    (let
+       all_decs =
+         SNOC
+           (Dlet NoLocs (Pcon NONE [])
+              (App Opapp [Var (Short main_name); Unit])) decs
+     in
+       nsLookup res_env.v (Short main_name) = SOME main_v ⇒
+       res_st.ffi = basis_ffi ext cl fs ⇒
+       is_refs_basis res_st.refs ⇒
+       wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+       sem_satisfies
+         (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env
+            all_decs)
+         (λbehavior.
+            ∃io_events result.
+              behavior = Terminate Success io_events ∧
+              extract_fs ext (cl,fs) io_events = SOME result ∧ post result))
+STORED basis_ffi.whole_prog_spec_semantics_prog hyps 0 oracles DISK_THM axioms 0
+⊢ ∀fname fv.
+    Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog
+      env2 st2 ⇒
+    lookup_var fname env2 = SOME fv ⇒
+    whole_prog_spec fv cl fs sprop Q ⇒
+    (∃h1 h2.
+       SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2) ∧
+       (COMMANDLINE cl * STDIO fs * case sprop of NONE => &T | SOME Q => Q)
+         h1) ⇒
+    sem_satisfies
+      (semantics_dec_list
+         (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+         (SNOC
+            (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+            prog))
+      (λbehavior.
+         ∃io_events fs'.
+           behavior = Terminate Success io_events ∧
+           extract_fs ext (cl,fs) io_events = SOME fs' ∧ Q fs')
+STORED basis_ffi.basis_proj1_def hyps 0 oracles DISK_THM axioms 0
+⊢ basis_proj1 =
+  (λ(cls,fs).
+     FEMPTY |++
+     (mk_proj1 cl_ffi_part cls ++ mk_proj1 fs_ffi_part fs ++
+      mk_proj1 runtime_ffi_part ()))
+STORED basis_ffi.basis_proj2_def hyps 0 oracles DISK_THM axioms 0
+⊢ basis_proj2 =
+  [mk_proj2 cl_ffi_part; mk_proj2 fs_ffi_part; mk_proj2 runtime_ffi_part]
+STORED basis_ffi.STDIO_precond hyps 3 oracles DISK_THM axioms 0
+ [...]
+⊢ STDIO fs
+    ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+STORED basis_ffi.extract_fs_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀ext st events.
+    extract_fs ext st events =
+    OPTION_MAP (numchars_fupd (K (SND st).numchars) ∘ SND)
+      (extract_fs_with_numchars ext st events)
+STORED cfMain.call_main_thm2 hyps 0 oracles DISK_THM axioms 0
+⊢ Decls env1 st1 prog env2 st2 ⇒
+  lookup_var fname env2 = SOME fv ⇒
+  app (proj1,proj2) fv [Conv NONE []] P (POSTv uv. &UNIT_TYPE () uv * Q) ⇒
+  FFI_part_hprop Q ⇒
+  SPLIT (st2heap (proj1,proj2) st2) (h1,h2) ∧ P h1 ⇒
+  sem_satisfies
+    (semantics_dec_list st1 env1
+       (SNOC
+          (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+          prog))
+    (λbehavior.
+       ∃st3.
+         behavior = Terminate Success st3.ffi.io_events ∧
+         (∃h3 h4. SPLIT3 (st2heap (proj1,proj2) st3) (h3,h2,h4) ∧ Q h3) ∧
+         call_FFI_rel꙳ st1.ffi st3.ffi)
+STORED cfMain.FFI_part_hprop_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀Q. FFI_part_hprop Q ⇔ ∀h. Q h ⇒ ∃s u ns us. FFI_part s u ns us ∈ h
+STORED cfStore.parts_ok_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀st proj parts.
+    parts_ok st (proj,parts) ⇔
+    ALL_DISTINCT (FLAT (MAP FST parts)) ∧
+    EVERY (ffi_has_index_in (FLAT (MAP FST parts))) st.io_events ∧
+    (∀ns u.
+       MEM (ns,u) parts ⇒
+       ∃s. ∀n. MEM n ns ⇒ FLOOKUP (proj st.ffi_state) n = SOME s) ∧
+    (∀x conf bytes m ns u.
+       MEM (ns,u) parts ∧ MEM m ns ∧
+       u m conf bytes (proj x)⟨m⟩ = SOME FFIdiverge ⇒
+       st.oracle (ExtCall m) x conf bytes = Oracle_final FFI_diverged) ∧
+    ∀x conf bytes w new_bytes m ns u.
+      MEM (ns,u) parts ∧ MEM m ns ∧
+      u m conf bytes (proj x)⟨m⟩ = SOME (FFIreturn new_bytes w) ⇒
+      LENGTH new_bytes = LENGTH bytes ∧
+      ∃y. st.oracle (ExtCall m) x conf bytes = Oracle_return y new_bytes ∧
+          proj x |++ MAP (λn. (n,w)) ns = proj y
+STORED cfStore.ffi2heap_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀proj parts st.
+    ffi2heap (proj,parts) st =
+    if parts_ok st (proj,parts) then
+      FFI_split INSERT
+      {FFI_part s u ns ts |
+       MEM (ns,u) parts ∧ ns ≠ [] ∧
+       ts = FILTER (ffi_has_index_in ns) st.io_events ∧
+       ∀n. MEM n ns ⇒ FLOOKUP (proj st.ffi_state) n = SOME s}
+    else {FFI_full st.io_events}
+STORED cfStore.ffi_has_index_in_def hyps 0 oracles DISK_THM axioms 0
+⊢ (ffi_has_index_in ns (IO_event (ExtCall i) conf ws) ⇔ MEM i ns) ∧
+  (ffi_has_index_in v0 (IO_event (SharedMem v10) v4 v5) ⇔ F)
+STORED cfHeapsBase.IO_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀s u ns.
+    IO s u ns = SEP_EXISTS events. one (FFI_part s u ns events) * &¬MEM «» ns
+STORED cfHeapsBase.IOx_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀encode decode ls s.
+    IOx (encode,decode,ls) s =
+    IO (encode s) (mk_ffi_next (encode,decode,ls)) (MAP FST ls)
+STORED cfHeapsBase.mk_ffi_next_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀encode decode ls name conf bytes s.
+    mk_ffi_next (encode,decode,ls) name conf bytes s =
+    do
+      f <- ALOOKUP ls name;
+      s' <- decode s;
+      r <- f conf bytes s';
+      case r of
+        FFIreturn bytes s => SOME (FFIreturn bytes (encode s))
+      | FFIdiverge => SOME FFIdiverge
+    od
+STORED TextIOProof.IOFS_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀fs. IOFS fs = IOx fs_ffi_part fs * IOFS_iobuff * &wfFS fs
+STORED TextIOProof.IOFS_iobuff_def hyps 0 oracles DISK_THM axioms 0
+⊢ IOFS_iobuff = SEP_EXISTS v. W8ARRAY iobuff_loc v * &(LENGTH v ≥ 2052)
+STORED TextIOProof.STDIO_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀fs.
+    STDIO fs =
+    (SEP_EXISTS ll. IOFS (fs with numchars := ll)) * &STD_streams fs
+STORED TextIOProof.FD_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀fd fdv.
+    FD fd fdv ⇔
+    STRING_TYPE (implode (MAP (CHR ∘ w2n) (n2w8 fd))) fdv ∧ fd < 256 ** 8
+STORED TextIOProof.INSTREAM_STR_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀fd is str fs.
+    INSTREAM_STR fd is str fs =
+    SEP_EXISTS read active left.
+      INSTREAM_BUFFERED_FD (MAP (n2w ∘ ORD) active) fd is *
+      &(str = STRCAT active left ∧
+       get_fd_content fs fd =
+       SOME (STRCAT read str,STRLEN read + STRLEN active) ∧
+       get_mode fs fd = SOME ReadMode)
+STORED TextIOProof.instream_buffered_inv_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀r w bcontent bactive.
+    instream_buffered_inv r w bcontent bactive ⇔
+    1028 ≤ LENGTH bcontent ∧ LENGTH bcontent < 256² ∧ 4 ≤ w ∧ 4 ≤ r ∧
+    r ≤ LENGTH bcontent ∧ w ≤ LENGTH bcontent ∧ r ≤ w ∧
+    LENGTH bactive = w − r ∧ LENGTH bactive < LENGTH bcontent ∧
+    bactive = TAKE (w − r) (DROP r bcontent)
+STORED TextIOProof.writei_spec hyps 0 oracles DISK_THM axioms 0
+⊢ wfFS fs ⇒
+  0 < n ⇒
+  MAX (i + n) 2048 ≤ LENGTH rest ⇒
+  i + n < 256² ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  NUM i iv ⇒
+  bc = h1::h2::h3::h4::rest ⇒
+  app p TextIO_writei_v [fdv; nv; iv]
+    (IOx fs_ffi_part fs * W8ARRAY iobuff_loc bc)
+    (POSTve
+       (λnwv.
+          SEP_EXISTS nw.
+            &NUM nw nwv * &(nw > 0) * &(nw ≤ n) *
+            W8ARRAY iobuff_loc (0w::n2w2 nw ++ n2w i::rest) *
+            IOx fs_ffi_part
+              (fsupdate fs fd (1 + Lnext_pos fs.numchars) (pos + nw)
+                 (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos
+                    content)))
+       (λe.
+          &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::n2w2 i ++ rest) *
+          &F *
+          IOFS
+            (fs with
+             numchars := THE (LDROP (1 + Lnext_pos fs.numchars) fs.numchars))))
+STORED TextIOProof.read_into_spec hyps 0 oracles DISK_THM axioms 0
+⊢ ∀fs fd fdv n nv buf.
+    wfFS fs ⇒
+    FD fd fdv ⇒
+    NUM n nv ⇒
+    n < 256² ⇒
+    MAX n 1024 ≤ LENGTH rest ⇒
+    app p TextIO_read_into_v [fdv; buf; nv]
+      (W8ARRAY buf (h1::h2::h3::h4::rest) * IOx fs_ffi_part fs)
+      (POSTve
+         (λnrv.
+            SEP_EXISTS nr.
+              &NUM nr nrv *
+              SEP_EXISTS content pos.
+                &(get_fd_content fs fd = SOME (content,pos) ∧
+                 get_mode fs fd = SOME ReadMode ∧
+                 (nr ≤ MIN n (STRLEN content − pos) ∧
+                  nr ≤ STRLEN content − pos) ∧
+                 (nr = 0 ⇔ eof fd fs = SOME T ∨ n = 0)) *
+                IOx fs_ffi_part (bumpFD fd fs nr) *
+                W8ARRAY buf
+                  (0w::n2w (nr DIV 256)::n2w nr::h4::
+                     MAP (n2w ∘ ORD) (TAKE nr (DROP pos content)) ++
+                   DROP nr rest))
+         (λe.
+            &InvalidFD_exn e *
+            &(get_fd_content fs fd = NONE ∨ get_mode fs fd ≠ SOME ReadMode) *
+            IOFS_WO_iobuff fs))
+STORED TextIOProof.print_spec hyps 0 oracles DISK_THM axioms 0
+⊢ ∀fs sv s.
+    STRING_TYPE s sv ⇒
+    app p TextIO_print_v [sv] (STDIO fs)
+      (POSTv uv. &UNIT_TYPE () uv * STDIO (add_stdout fs s))
+STORED TextIOProof.inputAllFrom_NONE_spec hyps 0 oracles DISK_THM axioms 0
+⊢ ∀p fs TYPE fnamev text.
+    OPTION_TYPE TYPE NONE fnamev ∧ stdin_content fs = SOME text ⇒
+    app p TextIO_inputAllFrom_v [fnamev] (STDIO fs)
+      (POSTv sv.
+         &OPTION_TYPE STRING_TYPE (SOME (implode text)) sv *
+         STDIO (fastForwardFD fs 0))
+STORED TextIOProof.refillBuffer_with_read_guard_spec_STR hyps 0 oracles DISK_THM axioms 0
+⊢ app p TextIO_refillBuffer_with_read_guard_v [is]
+    (STDIO fs * INSTREAM_STR' fd is input fs F T)
+    (POSTv retv. SEP_EXISTS nr.
+       STDIO (forwardFD fs fd nr) *
+       INSTREAM_STR' fd is input (forwardFD fs fd nr) (¬NULL input)
+         (NULL input) * &BOOL (NULL input) retv)
+STORED TextIOProof.consume_rest_spec hyps 0 oracles DISK_THM axioms 0
+⊢ ∀s fs fd k.
+    app p TextIO_consume_rest_v [is]
+      (STDIO (forwardFD fs fd k) * INSTREAM_STR fd is s (forwardFD fs fd k))
+      (POSTv retv. STDIO (fastForwardFD fs fd))
+STORED semanticsProps.extend_with_resource_limit_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀behaviours.
+    extend_with_resource_limit behaviours =
+    behaviours ∪
+    {Terminate Resource_limit_hit io_list |
+     ∃t l. Terminate t l ∈ behaviours ∧ io_list ≼ l} ∪
+    {Terminate Resource_limit_hit io_list |
+     ∃ll. Diverge ll ∈ behaviours ∧ LPREFIX (fromList io_list) ll}
+STORED semanticsProps.sem_satisfies_def hyps 0 oracles DISK_THM axioms 0
+⊢ ∀s P. sem_satisfies s P ⇔ s ≠ ∅ ∧ ∀b. b ∈ s ⇒ P b
+STORED targetProps.machine_sem_total hyps 0 oracles DISK_THM axioms 0
+⊢ ∃b. machine_sem mc st ms b
+STORED targetProps.evaluate_add_clock hyps 0 oracles DISK_THM axioms 0
+⊢ ∀mc_conf ffi k ms k1 r ms1 st1.
+    evaluate mc_conf ffi k ms = (r,ms1,st1) ∧ r ≠ TimeOut ⇒
+    evaluate mc_conf ffi (k + k1) ms = (r,ms1,st1)
+STORED targetProps.evaluate_add_clock_io_events_mono hyps 0 oracles DISK_THM axioms 0
+⊢ ∀mc_conf ffi k ms k'.
+    k ≤ k' ⇒
+    (SND (SND (evaluate mc_conf ffi k ms))).io_events ≼
+    (SND (SND (evaluate mc_conf ffi k' ms))).io_events
+THEORY_NAMES forge_refundRouteA1 stored_contract_demands_return_at_u393_close_state refund_ffi_tot_valid refund_ffi_tot_shift_seq refund_ffi_tot_invalid refund_ffi_tot_all_valid_is_identity refund_ffi_contract_on_totalises refund_ffi_contract_on_all_valid_is_the_stored_contract refund_env_with_ffi_interfer_fields refund_env_ok_sl_of_contract_on refund_close_call_valid_rejects_u393_witness refund_close_call_valid_excludes_zero_alen contract_on_without_totalisation_is_not_the_stored_contract close_abort_model_totalised_meets_stored_contract close_abort_model_satisfies_contract_on close_abort_model_fails_stored_contract bad_return_ffi_totalised_with_empty_predicate_meets_contract
+THEORY_NAMES forge_refundRouteA2 refund_profile_a_sl_reach refund_mc_totalised_record_fields refund_mc_totalised_record refund_ffi_tot_machine_sem_agree refund_ffi_tot_evaluate_agree read_ffi_bytearrays_ffi_interfer_update read_ffi_bytearray_ffi_interfer_update ffi_calls_ok_false_at_a_returning_call ffi_calls_ok_compute
+THEORY_NAMES forge_refundRouteA2b y3_event_predicate_admits_a_two_byte_read_array three_names_are_ExtCall rfb2_next_interfer_update rfb2_install_interfer_update rfb2_ffi_interfer_update returning_call_with_valid_event_gives_P returning_call_premise_is_needed refund_names_are_ExtCall refund_mc_close_fields refund_l2r_third_premise_close_and_rest refund_l2r_third_premise_close refund_ffi_calls_ok_close_totalised refund_ffi_calls_ok_close refund_close_premises_hold ffi_close_return_lengths ffi_calls_ok_of_valid_events ffi_calls_ok_of_returning_calls ffi_calls_ok_mono ffi_calls_ok_conj evaluate_clock_zero close_returning_calls_have_valid_lengths close_predicate_rejects_zero_alen close_predicate_fails_for_a_returning_zero_length_call close_instance_needs_the_basis_oracle call_FFI_return_keeps_oracle call_FFI_return_appends_its_event basis_close_return_lengths basis_close_call_returns_at_a_concrete_state
+THEORY_NAMES forge_refundRouteA2c zip_equal_lengths_injective word_add_n2w_suc VokY3_rejects_close_and_open_in VokY3_is_the_L2b_lambda valid_write_event_shape valid_write_event_gives_VokY3 valid_read_event_shape valid_read_event_gives_VokY3 valid_event_rejects_the_N4_short_read_event valid_event_rejects_a_close_event valid_event_index_and_shape valid_event_accepts_a_write_event valid_event_accepts_a_read_event refund_valid_event_is_the_L2b_EVc_lambda refund_valid_event_gives_VokY3 refund_record_bytearrays refund_profile_a_sl_events refund_names_are_nonempty_ExtCall refund_mc_pointer_fields refund_ffi_names_distinct refund_events_premise_gives_l2r_third_premise refund_calls_premise_VokY3 read_bytearray_EL_domain read_bytearray_EL R4_L2b_literal open_in_event_is_not_valid first_two_elements_are_take_two close_event_is_not_valid call_FFI_return_keeps_length
+MARK CONSTS
+CONST_IN forge_refundRouteA2c.refund_profile_a_sl_events basis_ffi$extract_fs : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list # IO_fs -> io_event list -> IO_fs option
+CONST_IN forge_refundRouteA2c.refund_profile_a_sl_events ffi$Success : :outcome
+CONST_IN forge_refundRouteA2c.refund_profile_a_sl_events ffi$Terminate : :outcome -> io_event list -> behaviour
+CONST_IN forge_refundRouteA2c.refund_profile_a_sl_events targetSem$machine_sem : :(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> arm8_state -> behaviour ...
+CONST_IN forge_refundRouteA2c.refund_profile_a_sl_events basis_ffi$basis_ffi : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list -> IO_fs -> (mlstring list # IO_fs) ffi_state
+CONST_IN forge_refundRouteA2c.refund_profile_a_sl_events targetSem$evaluate : :(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state ->
+num ->
+arm8_state -> ma ...
+CONST_IN forge_refundRouteA2c.refund_profile_a_sl_events forge_refundRouteA2c$refund_valid_event : :io_event -> bool
+CONST_IN forge_refundRouteA2c.refund_profile_a_sl_events forge_refundCmlMainStep$arm8_run : :num -> arm8_state -> arm8_state option
+CONST_IN forge_refundWholeProg.refund_semantics basis_ffi$extract_fs : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list # IO_fs -> io_event list -> IO_fs option
+CONST_IN forge_refundWholeProg.refund_semantics ffi$Success : :outcome
+CONST_IN forge_refundWholeProg.refund_semantics ffi$Terminate : :outcome -> io_event list -> behaviour
+CONST_IN forge_refundWholeProg.refund_semantics forge_refundWholeProg$refund_prog : :dec list
+CONST_IN forge_refundWholeProg.refund_semantics basis_ffi$basis_ffi : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list -> IO_fs -> (mlstring list # IO_fs) ffi_state
+CONST_IN forge_refundWholeProg.refund_semantics evaluate_dec$semantics_dec_list : :(mlstring list # IO_fs) cml_state ->
+cml_env -> dec list -> behaviour -> bool
+CONST_IN forge_refundSourceNonFail.refund_behavior_valid_request_no_handler basis_ffi$extract_fs : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list # IO_fs -> io_event list -> IO_fs option
+CONST_IN forge_refundSourceNonFail.refund_behavior_valid_request_no_handler ffi$Success : :outcome
+CONST_IN forge_refundSourceNonFail.refund_behavior_valid_request_no_handler ffi$Terminate : :outcome -> io_event list -> behaviour
+CONST_IN forge_refundSourceNonFail.refund_behavior_valid_request_no_handler basis_ffi$basis_ffi : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list -> IO_fs -> (mlstring list # IO_fs) ffi_state
+CONST_IN forge_refundSourceNonFail.refund_behavior_valid_request_no_handler targetSem$machine_sem : :(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> arm8_state -> behaviour ...
+CONST_IN forge_refundExclusionReal.refund_compile_correct_no_handler targetSem$machine_sem : :(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config -> δ ffi_state -> arm8_state -> behaviour -> bool
+CONST_IN forge_refundExclusionReal.refund_compile_correct_no_handler forge_refundWholeProg$refund_prog : :dec list
+MARK PARSE
+TYPECHECK_OK P0_refund_valid_event_w_lambda : :io_event -> bool
+  TERM λe.
+  (∃ab nb.
+     e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+     LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+     w22n [ab❲0❳; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+  ∃ab nb.
+    e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+    LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+    w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w
+  FREE_VARS 
+TYPECHECK_OK P1_SRC_EV : :bool
+  TERM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+sem_satisfies
+  (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env refund_prog)
+  (λbehavior.
+     ∃io_events.
+       (behavior = Terminate Success io_events ∧
+        extract_fs ext (cl,fs) io_events =
+        SOME
+          (add_stdout (fastForwardFD fs 0)
+             (refund_render_fields
+                (refund_fields charge request original remaining enabled
+                   opened candidate amount reason)))) ∧
+       EVERY refund_valid_event io_events)
+  FREE_VARS ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, cl::mlstring list, reason::mlstring, amount::int, candidate::bool, opened::bool, enabled::bool, remaining::int, original::int, request::mlstring, charge::mlstring, fs::IO_fs
+CONST_IN P1_SRC_EV forge_refundRouteA2c$refund_valid_event : :io_event -> bool
+CONST_IN P1_SRC_EV basis_ffi$extract_fs : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list # IO_fs -> io_event list -> IO_fs option
+CONST_IN P1_SRC_EV ffi$Success : :outcome
+CONST_IN P1_SRC_EV ffi$Terminate : :outcome -> io_event list -> behaviour
+CONST_IN P1_SRC_EV forge_refundWholeProg$refund_prog : :dec list
+CONST_IN P1_SRC_EV basis_ffi$basis_ffi : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list -> IO_fs -> (mlstring list # IO_fs) ffi_state
+CONST_IN P1_SRC_EV evaluate_dec$semantics_dec_list : :(mlstring list # IO_fs) cml_state ->
+cml_env -> dec list -> behaviour -> bool
+TYPECHECK_OK P1w_SRC_EV_weak_read_clause : :bool
+  TERM stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+sem_satisfies
+  (semantics_dec_list (init_state (basis_ffi ext cl fs)) init_env refund_prog)
+  (λbehavior.
+     ∃io_events.
+       (behavior = Terminate Success io_events ∧
+        extract_fs ext (cl,fs) io_events =
+        SOME
+          (add_stdout (fastForwardFD fs 0)
+             (refund_render_fields
+                (refund_fields charge request original remaining enabled
+                   opened candidate amount reason)))) ∧
+       EVERY
+         (λe.
+            (∃ab nb.
+               e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+               LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+               w22n [ab❲0❳; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+            ∃ab nb.
+              e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+              LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+              w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w)
+         io_events)
+  FREE_VARS ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, cl::mlstring list, reason::mlstring, amount::int, candidate::bool, opened::bool, enabled::bool, remaining::int, original::int, request::mlstring, charge::mlstring, fs::IO_fs
+CONST_IN P1w_SRC_EV_weak_read_clause basis_ffi$extract_fs : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list # IO_fs -> io_event list -> IO_fs option
+CONST_IN P1w_SRC_EV_weak_read_clause ffi$Success : :outcome
+CONST_IN P1w_SRC_EV_weak_read_clause ffi$Terminate : :outcome -> io_event list -> behaviour
+CONST_IN P1w_SRC_EV_weak_read_clause forge_refundWholeProg$refund_prog : :dec list
+CONST_IN P1w_SRC_EV_weak_read_clause basis_ffi$basis_ffi : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list -> IO_fs -> (mlstring list # IO_fs) ffi_state
+CONST_IN P1w_SRC_EV_weak_read_clause evaluate_dec$semantics_dec_list : :(mlstring list # IO_fs) cml_state ->
+cml_env -> dec list -> behaviour -> bool
+TYPECHECK_OK P2_BEH_EV : :bool
+  TERM is_arm8_machine_config mc0 ∧
+refund_installed_no_handler mc0 ms cbspace data_sp ∧
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+∃io_events.
+  (machine_sem mc0 (basis_ffi ext cl fs) ms ⊆
+   extend_with_resource_limit {Terminate Success io_events} ∧
+   extract_fs ext (cl,fs) io_events =
+   SOME
+     (add_stdout (fastForwardFD fs 0)
+        (refund_render_fields
+           (refund_fields charge request original remaining enabled opened
+              candidate amount reason)))) ∧
+  EVERY refund_valid_event io_events
+  FREE_VARS ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, cl::mlstring list, reason::mlstring, amount::int, candidate::bool, opened::bool, enabled::bool, remaining::int, original::int, request::mlstring, charge::mlstring, fs::IO_fs, data_sp::num, cbspace::num, ms::arm8_state, mc0::(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+CONST_IN P2_BEH_EV forge_refundRouteA2c$refund_valid_event : :io_event -> bool
+CONST_IN P2_BEH_EV basis_ffi$extract_fs : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list # IO_fs -> io_event list -> IO_fs option
+CONST_IN P2_BEH_EV ffi$Success : :outcome
+CONST_IN P2_BEH_EV ffi$Terminate : :outcome -> io_event list -> behaviour
+CONST_IN P2_BEH_EV basis_ffi$basis_ffi : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list -> IO_fs -> (mlstring list # IO_fs) ffi_state
+CONST_IN P2_BEH_EV targetSem$machine_sem : :(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> arm8_state -> behaviour ...
+R6_CONJUNCTS_FOUND 1 OTHER_PREMISES 12
+TYPECHECK_OK P3_R6_DISCHARGE_TARGET : :bool
+  TERM refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+refund_heap_clear_sl sl h e ∧
+envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses VokY3
+  envmc.ffi_interfer ∧
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+∀ms j.
+  arm8_run 27 s = SOME ms ⇒
+  EVERY refund_valid_event
+    (SND
+       (SND
+          (evaluate
+             (refund_mc (sl + 0x1000040D0w)
+                (envmc with
+                 ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+             (basis_ffi ext cl fs) j ms))).io_events
+  FREE_VARS ext::ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, cl::mlstring list, reason::mlstring, amount::int, candidate::bool, opened::bool, enabled::bool, remaining::int, original::int, request::mlstring, charge::mlstring, fs::IO_fs, envmc::(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config, e::word64, stk::word64, h::word64, s::arm8_state, sl::word64
+CONST_IN P3_R6_DISCHARGE_TARGET basis_ffi$basis_ffi : :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+mlstring list -> IO_fs -> (mlstring list # IO_fs) ffi_state
+CONST_IN P3_R6_DISCHARGE_TARGET targetSem$evaluate : :(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state ->
+num ->
+arm8_state -> ma ...
+CONST_IN P3_R6_DISCHARGE_TARGET forge_refundRouteA2c$refund_valid_event : :io_event -> bool
+CONST_IN P3_R6_DISCHARGE_TARGET forge_refundCmlMainStep$arm8_run : :num -> arm8_state -> arm8_state option
+TYPECHECK_OK P4_L_CLK : :bool
+  TERM ∀mc ffi ms io P.
+  machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io} ∧
+  EVERY P io ⇒
+  ∀j. EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+  FREE_VARS 
+CONST_IN P4_L_CLK targetSem$evaluate : :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+CONST_IN P4_L_CLK ffi$Success : :outcome
+CONST_IN P4_L_CLK ffi$Terminate : :outcome -> io_event list -> behaviour
+CONST_IN P4_L_CLK targetSem$machine_sem : :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+TYPECHECK_OK P5_IOxV_lambda : :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+  TERM λInv fs.
+  SEP_EXISTS evs.
+    one
+      (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+         (MAP FST (SND (SND fs_ffi_part))) evs) * &EVERY Inv evs *
+    &¬MEM «» (MAP FST (SND (SND fs_ffi_part)))
+  FREE_VARS 
+CONST_IN P5_IOxV_lambda fsFFI$encode : :IO_fs -> ffi
+TYPECHECK_OK P5b_IOFS_V_lambda : :(io_event -> bool) -> IO_fs -> (heap_part -> bool) -> bool
+  TERM λInv fs.
+  (SEP_EXISTS evs.
+     one
+       (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+          (MAP FST (SND (SND fs_ffi_part))) evs) * &EVERY Inv evs *
+     &¬MEM «» (MAP FST (SND (SND fs_ffi_part)))) *
+  (SEP_EXISTS v. W8ARRAY iobuff_loc v * &(LENGTH v = 2052)) * &wfFS fs
+  FREE_VARS 
+CONST_IN P5b_IOFS_V_lambda fsFFI$encode : :IO_fs -> ffi
+EXPLORE_MODE nothing is exported; the open lemmas are never stored
+MARK EXPLORE
+EXPLORE_BEGIN X1_EVERY_prefix steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN X1_EVERY_prefix #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀P l1 l2. l1 ≼ l2 ∧ EVERY P l2 ⇒ EVERY P l1
+    FREE_VARS 
+  GOAL_END X1_EVERY_prefix #1
+STEP X1_EVERY_prefix 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X1_EVERY_prefix #1 assumptions 0 (ASM 0 = newest)
+    CONCL l1 ≼ l2 ∧ EVERY P l2 ⇒ EVERY P l1
+    FREE_VARS P:α -> bool, l2:α list, l1:α list
+  GOAL_END X1_EVERY_prefix #1
+STEP X1_EVERY_prefix 2 rw_prefix goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X1_EVERY_prefix #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 EVERY P (l1 ++ l)
+    CONCL EVERY P l1
+    FREE_VARS l:α list, l1:α list, P:α -> bool
+  GOAL_END X1_EVERY_prefix #1
+STEP X1_EVERY_prefix 3 every_append goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED X1_EVERY_prefix after_steps 3
+VALIDATION X1_EVERY_prefix concl_aconv_goal true hyps 0
+EXPLORE_END X1_EVERY_prefix
+EXPLORE_BEGIN X2_clock_prefix_of_Terminate steps 7
+  GOAL_COUNT 1
+  GOAL_BEGIN X2_clock_prefix_of_Terminate #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀mc ffi ms t iob j.
+  machine_sem mc ffi ms (Terminate t iob) ⇒
+  (SND (SND (evaluate mc ffi j ms))).io_events ≼ iob
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    CONST_IN_CONCL targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    FREE_VARS 
+  GOAL_END X2_clock_prefix_of_Terminate #1
+STEP X2_clock_prefix_of_Terminate 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X2_clock_prefix_of_Terminate #1 assumptions 0 (ASM 0 = newest)
+    CONCL machine_sem mc ffi ms (Terminate t iob) ⇒
+(SND (SND (evaluate mc ffi j ms))).io_events ≼ iob
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    CONST_IN_CONCL targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    FREE_VARS j:num, iob:io_event list, t:outcome, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X2_clock_prefix_of_Terminate #1
+STEP X2_clock_prefix_of_Terminate 2 unfold goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X2_clock_prefix_of_Terminate #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 st'.io_events = iob
+    ASM 1 evaluate mc ffi k ms = (Halt t,ms',st')
+    CONST_IN_ASM_1 targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    CONCL (SND (SND (evaluate mc ffi j ms))).io_events ≼ iob
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, iob:io_event list, st':'ffi ffi_state, ms':β, t:outcome, ms:β, k:num, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X2_clock_prefix_of_Terminate #1
+STEP X2_clock_prefix_of_Terminate 3 case_split goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X2_clock_prefix_of_Terminate #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 j ≤ k
+    ASM 1 st'.io_events = iob
+    ASM 2 evaluate mc ffi k ms = (Halt t,ms',st')
+    CONST_IN_ASM_2 targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    CONCL (SND (SND (evaluate mc ffi j ms))).io_events ≼ iob
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, iob:io_event list, st':'ffi ffi_state, ms':β, t:outcome, ms:β, k:num, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X2_clock_prefix_of_Terminate #1
+  GOAL_BEGIN X2_clock_prefix_of_Terminate #2 assumptions 3 (ASM 0 = newest)
+    ASM 0 ¬(j ≤ k)
+    ASM 1 st'.io_events = iob
+    ASM 2 evaluate mc ffi k ms = (Halt t,ms',st')
+    CONST_IN_ASM_2 targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    CONCL (SND (SND (evaluate mc ffi j ms))).io_events ≼ iob
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, iob:io_event list, st':'ffi ffi_state, ms':β, t:outcome, ms:β, k:num, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X2_clock_prefix_of_Terminate #2
+STEP X2_clock_prefix_of_Terminate 4 le_A goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X2_clock_prefix_of_Terminate #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 ¬(j ≤ k)
+    ASM 1 st'.io_events = iob
+    ASM 2 evaluate mc ffi k ms = (Halt t,ms',st')
+    CONST_IN_ASM_2 targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    CONCL (SND (SND (evaluate mc ffi j ms))).io_events ≼ iob
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, iob:io_event list, st':'ffi ffi_state, ms':β, t:outcome, ms:β, k:num, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X2_clock_prefix_of_Terminate #1
+STEP X2_clock_prefix_of_Terminate 5 gt_A goals 0
+  GOAL_COUNT 0
+STEP X2_clock_prefix_of_Terminate 6 le_B goals 0
+  GOAL_COUNT 0
+STEP X2_clock_prefix_of_Terminate 7 gt_B goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED X2_clock_prefix_of_Terminate after_steps 7
+VALIDATION X2_clock_prefix_of_Terminate concl_aconv_goal true hyps 0
+EXPLORE_END X2_clock_prefix_of_Terminate
+EXPLORE_BEGIN X3_L_CLK steps 7
+  GOAL_COUNT 1
+  GOAL_BEGIN X3_L_CLK #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀mc ffi ms io P.
+  machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io} ∧
+  EVERY P io ⇒
+  ∀j. EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    CONST_IN_CONCL targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    FREE_VARS 
+  GOAL_END X3_L_CLK #1
+STEP X3_L_CLK 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X3_L_CLK #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 EVERY P io
+    ASM 1 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_1 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #1
+STEP X3_L_CLK 2 total goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X3_L_CLK #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 machine_sem mc ffi ms b
+    CONST_IN_ASM_0 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 1 EVERY P io
+    ASM 2 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_2 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, b:behaviour, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #1
+STEP X3_L_CLK 3 in_ext goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X3_L_CLK #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 b ∈ extend_with_resource_limit {Terminate Success io}
+    ASM 1 machine_sem mc ffi ms b
+    CONST_IN_ASM_1 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 2 EVERY P io
+    ASM 3 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_3 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, b:behaviour, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #1
+STEP X3_L_CLK 4 unfold_ext goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X3_L_CLK #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 b = Terminate Success io
+    ASM 1 machine_sem mc ffi ms b
+    CONST_IN_ASM_1 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 2 EVERY P io
+    ASM 3 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_3 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, b:behaviour, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #1
+  GOAL_BEGIN X3_L_CLK #2 assumptions 5 (ASM 0 = newest)
+    ASM 0 io_list ≼ io
+    ASM 1 b = Terminate Resource_limit_hit io_list
+    ASM 2 machine_sem mc ffi ms b
+    CONST_IN_ASM_2 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 3 EVERY P io
+    ASM 4 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_4 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, io_list:io_event list, b:behaviour, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #2
+STEP X3_L_CLK 5 subst goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X3_L_CLK #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 machine_sem mc ffi ms (Terminate Success io)
+    CONST_IN_ASM_0 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 1 EVERY P io
+    ASM 2 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_2 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #1
+  GOAL_BEGIN X3_L_CLK #2 assumptions 4 (ASM 0 = newest)
+    ASM 0 io_list ≼ io
+    ASM 1 machine_sem mc ffi ms (Terminate Resource_limit_hit io_list)
+    CONST_IN_ASM_1 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 2 EVERY P io
+    ASM 3 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_3 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, io_list:io_event list, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #2
+STEP X3_L_CLK 6 close_A goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X3_L_CLK #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 machine_sem mc ffi ms (Terminate Success io)
+    CONST_IN_ASM_0 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 1 EVERY P io
+    ASM 2 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_2 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #1
+  GOAL_BEGIN X3_L_CLK #2 assumptions 4 (ASM 0 = newest)
+    ASM 0 io_list ≼ io
+    ASM 1 machine_sem mc ffi ms (Terminate Resource_limit_hit io_list)
+    CONST_IN_ASM_1 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 2 EVERY P io
+    ASM 3 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_3 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, io_list:io_event list, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #2
+STEP X3_L_CLK 7 close_B goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X3_L_CLK #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 machine_sem mc ffi ms (Terminate Success io)
+    CONST_IN_ASM_0 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 1 EVERY P io
+    ASM 2 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_2 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #1
+  GOAL_BEGIN X3_L_CLK #2 assumptions 4 (ASM 0 = newest)
+    ASM 0 io_list ≼ io
+    ASM 1 machine_sem mc ffi ms (Terminate Resource_limit_hit io_list)
+    CONST_IN_ASM_1 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    ASM 2 EVERY P io
+    ASM 3 machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io}
+    CONST_IN_ASM_3 targetSem$machine_sem :(α, β, γ) machine_config -> 'ffi ffi_state -> β -> behaviour -> bool
+    CONCL EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+    CONST_IN_CONCL targetSem$evaluate :(α, β, γ) machine_config ->
+'ffi ffi_state -> num -> β -> machine_result # β # 'ffi ffi_state
+    FREE_VARS j:num, io_list:io_event list, P:io_event -> bool, io:io_event list, ms:β, ffi:'ffi ffi_state, mc:(α, β, γ) machine_config
+  GOAL_END X3_L_CLK #2
+EXPLORE_OPEN X3_L_CLK goals 2
+EXPLORE_END X3_L_CLK
+EXPLORE_BEGIN X4_bad_event_replays_to_the_same_state steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN X4_bad_event_replays_to_the_same_state #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀ext cls fs.
+  extract_fs_with_numchars ext (cls,fs)
+    [IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w]))] =
+  SOME (cls,fs)
+    FREE_VARS 
+  GOAL_END X4_bad_event_replays_to_the_same_state #1
+STEP X4_bad_event_replays_to_the_same_state 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X4_bad_event_replays_to_the_same_state #1 assumptions 0 (ASM 0 = newest)
+    CONCL extract_fs_with_numchars ext (cls,fs)
+  [IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w]))] =
+SOME (cls,fs)
+    FREE_VARS fs:IO_fs, cls:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+  GOAL_END X4_bad_event_replays_to_the_same_state #1
+STEP X4_bad_event_replays_to_the_same_state 2 eval_replay goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED X4_bad_event_replays_to_the_same_state after_steps 2
+VALIDATION X4_bad_event_replays_to_the_same_state concl_aconv_goal true hyps 0
+EXPLORE_END X4_bad_event_replays_to_the_same_state
+EXPLORE_BEGIN X5_stored_replay_cannot_exclude_the_bad_event steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN X5_stored_replay_cannot_exclude_the_bad_event #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀ext cl fs io.
+  extract_fs ext (cl,fs)
+    (io ++
+     [IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w]))]) =
+  extract_fs ext (cl,fs) io
+    FREE_VARS 
+  GOAL_END X5_stored_replay_cannot_exclude_the_bad_event #1
+STEP X5_stored_replay_cannot_exclude_the_bad_event 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X5_stored_replay_cannot_exclude_the_bad_event #1 assumptions 0 (ASM 0 = newest)
+    CONCL extract_fs ext (cl,fs)
+  (io ++
+   [IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w]))]) =
+extract_fs ext (cl,fs) io
+    FREE_VARS io:io_event list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+  GOAL_END X5_stored_replay_cannot_exclude_the_bad_event #1
+STEP X5_stored_replay_cannot_exclude_the_bad_event 2 unfold goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X5_stored_replay_cannot_exclude_the_bad_event #1 assumptions 0 (ASM 0 = newest)
+    CONCL OPTION_MAP (numchars_fupd (K fs.numchars) ∘ SND)
+  (case extract_fs_with_numchars ext (cl,fs) io of
+     NONE => NONE
+   | SOME st' =>
+     extract_fs_with_numchars ext st'
+       [IO_event (ExtCall «read») [] [(0w,1w); (0w,0w); (0w,0w); (0w,0w)]]) =
+OPTION_MAP (numchars_fupd (K fs.numchars) ∘ SND)
+  (extract_fs_with_numchars ext (cl,fs) io)
+    FREE_VARS io:io_event list, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, fs:IO_fs
+  GOAL_END X5_stored_replay_cannot_exclude_the_bad_event #1
+STEP X5_stored_replay_cannot_exclude_the_bad_event 3 cases goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X5_stored_replay_cannot_exclude_the_bad_event #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 extract_fs_with_numchars ext (cl,fs) io = SOME x
+    CONCL ∃z. extract_fs_with_numchars ext x
+      [IO_event (ExtCall «read») [] [(0w,1w); (0w,0w); (0w,0w); (0w,0w)]] =
+    SOME z ∧
+    SND x with numchars := fs.numchars = SND z with numchars := fs.numchars
+    FREE_VARS x:mlstring list # IO_fs, io:io_event list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+  GOAL_END X5_stored_replay_cannot_exclude_the_bad_event #1
+STEP X5_stored_replay_cannot_exclude_the_bad_event 4 pair goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X5_stored_replay_cannot_exclude_the_bad_event #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 extract_fs_with_numchars ext (cl,fs) io = SOME (stv0,stv1)
+    CONCL ∃z. extract_fs_with_numchars ext (stv0,stv1)
+      [IO_event (ExtCall «read») [] [(0w,1w); (0w,0w); (0w,0w); (0w,0w)]] =
+    SOME z ∧
+    stv1 with numchars := fs.numchars = SND z with numchars := fs.numchars
+    FREE_VARS stv1:IO_fs, stv0:mlstring list, io:io_event list, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+  GOAL_END X5_stored_replay_cannot_exclude_the_bad_event #1
+EXPLORE_OPEN X5_stored_replay_cannot_exclude_the_bad_event goals 1
+EXPLORE_END X5_stored_replay_cannot_exclude_the_bad_event
+EXPLORE_BEGIN X6_bad_event_is_not_valid steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X6_bad_event_is_not_valid #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬refund_valid_event
+  (IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w])))
+    CONST_IN_CONCL forge_refundRouteA2c$refund_valid_event :io_event -> bool
+    FREE_VARS 
+  GOAL_END X6_bad_event_is_not_valid #1
+STEP X6_bad_event_is_not_valid 1 simp goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED X6_bad_event_is_not_valid after_steps 1
+VALIDATION X6_bad_event_is_not_valid concl_aconv_goal true hyps 0
+EXPLORE_END X6_bad_event_is_not_valid
+EXPLORE_BEGIN X6w_bad_event_is_not_valid_w steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X6w_bad_event_is_not_valid_w #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬(λe.
+   (∃ab nb.
+      e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+      LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+      w22n [ab❲0❳; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+   ∃ab nb.
+     e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+     LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+     w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w)
+  (IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w])))
+    FREE_VARS 
+  GOAL_END X6w_bad_event_is_not_valid_w #1
+STEP X6w_bad_event_is_not_valid_w 1 simp goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED X6w_bad_event_is_not_valid_w after_steps 1
+VALIDATION X6w_bad_event_is_not_valid_w concl_aconv_goal true hyps 0
+EXPLORE_END X6w_bad_event_is_not_valid_w
+EXPLORE_BEGIN X6c_old_predicate_implies_weaker_predicate steps 6
+  GOAL_COUNT 1
+  GOAL_BEGIN X6c_old_predicate_implies_weaker_predicate #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀e. refund_valid_event e ⇒
+    (λe.
+       (∃ab nb.
+          e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+          LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+          w22n [ab❲0❳; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+       ∃ab nb.
+         e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+         LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+         w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w) e
+    CONST_IN_CONCL forge_refundRouteA2c$refund_valid_event :io_event -> bool
+    FREE_VARS 
+  GOAL_END X6c_old_predicate_implies_weaker_predicate #1
+STEP X6c_old_predicate_implies_weaker_predicate 1 unfold goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X6c_old_predicate_implies_weaker_predicate #1 assumptions 5 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 TAKE 2 ab = n2w2 4096
+    ASM 2 LENGTH nb = LENGTH ab
+    ASM 3 LENGTH ab = 4100
+    ASM 4 e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb))
+    CONCL (∃ab nb.
+   e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+   LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+   w22n [HD ab; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+∃ab nb.
+  e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧ LENGTH ab = 2052 ∧
+  LENGTH nb = LENGTH ab ∧ w22n [HD ab; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧
+  HD nb = 0w
+    FREE_VARS nb:word8 list, ab:word8 list, e:io_event
+  GOAL_END X6c_old_predicate_implies_weaker_predicate #1
+  GOAL_BEGIN X6c_old_predicate_implies_weaker_predicate #2 assumptions 5 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 w22n [HD ab; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048
+    ASM 2 LENGTH nb = LENGTH ab
+    ASM 3 LENGTH ab = 2052
+    ASM 4 e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb))
+    CONCL (∃ab nb.
+   e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+   LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+   w22n [HD ab; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+∃ab nb.
+  e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧ LENGTH ab = 2052 ∧
+  LENGTH nb = LENGTH ab ∧ w22n [HD ab; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧
+  HD nb = 0w
+    FREE_VARS nb:word8 list, ab:word8 list, e:io_event
+  GOAL_END X6c_old_predicate_implies_weaker_predicate #2
+STEP X6c_old_predicate_implies_weaker_predicate 2 subst goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X6c_old_predicate_implies_weaker_predicate #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 TAKE 2 ab = n2w2 4096
+    ASM 2 LENGTH nb = LENGTH ab
+    ASM 3 LENGTH ab = 4100
+    CONCL (∃ab' nb'.
+   IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) =
+   IO_event (ExtCall «read») (n2w8 0) (ZIP (ab',nb')) ∧
+   LENGTH nb' = LENGTH ab' ∧ 4 ≤ LENGTH ab' ∧ LENGTH ab' < 65536 ∧
+   w22n [HD ab'; ab'❲1❳] + 4 ≤ LENGTH ab' ∧ HD nb' = 0w) ∨
+∃ab' nb'.
+  IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) =
+  IO_event (ExtCall «write») (n2w8 1) (ZIP (ab',nb')) ∧ LENGTH ab' = 2052 ∧
+  LENGTH nb' = LENGTH ab' ∧
+  w22n [HD ab'; ab'❲1❳] + w22n [ab'❲2❳; ab'❲3❳] ≤ 2048 ∧ HD nb' = 0w
+    FREE_VARS nb:word8 list, ab:word8 list
+  GOAL_END X6c_old_predicate_implies_weaker_predicate #1
+  GOAL_BEGIN X6c_old_predicate_implies_weaker_predicate #2 assumptions 4 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 w22n [HD ab; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048
+    ASM 2 LENGTH nb = LENGTH ab
+    ASM 3 LENGTH ab = 2052
+    CONCL (∃ab' nb'.
+   IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) =
+   IO_event (ExtCall «read») (n2w8 0) (ZIP (ab',nb')) ∧
+   LENGTH nb' = LENGTH ab' ∧ 4 ≤ LENGTH ab' ∧ LENGTH ab' < 65536 ∧
+   w22n [HD ab'; ab'❲1❳] + 4 ≤ LENGTH ab' ∧ HD nb' = 0w) ∨
+∃ab' nb'.
+  IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) =
+  IO_event (ExtCall «write») (n2w8 1) (ZIP (ab',nb')) ∧ LENGTH ab' = 2052 ∧
+  LENGTH nb' = LENGTH ab' ∧
+  w22n [HD ab'; ab'❲1❳] + w22n [ab'❲2❳; ab'❲3❳] ≤ 2048 ∧ HD nb' = 0w
+    FREE_VARS nb:word8 list, ab:word8 list
+  GOAL_END X6c_old_predicate_implies_weaker_predicate #2
+STEP X6c_old_predicate_implies_weaker_predicate 3 beta goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X6c_old_predicate_implies_weaker_predicate #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 TAKE 2 ab = n2w2 4096
+    ASM 2 LENGTH nb = LENGTH ab
+    ASM 3 LENGTH ab = 4100
+    CONCL (∃ab' nb'.
+   IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) =
+   IO_event (ExtCall «read») (n2w8 0) (ZIP (ab',nb')) ∧
+   LENGTH nb' = LENGTH ab' ∧ 4 ≤ LENGTH ab' ∧ LENGTH ab' < 65536 ∧
+   w22n [HD ab'; ab'❲1❳] + 4 ≤ LENGTH ab' ∧ HD nb' = 0w) ∨
+∃ab' nb'.
+  IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) =
+  IO_event (ExtCall «write») (n2w8 1) (ZIP (ab',nb')) ∧ LENGTH ab' = 2052 ∧
+  LENGTH nb' = LENGTH ab' ∧
+  w22n [HD ab'; ab'❲1❳] + w22n [ab'❲2❳; ab'❲3❳] ≤ 2048 ∧ HD nb' = 0w
+    FREE_VARS nb:word8 list, ab:word8 list
+  GOAL_END X6c_old_predicate_implies_weaker_predicate #1
+  GOAL_BEGIN X6c_old_predicate_implies_weaker_predicate #2 assumptions 4 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 w22n [HD ab; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048
+    ASM 2 LENGTH nb = LENGTH ab
+    ASM 3 LENGTH ab = 2052
+    CONCL (∃ab' nb'.
+   IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) =
+   IO_event (ExtCall «read») (n2w8 0) (ZIP (ab',nb')) ∧
+   LENGTH nb' = LENGTH ab' ∧ 4 ≤ LENGTH ab' ∧ LENGTH ab' < 65536 ∧
+   w22n [HD ab'; ab'❲1❳] + 4 ≤ LENGTH ab' ∧ HD nb' = 0w) ∨
+∃ab' nb'.
+  IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) =
+  IO_event (ExtCall «write») (n2w8 1) (ZIP (ab',nb')) ∧ LENGTH ab' = 2052 ∧
+  LENGTH nb' = LENGTH ab' ∧
+  w22n [HD ab'; ab'❲1❳] + w22n [ab'❲2❳; ab'❲3❳] ≤ 2048 ∧ HD nb' = 0w
+    FREE_VARS nb:word8 list, ab:word8 list
+  GOAL_END X6c_old_predicate_implies_weaker_predicate #2
+STEP X6c_old_predicate_implies_weaker_predicate 4 write_case goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X6c_old_predicate_implies_weaker_predicate #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 TAKE 2 ab = n2w2 4096
+    ASM 2 LENGTH nb = LENGTH ab
+    ASM 3 LENGTH ab = 4100
+    CONCL (∃ab' nb'.
+   IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) =
+   IO_event (ExtCall «read») (n2w8 0) (ZIP (ab',nb')) ∧
+   LENGTH nb' = LENGTH ab' ∧ 4 ≤ LENGTH ab' ∧ LENGTH ab' < 65536 ∧
+   w22n [HD ab'; ab'❲1❳] + 4 ≤ LENGTH ab' ∧ HD nb' = 0w) ∨
+∃ab' nb'.
+  IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) =
+  IO_event (ExtCall «write») (n2w8 1) (ZIP (ab',nb')) ∧ LENGTH ab' = 2052 ∧
+  LENGTH nb' = LENGTH ab' ∧
+  w22n [HD ab'; ab'❲1❳] + w22n [ab'❲2❳; ab'❲3❳] ≤ 2048 ∧ HD nb' = 0w
+    FREE_VARS nb:word8 list, ab:word8 list
+  GOAL_END X6c_old_predicate_implies_weaker_predicate #1
+STEP X6c_old_predicate_implies_weaker_predicate 5 read_case goals 0
+  GOAL_COUNT 0
+STEP X6c_old_predicate_implies_weaker_predicate 6 read_case_B goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED X6c_old_predicate_implies_weaker_predicate after_steps 6
+VALIDATION X6c_old_predicate_implies_weaker_predicate concl_aconv_goal true hyps 0
+EXPLORE_END X6c_old_predicate_implies_weaker_predicate
+EXPLORE_BEGIN X7a_ffi_has_index_in_APPEND steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN X7a_ffi_has_index_in_APPEND #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀a b e.
+  ffi_has_index_in (a ++ b) e ⇔ ffi_has_index_in a e ∨ ffi_has_index_in b e
+    FREE_VARS 
+  GOAL_END X7a_ffi_has_index_in_APPEND #1
+STEP X7a_ffi_has_index_in_APPEND 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X7a_ffi_has_index_in_APPEND #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_has_index_in (a ++ b) e ⇔ ffi_has_index_in a e ∨ ffi_has_index_in b e
+    FREE_VARS e:io_event, b:mlstring list, a:mlstring list
+  GOAL_END X7a_ffi_has_index_in_APPEND #1
+STEP X7a_ffi_has_index_in_APPEND 2 cases_event goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X7a_ffi_has_index_in_APPEND #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_has_index_in (a ++ b) (IO_event nm conf' bs) ⇔
+ffi_has_index_in a (IO_event nm conf' bs) ∨
+ffi_has_index_in b (IO_event nm conf' bs)
+    FREE_VARS bs:(word8 # word8) list, conf':word8 list, nm:ffiname, b:mlstring list, a:mlstring list
+  GOAL_END X7a_ffi_has_index_in_APPEND #1
+STEP X7a_ffi_has_index_in_APPEND 3 cases_name goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X7a_ffi_has_index_in_APPEND #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_has_index_in (a ++ b) (IO_event (ExtCall m) conf' bs) ⇔
+ffi_has_index_in a (IO_event (ExtCall m) conf' bs) ∨
+ffi_has_index_in b (IO_event (ExtCall m) conf' bs)
+    FREE_VARS bs:(word8 # word8) list, conf':word8 list, m:mlstring, b:mlstring list, a:mlstring list
+  GOAL_END X7a_ffi_has_index_in_APPEND #1
+  GOAL_BEGIN X7a_ffi_has_index_in_APPEND #2 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_has_index_in (a ++ b) (IO_event (SharedMem s) conf' bs) ⇔
+ffi_has_index_in a (IO_event (SharedMem s) conf' bs) ∨
+ffi_has_index_in b (IO_event (SharedMem s) conf' bs)
+    FREE_VARS bs:(word8 # word8) list, conf':word8 list, s:shmem_op, b:mlstring list, a:mlstring list
+  GOAL_END X7a_ffi_has_index_in_APPEND #2
+STEP X7a_ffi_has_index_in_APPEND 4 simp goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED X7a_ffi_has_index_in_APPEND after_steps 4
+VALIDATION X7a_ffi_has_index_in_APPEND concl_aconv_goal true hyps 0
+EXPLORE_END X7a_ffi_has_index_in_APPEND
+EXPLORE_BEGIN X7_three_parts_every steps 6
+  GOAL_COUNT 1
+  GOAL_BEGIN X7_three_parts_every #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀P ns1 ns2 ns3 evs.
+  EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs ∧
+  FILTER (ffi_has_index_in ns1) evs = [] ∧
+  FILTER (ffi_has_index_in ns3) evs = [] ∧
+  EVERY P (FILTER (ffi_has_index_in ns2) evs) ⇒
+  EVERY P evs
+    FREE_VARS 
+  GOAL_END X7_three_parts_every #1
+STEP X7_three_parts_every 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X7_three_parts_every #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀evs.
+  EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs ∧
+  FILTER (ffi_has_index_in ns1) evs = [] ∧
+  FILTER (ffi_has_index_in ns3) evs = [] ∧
+  EVERY P (FILTER (ffi_has_index_in ns2) evs) ⇒
+  EVERY P evs
+    FREE_VARS P:io_event -> bool, ns3:mlstring list, ns2:mlstring list, ns1:mlstring list
+  GOAL_END X7_three_parts_every #1
+STEP X7_three_parts_every 2 induct goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X7_three_parts_every #1 assumptions 0 (ASM 0 = newest)
+    CONCL EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) [] ∧
+FILTER (ffi_has_index_in ns1) [] = [] ∧
+FILTER (ffi_has_index_in ns3) [] = [] ∧
+EVERY P (FILTER (ffi_has_index_in ns2) []) ⇒
+EVERY P []
+    FREE_VARS P:io_event -> bool, ns3:mlstring list, ns2:mlstring list, ns1:mlstring list
+  GOAL_END X7_three_parts_every #1
+  GOAL_BEGIN X7_three_parts_every #2 assumptions 1 (ASM 0 = newest)
+    ASM 0 EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs ∧
+FILTER (ffi_has_index_in ns1) evs = [] ∧
+FILTER (ffi_has_index_in ns3) evs = [] ∧
+EVERY P (FILTER (ffi_has_index_in ns2) evs) ⇒
+EVERY P evs
+    CONCL ∀h. EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) (h::evs) ∧
+    FILTER (ffi_has_index_in ns1) (h::evs) = [] ∧
+    FILTER (ffi_has_index_in ns3) (h::evs) = [] ∧
+    EVERY P (FILTER (ffi_has_index_in ns2) (h::evs)) ⇒
+    EVERY P (h::evs)
+    FREE_VARS P:io_event -> bool, evs:io_event list, ns3:mlstring list, ns2:mlstring list, ns1:mlstring list
+  GOAL_END X7_three_parts_every #2
+STEP X7_three_parts_every 3 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X7_three_parts_every #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs ∧
+FILTER (ffi_has_index_in ns1) evs = [] ∧
+FILTER (ffi_has_index_in ns3) evs = [] ∧
+EVERY P (FILTER (ffi_has_index_in ns2) evs) ⇒
+EVERY P evs
+    CONCL ∀h. (ffi_has_index_in (ns1 ++ ns2 ++ ns3) h ∧
+     EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs) ∧
+    (if ffi_has_index_in ns1 h then h::FILTER (ffi_has_index_in ns1) evs
+     else FILTER (ffi_has_index_in ns1) evs) = [] ∧
+    (if ffi_has_index_in ns3 h then h::FILTER (ffi_has_index_in ns3) evs
+     else FILTER (ffi_has_index_in ns3) evs) = [] ∧
+    EVERY P
+      (if ffi_has_index_in ns2 h then h::FILTER (ffi_has_index_in ns2) evs
+       else FILTER (ffi_has_index_in ns2) evs) ⇒
+    P h ∧ EVERY P evs
+    FREE_VARS P:io_event -> bool, evs:io_event list, ns3:mlstring list, ns2:mlstring list, ns1:mlstring list
+  GOAL_END X7_three_parts_every #1
+STEP X7_three_parts_every 4 strip goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN X7_three_parts_every #1 assumptions 6 (ASM 0 = newest)
+    ASM 0 EVERY P
+  (if ffi_has_index_in ns2 h then h::FILTER (ffi_has_index_in ns2) evs
+   else FILTER (ffi_has_index_in ns2) evs)
+    ASM 1 (if ffi_has_index_in ns3 h then h::FILTER (ffi_has_index_in ns3) evs
+ else FILTER (ffi_has_index_in ns3) evs) = []
+    ASM 2 (if ffi_has_index_in ns1 h then h::FILTER (ffi_has_index_in ns1) evs
+ else FILTER (ffi_has_index_in ns1) evs) = []
+    ASM 3 EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs
+    ASM 4 ffi_has_index_in (ns1 ++ ns2 ++ ns3) h
+    ASM 5 EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs ∧
+FILTER (ffi_has_index_in ns1) evs = [] ∧
+FILTER (ffi_has_index_in ns3) evs = [] ∧
+EVERY P (FILTER (ffi_has_index_in ns2) evs) ⇒
+EVERY P evs
+    CONCL P h
+    FREE_VARS h:io_event, P:io_event -> bool, evs:io_event list, ns3:mlstring list, ns2:mlstring list, ns1:mlstring list
+  GOAL_END X7_three_parts_every #1
+  GOAL_BEGIN X7_three_parts_every #2 assumptions 6 (ASM 0 = newest)
+    ASM 0 EVERY P
+  (if ffi_has_index_in ns2 h then h::FILTER (ffi_has_index_in ns2) evs
+   else FILTER (ffi_has_index_in ns2) evs)
+    ASM 1 (if ffi_has_index_in ns3 h then h::FILTER (ffi_has_index_in ns3) evs
+ else FILTER (ffi_has_index_in ns3) evs) = []
+    ASM 2 (if ffi_has_index_in ns1 h then h::FILTER (ffi_has_index_in ns1) evs
+ else FILTER (ffi_has_index_in ns1) evs) = []
+    ASM 3 EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs
+    ASM 4 ffi_has_index_in (ns1 ++ ns2 ++ ns3) h
+    ASM 5 EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs ∧
+FILTER (ffi_has_index_in ns1) evs = [] ∧
+FILTER (ffi_has_index_in ns3) evs = [] ∧
+EVERY P (FILTER (ffi_has_index_in ns2) evs) ⇒
+EVERY P evs
+    CONCL EVERY P evs
+    FREE_VARS h:io_event, P:io_event -> bool, evs:io_event list, ns3:mlstring list, ns2:mlstring list, ns1:mlstring list
+  GOAL_END X7_three_parts_every #2
+STEP X7_three_parts_every 5 cases goals 0
+  GOAL_COUNT 0
+STEP X7_three_parts_every 6 close goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED X7_three_parts_every after_steps 6
+VALIDATION X7_three_parts_every concl_aconv_goal true hyps 1
+  VALIDATION_HYP ∀a b e.
+  ffi_has_index_in (a ++ b) e ⇔ ffi_has_index_in a e ∨ ffi_has_index_in b e
+EXPLORE_END X7_three_parts_every
+EXPLORE_BEGIN X9_FFI_part_hprop_IOFS_V steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN X9_FFI_part_hprop_IOFS_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs.
+  FFI_part_hprop
+    ((λInv fs.
+        (SEP_EXISTS evs.
+           one
+             (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+                (MAP FST (SND (SND fs_ffi_part))) evs) * &EVERY Inv evs *
+           &¬MEM «» (MAP FST (SND (SND fs_ffi_part)))) *
+        (SEP_EXISTS v. W8ARRAY iobuff_loc v * &(LENGTH v = 2052)) * &wfFS fs)
+       Inv fs)
+    FREE_VARS 
+  GOAL_END X9_FFI_part_hprop_IOFS_V #1
+STEP X9_FFI_part_hprop_IOFS_V 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X9_FFI_part_hprop_IOFS_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL FFI_part_hprop
+  ((SEP_EXISTS evs.
+      one
+        (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+           (MAP FST (SND (SND fs_ffi_part))) evs) * &EVERY Inv evs *
+      &¬MEM «» (MAP FST (SND (SND fs_ffi_part)))) *
+   (SEP_EXISTS v. W8ARRAY iobuff_loc v * &(LENGTH v = 2052)) * &wfFS fs)
+    FREE_VARS Inv:io_event -> bool, fs:IO_fs
+  GOAL_END X9_FFI_part_hprop_IOFS_V #1
+STEP X9_FFI_part_hprop_IOFS_V 2 unfold goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X9_FFI_part_hprop_IOFS_V #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 (one
+   (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) evs) * &EVERY Inv evs *
+ &¬MEM «» (MAP FST (SND (SND fs_ffi_part))) *
+ (&(iobuff_loc = Loc T loc) * one (Mem loc (W8array v)) * &(LENGTH v = 2052)) *
+ &wfFS fs) h
+    CONCL ∃s u ns us. FFI_part s u ns us ∈ h
+    FREE_VARS h:heap_part -> bool, v:word8 list, loc:num, Inv:io_event -> bool, evs:io_event list, fs:IO_fs
+  GOAL_END X9_FFI_part_hprop_IOFS_V #1
+STEP X9_FFI_part_hprop_IOFS_V 3 split goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X9_FFI_part_hprop_IOFS_V #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 wfFS fs
+    ASM 1 LENGTH v = 2052
+    ASM 2 iobuff_loc = Loc T loc
+    ASM 3 ¬MEM «» (MAP FST (SND (SND fs_ffi_part)))
+    ASM 4 EVERY Inv evs
+    ASM 5 u DELETE
+FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) evs = ∅
+    ASM 6 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) evs ∈ u
+    ASM 7 Mem loc (W8array v) ∉ u
+    ASM 8 u ∪ {Mem loc (W8array v)} = h
+    CONCL ∃s u ns us. FFI_part s u ns us ∈ h
+    FREE_VARS Inv:io_event -> bool, fs:IO_fs, evs:io_event list, h:heap_part -> bool, v:word8 list, loc:num, u:heap_part -> bool
+  GOAL_END X9_FFI_part_hprop_IOFS_V #1
+STEP X9_FFI_part_hprop_IOFS_V 4 close goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X9_FFI_part_hprop_IOFS_V #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 wfFS fs
+    ASM 1 LENGTH v = 2052
+    ASM 2 iobuff_loc = Loc T loc
+    ASM 3 ¬MEM «» (MAP FST (SND (SND fs_ffi_part)))
+    ASM 4 EVERY Inv evs
+    ASM 5 u DELETE
+FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) evs = ∅
+    ASM 6 FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) evs ∈ u
+    ASM 7 Mem loc (W8array v) ∉ u
+    ASM 8 u ∪ {Mem loc (W8array v)} = h
+    CONCL ∃s u ns us. FFI_part s u ns us ∈ h
+    FREE_VARS Inv:io_event -> bool, fs:IO_fs, evs:io_event list, h:heap_part -> bool, v:word8 list, loc:num, u:heap_part -> bool
+  GOAL_END X9_FFI_part_hprop_IOFS_V #1
+EXPLORE_OPEN X9_FFI_part_hprop_IOFS_V goals 1
+EXPLORE_END X9_FFI_part_hprop_IOFS_V
+MARK CF
+XSIMPL_AVAILABLE cfLib opened
+EXPLORE_BEGIN X8_IOxV_weakens_to_IOx steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN X8_IOxV_weakens_to_IOx #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs.
+  (λInv fs.
+     SEP_EXISTS evs.
+       one
+         (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+            (MAP FST (SND (SND fs_ffi_part))) evs) * &EVERY Inv evs *
+       &¬MEM «» (MAP FST (SND (SND fs_ffi_part)))) Inv fs ==>>
+  IOx fs_ffi_part fs
+    FREE_VARS 
+  GOAL_END X8_IOxV_weakens_to_IOx #1
+STEP X8_IOxV_weakens_to_IOx 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X8_IOxV_weakens_to_IOx #1 assumptions 0 (ASM 0 = newest)
+    CONCL (SEP_EXISTS evs.
+   one
+     (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) evs) * &EVERY Inv evs *
+   &¬MEM «» (MAP FST (SND (SND fs_ffi_part)))) ==>> IOx fs_ffi_part fs
+    FREE_VARS Inv:io_event -> bool, fs:IO_fs
+  GOAL_END X8_IOxV_weakens_to_IOx #1
+STEP X8_IOxV_weakens_to_IOx 2 unfold goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X8_IOxV_weakens_to_IOx #1 assumptions 0 (ASM 0 = newest)
+    CONCL (SEP_EXISTS evs.
+   one
+     (FFI_part (encode fs)
+        (mk_ffi_next
+           (encode,decode,
+            [(«open_in»,ffi_open_in); («open_out»,ffi_open_out);
+             («read»,ffi_read); («write»,ffi_write); («close»,ffi_close)]))
+        [«open_in»; «open_out»; «read»; «write»; «close»] evs) *
+   &EVERY Inv evs * &T) ==>>
+SEP_EXISTS events.
+  one
+    (FFI_part (encode fs)
+       (mk_ffi_next
+          (encode,decode,
+           [(«open_in»,ffi_open_in); («open_out»,ffi_open_out);
+            («read»,ffi_read); («write»,ffi_write); («close»,ffi_close)]))
+       [«open_in»; «open_out»; «read»; «write»; «close»] events) * &T
+    FREE_VARS Inv:io_event -> bool, fs:IO_fs
+  GOAL_END X8_IOxV_weakens_to_IOx #1
+STEP X8_IOxV_weakens_to_IOx 3 xsimpl goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN X8_IOxV_weakens_to_IOx #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀x. EVERY Inv x ⇒
+    ∃x'.
+      one
+        (FFI_part (encode fs)
+           (mk_ffi_next
+              (encode,decode,
+               [(«open_in»,ffi_open_in); («open_out»,ffi_open_out);
+                («read»,ffi_read); («write»,ffi_write); («close»,ffi_close)]))
+           [«open_in»; «open_out»; «read»; «write»; «close»] x) ==>>
+      one
+        (FFI_part (encode fs)
+           (mk_ffi_next
+              (encode,decode,
+               [(«open_in»,ffi_open_in); («open_out»,ffi_open_out);
+                («read»,ffi_read); («write»,ffi_write); («close»,ffi_close)]))
+           [«open_in»; «open_out»; «read»; «write»; «close»] x')
+    FREE_VARS fs:IO_fs, Inv:io_event -> bool
+  GOAL_END X8_IOxV_weakens_to_IOx #1
+EXPLORE_OPEN X8_IOxV_weakens_to_IOx goals 1
+EXPLORE_END X8_IOxV_weakens_to_IOx
+CF_PART_DONE
+EXPLORE_COMPLETE

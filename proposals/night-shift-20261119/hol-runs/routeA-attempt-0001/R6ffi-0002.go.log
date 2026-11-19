@@ -1,0 +1,25 @@
+2026-11-19T11:12:01Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 5346.62M  free = 797.38M  (encrypted)
+System-wide memory free percentage: 63%
+START_STATE swap_free_mib=797 memory_free_percent=63
+exit 0
+actual_exit 0 wall 170.745 cpu 181.217 rss_mib 4114 ['EXACT_COMPLETE'] inputs_unchanged_after True
+22:GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argume
+35:TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+103:CHECKED IOFS_V_FFI_part_hprop
+112:CHECKED IOxV_IMP_IOx
+223:CHECKED writei_spec_V
+252:STEP_USED read_into_spec_V 5 cases (NEW: both error paths closed by the new hypotheses) candidate 0 goals_out 1
+281:CHECKED read_into_spec_V
+300:CLOSURE_AXIOM bool.SELECT_AX
+301:CLOSURE_AXIOM bool.INFINITY_AX
+302:CLOSURE_AXIOM bool.ETA_AX
+303:CLOSURE_AXIOM bool.BOOL_CASES_AX
+304:CONTROL_OK closure contains forge_refundR6Base
+305:CONTROL_OK closure contains TextIOProof
+308:CONTROL_OK 4 theorems, 3 definitions
+309:CLOSURE_NODES 548
+312:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0

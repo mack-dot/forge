@@ -1,0 +1,29 @@
+      0      32      32  mach_header_64                           data
+     32    1320    1288  load commands (18)                       data
+   1320   16384   15064  GAP                                      zeros
+  16384  153800  137416  __TEXT,__text                            data
+ 153800  154064     264  __TEXT,__stubs                           data
+ 154064  154590     526  __TEXT,__cstring                         data
+ 154590  154592       2  GAP                                      zeros
+ 154592  154752     160  __TEXT,__unwind_info                     data
+ 154752  163840    9088  GAP                                      zeros
+ 163840  164024     184  __DATA_CONST,__got                       data
+ 164024  180224   16200  GAP                                      zeros
+ 180224  200496   20272  __DATA,__data                            data
+ 200496  212992   12496  GAP                                      zeros
+ 212992  213360     368  LC_DYLD_CHAINED_FIXUPS                   data
+ 213360  214000     640  LC_DYLD_EXPORTS_TRIE                     data
+ 214000  214880     880  LC_FUNCTION_STARTS                       data
+ 214880  225088   10208  symtab nlist_64                          data
+ 225088  225268     180  indirect symbol table                    data
+ 225268  225272       4  GAP                                      zeros
+ 225272  236800   11528  string table                             data
+ 236800  238776    1976  LC_CODE_SIGNATURE                        data
+__text split:
+  16384   16492     108  cml_main stub (108)                      data
+  16492   16592     100  NOP pad + 6 FFI trampolines (100)        data
+  16592  147028  130436  CODE SLICE                               data
+ 147028  147456     428  cake codebuffer (428)                    data
+ 147456  151552    4096  .space 4096 after codebuffer_end         zeros
+ 151552  153800    2248  C run-time + main (basis_ffi.c)          data
+bitmap tail pad 200496..212992 zeros: True  heap/stack slots 180224..180248 zeros: True

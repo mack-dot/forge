@@ -28,6 +28,123 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Night shift 2026-11-19, proof track (Orchestrator A): replay ended; first HOL runs of the M1-B lemmas; native counterexamples — U481 to U498
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Branch
+`nightshift/A-proof`; NOT merged; NOT pushed. Every HOL result is a
+machine-model result on the same machine with stored parent theories.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| replay of the 158 recorded M1 cases (`driver3.py run 120 157`, a job of an earlier session; ended 08:08:54Z) |driver ended|152 AS_RECORDED; 005 EXIT_EQUAL_REASON_DIFFERS; 130, 142 EXIT_DIFFERS; 094, 097, 098 NOT_RUN_NO_SOURCE |
+| second runs of 005 (driver), 130, 142 (`driver3.py rerun`, mine) |0; 0; 0|AS_RECORDED each; the first runs stopped in the Poly/ML run-time during theory load |
+| digest search for the sources of 094, 097, 098 (13,542 git blobs; 22,854 files) |0|0 hits: UNAVAILABLE |
+| `go-routeA.sh L1-0001`; `L1imp-0001` |0; 0|16 theorems, `refund_ffi_contract_on_totalises`; import 9 of 9 |
+| `L2-0001`; `L2-0002`; `L2-0003` |1; 1; 0|tactic gap; ML error; 9 theorems, `refund_profile_a_sl_reach` |
+| `L2b-0001`; `L2b-0002`; `L2b-0003` |1; 1; 0|lemma failed; control code wrong; 28 theorems, `ffi_calls_ok_of_returning_calls` |
+| `E1-0001`; `E1-0002`; `E1-0003`; mutant `E1neg-0001` |1; 1; 0; 1|setup error; ML error; 18 erasure theorems; the mutant fails as required |
+| `PF-0001` to `PF-0003`; `PF-0004`; `PX-0001` |1; 1; 1; 0; 0|`lexPs_cons` open; 26 theorems, strict-prefix lemma; 9 theorems, exact acceptance set |
+| `LO-0001` to `LO-0005` (L-OUT) |−24; 1; 1; 1; 1|two lemmas open |
+| `LOx-0001` (exploration, no export); `LO-0006` |0; 0|goals printed step by step; 41 theorems, `refund_L_OUT`, `refund_profile_a_sl_fd1` |
+| `LE-0002`; `LE-0003`; `LE-0004` (L-EXIT-0) |1; 0; 0|ML error; `evaluate_Halt_reg`; `refund_profile_a_sl_halt` |
+| `ES-0001`; `ES-0002` (erasure step lift) |1; 1|ML error; erase lemmas for load and store classes open |
+| `L2c-0001` (Route A reduced to statement R6) |0|29 theorems, `refund_profile_a_sl_events` |
+| `EFx-0001` (exploration); `EF-0001` |0; 0|69 theorems, `Next_frame`, `NextStateARM8_frame` |
+| `MF-0001`; `MF-0002` (composition) |0; 0|`refund_model_frame_decision`; `refund_model_frame_meets_exported_contract` |
+| `MG-0001` (composition under the reduced premises) |0|`refund_model_frame_decision_events` |
+| `L2dx-0001` (exploration); `L2d-0001` (oracle-only valid-call predicate) |0; 0|29 theorems, `refund_profile_a_sl_shape`, `refund_model_frame_decision_shape` |
+| `R6x-0001`, `R6x-0002`, `EEx-0001` (explorations, no export); `R6base-0001` |0; 0; 0; 0|goals printed; 11 theorems, `every_clock_events`, `replay_cannot_exclude_error_return_events` |
+| `EEx-0002` (exploration); `EE-0001` (one-step erasure) |0; 0|101 theorems, `NextStateARM8_erase`, `Next_erase_sp` |
+| `R6x-0003`, `R6x-0004`, `R6x-0005` (explorations); `R6ffi-0002` |0; 0; 0; 0|R6x-0004 explored nothing (ML string error); `writei_spec_V`, `read_into_spec_V` |
+| `R6wx-0001` to `R6wx-0004` (explorations); `R6w-0004` (write side of R6) |0 each; 0|R6wx-0003 explored nothing (ML error); 16 theorems, `print_spec_refund` |
+| re-runs inside the swap rule: `E1r-0001`; `L2r-0001` |0; 0|theory `.dat` byte-equal to E1-0003 and L2-0003 |
+| link control `NB1` (input binding swapped on one side) |1|fails at `exported_ens2_value`, as required |
+| link cases H0, H1, H2, E0, R1, R2, R3, I1, H4 (`go.sh`) |0 each (H4, R2, R3, I1 on a second run after a wrapper path error)|`exported_contract_exact`; U294 replays; the stored theory imports |
+| link controls NC1 to NC6, NS1 to NS3, NR1; PC1 |1 each; 0|as planned |
+| `run_native_ffi_tests.py` (worker; then mine, results byte-equal) |0; 0|exit status 0 with a cut or empty standard output; a forged frame through a loader variable |
+| L3; the halt-value range; clean replay; independent replay |NOT RUN|statements or plans only |
+| Reproduction from the branch by a separate worker (same machine; stored older parents; U499): L1-0001, L2-0003, L2b-0003, L2c-0001, L2d-0001, PF-0004, PX-0001, LO-0006, LE-0004, contract-0001, MF-0002, MG-0001 (second run), E1-0003, EF-0001, EE-0001, R6base-0001 |0|16 cases; statements equal; exported theory files byte-identical |
+| The same: MG-0001 first run |1|Poly/ML "Run out of store" during theory load; infrastructure stop |
+| The same: R6ffi-0002 |-15|stopped by the worker watchdog after a system sleep; not a proof result |
+| The same: R6w-0004 |NOT RUN| |
+
+[State](proposals/night-shift-20261119/orch-A/STATE.md).
+[Morning report](proposals/night-shift-20261119/MORNING_REPORT.md).
+[Owner queue](proposals/night-shift-20261119/OWNER_REQUIRED.md).
+Reviews by separate workers: L1, L2, E1 and PF-0004 hold; L1 and L2
+trade the false FFI premise for two open premises; no non-vacuity
+witness. I started ten HOL cases below the protocol's swap limit
+(U485); two results of that group ran again inside the rule with
+byte-equal theories. No valid-call predicate yet makes all premises
+of `refund_profile_a_sl_reach` true (review). Links X8, X11, X16 and
+the FFI premise (L3) stay open.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## M1-B mission, wave 5: eleven workers; one composed Dafny lemma in the shape of the target; an audit of the records; the sink core's assumption cannot be met as written; the halting hole is wider — U477 to U480
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| pinned Dafny, gate options: `dafny verify SliceTheorem.dfy` (worker's attempts 1 to 4; then the orchestrator with a stored log) |1; 0; 0; 0; 0|attempt 1: a crash of the pinned Dafny on a refinement; final: 1570 verified, 0 errors; lemma `SliceSafety` |
+| `run_exit_status_broken_caller_control.py` (orchestrator) |1|9 of 18 rows differ, as it must |
+| `git apply --check` of the proposed `gate/refund.py` diff (orchestrator; nothing applied) |0|SHA-256 `70910e2e…` |
+| worker runs NOT run again: review proof `Attack.dfy`; witness; 5,500 differential sequences sink against compiled core; consumer tests; binding verifier and 22 controls; all gate tiers on 39 submissions; `0 < amount` on copies |0; 0; 0; 0; 0 and 1 each; per file; 0|60 verified (assumption A1 cannot be met by a real signature scheme); 67 verified; 0 divergences; 157 rows; identity only; an `expect` keyed to a rare amount is admitted by every tier; implementations verify unchanged |
+| hosted `gate/pr_check.py`, pull request 58, heads `ffa315e7` and `fa4f62e7` (read by a worker) |3; 3|UNSUPPORTED |
+| every HOL step |NOT RUN|the replay holds the one HOL slot |
+| replay of the 158 recorded M1 cases |WAITING on battery power|120 of 158 at 07:13Z: 116 as recorded, 1 to run again, 3 have no source file: at most 155 can run |
+
+[Tracker, wave 5](proposals/m1b-mission-20261119/TRACKER.md).
+[Graph, sections 8 and 9](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md).
+[Next obligations](proposals/m1b-mission-20261119/NEXT_OBLIGATIONS.md).
+`SliceSafety` is a Dafny model result: ValidArtifact is a hypothesis
+in it, and its signature assumption must be reworded.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## M1-B mission, after wave 4: exit-status statements corrected; fail-closed caller inspected; next obligations — U476
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No new worker.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| hosted `gate/pr_check.py`, pull request 58, head `685d07f5`, run 44472601209 |3|UNSUPPORTED, as expected |
+| pinned Dafny: the LinkedRefund proof without the library axiom module (orchestrator) |0|1486 verified; audit 0 findings, equal to the empty baseline |
+| `drafts/fail-closed/run_exit_status_controls.py` on planted process results |0|18 rows as expected (a finite test) |
+| the same test with a caller that authorizes on exit status 0 alone |1|9 rows differ: the test detects it |
+| L1 and every other HOL step |NOT RUN|the replay holds the one HOL slot |
+| replay of the 158 recorded M1 cases |WAITING on battery power|108 of 158; case 005 must run again |
+
+[Next obligations](proposals/m1b-mission-20261119/NEXT_OBLIGATIONS.md).
+Exit status 0 is not evidence of a complete output; the state x0 = 2^32
+is a counterexample to the implication, its reachability is unknown.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+## M1-B mission, wave 4: twelve workers, one per missing link; findings on admission, processor bits, exit status and enforcement; a Dafny sink core — U475
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| merge of pull request 57 (not a command of this session) |GitHub record: merged|squash commit `cc20207b`, 2026-11-19T06:02:18Z, by the owner's account |
+| pinned Dafny, gate options: a refund body that starts with `expect false;`, tries 1 and 2 |4; 0|try 1: my wrong solver path; try 2: 6 verified, 0 errors: the source proof is partial correctness only |
+| pinned Dafny, gate options: `dafny verify sink/SinkCore.dfy` (worker's attempts 1 and 2; then the orchestrator) |4; 0; 0|56 verified; `SinkCore refines FinalityProtocol`; not a proof of `sink.ts` |
+| `gh api …/branches/main/protection` |1 (HTTP 403)|`main` is not protected; the plan offers no rulesets for a private repository |
+| digests: the U294 export, its Dafny source, the flat contract file of the proof; the two slices of the executable |0|source and flat contract file byte-equal; slices equal to the second extraction |
+| worker runs NOT run again by the orchestrator: proof without the library axiom; its audit; 53 unread submissions; 486 kill runs on the sink; races to 50 processes; 9 mutated sink cores; export comparison; mirror proof |0; 0; 0; 0; 0; 4 each; 0; 0|1486 verified; audit equal to the empty baseline; 7 wrong submissions admitted; 0 violations; 1 commit per race except amount 0; all rejected; 0 differences; 246 verified |
+| every HOL step (L1, L2, L3, the link theorem, the output, exit and prefix lemmas) |NOT RUN|drafts; the replay holds the one HOL slot |
+| replay of the 158 recorded M1 cases (separate job) |WAITING on battery power|108 of 158 at 06:27Z: 104 as recorded, 1 must run again, 3 without source |
+
+[Tracker, wave 4](proposals/m1b-mission-20261119/TRACKER.md).
+[Graph, section 7](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md).
+Two premises of the machine-model theorem are false for real machines
+as written (the FFI contract; the processor bits TBI0 and SA0). Exit
+status 0 does not imply a complete output.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## M1-B mission, records: pull request 56 merged by the owner's account; Route A lemma drafts saved, not run — U474
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.

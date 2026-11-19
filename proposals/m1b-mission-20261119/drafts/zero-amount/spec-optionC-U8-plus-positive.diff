@@ -1,0 +1,35 @@
+--- a/spec/refund/RefundSpec.dfy
++++ b/spec/refund/RefundSpec.dfy
+@@ -32,7 +32,7 @@
+ 
+   predicate Eligible(context: Context, response: ModelResponse) {
+     ValidContext(context) && response.Candidate? &&
+-    0 <= response.amount <= context.remaining && AllowedReason(response.reason)
++    0 < response.amount <= context.remaining && AllowedReason(response.reason)
+   }
+ 
+   method Assess(context: Context, response: ModelResponse)
+@@ -61,4 +61,23 @@
+       intent.amount <= context.remaining <= context.original &&
+       AllowedReason(intent.reason) &&
+       intent.chargeId == context.chargeId && intent.requestId == context.requestId
++
++  // Stored state of one charge (U8 draft by Y7, text copied; owner-approved intent only if approved).
++  datatype StoredCharge = StoredCharge(
++    chargeId: string, original: int, remaining: int, refundEnabled: bool, settled: set<string>)
++
++  // Where the inputs of Assess come from: the stored state. A request is open iff its id is not settled.
++  function ContextAt(s: StoredCharge, requestId: string): Context {
++    ChargeContext(s.chargeId, requestId, s.original, s.remaining, s.refundEnabled, requestId !in s.settled)
++  }
++
++  // The approved stored-state step. An authorization decreases remaining by the amount and settles the
++  // request id. Every refusal changes nothing and has no intent.
++  predicate Settles(pre: StoredCharge, requestId: string, response: ModelResponse,
++                    post: StoredCharge, plan: seq<RefundIntent>) {
++    if Eligible(ContextAt(pre, requestId), response) then
++      post == pre.(remaining := pre.remaining - response.amount, settled := pre.settled + {requestId}) &&
++      plan == [Intent(pre.chargeId, requestId, response.amount, response.reason)]
++    else post == pre && plan == []
++  }
+ }

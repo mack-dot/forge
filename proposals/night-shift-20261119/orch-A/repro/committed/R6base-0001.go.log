@@ -1,0 +1,33 @@
+2026-11-19T10:32:08Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 5142.75M  free = 1001.25M  (encrypted)
+System-wide memory free percentage: 55%
+START_STATE swap_free_mib=1001 memory_free_percent=55
+exit 0
+actual_exit 0 wall 78.107 cpu 109.096 rss_mib 3726 ['EXACT_COMPLETE'] inputs_unchanged_after True
+17:CHECKED every_prefix
+23:CHECKED clock_prefix_of_terminate
+30:CHECKED every_clock_events
+39:CHECKED bad_read_event_replays_to_the_same_state
+47:CHECKED bad_read_event_is_not_valid
+53:CHECKED bad_read_event_is_not_valid_w
+67:CHECKED refund_valid_event_implies_weak
+85:CHECKED extract_fs_ignores_bad_read_event
+92:BEGIN replay_cannot_exclude_error_return_events
+93:TACTIC_USED replay_cannot_exclude_error_return_events 1
+94:Saved theorem _______ "replay_cannot_exclude_error_return_events"
+95:CHECKED replay_cannot_exclude_error_return_events
+119:CHECKED ffi_has_index_in_APPEND
+125:CHECKED every_of_three_parts
+133:CONTROL_OK X6c mentions the stored refund_valid_event
+134:CONTROL_OK the bad event is rejected by refund_valid_event
+135:CONTROL_OK L-CLK stored (every_clock_events)
+140:CLOSURE_AXIOM bool.SELECT_AX
+141:CLOSURE_AXIOM bool.INFINITY_AX
+142:CLOSURE_AXIOM bool.ETA_AX
+143:CLOSURE_AXIOM bool.BOOL_CASES_AX
+144:CONTROL_OK closure contains forge_refundRouteA2c
+147:CLOSURE_NODES 547
+150:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0

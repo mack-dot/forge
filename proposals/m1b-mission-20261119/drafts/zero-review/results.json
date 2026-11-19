@@ -1,0 +1,762 @@
+{
+ "C0-repo-impl": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+ },
+ "A02-assume-false": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(7,4): Warning: assume statement has no {:axiom} annotation",
+  "submission_sha256": "b7d5c9450ec6d5945b99ab414851a6c0dffd336760bf531e3ae7fa3c04c3fe00"
+ },
+ "C1-table": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 7
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 7 verified, 0 errors\\n\"}",
+  "submission_sha256": "46c6cf4a900695506eb1803cbfb3caaee4779c4c4bafb72e8b27400a8c8d4491"
+ },
+ "C2-recursion": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 10
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 10 verified, 0 errors\\n\"}",
+  "submission_sha256": "1af207b614ec7082f19c766656a47bcc487aee1dfc9c0876599257c15c8bfb28"
+ },
+ "C3-early-returns": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "735667b1338195cffd6160bd1597b4c2bc402f13743a4c4d2ab0d9dcc7c2acd2"
+ },
+ "C4-arith": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "da38f20ed8fe64c1d27623882423fd56a7e205b42eb96dfccb121bf03faa0966"
+ },
+ "C5-helper-lemmas": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 9
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 9 verified, 0 errors\\n\"}",
+  "submission_sha256": "c98c9bfcb0dbaecbfe83dfe9d50cc6241e4c376393ed7d087ada984bff988a53"
+ },
+ "C6-function-pair": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "a27274984e4d6883f60969c2f688e9efe9a73007aa9d2f3aaa2aeea1b4e76568"
+ },
+ "C7-loop-plan": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "7251d0bb65c8f9545053f9d2ce353fdda8254ff80bd9445b24f4751ea1b9f2d5"
+ },
+ "C8-isolate-attr": {
+  "kind": "CORRECT",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 40
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 40 verified, 0 errors\\n\"}",
+  "submission_sha256": "5996a2735ad59b11bcb8b04e29bc696e6f620be510d157350602962cd08fa3c5"
+ },
+ "C9-comment-word-include": {
+  "kind": "CORRECT",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M2 SOURCE_SCOPE prefix/sole include",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "de083663e729bf04db7634a8388119a65d232bc93dbbe2833300be052ba36d7e"
+ },
+ "C10-induction-attr": {
+  "kind": "CORRECT",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M3 SOURCE_SCOPE attribute or @",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "13796f4cb48b0b48bc712de40b95d58a0f452e0057572e784dea8f2287327c38"
+ },
+ "C11-at-in-string": {
+  "kind": "CORRECT",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M3 SOURCE_SCOPE attribute or @",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "930e9effc482cf57ea96688a49bac35100f8e2028ddeb298ce7402fb890d0901"
+ },
+ "C12-crlf-header": {
+  "kind": "CORRECT",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M2 SOURCE_SCOPE prefix/sole include",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "1ce2c12bdd29e29d4bf77eadde5521129c08ca732fd6233a03808002b0758884"
+ },
+ "A01-wrong-amount-one-input": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 5 verified, 1 error\\n\"}",
+  "submission_sha256": "cefe7055f877d83dc31d5cc95c8d6d632d934b594bd29302b310bc1325e40fc6"
+ },
+ "A03-axiom-lemma": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M3 SOURCE_SCOPE attribute or @",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "3d9d28a7473b88f482bc4964630c17ee619b99d34a287faa953a7b37b4088982"
+ },
+ "A04-verify-false": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M3 SOURCE_SCOPE attribute or @",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "f8c2d3e2d76853408048da68e75f89639c24a2622731fefa99ac2dc1378b54ff"
+ },
+ "A05-extern-body": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M3 SOURCE_SCOPE attribute or @",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "dab4c7438272f3d8c05f63bcbe2a9b3354640bba7635c614b17a492706883e2e"
+ },
+ "A06-bodiless-function": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(5,35): Warning: This ensures clause is part of a bodyless function. Add the {:axiom} attribute to it or the enclosing function to suppress this warning",
+  "submission_sha256": "4919958eaeab5bc82a052a513e79c5aeb5c70845b8ebd63f7311bccf12a1c762"
+ },
+ "A07-bodiless-lemma-concrete": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(4,22): Warning: This ensures clause is part of a bodyless method. Add the {:axiom} attribute to it or the enclosing method to suppress this warning",
+  "submission_sha256": "d92e968bd1de642f4236a0537724eca144ba34b1411bf2df0d5e8f00ba72dd29"
+ },
+ "A08-abstract-trap-toplevel-call": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(6,4): Error: unresolved identifier: Trap",
+  "submission_sha256": "d2524dc4a3f76a4e84036b89da9d53c51f9c4f28ee09f09e2a7d094cb92fab50"
+ },
+ "A09-abstract-trap-nested-call": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(9,4): Error: a compiled module is not allowed to use an abstract module (Trap)",
+  "submission_sha256": "bba661a6b17a396357f897cf8d6096b31bed9d5412badbc7ef55ab440e74942a"
+ },
+ "A10-abstract-trap-import": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(4,9): Error: The abstract import named T (using :) may only be used in an abstract or replaceable module declaration",
+  "submission_sha256": "77b34ee7877e64a24581e7058dc08f16717a6cdf339f95abd1cdacb83a1c816f"
+ },
+ "A11-abstract-trap-dead": {
+  "kind": "DEAD-CODE",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "e5c830033b22801c54fb94a27c4f29b653cbb6872261ca6585d4e7e66788b360"
+ },
+ "A12-redefine-eligible": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(4,12): Error: a refining predicate is not allowed to extend/change the body",
+  "submission_sha256": "765fd97974ea48e110e7f2d631985c74e85f82e6ce3462da882a26d226e6d743"
+ },
+ "A13-shadow-spec-nested": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 5 verified, 1 error\\n\"}",
+  "submission_sha256": "fa630aace2882a9cef468c1883ba59de400f13b6b4f01564e7f03c6528db50d7"
+ },
+ "A14-include-altered-spec": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M2 SOURCE_SCOPE prefix/sole include",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "9c159ba604951252e9bd5485f9b9d9d60c02ff82fa48fd87c1328d4ae4a25a00"
+ },
+ "A15-second-include-hatch": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M2 SOURCE_SCOPE prefix/sole include",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "b3dec9f1b0767eb9b221909bd3dbb3da9c8482cc7761c17e387d4601dc5c950b"
+ },
+ "A16-decreases-star": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(6,14): Error: decreases clause on refining method not supported, unless the refined method was specified with 'decreases *'",
+  "submission_sha256": "1b1f1b02868b13dc4d04ac965f67ae8b7a73b9f693f3981912109ad2222d5259"
+ },
+ "A17-print-effect": {
+  "kind": "DISHONEST",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 2,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"1 resolution/type errors detected in Refund.dfy\"}",
+  "submission_sha256": "305911beafb27e411df123a1266e5a0fef42a439ad9a59088f7eba97d5df27d1"
+ },
+ "A18-runtime-exhaustion": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "70fe4968cee7a2b5f1da7baf99021da95227dda67f0fc8cb2fd49c6e581b2603"
+ },
+ "A19-verifier-exhaustion": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors, 1 out of resource\\n\"}",
+  "submission_sha256": "9e33a87836cef5442e95911ea6b17f96b3110feb3ab291643b861e27ab078525"
+ },
+ "A20-unicode-module": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M2 SOURCE_SCOPE prefix/sole include",
+  "exit_codes": {
+   "audit_before": null,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "",
+  "submission_sha256": "4a3236f1278a46e5071221bc3275ed67ebf9f6a0bb1ff0b320d2979172dbed6b"
+ },
+ "A21-unicode-predicate": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(4,19): Error: invalid FunctionDecl",
+  "submission_sha256": "3fe38f4e98003f826f53349975752e7e2d98a25549153b34a6e5f2b39463641d"
+ },
+ "A22-requires-false-assess": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(6,13): Error: a refining method is not allowed to add preconditions",
+  "submission_sha256": "5cc253789d433dd6ecc4cb86b1d463bc20527c6323c39ce6bee1d49da73a3b55"
+ },
+ "A23-requires-false-helper": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 1 error\\n\"}",
+  "submission_sha256": "506341128d6156747746686f8cc5d5f15fbce01f6d29a9cddbafe200e5d99261"
+ },
+ "A24-expect-halt-one-input": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "4527791ca182274fe73941b356325f73d4b96bc15780754fe60030ae49ef2d24"
+ },
+ "A25-expect-as-assume-wrong-value": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "697dbbbd642495428c572bb65a974540c0b693d32db9951db06d44c6a41ffb68"
+ },
+ "A26-forall-no-body": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(7,4): Warning: this forall statement has no body",
+  "submission_sha256": "49a701adf80d655a8343045a474ee68f4a56857a7892817f490f440ae1facdf1"
+ },
+ "A27-while-no-body": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(8,4): Warning: this loop has no body",
+  "submission_sha256": "31893141d86f9c283f76ccf297caa339c7287a5258a797a417f786bbbf4479f3"
+ },
+ "A28-space-attribute": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(4,8): Error: a method must be given a name (expecting identifier)",
+  "submission_sha256": "3481862c6c8e2b04f8ce1cb9f57966799a5df19fda964c4a48ebc9d3b40f36e2"
+ },
+ "A29-by-method-mismatch": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 1 error\\n\"}",
+  "submission_sha256": "cd51cfaf5724d9e67662a1f74d03d00063c81ccbb9966624cc3c1f716e59ec9f"
+ },
+ "A30-dfyconfig-cwd": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 5 verified, 1 error\\n\"}",
+  "submission_sha256": "d448ba80924643a0c2675c6f68b406cffed27fa8c7b29630d8fb33f8d5e29408"
+ },
+ "A31-dfyconfig-impl-dir": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 5 verified, 1 error\\n\"}",
+  "submission_sha256": "d448ba80924643a0c2675c6f68b406cffed27fa8c7b29630d8fb33f8d5e29408"
+ },
+ "A32-dead-main-decreases-star": {
+  "kind": "DISHONEST",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: (0,-1): Error: Given report file (<session scratch folder>/m1b/Y5/work/A32-dead-main-decreases-star/audit-before.md) does not match text generated (and saved in /private/tmp/claude-501/-Users-<user>-forge/3f3e8317-4315-4bc0-af2",
+  "submission_sha256": "b1269366bc5e87dba08e12d266c98a252e2f18b15ea41b20c35ed57a41a8ef13"
+ },
+ "A33-const-alloc-exhaustion": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 7
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 7 verified, 0 errors\\n\"}",
+  "submission_sha256": "b686718c2474f7582c2c177f6e3b04f599e08ea68d3894e61411a30739f48fc4"
+ },
+ "A34-nested-comment-hide": {
+  "kind": "DEAD-CODE",
+  "ideal": "ADMITTED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 7
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 7 verified, 0 errors\\n\"}",
+  "submission_sha256": "dd53d60f0d0bc16f9d1f9a3074820d371352b7b1c48a4280be00929f133f00a9"
+ },
+ "A35-assume-in-ghost-helper": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M5 AUDIT_REJECTED",
+  "exit_codes": {
+   "audit_before": 2,
+   "verify": null,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "audit-before.log: impl/Refund.dfy(4,33): Warning: assume statement has no {:axiom} annotation",
+  "submission_sha256": "baf9d3d9b33a91393839d1330aac9084ed683a80014044e4274f11535b4caffc"
+ },
+ "A36-reveal-opaque-escape": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 1 error\\n\"}",
+  "submission_sha256": "a2abb33eb0b7740456177bb5ea372760e91eb104dbf8dbc29839a9bba7cfa192"
+ },
+ "A37-uncompilable-such-that": {
+  "kind": "DISHONEST",
+  "ideal": "REFUSED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "71909caaf385669178306fedb44537d70aa222e3c325f5ff7cda676400106921"
+ },
+ "A38-expect-always-halt": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 6
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 6 verified, 0 errors\\n\"}",
+  "submission_sha256": "937cfbf8d520a3960bac79d7f802766a0b28c604c23a1e36826bc01a02f83ef5"
+ },
+ "A39-expect-in-helper-method": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "ADMITTED",
+  "why": "all mirrored checks passed",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 0,
+   "audit_after": 0,
+   "trx_rows": 7
+  },
+  "gate_exit": 0,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 7 verified, 0 errors\\n\"}",
+  "submission_sha256": "d53fd29b8ab841bf7aaa7ecc9c343531795db9b2210e43e9985ad416e24883ef"
+ },
+ "A38n-control-without-expect": {
+  "kind": "WRONG",
+  "ideal": "REFUSED",
+  "actual": "REFUSED",
+  "why": "M6 VERIFICATION_REJECTED",
+  "exit_codes": {
+   "audit_before": 0,
+   "verify": 4,
+   "audit_after": null
+  },
+  "gate_exit": 1,
+  "diag": "verify.log: {\"type\":\"status\",\"value\":\"\\nDafny program verifier finished with 5 verified, 1 error\\n\"}",
+  "submission_sha256": "a2bb621df1e8b974ff760a000f9190af38cbab7eaf7857039a852a5bb5dc506a"
+ }
+}

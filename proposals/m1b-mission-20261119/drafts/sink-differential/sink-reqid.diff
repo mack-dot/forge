@@ -1,0 +1,19 @@
+--- a/ts/refund-finality/sink.ts
++++ b/ts/refund-finality/sink.ts
+@@ -84,6 +84,7 @@
+     if (token.body.specLockSha256 !== this.cfg.specLockSha256) return { status: "rejected", reason: "spec lock is not the pinned one" };
+     if (token.body.checkerSha256 !== this.cfg.checkerSha256) return { status: "rejected", reason: "checker is not the pinned one" };
+     if (!this.verified(token)) return { status: "rejected", reason: "signature does not verify" };
++    if (token.body.requestId !== token.body.intent.requestId) return { status: "rejected", reason: "request id is not the intent's request id" };
+     const tokenText = input, tokenSha256 = sha256hex(tokenText);
+     const requestId = token.body.requestId, postText = canon(token.body.post), intentText = canon(token.body.intent);
+     try {
+@@ -128,7 +129,7 @@
+         problems.push(`row ${row.seq}: token bytes`); tokens.push(null); continue;
+       }
+       tokens.push(token);
+-      if (token.body.requestId !== row.request_id) problems.push(`row ${row.seq}: request id`);
++      if (token.body.requestId !== row.request_id || token.body.intent.requestId !== row.request_id) problems.push(`row ${row.seq}: request id`);
+       if (token.body.specLockSha256 !== this.cfg.specLockSha256 || token.body.checkerSha256 !== this.cfg.checkerSha256) problems.push(`row ${row.seq}: ids`);
+       if (!this.verified(token)) problems.push(`row ${row.seq}: signature`);
+       if (token.body.preStateSha256 !== expected) problems.push(`row ${row.seq}: chain`);

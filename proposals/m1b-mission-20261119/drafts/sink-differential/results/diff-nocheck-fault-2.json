@@ -1,0 +1,195 @@
+{
+ "sink": "nocheck",
+ "mode": "fault-2",
+ "seed": 20261119,
+ "count": 500,
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 185,
+  "kinds": {
+   "wrong-spec": 248,
+   "valid": 962,
+   "stale-or-current": 336,
+   "wrong-checker": 197,
+   "settled-id-new-body": 222,
+   "reqid-mismatch": 293,
+   "replay": 280,
+   "zero": 283,
+   "sig-bitflip": 147,
+   "non-canonical": 74,
+   "unknown-pre-hash": 82,
+   "attacker-key": 111,
+   "forged-post(key)": 127
+  },
+  "first": [
+   {
+    "name": "seed20261119#1",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "valid",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_0",
+     "original": "717",
+     "remaining": "28",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "valid",
+      "sink_out": "committed",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"0\"}",
+       "settledEnc": [
+        "90975150926017989423096760697356"
+       ],
+       "outbox": [
+        "{\"amount\":\"0\",\"chargeId\":\"ch_0\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_1_4\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#8",
+    "original_len": 3,
+    "shrunk": [
+     {
+      "kind": "valid",
+      "special": "fault"
+     },
+     {
+      "kind": "unknown-pre-hash"
+     }
+    ],
+    "shrunk_len": 2,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "679",
+     "remaining": "319",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 1,
+     "detail": {
+      "kind": "unknown-pre-hash",
+      "sink_out": "committed",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"679\",\"refundEnabled\":true,\"remaining\":\"39\"}",
+       "settledEnc": [
+        "84109112962319844392661616296463",
+        "85825622453246800708267961418256"
+       ],
+       "outbox": [
+        "{\"amount\":\"115\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_8_0\"}",
+        "{\"amount\":\"165\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_8_1\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"679\",\"refundEnabled\":true,\"remaining\":\"204\"}",
+       "settledEnc": [
+        "84109112962319844392661616296463"
+       ],
+       "outbox": [
+        "{\"amount\":\"115\",\"chargeId\":\"ch_2\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_8_0\"}"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#13",
+    "original_len": 7,
+    "shrunk": [
+     {
+      "kind": "replay",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "481",
+     "remaining": "398",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "replay",
+      "sink_out": "committed",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"481\",\"refundEnabled\":true,\"remaining\":\"204\"}",
+       "settledEnc": [
+        "99444212785176657496959161917494002239"
+       ],
+       "outbox": [
+        "{\"amount\":\"80\",\"chargeId\":\"ch_1\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_13_3\"}"
+       ]
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"481\",\"refundEnabled\":true,\"remaining\":\"398\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#1",
+   "original_len": 10,
+   "shrunk": [
+    {
+     "kind": "valid",
+     "special": "fault"
+    }
+   ],
+   "shrunk_len": 1,
+   "s0": {
+    "chargeId": "ch_0",
+    "original": "717",
+    "remaining": "28",
+    "refundEnabled": false
+   },
+   "divergence": {
+    "step": 0,
+    "detail": {
+     "kind": "valid",
+     "sink_out": "committed",
+     "core_out": "rejected:PreStateMismatch",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"0\"}",
+      "settledEnc": [
+       "90975150926017989423096760697356"
+      ],
+      "outbox": [
+       "{\"amount\":\"0\",\"chargeId\":\"ch_0\",\"reason\":\"service_not_delivered\",\"requestId\":\"rq_1_4\"}"
+      ]
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+      "settledEnc": [],
+      "outbox": []
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": []
+}

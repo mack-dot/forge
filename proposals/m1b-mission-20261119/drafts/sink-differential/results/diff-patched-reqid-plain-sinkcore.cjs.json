@@ -1,0 +1,424 @@
+{
+ "sink": "patched-reqid",
+ "mode": "plain",
+ "seed": 20261119,
+ "count": 2000,
+ "directed": [
+  {
+   "name": "valid",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "chain",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "replay",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "replay",
+     "sink": "rejected:RequestSettled",
+     "core": "rejected:RequestSettled"
+    }
+   ]
+  },
+  {
+   "name": "same-id-other-token",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "settled-id-new-body",
+     "sink": "rejected:RequestSettled",
+     "core": "rejected:RequestSettled"
+    }
+   ]
+  },
+  {
+   "name": "stale",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "stale",
+     "sink": "rejected:PreStateMismatch",
+     "core": "rejected:PreStateMismatch"
+    }
+   ]
+  },
+  {
+   "name": "wrong-spec",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "wrong-spec",
+     "sink": "rejected:IdsNotPinned",
+     "core": "rejected:IdsNotPinned"
+    }
+   ]
+  },
+  {
+   "name": "wrong-checker",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "wrong-checker",
+     "sink": "rejected:IdsNotPinned",
+     "core": "rejected:IdsNotPinned"
+    }
+   ]
+  },
+  {
+   "name": "attacker-key",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "attacker-key",
+     "sink": "rejected:SignatureInvalid",
+     "core": "rejected:SignatureInvalid"
+    }
+   ]
+  },
+  {
+   "name": "sig-bitflip",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "sig-bitflip",
+     "sink": "rejected:SignatureInvalid",
+     "core": "rejected:SignatureInvalid"
+    }
+   ]
+  },
+  {
+   "name": "zero-twice",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "zero",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "reqid-mismatch",
+   "divergence": {
+    "step": 0,
+    "detail": {
+     "kind": "reqid-mismatch",
+     "sink_out": "rejected:ReqIdMismatch",
+     "core_out": "committed",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_d\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"1000\"}",
+      "settledEnc": [],
+      "outbox": []
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_d\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settledEnc": [
+       "122552531"
+      ],
+      "outbox": [
+       "{\"amount\":\"100\",\"chargeId\":\"ch_d\",\"reason\":\"returned_item\",\"requestId\":\"dv\"}"
+      ]
+     }
+    }
+   },
+   "outcomes": [
+    {
+     "kind": "reqid-mismatch",
+     "sink": "rejected:ReqIdMismatch",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "reqid-mismatch-onto-settled-id",
+   "divergence": {
+    "step": 1,
+    "detail": {
+     "kind": "reqid-mismatch",
+     "sink_out": "rejected:ReqIdMismatch",
+     "core_out": "committed",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_d\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"900\"}",
+      "settledEnc": [
+       "55705751"
+      ],
+      "outbox": [
+       "{\"amount\":\"100\",\"chargeId\":\"ch_d\",\"reason\":\"returned_item\",\"requestId\":\"d1\"}"
+      ]
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_d\",\"original\":\"1000\",\"refundEnabled\":true,\"remaining\":\"800\"}",
+      "settledEnc": [
+       "55705751",
+       "63303759167750"
+      ],
+      "outbox": [
+       "{\"amount\":\"100\",\"chargeId\":\"ch_d\",\"reason\":\"returned_item\",\"requestId\":\"d1\"}",
+       "{\"amount\":\"100\",\"chargeId\":\"ch_d\",\"reason\":\"returned_item\",\"requestId\":\"d1\"}"
+      ]
+     }
+    }
+   },
+   "outcomes": [
+    {
+     "kind": "valid",
+     "sink": "committed",
+     "core": "committed"
+    },
+    {
+     "kind": "reqid-mismatch",
+     "sink": "rejected:ReqIdMismatch",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "forged-post(key)",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "forged-post",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  },
+  {
+   "name": "non-canonical",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "non-canonical",
+     "sink": "rejected:Decode",
+     "core": "rejected:Decode"
+    }
+   ]
+  },
+  {
+   "name": "unknown-pre-hash",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "unknown-pre",
+     "sink": "rejected:PreStateMismatch",
+     "core": "rejected:PreStateMismatch"
+    }
+   ]
+  },
+  {
+   "name": "refund-disabled-but-signed",
+   "divergence": null,
+   "outcomes": [
+    {
+     "kind": "valid-signed",
+     "sink": "committed",
+     "core": "committed"
+    }
+   ]
+  }
+ ],
+ "random": {
+  "run": 2000,
+  "steps": 12998,
+  "divergent": 797,
+  "kinds": {
+   "wrong-spec": 978,
+   "valid": 3867,
+   "stale-or-current": 1287,
+   "wrong-checker": 650,
+   "settled-id-new-body": 863,
+   "reqid-mismatch": 1037,
+   "replay": 1115,
+   "zero": 1096,
+   "sig-bitflip": 535,
+   "non-canonical": 276,
+   "unknown-pre-hash": 272,
+   "attacker-key": 503,
+   "forged-post(key)": 519
+  },
+  "first": [
+   {
+    "name": "seed20261119#1",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "reqid-mismatch"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_0",
+     "original": "717",
+     "remaining": "28",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "reqid-mismatch",
+      "sink_out": "rejected:ReqIdMismatch",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+       "settledEnc": [],
+       "outbox": []
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#4",
+    "original_len": 6,
+    "shrunk": [
+     {
+      "kind": "reqid-mismatch"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "626",
+     "remaining": "214",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "reqid-mismatch",
+      "sink_out": "rejected:ReqIdMismatch",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"214\"}",
+       "settledEnc": [],
+       "outbox": []
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"214\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#6",
+    "original_len": 6,
+    "shrunk": [
+     {
+      "kind": "reqid-mismatch"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "25",
+     "remaining": "14",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "reqid-mismatch",
+      "sink_out": "rejected:ReqIdMismatch",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"25\",\"refundEnabled\":true,\"remaining\":\"14\"}",
+       "settledEnc": [],
+       "outbox": []
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"25\",\"refundEnabled\":true,\"remaining\":\"14\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#1",
+   "original_len": 10,
+   "shrunk": [
+    {
+     "kind": "reqid-mismatch"
+    }
+   ],
+   "shrunk_len": 1,
+   "s0": {
+    "chargeId": "ch_0",
+    "original": "717",
+    "remaining": "28",
+    "refundEnabled": false
+   },
+   "divergence": {
+    "step": 0,
+    "detail": {
+     "kind": "reqid-mismatch",
+     "sink_out": "rejected:ReqIdMismatch",
+     "core_out": "rejected:PreStateMismatch",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+      "settledEnc": [],
+      "outbox": []
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+      "settledEnc": [],
+      "outbox": []
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": [
+  "reqid-mismatch",
+  "reqid-mismatch-onto-settled-id"
+ ]
+}

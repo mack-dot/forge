@@ -1,0 +1,22 @@
+2026-11-19T09:01:05Z
+START_STATE swap_free_mib=1671 memory_free_percent=63
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+Thu Nov 19 04:01:05 EST 2026
+System-wide memory free percentage: 63%
+vm.swapusage: total = 7168.00M  used = 5496.81M  free = 1671.19M  (encrypted)
+/dev/disk3s5       460  338        89    80% 7991557 943512200    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 76
+COMMAND: FORGE_CWD=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment FORGE_CPU_SECONDS=300 python3 -I -B run_case.py u294-import u294/audit.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/u294/preload.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/stored/hol-0004/.hol/objs/forge_refundSourceBindingTheory.sig /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/stored/hol-0004/.hol/objs/forge_refundSourceBindingTheory.sml
+RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in u294-import/command.json)
+Uncaught exception at ./basis/TextIO.sml:284: Io {cause = SysErr ("No such file or directory", SOME ENOENT), function = "TextIO.openIn", name = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/stored/hol-0004/.hol/objs/.hol/objs/forge_refundSourceBindingTheory.sig"}
+  info: CLOSURE_NODE lines equal to recorded: False (0 now, 126 recorded)
+  info: actual_exit=1 markers=[] last FORGE_BEGIN=None *_COMPLETE lines=[] wall=1.544
+VERDICT I1 u294-import FAIL
+  exit 1, expected 0
+  marker SOURCE_IMPORT_COMPLETE missing
+  IMPORTED lines differ from recorded import-0001 (0 lines)
+  CLOSURE_AXIOM set [] differs from recorded ['CLOSURE_AXIOM bool.BOOL_CASES_AX', 'CLOSURE_AXIOM bool.ETA_AX', 'CLOSURE_AXIOM bool.INFINITY_AX', 'CLOSURE_AXIOM bool.SELECT_AX']
+GO.SH EXIT 1
+go exit 1

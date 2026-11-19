@@ -1,0 +1,28 @@
+{
+ "words": 32609,
+ "classified": 32609,
+ "unknown": 0,
+ "ambiguous": 0,
+ "reg18": 0,
+ "sp": 0,
+ "class_counts": {
+  "LD/ST unsigned imm (LDR/STR)": 9600,
+  "MOVN/MOVZ/MOVK": 5152,
+  "B/BL": 2542,
+  "ADD/SUB imm": 2519,
+  "ADD/SUB shifted reg": 2264,
+  "LD/ST unscaled imm (LDUR/STUR)": 2204,
+  "logical shifted reg": 2149,
+  "B.cond": 1826,
+  "bitfield (LSL/LSR/ASR imm)": 1482,
+  "ADR/ADRP": 1206,
+  "logical imm": 644,
+  "BR/BLR/RET(unpac)": 553,
+  "cond select (CSET/CSINC)": 182,
+  "data-proc 3 src (MUL/MSUB/SMULH)": 101,
+  "ADC/SBC": 70,
+  "data-proc 2 src (SDIV/LSLV..)": 61,
+  "cond compare imm": 35,
+  "EXTR (ROR imm)": 19
+ }
+}

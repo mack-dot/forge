@@ -1,0 +1,133 @@
+{
+ "file_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+ "slice_offset": 16592,
+ "slice_length": 130436,
+ "slice_vm_start": "0x1000040d0",
+ "slice_vm_end_excl": "0x100023e54",
+ "slice_sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+ "slice_sha256_ok": true,
+ "words": 32609,
+ "llvm_lines_in_slice": 32609,
+ "otool_lines_in_slice": 32609,
+ "listing_vs_file_mismatches": [],
+ "listing_vs_file_mismatch_count": 0,
+ "conservative_flagged_words": 443,
+ "flagged_field_counts": {
+  "Rn": 148,
+  "Rd": 53,
+  "Rm": 143,
+  "Ra_Rt2": 102
+ },
+ "words_really_naming_x18_w18": 0,
+ "real_x18_list": [],
+ "real_x18_not_flagged_by_field_scan": [],
+ "flagged_but_not_register": 443,
+ "examples_flagged_not_register": [
+  {
+   "addr": "0x100004750",
+   "word": "17fffe5c",
+   "fields18": [
+    "Rn"
+   ],
+   "llvm": "b\t0x1000040c0 <cake_exit>",
+   "otool": "b\tcake_exit"
+  },
+  {
+   "addr": "0x100004c80",
+   "word": "17fffdd2",
+   "fields18": [
+    "Rd"
+   ],
+   "llvm": "b\t0x1000043c8 <cml__GC_3>",
+   "otool": "b\tcml__GC_3"
+  },
+  {
+   "addr": "0x100004d78",
+   "word": "f8120360",
+   "fields18": [
+    "Rm"
+   ],
+   "llvm": "stur\tx0, [x27, #-0xe0]",
+   "otool": "stur\tx0, [x27, #-0xe0]"
+  },
+  {
+   "addr": "0x100004d98",
+   "word": "f8120360",
+   "fields18": [
+    "Rm"
+   ],
+   "llvm": "stur\tx0, [x27, #-0xe0]",
+   "otool": "stur\tx0, [x27, #-0xe0]"
+  },
+  {
+   "addr": "0x100004dd4",
+   "word": "f8120360",
+   "fields18": [
+    "Rm"
+   ],
+   "llvm": "stur\tx0, [x27, #-0xe0]",
+   "otool": "stur\tx0, [x27, #-0xe0]"
+  },
+  {
+   "addr": "0x100004de8",
+   "word": "f8120360",
+   "fields18": [
+    "Rm"
+   ],
+   "llvm": "stur\tx0, [x27, #-0xe0]",
+   "otool": "stur\tx0, [x27, #-0xe0]"
+  },
+  {
+   "addr": "0x100004dec",
+   "word": "f8520360",
+   "fields18": [
+    "Rm"
+   ],
+   "llvm": "ldur\tx0, [x27, #-0xe0]",
+   "otool": "ldur\tx0, [x27, #-0xe0]"
+  },
+  {
+   "addr": "0x100004e68",
+   "word": "f8528361",
+   "fields18": [
+    "Rm"
+   ],
+   "llvm": "ldur\tx1, [x27, #-0xd8]",
+   "otool": "ldur\tx1, [x27, #-0xd8]"
+  },
+  {
+   "addr": "0x100004f44",
+   "word": "17ffff12",
+   "fields18": [
+    "Rd"
+   ],
+   "llvm": "b\t0x100004b8c <cml__AnyArith_11>",
+   "otool": "b\tcml__AnyArith_11"
+  },
+  {
+   "addr": "0x100005164",
+   "word": "54000241",
+   "fields18": [
+    "Rn"
+   ],
+   "llvm": "b.ne\t0x1000051ac <cml__Equal_20+0x90>",
+   "otool": "b.ne\t0x1000051ac"
+  }
+ ],
+ "examples_really_x18": [],
+ "data_or_invalid_words_llvm": [],
+ "data_or_invalid_words_otool": [],
+ "special_mnemonics_llvm": {},
+ "special_mnemonics_otool": {},
+ "ret_variants_llvm": {},
+ "br_blr_llvm": {
+  "br": 553
+ },
+ "sp_operand_words_llvm": 0,
+ "sp_operand_examples": [],
+ "sp_operand_words_otool": 0,
+ "mnemonic_kinds_llvm": 41,
+ "mnemonic_kinds_otool": 41,
+ "mnemonic_disagreements_llvm_vs_otool": 0,
+ "mnemonic_disagreement_examples": []
+}

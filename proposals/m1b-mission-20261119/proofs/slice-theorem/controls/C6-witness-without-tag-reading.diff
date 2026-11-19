@@ -1,0 +1,10 @@
+--- SliceTheorem.dfy	2026-11-19 02:02:59.416746783 -0500
++++ <session scratch folder>/m1b/Z9/controls/C6-witness-without-tag-reading/SliceTheorem.dfy	2026-11-19 02:04:32.620611083 -0500
+@@ -495,7 +495,6 @@
+ 
+   // Non-vacuity: every hypothesis of SliceSafety holds and exactly one effect is committed.
+   lemma Witness()
+-    requires TagReading(W_TOK)
+     ensures InitOk(W_PRE)
+     ensures A1_IdealMacAtEachDelivery(W_PRE, ActsFor(W_TOK))
+     ensures A2_MintOnlyOnCheck(ActsFor(W_TOK))

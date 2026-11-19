@@ -1,0 +1,28 @@
+2026-11-19T08:43:29Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6433.00M  free = 735.00M  (encrypted)
+System-wide memory free percentage: 67%
+exit 0
+actual_exit 0 wall 97.861 cpu 116.8 rss_mib 3851 ['EXACT_COMPLETE'] inputs_unchanged_after True
+66:CHECKED read_ffi_bytearray_ffi_interfer_update
+71:CHECKED read_ffi_bytearrays_ffi_interfer_update
+76:CHECKED ffi_calls_ok_false_at_a_returning_call
+99:CHECKED refund_ffi_tot_evaluate_agree
+104:STATEMENT_L2 ∀k mc1 mc2 ffi ms.
+109:CHECKED refund_ffi_tot_machine_sem_agree
+119:CHECKED refund_mc_totalised_record
+123:CHECKED refund_mc_totalised_record_fields
+131:CHECKED refund_profile_a_sl_reach
+167:CONTROL_OK C-NV ffi_calls_ok with the empty predicate is false at a concrete returning call
+168:CONTROL_OK L2 statement is the literal statement of routeA-L2.sml
+169:CONTROL_OK L2R conclusion is term-identical to the conclusion of the stored refund_profile_a_sl (not weakened)
+170:CONTROL_OK L2R premises contain neither refund_env_ok_sl nor the all-states contract refund_ffi_contract_at
+171:CONTROL_OK L2R has the stored premises with exactly one replaced by three
+172:CLOSURE_AXIOM bool.SELECT_AX
+173:CLOSURE_AXIOM bool.INFINITY_AX
+174:CLOSURE_AXIOM bool.ETA_AX
+175:CLOSURE_AXIOM bool.BOOL_CASES_AX
+177:CLOSURE_NODES 544
+180:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0

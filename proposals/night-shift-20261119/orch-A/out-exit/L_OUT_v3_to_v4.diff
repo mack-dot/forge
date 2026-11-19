@@ -1,0 +1,112 @@
+--- L_OUT_v3.sml	2026-11-19 03:09:25.537623674 -0500
++++ L_OUT_v4.sml	2026-11-19 03:35:04.444610310 -0500
+@@ -1,4 +1,9 @@
+-(* L-OUT at no_ext, v3 (worker A3, Night-Shift Orchestrator A). DRAFT: NOT RUN. No HOL process was started.
++(* L-OUT at no_ext, v4 (worker A3). DRAFT: NOT RUN. v4 = v3 (SHA-256 553233ce...0a61, run as LO-0001: CPU limit,
++   stdout ends after CHECKED STD_streams_facts) with changes marked (* A3 tactic-only v4 *): flushed output,
++   BEGIN/END lines, Timeout.apply limits per lemma (240 s) and per alternative (60 s), and tame_uniq after
++   every drule STDF. No statement changed. Every tactic is UNCHECKED.
++   ---------------------------------------------------------------------------------------------------
++   L-OUT at no_ext, v3 (worker A3, Night-Shift Orchestrator A). No HOL process was started.
+    v3 = v2 (SHA-256 153885ba70f3e451f2f1516d36e617dec214fd9ed3be781b1b04de99e72a3c0d) with tactic/ML repairs.
+    Every repair is marked (* A3 tactic-only *). No statement of a v2 lemma changed. One lemma was ADDED:
+    P_O4_partial_write_counts_nw (a positive control; statement in the A3 report (handback text)). Every tactic is UNCHECKED.
+@@ -53,7 +58,23 @@
+      forge_refundSlideProfileA.refund_profile_a_sl_every_machine_run (stored E4; e4-0001/stdout.log 296-331) *)
+ open preamble basis_ffiTheory fsFFITheory fsFFIPropsTheory TextIOProofTheory MarshallingTheory;
+ val _ = Globals.max_print_depth := 60;
+-fun pr s = print (s ^ "\n");
++(* A3 tactic-only v4: flush after every line, so a stopped run shows where it stopped. *)
++fun pr s = (print (s ^ "\n"); TextIO.flushOut TextIO.stdOut);
++(* A3 tactic-only v4: time limits. Timeout.apply is HOL's portable timeout
++   (HOL/src/portableML/poly/concurrent/Timeout.sml:12-31; sig HOL/sigobj/Timeout.sig). It raises
++   Timeout.TIMEOUT. A failed load stops the script here, before any proof, with a clear line. *)
++val _ = (load "Timeout"; pr "TIMEOUT_HELPER Timeout.apply loaded")
++  handle e => (pr ("TIMEOUT_LOAD_FAILED " ^ General.exnMessage e); raise e);
++val ALT_SECS = 60;     (* one try_all alternative *)
++val LEMMA_SECS = 240;  (* one whole lemma *)
++fun tlim secs (tac : tactic) : tactic = fn g =>
++  Timeout.apply (Time.fromSeconds (Int.toLarge secs)) tac g
++  handle Timeout.TIMEOUT _ => (pr ("TIMEOUT_ALT after " ^ Int.toString secs ^ " s");
++                               raise mk_HOL_ERR "A3" "tlim" "time limit");
++(* The timer interrupts this thread; make sure interrupts are delivered asynchronously (Poly/ML Thread API). *)
++val _ = (Thread.Thread.setAttributes [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch];
++         pr "INTERRUPTS asynch")
++  handle e => pr ("INTERRUPTS_UNCHANGED " ^ General.exnMessage e);
+ fun tags name th = let val (ors,axs) = Tag.dest_tag (Thm.tag th) in
+   if null (hyp th) andalso null axs andalso List.all (fn x => x = "DISK_THM") ors then ()
+   else raise Fail ("Unexpected assumptions: " ^ name ^ " oracles=" ^ String.concatWith "," ors) end;
+@@ -66,12 +87,22 @@
+ val problems = ref ([] : string list);
+ fun bad s = (pr ("UNEXPECTED_CONTROL_ACCEPTANCE " ^ s); problems := s :: !problems);
+ fun chk name th = (tags name th; pr ("CHECKED " ^ name ^ "\n" ^ thm_to_string th));
+-fun thm name goalf tacf = (let val g = goalf () val th = save_thm (name, Tactical.TAC_PROOF (([], g), tacf ())) in chk name th; th end)
+-  handle e => (pr ("LEMMA_FAILED " ^ name ^ " " ^ General.exnMessage e); failed := name :: !failed; TRUTH);
++(* A3 tactic-only v4: BEGIN line, flush, and a time limit for each lemma. *)
++fun thm name goalf tacf =
++  (let val _ = pr ("BEGIN " ^ name)
++       val t0 = Time.now ()
++       val g = goalf ()
++       val pf = Timeout.apply (Time.fromSeconds (Int.toLarge LEMMA_SECS)) Tactical.TAC_PROOF
++       val th = save_thm (name, pf (([], g), tacf ()))
++   in chk name th; pr ("END " ^ name ^ " " ^ Time.toString (Time.- (Time.now (), t0)) ^ " s"); th end)
++  handle Timeout.TIMEOUT _ => (pr ("LEMMA_FAILED " ^ name ^ " TIMEOUT " ^ Int.toString LEMMA_SECS ^ " s");
++                               failed := name :: !failed; TRUTH)
++       | e => (pr ("LEMMA_FAILED " ^ name ^ " " ^ General.exnMessage e); failed := name :: !failed; TRUTH);
++(* A3 tactic-only v4: every alternative runs under ALT_SECS; a time-out counts as a failed alternative. *)
+ fun try_all name tacs =
+-  FIRST (map (fn t => t \\ NO_TAC) tacs)
+-  ORELSE (hd tacs \\ show_tac ("REMAINING " ^ name) \\ NO_TAC);
+-fun defn name q = (let val th = Define q in pr ("DEFINITION " ^ name ^ "\n" ^ thm_to_string th); th end)
++  FIRST (map (fn t => tlim ALT_SECS (t \\ NO_TAC)) tacs)
++  ORELSE tlim ALT_SECS (hd tacs \\ show_tac ("REMAINING " ^ name) \\ NO_TAC);
++fun defn name q = (let val _ = pr ("BEGIN_DEFINITION " ^ name) val th = Define q in pr ("DEFINITION " ^ name ^ "\n" ^ thm_to_string th); th end)
+   handle e => (pr ("DEFINITION_FAILED " ^ name ^ " " ^ General.exnMessage e); raise e);
+ val one_ne_zero8 = EVAL ``(1w:word8) = 0w``;
+ val CHOICE = miscTheory.OPTION_CHOICE_EQUALS_OPTION;
+@@ -116,10 +147,26 @@
+      [rw[STD_streams_def] \\ qexistsl_tac [`inp`,`out`,`err`] \\ simp[],
+       rw[STD_streams_def] \\ metis_tac[]]);
+ 
++(* A3 tactic-only v4. CAUSE of the LO-0001 stop (CPU limit, stdout ends after CHECKED STD_streams_facts):
++   STDF's last conjunct, once an assumption, is  !fd md off. ALOOKUP fs.infds fd = SOME (UStream «stdout»,md,off)
++   ==> fd = 1 . Its conclusion has a bare VARIABLE (fd) on the left. gvs/fs/simp turn it into a conditional
++   rewrite of any number to 1, and the side condition is again an ALOOKUP term with numbers in it: the most
++   probable non-terminating rewrite. v4 replaces it, right after drule STDF, by its contrapositive
++   !fd md off. fd <> 1 ==> ALOOKUP fs.infds fd <> SOME (UStream «stdout»,md,off)
++   (left-hand side ALOOKUP ...; no variable LHS). Same content (CONTRAPOS, GENL). *)
++val tame_uniq : tactic =
++  qpat_x_assum `!fd md off. _ ==> fd = 1`
++    (fn th => let val (vs, _) = strip_forall (concl th)
++              in assume_tac (GENL vs (CONTRAPOS (SPEC_ALL th))) end);
+ val FD012 = thm "STD_streams_File_fd"
+   (fn () => ``!fs fd f md off. STD_streams fs /\ ALOOKUP fs.infds fd = SOME (File f, md, off) ==>
+                 fd <> 0 /\ fd <> 1 /\ fd <> 2``)
+-  (fn () => rpt gen_tac \\ strip_tac \\ drule STDF \\ strip_tac \\ rpt conj_tac \\ strip_tac \\ gvs[]);
++  (fn () => try_all "STD_streams_File_fd"   (* A3 tactic-only v4: tame_uniq; no gvs *)
++     [rpt gen_tac \\ strip_tac \\ drule STDF \\ strip_tac \\ tame_uniq
++        \\ rpt conj_tac \\ strip_tac \\ rveq \\ fs[],
++      rpt gen_tac \\ strip_tac \\ drule STDF \\ strip_tac \\ tame_uniq
++        \\ rpt conj_tac \\ strip_tac \\ rveq
++        \\ metis_tac[optionTheory.SOME_11, pairTheory.PAIR_EQ, fsFFITheory.inode_distinct]]);
+ 
+ (* ================= write ================= *)
+ val W22LT = thm "w22n_lt"
+@@ -136,7 +183,7 @@
+        STD_streams fs1 /\ nw <= n /\
+        !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
+             ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (if fd = 1 then c0 ++ TAKE nw chars else c0)``)
+-  (fn () => rpt gen_tac \\ strip_tac \\ drule STDF \\ strip_tac
++  (fn () => rpt gen_tac \\ strip_tac \\ drule STDF \\ strip_tac \\ tame_uniq   (* A3 tactic-only v4 *)
+      \\ gvs[fsFFITheory.write_def] \\ rpt (pairarg_tac \\ gvs[])
+      \\ Cases_on `fd = 1`
+      >- (gvs[] \\ rpt conj_tac
+@@ -190,7 +237,7 @@
+ val READ_STDOUT = thm "read_stdout"
+   (fn () => ``!fd n fs l fs1. STD_streams fs /\ fsFFI$read fd fs n = SOME (l, fs1) ==>
+        STD_streams fs1 /\ fs1.inode_tbl = fs.inode_tbl``)
+-  (fn () => rpt gen_tac \\ strip_tac \\ drule STDF \\ strip_tac
++  (fn () => rpt gen_tac \\ strip_tac \\ drule STDF \\ strip_tac \\ tame_uniq   (* A3 tactic-only v4 *)
+      \\ gvs[fsFFITheory.read_def] \\ rpt (pairarg_tac \\ gvs[])
+      \\ `fd <> 1 /\ fd <> 2` by (rpt strip_tac \\ gvs[])
+      \\ conj_tac >- simp[STD_streams_bumpFD]

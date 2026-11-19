@@ -1,0 +1,374 @@
+TIMEOUT_HELPER Timeout.apply loaded
+<<HOL message: Created theory "forge_m1bErasureFrame">>
+MARK W
+BEGIN W_nonvacuous REQUIRED cpu=0.7
+TACTIC_USED W_nonvacuous 1
+Saved theorem _______ "W_nonvacuous"
+PROVED W_nonvacuous
+CHECKED W_nonvacuous
+⊢ ∃s t.
+    arm8_ok (erase s) ∧ s.TCR_EL1.TBI0 ∧ s.SCTLR_EL1.SA0 ∧ untagged t ∧
+    s.PSTATE.EL = 0w
+MARK S0
+CASE_RAND_COUNT 26 of 26
+RULE_COUNTS FR_RAND 135
+BEGIN FOR_proj REQUIRED cpu=1.0
+TACTIC_USED FOR_proj 1
+Saved theorem _______ "FOR_proj"
+PROVED FOR_proj
+BEGIN FOR_snd_const REQUIRED cpu=1.0
+TACTIC_USED FOR_snd_const 1
+Saved theorem _______ "FOR_snd_const"
+PROVED FOR_snd_const
+BEGIN Mem_state REQUIRED cpu=1.0
+TACTIC_USED Mem_state 1
+Saved theorem _______ "Mem_state"
+PROVED Mem_state
+BEGIN word2_cases REQUIRED cpu=1.1
+TACTIC_USED word2_cases 1
+Saved theorem _______ "word2_cases"
+PROVED word2_cases
+MARK F
+DEF_NAMES 130
+BEGIN frame_raise_exception REQUIRED cpu=1.1
+TACTIC_USED frame_raise_exception 1
+Saved theorem _______ "frame_raise_exception"
+PROVED frame_raise_exception
+FRAME_SKIP rec'TCR_EL1 (no state-transformer shape)
+FRAME_SKIP reg'TCR_EL1 (no state-transformer shape)
+FRAME_SKIP write'rec'TCR_EL1 (no state-transformer shape)
+FRAME_SKIP write'reg'TCR_EL1 (no state-transformer shape)
+FRAME_SKIP rec'TCR_EL2_EL3 (no state-transformer shape)
+FRAME_SKIP reg'TCR_EL2_EL3 (no state-transformer shape)
+FRAME_SKIP write'rec'TCR_EL2_EL3 (no state-transformer shape)
+FRAME_SKIP write'reg'TCR_EL2_EL3 (no state-transformer shape)
+FRAME_SKIP rec'SCTLRType (no state-transformer shape)
+FRAME_SKIP reg'SCTLRType (no state-transformer shape)
+FRAME_SKIP write'rec'SCTLRType (no state-transformer shape)
+FRAME_SKIP write'reg'SCTLRType (no state-transformer shape)
+BEGIN frame_write_X REQUIRED cpu=1.1
+TACTIC_USED frame_write_X 1
+Saved theorem _______ "frame_write_X"
+PROVED frame_write_X
+BEGIN frame_write_SP REQUIRED cpu=1.1
+TACTIC_USED frame_write_SP 1
+Saved theorem _______ "frame_write_SP"
+PROVED frame_write_SP
+BEGIN frame_Hint_Branch REQUIRED cpu=1.2
+TACTIC_USED frame_Hint_Branch 1
+Saved theorem _______ "frame_Hint_Branch"
+PROVED frame_Hint_Branch
+BEGIN frame_BranchTo REQUIRED cpu=1.3
+TACTIC_USED frame_BranchTo 1
+Saved theorem _______ "frame_BranchTo"
+PROVED frame_BranchTo
+FRAME_SKIP Align (no state-transformer shape)
+FRAME_SKIP Aligned (no state-transformer shape)
+BEGIN frame_CheckSPAlignment REQUIRED cpu=2.0
+TACTIC_USED frame_CheckSPAlignment 1
+Saved theorem _______ "frame_CheckSPAlignment"
+PROVED frame_CheckSPAlignment
+BEGIN frame_CheckAlignment REQUIRED cpu=2.0
+TACTIC_USED frame_CheckAlignment 1
+Saved theorem _______ "frame_CheckAlignment"
+PROVED frame_CheckAlignment
+FRAME_SKIP ByteList (no state-transformer shape)
+FRAME_SKIP BigEndianReverse (no state-transformer shape)
+BEGIN frame_Mem REQUIRED cpu=2.0
+TACTIC_USED frame_Mem 1
+Saved theorem _______ "frame_Mem"
+PROVED frame_Mem
+BEGIN frame_write_Mem REQUIRED cpu=2.0
+TACTIC_USED frame_write_Mem 1
+Saved theorem _______ "frame_write_Mem"
+PROVED frame_write_Mem
+FRAME_SKIP ConditionTest (no state-transformer shape)
+FRAME_SKIP Ones (no state-transformer shape)
+FRAME_SKIP Zeros (no state-transformer shape)
+FRAME_SKIP Replicate (no state-transformer shape)
+FRAME_SKIP HighestSetBit (no state-transformer shape)
+FRAME_SKIP CountLeadingZeroBits (no state-transformer shape)
+FRAME_SKIP CountLeadingSignBits (no state-transformer shape)
+FRAME_SKIP Poly32Mod2_loop (no state-transformer shape)
+FRAME_SKIP Poly32Mod2 (no state-transformer shape)
+FRAME_SKIP AddWithCarry (no state-transformer shape)
+BEGIN frame_SetTheFlags REQUIRED cpu=2.1
+TACTIC_USED frame_SetTheFlags 1
+Saved theorem _______ "frame_SetTheFlags"
+PROVED frame_SetTheFlags
+FRAME_SKIP DecodeShift (no state-transformer shape)
+FRAME_SKIP ShiftValue (no state-transformer shape)
+FRAME_SKIP ExtendWord (no state-transformer shape)
+FRAME_SKIP Extend (no state-transformer shape)
+FRAME_SKIP DecodeRegExtend (no state-transformer shape)
+FRAME_SKIP ExtendValue (no state-transformer shape)
+FRAME_SKIP DecodeBitMasks (no state-transformer shape)
+BEGIN frame_dfn_Address REQUIRED cpu=2.1
+TACTIC_USED frame_dfn_Address 1
+Saved theorem _______ "frame_dfn_Address"
+PROVED frame_dfn_Address
+BEGIN frame_dfn_AddSubCarry REQUIRED cpu=2.1
+TACTIC_USED frame_dfn_AddSubCarry 1
+Saved theorem _______ "frame_dfn_AddSubCarry"
+PROVED frame_dfn_AddSubCarry
+BEGIN frame_dfn_AddSubExtendRegister REQUIRED cpu=2.1
+TACTIC_USED frame_dfn_AddSubExtendRegister 1
+Saved theorem _______ "frame_dfn_AddSubExtendRegister"
+PROVED frame_dfn_AddSubExtendRegister
+BEGIN frame_dfn_AddSubImmediate REQUIRED cpu=2.2
+TACTIC_USED frame_dfn_AddSubImmediate 1
+Saved theorem _______ "frame_dfn_AddSubImmediate"
+PROVED frame_dfn_AddSubImmediate
+BEGIN frame_dfn_AddSubShiftedRegister REQUIRED cpu=2.2
+TACTIC_USED frame_dfn_AddSubShiftedRegister 1
+Saved theorem _______ "frame_dfn_AddSubShiftedRegister"
+PROVED frame_dfn_AddSubShiftedRegister
+BEGIN frame_dfn_LogicalImmediate REQUIRED cpu=2.2
+TACTIC_USED frame_dfn_LogicalImmediate 1
+Saved theorem _______ "frame_dfn_LogicalImmediate"
+PROVED frame_dfn_LogicalImmediate
+BEGIN frame_dfn_LogicalShiftedRegister REQUIRED cpu=2.3
+TACTIC_USED frame_dfn_LogicalShiftedRegister 1
+Saved theorem _______ "frame_dfn_LogicalShiftedRegister"
+PROVED frame_dfn_LogicalShiftedRegister
+BEGIN frame_dfn_Shift REQUIRED cpu=2.3
+TACTIC_USED frame_dfn_Shift 1
+Saved theorem _______ "frame_dfn_Shift"
+PROVED frame_dfn_Shift
+BEGIN frame_dfn_MoveWide REQUIRED cpu=2.3
+TACTIC_USED frame_dfn_MoveWide 1
+Saved theorem _______ "frame_dfn_MoveWide"
+PROVED frame_dfn_MoveWide
+BEGIN frame_dfn_BitfieldMove REQUIRED cpu=2.3
+TACTIC_USED frame_dfn_BitfieldMove 1
+Saved theorem _______ "frame_dfn_BitfieldMove"
+PROVED frame_dfn_BitfieldMove
+BEGIN frame_dfn_ConditionalCompareImmediate REQUIRED cpu=2.4
+TACTIC_USED frame_dfn_ConditionalCompareImmediate 1
+Saved theorem _______ "frame_dfn_ConditionalCompareImmediate"
+PROVED frame_dfn_ConditionalCompareImmediate
+BEGIN frame_dfn_ConditionalCompareRegister REQUIRED cpu=2.4
+TACTIC_USED frame_dfn_ConditionalCompareRegister 1
+Saved theorem _______ "frame_dfn_ConditionalCompareRegister"
+PROVED frame_dfn_ConditionalCompareRegister
+BEGIN frame_dfn_ConditionalSelect REQUIRED cpu=2.4
+TACTIC_USED frame_dfn_ConditionalSelect 1
+Saved theorem _______ "frame_dfn_ConditionalSelect"
+PROVED frame_dfn_ConditionalSelect
+BEGIN frame_dfn_CountLeading REQUIRED cpu=2.4
+TACTIC_USED frame_dfn_CountLeading 1
+Saved theorem _______ "frame_dfn_CountLeading"
+PROVED frame_dfn_CountLeading
+BEGIN frame_dfn_ExtractRegister REQUIRED cpu=2.4
+TACTIC_USED frame_dfn_ExtractRegister 1
+Saved theorem _______ "frame_dfn_ExtractRegister"
+PROVED frame_dfn_ExtractRegister
+BEGIN frame_dfn_Division REQUIRED cpu=2.5
+TACTIC_USED frame_dfn_Division 1
+Saved theorem _______ "frame_dfn_Division"
+PROVED frame_dfn_Division
+BEGIN frame_dfn_MultiplyAddSub REQUIRED cpu=2.5
+TACTIC_USED frame_dfn_MultiplyAddSub 1
+Saved theorem _______ "frame_dfn_MultiplyAddSub"
+PROVED frame_dfn_MultiplyAddSub
+BEGIN frame_dfn_MultiplyAddSubLong REQUIRED cpu=2.5
+TACTIC_USED frame_dfn_MultiplyAddSubLong 1
+Saved theorem _______ "frame_dfn_MultiplyAddSubLong"
+PROVED frame_dfn_MultiplyAddSubLong
+BEGIN frame_dfn_MultiplyHigh REQUIRED cpu=2.5
+TACTIC_USED frame_dfn_MultiplyHigh 1
+Saved theorem _______ "frame_dfn_MultiplyHigh"
+PROVED frame_dfn_MultiplyHigh
+BEGIN frame_dfn_Reverse REQUIRED cpu=2.5
+TACTIC_USED frame_dfn_Reverse 1
+Saved theorem _______ "frame_dfn_Reverse"
+PROVED frame_dfn_Reverse
+BEGIN frame_dfn_CRC REQUIRED cpu=2.6
+TACTIC_USED frame_dfn_CRC 1
+Saved theorem _______ "frame_dfn_CRC"
+PROVED frame_dfn_CRC
+BEGIN frame_dfn_BranchConditional REQUIRED cpu=2.6
+TACTIC_USED frame_dfn_BranchConditional 1
+Saved theorem _______ "frame_dfn_BranchConditional"
+PROVED frame_dfn_BranchConditional
+BEGIN frame_dfn_BranchImmediate REQUIRED cpu=2.6
+TACTIC_USED frame_dfn_BranchImmediate 1
+Saved theorem _______ "frame_dfn_BranchImmediate"
+PROVED frame_dfn_BranchImmediate
+BEGIN frame_dfn_BranchRegister REQUIRED cpu=2.7
+TACTIC_USED frame_dfn_BranchRegister 1
+Saved theorem _______ "frame_dfn_BranchRegister"
+PROVED frame_dfn_BranchRegister
+BEGIN frame_dfn_CompareAndBranch REQUIRED cpu=2.7
+TACTIC_USED frame_dfn_CompareAndBranch 1
+Saved theorem _______ "frame_dfn_CompareAndBranch"
+PROVED frame_dfn_CompareAndBranch
+BEGIN frame_dfn_TestBitAndBranch REQUIRED cpu=2.7
+TACTIC_USED frame_dfn_TestBitAndBranch 1
+Saved theorem _______ "frame_dfn_TestBitAndBranch"
+PROVED frame_dfn_TestBitAndBranch
+BEGIN frame_LoadStoreSingle REQUIRED cpu=2.7
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_m1bErasureFrame)>>
+TACTIC_USED frame_LoadStoreSingle 1
+Saved theorem _______ "frame_LoadStoreSingle"
+PROVED frame_LoadStoreSingle
+BEGIN frame_dfn_LoadStoreImmediate REQUIRED cpu=3.5
+TACTIC_USED frame_dfn_LoadStoreImmediate 1
+Saved theorem _______ "frame_dfn_LoadStoreImmediate"
+PROVED frame_dfn_LoadStoreImmediate
+BEGIN frame_dfn_LoadStoreRegister REQUIRED cpu=3.5
+TACTIC_USED frame_dfn_LoadStoreRegister 1
+Saved theorem _______ "frame_dfn_LoadStoreRegister"
+PROVED frame_dfn_LoadStoreRegister
+BEGIN frame_dfn_LoadStorePair REQUIRED cpu=3.5
+TACTIC_USED frame_dfn_LoadStorePair 1
+Saved theorem _______ "frame_dfn_LoadStorePair"
+PROVED frame_dfn_LoadStorePair
+FRAME_SKIP ExclusiveMonitorPass (no state-transformer shape)
+FRAME_SKIP SetExclusiveMonitors (no state-transformer shape)
+FRAME_SKIP ExclusiveMonitorStatus (no state-transformer shape)
+BEGIN frame_dfn_LoadStoreAcquire REQUIRED cpu=5.3
+TACTIC_USED frame_dfn_LoadStoreAcquire 1
+Saved theorem _______ "frame_dfn_LoadStoreAcquire"
+PROVED frame_dfn_LoadStoreAcquire
+BEGIN frame_dfn_LoadStoreAcquirePair REQUIRED cpu=5.8
+TACTIC_USED frame_dfn_LoadStoreAcquirePair 1
+Saved theorem _______ "frame_dfn_LoadStoreAcquirePair"
+PROVED frame_dfn_LoadStoreAcquirePair
+BEGIN frame_dfn_LoadLiteral REQUIRED cpu=6.7
+TACTIC_USED frame_dfn_LoadLiteral 1
+Saved theorem _______ "frame_dfn_LoadLiteral"
+PROVED frame_dfn_LoadLiteral
+BEGIN frame_dfn_MemoryBarrier REQUIRED cpu=7.1
+TACTIC_USED frame_dfn_MemoryBarrier 1
+Saved theorem _______ "frame_dfn_MemoryBarrier"
+PROVED frame_dfn_MemoryBarrier
+BEGIN frame_dfn_ClearExclusive REQUIRED cpu=7.1
+TACTIC_USED frame_dfn_ClearExclusive 1
+Saved theorem _______ "frame_dfn_ClearExclusive"
+PROVED frame_dfn_ClearExclusive
+BEGIN frame_dfn_Hint REQUIRED cpu=7.2
+TACTIC_USED frame_dfn_Hint 1
+Saved theorem _______ "frame_dfn_Hint"
+PROVED frame_dfn_Hint
+BEGIN frame_dfn_Breakpoint REQUIRED cpu=7.2
+TACTIC_USED frame_dfn_Breakpoint 1
+Saved theorem _______ "frame_dfn_Breakpoint"
+PROVED frame_dfn_Breakpoint
+BEGIN frame_dfn_DebugSwitch REQUIRED cpu=7.2
+TACTIC_USED frame_dfn_DebugSwitch 1
+Saved theorem _______ "frame_dfn_DebugSwitch"
+PROVED frame_dfn_DebugSwitch
+BEGIN frame_dfn_DebugRestore REQUIRED cpu=7.3
+TACTIC_USED frame_dfn_DebugRestore 1
+Saved theorem _______ "frame_dfn_DebugRestore"
+PROVED frame_dfn_DebugRestore
+BEGIN frame_dfn_Halt REQUIRED cpu=7.3
+TACTIC_USED frame_dfn_Halt 1
+Saved theorem _______ "frame_dfn_Halt"
+PROVED frame_dfn_Halt
+BEGIN frame_dfn_SystemInstruction REQUIRED cpu=7.3
+TACTIC_USED frame_dfn_SystemInstruction 1
+Saved theorem _______ "frame_dfn_SystemInstruction"
+PROVED frame_dfn_SystemInstruction
+BEGIN frame_dfn_MoveSystemRegister REQUIRED cpu=7.3
+TACTIC_USED frame_dfn_MoveSystemRegister 1
+Saved theorem _______ "frame_dfn_MoveSystemRegister"
+PROVED frame_dfn_MoveSystemRegister
+BEGIN frame_dfn_MoveImmediateProcState REQUIRED cpu=7.4
+TACTIC_USED frame_dfn_MoveImmediateProcState 1
+Saved theorem _______ "frame_dfn_MoveImmediateProcState"
+PROVED frame_dfn_MoveImmediateProcState
+BEGIN frame_dfn_SupervisorCall REQUIRED cpu=7.4
+TACTIC_USED frame_dfn_SupervisorCall 1
+Saved theorem _______ "frame_dfn_SupervisorCall"
+PROVED frame_dfn_SupervisorCall
+BEGIN frame_dfn_HypervisorCall REQUIRED cpu=7.4
+TACTIC_USED frame_dfn_HypervisorCall 1
+Saved theorem _______ "frame_dfn_HypervisorCall"
+PROVED frame_dfn_HypervisorCall
+BEGIN frame_dfn_SecureMonitorCall REQUIRED cpu=7.5
+TACTIC_USED frame_dfn_SecureMonitorCall 1
+Saved theorem _______ "frame_dfn_SecureMonitorCall"
+PROVED frame_dfn_SecureMonitorCall
+BEGIN frame_dfn_ExceptionReturn REQUIRED cpu=7.5
+TACTIC_USED frame_dfn_ExceptionReturn 1
+Saved theorem _______ "frame_dfn_ExceptionReturn"
+PROVED frame_dfn_ExceptionReturn
+BEGIN frame_dfn_Unallocated REQUIRED cpu=7.5
+TACTIC_USED frame_dfn_Unallocated 1
+Saved theorem _______ "frame_dfn_Unallocated"
+PROVED frame_dfn_Unallocated
+BEGIN frame_dfn_Reserved REQUIRED cpu=7.6
+TACTIC_USED frame_dfn_Reserved 1
+Saved theorem _______ "frame_dfn_Reserved"
+PROVED frame_dfn_Reserved
+BEGIN frame_Run REQUIRED cpu=7.6
+TACTIC_USED frame_Run 1
+Saved theorem _______ "frame_Run"
+PROVED frame_Run
+FRAME_SKIP DecodeLogicalOp (no state-transformer shape)
+FRAME_SKIP NoOperation (no state-transformer shape)
+FRAME_SKIP LoadStoreRegister (no state-transformer shape)
+FRAME_SKIP LoadStoreImmediateN (no state-transformer shape)
+FRAME_SKIP LoadStoreImmediate (no state-transformer shape)
+FRAME_SKIP LoadStorePairN (no state-transformer shape)
+FRAME_SKIP LoadStorePair (no state-transformer shape)
+FRAME_SKIP LoadStoreAcquireN (no state-transformer shape)
+FRAME_SKIP LoadStoreAcquire (no state-transformer shape)
+FRAME_SKIP Decode (no state-transformer shape)
+BEGIN frame_Fetch REQUIRED cpu=9.5
+TACTIC_USED frame_Fetch 1
+Saved theorem _______ "frame_Fetch"
+PROVED frame_Fetch
+FRAME_SKIP CountTrailing (no state-transformer shape)
+FRAME_SKIP EncodeBitMaskAux (no state-transformer shape)
+FRAME_SKIP EncodeBitMask (no state-transformer shape)
+FRAME_SKIP e_sf (no state-transformer shape)
+FRAME_SKIP EncodeLogicalOp (no state-transformer shape)
+FRAME_SKIP e_data (no state-transformer shape)
+FRAME_SKIP e_debug (no state-transformer shape)
+FRAME_SKIP e_crc (no state-transformer shape)
+FRAME_SKIP e_branch (no state-transformer shape)
+FRAME_SKIP e_system (no state-transformer shape)
+FRAME_SKIP e_LoadStoreImmediate (no state-transformer shape)
+FRAME_SKIP e_LoadStoreRegister (no state-transformer shape)
+FRAME_SKIP e_load_store (no state-transformer shape)
+FRAME_SKIP Encode (no state-transformer shape)
+FRAME_LEMMAS 61
+BEGIN Next_frame_all REQUIRED cpu=9.5
+TACTIC_USED Next_frame_all 1
+Saved theorem _______ "Next_frame_all"
+PROVED Next_frame_all
+BEGIN Next_frame REQUIRED cpu=9.5
+TACTIC_USED Next_frame 1
+Saved theorem _______ "Next_frame"
+PROVED Next_frame
+CHECKED Next_frame
+⊢ (Next s).TCR_EL1 = s.TCR_EL1 ∧ (Next s).SCTLR_EL1 = s.SCTLR_EL1 ∧
+  (Next s).PSTATE.EL = s.PSTATE.EL
+BEGIN NextStateARM8_frame REQUIRED cpu=9.6
+TACTIC_USED NextStateARM8_frame 1
+Saved theorem _______ "NextStateARM8_frame"
+PROVED NextStateARM8_frame
+CHECKED NextStateARM8_frame
+⊢ ∀s t.
+    NextStateARM8 s = SOME t ⇒
+    t.TCR_EL1 = s.TCR_EL1 ∧ t.SCTLR_EL1 = s.SCTLR_EL1 ∧
+    t.PSTATE.EL = s.PSTATE.EL
+MARK CONTROLS
+CONTROL_OK Next_frame is the literal E1-0003 statement
+CONTROL_OK W is the requested statement
+CONTROL_OK W, Next_frame, NextStateARM8_frame have no hypotheses
+CONTROL_OK frame_Run stored
+MARK CHECKS
+CPU_SECONDS_SCRIPT 9.7
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+STORED_THEOREMS 69
+CLOSURE_NODES 544
+Exporting theory "forge_m1bErasureFrame" ... done.
+Theory "forge_m1bErasureFrame" took 17.4s to build
+EXACT_COMPLETE

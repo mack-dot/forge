@@ -1,0 +1,44 @@
+2026-11-19T08:48:34Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6272.94M  free = 895.06M  (encrypted)
+System-wide memory free percentage: 71%
+START_STATE swap_free_mib=895 memory_free_percent=71
+exit 1
+actual_exit 1 wall 76.865 cpu 96.121 rss_mib 4244 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PF-0003/proof.sml:480: Fail "failed: lexPs_cons lexP_all lex_aux_prefix_ISL sexp_to_string_Expr_prefix_free refund_render_fields_prefix_free refund_strict_parse_no_strict_prefix refund_render_fields_prefix_code"
+59:CHECKED prefix_append_strict
+63:CHECKED every_isPREFIX
+67:CHECKED sexp_print_eqs
+81:CHECKED read_symbol_safe_nil
+87:CHECKED read_string_aux_char_escaped
+93:CHECKED char_escaped_strict_prefix
+98:CHECKED read_string_aux_strict_prefix
+105:CHECKED atom_prefix_ISL
+122:CHECKED lexP_Atom
+126:CHECKED lexPs_nil
+130:CHECKED lexP_Expr
+134:CHECKED lexPs_cons_split
+140:CHECKED lexPs_cons_in_v
+146:CHECKED lexPs_cons_space
+154:SHOW UNSOLVED cons.space
+160:  GOAL ISL
+168:SHOW TRY_ALL_ENTRY lexPs_cons_space
+180:  GOAL ISL
+185:SHOW TRY_ALL_ENTRY lexPs_cons
+186:  GOAL ∀v vs.
+189:SHOW UNSOLVED cons.space
+195:  GOAL ISL
+203:LEMMA_FAILED lexPs_cons HOL_ERR (HOL_ERROR {message = "unsolved goals at cons.space", origins = [{origin_function = "CL", origin_structure = "A2", source_location = Loc_Unknown}]})
+206:LEMMA_FAILED lexP_all (diagnostic only: proved only under the failed lemmas above)
+209:LEMMA_FAILED lex_aux_prefix_ISL (diagnostic only: proved only under the failed lemmas above)
+212:CHECKED parse_ISL_of_lex
+216:LEMMA_FAILED sexp_to_string_Expr_prefix_free (diagnostic only: proved only under the failed lemmas above)
+219:LEMMA_FAILED refund_render_fields_prefix_free (diagnostic only: proved only under the failed lemmas above)
+234:LEMMA_FAILED refund_strict_parse_no_strict_prefix (diagnostic only: proved only under the failed lemmas above)
+237:CHECKED refund_strict_parse_complete
+241:LEMMA_FAILED refund_render_fields_prefix_code (diagnostic only: proved only under the failed lemmas above)
+244:CHECKED N1_trailing_newline_breaks
+251:CHECKED N2_atom_breaks
+257:CHECKED N3_depth0_breaks
+hash_parents exit 0
+go exit 1

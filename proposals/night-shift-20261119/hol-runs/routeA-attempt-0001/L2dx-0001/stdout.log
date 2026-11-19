@@ -1,0 +1,2706 @@
+TIMEOUT_HELPER Timeout.apply loaded
+<<HOL message: Created theory "forge_refundRouteA2dExplore">>
+MARK INPUTS
+INPUT ffi_calls_ok_of_returning_calls
+⊢ ∀P k mc ffi ms.
+    (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ∧
+    (∀ffi1 ms1 i c ab ffi2 nb.
+       ffi1.oracle = ffi.oracle ∧ i < LENGTH mc.ffi_entry_pcs ∧
+       read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+       call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ⇒
+       P i nb ms1) ⇒
+    ffi_calls_ok P mc ffi k ms
+INPUT basis_close_return_lengths
+⊢ ∀ext st c ab st' nb.
+    st.oracle = basis_ffi_oracle ext ∧
+    call_FFI st (ExtCall «close») c ab = FFI_return st' nb ⇒
+    LENGTH c = 8 ∧ 1 ≤ LENGTH ab
+INPUT refund_mc_close_fields
+⊢ ∀b envmc.
+    (refund_mc b envmc).target = arm8_target ∧
+    (refund_mc b envmc).len_reg = 1 ∧ (refund_mc b envmc).len2_reg = 3 ∧
+    (refund_mc b envmc).ffi_names =
+    [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] ∧
+    LENGTH (refund_mc b envmc).ffi_entry_pcs = 4
+INPUT refund_names_are_ExtCall
+⊢ ∀i. i < 4 ⇒
+      ∃nm.
+        [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»]❲
+          i
+        ❳ = ExtCall nm
+INPUT refund_ffi_contract_on_def
+⊢ ∀b dm Vok ffi_i.
+    refund_ffi_contract_on b dm Vok ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ∧ Vok index new_bytes ms2 ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+MARK VOK
+VOK_SHAPE λi nb s.
+  (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+  (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)
+MARK MODEL
+EXPLORE_BEGIN ffi_read_return_length/A_gvs steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_return_length/A_gvs #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀c ab fsys nb fsys'.
+  ffi_read c ab fsys = SOME (FFIreturn nb fsys') ⇒ 4 ≤ LENGTH ab
+    FREE_VARS 
+  GOAL_END ffi_read_return_length/A_gvs #1
+STEP ffi_read_return_length/A_gvs 1 gen goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_return_length/A_gvs #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_read c ab fsys = SOME (FFIreturn nb fsys') ⇒ 4 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, ab:word8 list, c:word8 list
+  GOAL_END ffi_read_return_length/A_gvs #1
+STEP ffi_read_return_length/A_gvs 2 unfold goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_return_length/A_gvs #1 assumptions 0 (ASM 0 = newest)
+    CONCL (case ab of
+   [] => NONE
+ | [n1] => NONE
+ | [n1; n0] => NONE
+ | [n1; n0; pad1] => NONE
+ | n1::n0::pad1::pad2::tll =>
+   OPTION_CHOICE
+     (OPTION_IGNORE_BIND (assert (LENGTH c = 8))
+        (OPTION_IGNORE_BIND (assert (LENGTH tll ≥ w22n [n1; n0]))
+           do
+             (l,fs') <- read (w82n c) fsys (w22n [n1; n0]);
+             SOME
+               (FFIreturn
+                  (0w::
+                     (n2w2 (STRLEN l) ++ [pad2] ++ MAP (n2w ∘ ORD) l ++
+                      DROP (STRLEN l) tll)) fs')
+           od)) (SOME (FFIreturn ab❲0 ↦ 1w❳ fsys))) =
+SOME (FFIreturn nb fsys') ⇒
+4 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, c:word8 list, ab:word8 list
+  GOAL_END ffi_read_return_length/A_gvs #1
+STEP ffi_read_return_length/A_gvs 3 strip goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_return_length/A_gvs #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 (case ab of
+   [] => NONE
+ | [n1] => NONE
+ | [n1; n0] => NONE
+ | [n1; n0; pad1] => NONE
+ | n1::n0::pad1::pad2::tll =>
+   OPTION_CHOICE
+     (OPTION_IGNORE_BIND (assert (LENGTH c = 8))
+        (OPTION_IGNORE_BIND (assert (LENGTH tll ≥ w22n [n1; n0]))
+           do
+             (l,fs') <- read (w82n c) fsys (w22n [n1; n0]);
+             SOME
+               (FFIreturn
+                  (0w::
+                     (n2w2 (STRLEN l) ++ [pad2] ++ MAP (n2w ∘ ORD) l ++
+                      DROP (STRLEN l) tll)) fs')
+           od)) (SOME (FFIreturn ab❲0 ↦ 1w❳ fsys))) =
+SOME (FFIreturn nb fsys')
+    CONCL 4 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, c:word8 list, ab:word8 list
+  GOAL_END ffi_read_return_length/A_gvs #1
+STEP ffi_read_return_length/A_gvs 4 cases goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED ffi_read_return_length/A_gvs after_steps 4
+VALIDATION ffi_read_return_length/A_gvs concl_aconv_goal true hyps 0
+EXPLORE_END ffi_read_return_length/A_gvs
+EXPLORE_BEGIN ffi_read_return_length/C_lengths steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_return_length/C_lengths #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀c ab fsys nb fsys'.
+  ffi_read c ab fsys = SOME (FFIreturn nb fsys') ⇒ 4 ≤ LENGTH ab
+    FREE_VARS 
+  GOAL_END ffi_read_return_length/C_lengths #1
+STEP ffi_read_return_length/C_lengths 1 gen goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_return_length/C_lengths #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_read c ab fsys = SOME (FFIreturn nb fsys') ⇒ 4 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, ab:word8 list, c:word8 list
+  GOAL_END ffi_read_return_length/C_lengths #1
+STEP ffi_read_return_length/C_lengths 2 split goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_return_length/C_lengths #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 ¬(4 ≤ LENGTH ab)
+    CONCL ffi_read c ab fsys ≠ SOME (FFIreturn nb fsys')
+    FREE_VARS c:word8 list, fsys:IO_fs, nb:word8 list, fsys':IO_fs, ab:word8 list
+  GOAL_END ffi_read_return_length/C_lengths #1
+STEP ffi_read_return_length/C_lengths 3 four goals 4
+  GOAL_COUNT 4
+  GOAL_BEGIN ffi_read_return_length/C_lengths #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 LENGTH ab = 0
+    ASM 1 ¬(4 ≤ LENGTH ab)
+    CONCL ffi_read c ab fsys ≠ SOME (FFIreturn nb fsys')
+    FREE_VARS c:word8 list, fsys:IO_fs, nb:word8 list, fsys':IO_fs, ab:word8 list
+  GOAL_END ffi_read_return_length/C_lengths #1
+  GOAL_BEGIN ffi_read_return_length/C_lengths #2 assumptions 2 (ASM 0 = newest)
+    ASM 0 LENGTH ab = 1
+    ASM 1 ¬(4 ≤ LENGTH ab)
+    CONCL ffi_read c ab fsys ≠ SOME (FFIreturn nb fsys')
+    FREE_VARS c:word8 list, fsys:IO_fs, nb:word8 list, fsys':IO_fs, ab:word8 list
+  GOAL_END ffi_read_return_length/C_lengths #2
+  GOAL_BEGIN ffi_read_return_length/C_lengths #3 assumptions 2 (ASM 0 = newest)
+    ASM 0 LENGTH ab = 2
+    ASM 1 ¬(4 ≤ LENGTH ab)
+    CONCL ffi_read c ab fsys ≠ SOME (FFIreturn nb fsys')
+    FREE_VARS c:word8 list, fsys:IO_fs, nb:word8 list, fsys':IO_fs, ab:word8 list
+  GOAL_END ffi_read_return_length/C_lengths #3
+  GOAL_BEGIN ffi_read_return_length/C_lengths #4 assumptions 2 (ASM 0 = newest)
+    ASM 0 LENGTH ab = 3
+    ASM 1 ¬(4 ≤ LENGTH ab)
+    CONCL ffi_read c ab fsys ≠ SOME (FFIreturn nb fsys')
+    FREE_VARS c:word8 list, fsys:IO_fs, nb:word8 list, fsys':IO_fs, ab:word8 list
+  GOAL_END ffi_read_return_length/C_lengths #4
+STEP ffi_read_return_length/C_lengths 4 lists goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED ffi_read_return_length/C_lengths after_steps 4
+VALIDATION ffi_read_return_length/C_lengths concl_aconv_goal true hyps 0
+EXPLORE_END ffi_read_return_length/C_lengths
+PV_BEGIN ffi_read_return_length
+TACTIC_USED ffi_read_return_length 1
+PV_PROVED ffi_read_return_length (not stored)
+⊢ ∀c ab fsys nb fsys'.
+    ffi_read c ab fsys = SOME (FFIreturn nb fsys') ⇒ 4 ≤ LENGTH ab
+EXPLORE_BEGIN ffi_write_return_length/A_gvs steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_write_return_length/A_gvs #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀c ab fsys nb fsys'.
+  ffi_write c ab fsys = SOME (FFIreturn nb fsys') ⇒ 4 ≤ LENGTH ab
+    FREE_VARS 
+  GOAL_END ffi_write_return_length/A_gvs #1
+STEP ffi_write_return_length/A_gvs 1 gen goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_write_return_length/A_gvs #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_write c ab fsys = SOME (FFIreturn nb fsys') ⇒ 4 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, ab:word8 list, c:word8 list
+  GOAL_END ffi_write_return_length/A_gvs #1
+STEP ffi_write_return_length/A_gvs 2 unfold goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_write_return_length/A_gvs #1 assumptions 0 (ASM 0 = newest)
+    CONCL (case ab of
+   [] => NONE
+ | [n1] => NONE
+ | [n1; n0] => NONE
+ | [n1; n0; off1] => NONE
+ | n1::n0::off1::off0::tll =>
+   OPTION_CHOICE
+     (OPTION_IGNORE_BIND (assert (LENGTH c = 8))
+        (OPTION_IGNORE_BIND (assert (LENGTH tll ≥ w22n [off1; off0]))
+           do
+             (nw,fs') <-
+               write (w82n c) (w22n [n1; n0])
+                 (MAP (CHR ∘ w2n) (DROP (w22n [off1; off0]) tll)) fsys;
+             SOME (FFIreturn (0w::(n2w2 nw ++ off0::tll)) fs')
+           od)) (SOME (FFIreturn ab❲0 ↦ 1w❳ fsys))) =
+SOME (FFIreturn nb fsys') ⇒
+4 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, c:word8 list, ab:word8 list
+  GOAL_END ffi_write_return_length/A_gvs #1
+STEP ffi_write_return_length/A_gvs 3 strip goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_write_return_length/A_gvs #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 (case ab of
+   [] => NONE
+ | [n1] => NONE
+ | [n1; n0] => NONE
+ | [n1; n0; off1] => NONE
+ | n1::n0::off1::off0::tll =>
+   OPTION_CHOICE
+     (OPTION_IGNORE_BIND (assert (LENGTH c = 8))
+        (OPTION_IGNORE_BIND (assert (LENGTH tll ≥ w22n [off1; off0]))
+           do
+             (nw,fs') <-
+               write (w82n c) (w22n [n1; n0])
+                 (MAP (CHR ∘ w2n) (DROP (w22n [off1; off0]) tll)) fsys;
+             SOME (FFIreturn (0w::(n2w2 nw ++ off0::tll)) fs')
+           od)) (SOME (FFIreturn ab❲0 ↦ 1w❳ fsys))) =
+SOME (FFIreturn nb fsys')
+    CONCL 4 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, c:word8 list, ab:word8 list
+  GOAL_END ffi_write_return_length/A_gvs #1
+STEP ffi_write_return_length/A_gvs 4 cases goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED ffi_write_return_length/A_gvs after_steps 4
+VALIDATION ffi_write_return_length/A_gvs concl_aconv_goal true hyps 0
+EXPLORE_END ffi_write_return_length/A_gvs
+PV_BEGIN ffi_write_return_length
+TACTIC_USED ffi_write_return_length 1
+PV_PROVED ffi_write_return_length (not stored)
+⊢ ∀c ab fsys nb fsys'.
+    ffi_write c ab fsys = SOME (FFIreturn nb fsys') ⇒ 4 ≤ LENGTH ab
+EXPLORE_BEGIN ffi_open_in_return_length/A_cases steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_open_in_return_length/A_cases #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀c ab fsys nb fsys'.
+  ffi_open_in c ab fsys = SOME (FFIreturn nb fsys') ⇒ 1 ≤ LENGTH ab
+    FREE_VARS 
+  GOAL_END ffi_open_in_return_length/A_cases #1
+STEP ffi_open_in_return_length/A_cases 1 gen goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_open_in_return_length/A_cases #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_open_in c ab fsys = SOME (FFIreturn nb fsys') ⇒ 1 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, ab:word8 list, c:word8 list
+  GOAL_END ffi_open_in_return_length/A_cases #1
+STEP ffi_open_in_return_length/A_cases 2 cases goals 2
+  GOAL_COUNT 2
+  GOAL_BEGIN ffi_open_in_return_length/A_cases #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_open_in c [] fsys = SOME (FFIreturn nb fsys') ⇒ 1 ≤ LENGTH []
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, c:word8 list
+  GOAL_END ffi_open_in_return_length/A_cases #1
+  GOAL_BEGIN ffi_open_in_return_length/A_cases #2 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_open_in c (h::t) fsys = SOME (FFIreturn nb fsys') ⇒ 1 ≤ LENGTH (h::t)
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, t:word8 list, h:word8, c:word8 list
+  GOAL_END ffi_open_in_return_length/A_cases #2
+STEP ffi_open_in_return_length/A_cases 3 simp goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED ffi_open_in_return_length/A_cases after_steps 3
+VALIDATION ffi_open_in_return_length/A_cases concl_aconv_goal true hyps 0
+EXPLORE_END ffi_open_in_return_length/A_cases
+EXPLORE_BEGIN ffi_open_in_return_length/B_close_pattern steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_open_in_return_length/B_close_pattern #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀c ab fsys nb fsys'.
+  ffi_open_in c ab fsys = SOME (FFIreturn nb fsys') ⇒ 1 ≤ LENGTH ab
+    FREE_VARS 
+  GOAL_END ffi_open_in_return_length/B_close_pattern #1
+STEP ffi_open_in_return_length/B_close_pattern 1 rw goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_open_in_return_length/B_close_pattern #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 OPTION_CHOICE
+  (OPTION_IGNORE_BIND (assert (9 ≤ LENGTH ab))
+     do
+       fname <- getNullTermStr c;
+       (fd,fs') <- openFile (implode fname) fsys ReadMode 0;
+       SOME (FFIreturn (0w::(n2w8 fd ++ DROP 9 ab)) fs')
+     od)
+  (OPTION_IGNORE_BIND (assert (0 < LENGTH ab))
+     (SOME (FFIreturn ab❲0 ↦ 1w❳ fsys))) = SOME (FFIreturn nb fsys')
+    CONCL 1 ≤ LENGTH ab
+    FREE_VARS fsys':IO_fs, nb:word8 list, fsys:IO_fs, c:word8 list, ab:word8 list
+  GOAL_END ffi_open_in_return_length/B_close_pattern #1
+STEP ffi_open_in_return_length/B_close_pattern 2 choice goals 0
+  GOAL_COUNT 0
+STEP ffi_open_in_return_length/B_close_pattern 3 pairs goals 0
+  GOAL_COUNT 0
+STEP ffi_open_in_return_length/B_close_pattern 4 arith goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED ffi_open_in_return_length/B_close_pattern after_steps 4
+VALIDATION ffi_open_in_return_length/B_close_pattern concl_aconv_goal true hyps 0
+EXPLORE_END ffi_open_in_return_length/B_close_pattern
+PV_BEGIN ffi_open_in_return_length
+TACTIC_USED ffi_open_in_return_length 1
+PV_PROVED ffi_open_in_return_length (not stored)
+⊢ ∀c ab fsys nb fsys'.
+    ffi_open_in c ab fsys = SOME (FFIreturn nb fsys') ⇒ 1 ≤ LENGTH ab
+EXPLORE_BEGIN basis_read_return_length steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_read_return_length #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀ext st c ab st' nb.
+  st.oracle = basis_ffi_oracle ext ∧
+  call_FFI st (ExtCall «read») c ab = FFI_return st' nb ⇒
+  4 ≤ LENGTH ab
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS 
+  GOAL_END basis_read_return_length #1
+STEP basis_read_return_length 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_read_return_length #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 call_FFI st (ExtCall «read») c ab = FFI_return st' nb
+    ASM 1 st.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_1 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    CONCL 4 ≤ LENGTH ab
+    FREE_VARS c:word8 list, ab:word8 list, st':(mlstring list # IO_fs) ffi_state, nb:word8 list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) ffi_state
+  GOAL_END basis_read_return_length #1
+STEP basis_read_return_length 2 gvs goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_read_return_length #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 LENGTH nb = LENGTH ab
+    ASM 1 ffi_read c ab (SND st.ffi_state) = SOME (FFIreturn nb fs)
+    ASM 2 st.oracle =
+(λname (cls,fs) conf bytes.
+   if name = ExtCall «write» then
+     case ffi_write conf bytes fs of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes fs) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «read» then
+     case ffi_read conf bytes fs of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes fs) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «get_arg_count» then
+     case ffi_get_arg_count conf bytes cls of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes cls) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «get_arg_length» then
+     case ffi_get_arg_length conf bytes cls of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes cls) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «get_arg» then
+     case ffi_get_arg conf bytes cls of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes cls) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «open_in» then
+     case ffi_open_in conf bytes fs of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes fs) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall  ...
+    CONCL 4 ≤ LENGTH ab
+    FREE_VARS c:word8 list, ab:word8 list, nb:word8 list, fs:IO_fs, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) ffi_state
+  GOAL_END basis_read_return_length #1
+STEP basis_read_return_length 3 len goals 0
+  GOAL_COUNT 0
+STEP basis_read_return_length 4 fs goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED basis_read_return_length after_steps 4
+VALIDATION basis_read_return_length concl_aconv_goal true hyps 0
+EXPLORE_END basis_read_return_length
+PV_BEGIN basis_read_return_length
+TACTIC_USED basis_read_return_length 1
+PV_PROVED basis_read_return_length (not stored)
+⊢ ∀ext st c ab st' nb.
+    st.oracle = basis_ffi_oracle ext ∧
+    call_FFI st (ExtCall «read») c ab = FFI_return st' nb ⇒
+    4 ≤ LENGTH ab
+PV_BEGIN basis_write_return_length
+TACTIC_USED basis_write_return_length 1
+PV_PROVED basis_write_return_length (not stored)
+⊢ ∀ext st c ab st' nb.
+    st.oracle = basis_ffi_oracle ext ∧
+    call_FFI st (ExtCall «write») c ab = FFI_return st' nb ⇒
+    4 ≤ LENGTH ab
+EXPLORE_BEGIN basis_open_in_return_length steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_open_in_return_length #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀ext st c ab st' nb.
+  st.oracle = basis_ffi_oracle ext ∧
+  call_FFI st (ExtCall «open_in») c ab = FFI_return st' nb ⇒
+  1 ≤ LENGTH ab
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS 
+  GOAL_END basis_open_in_return_length #1
+STEP basis_open_in_return_length 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_open_in_return_length #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 call_FFI st (ExtCall «open_in») c ab = FFI_return st' nb
+    ASM 1 st.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_1 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    CONCL 1 ≤ LENGTH ab
+    FREE_VARS c:word8 list, ab:word8 list, st':(mlstring list # IO_fs) ffi_state, nb:word8 list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) ffi_state
+  GOAL_END basis_open_in_return_length #1
+STEP basis_open_in_return_length 2 gvs goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_open_in_return_length #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 LENGTH nb = LENGTH ab
+    ASM 1 ffi_open_in c ab (SND st.ffi_state) = SOME (FFIreturn nb fs)
+    ASM 2 st.oracle =
+(λname (cls,fs) conf bytes.
+   if name = ExtCall «write» then
+     case ffi_write conf bytes fs of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes fs) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «read» then
+     case ffi_read conf bytes fs of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes fs) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «get_arg_count» then
+     case ffi_get_arg_count conf bytes cls of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes cls) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «get_arg_length» then
+     case ffi_get_arg_length conf bytes cls of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes cls) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «get_arg» then
+     case ffi_get_arg conf bytes cls of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes cls) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall «open_in» then
+     case ffi_open_in conf bytes fs of
+       NONE => Oracle_final FFI_failed
+     | SOME (FFIreturn bytes fs) => Oracle_return (cls,fs) bytes
+     | SOME FFIdiverge => Oracle_final FFI_failed
+   else if name = ExtCall  ...
+    CONCL 1 ≤ LENGTH ab
+    FREE_VARS c:word8 list, ab:word8 list, nb:word8 list, fs:IO_fs, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, st:(mlstring list # IO_fs) ffi_state
+  GOAL_END basis_open_in_return_length #1
+STEP basis_open_in_return_length 3 len goals 0
+  GOAL_COUNT 0
+STEP basis_open_in_return_length 4 fs goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED basis_open_in_return_length after_steps 4
+VALIDATION basis_open_in_return_length concl_aconv_goal true hyps 0
+EXPLORE_END basis_open_in_return_length
+PV_BEGIN basis_open_in_return_length
+TACTIC_USED basis_open_in_return_length 1
+PV_PROVED basis_open_in_return_length (not stored)
+⊢ ∀ext st c ab st' nb.
+    st.oracle = basis_ffi_oracle ext ∧
+    call_FFI st (ExtCall «open_in») c ab = FFI_return st' nb ⇒
+    1 ≤ LENGTH ab
+MARK REGS
+EXPLORE_BEGIN arm8_ffi_bytearrays_lengths steps 6
+  GOAL_COUNT 1
+  GOAL_BEGIN arm8_ffi_bytearrays_lengths #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀mc ms1 c ab.
+  mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+  read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ⇒
+  LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w)
+    FREE_VARS 
+  GOAL_END arm8_ffi_bytearrays_lengths #1
+STEP arm8_ffi_bytearrays_lengths 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN arm8_ffi_bytearrays_lengths #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 1 mc.len2_reg = 3
+    ASM 2 mc.len_reg = 1
+    ASM 3 mc.target = arm8_target
+    CONCL LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w)
+    FREE_VARS ms1:arm8_state, c:word8 list, ab:word8 list, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END arm8_ffi_bytearrays_lengths #1
+STEP arm8_ffi_bytearrays_lengths 2 mp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN arm8_ffi_bytearrays_lengths #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 mc.len2_reg = 3
+    ASM 1 mc.len_reg = 1
+    ASM 2 mc.target = arm8_target
+    CONCL read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ⇒
+LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w)
+    FREE_VARS ms1:arm8_state, c:word8 list, ab:word8 list, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END arm8_ffi_bytearrays_lengths #1
+STEP arm8_ffi_bytearrays_lengths 3 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN arm8_ffi_bytearrays_lengths #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 mc.len2_reg = 3
+    ASM 1 mc.len_reg = 1
+    ASM 2 mc.target = arm8_target
+    CONCL read_bytearray (ms1.REG (n2w mc.ptr_reg)) (w2n (ms1.REG 1w))
+  (λa. if a ∈ mc.prog_addresses then SOME (ms1.MEM a) else NONE) = SOME c ∧
+read_bytearray (ms1.REG (n2w mc.ptr2_reg)) (w2n (ms1.REG 3w))
+  (λa. if a ∈ mc.prog_addresses then SOME (ms1.MEM a) else NONE) = SOME ab ⇒
+LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w)
+    FREE_VARS ms1:arm8_state, c:word8 list, ab:word8 list, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END arm8_ffi_bytearrays_lengths #1
+STEP arm8_ffi_bytearrays_lengths 4 strip goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN arm8_ffi_bytearrays_lengths #1 assumptions 5 (ASM 0 = newest)
+    ASM 0 read_bytearray (ms1.REG (n2w mc.ptr2_reg)) (w2n (ms1.REG 3w))
+  (λa. if a ∈ mc.prog_addresses then SOME (ms1.MEM a) else NONE) = SOME ab
+    ASM 1 read_bytearray (ms1.REG (n2w mc.ptr_reg)) (w2n (ms1.REG 1w))
+  (λa. if a ∈ mc.prog_addresses then SOME (ms1.MEM a) else NONE) = SOME c
+    ASM 2 mc.len2_reg = 3
+    ASM 3 mc.len_reg = 1
+    ASM 4 mc.target = arm8_target
+    CONCL LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w)
+    FREE_VARS ab:word8 list, ms1:arm8_state, c:word8 list, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END arm8_ffi_bytearrays_lengths #1
+STEP arm8_ffi_bytearrays_lengths 5 len goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN arm8_ffi_bytearrays_lengths #1 assumptions 7 (ASM 0 = newest)
+    ASM 0 LENGTH c = w2n (ms1.REG 1w)
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 read_bytearray (ms1.REG (n2w mc.ptr2_reg)) (w2n (ms1.REG 3w))
+  (λa. if a ∈ mc.prog_addresses then SOME (ms1.MEM a) else NONE) = SOME ab
+    ASM 3 read_bytearray (ms1.REG (n2w mc.ptr_reg)) (w2n (ms1.REG 1w))
+  (λa. if a ∈ mc.prog_addresses then SOME (ms1.MEM a) else NONE) = SOME c
+    ASM 4 mc.len2_reg = 3
+    ASM 5 mc.len_reg = 1
+    ASM 6 mc.target = arm8_target
+    CONCL LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w)
+    FREE_VARS ab:word8 list, ms1:arm8_state, c:word8 list, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END arm8_ffi_bytearrays_lengths #1
+STEP arm8_ffi_bytearrays_lengths 6 fs goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED arm8_ffi_bytearrays_lengths after_steps 6
+VALIDATION arm8_ffi_bytearrays_lengths concl_aconv_goal true hyps 0
+EXPLORE_END arm8_ffi_bytearrays_lengths
+PV_BEGIN arm8_ffi_bytearrays_lengths
+TACTIC_USED arm8_ffi_bytearrays_lengths 1
+PV_PROVED arm8_ffi_bytearrays_lengths (not stored)
+⊢ ∀mc ms1 c ab.
+    mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+    read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ⇒
+    LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w)
+EXPLORE_BEGIN basis_returning_call_has_valid_shape steps 9
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀ext mc ffi1 ms1 i c ab ffi2 nb.
+  mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+  mc.ffi_names❲0❳ = ExtCall «read» ∧ mc.ffi_names❲1❳ = ExtCall «write» ∧
+  mc.ffi_names❲2❳ = ExtCall «close» ∧ mc.ffi_names❲3❳ = ExtCall «open_in» ∧
+  ffi1.oracle = basis_ffi_oracle ext ∧
+  read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+  call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ⇒
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) i nb
+    ms1
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS 
+  GOAL_END basis_returning_call_has_valid_shape #1
+STEP basis_returning_call_has_valid_shape 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 10 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 1 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 2 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_2 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 3 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 4 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 5 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 6 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 7 mc.len2_reg = 3
+    ASM 8 mc.len_reg = 1
+    ASM 9 mc.target = arm8_target
+    CONCL (λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) i nb
+  ms1
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #1
+STEP basis_returning_call_has_valid_shape 2 beta goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 10 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 1 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 2 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_2 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 3 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 4 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 5 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 6 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 7 mc.len2_reg = 3
+    ASM 8 mc.len_reg = 1
+    ASM 9 mc.target = arm8_target
+    CONCL (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (ms1.REG 3w)) ∧
+(i = 2 ⇒ ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w) ∧ (i = 3 ⇒ ms1.REG 3w ≠ 0w)
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #1
+STEP basis_returning_call_has_valid_shape 3 lens goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 1 LENGTH c = w2n (ms1.REG 1w)
+    ASM 2 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (ms1.REG 3w)) ∧
+(i = 2 ⇒ ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w) ∧ (i = 3 ⇒ ms1.REG 3w ≠ 0w)
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #1
+STEP basis_returning_call_has_valid_shape 4 split goals 3
+  GOAL_COUNT 3
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 1 LENGTH c = w2n (ms1.REG 1w)
+    ASM 2 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #2 assumptions 12 (ASM 0 = newest)
+    ASM 0 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 1 LENGTH c = w2n (ms1.REG 1w)
+    ASM 2 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL i = 2 ⇒ ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #2
+  GOAL_BEGIN basis_returning_call_has_valid_shape #3 assumptions 12 (ASM 0 = newest)
+    ASM 0 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 1 LENGTH c = w2n (ms1.REG 1w)
+    ASM 2 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL i = 3 ⇒ ms1.REG 3w ≠ 0w
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #3
+STEP basis_returning_call_has_valid_shape 5 case goals 4
+  GOAL_COUNT 4
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 13 (ASM 0 = newest)
+    ASM 0 i = 0
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 LENGTH c = w2n (ms1.REG 1w)
+    ASM 3 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 4 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 5 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_5 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 6 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 7 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 8 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 9 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #2 assumptions 13 (ASM 0 = newest)
+    ASM 0 i = 1
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 LENGTH c = w2n (ms1.REG 1w)
+    ASM 3 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 4 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 5 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_5 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 6 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 7 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 8 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 9 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #2
+  GOAL_BEGIN basis_returning_call_has_valid_shape #3 assumptions 13 (ASM 0 = newest)
+    ASM 0 i = 2
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 LENGTH c = w2n (ms1.REG 1w)
+    ASM 3 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 4 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 5 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_5 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 6 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 7 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 8 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 9 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #3
+  GOAL_BEGIN basis_returning_call_has_valid_shape #4 assumptions 13 (ASM 0 = newest)
+    ASM 0 i = 3
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 LENGTH c = w2n (ms1.REG 1w)
+    ASM 3 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 4 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 5 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_5 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 6 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 7 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 8 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 9 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL ms1.REG 3w ≠ 0w
+    FREE_VARS i:num, ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #4
+STEP basis_returning_call_has_valid_shape 6 rveq goals 4
+  GOAL_COUNT 4
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 1 LENGTH c = w2n (ms1.REG 1w)
+    ASM 2 call_FFI ffi1 mc.ffi_names❲0❳ c ab = FFI_return ffi2 nb
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #2 assumptions 12 (ASM 0 = newest)
+    ASM 0 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 1 LENGTH c = w2n (ms1.REG 1w)
+    ASM 2 call_FFI ffi1 mc.ffi_names❲1❳ c ab = FFI_return ffi2 nb
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #2
+  GOAL_BEGIN basis_returning_call_has_valid_shape #3 assumptions 12 (ASM 0 = newest)
+    ASM 0 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 1 LENGTH c = w2n (ms1.REG 1w)
+    ASM 2 call_FFI ffi1 mc.ffi_names❲2❳ c ab = FFI_return ffi2 nb
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #3
+  GOAL_BEGIN basis_returning_call_has_valid_shape #4 assumptions 12 (ASM 0 = newest)
+    ASM 0 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 1 LENGTH c = w2n (ms1.REG 1w)
+    ASM 2 call_FFI ffi1 mc.ffi_names❲3❳ c ab = FFI_return ffi2 nb
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL ms1.REG 3w ≠ 0w
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #4
+STEP basis_returning_call_has_valid_shape 7 name goals 4
+  GOAL_COUNT 4
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 (ExtCall «read») c ab = FFI_return ffi2 nb
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 LENGTH c = w2n (ms1.REG 1w)
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #2 assumptions 12 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 (ExtCall «write») c ab = FFI_return ffi2 nb
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 LENGTH c = w2n (ms1.REG 1w)
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #2
+  GOAL_BEGIN basis_returning_call_has_valid_shape #3 assumptions 12 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 (ExtCall «close») c ab = FFI_return ffi2 nb
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 LENGTH c = w2n (ms1.REG 1w)
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #3
+  GOAL_BEGIN basis_returning_call_has_valid_shape #4 assumptions 12 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 (ExtCall «open_in») c ab = FFI_return ffi2 nb
+    ASM 1 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 2 LENGTH c = w2n (ms1.REG 1w)
+    ASM 3 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 4 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 mc.len2_reg = 3
+    ASM 10 mc.len_reg = 1
+    ASM 11 mc.target = arm8_target
+    CONCL ms1.REG 3w ≠ 0w
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #4
+STEP basis_returning_call_has_valid_shape 8 ret goals 4
+  GOAL_COUNT 4
+  GOAL_BEGIN basis_returning_call_has_valid_shape #1 assumptions 13 (ASM 0 = newest)
+    ASM 0 4 ≤ LENGTH ab
+    ASM 1 call_FFI ffi1 (ExtCall «read») c ab = FFI_return ffi2 nb
+    ASM 2 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 3 LENGTH c = w2n (ms1.REG 1w)
+    ASM 4 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 5 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_5 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 6 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 7 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 8 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 9 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #1
+  GOAL_BEGIN basis_returning_call_has_valid_shape #2 assumptions 13 (ASM 0 = newest)
+    ASM 0 4 ≤ LENGTH ab
+    ASM 1 call_FFI ffi1 (ExtCall «write») c ab = FFI_return ffi2 nb
+    ASM 2 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 3 LENGTH c = w2n (ms1.REG 1w)
+    ASM 4 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 5 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_5 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 6 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 7 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 8 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 9 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL 4 ≤ w2n (ms1.REG 3w)
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #2
+  GOAL_BEGIN basis_returning_call_has_valid_shape #3 assumptions 14 (ASM 0 = newest)
+    ASM 0 1 ≤ LENGTH ab
+    ASM 1 LENGTH c = 8
+    ASM 2 call_FFI ffi1 (ExtCall «close») c ab = FFI_return ffi2 nb
+    ASM 3 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 4 LENGTH c = w2n (ms1.REG 1w)
+    ASM 5 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 6 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_6 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 7 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 8 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 9 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 10 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 11 mc.len2_reg = 3
+    ASM 12 mc.len_reg = 1
+    ASM 13 mc.target = arm8_target
+    CONCL ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #3
+  GOAL_BEGIN basis_returning_call_has_valid_shape #4 assumptions 13 (ASM 0 = newest)
+    ASM 0 1 ≤ LENGTH ab
+    ASM 1 call_FFI ffi1 (ExtCall «open_in») c ab = FFI_return ffi2 nb
+    ASM 2 LENGTH ab = w2n (ms1.REG 3w)
+    ASM 3 LENGTH c = w2n (ms1.REG 1w)
+    ASM 4 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 5 ffi1.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_5 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 6 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 7 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 8 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 9 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL ms1.REG 3w ≠ 0w
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, ffi1:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_call_has_valid_shape #4
+STEP basis_returning_call_has_valid_shape 9 finish goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED basis_returning_call_has_valid_shape after_steps 9
+VALIDATION basis_returning_call_has_valid_shape concl_aconv_goal true hyps 0
+EXPLORE_END basis_returning_call_has_valid_shape
+PV_BEGIN basis_returning_call_has_valid_shape
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRouteA2dExplore)>>
+TACTIC_USED basis_returning_call_has_valid_shape 1
+PV_PROVED basis_returning_call_has_valid_shape (not stored)
+⊢ ∀ext mc ffi1 ms1 i c ab ffi2 nb.
+    mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+    mc.ffi_names❲0❳ = ExtCall «read» ∧ mc.ffi_names❲1❳ = ExtCall «write» ∧
+    mc.ffi_names❲2❳ = ExtCall «close» ∧ mc.ffi_names❲3❳ = ExtCall «open_in» ∧
+    ffi1.oracle = basis_ffi_oracle ext ∧
+    read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+    call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ⇒
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) i
+      nb ms1
+MARK CALLS
+EXPLORE_BEGIN basis_returning_calls_have_valid_shapes steps 8
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_calls_have_valid_shapes #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀ext k mc ffi ms.
+  mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+  (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ∧
+  mc.ffi_names❲0❳ = ExtCall «read» ∧ mc.ffi_names❲1❳ = ExtCall «write» ∧
+  mc.ffi_names❲2❳ = ExtCall «close» ∧ mc.ffi_names❲3❳ = ExtCall «open_in» ∧
+  ffi.oracle = basis_ffi_oracle ext ⇒
+  ffi_calls_ok
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) mc
+    ffi k ms
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS 
+  GOAL_END basis_returning_calls_have_valid_shapes #1
+STEP basis_returning_calls_have_valid_shapes 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_calls_have_valid_shapes #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_0 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 1 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 2 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 3 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 4 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 5 ∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm
+    ASM 6 mc.len2_reg = 3
+    ASM 7 mc.len_reg = 1
+    ASM 8 mc.target = arm8_target
+    CONCL ffi_calls_ok
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) mc
+  ffi k ms
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS k:num, ms:arm8_state, ffi:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_calls_have_valid_shapes #1
+STEP basis_returning_calls_have_valid_shapes 2 G goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_calls_have_valid_shapes #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_0 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 1 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 2 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 3 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 4 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 5 ∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm
+    ASM 6 mc.len2_reg = 3
+    ASM 7 mc.len_reg = 1
+    ASM 8 mc.target = arm8_target
+    CONCL (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ∧
+∀ffi1 ms1 i c ab ffi2 nb.
+  ffi1.oracle = ffi.oracle ∧ i < LENGTH mc.ffi_entry_pcs ∧
+  read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+  call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ⇒
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) i nb
+    ms1
+    FREE_VARS ffi:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_calls_have_valid_shapes #1
+STEP basis_returning_calls_have_valid_shapes 3 names goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_calls_have_valid_shapes #1 assumptions 9 (ASM 0 = newest)
+    ASM 0 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_0 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 1 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 2 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 3 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 4 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 5 ∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm
+    ASM 6 mc.len2_reg = 3
+    ASM 7 mc.len_reg = 1
+    ASM 8 mc.target = arm8_target
+    CONCL ∀ffi1 ms1 i c ab ffi2 nb.
+  ffi1.oracle = ffi.oracle ∧ i < LENGTH mc.ffi_entry_pcs ∧
+  read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+  call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ⇒
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) i nb
+    ms1
+    FREE_VARS ffi:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_calls_have_valid_shapes #1
+STEP basis_returning_calls_have_valid_shapes 4 leaf goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_calls_have_valid_shapes #1 assumptions 13 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 1 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 2 i < LENGTH mc.ffi_entry_pcs
+    ASM 3 ffi1.oracle = ffi.oracle
+    ASM 4 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 ∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL (λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) i nb
+  ms1
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, i:num, ffi1:(mlstring list # IO_fs) ffi_state, ffi:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_calls_have_valid_shapes #1
+STEP basis_returning_calls_have_valid_shapes 5 beta goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_calls_have_valid_shapes #1 assumptions 13 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 1 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 2 i < LENGTH mc.ffi_entry_pcs
+    ASM 3 ffi1.oracle = ffi.oracle
+    ASM 4 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 ∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (ms1.REG 3w)) ∧
+(i = 2 ⇒ ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w) ∧ (i = 3 ⇒ ms1.REG 3w ≠ 0w)
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, i:num, ffi1:(mlstring list # IO_fs) ffi_state, ffi:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_calls_have_valid_shapes #1
+STEP basis_returning_calls_have_valid_shapes 6 spec goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_calls_have_valid_shapes #1 assumptions 13 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 1 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 2 i < LENGTH mc.ffi_entry_pcs
+    ASM 3 ffi1.oracle = ffi.oracle
+    ASM 4 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 ∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL (mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+ mc.ffi_names❲0❳ = ExtCall «read» ∧ mc.ffi_names❲1❳ = ExtCall «write» ∧
+ mc.ffi_names❲2❳ = ExtCall «close» ∧ mc.ffi_names❲3❳ = ExtCall «open_in» ∧
+ ffi1.oracle = basis_ffi_oracle ext ∧
+ read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+ call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ⇒
+ (λi nb s.
+    (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+    (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) i nb
+   ms1) ⇒
+(i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (ms1.REG 3w)) ∧
+(i = 2 ⇒ ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w) ∧ (i = 3 ⇒ ms1.REG 3w ≠ 0w)
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, i:num, ffi1:(mlstring list # IO_fs) ffi_state, ffi:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_calls_have_valid_shapes #1
+STEP basis_returning_calls_have_valid_shapes 7 impl goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_returning_calls_have_valid_shapes #1 assumptions 13 (ASM 0 = newest)
+    ASM 0 call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb
+    ASM 1 read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+    ASM 2 i < LENGTH mc.ffi_entry_pcs
+    ASM 3 ffi1.oracle = ffi.oracle
+    ASM 4 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_4 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    ASM 5 mc.ffi_names❲3❳ = ExtCall «open_in»
+    ASM 6 mc.ffi_names❲2❳ = ExtCall «close»
+    ASM 7 mc.ffi_names❲1❳ = ExtCall «write»
+    ASM 8 mc.ffi_names❲0❳ = ExtCall «read»
+    ASM 9 ∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm
+    ASM 10 mc.len2_reg = 3
+    ASM 11 mc.len_reg = 1
+    ASM 12 mc.target = arm8_target
+    CONCL (λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) i nb
+  ms1 ⇒
+(i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (ms1.REG 3w)) ∧
+(i = 2 ⇒ ms1.REG 1w = 8w ∧ ms1.REG 3w ≠ 0w) ∧ (i = 3 ⇒ ms1.REG 3w ≠ 0w)
+    FREE_VARS ffi2:(mlstring list # IO_fs) ffi_state, nb:word8 list, ms1:arm8_state, c:word8 list, ab:word8 list, i:num, ffi1:(mlstring list # IO_fs) ffi_state, ffi:(mlstring list # IO_fs) ffi_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, mc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config
+  GOAL_END basis_returning_calls_have_valid_shapes #1
+STEP basis_returning_calls_have_valid_shapes 8 accept goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED basis_returning_calls_have_valid_shapes after_steps 8
+VALIDATION basis_returning_calls_have_valid_shapes concl_aconv_goal true hyps 0
+EXPLORE_END basis_returning_calls_have_valid_shapes
+PV_BEGIN basis_returning_calls_have_valid_shapes
+TACTIC_USED basis_returning_calls_have_valid_shapes 1
+PV_PROVED basis_returning_calls_have_valid_shapes (not stored)
+⊢ ∀ext k mc ffi ms.
+    mc.target = arm8_target ∧ mc.len_reg = 1 ∧ mc.len2_reg = 3 ∧
+    (∀i. i < LENGTH mc.ffi_entry_pcs ⇒ ∃nm. mc.ffi_names❲i❳ = ExtCall nm) ∧
+    mc.ffi_names❲0❳ = ExtCall «read» ∧ mc.ffi_names❲1❳ = ExtCall «write» ∧
+    mc.ffi_names❲2❳ = ExtCall «close» ∧ mc.ffi_names❲3❳ = ExtCall «open_in» ∧
+    ffi.oracle = basis_ffi_oracle ext ⇒
+    ffi_calls_ok
+      (λi nb s.
+         (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+         (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+      mc ffi k ms
+EXPLORE_BEGIN refund_ffi_calls_ok_shape steps 5
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_ffi_calls_ok_shape #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀b envmc ext ffi k ms.
+  ffi.oracle = basis_ffi_oracle ext ⇒
+  ffi_calls_ok
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    (refund_mc b envmc) ffi k ms
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS 
+  GOAL_END refund_ffi_calls_ok_shape #1
+STEP refund_ffi_calls_ok_shape 1 intro goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_ffi_calls_ok_shape #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_0 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    CONCL ffi_calls_ok
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  (refund_mc b envmc) ffi k ms
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS b:word64, envmc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config, k:num, ms:arm8_state, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, ffi:(mlstring list # IO_fs) ffi_state
+  GOAL_END refund_ffi_calls_ok_shape #1
+STEP refund_ffi_calls_ok_shape 2 mmp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_ffi_calls_ok_shape #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_0 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    CONCL ∃ext.
+  (refund_mc b envmc).target = arm8_target ∧
+  (refund_mc b envmc).len_reg = 1 ∧ (refund_mc b envmc).len2_reg = 3 ∧
+  (∀i. i < LENGTH (refund_mc b envmc).ffi_entry_pcs ⇒
+       ∃nm. (refund_mc b envmc).ffi_names❲i❳ = ExtCall nm) ∧
+  (refund_mc b envmc).ffi_names❲0❳ = ExtCall «read» ∧
+  (refund_mc b envmc).ffi_names❲1❳ = ExtCall «write» ∧
+  (refund_mc b envmc).ffi_names❲2❳ = ExtCall «close» ∧
+  (refund_mc b envmc).ffi_names❲3❳ = ExtCall «open_in» ∧
+  ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS b:word64, envmc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, ffi:(mlstring list # IO_fs) ffi_state
+  GOAL_END refund_ffi_calls_ok_shape #1
+STEP refund_ffi_calls_ok_shape 3 ex goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_ffi_calls_ok_shape #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_ASM_0 basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    CONCL (refund_mc b envmc).target = arm8_target ∧ (refund_mc b envmc).len_reg = 1 ∧
+(refund_mc b envmc).len2_reg = 3 ∧
+(∀i. i < LENGTH (refund_mc b envmc).ffi_entry_pcs ⇒
+     ∃nm. (refund_mc b envmc).ffi_names❲i❳ = ExtCall nm) ∧
+(refund_mc b envmc).ffi_names❲0❳ = ExtCall «read» ∧
+(refund_mc b envmc).ffi_names❲1❳ = ExtCall «write» ∧
+(refund_mc b envmc).ffi_names❲2❳ = ExtCall «close» ∧
+(refund_mc b envmc).ffi_names❲3❳ = ExtCall «open_in» ∧
+ffi.oracle = basis_ffi_oracle ext
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS b:word64, envmc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, ffi:(mlstring list # IO_fs) ffi_state
+  GOAL_END refund_ffi_calls_ok_shape #1
+STEP refund_ffi_calls_ok_shape 4 fs goals 0
+  GOAL_COUNT 0
+STEP refund_ffi_calls_ok_shape 5 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED refund_ffi_calls_ok_shape after_steps 5
+VALIDATION refund_ffi_calls_ok_shape concl_aconv_goal true hyps 0
+EXPLORE_END refund_ffi_calls_ok_shape
+PV_BEGIN refund_ffi_calls_ok_shape
+TACTIC_USED refund_ffi_calls_ok_shape 1
+PV_PROVED refund_ffi_calls_ok_shape (not stored)
+⊢ ∀b envmc ext ffi k ms.
+    ffi.oracle = basis_ffi_oracle ext ⇒
+    ffi_calls_ok
+      (λi nb s.
+         (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+         (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+      (refund_mc b envmc) ffi k ms
+EXPLORE_BEGIN refund_ffi_calls_ok_shape_totalised steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_ffi_calls_ok_shape_totalised #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀sl envmc Vok ext cl fs k ms.
+  ffi_calls_ok
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    (refund_mc (sl + 0x1000040D0w)
+       (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+    (basis_ffi ext cl fs) k ms
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS 
+  GOAL_END refund_ffi_calls_ok_shape_totalised #1
+STEP refund_ffi_calls_ok_shape_totalised 1 gen goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_ffi_calls_ok_shape_totalised #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_calls_ok
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  (refund_mc (sl + 0x1000040D0w)
+     (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+  (basis_ffi ext cl fs) k ms
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS ms:arm8_state, k:num, fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, envmc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config, Vok:num -> word8 list -> arm8_state -> bool, sl:word64
+  GOAL_END refund_ffi_calls_ok_shape_totalised #1
+STEP refund_ffi_calls_ok_shape_totalised 2 mmp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_ffi_calls_ok_shape_totalised #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∃ext'. (basis_ffi ext cl fs).oracle = basis_ffi_oracle ext'
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+  GOAL_END refund_ffi_calls_ok_shape_totalised #1
+STEP refund_ffi_calls_ok_shape_totalised 3 ex goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_ffi_calls_ok_shape_totalised #1 assumptions 0 (ASM 0 = newest)
+    CONCL (basis_ffi ext cl fs).oracle = basis_ffi_oracle ext
+    CONST_IN_CONCL basis_ffi$basis_ffi_oracle :(ffiname ->
+ mlstring list # IO_fs ->
+ word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result) ->
+ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+    FREE_VARS fs:IO_fs, cl:mlstring list, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result
+  GOAL_END refund_ffi_calls_ok_shape_totalised #1
+STEP refund_ffi_calls_ok_shape_totalised 4 simp goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED refund_ffi_calls_ok_shape_totalised after_steps 4
+VALIDATION refund_ffi_calls_ok_shape_totalised concl_aconv_goal true hyps 0
+EXPLORE_END refund_ffi_calls_ok_shape_totalised
+PV_BEGIN refund_ffi_calls_ok_shape_totalised
+TACTIC_USED refund_ffi_calls_ok_shape_totalised 1
+PV_PROVED refund_ffi_calls_ok_shape_totalised (not stored)
+⊢ ∀sl envmc Vok ext cl fs k ms.
+    ffi_calls_ok
+      (λi nb s.
+         (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+         (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+      (refund_mc (sl + 0x1000040D0w)
+         (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+      (basis_ffi ext cl fs) k ms
+MARK STRUCT
+CONTROL_OK VokS has the type of Vok
+L2R_THIRD_PREMISE_WITH_VOKS ∀ms k.
+  arm8_run 27 s = SOME ms ⇒
+  ffi_calls_ok
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    (refund_mc (sl + 0x1000040D0w)
+       (envmc with
+        ffi_interfer :=
+          refund_ffi_tot
+            (λi nb s.
+               (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+               (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧
+               (i = 3 ⇒ s.REG 3w ≠ 0w)) envmc.ffi_interfer))
+    (basis_ffi ext cl fs) k ms
+EXPLORE_BEGIN refund_l2r_third_premise_shape steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_l2r_third_premise_shape #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fs cl ext envmc sl s ms k.
+  arm8_run 27 s = SOME ms ⇒
+  ffi_calls_ok
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    (refund_mc (sl + 0x1000040D0w)
+       (envmc with
+        ffi_interfer :=
+          refund_ffi_tot
+            (λi nb s.
+               (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+               (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧
+               (i = 3 ⇒ s.REG 3w ≠ 0w)) envmc.ffi_interfer))
+    (basis_ffi ext cl fs) k ms
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    CONST_IN_CONCL forge_refundCmlMainStep$arm8_run :num -> arm8_state -> arm8_state option
+    FREE_VARS 
+  GOAL_END refund_l2r_third_premise_shape #1
+STEP refund_l2r_third_premise_shape 1 gen goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_l2r_third_premise_shape #1 assumptions 1 (ASM 0 = newest)
+    ASM 0 arm8_run 27 s = SOME ms
+    CONST_IN_ASM_0 forge_refundCmlMainStep$arm8_run :num -> arm8_state -> arm8_state option
+    CONCL ffi_calls_ok
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  (refund_mc (sl + 0x1000040D0w)
+     (envmc with
+      ffi_interfer :=
+        refund_ffi_tot
+          (λi nb s.
+             (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+             (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧
+             (i = 3 ⇒ s.REG 3w ≠ 0w)) envmc.ffi_interfer))
+  (basis_ffi ext cl fs) k ms
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS sl:word64, envmc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config, ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, cl:mlstring list, fs:IO_fs, k:num, ms:arm8_state, s:arm8_state
+  GOAL_END refund_l2r_third_premise_shape #1
+STEP refund_l2r_third_premise_shape 2 close goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED refund_l2r_third_premise_shape after_steps 2
+VALIDATION refund_l2r_third_premise_shape concl_aconv_goal true hyps 0
+EXPLORE_END refund_l2r_third_premise_shape
+PV_BEGIN refund_l2r_third_premise_shape
+TACTIC_USED refund_l2r_third_premise_shape 1
+PV_PROVED refund_l2r_third_premise_shape (not stored)
+⊢ ∀fs cl ext envmc sl s ms k.
+    arm8_run 27 s = SOME ms ⇒
+    ffi_calls_ok
+      (λi nb s.
+         (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+         (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+      (refund_mc (sl + 0x1000040D0w)
+         (envmc with
+          ffi_interfer :=
+            refund_ffi_tot
+              (λi nb s.
+                 (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+                 (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧
+                 (i = 3 ⇒ s.REG 3w ≠ 0w)) envmc.ffi_interfer))
+      (basis_ffi ext cl fs) k ms
+CONTROL_OK P3S is premise 3 of refund_profile_a_sl_reach with Vok := VokS
+MARK ASSEMBLY
+EXPLORE_BEGIN refund_profile_a_sl_shape steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refund_profile_a_sl_shape #1 assumptions 0 (ASM 0 = newest)
+    CONCL refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+refund_heap_clear_sl sl h e ∧
+envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer ∧
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+∃ms.
+  (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+  (∀j ms' ffi'.
+     evaluate (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) j
+       ms = (TimeOut,ms',ffi') ⇒
+     (refund_mc (sl + 0x1000040D0w) envmc).target.get_pc ms' ≠
+     (refund_mc (sl + 0x1000040D0w) envmc).install_pc) ∧
+  ∃io_events.
+    machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+      ms ⊆ extend_with_resource_limit {Terminate Success io_events} ∧
+    extract_fs ext (cl,fs) io_events =
+    SOME
+      (add_stdout (fastForwardFD fs 0)
+         (refund_render_fields
+            (refund_fields charge request original remaining enabled opened
+               candidate amount reason)))
+    CONST_IN_CONCL forge_refundCmlMainStep$arm8_run :num -> arm8_state -> arm8_state option
+    CONST_IN_CONCL forge_refundRouteA1$refund_ffi_contract_on :word64 ->
+(word64 -> bool) ->
+(num -> word8 list -> arm8_state -> bool) ->
+(num -> num # word8 list # arm8_state -> arm8_state) -> bool
+    FREE_VARS ext:ffiname ->
+mlstring list # IO_fs ->
+word8 list -> word8 list -> (mlstring list # IO_fs) oracle_result, cl:mlstring list, reason:mlstring, amount:int, candidate:bool, opened:bool, enabled:bool, remaining:int, original:int, request:mlstring, charge:mlstring, fs:IO_fs, envmc:(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config, e:word64, stk:word64, h:word64, s:arm8_state, sl:word64
+  GOAL_END refund_profile_a_sl_shape #1
+STEP refund_profile_a_sl_shape 1 fwd goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED refund_profile_a_sl_shape after_steps 1
+VALIDATION refund_profile_a_sl_shape concl_aconv_goal true hyps 0
+EXPLORE_END refund_profile_a_sl_shape
+PV_BEGIN refund_profile_a_sl_shape
+TACTIC_USED refund_profile_a_sl_shape 1
+PV_PROVED refund_profile_a_sl_shape (not stored)
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) j
+         ms = (TimeOut,ms',ffi') ⇒
+       (refund_mc (sl + 0x1000040D0w) envmc).target.get_pc ms' ≠
+       (refund_mc (sl + 0x1000040D0w) envmc).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+        ms ⊆ extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+MARK CONTROLS
+EXPLORE_BEGIN basis_read_call_returns_at_a_concrete_state steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_read_call_returns_at_a_concrete_state #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬ffi_calls_ok (λi nb s. i ≠ 0)
+  <|prog_addresses := 𝕌(:word64); shared_addresses := ∅;
+    ffi_entry_pcs := [0w; 16w; 32w; 48w];
+    ffi_names :=
+      [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»];
+    ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3;
+    ffi_interfer := ARB; callee_saved_regs := []; next_interfer := ARB;
+    halt_pc := 4w; install_pc := 8w; install_interfer := ARB;
+    target := arm8_target; mmio_info := []|>
+  (basis_ffi no_ext []
+     <|inode_tbl := []; files := []; infds := []; numchars := [||];
+       maxFD := 0|>) (SUC 0)
+  <|PC := 0w; REG := (λr. if r = 1w then 8w else if r = 3w then 4w else 0w);
+    MEM := (λa. 0w)|>
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS 
+  GOAL_END basis_read_call_returns_at_a_concrete_state #1
+STEP basis_read_call_returns_at_a_concrete_state 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_read_call_returns_at_a_concrete_state #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬case read_bytearray 0w 8 (λa. SOME 0w) of
+  NONE => T
+| SOME bytes =>
+  case read_bytearray 0w 4 (λa. SOME 0w) of
+    NONE => T
+  | SOME bytes2 =>
+    case
+      case
+        (basis_ffi no_ext []
+           <|inode_tbl := []; files := []; infds := []; numchars := [||];
+             maxFD := 0|>).oracle (ExtCall «read»)
+          (basis_ffi no_ext []
+             <|inode_tbl := []; files := []; infds := []; numchars := [||];
+               maxFD := 0|>).ffi_state bytes bytes2
+      of
+        Oracle_return ffi' bytes' =>
+          if LENGTH bytes' = LENGTH bytes2 then
+            FFI_return
+              (basis_ffi no_ext []
+                 <|inode_tbl := []; files := []; infds := [];
+                   numchars := [||]; maxFD := 0|> with
+               <|ffi_state := ffi';
+                 io_events :=
+                   (basis_ffi no_ext []
+                      <|inode_tbl := []; files := []; infds := [];
+                        numchars := [||]; maxFD := 0|>).io_events ++
+                   [IO_event (ExtCall «read») bytes (ZIP (bytes2,bytes'))]|>)
+              bytes'
+          else
+            FFI_final (Final_event (ExtCall «read») bytes bytes2 FFI_failed)
+      | Oracle_final outcome =>
+        FFI_final (Final_event (ExtCall «read») bytes bytes2 outcome)
+    of
+      FFI_return new_ffi nb => F
+    | FFI_final outcome => T
+    FREE_VARS 
+  GOAL_END basis_read_call_returns_at_a_concrete_state #1
+STEP basis_read_call_returns_at_a_concrete_state 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED basis_read_call_returns_at_a_concrete_state after_steps 2
+VALIDATION basis_read_call_returns_at_a_concrete_state concl_aconv_goal true hyps 0
+EXPLORE_END basis_read_call_returns_at_a_concrete_state
+EXPLORE_BEGIN shape_predicate_holds_at_the_concrete_read_call steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN shape_predicate_holds_at_the_concrete_read_call #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_calls_ok
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  <|prog_addresses := 𝕌(:word64); shared_addresses := ∅;
+    ffi_entry_pcs := [0w; 16w; 32w; 48w];
+    ffi_names :=
+      [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»];
+    ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3;
+    ffi_interfer := ARB; callee_saved_regs := []; next_interfer := ARB;
+    halt_pc := 4w; install_pc := 8w; install_interfer := ARB;
+    target := arm8_target; mmio_info := []|>
+  (basis_ffi no_ext []
+     <|inode_tbl := []; files := []; infds := []; numchars := [||];
+       maxFD := 0|>) (SUC 0)
+  <|PC := 0w; REG := (λr. if r = 1w then 8w else if r = 3w then 4w else 0w);
+    MEM := (λa. 0w)|>
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS 
+  GOAL_END shape_predicate_holds_at_the_concrete_read_call #1
+STEP shape_predicate_holds_at_the_concrete_read_call 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN shape_predicate_holds_at_the_concrete_read_call #1 assumptions 0 (ASM 0 = newest)
+    CONCL case read_bytearray 0w 8 (λa. SOME 0w) of
+  NONE => T
+| SOME bytes =>
+  case read_bytearray 0w 4 (λa. SOME 0w) of
+    NONE => T
+  | SOME bytes2 =>
+    case
+      case
+        (basis_ffi no_ext []
+           <|inode_tbl := []; files := []; infds := []; numchars := [||];
+             maxFD := 0|>).oracle (ExtCall «read»)
+          (basis_ffi no_ext []
+             <|inode_tbl := []; files := []; infds := []; numchars := [||];
+               maxFD := 0|>).ffi_state bytes bytes2
+      of
+        Oracle_return ffi' bytes' =>
+          if LENGTH bytes' = LENGTH bytes2 then
+            FFI_return
+              (basis_ffi no_ext []
+                 <|inode_tbl := []; files := []; infds := [];
+                   numchars := [||]; maxFD := 0|> with
+               <|ffi_state := ffi';
+                 io_events :=
+                   (basis_ffi no_ext []
+                      <|inode_tbl := []; files := []; infds := [];
+                        numchars := [||]; maxFD := 0|>).io_events ++
+                   [IO_event (ExtCall «read») bytes (ZIP (bytes2,bytes'))]|>)
+              bytes'
+          else
+            FFI_final (Final_event (ExtCall «read») bytes bytes2 FFI_failed)
+      | Oracle_final outcome =>
+        FFI_final (Final_event (ExtCall «read») bytes bytes2 outcome)
+    of
+      FFI_return new_ffi nb => T
+    | FFI_final outcome => T
+    FREE_VARS 
+  GOAL_END shape_predicate_holds_at_the_concrete_read_call #1
+STEP shape_predicate_holds_at_the_concrete_read_call 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED shape_predicate_holds_at_the_concrete_read_call after_steps 2
+VALIDATION shape_predicate_holds_at_the_concrete_read_call concl_aconv_goal true hyps 0
+EXPLORE_END shape_predicate_holds_at_the_concrete_read_call
+EXPLORE_BEGIN basis_write_call_returns_at_a_concrete_state steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_write_call_returns_at_a_concrete_state #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬ffi_calls_ok (λi nb s. i ≠ 1)
+  <|prog_addresses := 𝕌(:word64); shared_addresses := ∅;
+    ffi_entry_pcs := [0w; 16w; 32w; 48w];
+    ffi_names :=
+      [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»];
+    ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3;
+    ffi_interfer := ARB; callee_saved_regs := []; next_interfer := ARB;
+    halt_pc := 4w; install_pc := 8w; install_interfer := ARB;
+    target := arm8_target; mmio_info := []|>
+  (basis_ffi no_ext []
+     <|inode_tbl := []; files := []; infds := []; numchars := [||];
+       maxFD := 0|>) (SUC 0)
+  <|PC := 16w; REG := (λr. if r = 1w then 8w else if r = 3w then 4w else 0w);
+    MEM := (λa. 0w)|>
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS 
+  GOAL_END basis_write_call_returns_at_a_concrete_state #1
+STEP basis_write_call_returns_at_a_concrete_state 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_write_call_returns_at_a_concrete_state #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬case read_bytearray 0w 8 (λa. SOME 0w) of
+  NONE => T
+| SOME bytes =>
+  case read_bytearray 0w 4 (λa. SOME 0w) of
+    NONE => T
+  | SOME bytes2 =>
+    case
+      case
+        (basis_ffi no_ext []
+           <|inode_tbl := []; files := []; infds := []; numchars := [||];
+             maxFD := 0|>).oracle (ExtCall «write»)
+          (basis_ffi no_ext []
+             <|inode_tbl := []; files := []; infds := []; numchars := [||];
+               maxFD := 0|>).ffi_state bytes bytes2
+      of
+        Oracle_return ffi' bytes' =>
+          if LENGTH bytes' = LENGTH bytes2 then
+            FFI_return
+              (basis_ffi no_ext []
+                 <|inode_tbl := []; files := []; infds := [];
+                   numchars := [||]; maxFD := 0|> with
+               <|ffi_state := ffi';
+                 io_events :=
+                   (basis_ffi no_ext []
+                      <|inode_tbl := []; files := []; infds := [];
+                        numchars := [||]; maxFD := 0|>).io_events ++
+                   [IO_event (ExtCall «write») bytes (ZIP (bytes2,bytes'))]|>)
+              bytes'
+          else
+            FFI_final (Final_event (ExtCall «write») bytes bytes2 FFI_failed)
+      | Oracle_final outcome =>
+        FFI_final (Final_event (ExtCall «write») bytes bytes2 outcome)
+    of
+      FFI_return new_ffi nb => F
+    | FFI_final outcome => T
+    FREE_VARS 
+  GOAL_END basis_write_call_returns_at_a_concrete_state #1
+STEP basis_write_call_returns_at_a_concrete_state 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED basis_write_call_returns_at_a_concrete_state after_steps 2
+VALIDATION basis_write_call_returns_at_a_concrete_state concl_aconv_goal true hyps 0
+EXPLORE_END basis_write_call_returns_at_a_concrete_state
+EXPLORE_BEGIN shape_predicate_holds_at_the_concrete_write_call steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN shape_predicate_holds_at_the_concrete_write_call #1 assumptions 0 (ASM 0 = newest)
+    CONCL ffi_calls_ok
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  <|prog_addresses := 𝕌(:word64); shared_addresses := ∅;
+    ffi_entry_pcs := [0w; 16w; 32w; 48w];
+    ffi_names :=
+      [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»];
+    ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3;
+    ffi_interfer := ARB; callee_saved_regs := []; next_interfer := ARB;
+    halt_pc := 4w; install_pc := 8w; install_interfer := ARB;
+    target := arm8_target; mmio_info := []|>
+  (basis_ffi no_ext []
+     <|inode_tbl := []; files := []; infds := []; numchars := [||];
+       maxFD := 0|>) (SUC 0)
+  <|PC := 16w; REG := (λr. if r = 1w then 8w else if r = 3w then 4w else 0w);
+    MEM := (λa. 0w)|>
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS 
+  GOAL_END shape_predicate_holds_at_the_concrete_write_call #1
+STEP shape_predicate_holds_at_the_concrete_write_call 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN shape_predicate_holds_at_the_concrete_write_call #1 assumptions 0 (ASM 0 = newest)
+    CONCL case read_bytearray 0w 8 (λa. SOME 0w) of
+  NONE => T
+| SOME bytes =>
+  case read_bytearray 0w 4 (λa. SOME 0w) of
+    NONE => T
+  | SOME bytes2 =>
+    case
+      case
+        (basis_ffi no_ext []
+           <|inode_tbl := []; files := []; infds := []; numchars := [||];
+             maxFD := 0|>).oracle (ExtCall «write»)
+          (basis_ffi no_ext []
+             <|inode_tbl := []; files := []; infds := []; numchars := [||];
+               maxFD := 0|>).ffi_state bytes bytes2
+      of
+        Oracle_return ffi' bytes' =>
+          if LENGTH bytes' = LENGTH bytes2 then
+            FFI_return
+              (basis_ffi no_ext []
+                 <|inode_tbl := []; files := []; infds := [];
+                   numchars := [||]; maxFD := 0|> with
+               <|ffi_state := ffi';
+                 io_events :=
+                   (basis_ffi no_ext []
+                      <|inode_tbl := []; files := []; infds := [];
+                        numchars := [||]; maxFD := 0|>).io_events ++
+                   [IO_event (ExtCall «write») bytes (ZIP (bytes2,bytes'))]|>)
+              bytes'
+          else
+            FFI_final (Final_event (ExtCall «write») bytes bytes2 FFI_failed)
+      | Oracle_final outcome =>
+        FFI_final (Final_event (ExtCall «write») bytes bytes2 outcome)
+    of
+      FFI_return new_ffi nb => T
+    | FFI_final outcome => T
+    FREE_VARS 
+  GOAL_END shape_predicate_holds_at_the_concrete_write_call #1
+STEP shape_predicate_holds_at_the_concrete_write_call 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED shape_predicate_holds_at_the_concrete_write_call after_steps 2
+VALIDATION shape_predicate_holds_at_the_concrete_write_call concl_aconv_goal true hyps 0
+EXPLORE_END shape_predicate_holds_at_the_concrete_write_call
+EXPLORE_BEGIN basis_read_call_with_conf_length_0_returns steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_read_call_with_conf_length_0_returns #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬ffi_calls_ok (λi nb s. i ≠ 0)
+  <|prog_addresses := 𝕌(:word64); shared_addresses := ∅;
+    ffi_entry_pcs := [0w; 16w; 32w; 48w];
+    ffi_names :=
+      [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»];
+    ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3;
+    ffi_interfer := ARB; callee_saved_regs := []; next_interfer := ARB;
+    halt_pc := 4w; install_pc := 8w; install_interfer := ARB;
+    target := arm8_target; mmio_info := []|>
+  (basis_ffi no_ext []
+     <|inode_tbl := []; files := []; infds := []; numchars := [||];
+       maxFD := 0|>) (SUC 0)
+  <|PC := 0w; REG := (λr. if r = 3w then 4w else 0w); MEM := (λa. 0w)|>
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config ->
+(mlstring list # IO_fs) ffi_state -> num -> arm8_state -> bool
+    FREE_VARS 
+  GOAL_END basis_read_call_with_conf_length_0_returns #1
+STEP basis_read_call_with_conf_length_0_returns 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN basis_read_call_with_conf_length_0_returns #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬case read_bytearray 0w 4 (λa. SOME 0w) of
+  NONE => T
+| SOME bytes2 =>
+  case
+    case
+      (basis_ffi no_ext []
+         <|inode_tbl := []; files := []; infds := []; numchars := [||];
+           maxFD := 0|>).oracle (ExtCall «read»)
+        (basis_ffi no_ext []
+           <|inode_tbl := []; files := []; infds := []; numchars := [||];
+             maxFD := 0|>).ffi_state [] bytes2
+    of
+      Oracle_return ffi' bytes' =>
+        if LENGTH bytes' = LENGTH bytes2 then
+          FFI_return
+            (basis_ffi no_ext []
+               <|inode_tbl := []; files := []; infds := []; numchars := [||];
+                 maxFD := 0|> with
+             <|ffi_state := ffi';
+               io_events :=
+                 (basis_ffi no_ext []
+                    <|inode_tbl := []; files := []; infds := [];
+                      numchars := [||]; maxFD := 0|>).io_events ++
+                 [IO_event (ExtCall «read») [] (ZIP (bytes2,bytes'))]|>)
+            bytes'
+        else FFI_final (Final_event (ExtCall «read») [] bytes2 FFI_failed)
+    | Oracle_final outcome =>
+      FFI_final (Final_event (ExtCall «read») [] bytes2 outcome)
+  of
+    FFI_return new_ffi nb => F
+  | FFI_final outcome => T
+    FREE_VARS 
+  GOAL_END basis_read_call_with_conf_length_0_returns #1
+STEP basis_read_call_with_conf_length_0_returns 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED basis_read_call_with_conf_length_0_returns after_steps 2
+VALIDATION basis_read_call_with_conf_length_0_returns concl_aconv_goal true hyps 0
+EXPLORE_END basis_read_call_with_conf_length_0_returns
+EXPLORE_BEGIN shape_predicate_rejects_u393_and_zero_length_states steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN shape_predicate_rejects_u393_and_zero_length_states #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬(λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) 2 nb
+  <|PC := 0w; REG := (λr. 0w); MEM := (λa. 0w)|> ∧
+¬(λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) 0 nb
+  <|PC := 0w; REG := (λr. 0w); MEM := (λa. 0w)|> ∧
+¬(λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) 1 nb
+  <|PC := 0w; REG := (λr. 0w); MEM := (λa. 0w)|> ∧
+¬(λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) 3 nb
+  <|PC := 0w; REG := (λr. 0w); MEM := (λa. 0w)|> ∧
+(λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) 0 nb
+  <|PC := 0w; REG := (λr. if r = 1w then 8w else if r = 3w then 4w else 0w);
+    MEM := (λa. 0w)|> ∧
+(λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) 0 nb
+  <|PC := 0w; REG := (λr. if r = 3w then 4w else 0w); MEM := (λa. 0w)|>
+    FREE_VARS nb:word8 list
+  GOAL_END shape_predicate_rejects_u393_and_zero_length_states #1
+STEP shape_predicate_rejects_u393_and_zero_length_states 1 simp goals 0
+  GOAL_COUNT 0
+STEP shape_predicate_rejects_u393_and_zero_length_states 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED shape_predicate_rejects_u393_and_zero_length_states after_steps 2
+VALIDATION shape_predicate_rejects_u393_and_zero_length_states concl_aconv_goal true hyps 0
+EXPLORE_END shape_predicate_rejects_u393_and_zero_length_states
+EXPLORE_BEGIN shape_predicate_needs_the_basis_oracle steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN shape_predicate_needs_the_basis_oracle #1 assumptions 0 (ASM 0 = newest)
+    CONCL ¬ffi_calls_ok
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  <|prog_addresses := 𝕌(:word64); shared_addresses := ∅;
+    ffi_entry_pcs := [0w; 16w; 32w; 48w];
+    ffi_names :=
+      [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»];
+    ptr_reg := 0; len_reg := 1; ptr2_reg := 2; len2_reg := 3;
+    ffi_interfer := ARB; callee_saved_regs := []; next_interfer := ARB;
+    halt_pc := 4w; install_pc := 8w; install_interfer := ARB;
+    target := arm8_target; mmio_info := []|>
+  <|oracle := (λs st c b. Oracle_return st b); ffi_state := ();
+    io_events := []|> (SUC 0) <|PC := 0w; REG := (λr. 0w); MEM := (λa. 0w)|>
+    CONST_IN_CONCL forge_refundRouteA2$ffi_calls_ok :(num -> word8 list -> arm8_state -> bool) ->
+(64, arm8_state,
+ ProcState #
+ SCTLRType #
+ TCR_EL1 # exception # (word5 -> word64) # (word64 # word8 -> bool) # word64)
+machine_config -> unit ffi_state -> num -> arm8_state -> bool
+    FREE_VARS 
+  GOAL_END shape_predicate_needs_the_basis_oracle #1
+STEP shape_predicate_needs_the_basis_oracle 1 simp goals 0
+  GOAL_COUNT 0
+STEP shape_predicate_needs_the_basis_oracle 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED shape_predicate_needs_the_basis_oracle after_steps 2
+VALIDATION shape_predicate_needs_the_basis_oracle concl_aconv_goal true hyps 0
+EXPLORE_END shape_predicate_needs_the_basis_oracle
+EXPLORE_ERROR basis_oracle_fails_at_zero_length_read_and_u393_close HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: ffi_calls_ok :(num -> word8 list -> \206\177 -> bool) ->\n(\206\178, \206\177, \206\179) machine_config -> \206\180 ffi_state -> num -> \206\177 -> bool\n  Argument: \206\187i nb s. F :\206\177 -> word8 list -> arm8_state -> bool\n  Reason: Attempt to unify fixed variable type 'a with operator num$num\n", origins = [{origin_function = "type-analysis", origin_structure = "Preterm", source_location = Loc (LocA (485, 20), LocA (485, 20))}]})
+EXPLORE_BEGIN ffi_read_conf_length_0_returns_error_byte steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_conf_length_0_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fsys.
+  ffi_read [] [0w; 0w; 0w; 0w] fsys = SOME (FFIreturn [1w; 0w; 0w; 0w] fsys)
+    FREE_VARS 
+  GOAL_END ffi_read_conf_length_0_returns_error_byte #1
+STEP ffi_read_conf_length_0_returns_error_byte 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_conf_length_0_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL [0w; 0w; 0w; 0w]❲0 ↦ 1w❳ = [1w; 0w; 0w; 0w]
+    FREE_VARS 
+  GOAL_END ffi_read_conf_length_0_returns_error_byte #1
+STEP ffi_read_conf_length_0_returns_error_byte 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED ffi_read_conf_length_0_returns_error_byte after_steps 2
+VALIDATION ffi_read_conf_length_0_returns_error_byte concl_aconv_goal true hyps 0
+EXPLORE_END ffi_read_conf_length_0_returns_error_byte
+EXPLORE_BEGIN ffi_read_short_array_returns_error_byte steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_short_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fsys.
+  ffi_read [0w; 0w; 0w; 0w; 0w; 0w; 0w; 0w] [0w; 16w; 0w; 0w] fsys =
+  SOME (FFIreturn [1w; 16w; 0w; 0w] fsys)
+    FREE_VARS 
+  GOAL_END ffi_read_short_array_returns_error_byte #1
+STEP ffi_read_short_array_returns_error_byte 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_short_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fsys.
+  OPTION_CHOICE
+    (OPTION_IGNORE_BIND (assert (0 ≥ w22n [0w; 16w]))
+       do
+         (l,fs') <-
+           read (w82n [0w; 0w; 0w; 0w; 0w; 0w; 0w; 0w]) fsys (w22n [0w; 16w]);
+         SOME
+           (FFIreturn (0w::(n2w2 (STRLEN l) ++ [0w] ++ MAP (n2w ∘ ORD) l))
+              fs')
+       od) (SOME (FFIreturn [0w; 16w; 0w; 0w]❲0 ↦ 1w❳ fsys)) =
+  SOME (FFIreturn [1w; 16w; 0w; 0w] fsys)
+    FREE_VARS 
+  GOAL_END ffi_read_short_array_returns_error_byte #1
+STEP ffi_read_short_array_returns_error_byte 2 eval goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_read_short_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fsys. T
+    FREE_VARS 
+  GOAL_END ffi_read_short_array_returns_error_byte #1
+EXPLORE_OPEN ffi_read_short_array_returns_error_byte goals 1
+EXPLORE_END ffi_read_short_array_returns_error_byte
+EXPLORE_BEGIN ffi_write_conf_length_0_returns_error_byte steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_write_conf_length_0_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fsys.
+  ffi_write [] [0w; 0w; 0w; 0w] fsys = SOME (FFIreturn [1w; 0w; 0w; 0w] fsys)
+    FREE_VARS 
+  GOAL_END ffi_write_conf_length_0_returns_error_byte #1
+STEP ffi_write_conf_length_0_returns_error_byte 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_write_conf_length_0_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL [0w; 0w; 0w; 0w]❲0 ↦ 1w❳ = [1w; 0w; 0w; 0w]
+    FREE_VARS 
+  GOAL_END ffi_write_conf_length_0_returns_error_byte #1
+STEP ffi_write_conf_length_0_returns_error_byte 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED ffi_write_conf_length_0_returns_error_byte after_steps 2
+VALIDATION ffi_write_conf_length_0_returns_error_byte concl_aconv_goal true hyps 0
+EXPLORE_END ffi_write_conf_length_0_returns_error_byte
+EXPLORE_BEGIN ffi_open_in_one_byte_array_returns_error_byte steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_open_in_one_byte_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀c fsys. ffi_open_in c [0w] fsys = SOME (FFIreturn [1w] fsys)
+    FREE_VARS 
+  GOAL_END ffi_open_in_one_byte_array_returns_error_byte #1
+STEP ffi_open_in_one_byte_array_returns_error_byte 1 simp goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN ffi_open_in_one_byte_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+    CONCL [0w]❲0 ↦ 1w❳ = [1w]
+    FREE_VARS 
+  GOAL_END ffi_open_in_one_byte_array_returns_error_byte #1
+STEP ffi_open_in_one_byte_array_returns_error_byte 2 eval goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED ffi_open_in_one_byte_array_returns_error_byte after_steps 2
+VALIDATION ffi_open_in_one_byte_array_returns_error_byte concl_aconv_goal true hyps 0
+EXPLORE_END ffi_open_in_one_byte_array_returns_error_byte
+EXPLORE_BEGIN remaining_premise_met_by_the_abstract_effect steps 5
+  GOAL_COUNT 1
+  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀b dm.
+  refund_ffi_contract_on b dm
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    refund_abs_ffi
+    CONST_IN_CONCL forge_refundRouteA1$refund_ffi_contract_on :word64 ->
+(word64 -> bool) ->
+(num -> word8 list -> arm8_state -> bool) ->
+(num -> num # word8 list # arm8_state -> arm8_state) -> bool
+    FREE_VARS 
+  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+STEP remaining_premise_met_by_the_abstract_effect 1 unfold goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 8 (ASM 0 = newest)
+    ASM 0 (λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) index
+  new_bytes ms2
+    ASM 1 aligned 2 (t1.regs 30)
+    ASM 2 target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2
+    ASM 3 LENGTH new_bytes = LENGTH bytes2
+    ASM 4 read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2
+    ASM 5 read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes
+    ASM 6 t1.mem_domain = dm
+    ASM 7 index < 4
+    CONCL arm8_ok (refund_abs_ffi k (index,new_bytes,ms2)) ∧
+(refund_abs_ffi k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (refund_abs_ffi k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+    (refund_abs_ffi k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+    FREE_VARS k:num, b:word64, new_bytes:word8 list, bytes2:word8 list, ms2:arm8_state, bytes:word8 list, t1:64 asm_state, dm:word64 -> bool, index:num
+  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+STEP remaining_premise_met_by_the_abstract_effect 2 ab goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 8 (ASM 0 = newest)
+    ASM 0 (λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) index
+  new_bytes ms2
+    ASM 1 aligned 2 (t1.regs 30)
+    ASM 2 target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2
+    ASM 3 LENGTH new_bytes = LENGTH bytes2
+    ASM 4 read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2
+    ASM 5 read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes
+    ASM 6 t1.mem_domain = dm
+    ASM 7 index < 4
+    CONCL (∀k index new_bytes ms2 t1 bytes bytes2.
+   index < 4 ∧ t1.mem_domain = dm ∧
+   read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+     (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+   read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+     (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+   LENGTH new_bytes = LENGTH bytes2 ∧
+   target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+     ms2 ∧ aligned 2 (t1.regs 30) ⇒
+   arm8_ok (refund_abs_ffi k (index,new_bytes,ms2)) ∧
+   (refund_abs_ffi k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+   (∀a. a ∈ dm ⇒
+        (refund_abs_ffi k (index,new_bytes,ms2)).MEM a =
+        asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+   ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+       (refund_abs_ffi k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r) ⇒
+arm8_ok (refund_abs_ffi k (index,new_bytes,ms2)) ∧
+(refund_abs_ffi k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (refund_abs_ffi k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+    (refund_abs_ffi k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+    FREE_VARS k:num, b:word64, new_bytes:word8 list, bytes2:word8 list, ms2:arm8_state, bytes:word8 list, t1:64 asm_state, dm:word64 -> bool, index:num
+  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+STEP remaining_premise_met_by_the_abstract_effect 3 spec goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 8 (ASM 0 = newest)
+    ASM 0 (λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) index
+  new_bytes ms2
+    ASM 1 aligned 2 (t1.regs 30)
+    ASM 2 target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2
+    ASM 3 LENGTH new_bytes = LENGTH bytes2
+    ASM 4 read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2
+    ASM 5 read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes
+    ASM 6 t1.mem_domain = dm
+    ASM 7 index < 4
+    CONCL (index < 4 ∧ t1.mem_domain = dm ∧
+ read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+   (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+ read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+   (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+ LENGTH new_bytes = LENGTH bytes2 ∧
+ target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2 ∧
+ aligned 2 (t1.regs 30) ⇒
+ arm8_ok (refund_abs_ffi k (index,new_bytes,ms2)) ∧
+ (refund_abs_ffi k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+ (∀a. a ∈ dm ⇒
+      (refund_abs_ffi k (index,new_bytes,ms2)).MEM a =
+      asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+ ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+     (refund_abs_ffi k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r) ⇒
+arm8_ok (refund_abs_ffi k (index,new_bytes,ms2)) ∧
+(refund_abs_ffi k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (refund_abs_ffi k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+    (refund_abs_ffi k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+    FREE_VARS k:num, b:word64, new_bytes:word8 list, bytes2:word8 list, ms2:arm8_state, bytes:word8 list, t1:64 asm_state, dm:word64 -> bool, index:num
+  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+STEP remaining_premise_met_by_the_abstract_effect 4 impl goals 1
+  GOAL_COUNT 1
+  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 8 (ASM 0 = newest)
+    ASM 0 (λi nb s.
+   (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+   (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)) index
+  new_bytes ms2
+    ASM 1 aligned 2 (t1.regs 30)
+    ASM 2 target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16)) ms2
+    ASM 3 LENGTH new_bytes = LENGTH bytes2
+    ASM 4 read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2
+    ASM 5 read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+  (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes
+    ASM 6 t1.mem_domain = dm
+    ASM 7 index < 4
+    CONCL arm8_ok (refund_abs_ffi k (index,new_bytes,ms2)) ∧
+(refund_abs_ffi k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (refund_abs_ffi k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+(∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+     (refund_abs_ffi k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r) ⇒
+arm8_ok (refund_abs_ffi k (index,new_bytes,ms2)) ∧
+(refund_abs_ffi k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+(∀a. a ∈ dm ⇒
+     (refund_abs_ffi k (index,new_bytes,ms2)).MEM a =
+     asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+    (refund_abs_ffi k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+    FREE_VARS k:num, b:word64, new_bytes:word8 list, bytes2:word8 list, ms2:arm8_state, bytes:word8 list, t1:64 asm_state, dm:word64 -> bool, index:num
+  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+STEP remaining_premise_met_by_the_abstract_effect 5 accept goals 0
+  GOAL_COUNT 0
+EXPLORE_CLOSED remaining_premise_met_by_the_abstract_effect after_steps 5
+VALIDATION remaining_premise_met_by_the_abstract_effect concl_aconv_goal true hyps 0
+EXPLORE_END remaining_premise_met_by_the_abstract_effect
+MARK REMAINING
+ASM_HYPS 0
+CONTROL_OK ASSEMBLY conclusion is term-identical to the stored conclusion
+CONTROL_OK ASSEMBLY premises do not mention ffi_calls_ok
+CONTROL_OK ASSEMBLY does not mention the variable Vok
+ASSEMBLY_PREMISES 12 of stored 13
+REMAINING_NATIVE_PREMISE refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+  (λi nb s.
+     (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+     (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+  envmc.ffi_interfer
+REMAINING_INTERFERENCE_PREMISE interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+REMAINING_NATIVE_PREMISE_UNFOLDED ∀k index new_bytes ms2 t1 bytes bytes2.
+  index < 4 ∧ t1.mem_domain = envmc.prog_addresses ∧
+  read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+    (λa. if a ∈ envmc.prog_addresses then SOME (ms2.MEM a) else NONE) =
+  SOME bytes ∧
+  read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+    (λa. if a ∈ envmc.prog_addresses then SOME (ms2.MEM a) else NONE) =
+  SOME bytes2 ∧ LENGTH new_bytes = LENGTH bytes2 ∧
+  target_state_rel arm8_target
+    (t1 with pc := sl + 0x1000040D0w − n2w ((3 + index) * 16)) ms2 ∧
+  aligned 2 (t1.regs 30) ∧ (index = 0 ∨ index = 1 ⇒ 4 ≤ w2n (ms2.REG 3w)) ∧
+  (index = 2 ⇒ ms2.REG 1w = 8w ∧ ms2.REG 3w ≠ 0w) ∧
+  (index = 3 ⇒ ms2.REG 3w ≠ 0w) ⇒
+  arm8_ok (envmc.ffi_interfer k (index,new_bytes,ms2)) ∧
+  (envmc.ffi_interfer k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+  (∀a. a ∈ envmc.prog_addresses ⇒
+       (envmc.ffi_interfer k (index,new_bytes,ms2)).MEM a =
+       asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+  ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+      (envmc.ffi_interfer k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+ASSEMBLY_FREE_VARS ext cl reason amount candidate opened enabled remaining original request charge fs envmc e stk h s sl
+PV_FAILED_LIST 
+PROBLEMS 
+EXPLORE_COMPLETE

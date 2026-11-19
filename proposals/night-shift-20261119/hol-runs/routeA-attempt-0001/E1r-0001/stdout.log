@@ -1,0 +1,159 @@
+<<HOL message: Created theory "forge_m1bErasureV2">>
+MARK DEFS
+DEFINITION ⊢ ∀s. erase s =
+      s with
+      <|TCR_EL1 := s.TCR_EL1 with <|TBI0 := F; TBI1 := F|>;
+        SCTLR_EL1 := s.SCTLR_EL1 with SA0 := F|>
+DEFINITION ⊢ ∀s. bits_of s = (s.TCR_EL1.TBI0,s.TCR_EL1.TBI1,s.SCTLR_EL1.SA0)
+DEFINITION ⊢ ∀B s.
+    restore B s =
+    s with
+    <|TCR_EL1 := s.TCR_EL1 with <|TBI0 := FST B; TBI1 := FST (SND B)|>;
+      SCTLR_EL1 := s.SCTLR_EL1 with SA0 := SND (SND B)|>
+DEFINITION ⊢ ∀a. untagged a ⇔ (63 >< 55) a = 0w
+DEFINITION ⊢ ∀tcr t.
+    tbi_pc tcr t =
+    (let
+       s0 =
+         if word_bit 55 t ∧ tcr.TBI1 then bit_field_insert 63 56 255w t
+         else t
+     in
+       if ¬word_bit 55 s0 ∧ tcr.TBI0 then bit_field_insert 63 56 0w s0
+       else s0)
+DEFINITION ⊢ ∀s. erase_e0e s =
+      erase s with SCTLR_EL1 := (erase s).SCTLR_EL1 with E0E := F
+MARK FIELDS
+TACTIC_USED erase_fields 1
+Saved theorem _______ "erase_fields"
+CHECKED erase_fields
+⊢ (erase s).PC = s.PC ∧ (erase s).REG = s.REG ∧ (erase s).MEM = s.MEM ∧
+  (erase s).SP_EL0 = s.SP_EL0 ∧ (erase s).PSTATE = s.PSTATE ∧
+  (erase s).exception = s.exception ∧ (erase s).branch_hint = s.branch_hint ∧
+  ((erase s).SCTLR_EL1.A ⇔ s.SCTLR_EL1.A) ∧
+  ((erase s).SCTLR_EL1.E0E ⇔ s.SCTLR_EL1.E0E) ∧
+  ((erase s).SCTLR_EL1.EE ⇔ s.SCTLR_EL1.EE) ∧
+  ((erase s).SCTLR_EL1.SA ⇔ s.SCTLR_EL1.SA) ∧ ¬(erase s).TCR_EL1.TBI0 ∧
+  ¬(erase s).TCR_EL1.TBI1 ∧ ¬(erase s).SCTLR_EL1.SA0
+TACTIC_USED restore_erase 1
+Saved theorem _______ "restore_erase"
+CHECKED restore_erase
+⊢ bits_of s = B ⇒ restore B (erase s) = s
+TACTIC_USED erase_restore 1
+Saved theorem _______ "erase_restore"
+CHECKED erase_restore
+⊢ erase (restore B s) = erase s
+TACTIC_USED arm8_ok_erase 1
+Saved theorem _______ "arm8_ok_erase"
+CHECKED arm8_ok_erase
+⊢ arm8_ok (erase s) ⇔
+  s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.E0E ∧ s.exception = NoException ∧
+  aligned 2 s.PC
+MARK BRANCH
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_m1bErasureV2)>>
+TACTIC_USED untagged_bits 1
+Saved theorem _______ "untagged_bits"
+CHECKED untagged_bits
+⊢ ∀t. untagged t ⇒ ¬word_bit 55 t ∧ bit_field_insert 63 56 0w t = t
+TACTIC_USED BranchTo_EL0_pc 1
+Saved theorem _______ "BranchTo_EL0_pc"
+CHECKED BranchTo_EL0_pc
+⊢ s.PSTATE.EL = 0w ⇒
+  BranchTo (t,bt) s =
+  s with <|branch_hint := SOME bt; PC := tbi_pc s.TCR_EL1 t|>
+TACTIC_USED tbi_pc_erased 1
+Saved theorem _______ "tbi_pc_erased"
+CHECKED tbi_pc_erased
+⊢ ∀tcr t. tbi_pc (tcr with <|TBI0 := F; TBI1 := F|>) t = t
+TACTIC_USED tbi_pc_untagged 1
+Saved theorem _______ "tbi_pc_untagged"
+CHECKED tbi_pc_untagged
+⊢ ∀tcr t. untagged t ⇒ tbi_pc tcr t = t
+TACTIC_USED BranchTo_erase_untagged 1
+Saved theorem _______ "BranchTo_erase_untagged"
+CHECKED BranchTo_erase_untagged
+⊢ s.PSTATE.EL = 0w ∧ untagged t ⇒
+  BranchTo (t,bt) (erase s) = erase (BranchTo (t,bt) s)
+TACTIC_ATTEMPT_FAILED BranchTo_erase_iff 1 HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+TACTIC_ATTEMPT_FAILED BranchTo_erase_iff 2 HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+OPTIONAL_FAILED BranchTo_erase_iff Fail "all listed tactics failed"
+MARK SP
+TACTIC_USED CheckSPAlignment_erase 1
+Saved theorem _______ "CheckSPAlignment_erase"
+CHECKED CheckSPAlignment_erase
+⊢ s.PSTATE.EL = 0w ∧ (¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ⇒
+  CheckSPAlignment (erase s) = erase (CheckSPAlignment s)
+TACTIC_USED CheckSPAlignment_erase_fault 1
+Saved theorem _______ "CheckSPAlignment_erase_fault"
+CHECKED CheckSPAlignment_erase_fault
+⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ⇒
+  CheckSPAlignment (erase s) = erase s ∧
+  (CheckSPAlignment s = s ∨
+   s.SCTLR_EL1.SA0 ∧ ¬aligned 4 s.SP_EL0 ∧
+   CheckSPAlignment s = s with exception := ALIGNMENT_FAULT)
+MARK CONTROLS
+TACTIC_USED N1a_tagged_branch_breaks 1
+Saved theorem _______ "N1a_tagged_branch_breaks"
+CHECKED N1a_tagged_branch_breaks
+⊢ s.PSTATE.EL = 0w ∧ s.TCR_EL1.TBI0 ⇒
+  BranchTo (0x100000000001000w,BranchType_JMP) (erase s) ≠
+  erase (BranchTo (0x100000000001000w,BranchType_JMP) s)
+TACTIC_USED N1b_bit55_branch_breaks 1
+Saved theorem _______ "N1b_bit55_branch_breaks"
+CHECKED N1b_bit55_branch_breaks
+⊢ s.PSTATE.EL = 0w ∧ s.TCR_EL1.TBI1 ⇒
+  BranchTo (0x80000000001000w,BranchType_JMP) (erase s) ≠
+  erase (BranchTo (0x80000000001000w,BranchType_JMP) s)
+TACTIC_USED N2_misaligned_sp_breaks 1
+Saved theorem _______ "N2_misaligned_sp_breaks"
+CHECKED N2_misaligned_sp_breaks
+⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.SCTLR_EL1.SA0 ∧
+  s.SP_EL0 = 8w ⇒
+  (CheckSPAlignment (erase s)).exception = NoException ∧
+  (CheckSPAlignment s).exception = ALIGNMENT_FAULT
+TACTIC_USED N3_e0e_not_erasable 1
+Saved theorem _______ "N3_e0e_not_erasable"
+CHECKED N3_e0e_not_erasable
+⊢ s.PSTATE.EL = 0w ∧ s.SCTLR_EL1.E0E ⇒
+  (BigEndian (erase_e0e s) ⇎ BigEndian s)
+TACTIC_USED N4_slide_ok_admits_tagged_code 1
+Saved theorem _______ "N4_slide_ok_admits_tagged_code"
+CHECKED N4_slide_ok_admits_tagged_code
+⊢ aligned 12 0x100000000000000w ∧ 0x100000000000000w ≤₊ 0xFFFFFFFEFFFCF0CFw ∧
+  ¬untagged (0x100000000000000w + 0x1000040D0w)
+TACTIC_USED P1_bit55_without_TBI1_is_fine 1
+Saved theorem _______ "P1_bit55_without_TBI1_is_fine"
+CHECKED P1_bit55_without_TBI1_is_fine
+⊢ s.PSTATE.EL = 0w ∧ ¬s.TCR_EL1.TBI1 ⇒
+  BranchTo (0x80000000001000w,bt) (erase s) =
+  erase (BranchTo (0x80000000001000w,bt) s)
+TACTIC_USED N5_lo55_holds_at_slide_zero_and_fails_at_N4_slide 1
+Saved theorem _______ "N5_lo55_holds_at_slide_zero_and_fails_at_N4_slide"
+CHECKED N5_lo55_holds_at_slide_zero_and_fails_at_N4_slide
+⊢ w2n 0w + 4295167792 ≤ 2 ** 55 ∧
+  ¬(w2n 0x100000000000000w + 4295167792 ≤ 2 ** 55)
+MARK DEFERRED
+STATEMENT_TYPECHECKS Next_frame
+STATEMENT_TYPECHECKS Next_erase_fault_mono
+STATEMENT_TYPECHECKS Next_erase
+STATEMENT_TYPECHECKS NextStateARM8_erase
+STATEMENT_TYPECHECKS NextStateARM8_erase_or_fault
+STATEMENT_TYPECHECKS arm8_target_real (as an equation)
+STATEMENT_TYPECHECKS lo55 (as an equation)
+MARK CHECKS
+OPTIONAL_FAILED_LIST BranchTo_erase_iff
+CONTROL_OK N1a is a proved negative
+CONTROL_OK N1b is a proved negative
+CONTROL_OK N3 is a proved negative
+CONTROL_OK N2 proved: the real SA0 bit adds an alignment fault
+CONTROL_OK N4 proved: slide_ok admits a tagged code base
+CONTROL_OK BranchTo_erase_untagged is the literal draft statement
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+STORED_THEOREMS 18
+STORED_DEFINITIONS 6
+CLOSURE_NODES 543
+Exporting theory "forge_m1bErasureV2" ... done.
+Theory "forge_m1bErasureV2" took 8.8s to build
+EXACT_COMPLETE

@@ -1,0 +1,180 @@
+<<HOL message: Created theory "forge_refundRouteA1">>
+USED refund_ffi_contract_at_def
+⊢ ∀b dm ffi_i.
+    refund_ffi_contract_at b dm ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+USED refund_env_ok_sl_def
+⊢ ∀sl envmc.
+    refund_env_ok_sl sl envmc ⇔
+    interference_ok envmc.next_interfer
+      (arm8_target.proj envmc.prog_addresses) ∧
+    refund_ffi_contract_at (sl + 0x1000040D0w) envmc.prog_addresses
+      envmc.ffi_interfer
+USED refund_abs_ffi_contract_at
+⊢ ∀b dm. refund_ffi_contract_at b dm refund_abs_ffi
+USED refund_abs_ffi_def
+⊢ ∀k x.
+    refund_abs_ffi k x =
+    SND (SND x) with
+    <|PC := (SND (SND x)).REG 30w;
+      MEM :=
+        asm_write_bytearray ((SND (SND x)).REG 2w) (FST (SND x))
+          (SND (SND x)).MEM|>
+USED refund_bad_return_ffi_def
+⊢ ∀k x.
+    refund_bad_return_ffi k x =
+    refund_abs_ffi k x with PC := (SND (SND x)).REG 30w + 4w
+USED refund_ffi_witness_state_def
+⊢ refund_ffi_witness_state =
+  <|PC := 0x1000040A0w; PSTATE := <|EL := 0w|>; exception := NoException;
+    SCTLR_EL1 := <|E0E := F; SA0 := F|>; TCR_EL1 := <|TBI0 := F; TBI1 := F|>;
+    REG := (λr. 0w)|>
+USED refund_ffi_contract_at_witness
+⊢ ∀dm ffi_i k.
+    refund_ffi_contract dm ffi_i ⇒
+    (ffi_i k (0,[],refund_ffi_witness_state)).PC = 0w ∧
+    (∀a. a ∈ dm ⇒
+         (ffi_i k (0,[],refund_ffi_witness_state)).MEM a =
+         refund_ffi_witness_state.MEM a) ∧
+    (ffi_i k (0,[],refund_ffi_witness_state)).REG 19w = 0w
+USED refund_ffi_contract_at_link_base_is_the_old_contract
+⊢ ∀dm f. refund_ffi_contract_at 0x1000040D0w dm f ⇔ refund_ffi_contract dm f
+MARK D
+DEFINITION ⊢ ∀b dm Vok ffi_i.
+    refund_ffi_contract_on b dm Vok ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ∧ Vok index new_bytes ms2 ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+DEFINITION ⊢ ∀Vok f k x.
+    refund_ffi_tot Vok f k x =
+    if Vok (FST x) (FST (SND x)) (SND (SND x)) then f k x
+    else refund_abs_ffi k x
+CONTROL_OK refund_ffi_contract_on = stored contract body + exactly one hypothesis (Vok index new_bytes ms2); conclusions identical
+TEXT_CHECK_OK refund_ffi_contract_on_def
+MARK H
+Saved theorem _______ "refund_ffi_tot_valid"
+CHECKED refund_ffi_tot_valid
+⊢ ∀Vok f k index new_bytes ms2.
+    Vok index new_bytes ms2 ⇒
+    refund_ffi_tot Vok f k (index,new_bytes,ms2) = f k (index,new_bytes,ms2)
+Saved theorem _______ "refund_ffi_tot_invalid"
+CHECKED refund_ffi_tot_invalid
+⊢ ∀Vok f k index new_bytes ms2.
+    ¬Vok index new_bytes ms2 ⇒
+    refund_ffi_tot Vok f k (index,new_bytes,ms2) =
+    refund_abs_ffi k (index,new_bytes,ms2)
+Saved theorem _______ "refund_ffi_tot_all_valid_is_identity"
+CHECKED refund_ffi_tot_all_valid_is_identity
+⊢ ∀f. refund_ffi_tot (λi nb ms. T) f = f
+Saved theorem _______ "refund_ffi_tot_shift_seq"
+CHECKED refund_ffi_tot_shift_seq
+⊢ ∀n Vok f.
+    shift_seq n (refund_ffi_tot Vok f) = refund_ffi_tot Vok (shift_seq n f)
+MARK L1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRouteA1)>>
+Saved theorem _______ "refund_ffi_contract_on_totalises"
+CHECKED refund_ffi_contract_on_totalises
+⊢ ∀b dm Vok f.
+    refund_ffi_contract_on b dm Vok f ⇒
+    refund_ffi_contract_at b dm (refund_ffi_tot Vok f)
+STATEMENT_L1 ∀b dm Vok f.
+  refund_ffi_contract_on b dm Vok f ⇒
+  refund_ffi_contract_at b dm (refund_ffi_tot Vok f)
+Saved theorem _______ "refund_env_with_ffi_interfer_fields"
+CHECKED refund_env_with_ffi_interfer_fields
+⊢ (envmc with ffi_interfer := g).next_interfer = envmc.next_interfer ∧
+  (envmc with ffi_interfer := g).prog_addresses = envmc.prog_addresses ∧
+  (envmc with ffi_interfer := g).ffi_interfer = g
+Saved theorem _______ "refund_env_ok_sl_of_contract_on"
+CHECKED refund_env_ok_sl_of_contract_on
+⊢ interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ⇒
+  refund_env_ok_sl sl
+    (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+MARK S
+Saved theorem _______ "refund_ffi_contract_on_all_valid_is_the_stored_contract"
+CHECKED refund_ffi_contract_on_all_valid_is_the_stored_contract
+⊢ ∀b dm f.
+    refund_ffi_contract_on b dm (λi nb ms. T) f ⇔
+    refund_ffi_contract_at b dm f
+MARK N1
+Saved theorem _______ "contract_on_without_totalisation_is_not_the_stored_contract"
+CHECKED contract_on_without_totalisation_is_not_the_stored_contract
+⊢ ¬∀b dm Vok f.
+    refund_ffi_contract_on b dm Vok f ⇒ refund_ffi_contract_at b dm f
+Saved theorem _______ "bad_return_ffi_totalised_with_empty_predicate_meets_contract"
+CHECKED bad_return_ffi_totalised_with_empty_predicate_meets_contract
+⊢ ∀b dm.
+    refund_ffi_contract_at b dm
+      (refund_ffi_tot (λi nb ms. F) refund_bad_return_ffi)
+MARK N2
+Saved theorem _______ "refund_close_call_valid_excludes_zero_alen"
+CHECKED refund_close_call_valid_excludes_zero_alen
+⊢ ∀nb ms. ms.REG 3w = 0w ⇒ ¬refund_close_call_valid 2 nb ms
+Saved theorem _______ "refund_close_call_valid_rejects_u393_witness"
+CHECKED refund_close_call_valid_rejects_u393_witness
+⊢ ¬refund_close_call_valid 2 []
+    (refund_ffi_witness_state with PC := 0x100004080w)
+Saved theorem _______ "stored_contract_demands_return_at_u393_close_state"
+CHECKED stored_contract_demands_return_at_u393_close_state
+⊢ ∀dm ffi_i.
+    refund_ffi_contract_at 0x1000040D0w dm ffi_i ⇒
+    (ffi_i 0 (2,[],refund_ffi_witness_state with PC := 0x100004080w)).PC = 0w
+Saved theorem _______ "close_abort_model_satisfies_contract_on"
+CHECKED close_abort_model_satisfies_contract_on
+⊢ ∀b dm.
+    refund_ffi_contract_on b dm refund_close_call_valid
+      refund_close_abort_model_ffi
+Saved theorem _______ "close_abort_model_fails_stored_contract"
+CHECKED close_abort_model_fails_stored_contract
+⊢ ∀dm. ¬refund_ffi_contract_at 0x1000040D0w dm refund_close_abort_model_ffi
+Saved theorem _______ "close_abort_model_totalised_meets_stored_contract"
+CHECKED close_abort_model_totalised_meets_stored_contract
+⊢ ∀b dm.
+    refund_ffi_contract_at b dm
+      (refund_ffi_tot refund_close_call_valid refund_close_abort_model_ffi)
+MARK CHECKS
+CONTROL_OK N1 is a proved negation: without totalisation the on-form does not give the stored contract
+CONTROL_OK N2 the stand-in that does not return at the U393 close state fails the stored contract
+CONTROL_OK N2 the close predicate rejects the U393 state (x1 = 0w, x3 = 0w at PC 0x100004080w)
+CONTROL_OK L1: premise is the on-form only; conclusion is the stored contract at the totalised effect
+CONTROL_OK L1 statement is the literal planned statement
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+STORED_THEOREMS 16
+STORED_DEFINITIONS 4
+CLOSURE_NODES 543
+Exporting theory "forge_refundRouteA1" ... done.
+Theory "forge_refundRouteA1" took 14.6s to build
+EXACT_COMPLETE

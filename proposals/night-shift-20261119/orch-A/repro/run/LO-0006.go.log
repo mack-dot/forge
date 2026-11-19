@@ -1,0 +1,60 @@
+2026-11-19T14:49:24Z
+Now drawing from 'AC Power'
+total = 9216.00M  used = 8536.12M  free = 679.88M  (encrypted)
+System-wide memory free percentage: 50%
+START_STATE swap_free_mib=679 memory_free_percent=50
+USED_FILES_PRE 0 e3b0c44298fc1c14
+exit 0
+actual_exit 0 wall 141.677 cpu 121.776 rss_mib 2719 ['EXACT_COMPLETE'] inputs_unchanged_after True
+68:CHECKED fd1_written_APPEND
+73:CHECKED fd1_written_prefix
+78:CHECKED STD_streams_facts
+92:CHECKED STD_streams_File_fd
+99:CHECKED w22n_lt
+104:CHECKED w22n_n2w2_bytes
+109:CHECKED write_stdout
+120:CHECKED ffi_write_cases
+132:CHECKED ffi_write_stdout_step
+144:CHECKED read_stdout
+151:CHECKED ffi_read_stdout_step
+160:CHECKED openFile_stdout
+167:CHECKED openFile_truncate_stdout
+176:CHECKED ffi_open_in_stdout_step
+185:CHECKED ffi_open_out_stdout_step
+194:CHECKED STD_streams_ADELKEY_File
+201:CHECKED closeFD_stdout
+208:CHECKED ffi_close_stdout_step
+217:CHECKED ALOOKUP_fs_ffi_part
+226:CHECKED fs_ffi_part_stdout_step
+238:CHECKED extract_no_ext_ExtCall
+251:CHECKED extract_no_ext_stdout_step_fs_ffi_part
+267:CHECKED extract_no_ext_stdout_step_basis_other
+282:CHECKED extract_no_ext_stdout_step_ExtCall
+296:CHECKED extract_no_ext_stdout_step_SharedMem
+310:CHECKED extract_no_ext_stdout_step_event
+324:CHECKED extract_no_ext_stdout_step
+338:CHECKED extract_no_ext_stdout_nil
+350:CHECKED extract_no_ext_stdout_cons
+371:CHECKED extract_no_ext_stdout
+383:CHECKED extract_fs_inode_tbl
+392:CHECKED refund_L_OUT
+400:CHECKED refund_L_OUT_prefix
+417:CHECKED refund_profile_a_sl_fd1_Success
+442:CHECKED refund_profile_a_sl_fd1_Resource_limit_hit
+468:CHECKED refund_profile_a_sl_fd1
+516:CHECKED STD_streams_fs0
+521:CHECKED N_O1_free_ext_breaks
+549:CHECKED N_O2_failed_write_counted_without_success_test
+560:CHECKED N_O3_fd2_write_counted_without_fd_test
+568:CHECKED P_O4_partial_write_counts_nw
+579:CONTROL_OK refund_L_OUT statement is the literal planned statement
+580:CONTROL_OK refund_profile_a_sl_fd1 premise is the stored premise term
+581:CONTROL_OK refund_profile_a_sl_fd1 is at ext := no_ext (no free ext)
+582:CLOSURE_AXIOM bool.SELECT_AX
+583:CLOSURE_AXIOM bool.INFINITY_AX
+584:CLOSURE_AXIOM bool.ETA_AX
+585:CLOSURE_AXIOM bool.BOOL_CASES_AX
+590:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

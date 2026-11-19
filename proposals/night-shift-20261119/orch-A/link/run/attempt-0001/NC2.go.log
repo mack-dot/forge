@@ -1,0 +1,25 @@
+2026-11-19T08:54:47Z
+START_STATE swap_free_mib=1255 memory_free_percent=69
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/controls/NC2-ids-swapped-in-contract.sexp sha256 bacbc3561c6de696f926f2909417a98cb77fb5bd9da20b592b60bb5a8c01a44d expected bacbc3561c6de696f926f2909417a98cb77fb5bd9da20b592b60bb5a8c01a44d
+Thu Nov 19 03:54:47 EST 2026
+System-wide memory free percentage: 69%
+vm.swapusage: total = 7168.00M  used = 5912.94M  free = 1255.06M  (encrypted)
+/dev/disk3s5       460  339        89    80% 7989222 941081680    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 82
+COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=900 python3 -I -B run_case.py ctl-NC2 forge_refundExportedContractScript.sml
+RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in ctl-NC2/command.json)
+2:FORGE_BEGIN exported_contract_decode
+4:FORGE_BEGIN exported_contract_shape
+6:FORGE_BEGIN exported_ens1_value
+8:FORGE_BEGIN exported_ens2_value
+
+Exception raised at boolLib.store_thm_at:
+at Tactical.TAC_PROOF:
+  Failed to prove theorem "exported_ens2_value":
+unsolved goals
+  info: actual_exit=1 markers=[] last FORGE_BEGIN='exported_ens2_value' *_COMPLETE lines=[] wall=22.283
+VERDICT NC2 ctl-NC2 PASS
+GO.SH EXIT 1
+go exit 1

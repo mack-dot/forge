@@ -1,0 +1,68 @@
+--- /Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/link-contract/forge_refundExportedContractScript.sml	2026-11-19 01:27:05.612617894 -0500
++++ /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/forge_refundExportedContractScript_v2.sml	2026-11-19 02:59:47.865943580 -0500
+@@ -1,4 +1,7 @@
+ (* DRAFT (M1-B wave 4, worker Y2, graph links S5 and S6). NOT RUN. NOT CHECKED BY ANY TOOL.
++   A4 v2 (2026-11-19): FALLBACK copy for a SECOND attempt only. Use it only if the original
++   (SHA-256 89fee9c3...) fails at C3, C4, C5 or C6 for a tactic reason. Every statement is
++   byte-identical to the original; only tactics and one comment changed (marked A4). NOT RUN.
+ 
+    A `hol run` script in the style of U294 proof-0004.sml (backup branch
+    origin/backup/forge-local-2026-11-11, path
+@@ -18,9 +21,10 @@
+    The theorems do not read the method BODY of the export. The body is
+    related to refund_fields separately by U294 (source_compiled_fields).
+ 
+-   Inputs (environment): FORGE_CONTRACT_SEXP (the export bytes; the runner
+-   checks the SHA-256), FORGE_P3_OUT (output folder; the runner sets it),
+-   CAKEMLDIR (the runner sets it).
++   Inputs (environment): FORGE_CONTRACT_SEXP (the export bytes; the runner does NOT
++   check their SHA-256: run_case.py hashes only hol, the heap, the extra arguments and the
++   native image; go.sh checks the digest before the start (* A4 comment-only *)),
++   FORGE_P3_OUT (output folder; the runner sets it), CAKEMLDIR (the runner sets it).
+ 
+    No axiom, no cheat, no mk_thm, no new_axiom, no oracle. The final check
+    refuses any theorem with hypotheses, axiom tags or a tag other than DISK_THM. *)
+@@ -147,7 +151,8 @@
+       candidate amount reason ok a r c q n,
+    Rval (BoolV (ok <=> eligible charge request original remaining enabled opened
+       candidate amount reason)))``,
+-  EVAL_TAC >> rpt (IF_CASES_TAC >> fs [] >> EVAL_TAC));
++  (* A4 tactic-only: fix ok first, then the RUN_PLAN fallback loop with gvs. UNCHECKED. *)
++  Cases_on `ok` >> EVAL_TAC >> rpt (IF_CASES_TAC >> gvs [] >> EVAL_TAC));
+ 
+ val exported_ens2_value = prove ("exported_ens2_value", ``
+   evaluate_exp (exported_contract_state h charge request original remaining enabled
+@@ -155,7 +160,8 @@
+   (exported_contract_state h charge request original remaining enabled opened
+       candidate amount reason ok a r c q n,
+    Rval (BoolV (ok ==> a = amount /\ r = reason /\ c = charge /\ q = request /\ n = 1)))``,
+-  EVAL_TAC >> rpt (IF_CASES_TAC >> fs [] >> EVAL_TAC));
++  (* A4 tactic-only: fix ok first, then the RUN_PLAN fallback loop with gvs. UNCHECKED. *)
++  Cases_on `ok` >> EVAL_TAC >> rpt (IF_CASES_TAC >> gvs [] >> EVAL_TAC));
+ 
+ val exported_ens3_value = prove ("exported_ens3_value", ``
+   evaluate_exp (exported_contract_state h charge request original remaining enabled
+@@ -163,7 +169,8 @@
+   (exported_contract_state h charge request original remaining enabled opened
+       candidate amount reason ok a r c q n,
+    Rval (BoolV (~ok ==> a = 0 /\ r = «» /\ c = «» /\ q = «» /\ n = 0)))``,
+-  EVAL_TAC >> rpt (IF_CASES_TAC >> fs [] >> EVAL_TAC));
++  (* A4 tactic-only: fix ok first, then the RUN_PLAN fallback loop with gvs. UNCHECKED. *)
++  Cases_on `ok` >> EVAL_TAC >> rpt (IF_CASES_TAC >> gvs [] >> EVAL_TAC));
+ 
+ (* C6. The value of the whole ensures list. *)
+ val exported_contract_value = prove ("exported_contract_value", ``
+@@ -175,8 +182,11 @@
+                          candidate amount reason);
+          BoolV (ok ==> a = amount /\ r = reason /\ c = charge /\ q = request /\ n = 1);
+          BoolV (~ok ==> a = 0 /\ r = «» /\ c = «» /\ q = «» /\ n = 0)])``,
+-  simp [exported_ensures_def, evaluate_exp_def,
+-        exported_ens1_value, exported_ens2_value, exported_ens3_value]);
++  (* A4 tactic-only: the RUN_PLAN.md C6 fallback (one evaluate_exps step at a time). UNCHECKED. *)
++  REWRITE_TAC [exported_ensures_def] >> ONCE_REWRITE_TAC [evaluate_exp_def] >>
++  simp [exported_ens1_value] >> ONCE_REWRITE_TAC [evaluate_exp_def] >>
++  simp [exported_ens2_value] >> ONCE_REWRITE_TAC [evaluate_exp_def] >>
++  simp [exported_ens3_value, evaluate_exp_def]);
+ 
+ (* C7 = THE S6 THEOREM. *)
+ val exported_contract_on_refund_fields = prove ("exported_contract_on_refund_fields", ``

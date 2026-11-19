@@ -1,0 +1,2182 @@
+{
+ "manifest_format": "forge.m1b.refund-binding-manifest/1",
+ "subject": "Forge refund slice: which exact files are bound to which link of TOP_LEVEL_GRAPH.md, at which evidence class",
+ "end_to_end": false,
+ "notes": "DRAFT by worker Z8. Not evidence. M1-B OPEN. The class of a link is computed by the verifier; stated_class is only checked.",
+ "reference_values_pinned_by": "worker Z8 on the same machine and of the same agent family as the producers: consistency, not independence",
+ "toolchain": {
+  "dafny_tree": {
+   "toolchain": ".toolchain/dafny-4.11.0/dafny"
+  },
+  "dafny_tree_digest": "d0c1a9a96984f4aad1fe5be59df16ca72729f698d03c40aa47dcb5195a452c11",
+  "dafny_tree_files": 290,
+  "dafny": {
+   "locator": {
+    "toolchain": ".toolchain/dafny-4.11.0/dafny/dafny"
+   },
+   "sha256": "5d02cbb88300aef0726e933bd6f19754960b7409a9e0e2212a5e07edd1686012"
+  },
+  "z3": {
+   "locator": {
+    "toolchain": ".toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1"
+   },
+   "sha256": "7d15df1e4ba8f60b0808dce02ec85e0dd6dac4b975231a2f7b35fe8789464208"
+  },
+  "gate_options_source": {
+   "locator": {
+    "repo": "gate/backends/dafny.py"
+   },
+   "sha256": "a6e78cdcff7b79f9511c741de7d3c4c0c14239897279f29256eaab858829e3f6"
+  },
+  "version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2"
+ },
+ "dafny_proofs": [
+  {
+   "id": "S3-linked-refund",
+   "kind": "source",
+   "root": {
+    "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/inputs"
+   },
+   "entries": [
+    "LinkedRefund.dfy"
+   ],
+   "include_closure": [
+    {
+     "path": "Library.dfy",
+     "sha256": "20cd9f0d3455d693e8165db78446f30358d7489e1c344540e5cd8b6d759e5409"
+    },
+    {
+     "path": "LinkedRefund.dfy",
+     "sha256": "0d67b4838e390a336dfec027326a2cb067a7a35fa120af60b94bdfda4d069f34"
+    },
+    {
+     "path": "UnicodeRelation.dfy",
+     "sha256": "804504ef807d5c67ffaef7e11581ebe523f807c48af069d3c9ff5f5305f91990"
+    },
+    {
+     "path": "library/Std/Arithmetic/DivMod.dfy",
+     "sha256": "668a04ec1dfae3f41f3fc3952754900de605b022acbfc83243341f2f6cfa01d2"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/DivInternals.dfy",
+     "sha256": "34332d774149f3cc4984f0d4931d1cf6b343907bc3da70c6a23dca72ab559d50"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/DivInternalsNonlinear.dfy",
+     "sha256": "afe624f1d81ac82b95b9d90445931a444ca736c9d7865c539d4d0a47aa5d6913"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/GeneralInternals.dfy",
+     "sha256": "c91f452c462c9e07231f8ad18a1de409c29345c40689fc9f4a2a4ea9a7c02972"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/ModInternals.dfy",
+     "sha256": "775bcfbf5b168996e49c85ecc56e661e7136ab3fcc07aefd85e3402a7d96e7b0"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/ModInternalsNonlinear.dfy",
+     "sha256": "8a58ee87babaad395519b49f8fbe7b57bacc8b8534b81dd672876067728603e3"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/MulInternals.dfy",
+     "sha256": "7e4c589654853b740e72c950e526f15bee88cd76abeaf0ff94926867f1682f2c"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/MulInternalsNonlinear.dfy",
+     "sha256": "a9e4f91e111f8b085f35404ad3d5f9c445c084a0bf42455378fd417af5b0f81b"
+    },
+    {
+     "path": "library/Std/Arithmetic/LittleEndianNat.dfy",
+     "sha256": "c7a884f7c1a3d640ee54fdec6481e21659aa9f652a949ccc6983ae54181ea108"
+    },
+    {
+     "path": "library/Std/Arithmetic/Logarithm.dfy",
+     "sha256": "08e65e363e5d0ac0bfb674cc8dcb50c0e9f18b42fae278d471e5835d0cee50e8"
+    },
+    {
+     "path": "library/Std/Arithmetic/Mul.dfy",
+     "sha256": "318cdd74a34332cf14f03b0024f033ca8924d72ae0ba1959687fb439135e7d57"
+    },
+    {
+     "path": "library/Std/Arithmetic/Power.dfy",
+     "sha256": "880dd391bce30c73afa22f303cc78d917bd8857f1cedf7046506df46ff070675"
+    },
+    {
+     "path": "library/Std/Arithmetic/Power2.dfy",
+     "sha256": "576960a554cfb9431a5fb760ec92f3f142d49d9859e72959c7c0f72c26a690ae"
+    },
+    {
+     "path": "library/Std/Collections/Collections.dfy",
+     "sha256": "906397b244e36de57b6d8d2205967a9e9f8a55f89d062dd54f6251713ea06a92"
+    },
+    {
+     "path": "library/Std/Collections/Seq.dfy",
+     "sha256": "9d2f1c72503d140ccd4f963c820594086dc1f9de06e37e439e8a5d7c909a1d2d"
+    },
+    {
+     "path": "library/Std/Functions.dfy",
+     "sha256": "b935ef711e73777d8155bf30469b4b7c5e98c714d65129b816050839c48d2189"
+    },
+    {
+     "path": "library/Std/Math.dfy",
+     "sha256": "d1e7acf438f766770f5038aa26bc23f4e49dd17b06b64ccef07d8150c6e2b2a9"
+    },
+    {
+     "path": "library/Std/Relations.dfy",
+     "sha256": "af31852c17c7d56af89ebf8464cb8338fc857b4931f98e871aa83e4ec8b8b477"
+    },
+    {
+     "path": "library/Std/Strings.dfy",
+     "sha256": "c2d5ad12b1a84d9089297215920ab7367dc4dcbd384649ce91c2938bccdf4b87"
+    },
+    {
+     "path": "library/Std/Unicode/Unicode.dfy",
+     "sha256": "db4477f9f789ea61a5265a17ca8299494cf1a4b09747801e1ecab57bc875c016"
+    },
+    {
+     "path": "library/Std/Unicode/UnicodeBase.dfy",
+     "sha256": "2650a664f171dcd8cc20d8abd98003135d33fd0f4fbc4bb11c3a0c674cac733e"
+    },
+    {
+     "path": "library/Std/Unicode/UnicodeEncodingForm.dfy",
+     "sha256": "09b635f174602b4e91d80ba03fa578ad2fbc3f892df507ae349c16f219615485"
+    },
+    {
+     "path": "library/Std/Unicode/Utf8EncodingForm.dfy",
+     "sha256": "9ad6deab2edab4e6402f43e8ba65c4d9fca925421a55b7eab10a192c0da42a78"
+    },
+    {
+     "path": "library/Std/Wrappers.dfy",
+     "sha256": "b0db6d1cfce218f358e01e0eed52fba5246f8b64e9b5113d8187620903dc4c08"
+    },
+    {
+     "path": "transport/FlatCore.dfy",
+     "sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d"
+    },
+    {
+     "path": "transport/Transport.dfy",
+     "sha256": "a07fec89f746b0a67626c778f5b5376f5ae4660eb9514e30f4abcb3bdcd8efc8"
+    },
+    {
+     "path": "transport/clearing/RefundExact.dfy",
+     "sha256": "58d354e91ce08468ec40c321fee9a1fcec441616c69a443173b4328213d53d85"
+    },
+    {
+     "path": "transport/impl/Refund.dfy",
+     "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+    },
+    {
+     "path": "transport/proposals/forge2-pillar1-spec-determinism/RefundDeterminism.dfy",
+     "sha256": "6902061697489a0e17ac5340eb0a02bc57d43e8c1067ea1ca295430f5fc9ae0c"
+    },
+    {
+     "path": "transport/spec/refund/RefundSpec.dfy",
+     "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+    }
+   ],
+   "include_closure_digest": "691547b169e3593e84bca411aa9b4a9b017c490cdbc55d21e260758fb58c3803",
+   "folder_files": [
+    {
+     "path": "Boundary.dfy",
+     "sha256": "8ab7cd8a22adc527cf8ac2ab22906adad79dfe9179a8c0f6c46650429c7a9314"
+    },
+    {
+     "path": "Library.dfy",
+     "sha256": "20cd9f0d3455d693e8165db78446f30358d7489e1c344540e5cd8b6d759e5409"
+    },
+    {
+     "path": "LinkedRefund.dfy",
+     "sha256": "0d67b4838e390a336dfec027326a2cb067a7a35fa120af60b94bdfda4d069f34"
+    },
+    {
+     "path": "UnicodeRelation.dfy",
+     "sha256": "804504ef807d5c67ffaef7e11581ebe523f807c48af069d3c9ff5f5305f91990"
+    },
+    {
+     "path": "library/Std/Arithmetic/DivMod.dfy",
+     "sha256": "668a04ec1dfae3f41f3fc3952754900de605b022acbfc83243341f2f6cfa01d2"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/DivInternals.dfy",
+     "sha256": "34332d774149f3cc4984f0d4931d1cf6b343907bc3da70c6a23dca72ab559d50"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/DivInternalsNonlinear.dfy",
+     "sha256": "afe624f1d81ac82b95b9d90445931a444ca736c9d7865c539d4d0a47aa5d6913"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/GeneralInternals.dfy",
+     "sha256": "c91f452c462c9e07231f8ad18a1de409c29345c40689fc9f4a2a4ea9a7c02972"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/ModInternals.dfy",
+     "sha256": "775bcfbf5b168996e49c85ecc56e661e7136ab3fcc07aefd85e3402a7d96e7b0"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/ModInternalsNonlinear.dfy",
+     "sha256": "8a58ee87babaad395519b49f8fbe7b57bacc8b8534b81dd672876067728603e3"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/MulInternals.dfy",
+     "sha256": "7e4c589654853b740e72c950e526f15bee88cd76abeaf0ff94926867f1682f2c"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/MulInternalsNonlinear.dfy",
+     "sha256": "a9e4f91e111f8b085f35404ad3d5f9c445c084a0bf42455378fd417af5b0f81b"
+    },
+    {
+     "path": "library/Std/Arithmetic/LittleEndianNat.dfy",
+     "sha256": "c7a884f7c1a3d640ee54fdec6481e21659aa9f652a949ccc6983ae54181ea108"
+    },
+    {
+     "path": "library/Std/Arithmetic/Logarithm.dfy",
+     "sha256": "08e65e363e5d0ac0bfb674cc8dcb50c0e9f18b42fae278d471e5835d0cee50e8"
+    },
+    {
+     "path": "library/Std/Arithmetic/Mul.dfy",
+     "sha256": "318cdd74a34332cf14f03b0024f033ca8924d72ae0ba1959687fb439135e7d57"
+    },
+    {
+     "path": "library/Std/Arithmetic/Power.dfy",
+     "sha256": "880dd391bce30c73afa22f303cc78d917bd8857f1cedf7046506df46ff070675"
+    },
+    {
+     "path": "library/Std/Arithmetic/Power2.dfy",
+     "sha256": "576960a554cfb9431a5fb760ec92f3f142d49d9859e72959c7c0f72c26a690ae"
+    },
+    {
+     "path": "library/Std/Collections/Collections.dfy",
+     "sha256": "906397b244e36de57b6d8d2205967a9e9f8a55f89d062dd54f6251713ea06a92"
+    },
+    {
+     "path": "library/Std/Collections/Seq.dfy",
+     "sha256": "9d2f1c72503d140ccd4f963c820594086dc1f9de06e37e439e8a5d7c909a1d2d"
+    },
+    {
+     "path": "library/Std/Functions.dfy",
+     "sha256": "b935ef711e73777d8155bf30469b4b7c5e98c714d65129b816050839c48d2189"
+    },
+    {
+     "path": "library/Std/Math.dfy",
+     "sha256": "d1e7acf438f766770f5038aa26bc23f4e49dd17b06b64ccef07d8150c6e2b2a9"
+    },
+    {
+     "path": "library/Std/Relations.dfy",
+     "sha256": "af31852c17c7d56af89ebf8464cb8338fc857b4931f98e871aa83e4ec8b8b477"
+    },
+    {
+     "path": "library/Std/Strings.dfy",
+     "sha256": "c2d5ad12b1a84d9089297215920ab7367dc4dcbd384649ce91c2938bccdf4b87"
+    },
+    {
+     "path": "library/Std/Unicode/Unicode.dfy",
+     "sha256": "db4477f9f789ea61a5265a17ca8299494cf1a4b09747801e1ecab57bc875c016"
+    },
+    {
+     "path": "library/Std/Unicode/UnicodeBase.dfy",
+     "sha256": "2650a664f171dcd8cc20d8abd98003135d33fd0f4fbc4bb11c3a0c674cac733e"
+    },
+    {
+     "path": "library/Std/Unicode/UnicodeEncodingForm.dfy",
+     "sha256": "09b635f174602b4e91d80ba03fa578ad2fbc3f892df507ae349c16f219615485"
+    },
+    {
+     "path": "library/Std/Unicode/Utf8EncodingForm.dfy",
+     "sha256": "9ad6deab2edab4e6402f43e8ba65c4d9fca925421a55b7eab10a192c0da42a78"
+    },
+    {
+     "path": "library/Std/Wrappers.dfy",
+     "sha256": "b0db6d1cfce218f358e01e0eed52fba5246f8b64e9b5113d8187620903dc4c08"
+    },
+    {
+     "path": "transport/FlatCore.dfy",
+     "sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d"
+    },
+    {
+     "path": "transport/Transport.dfy",
+     "sha256": "a07fec89f746b0a67626c778f5b5376f5ae4660eb9514e30f4abcb3bdcd8efc8"
+    },
+    {
+     "path": "transport/clearing/RefundExact.dfy",
+     "sha256": "58d354e91ce08468ec40c321fee9a1fcec441616c69a443173b4328213d53d85"
+    },
+    {
+     "path": "transport/impl/Refund.dfy",
+     "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+    },
+    {
+     "path": "transport/proposals/forge2-pillar1-spec-determinism/RefundDeterminism.dfy",
+     "sha256": "6902061697489a0e17ac5340eb0a02bc57d43e8c1067ea1ca295430f5fc9ae0c"
+    },
+    {
+     "path": "transport/spec/refund/RefundSpec.dfy",
+     "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+    }
+   ],
+   "folder_digest": "3f679eeb0578aae243a85069c090c35b7ba2aef08e8591d3e7ea4ba676a15bd5",
+   "pins": [
+    {
+     "path": "LinkedRefund.dfy",
+     "sha256": "0d67b4838e390a336dfec027326a2cb067a7a35fa120af60b94bdfda4d069f34",
+     "why": "the proof file (run_check.py PROOF_SHA256)"
+    },
+    {
+     "path": "transport/FlatCore.dfy",
+     "sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d",
+     "why": "the flat contract = the input of the U294 export"
+    }
+   ],
+   "argv": [
+    "{dafny}",
+    "verify",
+    "LinkedRefund.dfy",
+    "--solver-path",
+    "{z3}",
+    "--resource-limit",
+    "1000000",
+    "--verification-time-limit",
+    "0",
+    "--cores",
+    "1",
+    "--verify-included-files",
+    "--track-print-effects"
+   ],
+   "expected_exit": 0,
+   "expected_summary": "Dafny program verifier finished with 1489 verified, 0 errors",
+   "controls": [
+    {
+     "name": "N1-unflatten-swap",
+     "diff": {
+      "locator": {
+       "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/negative/N1-unflatten-swap.diff"
+      },
+      "sha256": "6a785b223f694779d238124aff6dcb22f4b6cbb708154aa9e0cf7d6b8d70bede"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N1b-flatten-swap",
+     "diff": {
+      "locator": {
+       "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/negative/N1b-flatten-swap.diff"
+      },
+      "sha256": "8389dfe9dc2b09f2bb52989d56f24ea88d8d2d643bd49d2c74e09c499002bdfc"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N2-amount-plus-one",
+     "diff": {
+      "locator": {
+       "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/negative/N2-amount-plus-one.diff"
+      },
+      "sha256": "7d803c4ff404579407ae95ab93ec5a9552306cef0bed9a61b80f0e234869b544"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N3a-drop-flat-ensures-1",
+     "diff": {
+      "locator": {
+       "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/negative/N3a-drop-flat-ensures-1.diff"
+      },
+      "sha256": "e8db082c15b2a637fac86a761b2d5bac393927f9ec57962f90f157e97725c262"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N3b-drop-flat-ensures-2",
+     "diff": {
+      "locator": {
+       "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/negative/N3b-drop-flat-ensures-2.diff"
+      },
+      "sha256": "5cefa795938a22570c9c9e7e9c2d96e000a26ef1600220f123734f996c5e1c67"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N3c-drop-flat-ensures-3",
+     "diff": {
+      "locator": {
+       "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/negative/N3c-drop-flat-ensures-3.diff"
+      },
+      "sha256": "11e67a869502811a27223511fd61d2fa2764084976f5535d590b68f41ca5e029"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N4-count0-authorized",
+     "diff": {
+      "locator": {
+       "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/negative/N4-count0-authorized.diff"
+      },
+      "sha256": "b57e51cf8933c624a4b1e8ddcb7f84469afdb669b5abff50696651e5d89d446f"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N5-decode-reads-response",
+     "diff": {
+      "locator": {
+       "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/negative/N5-decode-reads-response.diff"
+      },
+      "sha256": "eea9e84bb2b3fbbc6961952e39c8717312808e8e22683327cd21a172d98f4c28"
+     },
+     "expected_exit": 0
+    }
+   ],
+   "runs": [
+    {
+     "record_kind": "run_check_result",
+     "by": "run_check.py dispatch, attempt-0002 (orchestrator, by the build/ location; not confirmed)",
+     "files": {
+      "result": {
+       "locator": {
+        "repo": "build/m1b-linked-refund/attempt-0002/result.json"
+       },
+       "sha256": "e474ec51f9ca6f88cb51d4ec427b5e13f6863221bb499b1438e0c56d313ded38"
+      },
+      "log": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/records/m1b-linked-refund-run2.log"
+       },
+       "sha256": "0d77223a05a3b8611876a5e5618b34a0537307c075d13fea26cdb49c3168599a"
+      }
+     }
+    },
+    {
+     "record_kind": "w9_attempt",
+     "by": "worker W9, attempt 04",
+     "files": {
+      "env": {
+       "locator": {
+        "scratch": "m1b/W9/attempts/04/env.txt"
+       },
+       "sha256": "c5d548821b5b5653baa4a5ce59ed9b9b1bfe2065fe76e084a0603b829e863f31"
+      },
+      "output": {
+       "locator": {
+        "scratch": "m1b/W9/attempts/04/output.log"
+       },
+       "sha256": "7e07b646aabfe4f013464d89a599198c5f5a60970d9cb162267f2dd884e85e23"
+      },
+      "sha": {
+       "locator": {
+        "scratch": "m1b/W9/attempts/04/sha256.txt"
+       },
+       "sha256": "077372a44cf46393413c13b760ba5841f91c7700de6a76faa1249000a55add24"
+      },
+      "command": {
+       "locator": {
+        "scratch": "m1b/W9/attempts/04/command.txt"
+       },
+       "sha256": "5f161f1258437581bc402ec2f7831e9da00a7bc89c919d157d2c8cb558ad7fcd"
+      },
+      "closure_list": {
+       "locator": {
+        "scratch": "m1b/W9/audit/reached-sha256.txt"
+       },
+       "sha256": "a0e6ceb4b7461c70c949815f30b62190930a116e2640145f871cef06b7a4c3bd"
+      }
+     }
+    }
+   ],
+   "runner": {
+    "file": {
+     "locator": {
+      "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/run_check.py"
+     },
+     "sha256": "9eaf2a64f670d9600236f61da95c11f6ba11e405a9005fa57bd350fcc55d7b77"
+    },
+    "controls_name": "CONTROLS"
+   },
+   "approved_copies": [
+    {
+     "copy": "transport/spec/refund/RefundSpec.dfy",
+     "approved": {
+      "repo": "spec/refund/RefundSpec.dfy"
+     }
+    },
+    {
+     "copy": "transport/impl/Refund.dfy",
+     "approved": {
+      "repo": "impl/Refund.dfy"
+     }
+    },
+    {
+     "copy": "transport/clearing/RefundExact.dfy",
+     "approved": {
+      "repo": "clearing/RefundExact.dfy"
+     }
+    }
+   ]
+  },
+  {
+   "id": "S3a-linked-refund-no-hex",
+   "kind": "source",
+   "root": {
+    "scratch": "m1b/Y10/S3a-noHex/inputs"
+   },
+   "entries": [
+    "LinkedRefund.dfy"
+   ],
+   "include_closure": [
+    {
+     "path": "Library.dfy",
+     "sha256": "20cd9f0d3455d693e8165db78446f30358d7489e1c344540e5cd8b6d759e5409"
+    },
+    {
+     "path": "LinkedRefund.dfy",
+     "sha256": "0d67b4838e390a336dfec027326a2cb067a7a35fa120af60b94bdfda4d069f34"
+    },
+    {
+     "path": "UnicodeRelation.dfy",
+     "sha256": "804504ef807d5c67ffaef7e11581ebe523f807c48af069d3c9ff5f5305f91990"
+    },
+    {
+     "path": "library/Std/Arithmetic/DivMod.dfy",
+     "sha256": "668a04ec1dfae3f41f3fc3952754900de605b022acbfc83243341f2f6cfa01d2"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/DivInternals.dfy",
+     "sha256": "34332d774149f3cc4984f0d4931d1cf6b343907bc3da70c6a23dca72ab559d50"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/DivInternalsNonlinear.dfy",
+     "sha256": "afe624f1d81ac82b95b9d90445931a444ca736c9d7865c539d4d0a47aa5d6913"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/GeneralInternals.dfy",
+     "sha256": "c91f452c462c9e07231f8ad18a1de409c29345c40689fc9f4a2a4ea9a7c02972"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/ModInternals.dfy",
+     "sha256": "775bcfbf5b168996e49c85ecc56e661e7136ab3fcc07aefd85e3402a7d96e7b0"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/ModInternalsNonlinear.dfy",
+     "sha256": "8a58ee87babaad395519b49f8fbe7b57bacc8b8534b81dd672876067728603e3"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/MulInternals.dfy",
+     "sha256": "7e4c589654853b740e72c950e526f15bee88cd76abeaf0ff94926867f1682f2c"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/MulInternalsNonlinear.dfy",
+     "sha256": "a9e4f91e111f8b085f35404ad3d5f9c445c084a0bf42455378fd417af5b0f81b"
+    },
+    {
+     "path": "library/Std/Arithmetic/LittleEndianNat.dfy",
+     "sha256": "c7a884f7c1a3d640ee54fdec6481e21659aa9f652a949ccc6983ae54181ea108"
+    },
+    {
+     "path": "library/Std/Arithmetic/Logarithm.dfy",
+     "sha256": "08e65e363e5d0ac0bfb674cc8dcb50c0e9f18b42fae278d471e5835d0cee50e8"
+    },
+    {
+     "path": "library/Std/Arithmetic/Mul.dfy",
+     "sha256": "318cdd74a34332cf14f03b0024f033ca8924d72ae0ba1959687fb439135e7d57"
+    },
+    {
+     "path": "library/Std/Arithmetic/Power.dfy",
+     "sha256": "880dd391bce30c73afa22f303cc78d917bd8857f1cedf7046506df46ff070675"
+    },
+    {
+     "path": "library/Std/Arithmetic/Power2.dfy",
+     "sha256": "576960a554cfb9431a5fb760ec92f3f142d49d9859e72959c7c0f72c26a690ae"
+    },
+    {
+     "path": "library/Std/Collections/Collections.dfy",
+     "sha256": "906397b244e36de57b6d8d2205967a9e9f8a55f89d062dd54f6251713ea06a92"
+    },
+    {
+     "path": "library/Std/Collections/Seq.dfy",
+     "sha256": "9d2f1c72503d140ccd4f963c820594086dc1f9de06e37e439e8a5d7c909a1d2d"
+    },
+    {
+     "path": "library/Std/Functions.dfy",
+     "sha256": "b935ef711e73777d8155bf30469b4b7c5e98c714d65129b816050839c48d2189"
+    },
+    {
+     "path": "library/Std/Math.dfy",
+     "sha256": "d1e7acf438f766770f5038aa26bc23f4e49dd17b06b64ccef07d8150c6e2b2a9"
+    },
+    {
+     "path": "library/Std/Relations.dfy",
+     "sha256": "af31852c17c7d56af89ebf8464cb8338fc857b4931f98e871aa83e4ec8b8b477"
+    },
+    {
+     "path": "library/Std/Strings.dfy",
+     "sha256": "b1c3769eb375876097b6918bba8acc6d60b63c98edcb7c472d34f02f2d10fe1f"
+    },
+    {
+     "path": "library/Std/Unicode/Unicode.dfy",
+     "sha256": "db4477f9f789ea61a5265a17ca8299494cf1a4b09747801e1ecab57bc875c016"
+    },
+    {
+     "path": "library/Std/Unicode/UnicodeBase.dfy",
+     "sha256": "2650a664f171dcd8cc20d8abd98003135d33fd0f4fbc4bb11c3a0c674cac733e"
+    },
+    {
+     "path": "library/Std/Unicode/UnicodeEncodingForm.dfy",
+     "sha256": "09b635f174602b4e91d80ba03fa578ad2fbc3f892df507ae349c16f219615485"
+    },
+    {
+     "path": "library/Std/Unicode/Utf8EncodingForm.dfy",
+     "sha256": "9ad6deab2edab4e6402f43e8ba65c4d9fca925421a55b7eab10a192c0da42a78"
+    },
+    {
+     "path": "library/Std/Wrappers.dfy",
+     "sha256": "b0db6d1cfce218f358e01e0eed52fba5246f8b64e9b5113d8187620903dc4c08"
+    },
+    {
+     "path": "transport/FlatCore.dfy",
+     "sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d"
+    },
+    {
+     "path": "transport/Transport.dfy",
+     "sha256": "a07fec89f746b0a67626c778f5b5376f5ae4660eb9514e30f4abcb3bdcd8efc8"
+    },
+    {
+     "path": "transport/clearing/RefundExact.dfy",
+     "sha256": "58d354e91ce08468ec40c321fee9a1fcec441616c69a443173b4328213d53d85"
+    },
+    {
+     "path": "transport/impl/Refund.dfy",
+     "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+    },
+    {
+     "path": "transport/proposals/forge2-pillar1-spec-determinism/RefundDeterminism.dfy",
+     "sha256": "6902061697489a0e17ac5340eb0a02bc57d43e8c1067ea1ca295430f5fc9ae0c"
+    },
+    {
+     "path": "transport/spec/refund/RefundSpec.dfy",
+     "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+    }
+   ],
+   "include_closure_digest": "c6d90bb35bc3a5458c0da1c4f6bf700b4460771802f598f84f3c8ddce737737f",
+   "folder_files": [
+    {
+     "path": "Boundary.dfy",
+     "sha256": "8ab7cd8a22adc527cf8ac2ab22906adad79dfe9179a8c0f6c46650429c7a9314"
+    },
+    {
+     "path": "Library.dfy",
+     "sha256": "20cd9f0d3455d693e8165db78446f30358d7489e1c344540e5cd8b6d759e5409"
+    },
+    {
+     "path": "LinkedRefund.dfy",
+     "sha256": "0d67b4838e390a336dfec027326a2cb067a7a35fa120af60b94bdfda4d069f34"
+    },
+    {
+     "path": "UnicodeRelation.dfy",
+     "sha256": "804504ef807d5c67ffaef7e11581ebe523f807c48af069d3c9ff5f5305f91990"
+    },
+    {
+     "path": "library/Std/Arithmetic/DivMod.dfy",
+     "sha256": "668a04ec1dfae3f41f3fc3952754900de605b022acbfc83243341f2f6cfa01d2"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/DivInternals.dfy",
+     "sha256": "34332d774149f3cc4984f0d4931d1cf6b343907bc3da70c6a23dca72ab559d50"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/DivInternalsNonlinear.dfy",
+     "sha256": "afe624f1d81ac82b95b9d90445931a444ca736c9d7865c539d4d0a47aa5d6913"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/GeneralInternals.dfy",
+     "sha256": "c91f452c462c9e07231f8ad18a1de409c29345c40689fc9f4a2a4ea9a7c02972"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/ModInternals.dfy",
+     "sha256": "775bcfbf5b168996e49c85ecc56e661e7136ab3fcc07aefd85e3402a7d96e7b0"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/ModInternalsNonlinear.dfy",
+     "sha256": "8a58ee87babaad395519b49f8fbe7b57bacc8b8534b81dd672876067728603e3"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/MulInternals.dfy",
+     "sha256": "7e4c589654853b740e72c950e526f15bee88cd76abeaf0ff94926867f1682f2c"
+    },
+    {
+     "path": "library/Std/Arithmetic/Internal/MulInternalsNonlinear.dfy",
+     "sha256": "a9e4f91e111f8b085f35404ad3d5f9c445c084a0bf42455378fd417af5b0f81b"
+    },
+    {
+     "path": "library/Std/Arithmetic/LittleEndianNat.dfy",
+     "sha256": "c7a884f7c1a3d640ee54fdec6481e21659aa9f652a949ccc6983ae54181ea108"
+    },
+    {
+     "path": "library/Std/Arithmetic/Logarithm.dfy",
+     "sha256": "08e65e363e5d0ac0bfb674cc8dcb50c0e9f18b42fae278d471e5835d0cee50e8"
+    },
+    {
+     "path": "library/Std/Arithmetic/Mul.dfy",
+     "sha256": "318cdd74a34332cf14f03b0024f033ca8924d72ae0ba1959687fb439135e7d57"
+    },
+    {
+     "path": "library/Std/Arithmetic/Power.dfy",
+     "sha256": "880dd391bce30c73afa22f303cc78d917bd8857f1cedf7046506df46ff070675"
+    },
+    {
+     "path": "library/Std/Arithmetic/Power2.dfy",
+     "sha256": "576960a554cfb9431a5fb760ec92f3f142d49d9859e72959c7c0f72c26a690ae"
+    },
+    {
+     "path": "library/Std/Collections/Collections.dfy",
+     "sha256": "906397b244e36de57b6d8d2205967a9e9f8a55f89d062dd54f6251713ea06a92"
+    },
+    {
+     "path": "library/Std/Collections/Seq.dfy",
+     "sha256": "9d2f1c72503d140ccd4f963c820594086dc1f9de06e37e439e8a5d7c909a1d2d"
+    },
+    {
+     "path": "library/Std/Functions.dfy",
+     "sha256": "b935ef711e73777d8155bf30469b4b7c5e98c714d65129b816050839c48d2189"
+    },
+    {
+     "path": "library/Std/Math.dfy",
+     "sha256": "d1e7acf438f766770f5038aa26bc23f4e49dd17b06b64ccef07d8150c6e2b2a9"
+    },
+    {
+     "path": "library/Std/Relations.dfy",
+     "sha256": "af31852c17c7d56af89ebf8464cb8338fc857b4931f98e871aa83e4ec8b8b477"
+    },
+    {
+     "path": "library/Std/Strings.dfy",
+     "sha256": "b1c3769eb375876097b6918bba8acc6d60b63c98edcb7c472d34f02f2d10fe1f"
+    },
+    {
+     "path": "library/Std/Unicode/Unicode.dfy",
+     "sha256": "db4477f9f789ea61a5265a17ca8299494cf1a4b09747801e1ecab57bc875c016"
+    },
+    {
+     "path": "library/Std/Unicode/UnicodeBase.dfy",
+     "sha256": "2650a664f171dcd8cc20d8abd98003135d33fd0f4fbc4bb11c3a0c674cac733e"
+    },
+    {
+     "path": "library/Std/Unicode/UnicodeEncodingForm.dfy",
+     "sha256": "09b635f174602b4e91d80ba03fa578ad2fbc3f892df507ae349c16f219615485"
+    },
+    {
+     "path": "library/Std/Unicode/Utf8EncodingForm.dfy",
+     "sha256": "9ad6deab2edab4e6402f43e8ba65c4d9fca925421a55b7eab10a192c0da42a78"
+    },
+    {
+     "path": "library/Std/Wrappers.dfy",
+     "sha256": "b0db6d1cfce218f358e01e0eed52fba5246f8b64e9b5113d8187620903dc4c08"
+    },
+    {
+     "path": "transport/FlatCore.dfy",
+     "sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d"
+    },
+    {
+     "path": "transport/Transport.dfy",
+     "sha256": "a07fec89f746b0a67626c778f5b5376f5ae4660eb9514e30f4abcb3bdcd8efc8"
+    },
+    {
+     "path": "transport/clearing/RefundExact.dfy",
+     "sha256": "58d354e91ce08468ec40c321fee9a1fcec441616c69a443173b4328213d53d85"
+    },
+    {
+     "path": "transport/impl/Refund.dfy",
+     "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+    },
+    {
+     "path": "transport/proposals/forge2-pillar1-spec-determinism/RefundDeterminism.dfy",
+     "sha256": "6902061697489a0e17ac5340eb0a02bc57d43e8c1067ea1ca295430f5fc9ae0c"
+    },
+    {
+     "path": "transport/spec/refund/RefundSpec.dfy",
+     "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+    }
+   ],
+   "folder_digest": "a18ab6c0f30fe55b5d308d2fff3a24892a5b4799188abc2cdf59962ea86a77de",
+   "pins": [
+    {
+     "path": "LinkedRefund.dfy",
+     "sha256": "0d67b4838e390a336dfec027326a2cb067a7a35fa120af60b94bdfda4d069f34",
+     "why": "the same proof file as S3"
+    }
+   ],
+   "argv": [
+    "{dafny}",
+    "verify",
+    "LinkedRefund.dfy",
+    "--solver-path",
+    "{z3}",
+    "--resource-limit",
+    "1000000",
+    "--verification-time-limit",
+    "0",
+    "--cores",
+    "1",
+    "--verify-included-files",
+    "--track-print-effects"
+   ],
+   "expected_exit": 0,
+   "expected_summary": "Dafny program verifier finished with 1486 verified, 0 errors",
+   "controls": [],
+   "runs": [
+    {
+     "record_kind": "y10_run",
+     "by": "worker Y10 (run1.sh)",
+     "files": {
+      "exit": {
+       "locator": {
+        "scratch": "m1b/Y10/runs/S3a-noHex/exit.txt"
+       },
+       "sha256": "0e3f8b893ad2d8910a737d864b39f80c79f9443ef7d50c89c9dc44645f0ca430"
+      },
+      "out": {
+       "locator": {
+        "scratch": "m1b/Y10/runs/S3a-noHex/out.txt"
+       },
+       "sha256": "280a120bac0b532ae2bef30882fc3fa3c293c2c9adbd2fcca906c3e86ba7e716"
+      },
+      "sha": {
+       "locator": {
+        "scratch": "m1b/Y10/runs/S3a-noHex/sha.txt"
+       },
+       "sha256": "6e0705439d5c8f3d19bbda1b2f0fad7ff68d5b39e3eb35d89a70293d6f4a5ccd"
+      },
+      "command": {
+       "locator": {
+        "scratch": "m1b/Y10/run1.sh"
+       },
+       "sha256": "c6057faa6122726fdae41c322b9d248e0afca6db111bf082fb763eb1b3dacbf0"
+      }
+     }
+    }
+   ],
+   "runner": null,
+   "derived_from": {
+    "proof": "S3-linked-refund",
+    "target": "library/Std/Strings.dfy",
+    "diff": {
+     "locator": {
+      "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/review-controls/S3a-remove-hex-module.diff"
+     },
+     "sha256": "ec73d8a98d647a00a97d385696e5513dc2d50b3ec07cb5fa47aa7a4fbb06347c"
+    }
+   },
+   "note": "the closure lives in scratch only; the repository holds the base closure and a classic diff without a file name"
+  },
+  {
+   "id": "U5a-sink-core",
+   "kind": "source",
+   "root": {
+    "repo": "proposals/m1b-mission-20261119/proofs/sink-core/inputs"
+   },
+   "entries": [
+    "sink/SinkCore.dfy"
+   ],
+   "include_closure": [
+    {
+     "path": "impl/Refund.dfy",
+     "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+    },
+    {
+     "path": "impl/RefundFinality.dfy",
+     "sha256": "2326934559f467883be97bd644da6a02fda60c0fac86ef2b3da6a8fa0071d41c"
+    },
+    {
+     "path": "model/FinalityProtocol.dfy",
+     "sha256": "8b70b6b410683004403beeadf427ece42dd38b292f12a082917efe6272177484"
+    },
+    {
+     "path": "sink/SinkCore.dfy",
+     "sha256": "198474e450db2bc1f255a07c6a6421b38e49285045415835bca16bfacb3601ba"
+    },
+    {
+     "path": "spec/refund/RefundSpec.dfy",
+     "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+    }
+   ],
+   "include_closure_digest": "8cc14980d23f2323b0a3731bc777d9e7608b07b1e5d4469008888fd97c3fbb31",
+   "folder_files": [
+    {
+     "path": "impl/Refund.dfy",
+     "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+    },
+    {
+     "path": "impl/RefundFinality.dfy",
+     "sha256": "2326934559f467883be97bd644da6a02fda60c0fac86ef2b3da6a8fa0071d41c"
+    },
+    {
+     "path": "model/FinalityProtocol.dfy",
+     "sha256": "8b70b6b410683004403beeadf427ece42dd38b292f12a082917efe6272177484"
+    },
+    {
+     "path": "sink/SinkCore.dfy",
+     "sha256": "198474e450db2bc1f255a07c6a6421b38e49285045415835bca16bfacb3601ba"
+    },
+    {
+     "path": "spec/refund/RefundSpec.dfy",
+     "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+    }
+   ],
+   "folder_digest": "8cc14980d23f2323b0a3731bc777d9e7608b07b1e5d4469008888fd97c3fbb31",
+   "pins": [
+    {
+     "path": "sink/SinkCore.dfy",
+     "sha256": "198474e450db2bc1f255a07c6a6421b38e49285045415835bca16bfacb3601ba",
+     "why": "the sink core proof file"
+    }
+   ],
+   "argv": [
+    "{dafny}",
+    "verify",
+    "sink/SinkCore.dfy",
+    "--solver-path",
+    "{z3}",
+    "--resource-limit",
+    "1000000",
+    "--verification-time-limit",
+    "0",
+    "--cores",
+    "1",
+    "--verify-included-files",
+    "--track-print-effects"
+   ],
+   "expected_exit": 0,
+   "expected_summary": "Dafny program verifier finished with 56 verified, 0 errors",
+   "controls": [
+    {
+     "name": "N1-drop-fresh-id-check",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N1-drop-fresh-id-check/sink/SinkCore.dfy"
+       },
+       "sha256": "15d845dfbb7e99dc4cf62286c2c2e3393cab46c8fea40a9180bfdd2de017097e"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N2-drop-pre-state-check",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N2-drop-pre-state-check/sink/SinkCore.dfy"
+       },
+       "sha256": "c32eaa86fdaafd93f1d7391fcb337e9989c1dacc6df900ca1bff7932cdfdaa79"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N3a-wrong-arithmetic-double-deduct",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N3a-wrong-arithmetic-double-deduct/sink/SinkCore.dfy"
+       },
+       "sha256": "dcfb02d0bdfddd7ede5130ee2a3c1564307ce0a1071fb588cefe3aaef82429c3"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N3b-wrong-arithmetic-add",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N3b-wrong-arithmetic-add/sink/SinkCore.dfy"
+       },
+       "sha256": "061e8d83346da21bcfc543fb1e0e7faefac3fbade5c06875fcc7bd90b4131292"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N4-commit-on-invalid-signature",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N4-commit-on-invalid-signature/sink/SinkCore.dfy"
+       },
+       "sha256": "5a829b4fdeb938a7cba92f5fe3a2e385642ecc35ee15ee237eb362f60cef13f1"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N5-drop-pinned-ids-check",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N5-drop-pinned-ids-check/sink/SinkCore.dfy"
+       },
+       "sha256": "754099f4c8ed611a2910152b6cc7003a909fa2848a67d9854657c9b76e31f53e"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N6-non-injective-id-encoding",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N6-non-injective-id-encoding/sink/SinkCore.dfy"
+       },
+       "sha256": "91f7c8285f4ad640741d5bc9ca5262103057740087e338b3d240f4e5d0465433"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N7-claim-every-commit-changes-state",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N7-claim-every-commit-changes-state/sink/SinkCore.dfy"
+       },
+       "sha256": "b07e51cc816416ed919a6553ec276eed0a7b39259f569aad4d5747a096f0458b"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    },
+    {
+     "name": "N8-two-effects-per-commit",
+     "mutant": {
+      "file": {
+       "locator": {
+        "repo": "proposals/m1b-mission-20261119/proofs/sink-core/mutants/N8-two-effects-per-commit/sink/SinkCore.dfy"
+       },
+       "sha256": "2c885d3f2ffb46c88ae9f970eed5e05b72edf5afd5c63f9d48bd7f7ef088a70e"
+      },
+      "replaces": "sink/SinkCore.dfy"
+     },
+     "expected_exit": 4
+    }
+   ],
+   "runs": [
+    {
+     "record_kind": "y7_result",
+     "by": "worker Y7 (dafny_one.sh)",
+     "files": {
+      "result": {
+       "locator": {
+        "scratch": "m1b/Y7/logs/result-all.json"
+       },
+       "sha256": "29447b3a6da65a70262d34792685886528f56ec58898e4dc198be11f364177f3"
+      },
+      "log": {
+       "locator": {
+        "scratch": "m1b/Y7/logs/main.log"
+       },
+       "sha256": "3b16ff565c11928eb889e8d092f1fd1f6123772ce28faf56ceef0050a9f0c2e7"
+      }
+     }
+    }
+   ],
+   "runner": {
+    "file": {
+     "locator": {
+      "repo": "proposals/m1b-mission-20261119/proofs/sink-core/run_y7.py"
+     },
+     "sha256": "487fd609f5fc672625178881d8bde67f664ef6930df5826c06325cebe2424083"
+    },
+    "controls_name": "MUTANTS"
+   },
+   "approved_copies": [
+    {
+     "copy": "model/FinalityProtocol.dfy",
+     "approved": {
+      "repo": "proposals/forge2-pillar2-finality-protocol/FinalityProtocol.dfy"
+     }
+    },
+    {
+     "copy": "impl/RefundFinality.dfy",
+     "approved": {
+      "repo": "impl/RefundFinality.dfy"
+     }
+    },
+    {
+     "copy": "impl/Refund.dfy",
+     "approved": {
+      "repo": "impl/Refund.dfy"
+     }
+    },
+    {
+     "copy": "spec/refund/RefundSpec.dfy",
+     "approved": {
+      "repo": "spec/refund/RefundSpec.dfy"
+     }
+    }
+   ]
+  }
+ ],
+ "recorded_runs": [
+  {
+   "id": "S2-refund-gate",
+   "record_kind": "slice1_refund_gate",
+   "by": "scripts/exit_slice1.py (Slice 1)",
+   "files": {
+    "evidence": {
+     "locator": {
+      "repo": "proposals/forge2-slice1-refund-finality/records/evidence.json"
+     },
+     "sha256": "c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1"
+    }
+   },
+   "bound_files": [
+    {
+     "locator": {
+      "repo": "impl/Refund.dfy"
+     },
+     "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+    },
+    {
+     "locator": {
+      "repo": "spec/refund/RefundSpec.dfy"
+     },
+     "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+    }
+   ]
+  },
+  {
+   "id": "U1-refund-finality",
+   "record_kind": "slice1_dafny_verify",
+   "by": "scripts/exit_slice1.py (Slice 1)",
+   "files": {
+    "evidence": {
+     "locator": {
+      "repo": "proposals/forge2-slice1-refund-finality/records/evidence.json"
+     },
+     "sha256": "c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1"
+    }
+   },
+   "bound_files": [
+    {
+     "locator": {
+      "repo": "impl/RefundFinality.dfy"
+     },
+     "sha256": "2326934559f467883be97bd644da6a02fda60c0fac86ef2b3da6a8fa0071d41c"
+    },
+    {
+     "locator": {
+      "repo": "tests/refund-finality/Bindings.dfy"
+     },
+     "sha256": "03ed3e77d43973f176caa27467d2c94eba0d0fe6170e48ea8cd198fd81cea136"
+    },
+    {
+     "locator": {
+      "repo": "impl/Refund.dfy"
+     },
+     "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+    },
+    {
+     "locator": {
+      "repo": "spec/refund/RefundSpec.dfy"
+     },
+     "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+    }
+   ]
+  },
+  {
+   "id": "U2U3-suite",
+   "record_kind": "slice1_suite",
+   "by": "scripts/exit_slice1.py (Slice 1)",
+   "files": {
+    "evidence": {
+     "locator": {
+      "repo": "proposals/forge2-slice1-refund-finality/records/evidence.json"
+     },
+     "sha256": "c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1"
+    }
+   },
+   "bound_files": [
+    {
+     "locator": {
+      "repo": "ts/refund-finality/sink.ts"
+     },
+     "sha256": "0690a4269a38f49a9b053ab9a97a55d917b4a3758f39cbecd2edf91a78484de7"
+    },
+    {
+     "locator": {
+      "repo": "ts/refund-finality/minter.ts"
+     },
+     "sha256": "714824d83fd660b4fa69d3bc8993a5b08cf79b396507cb026ce6563ef887e1df"
+    }
+   ]
+  },
+  {
+   "id": "U4-finality-model",
+   "record_kind": "f20_summary",
+   "by": "run_checks.py (F2.0)",
+   "case": "finality-protocol-model-verifies",
+   "files": {
+    "summary": {
+     "locator": {
+      "repo": "proposals/forge2-pillar2-finality-protocol/records/summary-attempt-0002.json"
+     },
+     "sha256": "5c7a13afd144e9a18edad24afda1682ef69d4f5ae30d1b61f38014c57f3ed563"
+    }
+   },
+   "bound_files": [
+    {
+     "locator": {
+      "repo": "proposals/forge2-pillar2-finality-protocol/FinalityProtocol.dfy"
+     },
+     "sha256": "8b70b6b410683004403beeadf427ece42dd38b292f12a082917efe6272177484"
+    }
+   ]
+  },
+  {
+   "id": "S5-u294-source",
+   "record_kind": "u294_command",
+   "by": "U294 (2026-11-04)",
+   "theorems": [
+    "source_decode",
+    "source_postconditions",
+    "source_full_result"
+   ],
+   "files": {
+    "command": {
+     "locator": {
+      "repo": "results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/hol-0004/command.json"
+     },
+     "sha256": "f9a364eaeb4c8a2dd15649f5b78f6eba7068a897f6c01ea8853c5832582874e8"
+    },
+    "stdout": {
+     "locator": {
+      "repo": "results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/hol-0004/stdout.log"
+     },
+     "sha256": "f0e92cc3d2d3c71fd6975736d3140213019dbf6b3a8fa524704c8e3047fe4992"
+    }
+   }
+  },
+  {
+   "id": "S5-u294-bridge",
+   "record_kind": "u294_command",
+   "by": "U294 (2026-11-04)",
+   "theorems": [
+    "source_compiled_fields"
+   ],
+   "files": {
+    "command": {
+     "locator": {
+      "repo": "results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/bridge-0001/command.json"
+     },
+     "sha256": "71881cdca9468e0c5f8729fb0a719f0d3cad72fd0f4f0dcb565c46dbd163a5e2"
+    },
+    "stdout": {
+     "locator": {
+      "repo": "results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/bridge-0001/stdout.log"
+     },
+     "sha256": "c5a2c2aa1132157cdce17cf30e9360faa76f9fb9d036fcf39781eefcc508253c"
+    }
+   }
+  },
+  {
+   "id": "X12-conformance",
+   "record_kind": "conformance",
+   "by": "scripts/exit_m1_conformance.py (Wave Gate 1)",
+   "files": {
+    "evidence": {
+     "locator": {
+      "repo": "proposals/forge2-m1-conformance/records/evidence.json"
+     },
+     "sha256": "f55391dad17a0a4ea707806c59dbac2419df51c692161704af71f0cfe0a11da9"
+    }
+   },
+   "bound_files": [
+    {
+     "locator": {
+      "repo": "proposals/forge2-m1-conformance/artifacts/refund-arm64-macho"
+     },
+     "sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8"
+    }
+   ]
+  },
+  {
+   "id": "V1-second-extraction",
+   "record_kind": "y9_extract_result",
+   "by": "worker Y9 (report D9)",
+   "files": {
+    "result": {
+     "locator": {
+      "repo": "proposals/m1b-mission-20261119/drafts/macho-extraction/extract_result.json"
+     },
+     "sha256": "5a9d9df7f8c6731d70ccdf266bf6296555d6b73ca9d4f5c1819e9fde6084542b"
+    }
+   }
+  },
+  {
+   "id": "X1-T05",
+   "record_kind": "m1r1_command",
+   "by": "M1R-1 replay (same machine)",
+   "label": "T05-forge_refundCertifiedProg",
+   "theorems": [
+    "refund_verified_spec"
+   ],
+   "files": {
+    "commands": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/commands.json"
+     },
+     "sha256": "91cc9f86a3a0377337e71b8a7cef53af069de0f4b04e34b4c23b10545732fe59"
+    },
+    "log": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/logs/T05-forge_refundCertifiedProg.log"
+     },
+     "sha256": "4f8bd1183ea3566ae85f9e6af347d222b036b1486776cdef21d632c63c357378"
+    },
+    "replay_manifest": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/MANIFEST.json"
+     },
+     "sha256": "9de9a6c2b761822582740225219bdbb3d2fc5fbbb945cbc969e08501d9ceee2d"
+    }
+   }
+  },
+  {
+   "id": "X2-C32",
+   "record_kind": "m1r1_command",
+   "by": "M1R-1 replay (same machine)",
+   "label": "C32-source-0006",
+   "theorems": [
+    "refund_install_exclusion_compiled"
+   ],
+   "files": {
+    "commands": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/commands.json"
+     },
+     "sha256": "91cc9f86a3a0377337e71b8a7cef53af069de0f4b04e34b4c23b10545732fe59"
+    },
+    "log": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/logs/C32-source-0006.stdout.log"
+     },
+     "sha256": "d010446a254a726e3f4b58452aba0abf413bf14b8aefe7b6ed60bcdcc5bb362a"
+    },
+    "replay_manifest": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/MANIFEST.json"
+     },
+     "sha256": "9de9a6c2b761822582740225219bdbb3d2fc5fbbb945cbc969e08501d9ceee2d"
+    }
+   }
+  },
+  {
+   "id": "X2-C34",
+   "record_kind": "m1r1_command",
+   "by": "M1R-1 replay (same machine)",
+   "label": "C34-real-0004",
+   "theorems": [
+    "refund_compile_correct_no_handler"
+   ],
+   "files": {
+    "commands": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/commands.json"
+     },
+     "sha256": "91cc9f86a3a0377337e71b8a7cef53af069de0f4b04e34b4c23b10545732fe59"
+    },
+    "log": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/logs/C34-real-0004.stdout.log"
+     },
+     "sha256": "f1714179c7db05c0ad2c36cc6daa72d3bca1a5aaa4691744a6cbbadfa9e3dd44"
+    },
+    "replay_manifest": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/MANIFEST.json"
+     },
+     "sha256": "9de9a6c2b761822582740225219bdbb3d2fc5fbbb945cbc969e08501d9ceee2d"
+    }
+   }
+  },
+  {
+   "id": "X14-T06",
+   "record_kind": "m1r1_command",
+   "by": "M1R-1 replay (same machine)",
+   "label": "T06-forge_refundWireProg",
+   "theorems": [
+    "refund_render_fields_roundtrip"
+   ],
+   "files": {
+    "commands": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/commands.json"
+     },
+     "sha256": "91cc9f86a3a0377337e71b8a7cef53af069de0f4b04e34b4c23b10545732fe59"
+    },
+    "log": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/logs/T06-forge_refundWireProg.log"
+     },
+     "sha256": "4a86463e7310b6733dde7f7018db90c27940db864d33795a277b0be03cde8af5"
+    },
+    "replay_manifest": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/MANIFEST.json"
+     },
+     "sha256": "9de9a6c2b761822582740225219bdbb3d2fc5fbbb945cbc969e08501d9ceee2d"
+    }
+   }
+  },
+  {
+   "id": "V1-C42",
+   "record_kind": "m1r1_command",
+   "by": "M1R-1 replay (same machine)",
+   "label": "C42-image-0001",
+   "theorems": [
+    "refund_file_code",
+    "refund_file_bitmaps"
+   ],
+   "files": {
+    "commands": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/commands.json"
+     },
+     "sha256": "91cc9f86a3a0377337e71b8a7cef53af069de0f4b04e34b4c23b10545732fe59"
+    },
+    "log": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/logs/C42-image-0001.stdout.log"
+     },
+     "sha256": "3d958f4a4e7ff24fe61f232e5c14a84d9bbe91b4218cc3bdb599aba2c212e185"
+    },
+    "replay_manifest": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/MANIFEST.json"
+     },
+     "sha256": "9de9a6c2b761822582740225219bdbb3d2fc5fbbb945cbc969e08501d9ceee2d"
+    }
+   }
+  },
+  {
+   "id": "X3-e4",
+   "record_kind": "hol_case",
+   "by": "M1R-1 replay (same machine)",
+   "theorems": [
+    "refund_profile_a_sl",
+    "refund_profile_a_sl_every_machine_run"
+   ],
+   "files": {
+    "command": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/final-cases/e4-0001/command.json"
+     },
+     "sha256": "23ab7e42a9c332978fe7369d936df795020acac7ed14c9d4d8e1ac2aedcf6612"
+    },
+    "stdout": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/final-cases/e4-0001/stdout.log"
+     },
+     "sha256": "614dd1726f0a8a3ddf0531e48463301cf9cfac4541c31d514155d9a26e636b19"
+    }
+   }
+  },
+  {
+   "id": "X4-fs",
+   "record_kind": "hol_case",
+   "by": "M1R-1 replay (same machine)",
+   "theorems": [
+    "refund_profile_a_sl_all_premises_satisfiable_at_0x4000"
+   ],
+   "files": {
+    "command": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/final-cases/fs-r4-0001/command.json"
+     },
+     "sha256": "d5a57da8cbcd391dd1a3cb801e39ee472f24d0e8cf383f01854e611ff7510845"
+    },
+    "stdout": {
+     "locator": {
+      "repo": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/final-cases/fs-r4-0001/stdout.log"
+     },
+     "sha256": "a0f80999f835cb73fbca59009a97fecefe6dd607f2a2162405439100abad6a46"
+    }
+   }
+  }
+ ],
+ "executable": {
+  "file": {
+   "locator": {
+    "repo": "proposals/forge2-m1-conformance/artifacts/refund-arm64-macho"
+   },
+   "sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8"
+  },
+  "size": 238776,
+  "slices": [
+   {
+    "name": "code",
+    "offset": 16592,
+    "length": 130436,
+    "symbols": [
+     "cake_main",
+     "_cake_codebuffer_begin"
+    ],
+    "sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb"
+   },
+   {
+    "name": "bitmaps",
+    "offset": 180248,
+    "length": 20248,
+    "symbols": [
+     "cake_bitmaps",
+     "_cake_bitmaps_buffer_begin"
+    ],
+    "sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76"
+   }
+  ],
+  "symbol_parser": {
+   "locator": {
+    "repo": "proposals/m1b-mission-20261119/drafts/macho-extraction/y9_macho.py"
+   },
+   "sha256": "63d64e8150b865a60152364bfbbe08ab8c71a2c20a067434e4936f73ed523dd0"
+  },
+  "outside_slices": [
+   [
+    0,
+    16592
+   ],
+   [
+    147028,
+    180248
+   ],
+   [
+    200496,
+    238776
+   ]
+  ]
+ },
+ "export": {
+  "source": {
+   "locator": {
+    "repo": "proposals/m1b-mission-20261119/proofs/linked-refund/inputs/transport/FlatCore.dfy"
+   },
+   "sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d"
+  },
+  "export_input": {
+   "locator": {
+    "repo": "results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/export-0003/input.dfy"
+   },
+   "sha256": "a89484e354914ca293286abfdb97376805d4e417a270342db15df4b784a51f4d"
+  },
+  "output": {
+   "locator": {
+    "repo": "results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/export-0003/output.sexp"
+   },
+   "sha256": "58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d"
+  },
+  "size": 3621,
+  "export_record": {
+   "locator": {
+    "repo": "results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/source-model-binding-20261104/records/export-0003/command.json"
+   },
+   "sha256": "138aad5aacfdd0ed344f9282804e00470cf04eef4dee61a7e60587fb2f73c702"
+  }
+ },
+ "assumptions": [
+  {
+   "id": "S7-operator-meaning",
+   "text": "Dafny and HOL operator meanings agree on 8 operators, 3 literals, 4 strings",
+   "approved": false
+  },
+  {
+   "id": "S8-canonical-wire",
+   "text": "canonical wire input only",
+   "approved": true,
+   "decision": {
+    "locator": {
+     "repo": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md"
+    },
+    "sha256": "b9659685a2a4b756d14b5108cc20a2d001f2f08ec2a7e8e146a9e673ac665465"
+   },
+   "marker": "Q5"
+  },
+  {
+   "id": "X5-entry-state",
+   "text": "the entry state before cml_main satisfies P1 to P6 (TBI0/SA0 wording is false for real registers, D11)",
+   "approved": true,
+   "decision": {
+    "locator": {
+     "repo": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md"
+    },
+    "sha256": "b9659685a2a4b756d14b5108cc20a2d001f2f08ec2a7e8e146a9e673ac665465"
+   },
+   "marker": "Q3a"
+  },
+  {
+   "id": "X6-ffi-contract",
+   "text": "premise P7 at ALL call states; probably FALSE (fficlose x3 = 0)",
+   "approved": false
+  },
+  {
+   "id": "X11-kernel",
+   "text": "processor and kernel between steps (L3 model, interference_ok)",
+   "approved": true,
+   "decision": {
+    "locator": {
+     "repo": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md"
+    },
+    "sha256": "b9659685a2a4b756d14b5108cc20a2d001f2f08ec2a7e8e146a9e673ac665465"
+   },
+   "marker": "Q1"
+  },
+  {
+   "id": "U6-ed25519",
+   "text": "Ed25519 and secrecy of the key",
+   "approved": false
+  },
+  {
+   "id": "U7-power-loss",
+   "text": "durable state after power loss (SQLite defaults, no full fsync)",
+   "approved": false
+  }
+ ],
+ "reported": [
+  {
+   "id": "E3-hosted-run",
+   "file": {
+    "locator": {
+     "repo": "ROADMAP.md"
+    },
+    "sha256": "cf9d6a6b6159325e0cea214c2f28be4ac4e3e2a4496a0229aa9d4e45a5bdbaf8"
+   },
+   "quote": "run 44454558079 |1|REJECTED"
+  },
+  {
+   "id": "S3a-orchestrator-run",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "RUN AGAIN BY THE ORCHESTRATOR (2026-11-19T06:29Z)"
+  },
+  {
+   "id": "U5a-orchestrator-run",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "orchestrator's run: exit 0, 56 verified"
+  },
+  {
+   "id": "S2-expect-false-run",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "orchestrator's run: exit 0, 6 verified"
+  },
+  {
+   "id": "S4-orchestrator-digests",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "digests checked by the orchestrator; now pinned in `run_check.py`"
+  },
+  {
+   "id": "X13-prefix-test",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "8,011 strict prefixes of 68 real outputs: a strict parser accepts 0 (report B3; the worker's run)"
+  },
+  {
+   "id": "V3-hash-walk",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "a hash walk of the real files, 0 mismatches (report B4; the worker's run; same machine)"
+  },
+  {
+   "id": "U7-crash-test",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "486 kills, 0 violations; worker's run"
+  },
+  {
+   "id": "V6-sha-assert",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "`run_case.py`, the conformance script"
+  },
+  {
+   "id": "V7-manifest-draft",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "56 control runs (report II; the worker's runs)"
+  },
+  {
+   "id": "X10-exit-reading",
+   "file": {
+    "locator": {
+     "repo": "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md"
+    },
+    "sha256": "71f2b9bd10ef146f21f65d8c4b87db5247279a4c5928eb648b7f79d53db36bd8"
+   },
+   "quote": "`_cml_exit` tests the low 32 bits of x0 (read by the orchestrator)"
+  }
+ ],
+ "unbound": [
+  {
+   "id": "c-runtime-ranges",
+   "what": "C run-time and main (basis_ffi.c) in __text, and the __stubs",
+   "ranges": [
+    [
+     151552,
+     153800
+    ],
+    [
+     153800,
+     154064
+    ]
+   ],
+   "why": "outside both slices; only the whole-file hash covers these bytes; no proof reads them"
+  },
+  {
+   "id": "got-binds",
+   "what": "__DATA_CONST,__got: 23 binds to libSystem (dyld fills them at load)",
+   "ranges": [
+    [
+     163840,
+     164024
+    ]
+   ],
+   "why": "the bytes on disk are hashed; the values at run time come from dyld and libSystem, which no proof covers"
+  },
+  {
+   "id": "cml-main-stub",
+   "what": "cml_main stub, NOP pad and 6 FFI trampolines",
+   "ranges": [
+    [
+     16384,
+     16592
+    ]
+   ],
+   "why": "in the HOL __TEXT but outside the code slice"
+  },
+  {
+   "id": "linkedit",
+   "what": "__LINKEDIT (fixups, exports, symbols, strings, code signature)",
+   "ranges": [
+    [
+     212992,
+     238776
+    ]
+   ],
+   "why": "read by dyld and by the symbol parser; no proof"
+  },
+  {
+   "id": "sink.ts",
+   "what": "ts/refund-finality/sink.ts",
+   "file": {
+    "locator": {
+     "repo": "ts/refund-finality/sink.ts"
+    },
+    "sha256": "0690a4269a38f49a9b053ab9a97a55d917b4a3758f39cbecd2edf91a78484de7"
+   },
+   "why": "TEST only (Slice 1 suite); U5b model-to-sink.ts is MISSING"
+  },
+  {
+   "id": "minter.ts",
+   "what": "ts/refund-finality/minter.ts",
+   "file": {
+    "locator": {
+     "repo": "ts/refund-finality/minter.ts"
+    },
+    "sha256": "714824d83fd660b4fa69d3bc8993a5b08cf79b396507cb026ce6563ef887e1df"
+   },
+   "why": "TEST only (U2)"
+  },
+  {
+   "id": "compiled-js-core",
+   "what": "JavaScript compiled from impl/RefundFinality.dfy by the Dafny JS back end",
+   "recorded_sha256": "721b4d0622ea905b1eeb3e09299b70d4308dcde52c38cbcac1673be97656607d",
+   "why": "source_to_module_proved=false in the Slice 1 record; the file with this digest is regenerated at run time; not located on disk by Z8"
+  },
+  {
+   "id": "node",
+   "what": "pinned Node v24.3.0",
+   "system_path": "/opt/homebrew/Cellar/node/24.3.0/bin/node",
+   "recorded_sha256": "bcc119a0264ba69e95419c10187cd11ed8550de17230c4e244d88455359243b6",
+   "why": "runs sink.ts, minter.ts and the compiled core; trusted, not proved"
+  },
+  {
+   "id": "sqlite",
+   "what": "SQLite inside Node (node:sqlite, DatabaseSync)",
+   "why": "durability is an ASSUMPTION (U7); no separate file to bind"
+  },
+  {
+   "id": "dyld-libsystem",
+   "what": "dyld, libSystem, the kernel",
+   "why": "outside every proof (X5, X11, V2)"
+  },
+  {
+   "id": "u294-exporter",
+   "what": "the patched Dafny exporter build of 2026-11-04 (DafnyDriver.dll 55d26351\u2026)",
+   "why": "no longer on this machine (S4); the export bytes are bound, the exporter is not"
+  }
+ ],
+ "claims": [
+  {
+   "link": "S1",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "S2",
+   "stated_class": "SOURCE_PROOF",
+   "evidence": [
+    "S2-refund-gate",
+    "S2-expect-false-run"
+   ]
+  },
+  {
+   "link": "S3",
+   "stated_class": "SOURCE_PROOF",
+   "evidence": [
+    "S3-linked-refund",
+    "export"
+   ]
+  },
+  {
+   "link": "S3a",
+   "stated_class": "SOURCE_PROOF",
+   "evidence": [
+    "S3a-linked-refund-no-hex",
+    "S3a-orchestrator-run"
+   ]
+  },
+  {
+   "link": "S4",
+   "stated_class": "TEST",
+   "evidence": [
+    "export",
+    "S4-orchestrator-digests",
+    "unbound:u294-exporter"
+   ]
+  },
+  {
+   "link": "S5",
+   "stated_class": "MODEL",
+   "evidence": [
+    "S5-u294-source",
+    "S5-u294-bridge"
+   ]
+  },
+  {
+   "link": "S6",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "S7",
+   "stated_class": "ASSUMPTION",
+   "evidence": [
+    "S7-operator-meaning"
+   ]
+  },
+  {
+   "link": "S8",
+   "stated_class": "ASSUMPTION",
+   "evidence": [
+    "S8-canonical-wire"
+   ]
+  },
+  {
+   "link": "X1",
+   "stated_class": "MODEL",
+   "evidence": [
+    "X1-T05"
+   ]
+  },
+  {
+   "link": "X2",
+   "stated_class": "MODEL",
+   "evidence": [
+    "X2-C32",
+    "X2-C34"
+   ]
+  },
+  {
+   "link": "X3",
+   "stated_class": "MODEL",
+   "evidence": [
+    "X3-e4",
+    "executable"
+   ]
+  },
+  {
+   "link": "X4",
+   "stated_class": "MODEL",
+   "evidence": [
+    "X4-fs"
+   ]
+  },
+  {
+   "link": "X5",
+   "stated_class": "ASSUMPTION",
+   "evidence": [
+    "X5-entry-state"
+   ]
+  },
+  {
+   "link": "X6",
+   "stated_class": "ASSUMPTION",
+   "evidence": [
+    "X6-ffi-contract"
+   ]
+  },
+  {
+   "link": "X7",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "X8",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "X9",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "X10",
+   "stated_class": "UNBOUND",
+   "evidence": [
+    "X10-exit-reading"
+   ]
+  },
+  {
+   "link": "X11",
+   "stated_class": "ASSUMPTION",
+   "evidence": [
+    "X11-kernel",
+    "unbound:dyld-libsystem"
+   ]
+  },
+  {
+   "link": "X11e",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "X12",
+   "stated_class": "TEST",
+   "evidence": [
+    "X12-conformance",
+    "executable"
+   ]
+  },
+  {
+   "link": "X13",
+   "stated_class": "REPORTED_ONLY",
+   "evidence": [
+    "X13-prefix-test"
+   ]
+  },
+  {
+   "link": "X14",
+   "stated_class": "MODEL",
+   "evidence": [
+    "X14-T06"
+   ]
+  },
+  {
+   "link": "X15",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "X16",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "U1",
+   "stated_class": "SOURCE_PROOF",
+   "evidence": [
+    "U1-refund-finality"
+   ]
+  },
+  {
+   "link": "U2",
+   "stated_class": "TEST",
+   "evidence": [
+    "U2U3-suite",
+    "unbound:minter.ts"
+   ]
+  },
+  {
+   "link": "U3",
+   "stated_class": "TEST",
+   "evidence": [
+    "U2U3-suite",
+    "unbound:sink.ts"
+   ]
+  },
+  {
+   "link": "U4",
+   "stated_class": "MODEL",
+   "evidence": [
+    "U4-finality-model"
+   ]
+  },
+  {
+   "link": "U5a",
+   "stated_class": "SOURCE_PROOF",
+   "evidence": [
+    "U5a-sink-core",
+    "U5a-orchestrator-run"
+   ]
+  },
+  {
+   "link": "U5b",
+   "stated_class": "UNBOUND",
+   "evidence": [
+    "unbound:sink.ts",
+    "unbound:compiled-js-core",
+    "unbound:node"
+   ]
+  },
+  {
+   "link": "U6",
+   "stated_class": "ASSUMPTION",
+   "evidence": [
+    "U6-ed25519"
+   ]
+  },
+  {
+   "link": "U7",
+   "stated_class": "ASSUMPTION",
+   "evidence": [
+    "U7-power-loss",
+    "U7-crash-test",
+    "unbound:sqlite"
+   ]
+  },
+  {
+   "link": "U8",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "V1",
+   "stated_class": "MODEL",
+   "evidence": [
+    "V1-C42",
+    "V1-second-extraction",
+    "executable"
+   ]
+  },
+  {
+   "link": "V2",
+   "stated_class": "UNBOUND",
+   "evidence": [
+    "unbound:c-runtime-ranges",
+    "unbound:got-binds",
+    "unbound:linkedit",
+    "unbound:cml-main-stub",
+    "unbound:dyld-libsystem"
+   ]
+  },
+  {
+   "link": "V3",
+   "stated_class": "REPORTED_ONLY",
+   "evidence": [
+    "V3-hash-walk"
+   ]
+  },
+  {
+   "link": "V4",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "V5",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "V6",
+   "stated_class": "REPORTED_ONLY",
+   "evidence": [
+    "V6-sha-assert"
+   ]
+  },
+  {
+   "link": "V7",
+   "stated_class": "REPORTED_ONLY",
+   "evidence": [
+    "V7-manifest-draft"
+   ]
+  },
+  {
+   "link": "E1",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "E2",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "E3",
+   "stated_class": "REPORTED_ONLY",
+   "evidence": [
+    "E3-hosted-run"
+   ]
+  },
+  {
+   "link": "E4",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  },
+  {
+   "link": "E5",
+   "stated_class": "UNBOUND",
+   "evidence": []
+  }
+ ]
+}

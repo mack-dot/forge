@@ -1,0 +1,16 @@
+2026-11-19T09:05:28Z
+START_STATE swap_free_mib=1679 memory_free_percent=55
+Thu Nov 19 04:05:28 EST 2026
+System-wide memory free percentage: 55%
+vm.swapusage: total = 7168.00M  used = 5488.81M  free = 1679.19M  (encrypted)
+/dev/disk3s5       460  338        89    80% 7994003 943490560    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 76
+COMMAND: FORGE_CWD=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundWireProg_experiment FORGE_CPU_SECONDS=900 python3 -I -B run_case.py render-0002 forge_refundExportedRenderScript.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/preload-render.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001/forge_refundExportedContractTheory.sig /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/contract-0001/forge_refundExportedContractTheory.sml
+RUNNER EXIT 0 (a signal or CPU-limit stop also gives 1; read actual_exit in render-0002/command.json)
+3:FORGE_THEOREM exported_contract_on_rendered_output
+  info: actual_exit=0 markers=['EXPORTED_RENDER_COMPLETE'] last FORGE_BEGIN=None *_COMPLETE lines=['EXPORTED_RENDER_COMPLETE'] wall=13.184
+VERDICT H4 render-0002 PASS
+GO.SH EXIT 0
+go exit 0

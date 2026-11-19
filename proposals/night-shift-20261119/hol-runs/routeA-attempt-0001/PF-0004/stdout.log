@@ -1,0 +1,253 @@
+<<HOL message: Created theory "forge_refundPrefixFree">>
+EVAL ⊢ isSpace #"(" ⇔ F
+EVAL ⊢ isSpace #")" ⇔ F
+EVAL ⊢ isSpace #"\"" ⇔ F
+EVAL ⊢ isSpace #" " ⇔ T
+EVAL ⊢ isSpace #"\\" ⇔ F
+USED refund_render_fields_def
+⊢ ∀fields.
+    refund_render_fields fields =
+    (let
+       (ok,a,r,c,q,n) = fields
+     in
+       sexp_to_string (refund_response ok a r c q n))
+USED refund_render_fields_roundtrip
+⊢ parse (explode (refund_render_fields (ok,a,r,c,q,n))) =
+  INR (refund_response ok a r c q n,"") ∧
+  refund_response_fields (refund_response ok a r c q n) = INR (ok,a,r,c,q,n)
+USED refund_response_def
+⊢ ∀ok amount reason charge request intent_count.
+    refund_response ok amount reason charge request intent_count =
+    Expr
+      [Atom «refund-result-v1»; Atom (if ok then «True» else «False»);
+       Atom (toString amount); Atom reason; Atom charge; Atom request;
+       Atom (toString intent_count)]
+USED sexp_to_app_list_ind
+⊢ ∀P0 P1.
+    (∀s. P0 (Atom s)) ∧ (∀l. P1 l ⇒ P0 (Expr l)) ∧ P1 [] ∧
+    (∀v vs.
+       (NULL vs ⇒ P0 v) ∧ (¬NULL vs ⇒ P0 v) ∧ (¬NULL vs ⇒ P1 vs) ⇒ P1 (v::vs)) ⇒
+    (∀v0. P0 v0) ∧ ∀v0. P1 v0
+USED lex_aux_sexp_to_list
+⊢ (∀x s ts depth.
+     (s ≠ "" ⇒ isSpace (HD s) ∨ HD s = #")") ∧ (depth = 0 ⇒ ts = []) ⇒
+     lex_aux depth
+       (STRCAT (explode (concat (append (sexp_to_app_list x)))) s) ts =
+     if depth = 0 then INR (REVERSE (to_tokens x) ++ ts,s)
+     else lex_aux depth s (REVERSE (to_tokens x) ++ ts)) ∧
+  ∀xs s ts depth.
+    (s ≠ "" ⇒ isSpace (HD s) ∨ HD s = #")") ∧ depth ≠ 0 ⇒
+    lex_aux depth
+      (STRCAT (explode (concat (append (sexps_to_app_list xs)))) s) ts =
+    lex_aux depth s (REVERSE (FLAT (MAP (λx. to_tokens x) xs)) ++ ts)
+USED read_string_aux_thm
+⊢ ∀xs s acc.
+    read_string_aux (STRCAT (STRCAT (CONCAT (MAP char_escaped xs)) "\"") s)
+      acc = INR (implode (STRCAT (REVERSE acc) xs),s)
+USED read_symbol_thm
+⊢ ∀t s acc.
+    EVERY is_safe_char t ∧ (s ≠ "" ⇒ isSpace (HD s) ∨ HD s = #")") ⇒
+    read_symbol (STRCAT t s) acc = (implode (STRCAT (REVERSE acc) t),s)
+USED make_str_safe_def
+⊢ ∀s. make_str_safe s =
+      if s = «» then «\"\"»
+      else if str_every is_safe_char (strlen s) s then s
+      else escape_str s
+BEGIN prefix_append_strict
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundPrefixFree)>>
+Saved theorem _______ "prefix_append_strict"
+CHECKED prefix_append_strict
+⊢ ∀a b p. p ≼ a ++ b ⇔ p ≼ a ∧ p ≠ a ∨ ∃q. p = a ++ q ∧ q ≼ b
+BEGIN every_isPREFIX
+Saved theorem _______ "every_isPREFIX"
+CHECKED every_isPREFIX
+⊢ ∀l p P. p ≼ l ∧ EVERY P l ⇒ EVERY P p
+BEGIN sexp_print_eqs
+Saved theorem _______ "sexp_print_eqs"
+CHECKED sexp_print_eqs
+⊢ (∀m. explode (concat (append (sexp_to_app_list (Atom m)))) =
+       explode (make_str_safe m)) ∧
+  (∀l. explode (concat (append (sexp_to_app_list (Expr l)))) =
+       STRCAT (STRCAT "(" (explode (concat (append (sexps_to_app_list l)))))
+         ")") ∧ explode (concat (append (sexps_to_app_list []))) = "" ∧
+  ∀v vs.
+    explode (concat (append (sexps_to_app_list (v::vs)))) =
+    if NULL vs then explode (concat (append (sexp_to_app_list v)))
+    else
+      STRCAT (STRCAT (explode (concat (append (sexp_to_app_list v)))) " ")
+        (explode (concat (append (sexps_to_app_list vs))))
+BEGIN read_symbol_safe_nil
+Saved theorem _______ "read_symbol_safe_nil"
+CHECKED read_symbol_safe_nil
+⊢ ∀t acc.
+    EVERY is_safe_char t ⇒
+    read_symbol t acc = (implode (STRCAT (REVERSE acc) t),"")
+BEGIN read_string_aux_char_escaped
+Saved theorem _______ "read_string_aux_char_escaped"
+CHECKED read_string_aux_char_escaped
+⊢ ∀h u acc.
+    read_string_aux (STRCAT (char_escaped h) u) acc =
+    read_string_aux u (STRING h acc)
+BEGIN char_escaped_strict_prefix
+Saved theorem _______ "char_escaped_strict_prefix"
+CHECKED char_escaped_strict_prefix
+⊢ ∀h u acc.
+    u ≼ char_escaped h ∧ u ≠ char_escaped h ⇒ ISL (read_string_aux u acc)
+BEGIN read_string_aux_strict_prefix
+Saved theorem _______ "read_string_aux_strict_prefix"
+CHECKED read_string_aux_strict_prefix
+⊢ ∀xs u acc.
+    u ≼ STRCAT (CONCAT (MAP char_escaped xs)) "\"" ∧
+    u ≠ STRCAT (CONCAT (MAP char_escaped xs)) "\"" ⇒
+    ISL (read_string_aux u acc)
+BEGIN atom_prefix_ISL
+Saved theorem _______ "atom_prefix_ISL"
+CHECKED atom_prefix_ISL
+⊢ ∀m p d ts. d ≠ 0 ∧ p ≼ explode (make_str_safe m) ⇒ ISL (lex_aux d p ts)
+Saved definition ____ "lexP_def"
+DEFINITION lexP
+⊢ ∀x. lexP x ⇔
+      ∀p d ts.
+        d ≠ 0 ∧ p ≼ explode (concat (append (sexp_to_app_list x))) ⇒
+        ISL (lex_aux d p ts)
+Saved definition ____ "lexPs_def"
+DEFINITION lexPs
+⊢ ∀xs.
+    lexPs xs ⇔
+    ∀p d ts.
+      d ≠ 0 ∧ p ≼ explode (concat (append (sexps_to_app_list xs))) ⇒
+      ISL (lex_aux d p ts)
+BEGIN lexP_Atom
+Saved theorem _______ "lexP_Atom"
+CHECKED lexP_Atom
+⊢ ∀s. lexP (Atom s)
+BEGIN lexPs_nil
+Saved theorem _______ "lexPs_nil"
+CHECKED lexPs_nil
+⊢ lexPs []
+BEGIN lexP_Expr
+Saved theorem _______ "lexP_Expr"
+CHECKED lexP_Expr
+⊢ ∀l. lexPs l ⇒ lexP (Expr l)
+BEGIN lexPs_cons_split
+Saved theorem _______ "lexPs_cons_split"
+CHECKED lexPs_cons_split
+⊢ ∀a b p.
+    p ≼ STRCAT (STRCAT a " ") b ⇒
+    p ≼ a ∨ ∃t. p = STRCAT a (STRING #" " t) ∧ t ≼ b
+BEGIN lexPs_cons_in_v
+Saved theorem _______ "lexPs_cons_in_v"
+CHECKED lexPs_cons_in_v
+⊢ ∀v p d ts.
+    lexP v ∧ d ≠ 0 ∧ p ≼ explode (concat (append (sexp_to_app_list v))) ⇒
+    ISL (lex_aux d p ts)
+BEGIN lexPs_cons_space
+Saved theorem _______ "lexPs_cons_space"
+CHECKED lexPs_cons_space
+⊢ ∀v vs t d ts.
+    lexPs vs ∧ d ≠ 0 ∧ t ≼ explode (concat (append (sexps_to_app_list vs))) ⇒
+    ISL
+      (lex_aux d
+         (STRCAT (explode (concat (append (sexp_to_app_list v))))
+            (STRING #" " t)) ts)
+BEGIN lexPs_cons
+Saved theorem _______ "lexPs_cons"
+CHECKED lexPs_cons
+⊢ ∀v vs.
+    (NULL vs ⇒ lexP v) ∧ (¬NULL vs ⇒ lexP v) ∧ (¬NULL vs ⇒ lexPs vs) ⇒
+    lexPs (v::vs)
+BEGIN lexP_all
+Saved theorem _______ "lexP_all"
+CHECKED lexP_all
+⊢ (∀x. lexP x) ∧ ∀xs. lexPs xs
+BEGIN lex_aux_prefix_ISL
+Saved theorem _______ "lex_aux_prefix_ISL"
+CHECKED lex_aux_prefix_ISL
+⊢ (∀x p d ts.
+     d ≠ 0 ∧ p ≼ explode (concat (append (sexp_to_app_list x))) ⇒
+     ISL (lex_aux d p ts)) ∧
+  ∀xs p d ts.
+    d ≠ 0 ∧ p ≼ explode (concat (append (sexps_to_app_list xs))) ⇒
+    ISL (lex_aux d p ts)
+BEGIN parse_ISL_of_lex
+Saved theorem _______ "parse_ISL_of_lex"
+CHECKED parse_ISL_of_lex
+⊢ ∀s. ISL (lex s) ⇒ ISL (parse s)
+BEGIN sexp_to_string_Expr_prefix_free
+Saved theorem _______ "sexp_to_string_Expr_prefix_free"
+CHECKED sexp_to_string_Expr_prefix_free
+⊢ ∀xs p.
+    p ≼ explode (sexp_to_string (Expr xs)) ∧
+    p ≠ explode (sexp_to_string (Expr xs)) ⇒
+    ISL (parse p)
+BEGIN refund_render_fields_prefix_free
+Saved theorem _______ "refund_render_fields_prefix_free"
+CHECKED refund_render_fields_prefix_free
+⊢ ∀f p.
+    p ≼ explode (refund_render_fields f) ∧
+    p ≠ explode (refund_render_fields f) ⇒
+    ISL (parse p)
+Saved definition ____ "refund_strict_parse_def"
+DEFINITION refund_strict_parse
+⊢ ∀s. refund_strict_parse s =
+      case parse s of
+        INL v1 => NONE
+      | INR (se,rest) =>
+        if rest ≠ "" then NONE
+        else
+          case refund_response_fields se of
+            INL v => NONE
+          | INR f =>
+            if explode (refund_render_fields f) = s then SOME f else NONE
+BEGIN refund_strict_parse_no_strict_prefix
+Saved theorem _______ "refund_strict_parse_no_strict_prefix"
+CHECKED refund_strict_parse_no_strict_prefix
+⊢ ∀f p.
+    p ≼ explode (refund_render_fields f) ∧
+    p ≠ explode (refund_render_fields f) ⇒
+    refund_strict_parse p = NONE
+BEGIN refund_strict_parse_complete
+Saved theorem _______ "refund_strict_parse_complete"
+CHECKED refund_strict_parse_complete
+⊢ ∀f. refund_strict_parse (explode (refund_render_fields f)) = SOME f
+BEGIN refund_render_fields_prefix_code
+Saved theorem _______ "refund_render_fields_prefix_code"
+CHECKED refund_render_fields_prefix_code
+⊢ ∀f g.
+    explode (refund_render_fields g) ≼ explode (refund_render_fields f) ⇒
+    g = f
+BEGIN N1_trailing_newline_breaks
+Saved theorem _______ "N1_trailing_newline_breaks"
+CHECKED N1_trailing_newline_breaks
+⊢ ¬∀f p.
+    p ≼ STRCAT (explode (refund_render_fields f)) "\n" ∧
+    p ≠ STRCAT (explode (refund_render_fields f)) "\n" ⇒
+    ISL (parse p)
+BEGIN N2_atom_breaks
+Saved theorem _______ "N2_atom_breaks"
+CHECKED N2_atom_breaks
+⊢ parse "ab" = INR (Atom «ab»,"") ∧
+  "ab" ≼ explode (sexp_to_string (Atom «abc»)) ∧
+  "ab" ≠ explode (sexp_to_string (Atom «abc»))
+BEGIN N3_depth0_breaks
+Saved theorem _______ "N3_depth0_breaks"
+CHECKED N3_depth0_breaks
+⊢ ¬∀x p d ts.
+    p ≼ explode (concat (append (sexp_to_app_list x))) ⇒ ISL (lex_aux d p ts)
+MARK CHECKS
+FAILED_LIST 
+DIAG_OK_UNDER_LIST 
+CONTROL_OK refund_strict_parse_no_strict_prefix statement is the literal planned statement
+CONTROL_OK refund_strict_parse_complete statement is the literal planned statement
+CONTROL_OK refund_render_fields_prefix_code statement is the literal planned statement
+CONTROL_OK N1 is a proved negation
+CONTROL_OK N3 is a proved negation
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+STORED_THEOREMS 26
+STORED_DEFINITIONS 3
+Exporting theory "forge_refundPrefixFree" ... done.
+Theory "forge_refundPrefixFree" took 11.9s to build
+EXACT_COMPLETE

@@ -1,0 +1,21 @@
+diff -ru proposals/m1b-mission-20261119/proofs/linked-refund/inputs/transport/FlatCore.dfy M6-flat-amount-minus1/inputs/transport/FlatCore.dfy
+--- proposals/m1b-mission-20261119/proofs/linked-refund/inputs/transport/FlatCore.dfy	2026-11-19 00:33:50.329756910 -0500
++++ M6-flat-amount-minus1/inputs/transport/FlatCore.dfy	2026-11-19 01:10:03.245210189 -0500
+@@ -9,7 +9,7 @@
+     ensures authorized <==>
+       chargeId != "" && requestId != "" && enabled && requestOpen &&
+       0 <= original <= 9223372036854775807 && 0 <= remaining <= original &&
+-      candidate && 0 <= amount <= remaining &&
++      candidate && -1 <= amount <= remaining &&
+       (reason == "duplicate_charge" || reason == "service_not_delivered" || reason == "returned_item")
+     ensures authorized ==>
+       outputAmount == amount && outputReason == reason &&
+@@ -20,7 +20,7 @@
+   {
+     authorized := chargeId != "" && requestId != "" && enabled && requestOpen &&
+       0 <= original <= 9223372036854775807 && 0 <= remaining <= original &&
+-      candidate && 0 <= amount <= remaining &&
++      candidate && -1 <= amount <= remaining &&
+       (reason == "duplicate_charge" || reason == "service_not_delivered" || reason == "returned_item");
+     if authorized {
+       outputAmount := amount;

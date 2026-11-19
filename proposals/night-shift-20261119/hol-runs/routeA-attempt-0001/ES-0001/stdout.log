@@ -1,0 +1,62 @@
+TIMEOUT_HELPER Timeout.apply loaded
+<<HOL message: Created theory "forge_m1bErasureStep">>
+FOR_ind ⊢ ∀P. (∀i j a. (i ≠ j ⇒ P (if i < j then i + 1 else i − 1,j,a)) ⇒ P (i,j,a)) ⇒
+      ∀v v1 v2. P (v,v1,v2)
+MARK W
+BEGIN W_nonvacuous REQUIRED cpu=0.2
+TACTIC_USED W_nonvacuous 1
+Saved theorem _______ "W_nonvacuous"
+PROVED W_nonvacuous
+CHECKED W_nonvacuous
+⊢ ∃s t.
+    arm8_ok (erase s) ∧ s.TCR_EL1.TBI0 ∧ s.SCTLR_EL1.SA0 ∧ untagged t ∧
+    s.PSTATE.EL = 0w
+MARK S0
+CASE_RAND_COUNT 26 of 26
+RULE_COUNTS FR_RAND 135 ER_OUT 27 ER_PAIR 54
+BEGIN FOR_proj REQUIRED cpu=0.4
+TACTIC_USED FOR_proj 1
+Saved theorem _______ "FOR_proj"
+PROVED FOR_proj
+BEGIN FOR_snd_const REQUIRED cpu=0.4
+TACTIC_USED FOR_snd_const 1
+Saved theorem _______ "FOR_snd_const"
+PROVED FOR_snd_const
+BEGIN FOR_erase REQUIRED cpu=0.4
+TACTIC_USED FOR_erase 1
+Saved theorem _______ "FOR_erase"
+PROVED FOR_erase
+BEGIN FOR_pair_erase REQUIRED cpu=0.5
+TACTIC_USED FOR_pair_erase 1
+Saved theorem _______ "FOR_pair_erase"
+PROVED FOR_pair_erase
+BEGIN Mem_state REQUIRED cpu=0.5
+TACTIC_USED Mem_state 1
+Saved theorem _______ "Mem_state"
+PROVED Mem_state
+BEGIN erase_reads REQUIRED cpu=0.5
+TACTIC_USED erase_reads 1
+Saved theorem _______ "erase_reads"
+PROVED erase_reads
+BEGIN erase_upds REQUIRED cpu=0.5
+TACTIC_USED erase_upds 1
+Saved theorem _______ "erase_upds"
+PROVED erase_upds
+BEGIN fupd_PC_id REQUIRED cpu=0.5
+TACTIC_USED fupd_PC_id 1
+Saved theorem _______ "fupd_PC_id"
+PROVED fupd_PC_id
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/ES-0001/proof.sml:221: error: Value or constructor (every_case_tac) has not been declared
+Found near
+  [
+     gen_tac >> simp ([SCTLR_def, ...] @ List.concat (... ...)),
+     ((gen_tac >> ... ...) >> every_case_tac) >> simp [],
+     ((... >> ...) >> every_case_tac) >> fs [...]
+     ]
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/ES-0001/proof.sml:222: error: Value or constructor (every_case_tac) has not been declared
+Found near
+  [
+     gen_tac >> simp ([SCTLR_def, ...] @ List.concat (... ...)),
+     ((gen_tac >> ... ...) >> every_case_tac) >> simp [],
+     ((... >> ...) >> every_case_tac) >> fs [...]
+     ]

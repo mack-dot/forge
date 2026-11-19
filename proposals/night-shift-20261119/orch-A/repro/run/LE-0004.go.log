@@ -1,0 +1,31 @@
+2026-11-19T14:51:47Z
+Now drawing from 'AC Power'
+total = 9216.00M  used = 8577.12M  free = 638.88M  (encrypted)
+System-wide memory free percentage: 52%
+START_STATE swap_free_mib=638 memory_free_percent=52
+USED_FILES_PRE 0 e3b0c44298fc1c14
+exit 0
+actual_exit 0 wall 108.75 cpu 110.014 rss_mib 2691 ['EXACT_COMPLETE'] inputs_unchanged_after True
+68:CHECKED evaluate_Halt_reg
+76:STATEMENT_EVALUATE targetSem evaluate_Halt_reg
+79:CHECKED machine_sem_of_evaluate_Halt
+86:CHECKED refund_halt_address
+91:STATEMENT_ARM8_RUN forge_refundCmlMainSlide refund_profile_a_sl_halt
+94:CHECKED refund_profile_a_sl_halt
+152:CHECKED N_E1_status_collision
+158:CHECKED N_E2_silent_stop
+163:CHECKED N_E3_success_with_zero_register
+171:CONTROL_OK evaluate_Halt_reg uses targetSem$evaluate
+172:CONTROL_OK refund_profile_a_sl_halt premise is the stored premise term
+173:CONTROL_OK refund_profile_a_sl_halt uses forge_refundLOut$fd1_written
+174:CONTROL_OK L-EXIT-V is not stored as a theorem
+175:CONTROL_OK stored theorems are the planned set (7)
+176:CLOSURE_AXIOM bool.SELECT_AX
+177:CLOSURE_AXIOM bool.INFINITY_AX
+178:CLOSURE_AXIOM bool.ETA_AX
+179:CLOSURE_AXIOM bool.BOOL_CASES_AX
+184:EXACT_COMPLETE_MODE imported
+185:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

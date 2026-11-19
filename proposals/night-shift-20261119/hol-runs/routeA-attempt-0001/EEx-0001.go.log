@@ -1,0 +1,69 @@
+2026-11-19T10:29:00Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 5158.75M  free = 985.25M  (encrypted)
+System-wide memory free percentage: 67%
+START_STATE swap_free_mib=985 memory_free_percent=69
+exit 0
+actual_exit 0 wall 184.22 cpu 196.84 rss_mib 4370 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+7613:  GOAL_END Run_pc/B_leaf_before_split #3
+7614:  GOAL_BEGIN Run_pc/B_leaf_before_split #4 assumptions 1 (ASM 0 = newest)
+7620:  GOAL_END Run_pc/B_leaf_before_split #4
+7621:  GOAL_SHORT Run_pc/B_leaf_before_split #5 (dfn'CompareAndBranch p s).PC = (dfn'CompareAndBranch p (erase s)).PC ∨
+7625:  GOAL_SHORT Run_pc/B_leaf_before_split #6 (dfn'TestBitAndBranch p s).PC = (dfn'TestBitAndBranch p (erase s)).PC ∨
+7629:  GOAL_SHORT Run_pc/B_leaf_before_split #7 (dfn'TestBitAndBranch p s).PC = (dfn'TestBitAndBranch p (erase s)).PC ∨
+7633:  GOAL_SHORT Run_pc/B_leaf_before_split #8 (dfn'LoadLiteral p s).PC = (dfn'LoadLiteral p (erase s)).PC ∨
+7636:  GOAL_SHORT Run_pc/B_leaf_before_split #9 (dfn'LoadLiteral p s).PC = (dfn'LoadLiteral p (erase s)).PC ∨
+7639:  GOAL_SHORT Run_pc/B_leaf_before_split #10 (dfn'LoadStoreAcquire p s).PC = (dfn'LoadStoreAcquire p (erase s)).PC ∨
+7643:  GOAL_SHORT Run_pc/B_leaf_before_split #11 (dfn'LoadStoreAcquire p s).PC = (dfn'LoadStoreAcquire p (erase s)).PC ∨
+7647:  GOAL_SHORT Run_pc/B_leaf_before_split #12 (dfn'LoadStoreAcquire p s).PC = (dfn'LoadStoreAcquire p (erase s)).PC ∨
+7651:  GOAL_SHORT Run_pc/B_leaf_before_split #13 (dfn'LoadStoreAcquire p s).PC = (dfn'LoadStoreAcquire p (erase s)).PC ∨
+7655:  GOAL_SHORT Run_pc/B_leaf_before_split #14 (dfn'LoadStoreAcquirePair p s).PC = (dfn'LoadStoreAcquirePair p (erase s)).PC ∨
+7659:  GOAL_SHORT Run_pc/B_leaf_before_split #15 (dfn'LoadStoreAcquirePair p s).PC = (dfn'LoadStoreAcquirePair p (erase s)).PC ∨
+7663:  GOAL_SHORT Run_pc/B_leaf_before_split #16 (dfn'LoadStoreImmediate p s).PC = (dfn'LoadStoreImmediate p (erase s)).PC ∨
+7667:  GOAL_SHORT Run_pc/B_leaf_before_split #17 (dfn'LoadStoreImmediate p s).PC = (dfn'LoadStoreImmediate p (erase s)).PC ∨
+7671:  GOAL_SHORT Run_pc/B_leaf_before_split #18 (dfn'LoadStoreImmediate p s).PC = (dfn'LoadStoreImmediate p (erase s)).PC ∨
+7675:  GOAL_SHORT Run_pc/B_leaf_before_split #19 (dfn'LoadStoreImmediate p s).PC = (dfn'LoadStoreImmediate p (erase s)).PC ∨
+7679:  GOAL_SHORT Run_pc/B_leaf_before_split #20 (dfn'LoadStorePair p s).PC = (dfn'LoadStorePair p (erase s)).PC ∨
+7683:  GOAL_SHORT Run_pc/B_leaf_before_split #21 (dfn'LoadStorePair p s).PC = (dfn'LoadStorePair p (erase s)).PC ∨
+7687:  GOAL_SHORT Run_pc/B_leaf_before_split #22 (dfn'LoadStoreRegister p s).PC = (dfn'LoadStoreRegister p (erase s)).PC ∨
+7691:  GOAL_SHORT Run_pc/B_leaf_before_split #23 (dfn'LoadStoreRegister p s).PC = (dfn'LoadStoreRegister p (erase s)).PC ∨
+7695:  GOAL_SHORT Run_pc/B_leaf_before_split #24 (dfn'LoadStoreRegister p s).PC = (dfn'LoadStoreRegister p (erase s)).PC ∨
+7699:  GOAL_SHORT Run_pc/B_leaf_before_split #25 (dfn'LoadStoreRegister p s).PC = (dfn'LoadStoreRegister p (erase s)).PC ∨
+7704:  GOAL_COUNT 16
+7705:  GOAL_BEGIN Run_pc/B_leaf_before_split #1 assumptions 1 (ASM 0 = newest)
+7711:  GOAL_END Run_pc/B_leaf_before_split #1
+7712:  GOAL_BEGIN Run_pc/B_leaf_before_split #2 assumptions 1 (ASM 0 = newest)
+7718:  GOAL_END Run_pc/B_leaf_before_split #2
+7719:  GOAL_BEGIN Run_pc/B_leaf_before_split #3 assumptions 1 (ASM 0 = newest)
+7725:  GOAL_END Run_pc/B_leaf_before_split #3
+7726:  GOAL_BEGIN Run_pc/B_leaf_before_split #4 assumptions 1 (ASM 0 = newest)
+7732:  GOAL_END Run_pc/B_leaf_before_split #4
+7733:  GOAL_SHORT Run_pc/B_leaf_before_split #5 (dfn'LoadStoreAcquirePair p s).PC = (dfn'LoadStoreAcquirePair p (erase s)).PC ∨
+7737:  GOAL_SHORT Run_pc/B_leaf_before_split #6 (dfn'LoadStoreAcquirePair p s).PC = (dfn'LoadStoreAcquirePair p (erase s)).PC ∨
+7741:  GOAL_SHORT Run_pc/B_leaf_before_split #7 (dfn'LoadStoreImmediate p s).PC = (dfn'LoadStoreImmediate p (erase s)).PC ∨
+7745:  GOAL_SHORT Run_pc/B_leaf_before_split #8 (dfn'LoadStoreImmediate p s).PC = (dfn'LoadStoreImmediate p (erase s)).PC ∨
+7749:  GOAL_SHORT Run_pc/B_leaf_before_split #9 (dfn'LoadStoreImmediate p s).PC = (dfn'LoadStoreImmediate p (erase s)).PC ∨
+7753:  GOAL_SHORT Run_pc/B_leaf_before_split #10 (dfn'LoadStoreImmediate p s).PC = (dfn'LoadStoreImmediate p (erase s)).PC ∨
+7757:  GOAL_SHORT Run_pc/B_leaf_before_split #11 (dfn'LoadStorePair p s).PC = (dfn'LoadStorePair p (erase s)).PC ∨
+7761:  GOAL_SHORT Run_pc/B_leaf_before_split #12 (dfn'LoadStorePair p s).PC = (dfn'LoadStorePair p (erase s)).PC ∨
+7765:  GOAL_SHORT Run_pc/B_leaf_before_split #13 (dfn'LoadStoreRegister p s).PC = (dfn'LoadStoreRegister p (erase s)).PC ∨
+7769:  GOAL_SHORT Run_pc/B_leaf_before_split #14 (dfn'LoadStoreRegister p s).PC = (dfn'LoadStoreRegister p (erase s)).PC ∨
+7773:  GOAL_SHORT Run_pc/B_leaf_before_split #15 (dfn'LoadStoreRegister p s).PC = (dfn'LoadStoreRegister p (erase s)).PC ∨
+7777:  GOAL_SHORT Run_pc/B_leaf_before_split #16 (dfn'LoadStoreRegister p s).PC = (dfn'LoadStoreRegister p (erase s)).PC ∨
+7786:LEMMA_FAILED Run_pc Fail "all listed tactics failed"
+7806:BEGIN Next_erase_exception cpu=123.0
+7807:TACTIC_USED Next_erase_exception 1
+7808:DIAG_OK_UNDER Next_erase_exception hypotheses=1
+7815:CHECKED_NOT_STORED NextStateARM8_erase hyps 2
+7817:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+7823:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+7827:STATEMENT_RESULT NextStateARM8_erase hyps 2 concl_literal true
+7829:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+7830:(Next s).exception = NoException ∧ untagged (Next (erase s)).PC ⇒
+7833:s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+7834:(¬s.SCTLR_EL1.SA0 ∨ aligned 4 s.SP_EL0) ∧ (Next s).exception = NoException ∧
+7878:DIAG_OK_UNDER_LIST Next_erase_exception
+7882:WOULD_FAIL_LIST erase_LoadStoreSingle erase_dfn_LoadStoreImmediate erase_dfn_LoadStoreRegister erase_dfn_LoadStorePair erase_dfn_LoadStoreAcquire erase_dfn_LoadStoreAcquirePair Run_erase_pc Run_pc Next_erase_pc Next_pc Next_erase_exception Next_erase_same
+7885:EXPLORE_COMPLETE
+hash_parents exit 0
+go exit 0

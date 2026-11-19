@@ -1,0 +1,91 @@
+{
+ "class": "TESTED-UNPROVED (finite tests; author of the control ran them)",
+ "executable_sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+ "rows": [
+  {
+   "test": "test_ac1",
+   "class": "AC-1",
+   "subcase": "AC1-a nonblock-full-stdout (CE-1)",
+   "premise": "N11,N21,N22",
+   "naive": "naive_exit",
+   "naive_outcome": "COMPLETE rc=0 stdout=1000 of 4044 bytes",
+   "attack_succeeded_on_naive": true,
+   "launcher_outcome": "AUTHORIZED(40)",
+   "launcher_as_expected": true,
+   "attack_expected_on_naive": true,
+   "naive_as_expected": true,
+   "note": "launcher CLI stdout was the same kind of pipe; the child still got a fresh blocking pipe"
+  },
+  {
+   "test": "test_ac1",
+   "class": "AC-1",
+   "subcase": "AC1-b stdin-closed (CE-2)",
+   "premise": "N09,N20",
+   "naive": "naive_exit",
+   "naive_outcome": "COMPLETE rc=0 stdout=0",
+   "attack_succeeded_on_naive": true,
+   "launcher_outcome": "AUTHORIZED(40)",
+   "launcher_as_expected": true,
+   "attack_expected_on_naive": true,
+   "naive_as_expected": true,
+   "note": ""
+  },
+  {
+   "test": "test_ac1",
+   "class": "AC-1",
+   "subcase": "AC1-c stdout-closed (CE-2)",
+   "premise": "N11,N22",
+   "naive": "naive_exit",
+   "naive_outcome": "COMPLETE rc=0",
+   "attack_succeeded_on_naive": true,
+   "launcher_outcome": "REFUSED rc=4",
+   "launcher_as_expected": true,
+   "attack_expected_on_naive": true,
+   "naive_as_expected": true,
+   "note": "launcher exits 4 when it cannot report"
+  },
+  {
+   "test": "test_ac1",
+   "class": "AC-1",
+   "subcase": "AC1-d real-process-prefix-exit0",
+   "premise": "decision rule D6/D7 (X8 C5 decision)",
+   "naive": "naive_exit",
+   "naive_outcome": "COMPLETE rc=0 stdout=b'(refund-result-v1 True 40 retu'",
+   "attack_succeeded_on_naive": true,
+   "launcher_outcome": "REFUSED D7",
+   "launcher_as_expected": true,
+   "attack_expected_on_naive": true,
+   "naive_as_expected": true,
+   "note": "test executable pinned only for this row"
+  },
+  {
+   "test": "test_ac1",
+   "class": "AC-1",
+   "subcase": "AC1-e real-process-empty-exit0",
+   "premise": "decision rule D6/D7 (X8 C5 decision)",
+   "naive": "naive_exit",
+   "naive_outcome": "COMPLETE rc=0 stdout=b''",
+   "attack_succeeded_on_naive": true,
+   "launcher_outcome": "REFUSED D6",
+   "launcher_as_expected": true,
+   "attack_expected_on_naive": true,
+   "naive_as_expected": true,
+   "note": "test executable pinned only for this row"
+  },
+  {
+   "test": "test_ac1",
+   "class": "AC-1",
+   "subcase": "AC1-f planted prefixes+suffixes (49)",
+   "premise": "decision rule D5-D7",
+   "naive": "naive_exit",
+   "naive_outcome": "COMPLETE for 49 of 49",
+   "attack_succeeded_on_naive": true,
+   "launcher_outcome": "non-REFUSED 0 of 49",
+   "launcher_as_expected": true,
+   "attack_expected_on_naive": true,
+   "naive_as_expected": true,
+   "note": ""
+  }
+ ],
+ "failures": 0
+}

@@ -1,0 +1,71 @@
+2026-11-19T12:24:42Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 5622.44M  free = 1545.56M  (encrypted)
+System-wide memory free percentage: 72%
+START_STATE swap_free_mib=1545 memory_free_percent=72
+USED_FILES_PRE 6 1b5fbbdfc72c9761
+exit 1
+actual_exit -15 wall 2388.691 cpu 2530.167 rss_mib 4679 [] inputs_unchanged_after True
+469:  GOAL_BEGIN STD_streams_fd0 #1 assumptions 2 (ASM 0 = newest)
+474:  GOAL_END STD_streams_fd0 #1
+477:  GOAL_COUNT 0
+482:  GOAL_COUNT 1
+483:  GOAL_BEGIN INSTREAM_STRP_V_F_F #1 assumptions 0 (ASM 0 = newest)
+486:  GOAL_END INSTREAM_STRP_V_F_F #1
+489:  GOAL_COUNT 0
+494:  GOAL_COUNT 1
+495:  GOAL_BEGIN INSTREAM_BUFFERED_FD_V_IMP #1 assumptions 0 (ASM 0 = newest)
+500:  GOAL_END INSTREAM_BUFFERED_FD_V_IMP #1
+504:  GOAL_COUNT 1
+505:  GOAL_BEGIN INSTREAM_BUFFERED_FD_V_IMP #1 assumptions 0 (ASM 0 = newest)
+510:  GOAL_END INSTREAM_BUFFERED_FD_V_IMP #1
+515:  GOAL_COUNT 0
+520:  GOAL_COUNT 1
+521:  GOAL_BEGIN INSTREAM_STR_V_IMP #1 assumptions 0 (ASM 0 = newest)
+524:  GOAL_END INSTREAM_STR_V_IMP #1
+528:  GOAL_COUNT 1
+529:  GOAL_BEGIN INSTREAM_STR_V_IMP #1 assumptions 0 (ASM 0 = newest)
+532:  GOAL_END INSTREAM_STR_V_IMP #1
+538:  GOAL_COUNT 1
+539:  GOAL_BEGIN read_into_spec_R #1 assumptions 0 (ASM 0 = newest)
+558:  GOAL_END read_into_spec_R #1
+561:  GOAL_COUNT 1
+562:  GOAL_BEGIN read_into_spec_R #1 assumptions 10 (ASM 0 = newest)
+594:  GOAL_END read_into_spec_R #1
+597:  GOAL_COUNT 1
+598:  GOAL_BEGIN read_into_spec_R #1 assumptions 12 (ASM 0 = newest)
+642:  GOAL_END read_into_spec_R #1
+645:  GOAL_COUNT 0
+650:  GOAL_COUNT 1
+651:  GOAL_BEGIN refillBuffer_with_read_spec_V #1 assumptions 0 (ASM 0 = newest)
+670:  GOAL_END refillBuffer_with_read_spec_V #1
+673:  GOAL_COUNT 2
+674:  GOAL_BEGIN refillBuffer_with_read_spec_V #1 assumptions 6 (ASM 0 = newest)
+724:  GOAL_END refillBuffer_with_read_spec_V #1
+725:  GOAL_BEGIN refillBuffer_with_read_spec_V #2 assumptions 6 (ASM 0 = newest)
+775:  GOAL_END refillBuffer_with_read_spec_V #2
+779:  GOAL_COUNT 2
+780:  GOAL_BEGIN refillBuffer_with_read_spec_V #1 assumptions 6 (ASM 0 = newest)
+830:  GOAL_END refillBuffer_with_read_spec_V #1
+831:  GOAL_BEGIN refillBuffer_with_read_spec_V #2 assumptions 6 (ASM 0 = newest)
+881:  GOAL_END refillBuffer_with_read_spec_V #2
+886:  GOAL_COUNT 1
+887:  GOAL_BEGIN refillBuffer_with_read_spec_STR_V #1 assumptions 0 (ASM 0 = newest)
+900:  GOAL_END refillBuffer_with_read_spec_STR_V #1
+903:  GOAL_COUNT 1
+904:  GOAL_BEGIN refillBuffer_with_read_spec_STR_V #1 assumptions 7 (ASM 0 = newest)
+932:  GOAL_END refillBuffer_with_read_spec_STR_V #1
+936:  GOAL_COUNT 1
+937:  GOAL_BEGIN refillBuffer_with_read_spec_STR_V #1 assumptions 7 (ASM 0 = newest)
+965:  GOAL_END refillBuffer_with_read_spec_STR_V #1
+971:  GOAL_COUNT 1
+972:  GOAL_BEGIN refillBuffer_with_read_spec_V__split #1 assumptions 0 (ASM 0 = newest)
+991:  GOAL_END refillBuffer_with_read_spec_V__split #1
+994:  GOAL_COUNT 2
+995:  GOAL_BEGIN refillBuffer_with_read_spec_V__split #1 assumptions 6 (ASM 0 = newest)
+1045:  GOAL_END refillBuffer_with_read_spec_V__split #1
+1046:  GOAL_BEGIN refillBuffer_with_read_spec_V__split #2 assumptions 6 (ASM 0 = newest)
+1096:  GOAL_END refillBuffer_with_read_spec_V__split #2
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 1

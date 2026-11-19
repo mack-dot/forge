@@ -1,0 +1,26 @@
+2026-11-19T10:05:57Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 5567.44M  free = 576.56M  (encrypted)
+System-wide memory free percentage: 70%
+START_STATE swap_free_mib=576 memory_free_percent=70
+exit 0
+actual_exit 0 wall 72.379 cpu 78.795 rss_mib 3802 ['EXACT_COMPLETE'] inputs_unchanged_after True
+175:CONTROL_OK R5 at no_ext concludes a premise of M1b at Vok := VokY3
+176:CONTROL_OK M1b and M3 conclusions use the same bound variables
+179:CHECKED refund_frame_contract_upgrade
+209:CHECKED refund_model_frame_contract_of_reach
+251:CHECKED refund_model_frame_decision_events
+300:CHECKED refund_success_accept_of_run
+309:CHECKED refund_model_success_gives_frame_events
+344:CONTROL_OK G1 conclusion is term-identical to the conclusion of refund_model_frame_meets_exported_contract
+345:CONTROL_OK G1 antecedent is term-identical to the antecedent of refund_profile_a_sl_events at ext := no_ext
+346:CONTROL_OK G1 antecedent contains neither refund_env_ok_sl nor ffi_calls_ok
+347:CONTROL_OK G2 = M2 conclusion under the G1 antecedent
+348:CONTROL_OK G1 and G2 have no free ext (no_ext)
+362:CLOSURE_AXIOM bool.SELECT_AX
+363:CLOSURE_AXIOM bool.INFINITY_AX
+364:CLOSURE_AXIOM bool.ETA_AX
+365:CLOSURE_AXIOM bool.BOOL_CASES_AX
+370:EXACT_COMPLETE
+hash_parents exit 0
+go exit 0

@@ -1,0 +1,743 @@
+--- /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005.sml	2026-11-19 03:56:55.246299122 -0500
++++ LOx-0001.sml	2026-11-19 04:21:46.942936824 -0500
+@@ -1,3 +1,7 @@
++(* LOx-0001.sml: L-OUT EXPLORATION run (worker A16, Night-Shift Orchestrator A). NOT RUN. NOT a proof attempt.
++   Lines below up to "PART 2" = LO-0005.sml lines 1-404 (SHA-256 9db45d735cf891429a6d9e80454ddf7c07d49b9a2a4030aca57d61c14571bb30),
++   byte-identical except one line: new_theory "forge_refundLOut" -> new_theory "forge_refundLOutExplore" (scratch; never exported).
++   No export_theory. No open lemma is stored. Ends with EXPLORE_COMPLETE. Every tactic UNCHECKED. *)
+ (* L-OUT at no_ext, v6 (worker A3). DRAFT: NOT RUN. Base LO-0004.sml (= v5, SHA-256 fcc80fb8...b8b4). Changes marked
+    (* A3 tactic-only v6 *) / "A3 addition v6": AGREE for the two arm8_run constants (refund_profile_a_sl_fd1);
+    an explicit step lemma extract_no_ext_stdout_step and an explicit induction for extract_no_ext_stdout.
+@@ -109,7 +113,7 @@
+     else (List.app (showg ("UNSOLVED " ^ tag)) gs; raise mk_HOL_ERR "A3" "CL" ("unsolved goals at " ^ tag))
+   end;
+ val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
+-val _ = new_theory "forge_refundLOut";
++val _ = new_theory "forge_refundLOutExplore";
+ val failed = ref ([] : string list);
+ val problems = ref ([] : string list);
+ fun bad s = (pr ("UNEXPECTED_CONTROL_ACCEPTANCE " ^ s); problems := s :: !problems);
+@@ -403,314 +407,436 @@
+       rpt gen_tac \\ simp[Once extract_fs_with_numchars_def, no_ext_def] \\ every_case_tac \\ rw[] \\ metis_tac[],
+       rpt gen_tac \\ simp[Once extract_fs_with_numchars_def, no_ext_def] \\ strip_tac \\ gvs[AllCaseEqs()]]);
+ 
+-(* A3 addition v6 (auxiliary lemma; no existing statement changed): ONE replay step, with every step explicit.
+-   LO-0004 stdout:256: extract_no_ext_stdout failed in FIRST_ASSUM (a drule/first_x_assum found no assumption;
+-   no goal was printed). v6 proves the step separately and then uses it by explicit qspecl_then / MATCH_MP. *)
+-val ISTEP = thm "extract_no_ext_stdout_step"
+-  (fn () => ``!e io cls fs cls' fs'.
++(* ===================================================================================================
++   LOx-0001 PART 2 (worker A16, Night-Shift Orchestrator A). EXPLORATION ONLY. NOT RUN. Every tactic UNCHECKED.
++   - Part 1 above = LO-0005.sml lines 1-404 (through extract_no_ext_ExtCall, the last lemma that passed in
++     LO-0005), unchanged except the new_theory name (scratch theory, never exported).
++   - Nothing below stores a theorem: no save_thm, no thm, no export_theory. The open lemmas are only explored.
++   - Where an exploration needs an open lemma (or an open sub-case), it uses ASSUME of its statement. A closed
++     exploration prints VALIDATION ... hyps N; N > 0 means "closed only under the ASSUMEd statements".
++   - Stepper: a step is (label, tactic, alternatives). For step i the cumulative prefix
++     ALL_TAC \\ t1 \\ ... \\ ti is applied afresh to the start goal as  prefix g ctxt  (no TAC_PROOF;
++     type tactic = goal -> Context.t -> goal list * validation, HOL/src/1/Abbrev.sig:10), under Timeout.apply. *)
++val _ = pr "EXPLORE_MODE nothing is exported; the open lemmas are never stored";
++val _ = metisTools.limit := {time = SOME 20.0, infs = NONE};
++val STEP_SECS = 60;
++type step = string * tactic * tactic list;
++
++(* ---------- printing ---------- *)
++val NAMED_CONSTS = ["arm8_run", "no_ext"];
++fun named_consts (tms : term list) : term list =
++  op_mk_set aconv
++    (List.concat (map (find_terms (fn t => is_const t andalso Lib.mem (fst (dest_const t)) NAMED_CONSTS)) tms));
++fun const_line (loc : string) (c : term) : string =
++  let val {Thy = thy, Name = nm, Ty = ty} = dest_thy_const c
++  in "    CONST_IN_" ^ loc ^ " " ^ thy ^ "$" ^ nm ^ " " ^ trunc 300 (type_to_string ty) end;
++fun var_line (v : term) : string =
++  let val (n, ty) = dest_var v in n ^ trunc 200 (type_to_string ty) end;
++fun show_goal (lemma : string) (k : int) ((asl, w) : goal) : unit =
++  let
++    fun asm_loop _ [] = ()
++      | asm_loop j (a :: rest) =
++          (pr ("    ASM " ^ Int.toString j ^ " " ^ trunc 1500 (term_to_string a));
++           List.app (fn c => pr (const_line ("ASM_" ^ Int.toString j) c)) (named_consts [a]);
++           asm_loop (j + 1) rest)
++  in
++    pr ("  GOAL_BEGIN " ^ lemma ^ " #" ^ Int.toString k ^ " assumptions " ^ Int.toString (length asl) ^
++        " (ASM 0 = newest)");
++    asm_loop 0 asl;
++    pr ("    CONCL " ^ trunc 4000 (term_to_string w));
++    List.app (fn c => pr (const_line "CONCL" c)) (named_consts [w]);
++    pr ("    FREE_VARS " ^ trunc 1500 (String.concatWith ", " (map var_line (free_varsl (w :: asl)))));
++    pr ("  GOAL_END " ^ lemma ^ " #" ^ Int.toString k)
++  end;
++fun show_goals (lemma : string) (gs : goal list) : unit =
++  let
++    fun loop _ [] = ()
++      | loop k (g :: rest) = (show_goal lemma k g; loop (k + 1) rest)
++  in
++    pr ("  GOAL_COUNT " ^ Int.toString (length gs));
++    loop 1 gs
++  end;
++
++(* ---------- the stepper ---------- *)
++fun prefix_of (ts : tactic list) : tactic = List.foldl (fn (t, acc) => acc \\ t) ALL_TAC ts;
++fun run_ts (ts : tactic list) (g : goal) : goal list * (thm list -> thm) =
++  let val ctxt = Context.snapshot ()
++  in Timeout.apply (Time.fromSeconds (Int.toLarge STEP_SECS)) (fn () => prefix_of ts g ctxt) () end;
++fun check_validation (lemma : string) (gt : term) (v : thm list -> thm) : unit =
++  (let val th = v [] in
++     pr ("VALIDATION " ^ lemma ^ " concl_aconv_goal " ^ Bool.toString (aconv (concl th) gt) ^
++         " hyps " ^ Int.toString (length (hyp th)));
++     List.app (fn h => pr ("  VALIDATION_HYP " ^ trunc 400 (term_to_string h))) (hyp th)
++   end)
++  handle e => pr ("VALIDATION_FAILED " ^ lemma ^ " " ^ trunc 600 (General.exnMessage e));
++fun explore0 (lemma : string) (gt : term) (steps : step list) : unit =
++  let
++    val g0 : goal = ([], gt)
++    fun attempt (ts : tactic list) : (goal list * (thm list -> thm)) option * string =
++      (SOME (run_ts ts g0), "")
++      handle Timeout.TIMEOUT _ => (NONE, "TIMEOUT after " ^ Int.toString STEP_SECS ^ " s")
++           | e => (NONE, General.exnMessage e)
++    fun finish (n : int) (gs : goal list) (v : thm list -> thm) : unit =
++      if null gs then
++        (pr ("EXPLORE_CLOSED " ^ lemma ^ " after_steps " ^ Int.toString n);
++         check_validation lemma gt v)
++      else pr ("EXPLORE_OPEN " ^ lemma ^ " goals " ^ Int.toString (length gs))
++    fun loop (i : int) (chosen : tactic list) (gs : goal list) (v : thm list -> thm) (rest : step list) : unit =
++      case rest of
++        [] => finish (i - 1) gs v
++      | ((label, tac, alts) :: more) =>
++          (case attempt (chosen @ [tac]) of
++             (SOME (gs1, v1), _) =>
++               (pr ("STEP " ^ lemma ^ " " ^ Int.toString i ^ " " ^ label ^ " goals " ^ Int.toString (length gs1));
++                show_goals lemma gs1;
++                loop (i + 1) (chosen @ [tac]) gs1 v1 more)
++           | (NONE, msg) =>
++               (pr ("STEP_FAILED " ^ lemma ^ " " ^ Int.toString i ^ " " ^ label ^ " " ^ trunc 800 msg);
++                pr ("GOALS_BEFORE_STEP " ^ lemma ^ " " ^ Int.toString i ^ " count " ^ Int.toString (length gs));
++                show_goals lemma gs;
++                alt_loop i label chosen more 1 alts))
++    and alt_loop (i : int) (label : string) (chosen : tactic list) (more : step list) (k : int)
++                 (alts : tactic list) : unit =
++      case alts of
++        [] => pr ("STEP_STUCK " ^ lemma ^ " " ^ Int.toString i ^ " " ^ label)
++      | (a :: others) =>
++          (case attempt (chosen @ [a]) of
++             (SOME (gs1, v1), _) =>
++               (pr ("ALT_WORKS " ^ lemma ^ " " ^ Int.toString i ^ " " ^ label ^ " alt " ^ Int.toString k);
++                pr ("STEP " ^ lemma ^ " " ^ Int.toString i ^ " " ^ label ^ " goals " ^ Int.toString (length gs1) ^
++                    " (alt " ^ Int.toString k ^ ")");
++                show_goals lemma gs1;
++                loop (i + 1) (chosen @ [a]) gs1 v1 more)
++           | (NONE, msg) =>
++               (pr ("ALT_FAILED " ^ lemma ^ " " ^ Int.toString i ^ " " ^ label ^ " alt " ^ Int.toString k ^ " " ^
++                    trunc 800 msg);
++                alt_loop i label chosen more (k + 1) others))
++    val v0 = (fn (_ : thm list) => raise mk_HOL_ERR "LOx" "explore" "no step was run") : thm list -> thm
++  in
++    pr ("EXPLORE_BEGIN " ^ lemma ^ " steps " ^ Int.toString (length steps));
++    show_goals lemma [g0];
++    loop 1 [] [g0] v0 steps;
++    pr ("EXPLORE_END " ^ lemma)
++  end;
++(* explore : string -> (unit -> term) -> (unit -> step list) -> unit. A parse error or any other exception in
++   one exploration prints EXPLORE_ERROR and the script goes on with the next one. *)
++fun explore (lemma : string) (goalf : unit -> term) (stepsf : unit -> step list) : unit =
++  explore0 lemma (goalf ()) (stepsf ())
++  handle e => pr ("EXPLORE_ERROR " ^ lemma ^ " " ^ trunc 800 (General.exnMessage e));
++
++(* ---------- statements (copied from LO-0005.sml; the case statements are new sub-goals) ---------- *)
++fun istep_tm () = ``!e io cls fs cls' fs'.
+        extract_fs_with_numchars no_ext (cls,fs) (e::io) = SOME (cls',fs') /\ STD_streams fs ==>
+        ?cls1 fs1. extract_fs_with_numchars no_ext (cls1,fs1) io = SOME (cls',fs') /\ STD_streams fs1 /\
+          !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
+-              ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [e])``)
+-  (fn () =>
+-   let
+-     val pairs = RULE_ASSUM_TAC (REWRITE_RULE [pairTheory.FST, pairTheory.SND])
+-     (* replay through fs_ffi_part *)
+-     val partA =
+-       ST "step_A_witness" (qexistsl_tac [`cls`, `fs1`])
+-       \\ ST "step_A_fstep" (qspecl_then [`nm`, `f`, `cf`, `bs0`, `fs`, `fs1`] mp_tac FSTEP)
+-       \\ impl_tac >- CL "step_A_fstep_pre" (ASM_REWRITE_TAC [])
+-       \\ strip_tac
+-       \\ rpt conj_tac >- CL "step_A_replay" (first_assum ACCEPT_TAC) >- CL "step_A_std" (first_assum ACCEPT_TAC)
+-       \\ qx_gen_tac `c0` \\ strip_tac
+-       \\ ST "step_A_c0" (qpat_x_assum `!c0. _ ==> _` (qspec_then `c0` mp_tac))
+-       \\ impl_tac >- CL "step_A_c0_pre" (first_assum ACCEPT_TAC)
+-       \\ disch_then SUBST1_TAC
+-       \\ CL "step_A_end" (simp[fdw_def])
+-     (* basis name outside fs_ffi_part: state unchanged, no bytes *)
+-     val partB =
+-       ST "step_B_witness" (qexistsl_tac [`cls`, `fs`])
+-       \\ rpt conj_tac >- CL "step_B_replay" (first_assum ACCEPT_TAC) >- CL "step_B_std" (first_assum ACCEPT_TAC)
+-       \\ `nm <> «write»` by
+-            CL "step_B_notwrite"
+-              (strip_tac \\ rveq \\ qspecl_then [`«write»`, `ffi_write`] mp_tac AFP \\ ASM_REWRITE_TAC []
+-               \\ simp[])
+-       \\ qx_gen_tac `c0` \\ strip_tac
+-       \\ CL "step_B_end" (simp[fdw_def])
+-     val extcall =
+-       rename1 `IO_event (ExtCall nm) cf bs0` \\ strip_tac
+-       \\ ST "step_extc" (qpat_x_assum `extract_fs_with_numchars _ _ _ = _` (strip_assume_tac o MATCH_MP EXTC))
+-       \\ pairs
+-       >- partA
+-       \\ partB
+-     val sharedmem =
+-       strip_tac \\ qpat_x_assum `extract_fs_with_numchars _ _ _ = _` mp_tac
+-       \\ CL "step_sharedmem" (simp[Once extract_fs_with_numchars_def, no_ext_def])
+-   in
+-     try_all "extract_no_ext_stdout_step"
+-       [rpt gen_tac \\ Cases_on `e` \\ rename1 `IO_event ff cf bs0` \\ Cases_on `ff`
+-          >- extcall \\ sharedmem,
+-        rpt gen_tac \\ Cases_on `e` \\ rename1 `IO_event ff cf bs0` \\ Cases_on `ff`
+-          >- (rename1 `IO_event (ExtCall nm) cf bs0` \\ strip_tac
+-              \\ qpat_x_assum `extract_fs_with_numchars _ _ _ = _` (strip_assume_tac o MATCH_MP EXTC)
+-              \\ gvs[]
+-              >- (drule_all FSTEP \\ strip_tac \\ qexistsl_tac [`cls`, `fs1`] \\ simp[fdw_def])
+-              \\ qexistsl_tac [`cls`, `fs`] \\ simp[fdw_def] \\ rw[] \\ gvs[fs_ffi_part_def])
+-          \\ sharedmem]
+-   end);
+-
+-(* Y4's statement, unchanged *)
+-val INV = thm "extract_no_ext_stdout"
+-  (fn () => ``!io cls fs cls' fs'.
++              ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [e])``;
++fun event_tm () = ``!ff cf bs0 io cls fs cls' fs'.
++       extract_fs_with_numchars no_ext (cls,fs) (IO_event ff cf bs0::io) = SOME (cls',fs') /\ STD_streams fs ==>
++       ?cls1 fs1. extract_fs_with_numchars no_ext (cls1,fs1) io = SOME (cls',fs') /\ STD_streams fs1 /\
++         !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++              ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [IO_event ff cf bs0])``;
++fun extcall_tm () = ``!nm cf bs0 io cls fs cls' fs'.
++       extract_fs_with_numchars no_ext (cls,fs) (IO_event (ExtCall nm) cf bs0::io) = SOME (cls',fs') /\
++       STD_streams fs ==>
++       ?cls1 fs1. extract_fs_with_numchars no_ext (cls1,fs1) io = SOME (cls',fs') /\ STD_streams fs1 /\
++         !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++              ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [IO_event (ExtCall nm) cf bs0])``;
++fun shared_tm () = ``!op cf bs0 io cls fs cls' fs'.
++       extract_fs_with_numchars no_ext (cls,fs) (IO_event (SharedMem op) cf bs0::io) = SOME (cls',fs') /\
++       STD_streams fs ==>
++       ?cls1 fs1. extract_fs_with_numchars no_ext (cls1,fs1) io = SOME (cls',fs') /\ STD_streams fs1 /\
++         !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++              ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [IO_event (SharedMem op) cf bs0])``;
++(* case A: the name is one of the five fs_ffi_part names (open_in, open_out, read, write, close); shape = EXTC disjunct 1 *)
++fun sga_tm () = ``!nm f cf bs0 io cls fs cls' fs' fs2.
++       ALOOKUP (SND (SND fs_ffi_part)) nm = SOME f /\
++       f cf (MAP FST bs0) fs = SOME (FFIreturn (MAP SND bs0) fs2) /\
++       extract_fs_with_numchars no_ext (cls,fs2) io = SOME (cls',fs') /\ STD_streams fs ==>
++       ?cls1 fs1. extract_fs_with_numchars no_ext (cls1,fs1) io = SOME (cls',fs') /\ STD_streams fs1 /\
++         !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++              ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [IO_event (ExtCall nm) cf bs0])``;
++(* case B: a basis name outside fs_ffi_part (get_arg_count, get_arg_length, get_arg, exit); shape = EXTC disjunct 2.
++   A non-basis name is vacuous at no_ext (Oracle_final): EXTC (proved) already excludes it. *)
++fun sgb_tm () = ``!nm cf bs0 io cls fs cls' fs'.
++       ALOOKUP (SND (SND fs_ffi_part)) nm = NONE /\ is_basis_ffi_name nm /\
++       extract_fs_with_numchars no_ext (cls,fs) io = SOME (cls',fs') /\ STD_streams fs ==>
++       ?cls1 fs1. extract_fs_with_numchars no_ext (cls1,fs1) io = SOME (cls',fs') /\ STD_streams fs1 /\
++         !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++              ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [IO_event (ExtCall nm) cf bs0])``;
++fun inv_tm () = ``!io cls fs cls' fs'.
+        extract_fs_with_numchars no_ext (cls,fs) io = SOME (cls',fs') /\ STD_streams fs ==>
+        STD_streams fs' /\
+        !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
+-            ALOOKUP fs'.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written io)``)
+-  (fn () =>
+-   let (* A3 tactic-only: the v2 tactic is kept as inv_tac with the v2 case split; a second copy renames
+-          the ffiname variable before Cases_on (D4). Nothing else differs between the two copies. *)
+-     fun inv_tac casetac =
+-       Induct
+-       >- try_all "extract_no_ext_stdout_nil" [simp[extract_fs_with_numchars_def, fdw_def],
+-                                                rw[extract_fs_with_numchars_def, fdw_def] \\ gvs[]]
+-       \\ casetac
+-       >- ((* ExtCall: through fs_ffi_part, or a basis name outside it *)
+-           rename1 `IO_event (ExtCall nm) cf bs0`
+-           \\ rpt gen_tac \\ strip_tac \\ drule EXTC \\ strip_tac
+-           >- (gvs[] \\ drule_all FSTEP \\ strip_tac
+-               \\ first_x_assum drule_all \\ strip_tac
+-               \\ conj_tac >- simp[]
+-               \\ rpt strip_tac \\ simp[fdw_def]
+-               \\ qpat_x_assum `!c0. ALOOKUP fs.inode_tbl _ = SOME c0 ==> _` drule \\ strip_tac
+-               \\ qpat_x_assum `!c0. ALOOKUP fs1.inode_tbl _ = SOME c0 ==> _` drule \\ simp[])
+-           \\ `nm <> «write»` by (strip_tac \\ gvs[fs_ffi_part_def])
+-           \\ gvs[] \\ first_x_assum drule_all \\ simp[fdw_def])
+-       \\ (* SharedMem: no_ext answers Oracle_final, the replay is NONE *)
+-       rpt gen_tac \\ simp[Once extract_fs_with_numchars_def, no_ext_def]
+-   in
+-     (* A3 tactic-only v6: first alternative = induction with the step lemma ISTEP, all steps explicit *)
+-     val by_step =
+-       Induct
+-       >- (rpt gen_tac \\ strip_tac
+-           \\ ST "inv_nil" (qpat_x_assum `extract_fs_with_numchars _ _ _ = _`
+-                (strip_assume_tac o SIMP_RULE (srw_ss()) [extract_fs_with_numchars_def]))
+-           \\ rveq \\ CL "inv_nil_end" (simp[fdw_def]))
+-       \\ qx_gen_tac `e` \\ rpt gen_tac \\ strip_tac
+-       \\ ST "inv_step" (qspecl_then [`e`, `io`, `cls`, `fs`, `cls'`, `fs'`] mp_tac ISTEP)
+-       \\ impl_tac >- CL "inv_step_pre" (ASM_REWRITE_TAC [])
+-       \\ strip_tac
+-       \\ ST "inv_ih" (first_x_assum (qspecl_then [`cls1`, `fs1`, `cls'`, `fs'`] mp_tac))
+-       \\ impl_tac >- CL "inv_ih_pre" (ASM_REWRITE_TAC [])
+-       \\ strip_tac
+-       \\ conj_tac >- CL "inv_std" (first_assum ACCEPT_TAC)
+-       \\ qx_gen_tac `c0` \\ strip_tac
+-       \\ ST "inv_c0" (qpat_x_assum `!c0. ALOOKUP fs.inode_tbl _ = SOME c0 ==> _` (qspec_then `c0` mp_tac))
+-       \\ impl_tac >- CL "inv_c0_pre" (first_assum ACCEPT_TAC)
+-       \\ strip_tac
+-       \\ ST "inv_c1" (qpat_x_assum `!c0. ALOOKUP fs1.inode_tbl _ = SOME c0 ==> _`
+-                         (qspec_then `c0 ++ fd1_written [e]` mp_tac))
+-       \\ impl_tac >- CL "inv_c1_pre" (first_assum ACCEPT_TAC)
+-       \\ disch_then SUBST1_TAC
+-       \\ `fd1_written (e::io) = fd1_written [e] ++ fd1_written io` by
+-            CL "inv_append" (qspecl_then [`[e]`, `io`] mp_tac FDA \\ simp[])
+-       \\ CL "inv_end" (ASM_REWRITE_TAC [listTheory.APPEND_ASSOC])
+-   in
+-     try_all "extract_no_ext_stdout"
+-       [by_step,
+-        inv_tac (Cases \\ rename1 `IO_event ff _ _` \\ Cases_on `ff`),
+-        inv_tac (Cases \\ Cases_on `f`)]
+-   end);
+-
+-val EFS = thm "extract_fs_inode_tbl"
+-  (fn () => ``!cl fs io fsx. extract_fs no_ext (cl,fs) io = SOME fsx ==>
+-       ?cls' fs'. extract_fs_with_numchars no_ext (cl,fs) io = SOME (cls',fs') /\ fsx.inode_tbl = fs'.inode_tbl``)
+-  (fn () => try_all "extract_fs_inode_tbl"
+-     [(* A3 tactic-only: added first alternative; the case split is on the replay result itself *)
+-      rpt gen_tac \\ simp[extract_fs_def] \\
+-        Cases_on `extract_fs_with_numchars no_ext (cl,fs) io` \\ simp[] \\
+-        rename1 `extract_fs_with_numchars _ _ _ = SOME pp` \\ PairCases_on `pp` \\ simp[] \\ rpt strip_tac \\ gvs[],
+-      rw[extract_fs_def] \\ rename1 `SOME zz` \\ PairCases_on `zz` \\ gvs[],
+-      rpt gen_tac \\ simp[extract_fs_def, PULL_EXISTS] \\ Cases \\ simp[],
+-      rw[extract_fs_def] \\ Cases_on `extract_fs_with_numchars no_ext (cl,fs) io` \\ gvs[] \\
+-        rename1 `SOME zz` \\ PairCases_on `zz` \\ gvs[]]);
+-
+-(* L-OUT (Y4's statement, unchanged) *)
+-val LOUT = thm "refund_L_OUT"
+-  (fn () => ``!cl fs io out. STD_streams fs /\
++            ALOOKUP fs'.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written io)``;
++fun inv_nil_tm () = ``!cls fs cls' fs'.
++       extract_fs_with_numchars no_ext (cls,fs) [] = SOME (cls',fs') /\ STD_streams fs ==>
++       STD_streams fs' /\
++       !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++            ALOOKUP fs'.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [])``;
++fun inv_cons_tm () = ``!io.
++       (!cls fs cls' fs'.
++          extract_fs_with_numchars no_ext (cls,fs) io = SOME (cls',fs') /\ STD_streams fs ==>
++          STD_streams fs' /\
++          !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++               ALOOKUP fs'.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written io)) ==>
++       !e cls fs cls' fs'.
++          extract_fs_with_numchars no_ext (cls,fs) (e::io) = SOME (cls',fs') /\ STD_streams fs ==>
++          STD_streams fs' /\
++          !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++               ALOOKUP fs'.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written (e::io))``;
++fun lout_tm () = ``!cl fs io out. STD_streams fs /\
+        extract_fs no_ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) out) ==>
+-       fd1_written io = explode out``)
+-  (fn () =>
+-   let (* A3 tactic-only (D2): v2 called drule STD_streams_stdout after drule_all INV. drule takes the newest
+-          matching assumption, which is STD_streams fs' (from INV), not STD_streams fs. v3 names fs. *)
+-     val pick_init =
+-       qpat_assum `STD_streams fs` (qx_choose_then `init` assume_tac o MATCH_MP STD_streams_stdout)
+-     val end_alts =
+-       [gvs[stdo_def, mlstringTheory.strcat_thm],
+-        qpat_x_assum `stdo _ _ (add_stdo _ _ _ _) _` (strip_assume_tac o REWRITE_RULE [stdo_def])
+-          \\ qpat_x_assum `(add_stdo _ _ _ _).inode_tbl = _` (fn th => RULE_ASSUM_TAC (REWRITE_RULE [th]))
+-          \\ gvs[mlstringTheory.strcat_thm],
+-        fs[stdo_def, mlstringTheory.strcat_thm] \\ rfs[] \\ gvs[]]
+-   in
+-     rpt gen_tac \\ strip_tac
+-     \\ pick_init
+-     \\ drule EFS \\ strip_tac
+-     \\ drule_all INV \\ strip_tac
+-     \\ `ALOOKUP fs.inode_tbl (UStream «stdout») = SOME (explode init)` by fs[stdo_def]
+-     \\ qpat_x_assum `!c0. _ ==> _` drule \\ strip_tac
+-     \\ `stdo 1 "stdout" (fastForwardFD fs 0) init` by simp[stdo_fastForwardFD]
+-     \\ `stdo 1 "stdout" (add_stdo 1 "stdout" (fastForwardFD fs 0) out) (strcat init out)` by
+-          (irule (GEN_ALL stdo_add_stdo) \\ simp[])
+-     \\ try_all "refund_L_OUT_end" end_alts
+-   end);
+-
+-val LOUTP = thm "refund_L_OUT_prefix"
+-  (fn () => ``!cl fs io io' out. STD_streams fs /\ io' <<= io /\
++       fd1_written io = explode out``;
++fun loutp_tm () = ``!cl fs io io' out. STD_streams fs /\ io' <<= io /\
+        extract_fs no_ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) out) ==>
+-       fd1_written io' <<= explode out``)
+-  (fn () => try_all "refund_L_OUT_prefix"
+-     [rpt strip_tac \\ drule_all LOUT \\ disch_then (SUBST1_TAC o SYM) \\ irule FDP \\ simp[],
+-      metis_tac[LOUT, FDP]]);
++       fd1_written io' <<= explode out``;
++
++(* ---------- (1a) extract_no_ext_stdout_step: diagnostic replay of the LO-0005 first alternative ---------- *)
++(* LO-0005 stdout:261: HOL_ERR origin FIRST_ASSUM, empty message, no STAGE_FAILED line, so the failing tactic was one
++   not wrapped by ST/CL. Two unwrapped candidates raise exactly this: rename1 (its last selection mode "sa" is
++   FIRST_ASSUM, HOL/src/q/Q.sml:647-650, 676-689) and qpat_x_assum (Q.sml:364-367 -> Tactical.PAT_X_ASSUM =
++   gen FIRST_X_ASSUM, Tactical.sml:941; FIRST_ASSUM raises with origin "FIRST_ASSUM", Tactical.sml:874-875). *)
++val _ = explore "extract_no_ext_stdout_step/A3_path" istep_tm (fn () =>
++  [("gen", rpt gen_tac, []),
++   ("cases_e", Cases_on `e`, []),
++   ("rename_event", rename1 `IO_event ff cf bs0`, [rename1 `IO_event ff _ _`]),
++   ("cases_ff", Cases_on `ff`, [Cases_on `f`]),
++   ("strip", strip_tac, []),
++   ("pat_extract_mp", qpat_x_assum `extract_fs_with_numchars _ _ _ = _` mp_tac,
++      [qpat_x_assum `extract_fs_with_numchars _ _ (_ :: _) = _` mp_tac]),
++   ("strip_again", strip_tac, []),
++   ("rename_extcall_TRY", TRY (rename1 `IO_event (ExtCall nm) cf bs0`), []),
++   ("extc_TRY", TRY (qpat_x_assum `extract_fs_with_numchars _ _ _ = _` (strip_assume_tac o MATCH_MP EXTC)), []),
++   ("pairs", RULE_ASSUM_TAC (REWRITE_RULE [pairTheory.FST, pairTheory.SND]), [])]);
++
++(* ---------- (1b) case A: fs_ffi_part name ---------- *)
++val _ = explore "extract_no_ext_stdout_step/ExtCall_fs_ffi_part" sga_tm (fn () =>
++  [("intro", rpt gen_tac \\ strip_tac, []),
++   ("fstep", drule_all FSTEP,
++      [qspecl_then [`nm`, `f`, `cf`, `bs0`, `fs`, `fs2`] mp_tac FSTEP \\ ASM_REWRITE_TAC [],
++       (qspecl_then [`nm`, `f`, `cf`, `bs0`, `fs`, `fs2`] mp_tac FSTEP \\ impl_tac) >- ASM_REWRITE_TAC []]),
++   ("fstep_strip", strip_tac, []),
++   ("witness", qexistsl_tac [`cls`, `fs2`], []),
++   ("conj", rpt conj_tac, []),
++   ("accept_asms_TRY", TRY (first_assum ACCEPT_TAC), []),
++   ("gen_c0", rpt strip_tac, []),
++   ("use_c0", qpat_x_assum `!c0. _ ==> _` (qspec_then `c0` mp_tac), [first_x_assum (qspec_then `c0` mp_tac)]),
++   ("c0_rw", ASM_REWRITE_TAC [], []),
++   ("subst", disch_then SUBST1_TAC, []),
++   ("end", simp[fdw_def],
++      [REWRITE_TAC [fdw_def, listTheory.APPEND_NIL],
++       rw[fdw_def],
++       Cases_on `nm = «write»` \\ ASM_REWRITE_TAC [fdw_def, listTheory.APPEND_NIL]])]);
++
++(* ---------- (1c) case B: basis name outside fs_ffi_part ---------- *)
++val _ = explore "extract_no_ext_stdout_step/ExtCall_basis_other" sgb_tm (fn () =>
++  [("intro", rpt gen_tac \\ strip_tac, []),
++   ("notwrite", (`nm <> «write»` by (strip_tac \\ rveq \\ qpat_x_assum `ALOOKUP _ _ = NONE` mp_tac \\
++                                      simp[fs_ffi_part_def])),
++      [(`nm <> «write»` by (strip_tac \\ rveq \\ qspecl_then [`«write»`, `ffi_write`] mp_tac AFP \\
++                            ASM_REWRITE_TAC [] \\ simp[])),
++       (`nm <> «write»` by (CCONTR_TAC \\ gvs[fs_ffi_part_def])),
++       (`nm <> «write»` by (strip_tac \\ gvs[fs_ffi_part_def, alistTheory.ALOOKUP_def]))]),
++   ("witness", qexistsl_tac [`cls`, `fs`], []),
++   ("conj", rpt conj_tac, []),
++   ("accept_asms_TRY", TRY (first_assum ACCEPT_TAC), []),
++   ("gen_c0", rpt strip_tac, []),
++   ("end", simp[fdw_def],
++      [gvs[fdw_def], rw[fdw_def] \\ gvs[], ASM_REWRITE_TAC [fdw_def, listTheory.APPEND_NIL]])]);
++
++(* ---------- (1d) ExtCall, from EXTC (proved) and the two cases (ASSUMEd) ---------- *)
++val _ = explore "extract_no_ext_stdout_step/ExtCall" extcall_tm (fn () =>
++  let val SGA_A = ASSUME (sga_tm ())
++      val SGB_A = ASSUME (sgb_tm ())
++  in
++  [("intro", rpt gen_tac \\ strip_tac, []),
++   ("extc", qpat_x_assum `extract_fs_with_numchars _ _ _ = _` (strip_assume_tac o MATCH_MP EXTC),
++      [drule EXTC \\ strip_tac,
++       first_x_assum (strip_assume_tac o MATCH_MP EXTC)]),
++   ("pairs", RULE_ASSUM_TAC (REWRITE_RULE [pairTheory.FST, pairTheory.SND]), [fs []]),
++   ("close_by_cases", FIRST [drule_all SGA_A \\ disch_then MATCH_ACCEPT_TAC,
++                             drule_all SGB_A \\ disch_then MATCH_ACCEPT_TAC],
++      [metis_tac [SGA_A, SGB_A]])]
++  end);
++
++(* ---------- (1e) SharedMem: no_ext answers Oracle_final, the replay is NONE ---------- *)
++val _ = explore "extract_no_ext_stdout_step/SharedMem" shared_tm (fn () =>
++  [("intro", rpt gen_tac \\ strip_tac, []),
++   ("pat_extract_mp", qpat_x_assum `extract_fs_with_numchars _ _ _ = _` mp_tac, [rpt (pop_assum mp_tac)]),
++   ("eval", simp[Once extract_fs_with_numchars_def, no_ext_def],
++      [simp[extract_fs_with_numchars_def, no_ext_def],
++       rw[Once extract_fs_with_numchars_def, no_ext_def],
++       fs[Once extract_fs_with_numchars_def, no_ext_def]])]);
++
++(* ---------- (1f) one io_event: split the ffiname (no variable names needed) ---------- *)
++val _ = explore "extract_no_ext_stdout_step/event" event_tm (fn () =>
++  let val EXT_A = ASSUME (extcall_tm ())
++      val SH_A = ASSUME (shared_tm ())
++  in
++  [("cases_name", Cases, [gen_tac \\ Cases_on `ff`]),
++   ("close_by_cases", FIRST [MATCH_ACCEPT_TAC EXT_A, MATCH_ACCEPT_TAC SH_A], [metis_tac [EXT_A, SH_A]])]
++  end);
++
++(* ---------- (1g) the step lemma itself ---------- *)
++val _ = explore "extract_no_ext_stdout_step" istep_tm (fn () =>
++  let val EV_A = ASSUME (event_tm ())
++  in
++  [("cases_e", Cases, [gen_tac \\ Cases_on `e`]),
++   ("close_by_event", MATCH_ACCEPT_TAC EV_A, [metis_tac [EV_A]])]
++  end);
++
++(* ---------- (2a) the invariant, nil case ---------- *)
++val _ = explore "extract_no_ext_stdout/nil" inv_nil_tm (fn () =>
++  [("intro", rpt gen_tac \\ strip_tac, []),
++   ("unfold", qpat_x_assum `extract_fs_with_numchars _ _ _ = _`
++                (strip_assume_tac o SIMP_RULE (srw_ss()) [extract_fs_with_numchars_def]),
++      [gvs[extract_fs_with_numchars_def], fs[extract_fs_with_numchars_def]]),
++   ("rveq", rveq, []),
++   ("end", simp[fdw_def], [rw[fdw_def], gvs[fdw_def]])]);
++
++(* ---------- (2b) the invariant, cons case, with the step lemma ASSUMEd ---------- *)
++val _ = explore "extract_no_ext_stdout/cons" inv_cons_tm (fn () =>
++  let val ISTEP_A = ASSUME (istep_tm ())
++  in
++  [("intro_io", gen_tac \\ DISCH_TAC, []),
++   ("intro_e", rpt gen_tac \\ strip_tac, []),
++   ("istep", qspecl_then [`e`, `io`, `cls`, `fs`, `cls'`, `fs'`] mp_tac ISTEP_A, []),
++   ("istep_rw", ASM_REWRITE_TAC [], [impl_tac >- ASM_REWRITE_TAC []]),
++   ("istep_strip", strip_tac, []),
++   ("ih", qpat_x_assum `!cls fs cls' fs'. _` (qspecl_then [`cls1`, `fs1`, `cls'`, `fs'`] mp_tac),
++      [last_x_assum (qspecl_then [`cls1`, `fs1`, `cls'`, `fs'`] mp_tac),
++       first_x_assum (qspecl_then [`cls1`, `fs1`, `cls'`, `fs'`] mp_tac)]),
++   ("ih_rw", ASM_REWRITE_TAC [], [impl_tac >- ASM_REWRITE_TAC []]),
++   ("ih_strip", strip_tac, []),
++   ("conj", conj_tac, []),
++   ("accept_std_TRY", TRY (first_assum ACCEPT_TAC), []),
++   ("gen_c0", rpt strip_tac, []),
++   ("c0_fs", qpat_x_assum `!c0. ALOOKUP fs.inode_tbl _ = SOME c0 ==> _` (qspec_then `c0` mp_tac),
++      [qpat_x_assum `!c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==> _` (qspec_then `c0` mp_tac)]),
++   ("c0_fs_rw", ASM_REWRITE_TAC [], []),
++   ("c0_fs_strip", strip_tac, []),
++   ("c1_fs1", qpat_x_assum `!c0. ALOOKUP fs1.inode_tbl _ = SOME c0 ==> _` (qspec_then `c0 ++ fd1_written [e]` mp_tac),
++      [qpat_x_assum `!c0. ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME c0 ==> _`
++         (qspec_then `c0 ++ fd1_written [e]` mp_tac)]),
++   ("c1_fs1_rw", ASM_REWRITE_TAC [], []),
++   ("subst", disch_then SUBST1_TAC, []),
++   ("append_fact", (`fd1_written (e::io) = fd1_written [e] ++ fd1_written io` by
++                      (qspecl_then [`[e]`, `io`] mp_tac FDA \\ simp[])),
++      [(`fd1_written (e::io) = fd1_written [e] ++ fd1_written io` by simp[GSYM FDA]),
++       (`fd1_written (e::io) = fd1_written [e] ++ fd1_written io` by metis_tac [FDA, listTheory.APPEND])]),
++   ("end", ASM_REWRITE_TAC [listTheory.APPEND_ASSOC], [simp[], metis_tac [listTheory.APPEND_ASSOC]])]
++  end);
++
++(* ---------- (2c) the invariant itself, from the two ASSUMEd cases ---------- *)
++val _ = explore "extract_no_ext_stdout" inv_tm (fn () =>
++  let val NIL_A = ASSUME (inv_nil_tm ())
++      val CONS_A = ASSUME (inv_cons_tm ())
++  in
++  [("induct", Induct, [Induct_on `io`]),
++   ("close_cases", FIRST [MATCH_ACCEPT_TAC NIL_A, first_assum (fn ih => MATCH_ACCEPT_TAC (MATCH_MP CONS_A ih))],
++      [metis_tac [NIL_A, CONS_A]])]
++  end);
+ 
+-(* ================= composition with the stored final theorem, ext := no_ext ================= *)
++(* ================= (3) refund_profile_a_sl_fd1 ================= *)
++(* Copied verbatim from LO-0005.sml:575-587 (ran in LO-0004: stdout EXT_VARIABLE / RENDER_TERM / NOEXT_TERM lines). *)
+ val (PREM, _) = dest_imp (concl (SPEC_ALL SPE));
+ val EXTV = valOf (List.find (fn v => fst (dest_var v) = "ext") (free_vars (concl (SPEC_ALL SPE))));
+ val _ = pr ("EXT_VARIABLE " ^ term_to_string EXTV ^ " : " ^ type_to_string (type_of EXTV));
+ val R = find_term (fn t => (fst (dest_const (fst (strip_comb t))) = "refund_render_fields") handle _ => false) (concl SPE);
+ val _ = pr ("RENDER_TERM " ^ term_to_string R);
+-(* A3 tactic-only (D1): no_ext is polymorphic (no_ext : ffiname -> mlstring list # IO_fs -> word8 list ->
+-   word8 list -> 'a oracle_result). ``no_ext`` parsed alone keeps 'a, so INST [EXTV |-> ``no_ext``] fails on the
+-   type and Term.free_in ``no_ext`` is false. NOEXT is the constant at the exact type of the variable ext. *)
+ val NOEXT = mk_thy_const {Thy = "basis_ffi", Name = "no_ext", Ty = type_of EXTV}
+   handle e => (pr ("NOEXT_FAILED " ^ General.exnMessage e); raise e);
+ val _ = pr ("NOEXT_TERM " ^ term_to_string NOEXT ^ " : " ^ type_to_string (type_of NOEXT));
+ val SPE_NOEXT = INST [EXTV |-> NOEXT] (SPEC_ALL SPE)
+   handle e => (pr ("SPE_NOEXT_FAILED " ^ General.exnMessage e); TRUTH);
+-val FD1 = thm "refund_profile_a_sl_fd1"
+-  (fn () => ``^PREM ==>
++(* Which arm8_run constants exist, and which one an unqualified quotation picks. *)
++val _ = List.app (fn c => pr (const_line "UNQUALIFIED_PARSE" c)) (named_consts [``arm8_run``])
++  handle e => pr ("UNQUALIFIED_PARSE_FAILED arm8_run " ^ General.exnMessage e);
++val _ = List.app (fn c => pr (const_line "QUALIFIED_SLIDE" c)) (named_consts [``forge_refundCmlMainSlide$arm8_run``])
++  handle e => pr ("QUALIFIED_PARSE_FAILED forge_refundCmlMainSlide$arm8_run " ^ General.exnMessage e);
++val _ = List.app (fn c => pr (const_line "QUALIFIED_STEP" c)) (named_consts [``forge_refundCmlMainStep$arm8_run``])
++  handle e => pr ("QUALIFIED_PARSE_FAILED forge_refundCmlMainStep$arm8_run " ^ General.exnMessage e);
++val _ = List.app (fn c => pr (const_line "AGREE_THEOREM" c)) (named_consts [concl AGREE]);
++val _ = List.app (fn c => pr (const_line "SPE_NOEXT_THEOREM" c)) (named_consts [concl SPE_NOEXT]);
++
++fun fd1_tm () = ``^PREM ==>
+      ?ms. (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+        !b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi no_ext cl fs) ms b ==>
+          ?t io. b = Terminate t io /\
+            ((t = Success /\ fd1_written io = explode ^R) \/
+-            (t = Resource_limit_hit /\ fd1_written io <<= explode ^R))``)
+-  (fn () =>
+-   let (* A3 tactic-only v5. LO-0003 stdout:249: both v4 alternatives failed at a ">- simp[]" before any use of
+-          LOUT (no SHOW line from the inner try_all): conj_tac >- simp[] (alt 1) and impl_tac >- simp[] (alt 2).
+-          The goals there are assumptions verbatim (arm8_run 27 s = SOME ms; ms.PC = ...; the PREM conjuncts);
+-          simp normalises the goal side and did not close it. v5 closes them with ACCEPT_TAC / ASM_REWRITE_TAC
+-          (no normalisation) and finishes each case with drule_all; metis only as a bounded fallback. *)
+-     val fd1_case =
+-       FIRST [qexistsl_tac [`Success`, `io`] \\ simp[] \\ drule_all LOUT \\ simp[] \\ NO_TAC,
+-              qexistsl_tac [`Resource_limit_hit`, `io'`] \\ simp[] \\ drule_all LOUTP \\ simp[] \\ NO_TAC,
+-              metis_tac[LOUT, LOUTP]]
+-     val end_alts =
+-       [metis_tac[LOUT, LOUTP],
+-        FIRST [drule_all LOUT \\ simp[] \\ NO_TAC, drule_all LOUTP \\ simp[] \\ NO_TAC]]
+-   in
+-     try_all "refund_profile_a_sl_fd1"
+-       [DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP SPE_NOEXT th))
+-          \\ ST "fd1_witness" (qexists_tac `ms`)
+-          \\ conj_tac >- CL "fd1_ms" (conj_tac \\ FIRST   (* A3 tactic-only v6: the two arm8_run constants *)
+-               [first_assum ACCEPT_TAC,
+-                CL "fd1_ms_agree" (ASM_REWRITE_TAC [AGREE]),
+-                CL "fd1_ms_agree_sym" (ASM_REWRITE_TAC [GSYM AGREE]),
+-                CL "fd1_ms_metis" (metis_tac [AGREE])])
+-          \\ qx_gen_tac `bb` \\ strip_tac
+-          \\ ST "fd1_spec" (qpat_x_assum `!b. _` (qspec_then `bb` mp_tac))
+-          \\ impl_tac >- CL "fd1_sem" (first_assum ACCEPT_TAC)
+-          \\ rpt strip_tac \\ rveq
+-          \\ CL "fd1_case" fd1_case,
+-        DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP SPE_NOEXT th))
+-          \\ qexists_tac `ms` \\ conj_tac >- FIRST [ASM_REWRITE_TAC [AGREE] \\ NO_TAC, ASM_REWRITE_TAC [GSYM AGREE] \\ NO_TAC]
+-          \\ qx_gen_tac `bb` \\ strip_tac
+-          \\ qpat_x_assum `!b. _` (qspec_then `bb` mp_tac) \\ ASM_REWRITE_TAC []
+-          \\ rpt strip_tac \\ gvs[]
+-          \\ try_all "refund_profile_a_sl_fd1_end" end_alts]
+-   end);
+-
+-(* ================= NEGATIVE CONTROLS ================= *)
+-val fs0_def = defn "fs0"
+-  `fs0 = <| inode_tbl := [(UStream «stdin», ""); (UStream «stdout», ""); (UStream «stderr», "")];
+-            files := []; infds := [(0,(UStream «stdin»,ReadMode,0)); (1,(UStream «stdout»,WriteMode,0));
+-                                   (2,(UStream «stderr»,WriteMode,0))];
+-            numchars := LNIL; maxFD := 3 |>`;
+-val ext_bad_def = defn "ext_bad"
+-  `ext_bad = \(n:ffiname) (st:mlstring list # IO_fs) (c:word8 list) (b:word8 list).
+-               Oracle_return (FST st, add_stdout (fastForwardFD (SND st) 0) «a») ([]:word8 list)`;
+-val STD0 = thm "STD_streams_fs0" (fn () => ``STD_streams fs0``)
+-  (fn () => rw[STD_streams_def] \\ qexists_tac `0` \\ rw[fs0_def] \\ rw[] \\ rw[EQ_IMP_THM]);
+-(* N-O1: with a free ext, L-OUT is FALSE (one non-basis event rewrites stdout; fd1_written sees nothing) *)
+-val NO1 = thm "N_O1_free_ext_breaks"
+-  (fn () => ``STD_streams fs0 /\
+-     extract_fs ext_bad ([],fs0) [IO_event (ExtCall «x») [] []] = SOME (add_stdout (fastForwardFD fs0 0) «a») /\
+-     fd1_written [IO_event (ExtCall «x») [] []] <> explode «a»``)
+-  (fn () => rpt conj_tac
+-     >- ACCEPT_TAC STD0
+-     >- try_all "N_O1_replay"
+-          [simp[extract_fs_def, extract_fs_with_numchars_def, ext_bad_def, is_basis_ffi_name_def, fs_ffi_part_def,
+-                IO_fs_component_equality],
+-           simp[extract_fs_def, extract_fs_with_numchars_def, ext_bad_def, is_basis_ffi_name_def, fs_ffi_part_def] \\
+-             simp[IO_fs_component_equality]]
+-     \\ simp[fdw_def]);
+-(* N-O2: dropping the success test counts a FAILED write (fs0 has numchars = LNIL, so write fails) *)
+-val wcns_def = defn "write_chunk_nosucc"
+-  `write_chunk_nosucc (conf:word8 list) (bs:(word8 # word8) list) =
+-     if LENGTH conf = 8 /\ w82n conf = 1 /\ 4 <= LENGTH bs then
+-       TAKE (w22n [SND (EL 1 bs); SND (EL 2 bs)])
+-            (DROP (w22n [FST (EL 2 bs); FST (EL 3 bs)]) (MAP (\b. CHR (w2n (FST b))) (DROP 4 bs)))
+-     else []`;
+-val wcnf_def = defn "write_chunk_nofd"
+-  `write_chunk_nofd (conf:word8 list) (bs:(word8 # word8) list) =
+-     if LENGTH conf = 8 /\ 4 <= LENGTH bs /\ SND (HD bs) = 0w then
+-       TAKE (w22n [SND (EL 1 bs); SND (EL 2 bs)])
+-            (DROP (w22n [FST (EL 2 bs); FST (EL 3 bs)]) (MAP (\b. CHR (w2n (FST b))) (DROP 4 bs)))
+-     else []`;
+-val NO2 = thm "N_O2_failed_write_counted_without_success_test"
+-  (fn () => ``extract_fs_with_numchars no_ext ([],fs0)
+-       [IO_event (ExtCall «write») (n2w8 1) (ZIP ([0w;1w;0w;0w;97w],[1w;1w;0w;0w;97w]))] = SOME ([],fs0) /\
+-     write_chunk (n2w8 1) (ZIP ([0w;1w;0w;0w;97w],[1w;1w;0w;0w;97w])) = "" /\
+-     write_chunk_nosucc (n2w8 1) (ZIP ([0w;1w;0w;0w;97w],[1w;1w;0w;0w;97w])) = "a"``)
+-  (fn () => try_all "N_O2"
+-     [EVAL_TAC,
+-      simp[extract_fs_with_numchars_def, fs_ffi_part_def, ffi_write_def, write_def, fs0_def, n2w8_def, w82n_def,
+-           w22n_def, CHOICE, wc_def, wcns_def] \\ EVAL_TAC]);
+-(* N-O3: dropping the descriptor test counts an fd-2 (stderr) write. Chunk-level witness: a successful
+-   fd-2 event (after-bytes 0w :: n2w2 1 ++ [0w; 97w]) gives "a" without the fd test and "" with it.
+-   That an fd-2 write leaves stdout unchanged is the fd <> 1 branch of write_stdout above. *)
+-val NO3 = thm "N_O3_fd2_write_counted_without_fd_test"
+-  (fn () => ``write_chunk (n2w8 2) (ZIP ([0w;1w;0w;0w;97w],[0w;0w;1w;0w;97w])) = "" /\
+-              write_chunk_nofd (n2w8 2) (ZIP ([0w;1w;0w;0w;97w],[0w;0w;1w;0w;97w])) = "a"``)
+-  (fn () => EVAL_TAC);
+-(* P-O4 (A3 addition, positive control; no v2 statement changed): a PARTIAL write counts exactly the returned
+-   count nw, not the requested count n. Request n = 2 bytes "ab" on fd 1; after-bytes 0w :: n2w2 1 ++ ...
+-   (nw = 1) gives "a"; after-bytes 0w :: n2w2 2 ++ ... (nw = 2) gives "ab". The model admits nw < n
+-   (fsFFI write_def: k = MIN n strm, strm from numchars). *)
+-val PO4 = thm "P_O4_partial_write_counts_nw"
+-  (fn () => ``fd1_written [IO_event (ExtCall «write») (n2w8 1) (ZIP ([0w;2w;0w;0w;97w;98w],[0w;0w;1w;0w;97w;98w]))] = "a" /\
+-              fd1_written [IO_event (ExtCall «write») (n2w8 1) (ZIP ([0w;2w;0w;0w;97w;98w],[0w;0w;2w;0w;97w;98w]))] = "ab"``)
+-  (fn () => try_all "P_O4" [EVAL_TAC, simp[fdw_def, wc_def, n2w8_def, w82n_def, w22n_def] \\ EVAL_TAC]);
+-
+-(* ================= checks ================= *)
+-val _ = pr "MARK CHECKS";
+-val _ = pr ("FAILED_LIST " ^ String.concatWith " " (rev (!failed)));          (* A3 tactic-only v5 *)
+-val _ = pr ("DIAG_OK_UNDER_LIST " ^ String.concatWith " " (rev (!diag)));
+-val _ = if null (!failed) then () else raise Fail ("failed: " ^ String.concatWith " " (rev (!failed)));
+-fun lit name th tm = if aconv (concl th) tm then pr ("CONTROL_OK " ^ name ^ " statement is the literal planned statement")
+-                     else bad (name ^ "-literal");
+-val _ = lit "refund_L_OUT" LOUT ``!cl fs io out. STD_streams fs /\
+-       extract_fs no_ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) out) ==> fd1_written io = explode out``;
+-val _ = if aconv (fst (dest_imp (concl FD1))) PREM then pr "CONTROL_OK refund_profile_a_sl_fd1 premise is the stored premise term"
+-        else bad "FD1-premise";
+-val _ = if Term.free_in NOEXT (concl FD1)   (* A3 tactic-only (D1): typed constant *)
+-        andalso not (Lib.mem "ext" (map (fst o dest_var) (free_vars (concl FD1))))
+-        then pr "CONTROL_OK refund_profile_a_sl_fd1 is at ext := no_ext (no free ext)" else bad "FD1-ext";
+-val _ = if null (!problems) then () else raise Fail ("problems: " ^ String.concatWith " " (rev (!problems)));
+-val _ = List.app (fn (n, th) => tags n th) (DB.theorems "forge_refundLOut" @ DB.definitions "forge_refundLOut");
+-val closure = "forge_refundLOut" :: Theory.ancestry "forge_refundLOut";
+-val axs = List.concat (map (fn n => map (fn (a, _) => n ^ "." ^ a) (DB.axioms n)) closure);
+-val _ = List.app (fn a => pr ("CLOSURE_AXIOM " ^ a)) axs;
+-val _ = if length axs = 4 then () else raise Fail "closure axioms are not the four of bool";
+-val _ = pr ("STORED_THEOREMS " ^ Int.toString (length (DB.theorems "forge_refundLOut")));
+-val _ = pr ("STORED_DEFINITIONS " ^ Int.toString (length (DB.definitions "forge_refundLOut")));
+-val _ = export_theory ();
+-val _ = pr "EXACT_COMPLETE";
++            (t = Resource_limit_hit /\ fd1_written io <<= explode ^R))``;
++fun fd1_ms_tm () = ``^PREM ==> ?ms. arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w``;
++fun fd1_succ_tm () = ``!io. extract_fs no_ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) ^R) /\ STD_streams fs ==>
++     ?t io'. Terminate Success io = Terminate t io' /\
++       ((t = Success /\ fd1_written io' = explode ^R) \/
++        (t = Resource_limit_hit /\ fd1_written io' <<= explode ^R))``;
++fun fd1_rlh_tm () = ``!io io'. io' <<= io /\
++       extract_fs no_ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) ^R) /\ STD_streams fs ==>
++     ?t io''. Terminate Resource_limit_hit io' = Terminate t io'' /\
++       ((t = Success /\ fd1_written io'' = explode ^R) \/
++        (t = Resource_limit_hit /\ fd1_written io'' <<= explode ^R))``;
++val _ = (pr ("FD1_STATEMENT_PARSED " ^ trunc 400 (term_to_string (fd1_tm ())));
++         List.app (fn c => pr (const_line "FD1_STATEMENT" c)) (named_consts [fd1_tm ()]))
++  handle e => pr ("FD1_STATEMENT_FAILED " ^ General.exnMessage e);
++
++(* (3a)-(3c) the arm8_run conjunct: three closing tactics, each tried alone after the same prefix. *)
++fun fd1_ms_prefix () : step list =
++  [("disch_spec", DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP SPE_NOEXT th)),
++      [DISCH_TAC \\ first_assum (fn th => STRIP_ASSUME_TAC (MP SPE_NOEXT th))]),
++   ("witness", qexists_tac `ms`, []),
++   ("conj", conj_tac, [])];
++val _ = explore "refund_profile_a_sl_fd1/ms_first_assum_ACCEPT" fd1_ms_tm (fn () =>
++  fd1_ms_prefix () @ [("close_first_assum_ACCEPT_TAC", first_assum ACCEPT_TAC, [])]);
++val _ = explore "refund_profile_a_sl_fd1/ms_ASM_REWRITE_AGREE" fd1_ms_tm (fn () =>
++  fd1_ms_prefix () @ [("close_ASM_REWRITE_TAC_AGREE", ASM_REWRITE_TAC [AGREE], [])]);
++val _ = explore "refund_profile_a_sl_fd1/ms_ASM_REWRITE_GSYM_AGREE" fd1_ms_tm (fn () =>
++  fd1_ms_prefix () @ [("close_ASM_REWRITE_TAC_GSYM_AGREE", ASM_REWRITE_TAC [GSYM AGREE], [])]);
++
++(* (3d) Success case, refund_L_OUT ASSUMEd (it is proved only under the open invariant, LO-0004 stdout DIAG_OK_UNDER) *)
++val _ = explore "refund_profile_a_sl_fd1/Success" fd1_succ_tm (fn () =>
++  let val LOUT_A = ASSUME (lout_tm ())
++  in
++  [("intro", rpt strip_tac, []),
++   ("witness", qexistsl_tac [`Success`, `io`], []),
++   ("simp_shape", simp[], []),
++   ("lout", drule_all LOUT_A, [irule LOUT_A \\ metis_tac [], metis_tac [LOUT_A]]),
++   ("close", disch_then MATCH_ACCEPT_TAC, [simp[], strip_tac \\ first_assum ACCEPT_TAC])]
++  end);
++
++(* (3e) Resource_limit_hit case, refund_L_OUT_prefix ASSUMEd *)
++val _ = explore "refund_profile_a_sl_fd1/Resource_limit_hit" fd1_rlh_tm (fn () =>
++  let val LOUTP_A = ASSUME (loutp_tm ())
++  in
++  [("intro", rpt strip_tac, []),
++   ("witness", qexistsl_tac [`Resource_limit_hit`, `io'`], []),
++   ("simp_shape", simp[], []),
++   ("loutp", drule_all LOUTP_A, [irule LOUTP_A \\ metis_tac [], metis_tac [LOUTP_A]]),
++   ("close", disch_then MATCH_ACCEPT_TAC, [simp[], strip_tac \\ first_assum ACCEPT_TAC])]
++  end);
++
++(* (3f) the lemma itself; the two cases ASSUMEd *)
++val _ = explore "refund_profile_a_sl_fd1" fd1_tm (fn () =>
++  let val SUCC_A = ASSUME (fd1_succ_tm ())
++      val RLH_A = ASSUME (fd1_rlh_tm ())
++  in
++  [("disch_spec", DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP SPE_NOEXT th)),
++      [DISCH_TAC \\ first_assum (fn th => STRIP_ASSUME_TAC (MP SPE_NOEXT th))]),
++   ("witness", qexists_tac `ms`, []),
++   ("conj_top", conj_tac, []),
++   ("split_ms_TRY", TRY conj_tac, []),
++   ("close_ms_TRY", TRY (FIRST [first_assum ACCEPT_TAC,
++                                ASM_REWRITE_TAC [AGREE] \\ NO_TAC,
++                                ASM_REWRITE_TAC [GSYM AGREE] \\ NO_TAC]), []),
++   ("gen_b", qx_gen_tac `bb`, []),
++   ("strip_b", strip_tac, []),
++   ("spec_b", qpat_x_assum `!b. _` (qspec_then `bb` mp_tac), [first_x_assum (qspec_then `bb` mp_tac)]),
++   ("sem_rw", ASM_REWRITE_TAC [], [impl_tac >- first_assum ACCEPT_TAC]),
++   ("strip_cases", rpt strip_tac, []),
++   ("rveq", rveq, []),
++   ("close_cases", FIRST [drule_all SUCC_A \\ disch_then MATCH_ACCEPT_TAC,
++                          drule_all RLH_A \\ disch_then MATCH_ACCEPT_TAC],
++      [metis_tac [SUCC_A, RLH_A]])]
++  end);
++
++val _ = pr "EXPLORE_COMPLETE";
+ val _ = OS.Process.exit OS.Process.success;

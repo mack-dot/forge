@@ -1,0 +1,41 @@
+2026-11-19T08:36:31Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6561.00M  free = 607.00M  (encrypted)
+System-wide memory free percentage: 66%
+exit 1
+actual_exit 1 wall 70.822 cpu 92.091 rss_mib 4124 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/E1neg-0001/proof.sml:251: Fail "failed: BranchTo_erase_untagged"
+28:CHECKED erase_fields
+31:  (erase s).exception = s.exception ∧ (erase s).branch_hint = s.branch_hint ∧
+39:CHECKED restore_erase
+43:CHECKED erase_restore
+47:CHECKED arm8_ok_erase
+49:  s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.E0E ∧ s.exception = NoException ∧
+55:CHECKED untagged_bits
+59:CHECKED BranchTo_EL0_pc
+65:CHECKED tbi_pc_erased
+69:CHECKED tbi_pc_untagged
+73:LEMMA_FAILED BranchTo_erase_untagged Fail "all listed tactics failed"
+80:CHECKED CheckSPAlignment_erase
+85:CHECKED CheckSPAlignment_erase_fault
+86:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ⇒
+90:   CheckSPAlignment s = s with exception := ALIGNMENT_FAULT)
+94:CHECKED N1a_tagged_branch_breaks
+100:CHECKED N1b_bit55_branch_breaks
+106:CHECKED N2_misaligned_sp_breaks
+107:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧ s.SCTLR_EL1.SA0 ∧
+109:  (CheckSPAlignment (erase s)).exception = NoException ∧
+110:  (CheckSPAlignment s).exception = ALIGNMENT_FAULT
+113:CHECKED N3_e0e_not_erasable
+118:CHECKED N4_slide_ok_admits_tagged_code
+123:CHECKED P1_bit55_without_TBI1_is_fine
+129:CHECKED N5_lo55_holds_at_slide_zero_and_fails_at_N4_slide
+133:STATEMENT_TYPECHECKS Next_frame
+134:STATEMENT_TYPECHECKS Next_erase_fault_mono
+135:STATEMENT_TYPECHECKS Next_erase
+136:STATEMENT_TYPECHECKS NextStateARM8_erase
+137:STATEMENT_TYPECHECKS NextStateARM8_erase_or_fault
+138:STATEMENT_TYPECHECKS arm8_target_real (as an equation)
+139:STATEMENT_TYPECHECKS lo55 (as an equation)
+hash_parents exit 0
+go exit 1

@@ -1,0 +1,11 @@
+--- a/spec/refund/RefundSpec.dfy
++++ b/spec/refund/RefundSpec.dfy
+@@ -32,7 +32,7 @@
+ 
+   predicate Eligible(context: Context, response: ModelResponse) {
+     ValidContext(context) && response.Candidate? &&
+-    0 <= response.amount <= context.remaining && AllowedReason(response.reason)
++    0 < response.amount <= context.remaining && AllowedReason(response.reason)
+   }
+ 
+   method Assess(context: Context, response: ModelResponse)

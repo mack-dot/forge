@@ -17498,3 +17498,829 @@ curl: (6) Could not resolve host: github.com
   deferred. Stage 12 unauthorized. end_to_end=false.
 - Next check: the replay result; then L1 with its controls, at most
   five attempts, one HOL process.
+
+## U475 — wave 4 of the M1-B mission: twelve workers, one per missing link; two more premises and one admission rule found weaker than recorded; a Dafny sink core machine-checked; pull request 57 merged by the owner's account
+- Status: 2026-11-19T06:28Z (inserted by the shell from `date -u`). Refs U473,
+  U474, U277, U294, U393. Reports D1 to D12 under
+  proposals/m1b-mission-20261119/reports; section 7 of
+  TOP_LEVEL_GRAPH.md; owner texts 10 to 14 in OWNER_DECISIONS.md.
+- Pull request 57 (head 67516456): GitHub records the merge at
+  2026-11-19T06:02:18Z, squash commit cc20207b, by the owner's
+  account; no command of this session ran it. Its gate status was
+  red (UNSUPPORTED; read by a worker; I did not read the run). A
+  CORRECTION of my wording: I called pull request 57 "documents
+  only"; it also carried .sh, .py and .sml draft files.
+- The owner's own words: "spin up a shit load of sub agnets" and "a
+  ton of sub agents please opus with fabe orchestraotr". I started
+  twelve Opus workers. No worker ran HOL or built an executable.
+- FINDING A (admission, source level; my own run): a refund body
+  `expect false; decision := Rejected; plan := [];` verifies against
+  the approved spec with the pinned Dafny and the gate options (exit
+  0, 6 verified, 0 errors). My first try gave exit 4 by my own wrong
+  solver path. Dafny assumes the condition of `expect`; at run time
+  the program halts. So the source proof gives partial correctness:
+  IF Assess returns, the result is allowed. The worker reports a
+  clean audit and no scan for the word in gate/refund.py (I did not
+  check these two). The approved impl/Refund.dfy,
+  impl/RefundFinality.dfy and LinkedRefund.dfy have no `expect` (my
+  grep). Not run: the gate's hostile-tests tier, which may catch a
+  halting body. Of 53 unread submissions: 7 wrong ones admitted (4 by
+  `expect`, 2 by unbounded time or memory, 1 probable compile gap), 4
+  correct ones refused by byte rules, 31 refused as intended.
+- FINDING B (processor premise; the definition read by me): arm8_ok
+  requires TCR_EL1.TBI0 = F and SCTLR_EL1.SA0 = F at every step.
+  Linux v6.12 sets both to 1 for user space (lines read by me in the
+  worker's saved copies of proc.S and sysreg.h); the public XNU
+  source does too (the worker's quotes; not read by me; the shipped
+  kernel configuration is not confirmed). So the premise is false for
+  a state that copies the real registers and holds only for an
+  "erased" copy; the soundness of the erasure is unproved. It hits
+  the present macOS theorem. U277 said the values were never
+  observed; they are still not observed, only read from sources.
+- FINDING C (exit status; the instruction read by me): `_cml_exit`
+  tests `cbz w0`, the low 32 bits of x0; the model tests 64 bits; the
+  process status is the low 8 bits (not checked on macOS). So exit
+  status 0 does not imply success. That x0 is 0, 1 or 2 at every halt
+  is a reading of source, no theorem. Also: a non-zero exit can come
+  with the complete output; the output-bytes lemma of my exact-claim
+  draft is false as stated (a free external oracle). Safety must rest
+  on a strict parse of the output.
+- FINDING D (GitHub, live; read by me): branches/main reports
+  protected false and the protection endpoint answers HTTP 403
+  "Upgrade to GitHub Pro or make this repository public". No rule is
+  enforced on main. The worker reports that this machine's keyring
+  holds the administrator identity and a second write identity.
+- FINDING E (sink): five zero-amount tokens with fresh request ids
+  all commit (the worker's run); a Dafny lemma proves that the
+  approved relation allows it. By reading: sink.ts does not check
+  that the token's request id equals the intent's request id.
+- RESULT, machine-checked (my own run): proofs/sink-core,
+  `SinkCore refines FinalityProtocol` for the refund instance: exit
+  0, 56 verified (28 rows of the new module). Every step of the core
+  is the model's Commit; one token per commit; no request id twice;
+  remaining never negative. NOT a proof of sink.ts. The signature
+  check is a named assumption that the audit does not report. Open:
+  whether inherited model lemmas are checked again for the instance.
+  Nine mutated cores exit 4 (the worker's runs).
+- Worker results that I did NOT run again: the Dafny proof without
+  the library axiom (exit 0, 1486 verified; audit equal to the empty
+  baseline); 486 SIGKILL runs on the sink with 0 violations (process
+  crash only; power loss is not tested); races up to 50 processes;
+  the comparison of the export with the Dafny text (0 differences in
+  62 clauses); a Dafny mirror of the HOL evaluation rules (246
+  verified; a proof about a transcription, not about HOL).
+- Checked by me: the Dafny source of the U294 export is byte-equal
+  to the flat contract file of the LinkedRefund proof; run_check.py
+  now pins that file. The two slice digests of the executable and
+  the four symbol addresses equal the worker's second extraction;
+  that extraction is NOT independent (same model family and machine).
+- Drafts only (nothing ran): the full HOL link theorem with 11
+  controls; the first read call-site theorem; the output, exit and
+  prefix lemmas; an owner runbook and an unapplied admission rule; a
+  spec draft for stored state.
+- Replay of the 158 cases: 108 of 158 at 06:27Z (104 as recorded, 1
+  must run again, 3 not run because their source is absent). The
+  driver waits: the machine is on battery power again.
+- NOT RUN: every HOL step, L1 included.
+- Impact: the claim about M1 narrows again: two premises of the
+  machine-model theorem are false for real machines as written (FFI
+  contract, processor bits), and the exit status carries no proof
+  meaning. M1-B OPEN. CURRENT none. Stage 9 deferred. Stage 12
+  unauthorized. end_to_end=false.
+- Next check: mains power; the replay end; L1; my own run of the
+  proof without the axiom; then the link theorem H0 probe.
+
+## U476 — after wave 4: exit-status statements corrected; the fail-closed caller inspected; next obligations listed; nothing ran in HOL
+- Status: 2026-11-19T06:35Z (inserted by the shell from `date -u`). Refs U475.
+  Owner text 15 (pasted): no new workers, no Linux probe, no protected
+  change; close the present chain.
+- Pull request 58 (head 685d07f5): hosted gate/pr_check.py run
+  44472601209, exit 3, UNSUPPORTED. My first reading of the log
+  printed "exit_code 0" from another field; the result line says 3.
+  Open; this entry is pushed to the same request.
+- My own run after U475: the LinkedRefund proof on the closure
+  without the library axiom module: exit 0, 1486 verified; the audit
+  of its 34 files has 0 findings and is byte-equal to
+  gate/expected-audit.md. Link S3a is MACHINE-CHECKED: the result
+  does not need the axiom.
+- The exit-status counterexample is a STATE, not a run: x0 = 2^32 at
+  a resource stop gives status 0 and an empty stderr on the real exit
+  path (`cbz w0`). Whether any run reaches such a state is NOT
+  known. No claim of reachability is made.
+- Corrected in the exact-claim draft: the output-bytes lemma with a
+  free external oracle is false; "exit 0 implies complete output" and
+  "non-zero exit implies a strict prefix" are not theorems.
+- The fail-closed caller draft: D0 to D12 already require a bounded,
+  complete, exactly framed, strictly parsed output and process
+  completion, and never decide on the exit status alone. New test
+  run_exit_status_controls.py on planted results: exit 0, 18 rows as
+  expected; with a caller that authorizes on status 0 alone the test
+  exits 1 (9 rows differ). A finite test. Missing in the draft and
+  added as requirement D13, without code: an M1 result is never an
+  authorization of an effect; the existing Check, token and sink stay.
+- NOT RUN: L1 and every other HOL step; the replay stands at 108 of
+  158 because the machine is on battery power.
+- Uncertainty: three HOL drafts (prefix lemma, output bytes, halt
+  value range) have fixed statements but unfinished tactics; the halt
+  value range may not be provable with the stored theorems.
+- Impact: none on any class of the graph beyond S3a. M1-B OPEN.
+  CURRENT none. Stage 9 deferred. Stage 12 unauthorized.
+  end_to_end=false.
+- Next check: mains power; replay to 158 and case 005; L1.
+
+## U477 — wave 5 started (eleven workers); a reconciliation audit of my records: fifteen corrections; amount 0 is an approved decision
+- Status: 2026-11-19T06:58Z (inserted by the shell from `date -u`). Refs U471,
+  U473, U475, U476. Report G11 and the other wave-5 reports under
+  proposals/m1b-mission-20261119/reports.
+- Wave 5: on the owner's own words ("fable orchestrator and opus
+  agents here please"; "fable orchestraoy and more sub agents opus
+  pleasde") I started eleven Opus workers. The second message carried
+  a pasted mission text that arrived cut off in its section 0. These
+  words came after the pasted text 15, which said no new workers.
+- Corrections from the audit (a fresh-context worker, read-only):
+  1. Replay state. My tracker row of 06:44Z said BLOCKED on battery
+     power; the record shows the driver running again from
+     06:41:58Z. Three recorded cases (094, 097, 098) have no source
+     file with the recorded digest: at most 155 of 158 can run. At
+     06:57Z: 118 in the record (114 as recorded, 1 to run again, 3
+     not run).
+  2. Case 005: I wrote "ran out of memory". The record says
+     "Interrupt" while it loaded theories, after 27.4 s, no time-out,
+     maximum resident size 1952 MiB. Memory pressure is probable, not
+     shown.
+  3. Heavy processes ran beside the replay (Dafny and Node of the
+     workers; swap about 8.6 of 9.2 GiB used). A KNOWN RISK that I
+     accept: a replay case that fails for that reason is run again;
+     every case that is not "as recorded" is looked at before any
+     total is stated.
+  4. Authority. Answers Q1 to Q6, the start of the replay, the merge
+     of pull request 54 and the order to run L1 rest on PASTED texts
+     that I took as the owner's instructions: an inference. The graph
+     labels "(Q1)", "(Q3a)" must be read so. A note is added to the
+     decisions file and to the graph.
+  5. Stored records. My own verify run of the proof without the
+     axiom (U476: exit 0, 1486) has no log: stated only; the worker's
+     run of the same is stored and now copied under
+     proofs/linked-refund/records, with my audit output. My SinkCore
+     run: its CSV is now under proofs/sink-core/records. My two
+     `expect false` runs (U475) have no log: stated only; the
+     worker's run is in drafts/zero-review/results.json.
+  6. The broken-caller control of U476 was an inline command with no
+     file. It is now a script with a stored result: exit 1, 9 of 18
+     rows differ; the unbroken run: 0 rows differ.
+  7. U5a (the Dafny sink core): my class MACHINE-CHECKED was
+     premature for the inherited model lemmas; it holds for the 28
+     rows of the new module. Open until the two reviews report.
+  8. Pull request 56: its subject says "documents and a Dafny proof";
+     it also carries 12 .py and 2 .sml files. Its body says 18 worker
+     reports; it has 17.
+  9. Gate runs: pull request 57: run 44469061507, exit 3. Pull
+     request 58: later heads ffa315e7 (run 44473281459) and fa4f62e7
+     (run 44473309248), both exit 3 (read by the audit worker, not by
+     me).
+  10. README: the model theorem allows a resource stop with a prefix;
+     the line now says so, names the processor bits, and no longer
+     lists "an approved profile" as open.
+  11. Smaller: the audit of the Dafny proof covered 34 files, not 33;
+     the sink test had 520 runs with 486 kills; "independent" in my
+     records means separate workers of one model family on one
+     machine; the wave-4 rules gave a wrong solver path (the cause of
+     two exit 4 results); one hosted REJECTED run is an instance, not
+     a rule.
+- Confirmed by the audit: all digests, the 45-link counts, the
+  numbers 1489, 1486, 58, 56, 28, 8011, 6363, 53; all merge and
+  commit times; no protected path in pull requests 56 to 58;
+  unsure.md changed by appends only.
+- Amount 0, a correction of my framing in U475 finding E: the
+  approved spec/refund/protocol.md says "Zero is a legitimate
+  authorization" and that no extra heuristic may reject a valid
+  proposal (lines 22 to 27, read by me). Repeated zero-amount commits
+  follow from approved intent. An unapplied packet lists three
+  options; a refusal of zero in the sink or issuer without a spec
+  change would be a hidden rule.
+- Other wave-5 reports so far (drafts and tests; no class changes):
+  the processor erasure lemma (a new premise is needed: code below
+  2^55; a model step that faults goes to an unspecified state,
+  arm8_next = THE o NextStateARM8, read by me); sixteen progress
+  obligations (the model halts in every run; nothing excludes the
+  resource stop; a space-safety theorem exists in the pinned CakeML
+  but its premise is weeks to months); consumer tests on a scratch
+  harness (157 rows; the worker's runs).
+- NOT RUN: every HOL step, L1 included.
+- Impact: no proof result changes. M1-B OPEN. CURRENT none. Stage 9
+  deferred. Stage 12 unauthorized. end_to_end=false.
+- Next check: the remaining six workers; the replay end and its
+  non-matching cases; L1.
+
+## U478 — two reviews of the Dafny sink core: assumption A1 as written cannot be met by a real signature scheme; the real sink agrees with the compiled core on 5,500 sequences
+- Status: 2026-11-19T06:58Z (inserted by the shell from `date -u`). Refs U475,
+  U477. Reports G4 and G10. All runs are the workers' runs; I have
+  not run them again.
+- CORRECTION of U475 "RESULT, machine-checked: SinkCore refines
+  FinalityProtocol": the result stands as a Dafny fact, but its
+  assumption A1 (IdealMac: every pair that verifies is in the finite
+  set of minted pairs) cannot hold for a real signature scheme. The
+  reviewer proved in Dafny (exit 0, 60 verified): if every claim has
+  some verifying tag, IdealMac is false in every state; and with
+  IdealMac at the initial state nothing ever commits. So the sink
+  core theorems speak of a verifier that accepts a fixed finite set.
+  A step-local premise for the presented pair only, which a real
+  system could meet, is proved to keep the invariant; the headline
+  lemmas are not restated with it. The protocol model of the F2.0
+  packet has the same assumption A1: link U4 has the same limit.
+- More limits found: the lemma for several charges ensures neither
+  the outcome nor the invariant; the five shape facts hold for one
+  charge; a request id is fresh per charge only; `dafny verify` does
+  not check inherited lemmas for the instance (56 rows), `dafny
+  build` does (71 rows, exit 0); the pinned Dafny crashes on any
+  refinement of SinkCore (exit 1, a tool fault).
+- The real sink against the compiled core (a finite test): 4,000
+  plain sequences and 1,500 with injected faults or interleaving, 0
+  divergences. Two of three broken sink copies diverge only with
+  faults or interleaving: a sequential test alone would not see
+  them.
+- The request-id gap, by a run: with a trusted signing key a token
+  whose body id and intent id differ commits in the unchanged sink,
+  and an honest token for the intent's id commits after it. The real
+  issuer refused all four mismatched transitions. A defence-in-depth
+  gap; a two-line fix exists as an unapplied diff.
+- Impact: link U5a is not a usable link until A1 is reworded and the
+  lemmas restated. M1-B OPEN. end_to_end=false.
+- Next check: restate the sink core under the step-local A1 (a
+  Dafny task); my own run of the reviewer's Attack.dfy.
+
+## U479 — one composed Dafny lemma in the shape of the target (model level, under an assumption that needs rewording); a binding manifest draft and what it found in my records
+- Status: 2026-11-19T07:12Z (inserted by the shell from `date -u`). Refs U475,
+  U477, U478. Reports G8 and G9.
+- RESULT (my own run, stored log and CSV under
+  proposals/m1b-mission-20261119/proofs/slice-theorem/records):
+  `dafny verify SliceTheorem.dfy` with the gate options: exit 0,
+  1570 verified, 0 errors; 23 rows belong to the new module;
+  SliceTheorem.dfy SHA-256 1d64e8ef…cd87; closure of 38 files with a
+  digest list. The worker's attempts: 1 (a resolver crash, exit 1),
+  then 0, 0, 0.
+- What lemma SliceSafety says: after any sequence of mint and deliver
+  actions on one charge, every effect in the outbox satisfies the
+  approved eligibility rule on the state stored at commit time; the
+  flat result of the artifact decodes to exactly that refund; it has
+  one token and one request id and is never committed twice. The
+  three earlier Dafny assets are included byte-equal.
+- What it does NOT say. (1) Its hypothesis A1 is the global ideal-MAC
+  predicate at each delivery; the review of U478 proved that no real
+  signature scheme meets it. I read the predicate in the file myself.
+  The non-vacuity witness holds only under a reading where the
+  verifier accepts one token's tag. (2) ValidArtifact is hypothesis
+  A6 about a parameter; nothing about the HOL functions or the
+  executable is proved by it. (3) One charge only. (4) Nothing about
+  sink.ts, the issuer glue, compiled code, storage or native
+  execution. (5) Zero-amount commits are not excluded (approved
+  intent, U477). (6) Two of the worker's six controls fail only by
+  out of resource.
+- The binding manifest draft (the worker's runs: verifier exit 0; 22
+  controls refused): it found that my present run_check.py has never
+  run, that the stored record of the refund proof names 4 of 33
+  files, that the closure without the axiom module and the sink core
+  have no byte-binding record in the repository, and that my rerun
+  record of the second extraction is a crash. OWED: those runs with
+  full records.
+- Replay: 120 of 158 at 07:03Z (116 as recorded).
+- NOT RUN: every HOL step.
+- Impact: the target has, for the first time, one machine-checked
+  statement of its shape, at the Dafny model level and under
+  assumptions of which one must be reworded and one is the whole
+  executable chain. M1-B OPEN. end_to_end=false.
+- Next check: restate SliceSafety with the step-local A1; the owed
+  records; the last two workers; the replay; L1.
+
+## U480 — wave 5 complete (eleven reports): the halting hole is wider than the first test showed; the halt-value range is not derivable; an unapplied gate rule
+- Status: 2026-11-19T07:26Z (inserted by the shell from `date -u`). Refs U475 to
+  U479. Reports G1 to G11. Runs named here are the workers' runs
+  unless I say otherwise.
+- CORRECTION of U475 finding A ("not run: the hostile-tests tier,
+  which may catch a halting body"): it catches the four first
+  submissions only because the gate's fixed seeds produce amount 7.
+  An `expect` that halts on amount 61, 1000, 123456789 or 2^63-3
+  passes EVERY tier of the present gate (0 of 50 other seeds catch
+  it). Also admitted by every tier: `:- expect`, `expect` in a
+  by-method, and a stack overflow, an out-of-memory and a 10^18-step
+  loop keyed to one amount. A looping submission gets no verdict: the
+  gate's runner has no time limit.
+- An UNAPPLIED rule: no word `expect` outside comments and literals
+  (a fail-closed lexer). Over 75 submissions it refuses the 12 of the
+  `expect` family and no correct one; the resource class stays
+  admitted. The diff touches only gate/refund.py (protected), SHA-256
+  70910e2e…9ce3; `git apply --check`, run by me: exit 0; nothing
+  applied. It needs the owner's approval of the exact diff.
+- The halt-value range (x0 is 0, 1 or 2 at every halt) is NOT
+  derivable from the stored theorems: each semantics layer drops the
+  halt value. So no HOL statement of today can tie the exit status to
+  the outcome beyond "Success iff x0 = 0 at the halt address". No
+  stored premise excludes an FFI return to the halt address with
+  x0 = 2^32; nothing shows it happens. Reachability is neither
+  claimed nor denied.
+- The strict-prefix statement survives a mirror test (0 of 78,357
+  prefixes accepted; a test of a Python mirror, not a proof). The
+  worker estimates 5 to 10 percent that a whole HOL script passes at
+  the first attempt.
+- Replay: 120 of 158 at 07:13Z; the machine is on battery power
+  again and no HOL process runs.
+- NOT RUN: every HOL step.
+- Impact: source admission by the present gate is a finite test for
+  halting behaviour. M1-B OPEN. CURRENT none. Stage 9 deferred.
+  Stage 12 unauthorized. end_to_end=false.
+- Next check: mains power; the owed Dafny records; the restated sink
+  core; the replay end; L1.
+
+## U481 — night shift, proof track: the replay of the 158 recorded cases ended; three sources are unavailable; three first runs stopped in the Poly/ML run-time
+
+- Evidence: `results/round4-m1-replay-20261118/phase3/results.json`
+  (summary copy `proposals/night-shift-20261119/replay-phase3-verdicts.json`);
+  `proposals/night-shift-20261119/orch-A/replay-debt/REPORT.md`.
+- Counted first runs: 152 AS_RECORDED; 1 EXIT_EQUAL_REASON_DIFFERS
+  (case 005); 2 EXIT_DIFFERS (cases 130, 142); 3 NOT_RUN_NO_SOURCE
+  (cases 094, 097, 098). The driver ended 2026-11-19T08:08:54Z.
+- Cases 005, 130, 142: the first run printed `Run out of store -
+  interrupting threads` (Poly/ML 5.9.2, an allocation failed after a
+  full collection) while HOL loaded parent theories; no proof code
+  ran. Second runs (stored under `rerun`; the first verdict stays the
+  counted one): 005 AS_RECORDED exit 1 (driver); 130 and 142
+  AS_RECORDED exit 0 (`driver3.py rerun`, exit 0 each, my runs).
+- Uncertainty: heap limit or failed OS allocation; the heap size at
+  the stop. Not shown to be a kernel out-of-memory kill. Not a
+  semantic result.
+- Cases 094, 097, 098: no file or git blob has the recorded SHA-256
+  (13,542 blobs and 22,854 files searched). Class: UNAVAILABLE. No
+  substitute source was made.
+- Impact: the replay reproduces records on the same machine. It
+  closes no proof obligation. M1-B OPEN. end_to_end=false.
+- Next check: none for the replay; a clean replay stays not started.
+
+## U482 — night shift, proof track: Route A lemmas L1 and L2 pass in HOL; the false FFI premise is replaced, not removed (refers to U393, U394, U474, U476)
+
+- Evidence: `proposals/night-shift-20261119/hol-runs/routeA-attempt-0001/`
+  cases `L1-0001` (exit 0, 16 theorems), `L1imp-0001` (exit 0,
+  IMPORTED_COUNT 9 MISMATCH_COUNT 0), `L2-0001` (exit 1, a tactic
+  gap), `L2-0002` (exit 1, an ML type error), `L2-0003` (exit 0,
+  9 theorems). Review of L1: `orch-A/review-L1/REPORT.md`.
+- Proved (machine model, same machine, stored parent theories):
+  `refund_ffi_contract_on_totalises`; `refund_ffi_tot_evaluate_agree`;
+  `refund_profile_a_sl_reach`: the stored theorem
+  `refund_profile_a_sl` with the premise `refund_env_ok_sl` replaced
+  by three premises: `interference_ok`; the contract only at calls
+  that satisfy `Vok` (`refund_ffi_contract_on`); and `ffi_calls_ok
+  Vok` for the totalised machine at every state after the 27 entry
+  steps and every clock.
+- NOT proved: that the real FFI code meets the contract at valid
+  calls (NATIVE); that every returning call of the run is valid
+  (`ffi_calls_ok`, lemma L3; attempt `L2b-0001` exit 1). So the
+  false premise of U393 is traded for two open premises.
+- Deviation: `L2-0003` started with 735 MiB swap free, below the
+  1 GiB rule of the night protocol (see U485).
+- Impact: one MODEL link (graph X6 → X7) moved; M1-B OPEN.
+- Next check: the adversarial review of L2; L2b attempt 2; L3.
+
+## U483 — night shift, proof track: processor erasure lemmas pass in HOL for single model functions; the step lift is missing (refers to U475, U477)
+
+- Evidence: cases `E1-0001` (exit 1, no theory loaded: my setup
+  error), `E1-0002` (exit 1, an ML static error), `E1-0003` (exit 0,
+  18 theorems, 6 definitions), mutant `E1neg-0001` (exit 1,
+  `LEMMA_FAILED BranchTo_erase_untagged`, as required). Review:
+  `orch-A/review-E1/REPORT.md`.
+- Proved: `BranchTo_erase_untagged`, `CheckSPAlignment_erase`,
+  `arm8_ok_erase` and controls: for an EL0 state and an untagged
+  target, the model functions give the same result with TBI0, TBI1
+  and SA0 erased.
+- NOT proved: one `NextStateARM8` step; `targetSem$evaluate`; the
+  environment conditions; the bridge between `arm8$Next` and the
+  stored target; untagged data addresses; the bit values on the real
+  processor (no vendor source in the repository). The premises are
+  traded (untagged addresses, SP alignment or fault, ¬E0E), not
+  removed. The optional `BranchTo_erase_iff` failed (two tactics).
+- Impact: a sub-result for graph link X11e; the link stays MISSING.
+- Next check: the step lift (draft in work).
+
+## U484 — night shift, proof track: on the real executable, exit status 0 with empty stderr does not imply a complete output; a loader variable gives a forged complete frame (refers to U476, U480)
+
+- Evidence: `orch-A/ffi-c-audit/` (worker) and
+  `orch-A/ffi-c-audit-recheck/` (my run of
+  `run_native_ffi_tests.py`: exit 0; results byte-equal). Executable
+  SHA-256 `b8ed5ec2…7bb8`. 15 native runs. A finite test.
+- T10: stdout a non-blocking pipe with 1000 bytes free: status 0,
+  stderr empty, stdout the first 1000 of 4044 bytes. T03 to T09, T16:
+  status 0 (or signal 13), stdout empty. Cause by reading: `write`
+  or `read` returns −1, the FFI sets the error byte, the exception is
+  not handled, the program ends normally. The model never fails a
+  write on descriptor 1.
+- T13: `DYLD_INSERT_LIBRARIES` with a test library: a complete
+  well-formed frame that the program did not compute, status 0,
+  stderr empty; the strict parser accepts it. The executable has no
+  hardened run-time. Both existing launchers pass a fixed
+  environment; T13 was not run through them.
+- Impact: a consumer must decide by a strict parse of one complete
+  frame, never by status; and the launch environment is a named
+  NATIVE assumption (A-LOADER) outside every theorem. No FFI-level
+  difference in the dangerous direction was found.
+- Next check: T13 through the real launchers; the strict-prefix
+  lemma in HOL (two attempts failed; one lemma stage is open).
+
+## U485 — night shift, proof track: I started ten HOL cases below the protocol's swap limit
+
+- Evidence: the first lines of each `<case>.go.log`; item A-1 of
+  `results/night-shift-20261119/OWNER_REQUIRED.md`.
+- Fact: the night protocol says to start no heavy step below 1 GiB
+  swap free. My wrapper checked power and other HOL processes only.
+  Between 08:31Z and 08:45Z cases PF-0001, E1-0001, E1-0002,
+  E1-0003, E1neg-0001, L2-0002, L2-0003, L2b-0001, LO-0002, LO-0003
+  and PF-0002 started with 503 to 759 MiB swap free.
+- No case of the group shows the Poly/ML store message. The exit
+  codes are actual. Two passing results are in the group: E1-0003
+  and L2-0003.
+- Correction: the wrapper refuses below 1024 MiB since 08:50Z; the
+  queue waits for the condition.
+- Next check: run E1-0003 and L2-0003 again inside the rule and
+  compare the exported theory digests.
+
+## U486 — night shift, proof track: the HOL half of the Dafny-to-HOL contract link passes with its controls; U294 replays (refers to U294, U473, U475)
+
+- Evidence: `proposals/night-shift-20261119/orch-A/link/run/attempt-0001/`
+  (`<CASE>.go.log`, last line `go exit N`; `linkq-q1.log`,
+  `linkq-q2.log`, `linkq-r.log`).
+- Exit 0: H0 (load probe); H1 and H2 (repeat): 9 theorems, 0
+  hypotheses, no axiom tags, oracle DISK_THM, among them
+  `exported_contract_on_refund_fields` and `exported_contract_exact`:
+  the three exported `ensures` clauses (export SHA-256
+  `58154ddf…dd0d`) evaluate to true in the CakeML Dafny semantics if
+  and only if the six outputs equal `refund_fields` of the nine
+  inputs; for all inputs. E0: `eligible_link_matches_compiled_guard`.
+  R1, R2, R3: the U294 scripts run again; I1: the stored 2026-11-04
+  theory imports. H4: the render step.
+- Controls: NC1 to NC6 (six changed exports) and NS1 to NS3 (three
+  changed statements): exit 1 each, as planned. PC1 (only the method
+  body changed): exit 0, as planned: the theorems do not read the
+  body. NR1 (changed render statement): exit 1.
+- First runs of H4, NR1, R2, R3, I1 stopped on a path error of the
+  wrapper (`.hol/objs/.hol/objs`): setup errors; logs kept as
+  `*.setup-error-1.go.log`; the first NR1 "exit 1" is not a control.
+- NOT proved: that the export has the meaning of the Dafny source
+  (the exporter build folder does not exist today); that a Dafny
+  clause and its HOL formula agree (strings as byte lists, unbounded
+  integers): named assumptions EXPORTER-ID and BETA-DAFNY-HOL. Two
+  kernels and a bridge, not one theorem. Machine model level.
+- The adversarial review of these runs is not finished at this entry.
+- Impact: graph links S5 and S6 move to machine-checked at model
+  level. M1-B OPEN. end_to_end=false.
+- Next check: the review; a third artefact for the bridge.
+
+## U487 — night shift, proof track: the strict-prefix lemma and the exact acceptance set of the strict parser pass in HOL (refers to U476, U480, U484)
+
+- Evidence: cases `PF-0001` to `PF-0003` (exit 1; lemma `lexPs_cons`
+  open: my workers read `++` as right-associated; `simp` makes it
+  left-associated), `PF-0004` (exit 0, 26 theorems), `PX-0001`
+  (exit 0, 9 theorems). Review of PF-0004:
+  `orch-A/review-PF/REPORT.md`.
+- Proved for the HOL renderer of the compiled program
+  (`forge_refundWireProg$refund_render_fields`):
+  a strict prefix of a rendered result does not parse; the complete
+  render parses to its value; `refund_strict_parse s = SOME f` if and
+  only if `s` is exactly the render of `f`; an extension is
+  rejected; `refund_frame_decision`: an output that is a prefix of
+  the correct complete output and is accepted IS the complete output
+  with the correct value.
+- NOT proved: that the real standard output is a prefix of the model
+  output (links X8, X9); that the Python consumer's renderer equals
+  the HOL renderer (tested: 0 wrong acceptances in 304,326 inputs).
+- Impact: graph link X13 at model level. With U484: the decision
+  must rest on the strict parse, not on the exit status.
+- Next check: L-OUT.
+
+## U488 — night shift, proof track: `ffi_calls_ok` for the close call from the oracle alone; the read, write and open parts stay open (refers to U482)
+
+- Evidence: `L2b-0001` (exit 1), `L2b-0002` (exit 1: every lemma
+  proved; one control comparison in the script was wrong, so the
+  script refused to export), `L2b-0003` (exit 0, 28 theorems; my
+  change is in the control code only).
+- Proved: `ffi_calls_ok_of_returning_calls`; a close call that
+  returns under the basis oracle had a configuration length 8 and a
+  non-zero array length; the third premise of
+  `refund_profile_a_sl_reach` for the close predicate.
+- NOT proved: the same premise for read, write and open_in
+  (statement R6: every event of every run is a valid read or write
+  event; it needs the program's behaviour, lemma L3). The contract at
+  valid calls for the real C code stays a NATIVE assumption.
+- The review of L2b-0003 is not finished at this entry.
+- Next check: the review; L3.
+
+## U489 — night shift, proof track: L-OUT is not proved after five case runs
+
+- Evidence: `LO-0001` (CPU limit: a rewriting loop), `LO-0002` (ML
+  error), `LO-0003` (exit 1, 24 lemmas), `LO-0004` (exit 1, 27
+  lemmas), `LO-0005` (exit 1: one lemma failed, then an ML parse
+  error); `ATTEMPT_COUNTS.md` in the run folder.
+- Open: the replay invariant `extract_no_ext_stdout` (its one-step
+  lemma fails at a step that prints no goal) and the refund instance
+  `refund_profile_a_sl_fd1` (two constants are named `arm8_run`; an
+  unqualified name in a quotation parsed to the other one; the
+  repair did not run).
+- `refund_L_OUT` and `refund_L_OUT_prefix` are proved only under the
+  assumed invariant (diagnostic; not stored).
+- Uncertainty: no evidence that a statement is false.
+- Impact: graph link X9 stays MISSING; L-EXIT needs it.
+- Next check: an exploration run that prints each goal (it proves
+  nothing), then one more proof run.
+
+## U490 — night shift, proof track: L-OUT and L-EXIT-0 pass in HOL after an exploration run (refers to U489, U476, U480)
+
+- Evidence: `LOx-0001` (an exploration: exit 0, marker
+  EXPLORE_COMPLETE, no export, nothing stored; it printed the goal
+  after every step); `LO-0006` (exit 0; 41 theorems printed as
+  CHECKED; 43 stored, the count includes `fd1_written_ind`);
+  `LE-0002` (exit 1, an ML parse error), `LE-0003` (exit 0, 6
+  theorems, without the L-OUT theory), `LE-0004` (exit 0, 7 theorems,
+  with it); `ATTEMPT_COUNTS.md` in the run folder.
+- Proved (machine model, oracle `no_ext`, stored premises):
+  `refund_L_OUT`: the bytes of the trace's writes to descriptor 1
+  are the replayed standard output; `refund_profile_a_sl_fd1`: every
+  behaviour of the run is Terminate Success with exactly the rendered
+  result, or Terminate Resource_limit_hit with a prefix of it;
+  `evaluate_Halt_reg`: a halt is an FFI outcome, or it is at the halt
+  address with (Success and register 0 = 0) or (resource stop and
+  register 0 ≠ 0); `refund_profile_a_sl_halt`: the two facts joined
+  for the refund program.
+- Method note: after five failed case runs I did not start a sixth
+  proof run on a guess. I ran one exploration (the project's recorded
+  method), then one proof run that replays the explored steps. A
+  reviewer is asked whether this bent the five-attempt rule; its
+  answer is not in this entry.
+- An unqualified `arm8_run` in a quotation parses to
+  `forge_refundCmlMainSlide$arm8_run`; the stored theorems use
+  `forge_refundCmlMainStep$arm8_run`; the stored bridge
+  `arm8_run_constants_agree` joins them. The new statements contain
+  the Slide constant.
+- NOT proved: the halt-value range (statement L-EXIT-V stays open and
+  is not derivable, U480); anything for an oracle other than
+  `no_ext`; anything about the real process. Both theorems keep the
+  stored all-states FFI premise (false for the real C code, U393);
+  the L2 form (U482) is not yet joined with them.
+- Impact: graph links X9 and the model part of X10 move. With U487:
+  the model chain "behaviour → descriptor-1 bytes → strict parse →
+  value" exists in pieces; the composed statement is in work.
+- Next check: the review of LO-0006; the composed theorem; the same
+  results under the L2 premises.
+
+## U491 — night shift, proof track: Route A is reduced to one program-behaviour premise and one native premise; one ARM8 step keeps the control registers; the executable rebuilds byte-exactly (refers to U482, U483, U488)
+
+- Evidence: `L2c-0001` (exit 0, 29 theorems); `EFx-0001`
+  (exploration, exit 0, no export) and `EF-0001` (exit 0, 69 stored
+  theorems); `ES-0001`, `ES-0002` (exit 1 each);
+  `orch-A/ffi-hardening/` (a worker's build and tests; I re-checked
+  three digests with `shasum`).
+- Proved: `refund_profile_a_sl_events`: the machine-model theorem
+  with the valid-call predicate `VokY3` (the exact argument shapes of
+  the program's read and write calls; close and open_in never
+  return) and its FFI premises reduced to (i) the contract at valid
+  calls for the real FFI code (NATIVE) and (ii) statement R6: every
+  FFI event of every finite run of the totalised machine is a valid
+  read or write event. `Next_frame`, `NextStateARM8_frame`: one step
+  of the ARM8 model never changes TCR_EL1, SCTLR_EL1 or PSTATE.EL;
+  a non-vacuity witness for the erasure premises.
+- NOT proved: R6 (it needs the program's behaviour); the erase
+  equations for one step (several load/store classes failed in
+  ES-0002); the lift to `evaluate`.
+- Reproduction: with the recorded commands the original C object and
+  the executable rebuild byte-exactly (image SHA-256 `b8ed5ec2…7bb8`).
+- A worker's review found that the present C FFI differs from the
+  model at more states than U393 (it aborts where the model returns
+  an error byte; it cuts the descriptor to 32 bits; it really closes
+  descriptors 0 to 2). An unapplied patch and a scratch image exist
+  for the owner's decision (item A-3 of the owner queue). The worker
+  linked that scratch image with the recorded command; the linker
+  put its default local ad hoc signature on it; no key and no
+  `codesign` command were used; the owner decides whether that
+  counts as signing.
+- Impact: graph link X6 → X7 stays open at R6; X11e stays open.
+- Next check: R6 feasibility; an oracle-only valid-call predicate
+  for a model-total C FFI.
+
+## U492 — night shift, proof track: one composed HOL theorem from the machine model to the exported contract (refers to U486, U487, U490)
+
+- Evidence: cases `MF-0001` (exit 0, 11 theorems) and `MF-0002`
+  (exit 0, 13 theorems; the contract theory of U486 is on the
+  command line; my change against MF-0001 is ML-only).
+- Proved: `refund_model_frame_decision`,
+  `refund_model_success_gives_frame`,
+  `refund_model_frame_meets_exported_contract`: under the stored
+  premises of the machine-model theorem, for every behaviour of the
+  run at the oracle `no_ext`: it terminates, and if the strict
+  parser accepts the bytes written to descriptor 1 as a value g,
+  then g is `refund_fields` of the request, the bytes are exactly
+  its render, and the three exported `ensures` clauses evaluate to
+  true on g. A Success run is accepted.
+  `refund_model_frame_decision_reach`: the same conclusion from the
+  premises of `refund_profile_a_sl_reach` (U482).
+- Limits: machine model only. The premises include the all-states
+  FFI premise, which the real C code does not meet (U393); the
+  `_reach` form needs `ffi_calls_ok`, which is not proved. Nothing
+  here is about the real process, the launcher, the Python consumer
+  or the issuer. The link from the exported clauses to the approved
+  spec is the Dafny proof plus two named bridge assumptions (U486).
+- The review of these two runs is not finished at this entry.
+- Impact: the model-level chain from the ARM64 machine model to the
+  exported contract is one theorem in one kernel. end_to_end stays
+  false. M1-B stays OPEN.
+- Next check: the review; the same theorem from the `VokY3` premises
+  (R6); statement R6 itself.
+
+## U493 — night shift, proof track: the composed model theorem under the reduced premises; reviews of the composition (refers to U491, U492)
+
+- Evidence: case `MG-0001` (exit 0, 5 theorems);
+  `orch-A/review-MF/REPORT.md` (a separate worker's review of
+  MF-0001, MF-0002, L2c-0001, LE-0004, EF-0001: no defect).
+- Proved: `refund_model_frame_decision_events`: the conclusion of
+  the composed theorem of U492 from the premises of
+  `refund_profile_a_sl_events` at `no_ext`: no all-states FFI premise
+  and no `ffi_calls_ok` premise; in their place the contract at
+  valid calls for the real FFI code (NATIVE) and statement R6.
+  `refund_model_success_gives_frame_events`: a Success run is
+  accepted with the function's value, under the same premises.
+- Review facts: the premises of the U492 theorem are jointly
+  satisfiable in the model (a stored witness theorem); that a
+  behaviour exists is a CakeML library fact, not part of the
+  composed statement; R6 is plausible in the model by reading the
+  program's I/O code, and is not proved.
+- MG-0001 itself has no separate review at this entry.
+- Impact: at model level the route from the machine model to the
+  exported contract now rests on two named open premises: R6 and the
+  native FFI contract at valid calls. M1-B OPEN. end_to_end=false.
+- Next check: R6.
+
+## U494 — night shift, proof track: with an oracle-only valid-call predicate the program-behaviour premise is discharged; R6 for the present executable is a multi-day proof (refers to U491, U493)
+
+- Evidence: `L2dx-0001` (exploration, exit 0, no export);
+  `L2d-0001` (exit 0, 29 theorems); `orch-A/r6/` (a worker's study
+  by reading; its exploration run is not finished at this entry).
+- Proved: for the predicate "argument shapes that the basis oracle
+  accepts" (read and write: array of at least 4 bytes; close:
+  configuration of 8 bytes and a non-empty array; open_in: a
+  non-empty array), every returning FFI call of every run is valid,
+  from the oracle definition alone
+  (`refund_ffi_calls_ok_shape_totalised`).
+  `refund_profile_a_sl_shape`: the machine-model theorem with one
+  FFI premise, the contract at shape-valid calls.
+  `refund_model_frame_decision_shape`: the composed theorem of U492
+  from the same premises.
+- Meaning: the remaining FFI premise is about native code only. For
+  the present C code it fails at shape-valid calls where the C code
+  aborts and the model returns an error byte (U491). For a C code
+  that follows the model there (the unapplied patch of owner item
+  A-3) it is plausible; that is tested, not proved.
+- Study result (not machine-checked): for the present executable the
+  statement R6 needs the TextIO specifications proved again with an
+  event invariant: about 1,700 to 1,900 lines, 4 to 7 working days.
+  A shortcut through the stored replay equation is refuted by
+  reading the oracle definition.
+- The review of L2d-0001 is not finished at this entry.
+- Impact: two routes to close the FFI premise at model level exist:
+  a long proof for the present executable, or an owner-approved
+  change of the C code. M1-B OPEN. end_to_end=false.
+- Next check: the review; the R6 exploration run.
+
+## U495 — night shift, proof track: first stored lemmas toward R6; the replay shortcut is refuted in HOL; the erase lemmas for load and store stay open (refers to U491, U494)
+
+- Evidence: `R6x-0001` (exploration, exit 0); `R6base-0001`
+  (exit 0, 11 theorems, theory `forge_refundR6Base`); `R6x-0002`
+  (exploration, exit 0); `EEx-0001` (exploration, exit 0); review
+  of L2d-0001 and MG-0001 (`orch-A/review-L2d/REPORT.md`: both hold).
+- Proved: `every_clock_events` (a property of every event of the
+  terminating behaviour holds at every clock);
+  `every_of_three_parts`; `replay_cannot_exclude_error_return_events`
+  (strong form): appending one error-return read event leaves the
+  replayed file system unchanged, and that event is not valid. So
+  the stored replay equation cannot give R6.
+- Explored, not proved: the heap predicate with an event invariant
+  weakens to the standard one (two pieces closed); the two
+  FFI-level specifications stop at a type error of a postcondition
+  quotation. The erase lemmas of the load and store classes stay
+  open (112 to 304 goals per lemma in the exploration).
+- R6base-0001 has no separate review at this entry.
+- Wording fixed after review: the remaining FFI premise of the
+  shape theorem (U494) is satisfiable in the model; no environment
+  that describes the present C code satisfies it; that blocks the
+  present executable only because the premise speaks about all stub
+  states.
+- Impact: none on any graph link yet. M1-B OPEN.
+- Next check: the two FFI-level specifications with the invariant.
+
+## U496 — night shift, proof track: the erasure of the processor bits holds for one step of the ARM8 model (refers to U483, U491, U495)
+
+- Evidence: `EEx-0001`, `EEx-0002` (explorations, exit 0, no
+  export); `EE-0001` (exit 0, 101 stored theorems).
+- Proved: `NextStateARM8_erase`: for a state at EL0 without an
+  exception, with SA0 clear or the stack pointer aligned, and with
+  an untagged next program counter of the erased step, one step on
+  the state with TBI0, TBI1 and SA0 erased is the erased result of
+  the step on the original state; a fault on one side is a fault on
+  the other. `Next_erase_sp`: the same for the total step function,
+  with one more premise than the text of U483 (the stack-pointer
+  premise; without it the equation is false, control N2 of U483).
+- Cause of the earlier failures: the simplifier splits a conditional
+  rewrite with a disjunctive premise into two rules; the proof must
+  split the disjunction first.
+- NOT proved: the lift over a run of `targetSem$evaluate`; the
+  environment and FFI steps; that every next program counter of the
+  refund run is untagged (no stored theorem keeps the program
+  counter in the code region); untagged data addresses; the bit
+  values on the real processor. Step-level negative controls were
+  not attempted. The review is not finished at this entry.
+- Impact: a sub-result for graph link X11e; the link stays MISSING.
+- Next check: the review; an invariant for the run.
+
+## U497 — night shift, proof track: the two FFI-level TextIO specifications hold with an event invariant (first step of R6) (refers to U495)
+
+- Evidence: `R6x-0003` (exploration, exit 0); `R6x-0004`
+  (exit 0, but a shared file did not compile: non-ASCII characters
+  in ML strings; nothing explored); `R6x-0005` (exploration, exit 0,
+  four pieces closed); `R6ffi-0002` (exit 0, theory
+  `forge_refundR6Ffi`, 3 definitions, 4 theorems).
+- Proved: `writei_spec_V` and `read_into_spec_V`: the CakeML
+  specifications of the two functions that call the write and read
+  FFI, with a heap predicate that also states that every recorded
+  event satisfies an invariant, under a hypothesis about the one new
+  event; `IOxV_IMP_IOx` (the new predicate implies the standard
+  one).
+- Evidence gap: the proof script reads three shared files with
+  `use`; the runner does not hash them. I recorded their SHA-256
+  after the run (`R6ffi-0002.used-files.txt`). That is a record, not
+  a binding at run time.
+- NOT proved: the specifications above these two on the program's
+  path (write side: 4 to 5; read side: about 13), the main program,
+  the step from the heap invariant to the event list, the transfer
+  to the machine: statement R6 stays open. Estimate by a worker:
+  7 to 12 working days in all.
+- I handed back once at about 11:06Z because the harness required
+  it; the launcher resumed me; the work after that is recorded in
+  `STATE.md` with a stop note and a resume note.
+- The review of R6ffi-0002 is not finished at this entry.
+- Next check: the review; the write side.
+
+## U498 — night shift, proof track: the write side of R6 holds: `print` appends only valid descriptor-1 write events (refers to U497)
+
+- Evidence: `R6wx-0001`, `R6wx-0002` (explorations, exit 0);
+  `R6wx-0003` (exit 0, but a shared file did not compile: a single
+  backslash at a line end; nothing explored); `R6wx-0004`
+  (exploration, exit 0, 16 lemmas close as real proofs);
+  `R6w-0004` (exit 0, theory `forge_refundR6Write`, 1 definition,
+  16 theorems). The files read with `use` were hashed before and
+  after the run: unchanged.
+- Proved: `write_spec_V`, `output_aux_spec_V`, `output_spec_V`,
+  `output_STDIO_spec_V`, `print_spec_V`, and `print_spec_refund`:
+  if every recorded event is a valid event before a call of
+  `TextIO.print`, every recorded event is valid after it, with the
+  standard output extended by the printed string.
+- Statement change against the CakeML original: the buffer length is
+  exactly 2048 (plus the 4-byte header), not "at least"; the heap
+  predicate pins the buffer to 2052 bytes, which is the allocation in
+  the basis code.
+- NOT proved: the read side; the main program with the new heap
+  predicate; that the initial heap satisfies it; the step from the
+  heap events to the semantic event list; the transfer to the
+  machine. R6 stays open.
+- The review of R6w-0004 is not finished at this entry.
+- Next check: the review; the read side.
+
+## U499 — second directive, proof track: ten HOL cases reproduced from the branch; the shortest boundary to the real executable restated; two explorations hung (refers to U492, U494, U498)
+
+- Evidence: `proposals/night-shift-20261119/orch-A/repro/`
+  (`RESULT.json`, `run/`); `orch-A/x8-x11/` (statement drafts, two
+  reviews, static tests); `orch-A/END_TO_END_GAPS.md`;
+  `orch-A/r6/preflight/`.
+- Reproduction by a separate worker, from the sources committed at
+  branch head `dae1b93e`, in a fresh folder, on top of the 62 stored
+  older parent theories: 10 of 18 cases so far: exit 0 each, every
+  printed statement equal, the exported `.sig`, `.sml` and `.dat`
+  byte-identical: L1-0001, L2-0003, L2b-0003, L2c-0001, PF-0004,
+  PX-0001, LO-0006, LE-0004, the link case contract-0001, MF-0002.
+  The eleventh (MG-0001) stopped once in the Poly/ML run-time
+  ("Run out of store" during theory load); it runs again. Same
+  machine; not a clean replay; not another machine.
+- By reading, reviewed twice, NOT machine-checked: for a statement
+  about a real run, the FFI premise can be met by an environment
+  built from that run (the real effect at the calls the run makes,
+  the abstract effect elsewhere: the guard of U482); statement R6 is
+  then not needed. What is needed instead: lemmas about a trace (not
+  written yet), and native assumptions at the calls the run makes,
+  some of which a launcher must ENFORCE (blocking descriptors, no
+  injected code). The red team found four defects in the first
+  draft (a system-register bit read at EL0, an index error, a false
+  clause for killed runs, an overclaim); they are recorded and not
+  yet repaired in the draft.
+- Static tests on the executable file (finite, tested only): the
+  proved code slice names register 18 in no instruction, uses the
+  stack pointer in none, has no system instruction; the text
+  segment is read-execute; the image has no hardened run-time.
+- Two exploration runs (R6rx-0001, R6tx-0001) hung in one step past
+  their time limit; I stopped my own processes; repaired copies with
+  a watchdog are staged, not run.
+- The push of the branch was denied by the session's permission
+  system (owner item A-4); nothing is pushed.
+- Impact: none on any stage label. M1-B OPEN. end_to_end=false.
+- Next check: the rest of the reproduction; the staged cases.

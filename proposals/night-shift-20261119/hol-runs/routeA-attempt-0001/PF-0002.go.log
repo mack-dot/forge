@@ -1,0 +1,40 @@
+2026-11-19T08:41:55Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6457.00M  free = 711.00M  (encrypted)
+System-wide memory free percentage: 59%
+exit 1
+actual_exit 1 wall 69.433 cpu 93.414 rss_mib 4103 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PF-0002/proof.sml:447: Fail "failed: lexPs_cons lexP_all lex_aux_prefix_ISL sexp_to_string_Expr_prefix_free refund_render_fields_prefix_free refund_strict_parse_no_strict_prefix refund_render_fields_prefix_code"
+59:CHECKED prefix_append_strict
+63:CHECKED every_isPREFIX
+67:CHECKED sexp_print_eqs
+81:CHECKED read_symbol_safe_nil
+87:CHECKED read_string_aux_char_escaped
+93:CHECKED char_escaped_strict_prefix
+98:CHECKED read_string_aux_strict_prefix
+105:CHECKED atom_prefix_ISL
+122:CHECKED lexP_Atom
+126:CHECKED lexPs_nil
+130:CHECKED lexP_Expr
+133:SHOW UNSOLVED cons.in_v
+142:  GOAL p ≼ explode (concat (append (sexp_to_app_list v)))
+143:SHOW TRY_ALL_ENTRY lexPs_cons_space
+155:  GOAL ISL
+160:SHOW TRY_ALL_ENTRY lexPs_cons
+161:  GOAL ∀v vs.
+164:SHOW UNSOLVED cons.in_v
+173:  GOAL p ≼ explode (concat (append (sexp_to_app_list v)))
+174:LEMMA_FAILED lexPs_cons HOL_ERR (HOL_ERROR {message = "unsolved goals at cons.in_v", origins = [{origin_function = "CL", origin_structure = "A2", source_location = Loc_Unknown}]})
+177:LEMMA_FAILED lexP_all (diagnostic only: proved only under the failed lemmas above)
+180:LEMMA_FAILED lex_aux_prefix_ISL (diagnostic only: proved only under the failed lemmas above)
+183:CHECKED parse_ISL_of_lex
+187:LEMMA_FAILED sexp_to_string_Expr_prefix_free (diagnostic only: proved only under the failed lemmas above)
+190:LEMMA_FAILED refund_render_fields_prefix_free (diagnostic only: proved only under the failed lemmas above)
+205:LEMMA_FAILED refund_strict_parse_no_strict_prefix (diagnostic only: proved only under the failed lemmas above)
+208:CHECKED refund_strict_parse_complete
+212:LEMMA_FAILED refund_render_fields_prefix_code (diagnostic only: proved only under the failed lemmas above)
+215:CHECKED N1_trailing_newline_breaks
+222:CHECKED N2_atom_breaks
+228:CHECKED N3_depth0_breaks
+hash_parents exit 0
+go exit 1

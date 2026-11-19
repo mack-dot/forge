@@ -1,0 +1,171 @@
+TIMEOUT_HELPER Timeout.apply loaded
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+LOAD_OK basisFunctionsLib
+<<HOL message: Created theory "forge_refundR6TExplore1">>
+EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)
+EXPLORE_MODE nothing is exported; the open lemmas are never stored
+MARK USE r6t_common.sml
+MARK GRAMMAR
+GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\187v. &T :v -> (\206\177 -> bool) -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and flatSem$v\n", origins = [{origin_function = "type-analysis", origin_structure  ...
+TYPE_REPRIVILEGED ffi_result was cfHeapsBase now ffi
+TYPE_REPRIVILEGED shift was wordLang now ast
+TYPE_REPRIVILEGED pat was pattern_semantics now ast
+TYPE_REPRIVILEGED op was flatLang now ast
+TYPE_REPRIVILEGED locs was location now ast
+TYPE_REPRIVILEGED lit was dafny_ast now ast
+TYPE_REPRIVILEGED exp was dafny_ast now ast
+TYPE_REPRIVILEGED arith was asm now ast
+TYPE_REPRIVILEGED v was flatSem now semanticPrimitives
+TYPE_REPRIVILEGED state was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED sem_env was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED result was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED dest_thunk_ret was flatSem now semanticPrimitives
+GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK
+GRAMMAR_FIX B
+MARK SHORTCUTS
+MARK STATEMENTS
+SURGERY_DECLS Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2
+  st2
+SURGERY_LOOKUP lookup_var fname env2 = SOME fv
+SURGERY_SEM semantics_dec_list (init_state (basis_ffi ext cl fs) with eval_state := es)
+  env1
+  (SNOC (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit]))
+     prog)
+SURGERY_FREE st2 env2 fv prog fname env1 fs cl ext es
+STATEMENT_PARSE_FAILED whole_prog_spec_V_events HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: app (basis_proj1,basis_proj2) :v ->\nv list ->\n((heap_part -> bool) -> bool) -> (res -> (heap_part -> bool) -> bool) -> bool\n  Argument: fv :num -> closLang$exp list -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and min$fun\n", origins = [{origin_function = "type-analysis", origin_structure = "Preterm", source_location = Loc (LocP (4, 0, 41), LocP (4, 0, 42))}]})
+STATEMENT_PARSE_FAILED whole_prog_spec_V_init HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: app (basis_proj1,basis_proj2) :v ->\nv list ->\n((heap_part -> bool) -> bool) -> (res -> (heap_part -> bool) -> bool) -> bool\n  Argument: fv :num -> closLang$exp list -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and min$fun\n", origins = [{origin_function = "type-analysis", origin_structure = "Preterm", source_location = Loc (LocP (4, 0, 173), LocP (4, 0, 174))}]})
+STATEMENT parts_ok_basis_ffi
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒ parts_ok st.ffi (basis_proj1,basis_proj2)
+STATEMENT init_fs_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+    (MAP FST (SND (SND fs_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_cl_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+    (MAP FST (SND (SND cl_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_rt_part_IN
+∀st ext cl fs.
+  st.ffi = basis_ffi ext cl fs ⇒
+  FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+    (MAP FST (SND (SND runtime_ffi_part))) [] ∈
+  st2heap (basis_proj1,basis_proj2) st
+STATEMENT init_iobuff_IN
+∀st bs1 bs2 rest.
+  st.refs = W8array bs1::W8array bs2::rest ⇒
+  Mem 1 (W8array bs2) ∈ st2heap (basis_proj1,basis_proj2) st
+STATEMENT IOFS_V_init
+∀Inv fs v events.
+  wfFS fs ∧ LENGTH v = 2052 ∧ EVERY Inv events ⇒
+  IOFS_V Inv fs
+    ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) events} ∪ {Mem 1 (W8array v)})
+STATEMENT STDIO_V_of_IOFS_V
+∀Inv fs h. STD_streams fs ∧ IOFS_V Inv fs h ⇒ STDIO_V Inv fs h
+STATEMENT init_heap_V
+∀Inv st ext cl fs bs1 bs2 rest.
+  st.ffi = basis_ffi ext cl fs ∧ st.refs = W8array bs1::W8array bs2::rest ∧
+  LENGTH bs2 = 2052 ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃h1 h2.
+    SPLIT (st2heap (basis_proj1,basis_proj2) st) (h1,h2) ∧
+    STDIO_V Inv fs h1 ∧
+    FFI_part (encode cl) (mk_ffi_next cl_ffi_part)
+      (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+    FFI_part (encode ()) (mk_ffi_next runtime_ffi_part)
+      (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2
+STATEMENT FFI_part_IN_st2heap_FILTER
+∀p st s u ns events.
+  FFI_part s u ns events ∈ st2heap p st ⇒
+  parts_ok st.ffi p ∧ FILTER (ffi_has_index_in ns) st.ffi.io_events = events
+STATEMENT basis_proj2_names
+FLAT (MAP FST basis_proj2) =
+MAP FST (SND (SND cl_ffi_part)) ++ MAP FST (SND (SND fs_ffi_part)) ++
+MAP FST (SND (SND runtime_ffi_part))
+STATEMENT every_basis_events
+∀Inv f.
+  parts_ok f (basis_proj1,basis_proj2) ∧
+  FILTER (ffi_has_index_in (MAP FST (SND (SND cl_ffi_part)))) f.io_events =
+  [] ∧
+  FILTER (ffi_has_index_in (MAP FST (SND (SND runtime_ffi_part))))
+    f.io_events = [] ∧
+  EVERY Inv
+    (FILTER (ffi_has_index_in (MAP FST (SND (SND fs_ffi_part)))) f.io_events) ⇒
+  EVERY Inv f.io_events
+STATEMENT sem_satisfies_imp_V
+∀s P Q. sem_satisfies s P ⇒ (∀b. P b ⇒ Q b) ⇒ sem_satisfies s Q
+STATEMENT STDIO_V_FFI_part_hprop
+∀Inv fs. FFI_part_hprop (STDIO_V Inv fs)
+STATEMENT IOxV_events_IN
+∀Inv fs H h.
+  (IOxV Inv fs * H) h ⇒
+  ∃ev.
+    FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) ev ∈ h ∧ EVERY Inv ev
+STATEMENT STDIO_V_events
+∀Inv fs h.
+  STDIO_V Inv fs h ⇒
+  ∃s u ev.
+    FFI_part s u (MAP FST (SND (SND fs_ffi_part))) ev ∈ h ∧ EVERY Inv ev
+STATEMENT final_heap_events
+∀Inv fs' st3 h2 h3 h4 s1 u1 s3 u3.
+  SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) ∧
+  STDIO_V Inv fs' h3 ∧
+  FFI_part s1 u1 (MAP FST (SND (SND cl_ffi_part))) [] ∈ h2 ∧
+  FFI_part s3 u3 (MAP FST (SND (SND runtime_ffi_part))) [] ∈ h2 ⇒
+  EVERY Inv st3.ffi.io_events
+STATEMENT whole_prog_spec_V_events
+T
+STATEMENT whole_prog_spec_V_init
+T
+CONST parts_ok_basis_ffi cfStore$parts_ok
+CONST init_fs_part_IN cfStore$st2heap
+CONST init_fs_part_IN fsFFI$encode
+CONST init_cl_part_IN cfStore$st2heap
+CONST init_cl_part_IN clFFI$encode
+CONST init_rt_part_IN cfStore$st2heap
+CONST init_rt_part_IN runtimeFFI$encode
+CONST init_iobuff_IN cfStore$st2heap
+CONST IOFS_V_init fsFFI$encode
+CONST init_heap_V runtimeFFI$encode
+CONST init_heap_V clFFI$encode
+CONST init_heap_V cfStore$st2heap
+CONST init_heap_V set_sep$SPLIT
+CONST FFI_part_IN_st2heap_FILTER cfStore$ffi_has_index_in
+CONST FFI_part_IN_st2heap_FILTER cfStore$parts_ok
+CONST FFI_part_IN_st2heap_FILTER cfStore$st2heap
+CONST every_basis_events cfStore$ffi_has_index_in
+CONST every_basis_events cfStore$parts_ok
+CONST sem_satisfies_imp_V semanticsProps$sem_satisfies
+CONST IOxV_events_IN fsFFI$encode
+CONST final_heap_events cfStore$st2heap
+CONST final_heap_events cfHeapsBase$SPLIT3
+PART_DONE r6t_common.sml
+MARK USE r6t_steps.sml
+R6T_STEPS opened
+R6T_STEPS loaded
+PART_DONE r6t_steps.sml
+MARK USE r6t_explore_calls.sml
+TH_ASSUMED all statements
+TRY_HELPER_BEGIN parts_ok_basis_ffi
+STEP_USED parts_ok_basis_ffi 1 intro candidate 0 goals_out 1

@@ -1,0 +1,150 @@
+TIMEOUT_HELPER Timeout.apply loaded
+<<HOL message: Created theory "forge_refundR6Base">>
+MARK INPUTS
+WEAK_PREDICATE λe.
+  (∃ab nb.
+     e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+     LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+     w22n [ab❲0❳; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+  ∃ab nb.
+    e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+    LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+    w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w
+MARK CLOCK
+BEGIN every_prefix
+TACTIC_USED every_prefix 1
+Saved theorem _______ "every_prefix"
+CHECKED every_prefix
+⊢ ∀P l1 l2. l1 ≼ l2 ∧ EVERY P l2 ⇒ EVERY P l1
+BEGIN clock_prefix_of_terminate
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundR6Base)>>
+TACTIC_USED clock_prefix_of_terminate 1
+Saved theorem _______ "clock_prefix_of_terminate"
+CHECKED clock_prefix_of_terminate
+⊢ ∀mc ffi ms t iob j.
+    machine_sem mc ffi ms (Terminate t iob) ⇒
+    (SND (SND (evaluate mc ffi j ms))).io_events ≼ iob
+BEGIN every_clock_events
+TACTIC_USED every_clock_events 1
+Saved theorem _______ "every_clock_events"
+CHECKED every_clock_events
+⊢ ∀mc ffi ms io P.
+    machine_sem mc ffi ms ⊆ extend_with_resource_limit {Terminate Success io} ∧
+    EVERY P io ⇒
+    ∀j. EVERY P (SND (SND (evaluate mc ffi j ms))).io_events
+MARK REPLAY
+BEGIN bad_read_event_replays_to_the_same_state
+TACTIC_USED bad_read_event_replays_to_the_same_state 1
+Saved theorem _______ "bad_read_event_replays_to_the_same_state"
+CHECKED bad_read_event_replays_to_the_same_state
+⊢ ∀ext cls fs.
+    extract_fs_with_numchars ext (cls,fs)
+      [IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w]))] =
+    SOME (cls,fs)
+BEGIN bad_read_event_is_not_valid
+TACTIC_USED bad_read_event_is_not_valid 1
+Saved theorem _______ "bad_read_event_is_not_valid"
+CHECKED bad_read_event_is_not_valid
+⊢ ¬refund_valid_event
+    (IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w])))
+BEGIN bad_read_event_is_not_valid_w
+TACTIC_USED bad_read_event_is_not_valid_w 1
+Saved theorem _______ "bad_read_event_is_not_valid_w"
+CHECKED bad_read_event_is_not_valid_w
+⊢ ¬(λe.
+     (∃ab nb.
+        e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+        LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+        w22n [ab❲0❳; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+     ∃ab nb.
+       e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+       LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+       w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w)
+    (IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w])))
+BEGIN refund_valid_event_implies_weak
+TACTIC_USED refund_valid_event_implies_weak 1
+Saved theorem _______ "refund_valid_event_implies_weak"
+CHECKED refund_valid_event_implies_weak
+⊢ ∀e. refund_valid_event e ⇒
+      (λe.
+         (∃ab nb.
+            e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+            LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+            w22n [ab❲0❳; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+         ∃ab nb.
+           e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+           LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+           w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w) e
+X4_SIMP_NORMAL ⊢ ∀ext cls fs.
+    extract_fs_with_numchars ext (cls,fs)
+      [IO_event (ExtCall «read») [] [(0w,1w); (0w,0w); (0w,0w); (0w,0w)]] =
+    SOME (cls,fs)
+BEGIN extract_fs_ignores_bad_read_event
+TACTIC_USED extract_fs_ignores_bad_read_event 1
+Saved theorem _______ "extract_fs_ignores_bad_read_event"
+CHECKED extract_fs_ignores_bad_read_event
+⊢ ∀ext cl fs io.
+    extract_fs ext (cl,fs)
+      (io ++
+       [IO_event (ExtCall «read») []
+          (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w]))]) =
+    extract_fs ext (cl,fs) io
+BEGIN replay_cannot_exclude_error_return_events
+TACTIC_USED replay_cannot_exclude_error_return_events 1
+Saved theorem _______ "replay_cannot_exclude_error_return_events"
+CHECKED replay_cannot_exclude_error_return_events
+⊢ (∀ext cl fs io.
+     extract_fs ext (cl,fs)
+       (io ++
+        [IO_event (ExtCall «read») []
+           (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w]))]) =
+     extract_fs ext (cl,fs) io) ∧
+  ¬refund_valid_event
+    (IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w]))) ∧
+  ¬(λe.
+     (∃ab nb.
+        e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+        LENGTH nb = LENGTH ab ∧ 4 ≤ LENGTH ab ∧ LENGTH ab < 65536 ∧
+        w22n [ab❲0❳; ab❲1❳] + 4 ≤ LENGTH ab ∧ HD nb = 0w) ∨
+     ∃ab nb.
+       e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+       LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+       w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w)
+    (IO_event (ExtCall «read») [] (ZIP ([0w; 0w; 0w; 0w],[1w; 0w; 0w; 0w])))
+REPLAY_FORM STRONG (extract_fs of io ++ [E_BAD] = extract_fs of io)
+MARK PARTS
+BEGIN ffi_has_index_in_APPEND
+TACTIC_USED ffi_has_index_in_APPEND 1
+Saved theorem _______ "ffi_has_index_in_APPEND"
+CHECKED ffi_has_index_in_APPEND
+⊢ ∀a b e.
+    ffi_has_index_in (a ++ b) e ⇔ ffi_has_index_in a e ∨ ffi_has_index_in b e
+BEGIN every_of_three_parts
+TACTIC_USED every_of_three_parts 1
+Saved theorem _______ "every_of_three_parts"
+CHECKED every_of_three_parts
+⊢ ∀P ns1 ns2 ns3 evs.
+    EVERY (ffi_has_index_in (ns1 ++ ns2 ++ ns3)) evs ∧
+    FILTER (ffi_has_index_in ns1) evs = [] ∧
+    FILTER (ffi_has_index_in ns3) evs = [] ∧
+    EVERY P (FILTER (ffi_has_index_in ns2) evs) ⇒
+    EVERY P evs
+MARK CONTROLS
+CONTROL_OK X6c mentions the stored refund_valid_event
+CONTROL_OK the bad event is rejected by refund_valid_event
+CONTROL_OK L-CLK stored (every_clock_events)
+MARK CHECKS
+FAILED_LIST 
+DIAG_OK_UNDER_LIST 
+PARENTS forge_refundRouteA2c
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CONTROL_OK closure contains forge_refundRouteA2c
+STORED_THEOREMS 11
+STORED_DEFINITIONS 0
+CLOSURE_NODES 547
+Exporting theory "forge_refundR6Base" ... done.
+Theory "forge_refundR6Base" took 9.5s to build
+EXACT_COMPLETE

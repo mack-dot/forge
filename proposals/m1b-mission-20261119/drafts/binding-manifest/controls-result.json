@@ -1,0 +1,345 @@
+{
+ "snapshot_notes": [],
+ "controls": [
+  {
+   "control": "B0-baseline",
+   "what": "unchanged manifest on the mirror",
+   "expected_exit": 0,
+   "actual_exit": 0,
+   "required_codes": [],
+   "codes": [],
+   "as_expected": true
+  },
+  {
+   "control": "C01-linkedrefund-byte",
+   "what": "one byte changed in LinkedRefund.dfy",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "DIGEST_MISMATCH"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "DIGEST_MISMATCH",
+    "EVIDENCE_REFUSED"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C02-flatcore-byte",
+   "what": "one byte changed in FlatCore.dfy",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "DIGEST_MISMATCH"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "DIGEST_MISMATCH",
+    "EVIDENCE_REFUSED"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C03-library-byte",
+   "what": "one byte changed in an included library file (Std/Wrappers.dfy)",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "DIGEST_MISMATCH"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "DIGEST_MISMATCH",
+    "EVIDENCE_REFUSED"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C04-exe-in-code-slice",
+   "what": "one byte changed in the executable at offset 17592 (inside the code slice)",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "SLICE_DIGEST",
+    "WHOLE_FILE_DIGEST"
+   ],
+   "codes": [
+    "DIGEST_MISMATCH",
+    "EVIDENCE_REFUSED",
+    "SLICE_DIGEST",
+    "WHOLE_FILE_DIGEST"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C05-exe-outside-slices",
+   "what": "one byte changed at offset 152900 (_main C code, outside both slices)",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "WHOLE_FILE_DIGEST"
+   ],
+   "codes": [
+    "DIGEST_MISMATCH",
+    "EVIDENCE_REFUSED",
+    "WHOLE_FILE_DIGEST"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C06-swapped-sinkcore",
+   "what": "SinkCore.dfy replaced by the N1 mutant (a real other file)",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "DIGEST_MISMATCH"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "CONTROL_NOT_A_MUTANT",
+    "DIGEST_MISMATCH",
+    "EVIDENCE_REFUSED"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C07-stale-log",
+   "what": "the run record replaced by an older real log (W9 attempt 03), digests re-pinned",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "STALE_RECORD"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "EVIDENCE_REFUSED",
+    "STALE_RECORD"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C08-control-diff-removed",
+   "what": "negative/N3a-drop-flat-ensures-1.diff deleted",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "MISSING_FILE"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "EVIDENCE_REFUSED",
+    "MISSING_FILE"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C08b-control-entry-removed",
+   "what": "the N3a control removed from the manifest list",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "CONTROL_SET"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "CONTROL_SET",
+    "EVIDENCE_REFUSED"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C09-added-file-in-folder",
+   "what": "a new file transport/Extra.dfy added to the proof folder",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "EXTRA_FILE"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "EVIDENCE_REFUSED",
+    "EXTRA_FILE"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C09b-closure-lists-unread-file",
+   "what": "the manifest closure lists Boundary.dfy, which the include walk does not reach",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "MISSING_FILE"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "EVIDENCE_REFUSED",
+    "MISSING_FILE"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C10-model-for-test-row",
+   "what": "claims X12 (a finite test) as MODEL",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "CLASS_OVERSTATED"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C10b-test-for-sentence",
+   "what": "claims E3 (a sentence only) as TEST",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "CLASS_OVERSTATED"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C11-claim-removed",
+   "what": "the claim for link S3 removed",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "MISSING_REQUIRED_ENTRY"
+   ],
+   "codes": [
+    "MISSING_REQUIRED_ENTRY"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C11b-proof-entry-removed",
+   "what": "the dafny_proofs entry U5a-sink-core removed",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "MISSING_REQUIRED_ENTRY",
+    "DANGLING_EVIDENCE"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "DANGLING_EVIDENCE",
+    "MISSING_REQUIRED_ENTRY"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C11c-unbound-item-removed",
+   "what": "the unbound item sink.ts removed",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "MISSING_REQUIRED_ENTRY"
+   ],
+   "codes": [
+    "DANGLING_EVIDENCE",
+    "MISSING_REQUIRED_ENTRY"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C11d-executable-removed",
+   "what": "the executable entry removed",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "MISSING_FIELD"
+   ],
+   "codes": [
+    "CLASS_MISMATCH",
+    "CLASS_OVERSTATED",
+    "DANGLING_EVIDENCE",
+    "MISSING_FIELD"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C12-change-and-repin",
+   "what": "one byte in LinkedRefund.dfy AND every manifest digest of it re-pinned",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "STALE_RECORD",
+    "RUNNER_PIN"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "DERIVATION",
+    "EVIDENCE_REFUSED",
+    "RUNNER_PIN",
+    "STALE_RECORD"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C13-producer-stated-level",
+   "what": "a claim carries a computed_class key",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "PRODUCER_STATED_LEVEL"
+   ],
+   "codes": [
+    "PRODUCER_STATED_LEVEL"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C14-tool-digest",
+   "what": "the Dafny tree digest changed in the manifest",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "TOOL_MISMATCH"
+   ],
+   "codes": [
+    "TOOL_MISMATCH"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C15-argv-weakened",
+   "what": "argv without --verify-included-files",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "ARGV_MISMATCH"
+   ],
+   "codes": [
+    "ARGV_MISMATCH",
+    "CLASS_OVERSTATED",
+    "EVIDENCE_REFUSED"
+   ],
+   "as_expected": true
+  },
+  {
+   "control": "C16-s3a-derivation",
+   "what": "one byte in the S3a Strings.dfy (scratch)",
+   "expected_exit": 1,
+   "actual_exit": 1,
+   "required_codes": [
+    "DERIVATION",
+    "DIGEST_MISMATCH"
+   ],
+   "codes": [
+    "CLASS_OVERSTATED",
+    "DERIVATION",
+    "DIGEST_MISMATCH",
+    "EVIDENCE_REFUSED"
+   ],
+   "as_expected": true
+  }
+ ],
+ "all_as_expected": true,
+ "proofs_re_run": false
+}

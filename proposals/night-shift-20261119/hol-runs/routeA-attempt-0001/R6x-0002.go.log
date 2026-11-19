@@ -1,0 +1,69 @@
+2026-11-19T10:33:27Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 5142.75M  free = 1001.25M  (encrypted)
+System-wide memory free percentage: 57%
+START_STATE swap_free_mib=1001 memory_free_percent=57
+exit 0
+actual_exit 0 wall 130.813 cpu 153.887 rss_mib 4728 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+38:  GOAL_COUNT 1
+39:  GOAL_BEGIN X9r_FFI_part_hprop_IOFS_V #1 assumptions 0 (ASM 0 = newest)
+42:  GOAL_END X9r_FFI_part_hprop_IOFS_V #1
+44:  GOAL_COUNT 1
+45:  GOAL_BEGIN X9r_FFI_part_hprop_IOFS_V #1 assumptions 0 (ASM 0 = newest)
+48:  GOAL_END X9r_FFI_part_hprop_IOFS_V #1
+50:  GOAL_COUNT 1
+51:  GOAL_BEGIN X9r_FFI_part_hprop_IOFS_V #1 assumptions 1 (ASM 0 = newest)
+60:  GOAL_END X9r_FFI_part_hprop_IOFS_V #1
+62:  GOAL_COUNT 1
+63:  GOAL_BEGIN X9r_FFI_part_hprop_IOFS_V #1 assumptions 9 (ASM 0 = newest)
+78:  GOAL_END X9r_FFI_part_hprop_IOFS_V #1
+80:  GOAL_COUNT 0
+153:  GOAL_COUNT 1
+154:  GOAL_BEGIN X8r_IOxV_weakens_to_IOx #1 assumptions 0 (ASM 0 = newest)
+157:  GOAL_END X8r_IOxV_weakens_to_IOx #1
+159:  GOAL_COUNT 1
+160:  GOAL_BEGIN X8r_IOxV_weakens_to_IOx #1 assumptions 0 (ASM 0 = newest)
+163:  GOAL_END X8r_IOxV_weakens_to_IOx #1
+165:  GOAL_COUNT 1
+166:  GOAL_BEGIN X8r_IOxV_weakens_to_IOx #1 assumptions 0 (ASM 0 = newest)
+185:  GOAL_END X8r_IOxV_weakens_to_IOx #1
+187:  GOAL_COUNT 1
+188:  GOAL_BEGIN X8r_IOxV_weakens_to_IOx #1 assumptions 0 (ASM 0 = newest)
+206:  GOAL_END X8r_IOxV_weakens_to_IOx #1
+208:  GOAL_COUNT 0
+216:  GOAL_COUNT 1
+217:  GOAL_BEGIN WRITEI_V_branch1_xffi #1 assumptions 0 (ASM 0 = newest)
+252:  GOAL_END WRITEI_V_branch1_xffi #1
+255:  GOAL_COUNT 2
+256:  GOAL_BEGIN WRITEI_V_branch1_xffi #1 assumptions 18 (ASM 0 = newest)
+332:  GOAL_END WRITEI_V_branch1_xffi #1
+333:  GOAL_BEGIN WRITEI_V_branch1_xffi #2 assumptions 18 (ASM 0 = newest)
+433:  GOAL_END WRITEI_V_branch1_xffi #2
+436:  GOAL_COUNT 2
+437:  GOAL_BEGIN WRITEI_V_branch1_xffi #1 assumptions 19 (ASM 0 = newest)
+514:  GOAL_END WRITEI_V_branch1_xffi #1
+515:  GOAL_BEGIN WRITEI_V_branch1_xffi #2 assumptions 18 (ASM 0 = newest)
+615:  GOAL_END WRITEI_V_branch1_xffi #2
+616:STEP_FAILED WRITEI_V_branch1_xffi 3 n2w2_into_iobuff HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\18
+619:  GOAL_COUNT 2
+620:  GOAL_BEGIN WRITEI_V_branch1_xffi #1 assumptions 19 (ASM 0 = newest)
+697:  GOAL_END WRITEI_V_branch1_xffi #1
+698:  GOAL_BEGIN WRITEI_V_branch1_xffi #2 assumptions 18 (ASM 0 = newest)
+798:  GOAL_END WRITEI_V_branch1_xffi #2
+805:  GOAL_COUNT 1
+806:  GOAL_BEGIN READ_INTO_V_success_xffi #1 assumptions 0 (ASM 0 = newest)
+843:  GOAL_END READ_INTO_V_success_xffi #1
+846:  GOAL_COUNT 1
+847:  GOAL_BEGIN READ_INTO_V_success_xffi #1 assumptions 8 (ASM 0 = newest)
+880:  GOAL_END READ_INTO_V_success_xffi #1
+883:  GOAL_COUNT 1
+884:  GOAL_BEGIN READ_INTO_V_success_xffi #1 assumptions 8 (ASM 0 = newest)
+949:  GOAL_END READ_INTO_V_success_xffi #1
+950:STEP_FAILED READ_INTO_V_success_xffi 3 n2w2_into_buf HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\18
+953:  GOAL_COUNT 1
+954:  GOAL_BEGIN READ_INTO_V_success_xffi #1 assumptions 8 (ASM 0 = newest)
+1019:  GOAL_END READ_INTO_V_success_xffi #1
+1020:ALT_FAILED READ_INTO_V_success_xffi 3 n2w2_into_buf alt 1 HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \
+1024:EXPLORE_COMPLETE
+hash_parents exit 0
+go exit 0

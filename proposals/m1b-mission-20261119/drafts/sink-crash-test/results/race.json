@@ -1,0 +1,232 @@
+{
+ "variant": "real",
+ "tsx_source": false,
+ "rows": [
+  {
+   "K": 2,
+   "round": 0,
+   "committed": 1,
+   "stale": 1,
+   "late": 0,
+   "mem_mib_before": 2790,
+   "violations": []
+  },
+  {
+   "K": 2,
+   "round": 1,
+   "committed": 1,
+   "stale": 1,
+   "late": 0,
+   "mem_mib_before": 2818,
+   "violations": []
+  },
+  {
+   "K": 2,
+   "round": 2,
+   "committed": 1,
+   "stale": 1,
+   "late": 0,
+   "mem_mib_before": 3994,
+   "violations": []
+  },
+  {
+   "K": 2,
+   "round": 3,
+   "committed": 1,
+   "stale": 1,
+   "late": 0,
+   "mem_mib_before": 3704,
+   "violations": []
+  },
+  {
+   "K": 2,
+   "round": 4,
+   "committed": 1,
+   "stale": 1,
+   "late": 0,
+   "mem_mib_before": 3817,
+   "violations": []
+  },
+  {
+   "K": 5,
+   "round": 0,
+   "committed": 1,
+   "stale": 4,
+   "late": 0,
+   "mem_mib_before": 3645,
+   "violations": []
+  },
+  {
+   "K": 5,
+   "round": 1,
+   "committed": 1,
+   "stale": 4,
+   "late": 0,
+   "mem_mib_before": 3436,
+   "violations": []
+  },
+  {
+   "K": 5,
+   "round": 2,
+   "committed": 1,
+   "stale": 4,
+   "late": 0,
+   "mem_mib_before": 3333,
+   "violations": []
+  },
+  {
+   "K": 5,
+   "round": 3,
+   "committed": 1,
+   "stale": 4,
+   "late": 0,
+   "mem_mib_before": 3475,
+   "violations": []
+  },
+  {
+   "K": 5,
+   "round": 4,
+   "committed": 1,
+   "stale": 4,
+   "late": 0,
+   "mem_mib_before": 3338,
+   "violations": []
+  },
+  {
+   "K": 10,
+   "round": 0,
+   "committed": 1,
+   "stale": 9,
+   "late": 0,
+   "mem_mib_before": 3083,
+   "violations": [],
+   "replays50": {
+    "statuses": [
+     "replayed"
+    ],
+    "late": 0,
+    "store_unchanged": true
+   }
+  },
+  {
+   "K": 10,
+   "round": 1,
+   "committed": 1,
+   "stale": 9,
+   "late": 0,
+   "mem_mib_before": 3142,
+   "violations": []
+  },
+  {
+   "K": 10,
+   "round": 2,
+   "committed": 1,
+   "stale": 9,
+   "late": 0,
+   "mem_mib_before": 3340,
+   "violations": []
+  },
+  {
+   "K": 10,
+   "round": 3,
+   "committed": 1,
+   "stale": 9,
+   "late": 0,
+   "mem_mib_before": 3423,
+   "violations": []
+  },
+  {
+   "K": 10,
+   "round": 4,
+   "committed": 1,
+   "stale": 9,
+   "late": 0,
+   "mem_mib_before": 3260,
+   "violations": []
+  },
+  {
+   "K": 25,
+   "round": 0,
+   "committed": 1,
+   "stale": 24,
+   "late": 0,
+   "mem_mib_before": 3466,
+   "violations": [],
+   "replays50": {
+    "statuses": [
+     "replayed"
+    ],
+    "late": 0,
+    "store_unchanged": true
+   }
+  },
+  {
+   "K": 25,
+   "round": 1,
+   "committed": 1,
+   "stale": 24,
+   "late": 0,
+   "mem_mib_before": 3692,
+   "violations": []
+  },
+  {
+   "K": 25,
+   "round": 2,
+   "committed": 1,
+   "stale": 24,
+   "late": 0,
+   "mem_mib_before": 3467,
+   "violations": []
+  },
+  {
+   "K": 50,
+   "round": 0,
+   "committed": 1,
+   "stale": 49,
+   "late": 0,
+   "mem_mib_before": 3330,
+   "violations": [],
+   "replays50": {
+    "statuses": [
+     "replayed"
+    ],
+    "late": 0,
+    "store_unchanged": true
+   }
+  },
+  {
+   "K": 50,
+   "round": 1,
+   "committed": 1,
+   "stale": 49,
+   "late": 0,
+   "mem_mib_before": 3472,
+   "violations": []
+  },
+  {
+   "K": 100,
+   "round": 0,
+   "skipped": "free+inactive memory 3362 MiB"
+  },
+  {
+   "K": 100,
+   "round": 1,
+   "skipped": "free+inactive memory 3358 MiB"
+  }
+ ],
+ "violations": [],
+ "races": 20,
+ "skipped": [
+  {
+   "K": 100,
+   "round": 0,
+   "skipped": "free+inactive memory 3362 MiB"
+  },
+  {
+   "K": 100,
+   "round": 1,
+   "skipped": "free+inactive memory 3358 MiB"
+  }
+ ],
+ "seconds": 62.8
+}

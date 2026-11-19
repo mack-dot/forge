@@ -1,0 +1,1670 @@
+{
+ "read_from": "/Users/mackianni/forge/results/round4-m1-replay-20261118/phase3/results.json",
+ "claim": "A replay shows that recorded cases behave as recorded on this machine, nothing more. No M1 theorem is claimed.",
+ "end_to_end": false,
+ "case_run_seconds_used": 8704.5,
+ "events": [
+  {
+   "utc": "2026-11-19T04:28:56Z",
+   "event": "DRIVER START range 0-3 pid 73930"
+  },
+  {
+   "utc": "2026-11-19T04:30:38Z",
+   "event": "DRIVER END"
+  },
+  {
+   "utc": "2026-11-19T04:30:47Z",
+   "event": "DRIVER START range 0-157 pid 79903"
+  },
+  {
+   "utc": "2026-11-19T04:58:43Z",
+   "event": "WAIT before 032-m1-replay-closure-20261112-wrong-polarity-0002: power_ok=False memory_free=62 other_hol=0"
+  },
+  {
+   "utc": "2026-11-19T06:00:07Z",
+   "event": "WAIT before 087-m1-p3-prefix-20261113-statement-repeat: power_ok=False memory_free=58 other_hol=0"
+  },
+  {
+   "utc": "2026-11-19T06:19:24Z",
+   "event": "WAIT before 108-m1-compile-correct-20261114-control-repeat-0002: power_ok=False memory_free=46 other_hol=0"
+  },
+  {
+   "utc": "2026-11-19T06:58:15Z",
+   "event": "WAIT before 120-m1-reject-startup-20261115-sat-repeat: power_ok=False memory_free=55 other_hol=0"
+  },
+  {
+   "utc": "2026-11-19T07:28:19Z",
+   "event": "STOP: no mains power for 30 minutes"
+  },
+  {
+   "utc": "2026-11-19T07:28:20Z",
+   "event": "DRIVER END"
+  },
+  {
+   "utc": "2026-11-19T07:30:22Z",
+   "event": "DRIVER START range 120-157 pid 90164"
+  },
+  {
+   "utc": "2026-11-19T08:07:43Z",
+   "event": "DRIVER END"
+  },
+  {
+   "utc": "2026-11-19T08:07:43Z",
+   "event": "RERUN 005-initial-stack-code-local-20261112-duplicate-label: first run ended in Poly/ML Run out of store while it loaded parent theories (27 s, no control code reached); second run for information, the first run stays the counted one"
+  },
+  {
+   "utc": "2026-11-19T08:09:03Z",
+   "event": "RERUN 130-m1-memory-domain-20261115-dom-repeat: first run ended in Poly/ML Run out of store while it loaded parent theories (about 13 s, no proof code reached); second run by Night-Shift Orchestrator A for information, the first run stays the counted one"
+  },
+  {
+   "utc": "2026-11-19T08:10:03Z",
+   "event": "RERUN 142-m1-fficlose-compose-20261116-compose-repeat: first run ended in Poly/ML Run out of store while it loaded parent theories (about 13 s, no proof code reached); second run by Night-Shift Orchestrator A for information, the first run stays the counted one"
+  }
+ ],
+ "cases": {
+  "000-generic-read-local-20261112-import": {
+   "index": 0,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 14.4,
+   "start_utc": "2026-11-19T04:28:56Z",
+   "end_utc": "2026-11-19T04:29:10Z",
+   "child_max_rss_mib": 859
+  },
+  "001-generic-read-local-20261112-omitted-event": {
+   "index": 1,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 14.2,
+   "start_utc": "2026-11-19T04:29:10Z",
+   "end_utc": "2026-11-19T04:29:25Z",
+   "child_max_rss_mib": 1023
+  },
+  "002-generic-read-local-20261112-repeat": {
+   "index": 2,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 60.0,
+   "start_utc": "2026-11-19T04:29:25Z",
+   "end_utc": "2026-11-19T04:30:25Z",
+   "child_max_rss_mib": 2105
+  },
+  "003-generic-read-local-20261112-wrong-exception": {
+   "index": 3,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 13.2,
+   "start_utc": "2026-11-19T04:30:25Z",
+   "end_utc": "2026-11-19T04:30:38Z",
+   "child_max_rss_mib": 1079
+  },
+  "004-initial-stack-code-local-20261112-audit": {
+   "index": 4,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 70.1,
+   "start_utc": "2026-11-19T04:30:47Z",
+   "end_utc": "2026-11-19T04:31:57Z",
+   "child_max_rss_mib": 2297
+  },
+  "005-initial-stack-code-local-20261112-duplicate-label": {
+   "index": 5,
+   "verdict": "EXIT_EQUAL_REASON_DIFFERS",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 27.4,
+   "start_utc": "2026-11-19T04:31:57Z",
+   "end_utc": "2026-11-19T04:32:25Z",
+   "child_max_rss_mib": 1952,
+   "rerun": {
+    "verdict": "AS_RECORDED",
+    "actual_exit": 1,
+    "wall_seconds": 70.8,
+    "start_utc": "2026-11-19T08:07:43Z",
+    "end_utc": "2026-11-19T08:08:54Z",
+    "note": "first run ended in Poly/ML Run out of store while it loaded parent theories (27 s, no control code reached); second run for information, the first run stays the counted one"
+   }
+  },
+  "006-initial-stack-code-local-20261112-missing-memory": {
+   "index": 6,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 73.2,
+   "start_utc": "2026-11-19T04:32:25Z",
+   "end_utc": "2026-11-19T04:33:38Z",
+   "child_max_rss_mib": 2648
+  },
+  "007-initial-stack-code-local-20261112-repeat": {
+   "index": 7,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 78.0,
+   "start_utc": "2026-11-19T04:33:38Z",
+   "end_utc": "2026-11-19T04:34:56Z",
+   "child_max_rss_mib": 3354
+  },
+  "008-initial-stack-code-local-20261112-wrong-lowering": {
+   "index": 8,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 74.1,
+   "start_utc": "2026-11-19T04:34:56Z",
+   "end_utc": "2026-11-19T04:36:10Z",
+   "child_max_rss_mib": 2909
+  },
+  "009-arm8-compose-local-20261112-import": {
+   "index": 9,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T04:36:10Z",
+   "end_utc": "2026-11-19T04:36:15Z",
+   "child_max_rss_mib": 406
+  },
+  "010-arm8-compose-local-20261112-missing-separation": {
+   "index": 10,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T04:36:15Z",
+   "end_utc": "2026-11-19T04:36:20Z",
+   "child_max_rss_mib": 489
+  },
+  "011-arm8-compose-local-20261112-missing-separation-v2": {
+   "index": 11,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T04:36:20Z",
+   "end_utc": "2026-11-19T04:36:26Z",
+   "child_max_rss_mib": 578
+  },
+  "012-arm8-compose-local-20261112-repeat": {
+   "index": 12,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T04:36:26Z",
+   "end_utc": "2026-11-19T04:36:31Z",
+   "child_max_rss_mib": 488
+  },
+  "013-arm8-compose-local-20261112-untaken-branch": {
+   "index": 13,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T04:36:31Z",
+   "end_utc": "2026-11-19T04:36:36Z",
+   "child_max_rss_mib": 643
+  },
+  "014-arm8-compose-local-20261112-untaken-branch-v2": {
+   "index": 14,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T04:36:36Z",
+   "end_utc": "2026-11-19T04:36:41Z",
+   "child_max_rss_mib": 413
+  },
+  "015-arm8-compose-local-20261112-wrong-status": {
+   "index": 15,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T04:36:41Z",
+   "end_utc": "2026-11-19T04:36:46Z",
+   "child_max_rss_mib": 506
+  },
+  "016-initializer-machine-local-20261112-audit-0002": {
+   "index": 16,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 76.0,
+   "start_utc": "2026-11-19T04:36:46Z",
+   "end_utc": "2026-11-19T04:38:02Z",
+   "child_max_rss_mib": 3256
+  },
+  "017-initializer-machine-local-20261112-repeat": {
+   "index": 17,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 81.3,
+   "start_utc": "2026-11-19T04:38:02Z",
+   "end_utc": "2026-11-19T04:39:24Z",
+   "child_max_rss_mib": 3297
+  },
+  "018-m1-replay-closure-20261112-import": {
+   "index": 18,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 41.5,
+   "start_utc": "2026-11-19T04:39:24Z",
+   "end_utc": "2026-11-19T04:40:05Z",
+   "child_max_rss_mib": 1557
+  },
+  "019-m1-replay-closure-20261112-instance-missing-read-none": {
+   "index": 19,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 43.7,
+   "start_utc": "2026-11-19T04:40:05Z",
+   "end_utc": "2026-11-19T04:40:49Z",
+   "child_max_rss_mib": 1504
+  },
+  "020-m1-replay-closure-20261112-oracle-missing-read-none": {
+   "index": 20,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 43.7,
+   "start_utc": "2026-11-19T04:40:49Z",
+   "end_utc": "2026-11-19T04:41:33Z",
+   "child_max_rss_mib": 1492
+  },
+  "021-m1-replay-closure-20261112-oracle-repeat": {
+   "index": 21,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 45.6,
+   "start_utc": "2026-11-19T04:41:33Z",
+   "end_utc": "2026-11-19T04:42:18Z",
+   "child_max_rss_mib": 1452
+  },
+  "022-m1-replay-closure-20261112-repeat": {
+   "index": 22,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 45.6,
+   "start_utc": "2026-11-19T04:42:19Z",
+   "end_utc": "2026-11-19T04:43:04Z",
+   "child_max_rss_mib": 1503
+  },
+  "023-m1-replay-closure-20261112-wrong-exception": {
+   "index": 23,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 51.0,
+   "start_utc": "2026-11-19T04:43:04Z",
+   "end_utc": "2026-11-19T04:43:55Z",
+   "child_max_rss_mib": 1063
+  },
+  "024-m1-replay-closure-20261112-audit": {
+   "index": 24,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 84.2,
+   "start_utc": "2026-11-19T04:43:55Z",
+   "end_utc": "2026-11-19T04:45:20Z",
+   "child_max_rss_mib": 2396
+  },
+  "025-m1-replay-closure-20261112-missing-memory-statement": {
+   "index": 25,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 75.0,
+   "start_utc": "2026-11-19T04:45:20Z",
+   "end_utc": "2026-11-19T04:46:35Z",
+   "child_max_rss_mib": 2192
+  },
+  "026-m1-replay-closure-20261112-repeat": {
+   "index": 26,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 83.3,
+   "start_utc": "2026-11-19T04:46:35Z",
+   "end_utc": "2026-11-19T04:47:58Z",
+   "child_max_rss_mib": 2500
+  },
+  "027-m1-replay-closure-20261112-unaligned-domain": {
+   "index": 27,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 77.5,
+   "start_utc": "2026-11-19T04:47:58Z",
+   "end_utc": "2026-11-19T04:49:16Z",
+   "child_max_rss_mib": 2527
+  },
+  "028-m1-replay-closure-20261112-missing-memory": {
+   "index": 28,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": -24,
+   "actual_exit": -24,
+   "wall_seconds": 378.3,
+   "start_utc": "2026-11-19T04:49:16Z",
+   "end_utc": "2026-11-19T04:55:34Z",
+   "child_max_rss_mib": 3997
+  },
+  "029-m1-replay-closure-20261112-missing-memory-statement": {
+   "index": 29,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 75.9,
+   "start_utc": "2026-11-19T04:55:34Z",
+   "end_utc": "2026-11-19T04:56:50Z",
+   "child_max_rss_mib": 3896
+  },
+  "030-m1-replay-closure-20261112-no-machine-config": {
+   "index": 30,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 97.5,
+   "start_utc": "2026-11-19T04:56:50Z",
+   "end_utc": "2026-11-19T04:58:27Z",
+   "child_max_rss_mib": 3347
+  },
+  "031-m1-replay-closure-20261112-import-0002": {
+   "index": 31,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 15.2,
+   "start_utc": "2026-11-19T04:58:28Z",
+   "end_utc": "2026-11-19T04:58:43Z",
+   "child_max_rss_mib": 1328
+  },
+  "032-m1-replay-closure-20261112-wrong-polarity-0002": {
+   "index": 32,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 17.3,
+   "start_utc": "2026-11-19T05:17:46Z",
+   "end_utc": "2026-11-19T05:18:03Z",
+   "child_max_rss_mib": 1148
+  },
+  "033-m1-installed-closure-20261112-audit": {
+   "index": 33,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 82.6,
+   "start_utc": "2026-11-19T05:18:03Z",
+   "end_utc": "2026-11-19T05:19:26Z",
+   "child_max_rss_mib": 2096
+  },
+  "034-m1-installed-closure-20261112-missing-installed": {
+   "index": 34,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 88.8,
+   "start_utc": "2026-11-19T05:19:26Z",
+   "end_utc": "2026-11-19T05:20:54Z",
+   "child_max_rss_mib": 2473
+  },
+  "035-m1-installed-closure-20261112-other-bitmaps": {
+   "index": 35,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 83.8,
+   "start_utc": "2026-11-19T05:20:54Z",
+   "end_utc": "2026-11-19T05:22:18Z",
+   "child_max_rss_mib": 2924
+  },
+  "036-m1-installed-closure-20261112-repeat": {
+   "index": 36,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 89.5,
+   "start_utc": "2026-11-19T05:22:18Z",
+   "end_utc": "2026-11-19T05:23:48Z",
+   "child_max_rss_mib": 3061
+  },
+  "037-m1-installed-closure-20261112-import": {
+   "index": 37,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 6.1,
+   "start_utc": "2026-11-19T05:23:48Z",
+   "end_utc": "2026-11-19T05:23:54Z",
+   "child_max_rss_mib": 365
+  },
+  "038-m1-installed-closure-20261112-repeat": {
+   "index": 38,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T05:23:54Z",
+   "end_utc": "2026-11-19T05:23:59Z",
+   "child_max_rss_mib": 602
+  },
+  "039-m1-installed-closure-20261112-wrong-target": {
+   "index": 39,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 6.1,
+   "start_utc": "2026-11-19T05:23:59Z",
+   "end_utc": "2026-11-19T05:24:05Z",
+   "child_max_rss_mib": 439
+  },
+  "040-m1-exclusion-profile-20261113-import": {
+   "index": 40,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 20.3,
+   "start_utc": "2026-11-19T05:24:05Z",
+   "end_utc": "2026-11-19T05:24:26Z",
+   "child_max_rss_mib": 1391
+  },
+  "041-m1-exclusion-profile-20261113-missing-exclusion": {
+   "index": 41,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 20.3,
+   "start_utc": "2026-11-19T05:24:26Z",
+   "end_utc": "2026-11-19T05:24:46Z",
+   "child_max_rss_mib": 1309
+  },
+  "042-m1-exclusion-profile-20261113-repeat": {
+   "index": 42,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 25.4,
+   "start_utc": "2026-11-19T05:24:46Z",
+   "end_utc": "2026-11-19T05:25:11Z",
+   "child_max_rss_mib": 1905
+  },
+  "043-m1-exclusion-profile-20261113-search-install-pc": {
+   "index": 43,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 18.2,
+   "start_utc": "2026-11-19T05:25:12Z",
+   "end_utc": "2026-11-19T05:25:30Z",
+   "child_max_rss_mib": 1459
+  },
+  "044-m1-exclusion-profile-20261113-wrong-return-register": {
+   "index": 44,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": -24,
+   "actual_exit": -24,
+   "wall_seconds": 596.7,
+   "start_utc": "2026-11-19T05:25:30Z",
+   "end_utc": "2026-11-19T05:35:27Z",
+   "child_max_rss_mib": 1561
+  },
+  "045-m1-exclusion-profile-20261113-wrong-return-register-v2": {
+   "index": 45,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 22.3,
+   "start_utc": "2026-11-19T05:35:27Z",
+   "end_utc": "2026-11-19T05:35:49Z",
+   "child_max_rss_mib": 1514
+  },
+  "046-m1-n1-reachability-20261113-import": {
+   "index": 46,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 43.5,
+   "start_utc": "2026-11-19T05:35:49Z",
+   "end_utc": "2026-11-19T05:36:33Z",
+   "child_max_rss_mib": 2711
+  },
+  "047-m1-n1-reachability-20261113-import_import.sml": {
+   "index": 47,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 1.1,
+   "start_utc": "2026-11-19T05:36:33Z",
+   "end_utc": "2026-11-19T05:36:34Z",
+   "child_max_rss_mib": 269
+  },
+  "048-m1-n1-reachability-20261113-naive-closure": {
+   "index": 48,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 41.5,
+   "start_utc": "2026-11-19T05:36:34Z",
+   "end_utc": "2026-11-19T05:37:15Z",
+   "child_max_rss_mib": 2730
+  },
+  "049-m1-n1-reachability-20261113-naive-closure_naive-closure.sml": {
+   "index": 49,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 1.1,
+   "start_utc": "2026-11-19T05:37:15Z",
+   "end_utc": "2026-11-19T05:37:16Z",
+   "child_max_rss_mib": 266
+  },
+  "050-m1-n1-reachability-20261113-naive-statement": {
+   "index": 50,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 38.5,
+   "start_utc": "2026-11-19T05:37:16Z",
+   "end_utc": "2026-11-19T05:37:55Z",
+   "child_max_rss_mib": 2119
+  },
+  "051-m1-n1-reachability-20261113-naive-statement_naive-statement.sml": {
+   "index": 51,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 1.1,
+   "start_utc": "2026-11-19T05:37:55Z",
+   "end_utc": "2026-11-19T05:37:56Z",
+   "child_max_rss_mib": 266
+  },
+  "052-m1-n1-reachability-20261113-repeat": {
+   "index": 52,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 60.7,
+   "start_utc": "2026-11-19T05:37:56Z",
+   "end_utc": "2026-11-19T05:38:57Z",
+   "child_max_rss_mib": 2965
+  },
+  "053-m1-p1-lab-closure-20261113-import": {
+   "index": 53,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 31.4,
+   "start_utc": "2026-11-19T05:38:57Z",
+   "end_utc": "2026-11-19T05:39:28Z",
+   "child_max_rss_mib": 2279
+  },
+  "054-m1-p1-lab-closure-20261113-naive-closure": {
+   "index": 54,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 40.6,
+   "start_utc": "2026-11-19T05:39:28Z",
+   "end_utc": "2026-11-19T05:40:09Z",
+   "child_max_rss_mib": 2689
+  },
+  "055-m1-p1-lab-closure-20261113-naive-statement": {
+   "index": 55,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 32.6,
+   "start_utc": "2026-11-19T05:40:09Z",
+   "end_utc": "2026-11-19T05:40:42Z",
+   "child_max_rss_mib": 2189
+  },
+  "056-m1-p1-lab-closure-20261113-repeat": {
+   "index": 56,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 121.6,
+   "start_utc": "2026-11-19T05:40:42Z",
+   "end_utc": "2026-11-19T05:42:43Z",
+   "child_max_rss_mib": 3114
+  },
+  "057-m1-p1-lab-closure-20261113-resolve-import": {
+   "index": 57,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 30.4,
+   "start_utc": "2026-11-19T05:42:43Z",
+   "end_utc": "2026-11-19T05:43:14Z",
+   "child_max_rss_mib": 2364
+  },
+  "058-m1-p1-lab-closure-20261113-resolve-naive": {
+   "index": 58,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 91.5,
+   "start_utc": "2026-11-19T05:43:14Z",
+   "end_utc": "2026-11-19T05:44:45Z",
+   "child_max_rss_mib": 2431
+  },
+  "059-m1-p1-lab-closure-20261113-resolve-repeat": {
+   "index": 59,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 128.5,
+   "start_utc": "2026-11-19T05:44:45Z",
+   "end_utc": "2026-11-19T05:46:54Z",
+   "child_max_rss_mib": 2777
+  },
+  "060-m1-p1-lab-closure-20261113-lemmas-import": {
+   "index": 60,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:46:54Z",
+   "end_utc": "2026-11-19T05:46:58Z",
+   "child_max_rss_mib": 386
+  },
+  "061-m1-p1-lab-closure-20261113-lemmas-missing-premise": {
+   "index": 61,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:46:58Z",
+   "end_utc": "2026-11-19T05:47:02Z",
+   "child_max_rss_mib": 376
+  },
+  "062-m1-p1-lab-closure-20261113-lemmas-repeat": {
+   "index": 62,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 11.2,
+   "start_utc": "2026-11-19T05:47:02Z",
+   "end_utc": "2026-11-19T05:47:14Z",
+   "child_max_rss_mib": 909
+  },
+  "063-m1-p2-lab-invariant-20261113-init-import": {
+   "index": 63,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 55.4,
+   "start_utc": "2026-11-19T05:47:14Z",
+   "end_utc": "2026-11-19T05:48:09Z",
+   "child_max_rss_mib": 2103
+  },
+  "064-m1-p2-lab-invariant-20261113-init-repeat": {
+   "index": 64,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 48.0,
+   "start_utc": "2026-11-19T05:48:09Z",
+   "end_utc": "2026-11-19T05:48:57Z",
+   "child_max_rss_mib": 1922
+  },
+  "065-m1-p2-lab-invariant-20261113-run-import": {
+   "index": 65,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 30.4,
+   "start_utc": "2026-11-19T05:48:57Z",
+   "end_utc": "2026-11-19T05:49:28Z",
+   "child_max_rss_mib": 2818
+  },
+  "066-m1-p2-lab-invariant-20261113-run-missing-premise": {
+   "index": 66,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 29.5,
+   "start_utc": "2026-11-19T05:49:28Z",
+   "end_utc": "2026-11-19T05:49:57Z",
+   "child_max_rss_mib": 2684
+  },
+  "067-m1-p2-lab-invariant-20261113-run-naive": {
+   "index": 67,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 209.3,
+   "start_utc": "2026-11-19T05:49:57Z",
+   "end_utc": "2026-11-19T05:53:27Z",
+   "child_max_rss_mib": 2481
+  },
+  "068-m1-p2-lab-invariant-20261113-run-repeat": {
+   "index": 68,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 206.3,
+   "start_utc": "2026-11-19T05:53:27Z",
+   "end_utc": "2026-11-19T05:56:53Z",
+   "child_max_rss_mib": 2704
+  },
+  "069-m1-p2-lab-invariant-20261113-step-import-0002": {
+   "index": 69,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:56:53Z",
+   "end_utc": "2026-11-19T05:56:57Z",
+   "child_max_rss_mib": 380
+  },
+  "070-m1-p2-lab-invariant-20261113-step-missing-hyp": {
+   "index": 70,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:56:57Z",
+   "end_utc": "2026-11-19T05:57:01Z",
+   "child_max_rss_mib": 360
+  },
+  "071-m1-p2-lab-invariant-20261113-step-refute-weakened": {
+   "index": 71,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:57:01Z",
+   "end_utc": "2026-11-19T05:57:05Z",
+   "child_max_rss_mib": 458
+  },
+  "072-m1-p2-lab-invariant-20261113-step-refute-weakened-v2": {
+   "index": 72,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:57:05Z",
+   "end_utc": "2026-11-19T05:57:10Z",
+   "child_max_rss_mib": 466
+  },
+  "073-m1-p2-lab-invariant-20261113-step-refute-weakened-v3": {
+   "index": 73,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:57:10Z",
+   "end_utc": "2026-11-19T05:57:14Z",
+   "child_max_rss_mib": 388
+  },
+  "074-m1-p2-lab-invariant-20261113-step-repeat-0002": {
+   "index": 74,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 11.2,
+   "start_utc": "2026-11-19T05:57:14Z",
+   "end_utc": "2026-11-19T05:57:25Z",
+   "child_max_rss_mib": 1237
+  },
+  "075-m1-p2-lab-invariant-20261113-walk-import": {
+   "index": 75,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:57:25Z",
+   "end_utc": "2026-11-19T05:57:29Z",
+   "child_max_rss_mib": 371
+  },
+  "076-m1-p2-lab-invariant-20261113-walk-repeat": {
+   "index": 76,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 7.1,
+   "start_utc": "2026-11-19T05:57:29Z",
+   "end_utc": "2026-11-19T05:57:36Z",
+   "child_max_rss_mib": 984
+  },
+  "077-m1-lab-exclusion-20261113-aligned-import": {
+   "index": 77,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:57:36Z",
+   "end_utc": "2026-11-19T05:57:40Z",
+   "child_max_rss_mib": 481
+  },
+  "078-m1-lab-exclusion-20261113-aligned-missing-coverage": {
+   "index": 78,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:57:40Z",
+   "end_utc": "2026-11-19T05:57:45Z",
+   "child_max_rss_mib": 442
+  },
+  "079-m1-lab-exclusion-20261113-aligned-repeat": {
+   "index": 79,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 18.2,
+   "start_utc": "2026-11-19T05:57:45Z",
+   "end_utc": "2026-11-19T05:58:03Z",
+   "child_max_rss_mib": 2390
+  },
+  "080-m1-lab-exclusion-20261113-excl-import": {
+   "index": 80,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 29.4,
+   "start_utc": "2026-11-19T05:58:03Z",
+   "end_utc": "2026-11-19T05:58:32Z",
+   "child_max_rss_mib": 2886
+  },
+  "081-m1-lab-exclusion-20261113-excl-missing-init": {
+   "index": 81,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 35.5,
+   "start_utc": "2026-11-19T05:58:32Z",
+   "end_utc": "2026-11-19T05:59:08Z",
+   "child_max_rss_mib": 2530
+  },
+  "082-m1-lab-exclusion-20261113-excl-repeat": {
+   "index": 82,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 42.8,
+   "start_utc": "2026-11-19T05:59:08Z",
+   "end_utc": "2026-11-19T05:59:51Z",
+   "child_max_rss_mib": 2353
+  },
+  "083-m1-p3-prefix-20261113-prefix-import": {
+   "index": 83,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 3.1,
+   "start_utc": "2026-11-19T05:59:51Z",
+   "end_utc": "2026-11-19T05:59:54Z",
+   "child_max_rss_mib": 357
+  },
+  "084-m1-p3-prefix-20261113-prefix-invalid-layout": {
+   "index": 84,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:59:54Z",
+   "end_utc": "2026-11-19T05:59:58Z",
+   "child_max_rss_mib": 349
+  },
+  "085-m1-p3-prefix-20261113-prefix-missing-first": {
+   "index": 85,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T05:59:58Z",
+   "end_utc": "2026-11-19T06:00:02Z",
+   "child_max_rss_mib": 353
+  },
+  "086-m1-p3-prefix-20261113-prefix-repeat": {
+   "index": 86,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T06:00:02Z",
+   "end_utc": "2026-11-19T06:00:07Z",
+   "child_max_rss_mib": 464
+  },
+  "087-m1-p3-prefix-20261113-statement-repeat": {
+   "index": 87,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 40.6,
+   "start_utc": "2026-11-19T06:03:08Z",
+   "end_utc": "2026-11-19T06:03:48Z",
+   "child_max_rss_mib": 2938
+  },
+  "088-m1-p3-zero-case-20261113-zero-import": {
+   "index": 88,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T06:03:48Z",
+   "end_utc": "2026-11-19T06:03:53Z",
+   "child_max_rss_mib": 523
+  },
+  "089-m1-p3-zero-case-20261113-zero-repeat-0002": {
+   "index": 89,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T06:03:53Z",
+   "end_utc": "2026-11-19T06:03:58Z",
+   "child_max_rss_mib": 573
+  },
+  "090-m1-p3-layout-20261113-layout-import": {
+   "index": 90,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T06:03:58Z",
+   "end_utc": "2026-11-19T06:04:02Z",
+   "child_max_rss_mib": 521
+  },
+  "091-m1-p3-layout-20261113-layout-repeat": {
+   "index": 91,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T06:04:02Z",
+   "end_utc": "2026-11-19T06:04:07Z",
+   "child_max_rss_mib": 501
+  },
+  "092-m1-p3-root-20261113-root-import": {
+   "index": 92,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T06:04:07Z",
+   "end_utc": "2026-11-19T06:04:11Z",
+   "child_max_rss_mib": 460
+  },
+  "093-m1-p3-root-20261113-root-repeat": {
+   "index": 93,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 12.2,
+   "start_utc": "2026-11-19T06:04:11Z",
+   "end_utc": "2026-11-19T06:04:23Z",
+   "child_max_rss_mib": 1285
+  },
+  "094-m1-p3-replay-20261113-base-0003": {
+   "index": 94,
+   "verdict": "NOT_RUN_NO_SOURCE",
+   "recorded_exit": 1,
+   "actual_exit": null,
+   "wall_seconds": null,
+   "start_utc": null,
+   "end_utc": null,
+   "child_max_rss_mib": null
+  },
+  "095-m1-p3-replay-20261113-final-import-0002": {
+   "index": 95,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 4.1,
+   "start_utc": "2026-11-19T06:04:24Z",
+   "end_utc": "2026-11-19T06:04:28Z",
+   "child_max_rss_mib": 462
+  },
+  "096-m1-p3-replay-20261113-final-repeat": {
+   "index": 96,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 100.7,
+   "start_utc": "2026-11-19T06:04:28Z",
+   "end_utc": "2026-11-19T06:06:08Z",
+   "child_max_rss_mib": 2553
+  },
+  "097-m1-p3-replay-20261113-quick-0001": {
+   "index": 97,
+   "verdict": "NOT_RUN_NO_SOURCE",
+   "recorded_exit": 0,
+   "actual_exit": null,
+   "wall_seconds": null,
+   "start_utc": null,
+   "end_utc": null,
+   "child_max_rss_mib": null
+  },
+  "098-m1-p3-replay-20261113-replay-0026": {
+   "index": 98,
+   "verdict": "NOT_RUN_NO_SOURCE",
+   "recorded_exit": 0,
+   "actual_exit": null,
+   "wall_seconds": null,
+   "start_utc": null,
+   "end_utc": null,
+   "child_max_rss_mib": null
+  },
+  "099-m1-exact-exclusion-20261114-chain-repeat": {
+   "index": 99,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 55.7,
+   "start_utc": "2026-11-19T06:06:08Z",
+   "end_utc": "2026-11-19T06:07:04Z",
+   "child_max_rss_mib": 2335
+  },
+  "100-m1-exact-exclusion-20261114-exact-import-0002": {
+   "index": 100,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 36.5,
+   "start_utc": "2026-11-19T06:07:04Z",
+   "end_utc": "2026-11-19T06:07:41Z",
+   "child_max_rss_mib": 2350
+  },
+  "101-m1-exact-exclusion-20261114-exact-repeat": {
+   "index": 101,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 49.6,
+   "start_utc": "2026-11-19T06:07:41Z",
+   "end_utc": "2026-11-19T06:08:31Z",
+   "child_max_rss_mib": 2778
+  },
+  "102-m1-exact-exclusion-20261114-filtered-repeat": {
+   "index": 102,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 264.9,
+   "start_utc": "2026-11-19T06:08:31Z",
+   "end_utc": "2026-11-19T06:12:56Z",
+   "child_max_rss_mib": 2614
+  },
+  "103-m1-exact-exclusion-20261114-final-repeat": {
+   "index": 103,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 44.7,
+   "start_utc": "2026-11-19T06:12:56Z",
+   "end_utc": "2026-11-19T06:13:40Z",
+   "child_max_rss_mib": 2081
+  },
+  "104-m1-exact-exclusion-20261114-handler-repeat": {
+   "index": 104,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 80.6,
+   "start_utc": "2026-11-19T06:13:40Z",
+   "end_utc": "2026-11-19T06:15:01Z",
+   "child_max_rss_mib": 2303
+  },
+  "105-m1-compile-facts-20261114-arm8-repeat": {
+   "index": 105,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 69.3,
+   "start_utc": "2026-11-19T06:15:01Z",
+   "end_utc": "2026-11-19T06:16:10Z",
+   "child_max_rss_mib": 2466
+  },
+  "106-m1-compile-facts-20261114-facts-import-0002": {
+   "index": 106,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 56.0,
+   "start_utc": "2026-11-19T06:16:11Z",
+   "end_utc": "2026-11-19T06:17:07Z",
+   "child_max_rss_mib": 2285
+  },
+  "107-m1-compile-facts-20261114-facts-repeat": {
+   "index": 107,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 137.5,
+   "start_utc": "2026-11-19T06:17:07Z",
+   "end_utc": "2026-11-19T06:19:24Z",
+   "child_max_rss_mib": 2864
+  },
+  "108-m1-compile-correct-20261114-control-repeat-0002": {
+   "index": 108,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 139.9,
+   "start_utc": "2026-11-19T06:41:58Z",
+   "end_utc": "2026-11-19T06:44:17Z",
+   "child_max_rss_mib": 2856
+  },
+  "109-m1-compile-correct-20261114-import-0004": {
+   "index": 109,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 52.8,
+   "start_utc": "2026-11-19T06:44:18Z",
+   "end_utc": "2026-11-19T06:45:10Z",
+   "child_max_rss_mib": 2602
+  },
+  "110-m1-compile-correct-20261114-real-repeat": {
+   "index": 110,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 60.8,
+   "start_utc": "2026-11-19T06:45:10Z",
+   "end_utc": "2026-11-19T06:46:11Z",
+   "child_max_rss_mib": 3168
+  },
+  "111-m1-compile-correct-20261114-source-repeat": {
+   "index": 111,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 58.7,
+   "start_utc": "2026-11-19T06:46:11Z",
+   "end_utc": "2026-11-19T06:47:10Z",
+   "child_max_rss_mib": 2739
+  },
+  "112-m1-compile-correct-20261114-variant-repeat": {
+   "index": 112,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 198.9,
+   "start_utc": "2026-11-19T06:47:10Z",
+   "end_utc": "2026-11-19T06:50:29Z",
+   "child_max_rss_mib": 3005
+  },
+  "113-m1-source-nonfail-20261115-import-0001": {
+   "index": 113,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 55.8,
+   "start_utc": "2026-11-19T06:50:29Z",
+   "end_utc": "2026-11-19T06:51:25Z",
+   "child_max_rss_mib": 2749
+  },
+  "114-m1-source-nonfail-20261115-nonfail-repeat": {
+   "index": 114,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 66.2,
+   "start_utc": "2026-11-19T06:51:25Z",
+   "end_utc": "2026-11-19T06:52:31Z",
+   "child_max_rss_mib": 2138
+  },
+  "115-m1-source-nonfail-20261115-startup-repeat": {
+   "index": 115,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 66.1,
+   "start_utc": "2026-11-19T06:52:31Z",
+   "end_utc": "2026-11-19T06:53:37Z",
+   "child_max_rss_mib": 2279
+  },
+  "116-m1-reject-startup-20261115-import-0001": {
+   "index": 116,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 59.8,
+   "start_utc": "2026-11-19T06:53:37Z",
+   "end_utc": "2026-11-19T06:54:37Z",
+   "child_max_rss_mib": 2282
+  },
+  "117-m1-reject-startup-20261115-mc-repeat": {
+   "index": 117,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 71.5,
+   "start_utc": "2026-11-19T06:54:37Z",
+   "end_utc": "2026-11-19T06:55:49Z",
+   "child_max_rss_mib": 2368
+  },
+  "118-m1-reject-startup-20261115-reject-repeat": {
+   "index": 118,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 130.6,
+   "start_utc": "2026-11-19T06:55:49Z",
+   "end_utc": "2026-11-19T06:58:00Z",
+   "child_max_rss_mib": 2683
+  },
+  "119-m1-reject-startup-20261115-cml-repeat": {
+   "index": 119,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 15.5,
+   "start_utc": "2026-11-19T06:58:00Z",
+   "end_utc": "2026-11-19T06:58:15Z",
+   "child_max_rss_mib": 762
+  },
+  "120-m1-reject-startup-20261115-sat-repeat": {
+   "index": 120,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 7.1,
+   "start_utc": "2026-11-19T07:30:22Z",
+   "end_utc": "2026-11-19T07:30:29Z",
+   "child_max_rss_mib": 464
+  },
+  "121-m1-reject-startup-20261115-steps-0001": {
+   "index": 121,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 6.1,
+   "start_utc": "2026-11-19T07:30:29Z",
+   "end_utc": "2026-11-19T07:30:35Z",
+   "child_max_rss_mib": 385
+  },
+  "122-m1-loader-memory-20261115-compose-repeat": {
+   "index": 122,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 73.1,
+   "start_utc": "2026-11-19T07:30:35Z",
+   "end_utc": "2026-11-19T07:31:49Z",
+   "child_max_rss_mib": 2969
+  },
+  "123-m1-loader-memory-20261115-entrysat-repeat": {
+   "index": 123,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 68.3,
+   "start_utc": "2026-11-19T07:31:49Z",
+   "end_utc": "2026-11-19T07:32:57Z",
+   "child_max_rss_mib": 2518
+  },
+  "124-m1-loader-memory-20261115-frame-repeat": {
+   "index": 124,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 14.2,
+   "start_utc": "2026-11-19T07:32:57Z",
+   "end_utc": "2026-11-19T07:33:11Z",
+   "child_max_rss_mib": 452
+  },
+  "125-m1-loader-memory-20261115-image-repeat": {
+   "index": 125,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 255.6,
+   "start_utc": "2026-11-19T07:33:11Z",
+   "end_utc": "2026-11-19T07:37:27Z",
+   "child_max_rss_mib": 5340
+  },
+  "126-m1-loader-memory-20261115-import-0002": {
+   "index": 126,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 47.7,
+   "start_utc": "2026-11-19T07:37:27Z",
+   "end_utc": "2026-11-19T07:38:15Z",
+   "child_max_rss_mib": 4469
+  },
+  "127-m1-loader-memory-20261115-lemmas-repeat": {
+   "index": 127,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 55.7,
+   "start_utc": "2026-11-19T07:38:15Z",
+   "end_utc": "2026-11-19T07:39:10Z",
+   "child_max_rss_mib": 2979
+  },
+  "128-m1-loader-memory-20261115-loader-0003": {
+   "index": 128,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 1,
+   "actual_exit": 1,
+   "wall_seconds": 231.4,
+   "start_utc": "2026-11-19T07:39:11Z",
+   "end_utc": "2026-11-19T07:43:02Z",
+   "child_max_rss_mib": 5038
+  },
+  "129-m1-memory-domain-20261115-asm-repeat": {
+   "index": 129,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 55.6,
+   "start_utc": "2026-11-19T07:43:02Z",
+   "end_utc": "2026-11-19T07:43:58Z",
+   "child_max_rss_mib": 4881
+  },
+  "130-m1-memory-domain-20261115-dom-repeat": {
+   "index": 130,
+   "verdict": "EXIT_DIFFERS",
+   "recorded_exit": 0,
+   "actual_exit": 1,
+   "wall_seconds": 13.2,
+   "start_utc": "2026-11-19T07:43:58Z",
+   "end_utc": "2026-11-19T07:44:11Z",
+   "child_max_rss_mib": 1449,
+   "rerun": {
+    "verdict": "AS_RECORDED",
+    "actual_exit": 0,
+    "wall_seconds": 59.7,
+    "start_utc": "2026-11-19T08:09:03Z",
+    "end_utc": "2026-11-19T08:10:02Z",
+    "note": "first run ended in Poly/ML Run out of store while it loaded parent theories (about 13 s, no proof code reached); second run by Night-Shift Orchestrator A for information, the first run stays the counted one"
+   }
+  },
+  "131-m1-memory-domain-20261115-import-0003": {
+   "index": 131,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 54.7,
+   "start_utc": "2026-11-19T07:44:11Z",
+   "end_utc": "2026-11-19T07:45:06Z",
+   "child_max_rss_mib": 3815
+  },
+  "132-m1-residual-20261115-ffi-repeat": {
+   "index": 132,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 77.0,
+   "start_utc": "2026-11-19T07:45:06Z",
+   "end_utc": "2026-11-19T07:46:23Z",
+   "child_max_rss_mib": 4068
+  },
+  "133-m1-residual-20261115-import-0001": {
+   "index": 133,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 61.9,
+   "start_utc": "2026-11-19T07:46:23Z",
+   "end_utc": "2026-11-19T07:47:25Z",
+   "child_max_rss_mib": 2944
+  },
+  "134-m1-residual-20261115-res-repeat": {
+   "index": 134,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 84.2,
+   "start_utc": "2026-11-19T07:47:25Z",
+   "end_utc": "2026-11-19T07:48:49Z",
+   "child_max_rss_mib": 3294
+  },
+  "135-m1-env-model-20261116-env-repeat": {
+   "index": 135,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 95.3,
+   "start_utc": "2026-11-19T07:48:49Z",
+   "end_utc": "2026-11-19T07:50:25Z",
+   "child_max_rss_mib": 3731
+  },
+  "136-m1-env-model-20261116-import-0001": {
+   "index": 136,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 58.9,
+   "start_utc": "2026-11-19T07:50:25Z",
+   "end_utc": "2026-11-19T07:51:24Z",
+   "child_max_rss_mib": 2949
+  },
+  "137-m1-fficlose-stub-20261116-bridge-repeat": {
+   "index": 137,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 99.2,
+   "start_utc": "2026-11-19T07:51:24Z",
+   "end_utc": "2026-11-19T07:53:03Z",
+   "child_max_rss_mib": 3273
+  },
+  "138-m1-fficlose-stub-20261116-ffic-repeat": {
+   "index": 138,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 12.2,
+   "start_utc": "2026-11-19T07:53:03Z",
+   "end_utc": "2026-11-19T07:53:15Z",
+   "child_max_rss_mib": 336
+  },
+  "139-m1-fficlose-stub-20261116-import-0001": {
+   "index": 139,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 66.1,
+   "start_utc": "2026-11-19T07:53:15Z",
+   "end_utc": "2026-11-19T07:54:21Z",
+   "child_max_rss_mib": 3031
+  },
+  "140-m1-fficlose-stub-20261116-steps-0001": {
+   "index": 140,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 7.1,
+   "start_utc": "2026-11-19T07:54:22Z",
+   "end_utc": "2026-11-19T07:54:29Z",
+   "child_max_rss_mib": 623
+  },
+  "141-m1-fficlose-compose-20261116-assert-repeat": {
+   "index": 141,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 9.2,
+   "start_utc": "2026-11-19T07:54:29Z",
+   "end_utc": "2026-11-19T07:54:38Z",
+   "child_max_rss_mib": 411
+  },
+  "142-m1-fficlose-compose-20261116-compose-repeat": {
+   "index": 142,
+   "verdict": "EXIT_DIFFERS",
+   "recorded_exit": 0,
+   "actual_exit": 1,
+   "wall_seconds": 13.3,
+   "start_utc": "2026-11-19T07:54:38Z",
+   "end_utc": "2026-11-19T07:54:51Z",
+   "child_max_rss_mib": 788,
+   "rerun": {
+    "verdict": "AS_RECORDED",
+    "actual_exit": 0,
+    "wall_seconds": 70.8,
+    "start_utc": "2026-11-19T08:10:03Z",
+    "end_utc": "2026-11-19T08:11:13Z",
+    "note": "first run ended in Poly/ML Run out of store while it loaded parent theories (about 13 s, no proof code reached); second run by Night-Shift Orchestrator A for information, the first run stays the counted one"
+   }
+  },
+  "143-m1-fficlose-compose-20261116-import-0001": {
+   "index": 143,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 70.5,
+   "start_utc": "2026-11-19T07:54:51Z",
+   "end_utc": "2026-11-19T07:56:02Z",
+   "child_max_rss_mib": 2468
+  },
+  "144-m1-callsite-20261116-import-0001": {
+   "index": 144,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 74.4,
+   "start_utc": "2026-11-19T07:56:02Z",
+   "end_utc": "2026-11-19T07:57:16Z",
+   "child_max_rss_mib": 2442
+  },
+  "145-m1-callsite-20261116-site-repeat": {
+   "index": 145,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 81.4,
+   "start_utc": "2026-11-19T07:57:16Z",
+   "end_utc": "2026-11-19T07:58:38Z",
+   "child_max_rss_mib": 2439
+  },
+  "146-m1-signed-len-20261116-import-0002": {
+   "index": 146,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 73.7,
+   "start_utc": "2026-11-19T07:58:38Z",
+   "end_utc": "2026-11-19T07:59:52Z",
+   "child_max_rss_mib": 2715
+  },
+  "147-m1-signed-len-20261116-signed-repeat": {
+   "index": 147,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 78.8,
+   "start_utc": "2026-11-19T07:59:52Z",
+   "end_utc": "2026-11-19T08:01:10Z",
+   "child_max_rss_mib": 3073
+  },
+  "148-m1-ffiwrite-20261116-dbg-0001": {
+   "index": 148,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T08:01:11Z",
+   "end_utc": "2026-11-19T08:01:16Z",
+   "child_max_rss_mib": 511
+  },
+  "149-m1-ffiwrite-20261116-ffiw-0008r": {
+   "index": 149,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 24.4,
+   "start_utc": "2026-11-19T08:01:16Z",
+   "end_utc": "2026-11-19T08:01:40Z",
+   "child_max_rss_mib": 980
+  },
+  "150-m1-ffiwrite-20261116-import-0001": {
+   "index": 150,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 74.2,
+   "start_utc": "2026-11-19T08:01:40Z",
+   "end_utc": "2026-11-19T08:02:54Z",
+   "child_max_rss_mib": 2876
+  },
+  "151-m1-ffiwrite-20261116-steps-0001": {
+   "index": 151,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 6.1,
+   "start_utc": "2026-11-19T08:02:55Z",
+   "end_utc": "2026-11-19T08:03:01Z",
+   "child_max_rss_mib": 419
+  },
+  "152-m1-ffiwrite-success-20261116-dbg-0003": {
+   "index": 152,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 5.1,
+   "start_utc": "2026-11-19T08:03:01Z",
+   "end_utc": "2026-11-19T08:03:06Z",
+   "child_max_rss_mib": 407
+  },
+  "153-m1-ffiwrite-success-20261116-import-0001": {
+   "index": 153,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 69.0,
+   "start_utc": "2026-11-19T08:03:06Z",
+   "end_utc": "2026-11-19T08:04:15Z",
+   "child_max_rss_mib": 2946
+  },
+  "154-m1-ffiwrite-success-20261116-uns-0007r": {
+   "index": 154,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 7.1,
+   "start_utc": "2026-11-19T08:04:15Z",
+   "end_utc": "2026-11-19T08:04:22Z",
+   "child_max_rss_mib": 559
+  },
+  "155-m1-slide-s3-20261117-imp-0002": {
+   "index": 155,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 86.6,
+   "start_utc": "2026-11-19T08:04:22Z",
+   "end_utc": "2026-11-19T08:05:49Z",
+   "child_max_rss_mib": 3645
+  },
+  "156-m1-slide-s3-20261117-s1-repeat": {
+   "index": 156,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 23.3,
+   "start_utc": "2026-11-19T08:05:49Z",
+   "end_utc": "2026-11-19T08:06:12Z",
+   "child_max_rss_mib": 916
+  },
+  "157-m1-slide-s3-20261117-s2-repeat": {
+   "index": 157,
+   "verdict": "AS_RECORDED",
+   "recorded_exit": 0,
+   "actual_exit": 0,
+   "wall_seconds": 91.0,
+   "start_utc": "2026-11-19T08:06:12Z",
+   "end_utc": "2026-11-19T08:07:43Z",
+   "child_max_rss_mib": 4191
+  }
+ }
+}

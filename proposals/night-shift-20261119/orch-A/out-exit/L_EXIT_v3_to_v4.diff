@@ -1,0 +1,41 @@
+--- L_EXIT_v3.sml	2026-11-19 03:09:25.538293926 -0500
++++ L_EXIT_v4.sml	2026-11-19 03:56:13.796990411 -0500
+@@ -1,4 +1,6 @@
+-(* L-EXIT-0 and the halt instance, v3 (worker A3, Night-Shift Orchestrator A). DRAFT: NOT RUN. No HOL process
++(* L-EXIT-0 v4 (A3): v3 + AGREE for the two arm8_run constants (marked "A3 tactic-only v4"). NOT RUN. The helpers are
++   still v3 style (no Context.t-aware time limits): port the LO-0004 helpers before a run.
++   L-EXIT-0 and the halt instance, v3 (worker A3, Night-Shift Orchestrator A). DRAFT: NOT RUN. No HOL process
+    was started. v3 = v2 (SHA-256 0d2a0ada7627bafe210623b41d4e4fd5a9d734ef1fa5c2f88c195adde7cef61e) with tactic
+    repairs only, each marked (* A3 tactic-only *). No statement changed; no lemma added or removed. Every tactic
+    is UNCHECKED. Needs forge_refundLOut from a PASSING run of L_OUT_v3.sml (not v2: v2 cannot export).
+@@ -51,6 +53,12 @@
+ fun defn name q = (let val th = Define q in pr ("DEFINITION " ^ name ^ "\n" ^ thm_to_string th); th end)
+   handle e => (pr ("DEFINITION_FAILED " ^ name ^ " " ^ General.exnMessage e); raise e);
+ val SPE = DB.fetch "forge_refundSlideProfileA" "refund_profile_a_sl_every_machine_run";
++(* A3 tactic-only v4: two constants are named arm8_run (forge_refundCmlMainStep, forge_refundCmlMainSlide); the
++   unqualified `arm8_run` of the HALT quotation may differ from the stored one (LO-0004 stdout:323/393, same issue
++   in L-OUT). The stored bridge forge_refundSlideEntry.arm8_run_constants_agree closes the gap. *)
++val AGREE = DB.fetch "forge_refundSlideEntry" "arm8_run_constants_agree";
++val ms_tac = FIRST [first_assum ACCEPT_TAC, ASM_REWRITE_TAC [AGREE] \\ NO_TAC,
++                    ASM_REWRITE_TAC [GSYM AGREE] \\ NO_TAC, metis_tac [AGREE]];
+ val REGF = DB.fetch "forge_refundSlideProfileA" "refund_mc_register_fields_sl";
+ val MCF = DB.fetch "forge_refundStartupBridge" "refund_mc_fields";
+ val FD1 = DB.fetch "forge_refundLOut" "refund_profile_a_sl_fd1";
+@@ -117,7 +125,7 @@
+   (fn () => try_all "refund_profile_a_sl_halt"
+    [(* A3 tactic-only (E3): MP with the premise term; then the v2 steps *)
+     DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP FD1 th))
+-     \\ qexists_tac `ms` \\ conj_tac >- simp[]
++     \\ qexists_tac `ms` \\ conj_tac >- (conj_tac \\ ms_tac)   (* A3 tactic-only v4 *)
+      \\ rpt gen_tac \\ strip_tac
+      \\ `machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi no_ext cl fs) ms (Terminate t st'.io_events)`
+           by (simp[targetSemTheory.machine_sem_def] \\ metis_tac[])
+@@ -126,7 +134,7 @@
+      \\ gvs[MCF, REGF, tg, HADDR],
+     strip_tac
+      \\ mp_tac FD1 \\ impl_tac >- simp[]
+-     \\ strip_tac \\ qexists_tac `ms` \\ simp[]
++     \\ strip_tac \\ qexists_tac `ms` \\ conj_tac >- (conj_tac \\ ms_tac)   (* A3 tactic-only v4 *)
+      \\ rpt gen_tac \\ strip_tac
+      \\ `machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi no_ext cl fs) ms (Terminate t st'.io_events)`
+           by (simp[targetSemTheory.machine_sem_def] \\ metis_tac[])

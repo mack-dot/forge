@@ -1,0 +1,193 @@
+{
+ "kill_points_tsx": {
+  "variant": "real",
+  "tsx_source": true,
+  "kills": 12,
+  "runs": 12,
+  "violations": [],
+  "journal_present_at_kill": 8,
+  "hot_journal_recovered": 4,
+  "contender_runs": 4,
+  "rows": [
+   {
+    "point": "after-update-state",
+    "rep": 0,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": true,
+    "hot_journal_before_reopen": true,
+    "settled_after": 0,
+    "contender": null,
+    "violations": []
+   },
+   {
+    "point": "after-update-state",
+    "rep": 1,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": true,
+    "hot_journal_before_reopen": false,
+    "settled_after": 1,
+    "contender": {
+     "status": "committed",
+     "onTime": false
+    },
+    "violations": []
+   },
+   {
+    "point": "after-update-state",
+    "rep": 2,
+    "k": 1,
+    "kill_rc": -9,
+    "journal_at_kill": true,
+    "hot_journal_before_reopen": true,
+    "settled_after": 1,
+    "contender": null,
+    "violations": []
+   },
+   {
+    "point": "after-update-state",
+    "rep": 3,
+    "k": 1,
+    "kill_rc": -9,
+    "journal_at_kill": true,
+    "hot_journal_before_reopen": false,
+    "settled_after": 2,
+    "contender": {
+     "status": "committed",
+     "onTime": false
+    },
+    "violations": []
+   },
+   {
+    "point": "before-commit",
+    "rep": 0,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": true,
+    "hot_journal_before_reopen": true,
+    "settled_after": 0,
+    "contender": null,
+    "violations": []
+   },
+   {
+    "point": "before-commit",
+    "rep": 1,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": true,
+    "hot_journal_before_reopen": false,
+    "settled_after": 1,
+    "contender": {
+     "status": "committed",
+     "onTime": false
+    },
+    "violations": []
+   },
+   {
+    "point": "before-commit",
+    "rep": 2,
+    "k": 1,
+    "kill_rc": -9,
+    "journal_at_kill": true,
+    "hot_journal_before_reopen": true,
+    "settled_after": 1,
+    "contender": null,
+    "violations": []
+   },
+   {
+    "point": "before-commit",
+    "rep": 3,
+    "k": 1,
+    "kill_rc": -9,
+    "journal_at_kill": true,
+    "hot_journal_before_reopen": false,
+    "settled_after": 2,
+    "contender": {
+     "status": "committed",
+     "onTime": false
+    },
+    "violations": []
+   },
+   {
+    "point": "after-commit",
+    "rep": 0,
+    "k": 0,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 1,
+    "contender": null,
+    "violations": []
+   },
+   {
+    "point": "after-commit",
+    "rep": 1,
+    "k": 1,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 2,
+    "contender": null,
+    "violations": []
+   },
+   {
+    "point": "after-commit",
+    "rep": 2,
+    "k": 2,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 3,
+    "contender": null,
+    "violations": []
+   },
+   {
+    "point": "after-commit",
+    "rep": 3,
+    "k": 3,
+    "kill_rc": -9,
+    "journal_at_kill": false,
+    "hot_journal_before_reopen": false,
+    "settled_after": 4,
+    "contender": null,
+    "violations": []
+   }
+  ]
+ },
+ "race_tsx": {
+  "variant": "real",
+  "tsx_source": true,
+  "rows": [
+   {
+    "K": 10,
+    "round": 0,
+    "committed": 1,
+    "stale": 9,
+    "late": 0,
+    "mem_mib_before": 4459,
+    "violations": [],
+    "replays50": {
+     "statuses": [
+      "replayed"
+     ],
+     "late": 0,
+     "store_unchanged": true
+    }
+   },
+   {
+    "K": 10,
+    "round": 1,
+    "committed": 1,
+    "stale": 9,
+    "late": 0,
+    "mem_mib_before": 5020,
+    "violations": []
+   }
+  ],
+  "violations": [],
+  "races": 2,
+  "skipped": []
+ },
+ "seconds": 12.8
+}

@@ -1,0 +1,30 @@
+{
+ "sink": "toctou",
+ "mode": "fault-2",
+ "seed": 20261119,
+ "count": 500,
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 0,
+  "kinds": {
+   "wrong-spec": 248,
+   "valid": 962,
+   "stale-or-current": 336,
+   "wrong-checker": 197,
+   "settled-id-new-body": 222,
+   "reqid-mismatch": 293,
+   "replay": 280,
+   "zero": 283,
+   "sig-bitflip": 147,
+   "non-canonical": 74,
+   "unknown-pre-hash": 82,
+   "attacker-key": 111,
+   "forged-post(key)": 127
+  },
+  "first": [],
+  "smallest": null
+ },
+ "directed_divergent": []
+}

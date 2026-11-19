@@ -103,6 +103,13 @@ statement and no test).
 | E4 | checker, proof-producing agent, deployment authority | three separate trust domains | none | MISSING | one GitHub account with administrator rights and one machine user (report B5) | a separate non-admin identity for the agent; an owner key on another device |
 | E5 | a merge | what reaches protected state | none | MISSING | nothing is deployed; no admission check exists | the admission boundary of the draft |
 
+> Section 2 above is the state of U473. Rows S2, S3a, S4, S7, X5, X9,
+> X10, U3, U5, U7, V1 have CHANGED: read section 7 and section 8 with
+> them. Labels such as "(Q1)" or "(Q3a)" name answers in owner text 1,
+> a PASTED text that the agent took as the owner's decision (an
+> inference, U473). "Independently" in this file means: by separate
+> workers of the same model family on the same machine.
+
 ## 3. Counts, and the first missing link
 
 | Chain | MACHINE-CHECKED | ASSUMPTION | TESTED-UNPROVED | MISSING |
@@ -162,3 +169,73 @@ Already runnable without HOL, and run: the Dafny half
   owner named, the replays are not complete, and blocker 1 shows that
   the claim itself must be worded as machine-model behaviour.
 - `end_to_end=false`. Stage 12 unauthorized. Stage 9 deferred.
+
+## 7. Changes after wave 4 (twelve workers, 2026-11-19; tracker steps D1 to D12)
+
+No link moved to MACHINE-CHECKED by a draft. Changes of class are only
+where a run exists. "Worker's run" means: not run again by the
+orchestrator.
+
+| Link | Change | Evidence |
+| --- | --- | --- |
+| S2 | LIMIT ADDED: partial correctness only. A body `expect false; …` verifies against the approved spec (orchestrator's run: exit 0, 6 verified). "Verified" means: IF `Assess` returns, the result is allowed. The gate's source scan does not look for `expect` (worker's reading) | report D5 |
+| S3 | stays MACHINE-CHECKED; a fresh adversarial review found no defect; not vacuous (worker's runs); some controls fail partly by "out of resource", which is not a refutation | report D10 |
+| S3a | candidate for MACHINE-CHECKED: with the axiom's module removed the proof verifies (exit 0, 1486) and the audit equals the empty baseline. RUN AGAIN BY THE ORCHESTRATOR (2026-11-19T06:29Z): `dafny verify LinkedRefund.dfy` on that closure: exit 0, 1486 verified; audit of its 34 files: 0 findings, byte-equal to `gate/expected-audit.md`; the proof file is byte-equal to the recorded one. S3a: ASSUMPTION → MACHINE-CHECKED (the result does not need the axiom). The recorded closure in `proofs/linked-refund/inputs` still CONTAINS the module; the removal is `review-controls/S3a-remove-hex-module.diff` | report D10 |
+| S4 | ASSUMPTION → TESTED-UNPROVED for this one export file: four readings agree with the Dafny text; the Dafny source of the export is byte-equal to the flat contract file of S3 (digests checked by the orchestrator; now pinned in `run_check.py`) | reports D2, D12 |
+| S6 | stays MISSING; the full draft with 11 controls is ready to run | report D2 |
+| S7 | stays ASSUMPTION, narrowed: 8 operators, three integer literals, four ASCII strings; exact wording given; a Dafny mirror of the HOL rules agrees (a proof about a transcription, not about HOL) | report D12 |
+| X5, X11 | WORDING MUST CHANGE: `arm8_ok` requires TBI0 = F and SA0 = F at every step; Linux and the public XNU source set both to 1 for user space. The premise is literally false for a state that copies the real registers; it holds for an "erased" copy only. New link X11e (the erasure is sound): MISSING | report D11 |
+| X6 | more counterexample states for `read`, `write`, `open_in` (wrong configuration length, top bit of the length, descriptor bytes of 0x80 or more) | report D3 |
+| X7 | stays MISSING. L1: pre-flight found no defect. L3 needs about 15 text I/O specifications proved again with two FFI names (days). The program never calls close or open_in (by reading the source) | reports D1, D3 |
+| X9 | stays MISSING; the form in the exact-claim draft is FALSE (free external oracle); repaired draft at `no_ext` | report D4 |
+| X10 | stays MISSING, and worse than stated: exit status 0 does NOT imply success. `_cml_exit` tests the low 32 bits of x0 (read by the orchestrator); the status is the low 8 bits; the model tests 64 bits. Safety must rest on a strict parse of the output, not on the exit status | report D4 |
+| X13 | stays TESTED-UNPROVED; HOL draft with a strict parser defined | report D4 |
+| U3, U7 | U7: ASSUMPTION → TESTED-UNPROVED for a PROCESS crash (486 kills, 0 violations; worker's run); power loss stays an ASSUMPTION (SQLite defaults, no full fsync). U3: "one commit per pre-state" is FALSE for amount 0 | report D6 |
+| U5 | split. U5a model → Dafny sink core: MACHINE-CHECKED under named assumptions (orchestrator's run: exit 0, 56 verified). U5b sink core → `sink.ts`: MISSING. By reading: `sink.ts` does not check that the token's request id equals the intent's | report D7 |
+| U8 | stays MISSING; `ZeroAmountRepeats` proves that the approved relation lets two zero-amount claims commit; an unapplied spec draft exists | report D7 |
+| V1 | the Q3c second extraction: TESTED-UNPROVED, NOT independent (same model family, same machine). First derivation of the offsets from the file's symbols; equal values (digests checked by the orchestrator) | report D9 |
+| V2 | stays MISSING; full inventory: C run-time, 22 stubs, 23 binds, `__LINKEDIT`; a changed byte outside the two slices is caught by the whole-file hash only | report D9 |
+| E2, E4 | stay MISSING, with live facts: `main` is NOT protected (HTTP 403: the plan gives no rulesets to a private repository; read by the orchestrator); this machine holds the administrator identity and a second write identity | report D8 |
+| E1 | stays MISSING; an unapplied admission rule (exit 3 admits documents only) is drafted and tested on two real receipts | report D8 |
+
+New counts are not given: a count is not a measure of completion, and
+three links were split. The first missing links are unchanged: S1
+(nearest the owner), S6 (proof chain), X8 with X7, X9, X10 (critical).
+Two premises of the machine-model theorem are now known to be false
+for real machines as written: the FFI contract (X6) and the processor
+bits (X5).
+
+## 8. Corrections after the reconciliation audit (step G11; 2026-11-19T06:58Z)
+
+| Link | Correction |
+| --- | --- |
+| U5a | MACHINE-CHECKED only in this sense (reviews G4 and G10, the workers' runs): the 28 rows of `SinkCore` by `dafny verify` (record: `proofs/sink-core/records/orchestrator-verification.csv`); the 15 inherited lemmas are checked for the instance by `dafny build` (71 rows), not by `verify`. Its assumption A1 (`IdealMac`) as written CANNOT be met by a real signature scheme (proved by the reviewer): the theorem is about a verifier that accepts a fixed finite set of pairs. A step-local A1 that can be met is proved to suffice for the invariant, but the headline lemmas are not restated with it. T1 to T5 are for ONE charge. So: a model result under an assumption that needs rewording, not yet a usable link |
+| S3a | The orchestrator's verify run has no stored log: stated only. Stored: the worker's run (`proofs/linked-refund/records/S3a-worker-verify-*.txt`: exit 0, 1486) and the orchestrator's audit output, byte-equal to the empty baseline. The class stays MACHINE-CHECKED on the worker's stored run |
+| S3 | records now stored: `proofs/linked-refund/records/` (runs 1 and 2 of `run_check.py`). The present `run_check.py` with the FlatCore pin has not run yet |
+| E3 | one hosted run REJECTED: an instance, not a rule; link E2 shows that a merge can go around it |
+| V1 | the second extraction is done (section 7), not independent |
+| all | the replay cannot reach 158: three recorded cases have no source file |
+| U5b | stays MISSING as a proof; now TESTED: 5,500 sequences, the unchanged `sink.ts` against the compiled core, 0 divergences (the worker's run); `sink.ts` is stricter than the core in eight places |
+| U3 | by a run: `sink.ts` (and the core) accept a token whose body request id differs from the intent's, if the signing key signs it; the real issuer refuses to sign it |
+
+## 9. The first composed statement (step G9; 2026-11-19T07:12Z)
+
+A single Dafny lemma now has the SHAPE of the owner's target for one
+charge: `SliceSafety` in `proofs/slice-theorem/inputs/SliceTheorem.dfy`
+(orchestrator's run with a stored log: exit 0, 1570 verified).
+
+    Committed(e) ⇒ ApprovedSpec(e) ∧ FlatResultAgrees(e) ∧ UniqueAuthorization(e)
+    under A1 (ideal MAC at each delivery), A2 (mint only on Check),
+    A5 (verifier matches), A6 (the artifact computes the flat contract)
+
+| Conjunct of the target | In this lemma | Kind |
+| --- | --- | --- |
+| ApprovedSpec | proved: the approved `Eligible` on the state stored at commit time | Dafny MODEL |
+| UniqueAuthorization | proved: one token, one request id, no second commit | Dafny MODEL |
+| ValidArtifact | NOT proved: hypothesis A6 on a parameter `art`; closing it is links S4 to S7 and X1 to X16 | ASSUMPTION |
+
+It is NOT a link to anything real yet: A1 as written cannot be met by
+a real signature scheme (section 8, U5a); `sink.ts`, the issuer glue,
+compiled code, storage and native execution are outside it. It joins
+the existing rows S2, S3, U1, U4 and U5a into one statement; it adds
+no new link class.

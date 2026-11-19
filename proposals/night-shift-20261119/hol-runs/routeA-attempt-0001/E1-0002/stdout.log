@@ -1,0 +1,82 @@
+<<HOL message: Created theory "forge_m1bErasureV2">>
+MARK DEFS
+DEFINITION ⊢ ∀s. erase s =
+      s with
+      <|TCR_EL1 := s.TCR_EL1 with <|TBI0 := F; TBI1 := F|>;
+        SCTLR_EL1 := s.SCTLR_EL1 with SA0 := F|>
+DEFINITION ⊢ ∀s. bits_of s = (s.TCR_EL1.TBI0,s.TCR_EL1.TBI1,s.SCTLR_EL1.SA0)
+DEFINITION ⊢ ∀B s.
+    restore B s =
+    s with
+    <|TCR_EL1 := s.TCR_EL1 with <|TBI0 := FST B; TBI1 := FST (SND B)|>;
+      SCTLR_EL1 := s.SCTLR_EL1 with SA0 := SND (SND B)|>
+DEFINITION ⊢ ∀a. untagged a ⇔ (63 >< 55) a = 0w
+DEFINITION ⊢ ∀tcr t.
+    tbi_pc tcr t =
+    (let
+       s0 =
+         if word_bit 55 t ∧ tcr.TBI1 then bit_field_insert 63 56 255w t
+         else t
+     in
+       if ¬word_bit 55 s0 ∧ tcr.TBI0 then bit_field_insert 63 56 0w s0
+       else s0)
+DEFINITION ⊢ ∀s. erase_e0e s =
+      erase s with SCTLR_EL1 := (erase s).SCTLR_EL1 with E0E := F
+MARK FIELDS
+TACTIC_USED erase_fields 1
+Saved theorem _______ "erase_fields"
+CHECKED erase_fields
+⊢ (erase s).PC = s.PC ∧ (erase s).REG = s.REG ∧ (erase s).MEM = s.MEM ∧
+  (erase s).SP_EL0 = s.SP_EL0 ∧ (erase s).PSTATE = s.PSTATE ∧
+  (erase s).exception = s.exception ∧ (erase s).branch_hint = s.branch_hint ∧
+  ((erase s).SCTLR_EL1.A ⇔ s.SCTLR_EL1.A) ∧
+  ((erase s).SCTLR_EL1.E0E ⇔ s.SCTLR_EL1.E0E) ∧
+  ((erase s).SCTLR_EL1.EE ⇔ s.SCTLR_EL1.EE) ∧
+  ((erase s).SCTLR_EL1.SA ⇔ s.SCTLR_EL1.SA) ∧ ¬(erase s).TCR_EL1.TBI0 ∧
+  ¬(erase s).TCR_EL1.TBI1 ∧ ¬(erase s).SCTLR_EL1.SA0
+TACTIC_USED restore_erase 1
+Saved theorem _______ "restore_erase"
+CHECKED restore_erase
+⊢ bits_of s = B ⇒ restore B (erase s) = s
+TACTIC_USED erase_restore 1
+Saved theorem _______ "erase_restore"
+CHECKED erase_restore
+⊢ erase (restore B s) = erase s
+TACTIC_USED arm8_ok_erase 1
+Saved theorem _______ "arm8_ok_erase"
+CHECKED arm8_ok_erase
+⊢ arm8_ok (erase s) ⇔
+  s.PSTATE.EL = 0w ∧ ¬s.SCTLR_EL1.E0E ∧ s.exception = NoException ∧
+  aligned 2 s.PC
+MARK BRANCH
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_m1bErasureV2)>>
+TACTIC_USED untagged_bits 1
+Saved theorem _______ "untagged_bits"
+CHECKED untagged_bits
+⊢ ∀t. untagged t ⇒ ¬word_bit 55 t ∧ bit_field_insert 63 56 0w t = t
+TACTIC_USED BranchTo_EL0_pc 1
+Saved theorem _______ "BranchTo_EL0_pc"
+CHECKED BranchTo_EL0_pc
+⊢ s.PSTATE.EL = 0w ⇒
+  BranchTo (t,bt) s =
+  s with <|branch_hint := SOME bt; PC := tbi_pc s.TCR_EL1 t|>
+TACTIC_USED tbi_pc_erased 1
+Saved theorem _______ "tbi_pc_erased"
+CHECKED tbi_pc_erased
+⊢ ∀tcr t. tbi_pc (tcr with <|TBI0 := F; TBI1 := F|>) t = t
+TACTIC_USED tbi_pc_untagged 1
+Saved theorem _______ "tbi_pc_untagged"
+CHECKED tbi_pc_untagged
+⊢ ∀tcr t. untagged t ⇒ tbi_pc tcr t = t
+TACTIC_USED BranchTo_erase_untagged 1
+Saved theorem _______ "BranchTo_erase_untagged"
+CHECKED BranchTo_erase_untagged
+⊢ s.PSTATE.EL = 0w ∧ untagged t ⇒
+  BranchTo (t,bt) (erase s) = erase (BranchTo (t,bt) s)
+TACTIC_ATTEMPT_FAILED BranchTo_erase_iff 1 HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+TACTIC_ATTEMPT_FAILED BranchTo_erase_iff 2 HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+OPTIONAL_FAILED BranchTo_erase_iff Fail "all listed tactics failed"
+MARK SP
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/E1-0002/proof.sml:156: error: Value or constructor (w2w_id) has not been declared
+Found near
+  [CheckSPAlignment_def, SP_def, erase_def, Aligned, literal_case_THM, ...]

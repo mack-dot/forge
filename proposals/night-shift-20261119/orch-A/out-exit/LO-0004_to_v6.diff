@@ -1,0 +1,152 @@
+--- orig/LO-0004.sml	2026-11-19 03:54:43.229990319 -0500
++++ L_OUT_v6.sml	2026-11-19 03:55:15.878331745 -0500
+@@ -1,4 +1,9 @@
+-(* L-OUT at no_ext, v5 (worker A3). DRAFT: NOT RUN. Base: LO-0003.sml (SHA-256 4bc9910a7b17a735c340ab8e27d728587a3a5db497b70e4a3ba68ceefbfd5cc7,
++(* L-OUT at no_ext, v6 (worker A3). DRAFT: NOT RUN. Base LO-0004.sml (= v5, SHA-256 fcc80fb8...b8b4). Changes marked
++   (* A3 tactic-only v6 *) / "A3 addition v6": AGREE for the two arm8_run constants (refund_profile_a_sl_fd1);
++   an explicit step lemma extract_no_ext_stdout_step and an explicit induction for extract_no_ext_stdout.
++   No existing statement changed. Every tactic UNCHECKED.
++   ---------------------------------------------------------------------------------------------------
++   v5 header: L-OUT at no_ext, v5 (worker A3). DRAFT: NOT RUN. Base: LO-0003.sml (SHA-256 4bc9910a7b17a735c340ab8e27d728587a3a5db497b70e4a3ba68ceefbfd5cc7,
+    = v4 + orchestrator ML edits). Changes marked (* A3 tactic-only v5 *); no statement changed; every tactic UNCHECKED.
+    Real failures repaired: read_stdout (stdout:140), refund_profile_a_sl_fd1 (stdout:249). Failed lemmas now become
+    ASSUME of their statement (diagnostic; never stored; export still forbidden after any failure). *)
+@@ -149,6 +154,16 @@
+ val one_ne_zero8 = EVAL ``(1w:word8) = 0w``;
+ val CHOICE = miscTheory.OPTION_CHOICE_EQUALS_OPTION;
+ val SPE = DB.fetch "forge_refundSlideProfileA" "refund_profile_a_sl_every_machine_run";
++(* A3 tactic-only v6. Two constants are named arm8_run in the deps: forge_refundCmlMainStep$arm8_run (used by the
++   stored theorem: E4/proof.sml:172 qualifies it) and forge_refundCmlMainSlide$arm8_run. The unqualified
++   `arm8_run` in the FD1 quotation may parse to the other one: LO-0004 stdout:323/393 show the goal
++   "arm8_run 27 s = SOME ms" left open next to an assumption that prints identically. The stored theorem
++   forge_refundSlideEntry.arm8_run_constants_agree (results/refund-slide-local-20261117/attempt-0001/s2-0003/
++   stdout.log:18-19; source s2-0003.sml:40: !n s. run_new n s = run_old n s) bridges the two. No statement change. *)
++val AGREE = DB.fetch "forge_refundSlideEntry" "arm8_run_constants_agree";
++val _ = pr ("USED arm8_run_constants_agree\n" ^ thm_to_string AGREE);
++val _ = List.app (fn t => pr ("ARM8_RUN_IN_STORED " ^ (#Thy (dest_thy_const t))))
++          (find_terms (fn t => is_const t andalso fst (dest_const t) = "arm8_run") (concl SPE));
+ val _ = pr ("USED refund_profile_a_sl_every_machine_run\n" ^ thm_to_string SPE);
+ 
+ (* ================= definitions ================= *)
+@@ -388,6 +403,62 @@
+       rpt gen_tac \\ simp[Once extract_fs_with_numchars_def, no_ext_def] \\ every_case_tac \\ rw[] \\ metis_tac[],
+       rpt gen_tac \\ simp[Once extract_fs_with_numchars_def, no_ext_def] \\ strip_tac \\ gvs[AllCaseEqs()]]);
+ 
++(* A3 addition v6 (auxiliary lemma; no existing statement changed): ONE replay step, with every step explicit.
++   LO-0004 stdout:256: extract_no_ext_stdout failed in FIRST_ASSUM (a drule/first_x_assum found no assumption;
++   no goal was printed). v6 proves the step separately and then uses it by explicit qspecl_then / MATCH_MP. *)
++val ISTEP = thm "extract_no_ext_stdout_step"
++  (fn () => ``!e io cls fs cls' fs'.
++       extract_fs_with_numchars no_ext (cls,fs) (e::io) = SOME (cls',fs') /\ STD_streams fs ==>
++       ?cls1 fs1. extract_fs_with_numchars no_ext (cls1,fs1) io = SOME (cls',fs') /\ STD_streams fs1 /\
++         !c0. ALOOKUP fs.inode_tbl (UStream «stdout») = SOME c0 ==>
++              ALOOKUP fs1.inode_tbl (UStream «stdout») = SOME (c0 ++ fd1_written [e])``)
++  (fn () =>
++   let
++     val pairs = RULE_ASSUM_TAC (REWRITE_RULE [pairTheory.FST, pairTheory.SND])
++     (* replay through fs_ffi_part *)
++     val partA =
++       ST "step_A_witness" (qexistsl_tac [`cls`, `fs1`])
++       \\ ST "step_A_fstep" (qspecl_then [`nm`, `f`, `cf`, `bs0`, `fs`, `fs1`] mp_tac FSTEP)
++       \\ impl_tac >- CL "step_A_fstep_pre" (ASM_REWRITE_TAC [])
++       \\ strip_tac
++       \\ rpt conj_tac >- CL "step_A_replay" (first_assum ACCEPT_TAC) >- CL "step_A_std" (first_assum ACCEPT_TAC)
++       \\ qx_gen_tac `c0` \\ strip_tac
++       \\ ST "step_A_c0" (qpat_x_assum `!c0. _ ==> _` (qspec_then `c0` mp_tac))
++       \\ impl_tac >- CL "step_A_c0_pre" (first_assum ACCEPT_TAC)
++       \\ disch_then SUBST1_TAC
++       \\ CL "step_A_end" (simp[fdw_def])
++     (* basis name outside fs_ffi_part: state unchanged, no bytes *)
++     val partB =
++       ST "step_B_witness" (qexistsl_tac [`cls`, `fs`])
++       \\ rpt conj_tac >- CL "step_B_replay" (first_assum ACCEPT_TAC) >- CL "step_B_std" (first_assum ACCEPT_TAC)
++       \\ `nm <> «write»` by
++            CL "step_B_notwrite"
++              (strip_tac \\ rveq \\ qspecl_then [`«write»`, `ffi_write`] mp_tac AFP \\ ASM_REWRITE_TAC []
++               \\ simp[])
++       \\ qx_gen_tac `c0` \\ strip_tac
++       \\ CL "step_B_end" (simp[fdw_def])
++     val extcall =
++       rename1 `IO_event (ExtCall nm) cf bs0` \\ strip_tac
++       \\ ST "step_extc" (qpat_x_assum `extract_fs_with_numchars _ _ _ = _` (strip_assume_tac o MATCH_MP EXTC))
++       \\ pairs
++       >- partA
++       \\ partB
++     val sharedmem =
++       strip_tac \\ qpat_x_assum `extract_fs_with_numchars _ _ _ = _` mp_tac
++       \\ CL "step_sharedmem" (simp[Once extract_fs_with_numchars_def, no_ext_def])
++   in
++     try_all "extract_no_ext_stdout_step"
++       [rpt gen_tac \\ Cases_on `e` \\ rename1 `IO_event ff cf bs0` \\ Cases_on `ff`
++          >- extcall \\ sharedmem,
++        rpt gen_tac \\ Cases_on `e` \\ rename1 `IO_event ff cf bs0` \\ Cases_on `ff`
++          >- (rename1 `IO_event (ExtCall nm) cf bs0` \\ strip_tac
++              \\ qpat_x_assum `extract_fs_with_numchars _ _ _ = _` (strip_assume_tac o MATCH_MP EXTC)
++              \\ gvs[]
++              >- (drule_all FSTEP \\ strip_tac \\ qexistsl_tac [`cls`, `fs1`] \\ simp[fdw_def])
++              \\ qexistsl_tac [`cls`, `fs`] \\ simp[fdw_def] \\ rw[] \\ gvs[fs_ffi_part_def])
++          \\ sharedmem]
++   end);
++
+ (* Y4's statement, unchanged *)
+ val INV = thm "extract_no_ext_stdout"
+   (fn () => ``!io cls fs cls' fs'.
+@@ -417,8 +488,36 @@
+        \\ (* SharedMem: no_ext answers Oracle_final, the replay is NONE *)
+        rpt gen_tac \\ simp[Once extract_fs_with_numchars_def, no_ext_def]
+    in
++     (* A3 tactic-only v6: first alternative = induction with the step lemma ISTEP, all steps explicit *)
++     val by_step =
++       Induct
++       >- (rpt gen_tac \\ strip_tac
++           \\ ST "inv_nil" (qpat_x_assum `extract_fs_with_numchars _ _ _ = _`
++                (strip_assume_tac o SIMP_RULE (srw_ss()) [extract_fs_with_numchars_def]))
++           \\ rveq \\ CL "inv_nil_end" (simp[fdw_def]))
++       \\ qx_gen_tac `e` \\ rpt gen_tac \\ strip_tac
++       \\ ST "inv_step" (qspecl_then [`e`, `io`, `cls`, `fs`, `cls'`, `fs'`] mp_tac ISTEP)
++       \\ impl_tac >- CL "inv_step_pre" (ASM_REWRITE_TAC [])
++       \\ strip_tac
++       \\ ST "inv_ih" (first_x_assum (qspecl_then [`cls1`, `fs1`, `cls'`, `fs'`] mp_tac))
++       \\ impl_tac >- CL "inv_ih_pre" (ASM_REWRITE_TAC [])
++       \\ strip_tac
++       \\ conj_tac >- CL "inv_std" (first_assum ACCEPT_TAC)
++       \\ qx_gen_tac `c0` \\ strip_tac
++       \\ ST "inv_c0" (qpat_x_assum `!c0. ALOOKUP fs.inode_tbl _ = SOME c0 ==> _` (qspec_then `c0` mp_tac))
++       \\ impl_tac >- CL "inv_c0_pre" (first_assum ACCEPT_TAC)
++       \\ strip_tac
++       \\ ST "inv_c1" (qpat_x_assum `!c0. ALOOKUP fs1.inode_tbl _ = SOME c0 ==> _`
++                         (qspec_then `c0 ++ fd1_written [e]` mp_tac))
++       \\ impl_tac >- CL "inv_c1_pre" (first_assum ACCEPT_TAC)
++       \\ disch_then SUBST1_TAC
++       \\ `fd1_written (e::io) = fd1_written [e] ++ fd1_written io` by
++            CL "inv_append" (qspecl_then [`[e]`, `io`] mp_tac FDA \\ simp[])
++       \\ CL "inv_end" (ASM_REWRITE_TAC [listTheory.APPEND_ASSOC])
++   in
+      try_all "extract_no_ext_stdout"
+-       [inv_tac (Cases \\ rename1 `IO_event ff _ _` \\ Cases_on `ff`),
++       [by_step,
++        inv_tac (Cases \\ rename1 `IO_event ff _ _` \\ Cases_on `ff`),
+         inv_tac (Cases \\ Cases_on `f`)]
+    end);
+ 
+@@ -510,14 +609,18 @@
+      try_all "refund_profile_a_sl_fd1"
+        [DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP SPE_NOEXT th))
+           \\ ST "fd1_witness" (qexists_tac `ms`)
+-          \\ conj_tac >- CL "fd1_ms" (conj_tac \\ FIRST [first_assum ACCEPT_TAC, ASM_REWRITE_TAC []])
++          \\ conj_tac >- CL "fd1_ms" (conj_tac \\ FIRST   (* A3 tactic-only v6: the two arm8_run constants *)
++               [first_assum ACCEPT_TAC,
++                CL "fd1_ms_agree" (ASM_REWRITE_TAC [AGREE]),
++                CL "fd1_ms_agree_sym" (ASM_REWRITE_TAC [GSYM AGREE]),
++                CL "fd1_ms_metis" (metis_tac [AGREE])])
+           \\ qx_gen_tac `bb` \\ strip_tac
+           \\ ST "fd1_spec" (qpat_x_assum `!b. _` (qspec_then `bb` mp_tac))
+           \\ impl_tac >- CL "fd1_sem" (first_assum ACCEPT_TAC)
+           \\ rpt strip_tac \\ rveq
+           \\ CL "fd1_case" fd1_case,
+         DISCH_THEN (fn th => STRIP_ASSUME_TAC th \\ STRIP_ASSUME_TAC (MP SPE_NOEXT th))
+-          \\ qexists_tac `ms` \\ conj_tac >- ASM_REWRITE_TAC []
++          \\ qexists_tac `ms` \\ conj_tac >- FIRST [ASM_REWRITE_TAC [AGREE] \\ NO_TAC, ASM_REWRITE_TAC [GSYM AGREE] \\ NO_TAC]
+           \\ qx_gen_tac `bb` \\ strip_tac
+           \\ qpat_x_assum `!b. _` (qspec_then `bb` mp_tac) \\ ASM_REWRITE_TAC []
+           \\ rpt strip_tac \\ gvs[]

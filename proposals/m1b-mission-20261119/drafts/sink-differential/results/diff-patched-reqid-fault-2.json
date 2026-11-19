@@ -1,0 +1,176 @@
+{
+ "sink": "patched-reqid",
+ "mode": "fault-2",
+ "seed": 20261119,
+ "count": 500,
+ "directed": [],
+ "random": {
+  "run": 500,
+  "steps": 3362,
+  "divergent": 215,
+  "kinds": {
+   "wrong-spec": 248,
+   "valid": 962,
+   "stale-or-current": 336,
+   "wrong-checker": 197,
+   "settled-id-new-body": 222,
+   "reqid-mismatch": 293,
+   "replay": 280,
+   "zero": 283,
+   "sig-bitflip": 147,
+   "non-canonical": 74,
+   "unknown-pre-hash": 82,
+   "attacker-key": 111,
+   "forged-post(key)": 127
+  },
+  "first": [
+   {
+    "name": "seed20261119#1",
+    "original_len": 10,
+    "shrunk": [
+     {
+      "kind": "valid",
+      "special": "fault"
+     },
+     {
+      "kind": "reqid-mismatch"
+     }
+    ],
+    "shrunk_len": 2,
+    "s0": {
+     "chargeId": "ch_0",
+     "original": "717",
+     "remaining": "28",
+     "refundEnabled": false
+    },
+    "divergence": {
+     "step": 1,
+     "detail": {
+      "kind": "reqid-mismatch",
+      "sink_out": "rejected:ReqIdMismatch(new check)",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+       "settledEnc": [],
+       "outbox": []
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_0\",\"original\":\"717\",\"refundEnabled\":false,\"remaining\":\"28\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#4",
+    "original_len": 6,
+    "shrunk": [
+     {
+      "kind": "reqid-mismatch",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 1,
+    "s0": {
+     "chargeId": "ch_2",
+     "original": "626",
+     "remaining": "214",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "reqid-mismatch",
+      "sink_out": "rejected:ReqIdMismatch(new check)",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"214\"}",
+       "settledEnc": [],
+       "outbox": []
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"214\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   },
+   {
+    "name": "seed20261119#6",
+    "original_len": 6,
+    "shrunk": [
+     {
+      "kind": "reqid-mismatch"
+     },
+     {
+      "kind": "zero",
+      "special": "fault"
+     }
+    ],
+    "shrunk_len": 2,
+    "s0": {
+     "chargeId": "ch_1",
+     "original": "25",
+     "remaining": "14",
+     "refundEnabled": true
+    },
+    "divergence": {
+     "step": 0,
+     "detail": {
+      "kind": "reqid-mismatch",
+      "sink_out": "rejected:ReqIdMismatch(new check)",
+      "core_out": "rejected:PreStateMismatch",
+      "sink": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"25\",\"refundEnabled\":true,\"remaining\":\"14\"}",
+       "settledEnc": [],
+       "outbox": []
+      },
+      "core": {
+       "charge": "{\"chargeId\":\"ch_1\",\"original\":\"25\",\"refundEnabled\":true,\"remaining\":\"14\"}",
+       "settledEnc": [],
+       "outbox": []
+      }
+     }
+    }
+   }
+  ],
+  "smallest": {
+   "name": "seed20261119#4",
+   "original_len": 6,
+   "shrunk": [
+    {
+     "kind": "reqid-mismatch",
+     "special": "fault"
+    }
+   ],
+   "shrunk_len": 1,
+   "s0": {
+    "chargeId": "ch_2",
+    "original": "626",
+    "remaining": "214",
+    "refundEnabled": true
+   },
+   "divergence": {
+    "step": 0,
+    "detail": {
+     "kind": "reqid-mismatch",
+     "sink_out": "rejected:ReqIdMismatch(new check)",
+     "core_out": "rejected:PreStateMismatch",
+     "sink": {
+      "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"214\"}",
+      "settledEnc": [],
+      "outbox": []
+     },
+     "core": {
+      "charge": "{\"chargeId\":\"ch_2\",\"original\":\"626\",\"refundEnabled\":true,\"remaining\":\"214\"}",
+      "settledEnc": [],
+      "outbox": []
+     }
+    }
+   }
+  }
+ },
+ "directed_divergent": []
+}

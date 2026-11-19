@@ -1,0 +1,184 @@
+{
+ "worker": "W-static",
+ "date": "2026-11-19",
+ "classification": "TESTED-UNPROVED (static reading of the file only)",
+ "executable": {
+  "source": "results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund",
+  "copy": "refund.copy (mode 0444, never executed)",
+  "sha256_source": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8",
+  "sha256_copy_equal": true
+ },
+ "T1": {
+  "commands": {
+   "otool_loadcmds": "0",
+   "otool_hv": "0",
+   "codesign_dvvv": "0",
+   "codesign_ent_xml": "0",
+   "otool_libs": "0",
+   "nm_u": "0",
+   "nm_n": "0"
+  },
+  "segments": [
+   [
+    "__PAGEZERO",
+    "0x0",
+    "0x100000000",
+    0,
+    0,
+    "---",
+    "---",
+    "0x0"
+   ],
+   [
+    "__TEXT",
+    "0x100000000",
+    "0x28000",
+    0,
+    163840,
+    "r-x",
+    "r-x",
+    "0x0"
+   ],
+   [
+    "__DATA_CONST",
+    "0x100028000",
+    "0x4000",
+    163840,
+    16384,
+    "rw-",
+    "rw-",
+    "0x10 (SG_READ_ONLY)"
+   ],
+   [
+    "__DATA",
+    "0x10002c000",
+    "0x8000",
+    180224,
+    32768,
+    "rw-",
+    "rw-",
+    "0x0"
+   ],
+   [
+    "__LINKEDIT",
+    "0x100034000",
+    "0x8000",
+    212992,
+    25784,
+    "r--",
+    "r--",
+    "0x0"
+   ]
+  ],
+  "segment_columns": [
+   "name",
+   "vmaddr",
+   "vmsize",
+   "fileoff",
+   "filesize",
+   "maxprot",
+   "initprot",
+   "flags"
+  ],
+  "header_flags": "NOUNDEFS DYLDLINK TWOLEVEL PIE",
+  "LC_MAIN_entryoff": "152900 = _main 0x100025544 (C main, not cml_main)",
+  "codesign": "CodeDirectory flags=0x20002 (adhoc, linker-signed); no hardened runtime (0x10000 absent); Signature=adhoc; TeamIdentifier not set; entitlements: none (empty output)",
+  "libraries": [
+   "/usr/lib/libSystem.B.dylib"
+  ],
+  "imports_count": 23,
+  "pass_criterion": "__TEXT initprot = maxprot = r-x; no allow-jit / disable-library-validation entitlement",
+  "pass": true,
+  "deviations_noted": [
+   "no hardened runtime flag (so the kernel does not enforce library validation or DYLD_* stripping for this binary; A-LOADER stays an ENFORCE item)",
+   "ad hoc linker signature only, no team identifier",
+   "no segment is writable+executable; __DATA_CONST rw- with SG_READ_ONLY (made read-only by dyld after fixups)"
+  ],
+  "does_not_show": "run-time protections (mprotect/vm_protect by C code or the kernel), dyld behaviour, DYLD_INSERT_LIBRARIES injection, page-in transforms"
+ },
+ "T5": {
+  "commands": {
+   "llvm_objdump_version": "0",
+   "llvm_objdump_slice": "0",
+   "llvm_objdump_stubregion": "0",
+   "otool_tV": "0",
+   "t5_decode": "0",
+   "t5_classdecode": "0"
+  },
+  "tools": "Apple LLVM 17.0.0 llvm-objdump; /usr/bin/otool -tV; python3 -I 3.10.11",
+  "slice": {
+   "file_offset": 16592,
+   "length": 130436,
+   "vm": "0x1000040d0..0x100023e54 (excl)",
+   "sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+   "sha256_matches_3c67983c": true,
+   "words": 32609
+  },
+  "listing_word_mismatch_vs_file": 0,
+  "data_or_invalid_words": {
+   "llvm": 0,
+   "otool": 0
+  },
+  "conservative_field_scan_flagged": 443,
+  "flagged_field_counts": {
+   "Rn": 148,
+   "Rd": 53,
+   "Rm": 143,
+   "Ra_Rt2": 102
+  },
+  "words_really_naming_x18_w18": {
+   "disassembly_llvm_or_otool": 0,
+   "class_decoder": 0
+  },
+  "flagged_but_field_not_register": 443,
+  "sp_uses": {
+   "llvm": 0,
+   "otool": 0,
+   "class_decoder": 0
+  },
+  "special_mnemonics_svc_mrs_msr_pac_aut_bti_brk_ldxr_ldp_stp_barriers": {},
+  "ret_variants": {},
+  "br": 553,
+  "bl": 0,
+  "blr": 0,
+  "nop": 0,
+  "class_decoder_counts": {
+   "LD/ST unsigned imm (LDR/STR)": 9600,
+   "MOVN/MOVZ/MOVK": 5152,
+   "B/BL": 2542,
+   "ADD/SUB imm": 2519,
+   "ADD/SUB shifted reg": 2264,
+   "LD/ST unscaled imm (LDUR/STUR)": 2204,
+   "logical shifted reg": 2149,
+   "B.cond": 1826,
+   "bitfield (LSL/LSR/ASR imm)": 1482,
+   "ADR/ADRP": 1206,
+   "logical imm": 644,
+   "BR/BLR/RET(unpac)": 553,
+   "cond select (CSET/CSINC)": 182,
+   "data-proc 3 src (MUL/MSUB/SMULH)": 101,
+   "ADC/SBC": 70,
+   "data-proc 2 src (SDIV/LSLV..)": 61,
+   "cond compare imm": 35,
+   "EXTR (ROR imm)": 19
+  },
+  "class_decoder_unknown": 0,
+  "mnemonic_disagreements_llvm_vs_otool": 0,
+  "pass_criterion": "(ii) no operand register 18, (iii) no SP-based access, (iv) no SVC/MRS/MSR/PAC/BTI/LDXR; (i) only known data words",
+  "pass": true,
+  "does_not_show": "which words execute (control flow), run-time x18/SP values, processor behaviour, loader/page-in; class-level decode only (not the in-HOL decode lemma, which stays MISSING)"
+ },
+ "stub_region": {
+  "file": "16384..16592 (0x100004000..0x1000040d0)",
+  "cml_main": "27 words (26 instr + nop); writes x0,x1,x2,x3; ADRP/ADD/LDR/STR; stores 5 words at [cml_heap]..+0x20; ends b cml__Init_0; no x18, no sp",
+  "ffi_stubs": {
+   "cake_ffiopen_in 0x100004070": "b _ffiopen_in 0x100025098",
+   "cake_fficlose 0x100004080": "b _fficlose 0x100025260",
+   "cake_ffiwrite 0x100004090": "b _ffiwrite 0x1000251e0",
+   "cake_ffiread 0x1000040a0": "b _ffiread 0x100025170",
+   "cake_install 0x1000040b0": "b _cml_install 0x100025504",
+   "cake_exit 0x1000040c0": "b _cml_exit 0x100025464"
+  },
+  "ffi_stub_registers": "none: each is one B (no link) + 3 NOP; x30 is kept for the C callee"
+ }
+}

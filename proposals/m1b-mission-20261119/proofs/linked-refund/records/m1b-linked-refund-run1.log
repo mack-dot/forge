@@ -1,0 +1,19 @@
+copy equals spec/refund/RefundSpec.dfy: expected 90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57, actual 90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57
+copy equals impl/Refund.dfy: expected 0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700, actual 0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700
+copy equals clearing/RefundExact.dfy: expected 58d354e91ce08468ec40c321fee9a1fcec441616c69a443173b4328213d53d85, actual 58d354e91ce08468ec40c321fee9a1fcec441616c69a443173b4328213d53d85
+proof file SHA-256: expected 0d67b4838e390a336dfec027326a2cb067a7a35fa120af60b94bdfda4d069f34, actual 0d67b4838e390a336dfec027326a2cb067a7a35fa120af60b94bdfda4d069f34
+verify LinkedRefund.dfy (exit): expected 0, actual 0
+verify LinkedRefund.dfy (summary): expected Dafny program verifier finished with 1489 verified, 0 errors, actual Dafny program verifier finished with 1489 verified, 0 errors
+control N1-unflatten-swap (exit): expected 4, actual 4
+control N1b-flatten-swap (exit): expected 4, actual 4
+control N2-amount-plus-one (exit): expected 4, actual 4
+control N3a-drop-flat-ensures-1 (exit): expected 4, actual 4
+control N3b-drop-flat-ensures-2 (exit): expected 4, actual 4
+control N3c-drop-flat-ensures-3 (exit): expected 4, actual 4
+control N4-count0-authorized (exit): expected 4, actual 4
+control N5-decode-reads-response (exit): expected 0, actual 0
+audit of all 34 Dafny files against the empty baseline (exit): expected 2, actual 2
+audit names the library axiom: expected True, actual False  <-- NOT AS EXPECTED
+forbidden words in LinkedRefund.dfy: expected , actual 
+LINKED-REFUND FAILED; the Dafny half only; M1-B OPEN; end_to_end=false
+exit 1

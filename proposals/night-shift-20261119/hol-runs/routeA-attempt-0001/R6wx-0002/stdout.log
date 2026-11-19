@@ -1,0 +1,2977 @@
+TIMEOUT_HELPER Timeout.apply loaded
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+LOAD_OK basisFunctionsLib
+<<HOL message: Created theory "forge_refundR6WExplore2">>
+EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)
+EXPLORE_MODE nothing is exported; the open lemmas are never stored
+MARK USE r6w_common.sml
+MARK GRAMMAR
+GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\187v. &T :v -> (\206\177 -> bool) -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and flatSem$v\n", origins = [{origin_function = "type-analysis", origin_structure  ...
+TYPE_REPRIVILEGED ffi_result was cfHeapsBase now ffi
+TYPE_REPRIVILEGED shift was wordLang now ast
+TYPE_REPRIVILEGED pat was pattern_semantics now ast
+TYPE_REPRIVILEGED op was flatLang now ast
+TYPE_REPRIVILEGED locs was location now ast
+TYPE_REPRIVILEGED lit was dafny_ast now ast
+TYPE_REPRIVILEGED exp was dafny_ast now ast
+TYPE_REPRIVILEGED arith was asm now ast
+TYPE_REPRIVILEGED v was flatSem now semanticPrimitives
+TYPE_REPRIVILEGED state was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED sem_env was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED result was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED dest_thunk_ret was flatSem now semanticPrimitives
+GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK
+GRAMMAR_FIX B
+MARK DEFS
+DEFINITION ⊢ ∀Inv fd.
+    write_event_ok Inv fd ⇔
+    ∀n i rest nb.
+      LENGTH rest = 2048 ∧ i + n ≤ 2048 ∧ LENGTH nb = 4 + LENGTH rest ∧
+      HD nb = 0w ⇒
+      Inv
+        (IO_event (ExtCall «write») (n2w8 fd)
+           (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+MARK SHORTCUTS
+MARK STATEMENTS
+STATEMENT write_event_ok_writei
+∀Inv fd n i rest.
+  write_event_ok Inv fd ∧ LENGTH rest = 2048 ∧ i + n ≤ 2048 ⇒
+  ∀nb.
+    LENGTH nb = 4 + LENGTH rest ∧ HD nb = 0w ⇒
+    Inv
+      (IO_event (ExtCall «write») (n2w8 fd)
+         (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+STATEMENT write_event_ok_refund
+write_event_ok refund_valid_event 1
+STATEMENT SEG_APPEND3_W
+∀len off z l.
+  len + off ≤ z ∧ z ≤ LENGTH l ⇒
+  SEG len off l ++ SEG (z − (off + len)) (off + len) l = SEG (z − off) off l
+STATEMENT IOxV_FFI_part_IN
+∀Inv fs H h.
+  (IOxV Inv fs * H) h ⇒
+  ∃ev.
+    FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) ev ∈ h
+STATEMENT UNIQUE_IOFS_V
+∀s. VALID_HEAP s ⇒
+    ∀Inv1 Inv2 fs1 fs2 H1 H2.
+      (IOFS_V Inv1 fs1 * H1) s ∧ (IOFS_V Inv2 fs2 * H2) s ⇒ fs1 = fs2
+STATEMENT IOFS_V_HPROP_INJ
+∀Inv fs1 fs2. HPROP_INJ (IOFS_V Inv fs1) (IOFS_V Inv fs2) (fs2 = fs1)
+STATEMENT STDIO_V_numchars
+∀Inv fs x. STDIO_V Inv (fs with numchars := x) = STDIO_V Inv fs
+STATEMENT UNIQUE_STDIO_V
+∀s. VALID_HEAP s ⇒
+    ∀fs1 fs2 Inv H1 H2.
+      (STDIO_V Inv fs1 * H1) s ∧ (STDIO_V Inv fs2 * H2) s ⇒
+      fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+      fs1.inode_tbl = fs2.inode_tbl
+STATEMENT STDIO_V_HPROP_INJ
+∀Inv fs1 fs2.
+  HPROP_INJ (STDIO_V Inv fs1) (STDIO_V Inv fs2)
+    (fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+     fs1.inode_tbl = fs2.inode_tbl)
+STATEMENT STD_streams_fd0
+∀fs.
+  wfFS fs ∧ STD_streams fs ⇒
+  get_fd_content fs 0 ≠ NONE ∧ get_mode fs 0 = SOME ReadMode
+STATEMENT writei_spec_W
+wfFS fs ⇒
+0 < n ⇒
+MAX (i + n) 2048 ≤ LENGTH rest ⇒
+i + n < 256² ⇒
+get_fd_content fs fd = SOME (content,pos) ⇒
+get_mode fs fd = SOME WriteMode ⇒
+FD fd fdv ⇒
+NUM n nv ⇒
+NUM i iv ⇒
+bc = h1::h2::h3::h4::rest ⇒
+LENGTH rest = 2048 ⇒
+write_event_ok Inv fd ⇒
+app p TextIO_writei_v [fdv; nv; iv] (IOxV Inv fs * W8ARRAY iobuff_loc bc)
+  (POSTve
+     (λnwv.
+        SEP_EXISTS nw.
+          &NUM nw nwv * &(nw > 0) * &(nw ≤ n) *
+          W8ARRAY iobuff_loc (0w::n2w2 nw ++ n2w i::rest) *
+          IOxV Inv
+            (fsupdate fs fd (1 + Lnext_pos fs.numchars) (pos + nw)
+               (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos
+                  content)))
+     (λe.
+        &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::n2w2 i ++ rest) *
+        &F *
+        IOFS
+          (fs with
+           numchars := THE (LDROP (1 + Lnext_pos fs.numchars) fs.numchars))))
+STATEMENT write_spec_V
+∀n fs fd i pos h1 h2 h3 h4 rest bc fdv nv iv content.
+  wfFS fs ⇒
+  MAX (i + n) 2048 ≤ LENGTH rest ⇒
+  i + n < 256² ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  NUM i iv ⇒
+  bc = h1::h2::h3::h4::rest ⇒
+  LENGTH rest = 2048 ⇒
+  write_event_ok Inv fd ⇒
+  app p TextIO_write_v [fdv; nv; iv] (IOxV Inv fs * W8ARRAY iobuff_loc bc)
+    (POSTv nwv. SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + n)
+            (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)))
+STATEMENT output_aux_spec_V
+∀fd fdv s sv i iv z zv fs content pos.
+  OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+  z ≤ strlen s ∧ get_fd_content fs fd = SOME (content,pos) ∧
+  get_mode fs fd = SOME WriteMode ∧ write_event_ok Inv fd ⇒
+  app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       SEP_EXISTS k.
+         IOFS_V Inv
+           (fsupdate fs fd k (pos + (z − i))
+              (insert_atI (explode (substring s i (z − i))) pos content)))
+STATEMENT output_spec_V
+∀s fd fdv sv fs content pos.
+  OUTSTREAM fd fdv ⇒
+  STRING_TYPE s sv ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  write_event_ok Inv fd ⇒
+  app p TextIO_output_v [fdv; sv] (IOFS_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       SEP_EXISTS k.
+         IOFS_V Inv
+           (fsupdate fs fd k (pos + strlen s)
+              (insert_atI (explode s) pos content)))
+STATEMENT output_STDIO_spec_V
+∀fd fdv fs content pos s.
+  OUTSTREAM fd fdv ∧ get_fd_content fs fd = SOME (content,pos) ∧
+  get_mode fs fd = SOME WriteMode ∧ STRING_TYPE s sv ∧ write_event_ok Inv fd ⇒
+  app p TextIO_output_v [fdv; sv] (STDIO_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       STDIO_V Inv
+         (fsupdate fs fd 0 (pos + strlen s)
+            (insert_atI (explode s) pos content)))
+STATEMENT print_spec_V
+∀fs sv s.
+  STRING_TYPE s sv ⇒
+  write_event_ok Inv 1 ⇒
+  app p TextIO_print_v [sv] (STDIO_V Inv fs)
+    (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv (add_stdout fs s))
+STATEMENT print_spec_refund
+∀fs sv s.
+  STRING_TYPE s sv ⇒
+  app p TextIO_print_v [sv] (STDIO_V refund_valid_event fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv * STDIO_V refund_valid_event (add_stdout fs s))
+PART_DONE r6w_common.sml
+MARK USE r6w_steps.sml
+R6W_STEPS opened
+DELSIMPS_OK
+R6W_STEPS loaded
+PART_DONE r6w_steps.sml
+MARK USE r6w_explore_calls.sml
+TH_ASSUMED all statements
+TRY_HELPER_BEGIN write_event_ok_writei
+STEP_USED write_event_ok_writei 1 close candidate 0 goals_out 0
+Saved theorem _______ "write_event_ok_writei"
+TRY_HELPER_CLOSED write_event_ok_writei hyps 0
+TRY_HELPER_BEGIN write_event_ok_refund
+STEP_USED write_event_ok_refund 1 intro candidate 0 goals_out 1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundR6WExplore2)>>
+STEP_USED write_event_ok_refund 2 nums candidate 0 goals_out 1
+STEP_USED write_event_ok_refund 3 unfold candidate 0 goals_out 1
+STEP_USED write_event_ok_refund 4 witness candidate 0 goals_out 1
+STEP_USED write_event_ok_refund 5 close candidate 0 goals_out 0
+Saved theorem _______ "write_event_ok_refund"
+TRY_HELPER_CLOSED write_event_ok_refund hyps 0
+TRY_HELPER_BEGIN SEG_APPEND3_W
+STEP_USED SEG_APPEND3_W 1 all candidate 0 goals_out 0
+Saved theorem _______ "SEG_APPEND3_W"
+TRY_HELPER_CLOSED SEG_APPEND3_W hyps 0
+TRY_HELPER_BEGIN IOxV_FFI_part_IN
+STEP_USED IOxV_FFI_part_IN 1 close candidate 0 goals_out 0
+Saved theorem _______ "IOxV_FFI_part_IN"
+TRY_HELPER_CLOSED IOxV_FFI_part_IN hyps 0
+TRY_HELPER_BEGIN UNIQUE_IOFS_V
+STEP_USED UNIQUE_IOFS_V 1 unfold candidate 0 goals_out 1
+STEP_USED UNIQUE_IOFS_V 2 close candidate 0 goals_out 0
+Saved theorem _______ "UNIQUE_IOFS_V"
+TRY_HELPER_CLOSED UNIQUE_IOFS_V hyps 0
+TRY_HELPER_BEGIN IOFS_V_HPROP_INJ
+STEP_USED IOFS_V_HPROP_INJ 1 close candidate 0 goals_out 0
+Saved theorem _______ "IOFS_V_HPROP_INJ"
+TRY_HELPER_CLOSED IOFS_V_HPROP_INJ hyps 0
+FRAME_THM_REGISTERED IOFS_V_HPROP_INJ
+TRY_HELPER_BEGIN STDIO_V_numchars
+STEP_USED STDIO_V_numchars 1 close candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_numchars"
+TRY_HELPER_CLOSED STDIO_V_numchars hyps 0
+TRY_HELPER_BEGIN UNIQUE_STDIO_V
+STEP_USED UNIQUE_STDIO_V 1 close candidate 0 goals_out 0
+Saved theorem _______ "UNIQUE_STDIO_V"
+TRY_HELPER_CLOSED UNIQUE_STDIO_V hyps 0
+TRY_HELPER_BEGIN STDIO_V_HPROP_INJ
+STEP_USED STDIO_V_HPROP_INJ 1 split candidate 0 goals_out 2
+STEP_USED STDIO_V_HPROP_INJ 2 => (lines 141-153) candidate 0 goals_out 0
+STEP_USED STDIO_V_HPROP_INJ 3 <= (lines 154-162) candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_HPROP_INJ"
+TRY_HELPER_CLOSED STDIO_V_HPROP_INJ hyps 0
+FRAME_THM_REGISTERED STDIO_V_HPROP_INJ
+TRY_HELPER_BEGIN STD_streams_fd0
+STEP_USED STD_streams_fd0 1 intro candidate 0 goals_out 2
+STEP_CANDIDATE_FAILED STD_streams_fd0 2 candidate 0 HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED STD_streams_fd0 2 candidate 1 HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+SHOW STEP_ALL_FAILED STD_streams_fd0 2 content
+  ASM STD_streams fs
+  ASM wfFS fs
+  GOAL get_fd_content fs 0 ≠ NONE
+TRY_HELPER_FAILED STD_streams_fd0 HOL_ERR (HOL_ERROR {message = "all candidates failed at STD_streams_fd0 step 2", origins = [{origin_function = "step_tac", origin_structure = "A33", source_location = Loc_Unknown}]})
+TRY_HELPER_BEGIN writei_spec_W
+STEP_USED writei_spec_W 1 intro candidate 0 goals_out 1
+STEP_USED writei_spec_W 2 bound candidate 0 goals_out 1
+STEP_CANDIDATE_FAILED writei_spec_W 3 candidate 0 HOL_ERR (HOL_ERROR {message = "predicate not true", origins = [{origin_function = "assert", origin_structure = "Lib", source_location = Loc_Unknown}]})
+STEP_USED writei_spec_W 3 H_inv from write_event_ok candidate 1 goals_out 1
+STEP_USED writei_spec_W 4 apply writei_spec_V candidate 0 goals_out 0
+Saved theorem _______ "writei_spec_W"
+TRY_HELPER_CLOSED writei_spec_W hyps 0
+TRY_HELPER_BEGIN write_spec_V
+Adding nsLookup representation thms for 4 consts [TextIOProg_env_14, TextIOProg_env_13, ..., TextIOProg_env_11]
+Adding nsLookup representation thms for [TextIOProg_env_10, TextIOProg_env_9]
+Adding nsLookup representation thms for [TextIOProg_env_8]
+Adding nsLookup representation thms for 4 consts [TextIOProg_env_7, TextIOProg_env_6, ..., TextIOProg_env_4]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_3, TextIOProg_env_2, ..., TextIOProg_env]
+Adding nsLookup representation thms for 528 consts [MarshallingProg_env_1, MarshallingProg_env_0, ..., CommandLineProg_env_2]
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOxV Inv fs * W8ARRAY iobuff_loc bc * &BOOL (n = 0) bv
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOxV Inv fs * W8ARRAY iobuff_loc bc * &BOOL T bv
+STEP_USED write_spec_V 1 setup+n=0 (1568-1578) candidate 0 goals_out 1
+xlet_auto : using heuristics
+Post condition: POSTve
+  (λnwv.
+     SEP_EXISTS nw.
+       IOxV Inv
+         (fsupdate fs fd (Lnext_pos ... .numchars + 1) (nw + pos)
+            (insert_atI (... ... (... ... )) pos content)) *
+       W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &(nw ≤ n) *
+       &(nw > 0) * &NUM nw nwv)
+  (λe.
+     IOFS
+       (fs with
+        numchars := THE (LDROP (Lnext_pos fs.numchars + 1) fs.numchars)) *
+     W8ARRAY iobuff_loc (1w::n2w n::(n2w2 i ++ rest)) * &F * &InvalidFD_exn e)
+STEP_USED write_spec_V 2 writei call (1579-1580, writei_spec_W) candidate 0 goals_out 1
+Using translator specification lt_v_thm from theory mlbasicsProg
+Post condition: POSTv bv1.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &BOOL (nw < n) bv1
+STEP_USED write_spec_V 3 nw < n test (1581) candidate 0 goals_out 1
+STEP_USED write_spec_V 4 done branch (1581-1587) candidate 0 goals_out 1
+Using translator specification plus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv1.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &NUM (i + nw) nv1
+Using translator specification minus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv2.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &NUM (n − nw) nv2
+STEP_USED write_spec_V 5 n-nw, i+nw (1588) candidate 0 goals_out 1
+STEP_USED write_spec_V 6 IH (1589-1594) candidate 0 goals_out 1
+STEP_USED write_spec_V 7 IH side conditions (1595-1601) candidate 0 goals_out 1
+STEP_USED write_spec_V 8 final (1602-1606) candidate 0 goals_out 0
+Saved theorem _______ "write_spec_V"
+TRY_HELPER_CLOSED write_spec_V hyps 0
+TRY_HELPER_BEGIN output_aux_spec_V
+STEP_USED output_aux_spec_V 1 induct (1743) candidate 0 goals_out 1
+Adding nsLookup representation thms for [TextIOProg_env_15]
+Using translator specification le_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOFS_V Inv fs * &BOOL (z ≤ i) bv
+STEP_USED output_aux_spec_V 2 xcf, z <= i test, xif (1744-1746) candidate 0 goals_out 2
+STEP_USED output_aux_spec_V 3 done branch (1747-1753) candidate 0 goals_out 0
+Using translator specification minus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv. IOFS_V Inv fs * &NUM (z − i) nv
+Using translator specification le_v_thm from theory mlbasicsProg
+Post condition: POSTv bv1. IOFS_V Inv fs * &BOOL (z ≤ i + 2048) bv1
+STEP_USED output_aux_spec_V 4 left, n (1754-1755) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 5 xlet MIN (1756-1760; IOFS -> IOFS_V Inv) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 6 open IOFS_V in the precondition (1766-1767) candidate 0 goals_out 1
+Using CF specification w8array_copyVec_spec from theory Word8ArrayProof
+Post condition: POSTv uv.
+  W8ARRAY iobuff_loc
+    (TAKE 4 buff ++
+     MAP (n2w ∘ ORD)
+       (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+     DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs *
+  &UNIT_TYPE () uv
+STEP_USED output_aux_spec_V 7 copyVec (1768) candidate 0 goals_out 1
+Using translator specification get_out_v_thm from theory TextIOProg
+xlet_auto : using heuristics
+Post condition: POSTv sv1.
+  W8ARRAY iobuff_loc
+    (TAKE 4 buff ++
+     MAP (n2w ∘ ORD)
+       (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+     DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs *
+  &STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))))
+    sv1
+STEP_USED output_aux_spec_V 8 get_out (1769-1770) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 9 buff split (1772-1773) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 10 LENGTH t = 2048 (NEW) candidate 0 goals_out 1
+xlet_auto : using heuristics
+Post condition: POSTv nwv. SEP_EXISTS k.
+  IOFS_V Inv
+    (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+       (insert_atI
+          (TAKE (if z < i + 2048 then z − i else 2048)
+             (STRCAT
+                (MAP (CHR ∘ w2n)
+                   (MAP (n2w ∘ ORD)
+                      (explode
+                         (... ... i (if ... < ... then ... − ... else 2048)))))
+                (MAP (CHR ∘ w2n)
+                   (DROP (if z < i + 2048 then z − i else 2048) t)))) pos
+          content))
+STEP_USED output_aux_spec_V 11 write call (1774-1775; write_spec_V; side condition LENGTH rest = 2048) candidate 0 goals_out 1
+Using translator specification plus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv1.
+  IOFS_V Inv
+    (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+       (insert_atI
+          (TAKE (if z < i + 2048 then z − i else 2048)
+             (STRCAT
+                (MAP (CHR ∘ w2n)
+                   (MAP (n2w ∘ ORD)
+                      (explode (... ... (if ... then ... else ... )))))
+                (MAP (CHR ∘ w2n)
+                   (DROP (if z < ... + ... then z − i else 2048) t)))) pos
+          content)) * &NUM (i + if z < i + 2048 then z − i else 2048) nv1
+STEP_USED output_aux_spec_V 12 i + n (1776) candidate 0 goals_out 1
+Using a CF specification from the assumptions
+STEP_USED output_aux_spec_V 13 recursive call (1777-1789) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 14 post: fsupdate_o, insert_atI (1790-1798) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 15 pfx ++ sfx (1799-1810; SEG_APPEND3_W) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 16 close (1811-1814) candidate 0 goals_out 0
+Saved theorem _______ "output_aux_spec_V"
+TRY_HELPER_CLOSED output_aux_spec_V hyps 0
+TRY_HELPER_BEGIN output_spec_V
+Adding nsLookup representation thms for [TextIOProg_env_17]
+Adding nsLookup representation thms for [TextIOProg_env_16]
+Using translator specification string_size_v_thm from theory StringProg
+Post condition: POSTv nv. IOFS_V Inv fs * &NUM (strlen s) nv
+STEP_USED output_spec_V 1 xcf, size (1826-1829) candidate 0 goals_out 1
+STEP_CANDIDATE_FAILED output_spec_V 2 candidate 0 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED output_spec_V 2 candidate 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+SHOW STEP_ALL_FAILED output_spec_V 2 call output_aux_spec_V (1830-1835)
+  ASM NUM (strlen s) nv
+  ASM write_event_ok Inv fd
+  ASM get_mode fs fd = SOME WriteMode
+  ASM get_fd_content fs fd = SOME (content,pos)
+  ASM STRING_TYPE s sv
+  ASM OUTSTREAM fd fdv
+  GOAL cf_app p (Var (Short «output_aux»))
+  [Var (Short «fd»); Var (Short «s»); Lit (IntLit 0); Var (Short « v0»)]
+  (extend_env_rec [«output»] [TextIO_output_v] [«fd»; «s»] [fdv; sv]
+     (merge_env TextIOProg_env_17
+        (merge_env TextIOProg_env_16
+           (merge_env TextIOProg_env_10
+              (merge_env TextIOProg_env_8
+                 (merge_env TextIOProg_env_7
+                    (merge_env TextIOProg_env_3
+                       (merge_env empty_env
+                          (merge_env MarshallingProg_env_1 init_env)))))))) with
+   v :=
+     nsBind « v0» nv
+       (extend_env_rec [«output»] [TextIO_output_v] [«fd»; «s»] [fdv; sv]
+          (merge_env TextIOProg_env_17
+             (merge_env TextIOProg_env_16
+                (merge_env TextIOProg_env_10
+                   (merge_env TextIOProg_env_8
+                      (merge_env TextIOProg_env_7
+                         (merge_env TextIOProg_env_3 (... ... (... ... ))))))))).
+       v) (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + strlen s)
+            (insert_atI (explode s) pos content)))
+TRY_HELPER_FAILED output_spec_V HOL_ERR (HOL_ERROR {message = "all candidates failed at output_spec_V step 2", origins = [{origin_function = "step_tac", origin_structure = "A33", source_location = Loc_Unknown}]})
+TRY_HELPER_BEGIN output_STDIO_spec_V
+STEP_USED output_STDIO_spec_V 1 unfold STDIO_V (1845-1847) candidate 0 goals_out 1
+STEP_USED output_STDIO_spec_V 2 call output_spec_V (1848-1851) candidate 0 goals_out 1
+STEP_USED output_STDIO_spec_V 3 post (1852-1866, one >> chain) candidate 0 goals_out 0
+TRY_HELPER_HYPS output_STDIO_spec_V 1
+TRY_HELPER_BEGIN print_spec_V
+STEP_USED print_spec_V 1 xcf, STD_streams case (1875-1877) candidate 0 goals_out 1
+Adding nsLookup representation thms for [TextIOProg_env_18]
+STEP_USED print_spec_V 2 call output_STDIO_spec_V + tac (1878-1879) candidate 0 goals_out 0
+TRY_HELPER_FAILED print_spec_V HOL_ERR (HOL_ERROR {message = "Can't alpha convert", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+TRY_HELPER_BEGIN print_spec_refund
+STEP_USED print_spec_refund 1 instance candidate 0 goals_out 0
+TRY_HELPER_HYPS print_spec_refund 1
+EXPLORE_LEMMA write_event_ok_writei required
+EXPLORE_BEGIN write_event_ok_writei (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_event_ok_writei #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fd n i rest.
+  write_event_ok Inv fd ∧ LENGTH rest = 2048 ∧ i + n ≤ 2048 ⇒
+  ∀nb.
+    LENGTH nb = 4 + LENGTH rest ∧ HD nb = 0w ⇒
+    Inv
+      (IO_event (ExtCall «write») (n2w8 fd)
+         (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+    FREE_VARS 
+  GOAL_END write_event_ok_writei #1
+STEP write_event_ok_writei 1 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED write_event_ok_writei after_steps 1
+EXPLORE_END write_event_ok_writei
+EXPLORE_LEMMA write_event_ok_refund required
+EXPLORE_BEGIN write_event_ok_refund (head-goal mode) steps 5
+  GOAL_COUNT 1
+  GOAL_BEGIN write_event_ok_refund #1 assumptions 0 (ASM 0 = newest)
+    CONCL write_event_ok refund_valid_event 1
+    CONST_IN_CONCL forge_refundRouteA2c$refund_valid_event :io_event -> bool
+    FREE_VARS 
+  GOAL_END write_event_ok_refund #1
+STEP write_event_ok_refund 1 intro goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_event_ok_refund #1 assumptions 4 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 LENGTH nb = LENGTH rest + 4
+    ASM 2 i + n ≤ 2048
+    ASM 3 LENGTH rest = 2048
+    CONCL refund_valid_event
+  (IO_event (ExtCall «write») (n2w8 1) (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+    CONST_IN_CONCL forge_refundRouteA2c$refund_valid_event :io_event -> bool
+    FREE_VARS nb:word8 list, i:num, n:num, rest:word8 list
+  GOAL_END write_event_ok_refund #1
+STEP write_event_ok_refund 2 nums goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_event_ok_refund #1 assumptions 8 (ASM 0 = newest)
+    ASM 0 w22n (n2w2 n) = n
+    ASM 1 w22n (n2w2 i) = i
+    ASM 2 i < 2 ** (2 * 8)
+    ASM 3 n < 2 ** (2 * 8)
+    ASM 4 HD nb = 0w
+    ASM 5 LENGTH nb = LENGTH rest + 4
+    ASM 6 i + n ≤ 2048
+    ASM 7 LENGTH rest = 2048
+    CONCL refund_valid_event
+  (IO_event (ExtCall «write») (n2w8 1) (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+    CONST_IN_CONCL forge_refundRouteA2c$refund_valid_event :io_event -> bool
+    FREE_VARS nb:word8 list, i:num, n:num, rest:word8 list
+  GOAL_END write_event_ok_refund #1
+STEP write_event_ok_refund 3 unfold goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_event_ok_refund #1 assumptions 8 (ASM 0 = newest)
+    ASM 0 w22n (n2w2 n) = n
+    ASM 1 w22n (n2w2 i) = i
+    ASM 2 i < 2 ** (2 * 8)
+    ASM 3 n < 2 ** (2 * 8)
+    ASM 4 HD nb = 0w
+    ASM 5 LENGTH nb = LENGTH rest + 4
+    ASM 6 i + n ≤ 2048
+    ASM 7 LENGTH rest = 2048
+    CONCL ∃ab nb'.
+  ZIP (n2w2 n ++ n2w2 i ++ rest,nb) = ZIP (ab,nb') ∧ LENGTH ab = 2052 ∧
+  LENGTH nb' = LENGTH ab ∧ w22n [HD ab; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧
+  HD nb' = 0w
+    FREE_VARS nb:word8 list, i:num, n:num, rest:word8 list
+  GOAL_END write_event_ok_refund #1
+STEP write_event_ok_refund 4 witness goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_event_ok_refund #1 assumptions 8 (ASM 0 = newest)
+    ASM 0 w22n (n2w2 n) = n
+    ASM 1 w22n (n2w2 i) = i
+    ASM 2 i < 2 ** (2 * 8)
+    ASM 3 n < 2 ** (2 * 8)
+    ASM 4 HD nb = 0w
+    ASM 5 LENGTH nb = LENGTH rest + 4
+    ASM 6 i + n ≤ 2048
+    ASM 7 LENGTH rest = 2048
+    CONCL ZIP (n2w2 n ++ n2w2 i ++ rest,nb) = ZIP (n2w2 n ++ n2w2 i ++ rest,nb) ∧
+LENGTH (n2w2 n ++ n2w2 i ++ rest) = 2052 ∧
+LENGTH nb = LENGTH (n2w2 n ++ n2w2 i ++ rest) ∧
+w22n [HD (n2w2 n ++ n2w2 i ++ rest); (n2w2 n ++ n2w2 i ++ rest)❲1❳] +
+w22n [(n2w2 n ++ n2w2 i ++ rest)❲2❳; (n2w2 n ++ n2w2 i ++ rest)❲3❳] ≤ 2048 ∧
+HD nb = 0w
+    FREE_VARS nb:word8 list, i:num, n:num, rest:word8 list
+  GOAL_END write_event_ok_refund #1
+STEP write_event_ok_refund 5 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED write_event_ok_refund after_steps 5
+EXPLORE_END write_event_ok_refund
+EXPLORE_LEMMA SEG_APPEND3_W required
+EXPLORE_BEGIN SEG_APPEND3_W (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN SEG_APPEND3_W #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀len off z l.
+  len + off ≤ z ∧ z ≤ LENGTH l ⇒
+  SEG len off l ++ SEG (z − (off + len)) (off + len) l = SEG (z − off) off l
+    FREE_VARS 
+  GOAL_END SEG_APPEND3_W #1
+STEP SEG_APPEND3_W 1 all goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED SEG_APPEND3_W after_steps 1
+EXPLORE_END SEG_APPEND3_W
+EXPLORE_LEMMA IOxV_FFI_part_IN required
+EXPLORE_BEGIN IOxV_FFI_part_IN (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN IOxV_FFI_part_IN #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs H h.
+  (IOxV Inv fs * H) h ⇒
+  ∃ev.
+    FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) ev ∈ h
+    FREE_VARS 
+  GOAL_END IOxV_FFI_part_IN #1
+STEP IOxV_FFI_part_IN 1 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED IOxV_FFI_part_IN after_steps 1
+EXPLORE_END IOxV_FFI_part_IN
+EXPLORE_LEMMA UNIQUE_IOFS_V required
+EXPLORE_BEGIN UNIQUE_IOFS_V (head-goal mode) steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN UNIQUE_IOFS_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀s. VALID_HEAP s ⇒
+    ∀Inv1 Inv2 fs1 fs2 H1 H2.
+      (IOFS_V Inv1 fs1 * H1) s ∧ (IOFS_V Inv2 fs2 * H2) s ⇒ fs1 = fs2
+    FREE_VARS 
+  GOAL_END UNIQUE_IOFS_V #1
+STEP UNIQUE_IOFS_V 1 unfold goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN UNIQUE_IOFS_V #1 assumptions 5 (ASM 0 = newest)
+    ASM 0 FFI_part (encode fs1) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) ev' ∈ s
+    ASM 1 FFI_part (encode fs2) (mk_ffi_next fs_ffi_part)
+  (MAP FST (SND (SND fs_ffi_part))) ev ∈ s
+    ASM 2 (IOxV Inv2 fs2 *
+ ((SEP_EXISTS v. W8ARRAY iobuff_loc v * &(LENGTH v = 2052)) *
+  (&wfFS fs2 * H2))) s
+    ASM 3 (IOxV Inv1 fs1 *
+ ((SEP_EXISTS v. W8ARRAY iobuff_loc v * &(LENGTH v = 2052)) *
+  (&wfFS fs1 * H1))) s
+    ASM 4 VALID_HEAP s
+    CONCL fs1 = fs2
+    FREE_VARS ev':io_event list, ev:io_event list, Inv2:io_event -> bool, fs2:IO_fs, H2:(heap_part -> bool) -> bool, Inv1:io_event -> bool, fs1:IO_fs, H1:(heap_part -> bool) -> bool, s:heap_part -> bool
+  GOAL_END UNIQUE_IOFS_V #1
+STEP UNIQUE_IOFS_V 2 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED UNIQUE_IOFS_V after_steps 2
+EXPLORE_END UNIQUE_IOFS_V
+EXPLORE_LEMMA IOFS_V_HPROP_INJ required
+EXPLORE_BEGIN IOFS_V_HPROP_INJ (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN IOFS_V_HPROP_INJ #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs1 fs2. HPROP_INJ (IOFS_V Inv fs1) (IOFS_V Inv fs2) (fs2 = fs1)
+    FREE_VARS 
+  GOAL_END IOFS_V_HPROP_INJ #1
+STEP IOFS_V_HPROP_INJ 1 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED IOFS_V_HPROP_INJ after_steps 1
+EXPLORE_END IOFS_V_HPROP_INJ
+EXPLORE_LEMMA STDIO_V_numchars optional
+EXPLORE_BEGIN STDIO_V_numchars (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN STDIO_V_numchars #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs x. STDIO_V Inv (fs with numchars := x) = STDIO_V Inv fs
+    FREE_VARS 
+  GOAL_END STDIO_V_numchars #1
+STEP STDIO_V_numchars 1 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED STDIO_V_numchars after_steps 1
+EXPLORE_END STDIO_V_numchars
+EXPLORE_LEMMA UNIQUE_STDIO_V optional
+EXPLORE_BEGIN UNIQUE_STDIO_V (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN UNIQUE_STDIO_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀s. VALID_HEAP s ⇒
+    ∀fs1 fs2 Inv H1 H2.
+      (STDIO_V Inv fs1 * H1) s ∧ (STDIO_V Inv fs2 * H2) s ⇒
+      fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+      fs1.inode_tbl = fs2.inode_tbl
+    FREE_VARS 
+  GOAL_END UNIQUE_STDIO_V #1
+STEP UNIQUE_STDIO_V 1 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED UNIQUE_STDIO_V after_steps 1
+EXPLORE_END UNIQUE_STDIO_V
+EXPLORE_LEMMA STDIO_V_HPROP_INJ optional
+EXPLORE_BEGIN STDIO_V_HPROP_INJ (head-goal mode) steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN STDIO_V_HPROP_INJ #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fs1 fs2.
+  HPROP_INJ (STDIO_V Inv fs1) (STDIO_V Inv fs2)
+    (fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+     fs1.inode_tbl = fs2.inode_tbl)
+    FREE_VARS 
+  GOAL_END STDIO_V_HPROP_INJ #1
+STEP STDIO_V_HPROP_INJ 1 split goals 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN STDIO_V_HPROP_INJ #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 (STDIO_V Inv fs2 * G2) s
+    ASM 1 (STDIO_V Inv fs1 * G1) s
+    ASM 2 VALID_HEAP s
+    CONCL (fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+ fs1.inode_tbl = fs2.inode_tbl) ∧ (STDIO_V Inv fs1 * G2) s
+    FREE_VARS fs2:IO_fs, G2:(heap_part -> bool) -> bool, Inv:io_event -> bool, fs1:IO_fs, G1:(heap_part -> bool) -> bool, s:heap_part -> bool
+  GOAL_END STDIO_V_HPROP_INJ #1
+  GOAL_BEGIN STDIO_V_HPROP_INJ #2 assumptions 3 (ASM 0 = newest)
+    ASM 0 (fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+ fs1.inode_tbl = fs2.inode_tbl) ∧ (STDIO_V Inv fs1 * G2) s
+    ASM 1 (STDIO_V Inv fs1 * G1) s
+    ASM 2 VALID_HEAP s
+    CONCL (STDIO_V Inv fs2 * G2) s
+    FREE_VARS fs2:IO_fs, G2:(heap_part -> bool) -> bool, Inv:io_event -> bool, fs1:IO_fs, G1:(heap_part -> bool) -> bool, s:heap_part -> bool
+  GOAL_END STDIO_V_HPROP_INJ #2
+STEP STDIO_V_HPROP_INJ 2 => (lines 141-153) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN STDIO_V_HPROP_INJ #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 (fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+ fs1.inode_tbl = fs2.inode_tbl) ∧ (STDIO_V Inv fs1 * G2) s
+    ASM 1 (STDIO_V Inv fs1 * G1) s
+    ASM 2 VALID_HEAP s
+    CONCL (STDIO_V Inv fs2 * G2) s
+    FREE_VARS fs2:IO_fs, G2:(heap_part -> bool) -> bool, Inv:io_event -> bool, fs1:IO_fs, G1:(heap_part -> bool) -> bool, s:heap_part -> bool
+  GOAL_END STDIO_V_HPROP_INJ #1
+STEP STDIO_V_HPROP_INJ 3 <= (lines 154-162) goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED STDIO_V_HPROP_INJ after_steps 3
+EXPLORE_END STDIO_V_HPROP_INJ
+EXPLORE_LEMMA STD_streams_fd0 optional
+EXPLORE_BEGIN STD_streams_fd0 (head-goal mode) steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN STD_streams_fd0 #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fs.
+  wfFS fs ∧ STD_streams fs ⇒
+  get_fd_content fs 0 ≠ NONE ∧ get_mode fs 0 = SOME ReadMode
+    FREE_VARS 
+  GOAL_END STD_streams_fd0 #1
+STEP STD_streams_fd0 1 intro goals 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN STD_streams_fd0 #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 wfFS fs
+    CONCL get_fd_content fs 0 ≠ NONE
+    FREE_VARS fs:IO_fs
+  GOAL_END STD_streams_fd0 #1
+  GOAL_BEGIN STD_streams_fd0 #2 assumptions 2 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 wfFS fs
+    CONCL get_mode fs 0 = SOME ReadMode
+    FREE_VARS fs:IO_fs
+  GOAL_END STD_streams_fd0 #2
+STEP_FAILED STD_streams_fd0 2 content HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+GOALS_BEFORE_STEP STD_streams_fd0 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN STD_streams_fd0 #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 wfFS fs
+    CONCL get_fd_content fs 0 ≠ NONE
+    FREE_VARS fs:IO_fs
+  GOAL_END STD_streams_fd0 #1
+  GOAL_BEGIN STD_streams_fd0 #2 assumptions 2 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 wfFS fs
+    CONCL get_mode fs 0 = SOME ReadMode
+    FREE_VARS fs:IO_fs
+  GOAL_END STD_streams_fd0 #2
+ALT_FAILED STD_streams_fd0 2 content alt 1 HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+STEP_STUCK STD_streams_fd0 2 content
+EXPLORE_END STD_streams_fd0
+EXPLORE_LEMMA writei_spec_W required
+EXPLORE_BEGIN writei_spec_W (head-goal mode) steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN writei_spec_W #1 assumptions 0 (ASM 0 = newest)
+    CONCL wfFS fs ⇒
+0 < n ⇒
+MAX (i + n) 2048 ≤ LENGTH rest ⇒
+i + n < 256² ⇒
+get_fd_content fs fd = SOME (content,pos) ⇒
+get_mode fs fd = SOME WriteMode ⇒
+FD fd fdv ⇒
+NUM n nv ⇒
+NUM i iv ⇒
+bc = h1::h2::h3::... ::... ⇒
+LENGTH rest = 2048 ⇒
+write_event_ok Inv fd ⇒
+... ... (... * ... ) (... ... (λ... . ... ))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, h4:word8, h3:word8, h2:word8, h1:word8, bc:word8 list, iv:v, nv:v, fdv:v, pos:num, content:string, fd:num, rest:word8 list, i:num, n:num, fs:IO_fs
+  GOAL_END writei_spec_W #1
+STEP writei_spec_W 1 intro goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN writei_spec_W #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 write_event_ok Inv fd
+    ASM 1 LENGTH rest = 2048
+    ASM 2 bc = h1::h2::h3::h4::rest
+    ASM 3 NUM i iv
+    ASM 4 NUM n nv
+    ASM 5 FD fd fdv
+    ASM 6 get_mode fs fd = SOME WriteMode
+    ASM 7 get_fd_content fs fd = SOME (content,pos)
+    ASM 8 i + n < 256²
+    ASM 9 MAX (i + n) 2048 ≤ LENGTH rest
+    ASM 10 0 < n
+    ASM 11 wfFS fs
+    CONCL app p TextIO_writei_v [fdv; nv; iv] (IOxV Inv fs * W8ARRAY iobuff_loc bc)
+  (POSTve
+     (λnwv.
+        SEP_EXISTS nw.
+          &NUM nw nwv * &(nw > 0) * &(nw ≤ n) *
+          W8ARRAY iobuff_loc (0w::n2w2 nw ++ n2w i::rest) *
+          IOxV Inv
+            (fsupdate fs fd (1 + Lnext_pos fs.numchars) (pos + nw)
+               (insert_atI (TAKE nw (MAP (... ∘ ... ) (... ... rest))) pos
+                  content)))
+     (λe.
+        &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::n2w2 i ++ rest) *
+        &F *
+        IOFS
+          (fs with
+           numchars := THE (LDROP (1 + Lnext_pos fs.numchars) fs.numchars))))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, rest:word8 list, n:num, fs:IO_fs
+  GOAL_END writei_spec_W #1
+STEP writei_spec_W 2 bound goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN writei_spec_W #1 assumptions 13 (ASM 0 = newest)
+    ASM 0 i + n ≤ 2048
+    ASM 1 write_event_ok Inv fd
+    ASM 2 LENGTH rest = 2048
+    ASM 3 bc = h1::h2::h3::h4::rest
+    ASM 4 NUM i iv
+    ASM 5 NUM n nv
+    ASM 6 FD fd fdv
+    ASM 7 get_mode fs fd = SOME WriteMode
+    ASM 8 get_fd_content fs fd = SOME (content,pos)
+    ASM 9 i + n < 256²
+    ASM 10 MAX (i + n) 2048 ≤ LENGTH rest
+    ASM 11 0 < n
+    ASM 12 wfFS fs
+    CONCL app p TextIO_writei_v [fdv; nv; iv] (IOxV Inv fs * W8ARRAY iobuff_loc bc)
+  (POSTve
+     (λnwv.
+        SEP_EXISTS nw.
+          &NUM nw nwv * &(nw > 0) * &(nw ≤ n) *
+          W8ARRAY iobuff_loc (0w::n2w2 nw ++ n2w i::rest) *
+          IOxV Inv
+            (fsupdate fs fd (1 + Lnext_pos fs.numchars) (pos + nw)
+               (insert_atI (TAKE nw (MAP (... ∘ ... ) (... ... rest))) pos
+                  content)))
+     (λe.
+        &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::n2w2 i ++ rest) *
+        &F *
+        IOFS
+          (fs with
+           numchars := THE (LDROP (1 + Lnext_pos fs.numchars) fs.numchars))))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, rest:word8 list, n:num, fs:IO_fs
+  GOAL_END writei_spec_W #1
+STEP_FAILED writei_spec_W 3 H_inv from write_event_ok HOL_ERR (HOL_ERROR {message = "predicate not true", origins = [{origin_function = "assert", origin_structure = "Lib", source_location = Loc_Unknown}]})
+GOALS_BEFORE_STEP writei_spec_W 3
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN writei_spec_W #1 assumptions 13 (ASM 0 = newest)
+    ASM 0 i + n ≤ 2048
+    ASM 1 write_event_ok Inv fd
+    ASM 2 LENGTH rest = 2048
+    ASM 3 bc = h1::h2::h3::h4::rest
+    ASM 4 NUM i iv
+    ASM 5 NUM n nv
+    ASM 6 FD fd fdv
+    ASM 7 get_mode fs fd = SOME WriteMode
+    ASM 8 get_fd_content fs fd = SOME (content,pos)
+    ASM 9 i + n < 256²
+    ASM 10 MAX (i + n) 2048 ≤ LENGTH rest
+    ASM 11 0 < n
+    ASM 12 wfFS fs
+    CONCL app p TextIO_writei_v [fdv; nv; iv] (IOxV Inv fs * W8ARRAY iobuff_loc bc)
+  (POSTve
+     (λnwv.
+        SEP_EXISTS nw.
+          &NUM nw nwv * &(nw > 0) * &(nw ≤ n) *
+          W8ARRAY iobuff_loc (0w::n2w2 nw ++ n2w i::rest) *
+          IOxV Inv
+            (fsupdate fs fd (1 + Lnext_pos fs.numchars) (pos + nw)
+               (insert_atI (TAKE nw (MAP (... ∘ ... ) (... ... rest))) pos
+                  content)))
+     (λe.
+        &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::n2w2 i ++ rest) *
+        &F *
+        IOFS
+          (fs with
+           numchars := THE (LDROP (1 + Lnext_pos fs.numchars) fs.numchars))))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, rest:word8 list, n:num, fs:IO_fs
+  GOAL_END writei_spec_W #1
+ALT_WORKS writei_spec_W 3 H_inv from write_event_ok alt 1
+STEP writei_spec_W 3 H_inv from write_event_ok goals 1 (alt 1)
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN writei_spec_W #1 assumptions 15 (ASM 0 = newest)
+    ASM 0 ∀nb.
+  HD nb = 0w ⇒
+  LENGTH nb = 4 + LENGTH rest ⇒
+  Inv
+    (IO_event (ExtCall «write») (n2w8 fd) (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+    ASM 1 ∀nb.
+  LENGTH nb = 4 + LENGTH rest ⇒
+  HD nb = 0w ⇒
+  Inv
+    (IO_event (ExtCall «write») (n2w8 fd) (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+    ASM 2 i + n ≤ 2048
+    ASM 3 write_event_ok Inv fd
+    ASM 4 LENGTH rest = 2048
+    ASM 5 bc = h1::h2::h3::h4::rest
+    ASM 6 NUM i iv
+    ASM 7 NUM n nv
+    ASM 8 FD fd fdv
+    ASM 9 get_mode fs fd = SOME WriteMode
+    ASM 10 get_fd_content fs fd = SOME (content,pos)
+    ASM 11 i + n < 256²
+    ASM 12 MAX (i + n) 2048 ≤ LENGTH rest
+    ASM 13 0 < n
+    ASM 14 wfFS fs
+    CONCL app p TextIO_writei_v [fdv; nv; iv] (IOxV Inv fs * W8ARRAY iobuff_loc bc)
+  (POSTve
+     (λnwv.
+        SEP_EXISTS nw.
+          &NUM nw nwv * &(nw > 0) * &(nw ≤ n) *
+          W8ARRAY iobuff_loc (0w::n2w2 nw ++ n2w i::rest) *
+          IOxV Inv
+            (fsupdate fs fd (1 + Lnext_pos fs.numchars) (pos + nw)
+               (insert_atI (TAKE nw (MAP (... ∘ ... ) (... ... rest))) pos
+                  content)))
+     (λe.
+        &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::n2w2 i ++ rest) *
+        &F *
+        IOFS
+          (fs with
+           numchars := THE (LDROP (1 + Lnext_pos fs.numchars) fs.numchars))))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, rest:word8 list, n:num, fs:IO_fs
+  GOAL_END writei_spec_W #1
+STEP writei_spec_W 4 apply writei_spec_V goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED writei_spec_W after_steps 4
+EXPLORE_END writei_spec_W
+EXPLORE_LEMMA write_spec_V required
+EXPLORE_BEGIN write_spec_V (head-goal mode) steps 8
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀n fs fd i pos h1 h2 h3 h4 rest bc fdv nv iv content.
+  wfFS fs ⇒
+  MAX (i + n) 2048 ≤ LENGTH rest ⇒
+  i + n < 256² ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  NUM i iv ⇒
+  bc = h1::h2::h3::... ::... ⇒
+  LENGTH rest = 2048 ⇒
+  write_event_ok Inv fd ⇒
+  ... ... (... * ... ) (POSTv nwv. SEP_EXISTS k. ... ... )
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool
+  GOAL_END write_spec_V #1
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOxV Inv fs * W8ARRAY iobuff_loc bc * &BOOL (n = 0) bv
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOxV Inv fs * W8ARRAY iobuff_loc bc * &BOOL T bv
+STEP write_spec_V 1 setup+n=0 (1568-1578) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 15 (ASM 0 = newest)
+    ASM 0 n ≠ 0
+    ASM 1 BOOL (n = 0) bv
+    ASM 2 write_event_ok Inv fd
+    ASM 3 LENGTH rest = 2048
+    ASM 4 bc = h1::h2::h3::h4::rest
+    ASM 5 NUM i iv
+    ASM 6 NUM n nv
+    ASM 7 FD fd fdv
+    ASM 8 get_mode fs fd = SOME WriteMode
+    ASM 9 get_fd_content fs fd = SOME (content,pos)
+    ASM 10 i + n < 65536
+    ASM 11 i + n ≤ 2048
+    ASM 12 wfFS fs
+    ASM 13 n ≤ SUC N
+    ASM 14 ∀n'.
+  n' ≤ N ⇒
+  ∀fs' fd' i' pos' h1' h2' h3' h4' rest' fdv' nv' iv' content'.
+    wfFS fs' ⇒
+    i' + n' ≤ LENGTH rest' ∧ 2048 ≤ LENGTH rest' ⇒
+    i' + n' < 65536 ⇒
+    get_fd_content fs' fd' = SOME (content',pos') ⇒
+    get_mode fs' fd' = SOME WriteMode ⇒
+    FD fd' fdv' ⇒
+    NUM n' nv' ⇒
+    NUM i' iv' ⇒
+    LENGTH rest' = 2048 ⇒
+    ... ... fd' ⇒
+    ... ... (POSTv... . SEP_EXISTS... . ... )
+    CONCL cf_let (SOME «nw»)
+  (cf_app p (Var (Short «writei»))
+     [Var (Short «fd»); Var (Short «n»); Var (Short «i»)])
+  (cf_let (SOME « v1»)
+     (cf_app p (Var (Short «<»)) [Var (Short «nw»); Var (Short «n»)])
+     (cf_if (Var (Short « v1»))
+        (cf_let (SOME « v3»)
+           (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «nw»)])
+           (cf_let (SOME « v2»)
+              (cf_app p (Var (Short «-»)) [Var (Short «n»); Var (... ... )])
+              (cf_app p (Var (Short «write»))
+                 [Var (Short «fd»); Var (Short « v2»); Var (... ... )])))
+        (cf_con NONE [])))
+  (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»] [fdv; nv; iv]
+     (merge_env TextIOProg_env_14
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v0» bv
+       (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»]
+          [fdv; nv; iv]
+          (merge_env TextIOProg_env_14
+             (merge_env TextIOProg_env_10
+                (merge_env TextIOProg_env_8
+                   (merge_env TextIOProg_env_7
+                      (merge_env TextIOProg_env_3
+                         (merge_env empty_env (... ... init_env)))))))).v)
+  (IOxV Inv fs * W8ARRAY iobuff_loc (h1::h2::h3::h4::rest))
+  (POSTv nwv. SEP_EXISTS k.
+     IOFS_V Inv
+       (fsupdate fs fd k (pos + n)
+          (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)))
+    FREE_VARS bv:v, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, rest:word8 list, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, fs:IO_fs, n:num, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, N:num
+  GOAL_END write_spec_V #1
+xlet_auto : using heuristics
+Post condition: POSTve
+  (λnwv.
+     SEP_EXISTS nw.
+       IOxV Inv
+         (fsupdate fs fd (Lnext_pos ... .numchars + 1) (nw + pos)
+            (insert_atI (... ... (... ... )) pos content)) *
+       W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &(nw ≤ n) *
+       &(nw > 0) * &NUM nw nwv)
+  (λe.
+     IOFS
+       (fs with
+        numchars := THE (LDROP (Lnext_pos fs.numchars + 1) fs.numchars)) *
+     W8ARRAY iobuff_loc (1w::n2w n::(n2w2 i ++ rest)) * &F * &InvalidFD_exn e)
+STEP write_spec_V 2 writei call (1579-1580, writei_spec_W) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 18 (ASM 0 = newest)
+    ASM 0 NUM nw v
+    ASM 1 nw > 0
+    ASM 2 nw ≤ n
+    ASM 3 n ≠ 0
+    ASM 4 BOOL (n = 0) bv
+    ASM 5 write_event_ok Inv fd
+    ASM 6 LENGTH rest = 2048
+    ASM 7 bc = h1::h2::h3::h4::rest
+    ASM 8 NUM i iv
+    ASM 9 NUM n nv
+    ASM 10 FD fd fdv
+    ASM 11 get_mode fs fd = SOME WriteMode
+    ASM 12 get_fd_content fs fd = SOME (content,pos)
+    ASM 13 i + n < 65536
+    ASM 14 i + n ≤ 2048
+    ASM 15 wfFS fs
+    ASM 16 n ≤ SUC N
+    ASM 17 ∀n'.
+  n' ≤ N ⇒
+  ∀fs' fd' i' pos' h1' h2' h3' h4' rest' fdv' nv' iv' content'.
+    wfFS fs' ⇒
+    i' + n' ≤ LENGTH rest' ∧ 2048 ≤ LENGTH rest' ⇒
+    i' + n' < 65536 ⇒
+    get_fd_content fs' fd' = SOME (content',pos') ⇒
+    get_mode fs' fd' = SOME WriteMode ⇒
+    FD fd' fdv' ⇒
+    NUM n' nv' ⇒
+    NUM i' iv' ⇒
+    LENGTH rest' = 2048 ⇒
+    ... ... fd' ⇒
+    ... ... (POSTv... . SEP_EXISTS... . ... )
+    CONCL cf_let (SOME « v1»)
+  (cf_app p (Var (Short «<»)) [Var (Short «nw»); Var (Short «n»)])
+  (cf_if (Var (Short « v1»))
+     (cf_let (SOME « v3»)
+        (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «nw»)])
+        (cf_let (SOME « v2»)
+           (cf_app p (Var (Short «-»)) [Var (Short «n»); Var (Short «nw»)])
+           (cf_app p (Var (Short «write»))
+              [Var (Short «fd»); Var (Short « v2»); Var (Short « v3»)])))
+     (cf_con NONE []))
+  (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»] [fdv; nv; iv]
+     (merge_env TextIOProg_env_14
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind «nw» v
+       (nsBind « v0» bv
+          (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»]
+             [fdv; nv; iv]
+             (merge_env TextIOProg_env_14
+                (merge_env TextIOProg_env_10
+                   (merge_env TextIOProg_env_8
+                      (merge_env TextIOProg_env_7
+                         (merge_env TextIOProg_env_3 (... ... (... ... )))))))).
+          v))
+  (IOxV Inv
+     (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+        (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+   W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)))
+  (POSTv nwv. SEP_EXISTS k.
+     IOFS_V Inv
+       (fsupdate fs fd k (n + pos)
+          (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)))
+    FREE_VARS v:v, nw:num, bv:v, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, rest:word8 list, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, fs:IO_fs, n:num, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, N:num
+  GOAL_END write_spec_V #1
+Using translator specification lt_v_thm from theory mlbasicsProg
+Post condition: POSTv bv1.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &BOOL (nw < n) bv1
+STEP write_spec_V 3 nw < n test (1581) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 19 (ASM 0 = newest)
+    ASM 0 BOOL (nw < n) bv1
+    ASM 1 NUM nw v
+    ASM 2 nw > 0
+    ASM 3 nw ≤ n
+    ASM 4 n ≠ 0
+    ASM 5 BOOL (n = 0) bv
+    ASM 6 write_event_ok Inv fd
+    ASM 7 LENGTH rest = 2048
+    ASM 8 bc = h1::h2::h3::h4::rest
+    ASM 9 NUM i iv
+    ASM 10 NUM n nv
+    ASM 11 FD fd fdv
+    ASM 12 get_mode fs fd = SOME WriteMode
+    ASM 13 get_fd_content fs fd = SOME (content,pos)
+    ASM 14 i + n < 65536
+    ASM 15 i + n ≤ 2048
+    ASM 16 wfFS fs
+    ASM 17 n ≤ SUC N
+    ASM 18 ∀n'.
+  n' ≤ N ⇒
+  ∀fs' fd' i' pos' h1' h2' h3' h4' rest' fdv' nv' iv' content'.
+    wfFS fs' ⇒
+    i' + n' ≤ LENGTH rest' ∧ 2048 ≤ LENGTH rest' ⇒
+    i' + n' < 65536 ⇒
+    get_fd_content fs' fd' = SOME (content',pos') ⇒
+    get_mode fs' fd' = SOME WriteMode ⇒
+    FD fd' fdv' ⇒
+    NUM n' nv' ⇒
+    NUM i' iv' ⇒
+    LENGTH rest' = 2048 ⇒
+    ... ... fd' ⇒
+    ... ... (POSTv... . SEP_EXISTS... . ... )
+    CONCL cf_if (Var (Short « v1»))
+  (cf_let (SOME « v3»)
+     (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «nw»)])
+     (cf_let (SOME « v2»)
+        (cf_app p (Var (Short «-»)) [Var (Short «n»); Var (Short «nw»)])
+        (cf_app p (Var (Short «write»))
+           [Var (Short «fd»); Var (Short « v2»); Var (Short « v3»)])))
+  (cf_con NONE [])
+  (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»] [fdv; nv; iv]
+     (merge_env TextIOProg_env_14
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v1» bv1
+       (nsBind «nw» v
+          (nsBind « v0» bv
+             (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»]
+                [fdv; nv; iv]
+                (merge_env TextIOProg_env_14
+                   (merge_env TextIOProg_env_10
+                      (merge_env TextIOProg_env_8
+                         (merge_env TextIOProg_env_7 (... ... (... ... ))))))).
+             v)))
+  (IOxV Inv
+     (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+        (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+   W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)))
+  (POSTv nwv. SEP_EXISTS k.
+     IOFS_V Inv
+       (fsupdate fs fd k (n + pos)
+          (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)))
+    FREE_VARS bv1:v, v:v, nw:num, bv:v, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, rest:word8 list, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, fs:IO_fs, n:num, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, N:num
+  GOAL_END write_spec_V #1
+STEP write_spec_V 4 done branch (1581-1587) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 20 (ASM 0 = newest)
+    ASM 0 nw < n
+    ASM 1 BOOL (nw < n) bv1
+    ASM 2 NUM nw v
+    ASM 3 nw > 0
+    ASM 4 nw ≤ n
+    ASM 5 n ≠ 0
+    ASM 6 BOOL F bv
+    ASM 7 write_event_ok Inv fd
+    ASM 8 LENGTH rest = 2048
+    ASM 9 bc = h1::h2::h3::h4::rest
+    ASM 10 NUM i iv
+    ASM 11 NUM n nv
+    ASM 12 FD fd fdv
+    ASM 13 get_mode fs fd = SOME WriteMode
+    ASM 14 get_fd_content fs fd = SOME (content,pos)
+    ASM 15 i + n < 65536
+    ASM 16 i + n ≤ 2048
+    ASM 17 wfFS fs
+    ASM 18 n ≤ SUC N
+    ASM 19 ∀n'.
+  n' ≤ N ⇒
+  ∀fs' fd' i' pos' h1' h2' h3' h4' rest' fdv' nv' iv' content'.
+    wfFS fs' ⇒
+    i' + n' ≤ LENGTH rest' ∧ 2048 ≤ LENGTH rest' ⇒
+    i' + n' < 65536 ⇒
+    get_fd_content fs' fd' = SOME (content',pos') ⇒
+    get_mode fs' fd' = SOME WriteMode ⇒
+    FD fd' fdv' ⇒
+    NUM n' nv' ⇒
+    NUM i' iv' ⇒
+    LENGTH rest' = 2048 ⇒
+    ... ... fd' ⇒
+    ... ... (POSTv... . SEP_EXISTS... . ... )
+    CONCL cf_let (SOME « v3»)
+  (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «nw»)])
+  (cf_let (SOME « v2»)
+     (cf_app p (Var (Short «-»)) [Var (Short «n»); Var (Short «nw»)])
+     (cf_app p (Var (Short «write»))
+        [Var (Short «fd»); Var (Short « v2»); Var (Short « v3»)]))
+  (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»] [fdv; nv; iv]
+     (merge_env TextIOProg_env_14
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v1» bv1
+       (nsBind «nw» v
+          (nsBind « v0» bv
+             (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»]
+                [fdv; nv; iv]
+                (merge_env TextIOProg_env_14
+                   (merge_env TextIOProg_env_10
+                      (merge_env TextIOProg_env_8
+                         (merge_env TextIOProg_env_7 (... ... (... ... ))))))).
+             v)))
+  (IOxV Inv
+     (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+        (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+   W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)))
+  (POSTv nwv. SEP_EXISTS k.
+     IOFS_V Inv
+       (fsupdate fs fd k (n + pos)
+          (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)))
+    FREE_VARS bv1:v, v:v, nw:num, bv:v, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, rest:word8 list, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, fs:IO_fs, n:num, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, N:num
+  GOAL_END write_spec_V #1
+Using translator specification plus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv1.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &NUM (i + nw) nv1
+Using translator specification minus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv2.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &NUM (n − nw) nv2
+STEP write_spec_V 5 n-nw, i+nw (1588) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 22 (ASM 0 = newest)
+    ASM 0 NUM (n − nw) nv2
+    ASM 1 NUM (i + nw) nv1
+    ASM 2 nw < n
+    ASM 3 BOOL (nw < n) bv1
+    ASM 4 NUM nw v
+    ASM 5 nw > 0
+    ASM 6 nw ≤ n
+    ASM 7 n ≠ 0
+    ASM 8 BOOL F bv
+    ASM 9 write_event_ok Inv fd
+    ASM 10 LENGTH rest = 2048
+    ASM 11 bc = h1::h2::h3::h4::rest
+    ASM 12 NUM i iv
+    ASM 13 NUM n nv
+    ASM 14 FD fd fdv
+    ASM 15 get_mode fs fd = SOME WriteMode
+    ASM 16 get_fd_content fs fd = SOME (content,pos)
+    ASM 17 i + n < 65536
+    ASM 18 i + n ≤ 2048
+    ASM 19 wfFS fs
+    ASM 20 n ≤ SUC N
+    ASM 21 ∀n'.
+  n' ≤ N ⇒
+  ∀fs' fd' i' pos' h1' h2' h3' h4' rest' fdv' nv' iv' content'.
+    wfFS fs' ⇒
+    i' + n' ≤ LENGTH rest' ∧ 2048 ≤ LENGTH rest' ⇒
+    i' + n' < 65536 ⇒
+    get_fd_content fs' fd' = SOME (content',pos') ⇒
+    get_mode fs' fd' = SOME WriteMode ⇒
+    FD fd' fdv' ⇒
+    NUM n' nv' ⇒
+    NUM i' iv' ⇒
+    LENGTH rest' = 2048 ⇒
+    ... ... fd' ⇒
+    ... ... (POSTv... . SEP_EXISTS... . ... )
+    CONCL cf_app p (Var (Short «write»))
+  [Var (Short «fd»); Var (Short « v2»); Var (Short « v3»)]
+  (extend_env_rec [«write»] [TextIO_write_v] [«fd»; «n»; «i»] [fdv; nv; iv]
+     (merge_env TextIOProg_env_14
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v2» nv2
+       (nsBind « v3» nv1
+          (nsBind « v1» bv1
+             (nsBind «nw» v
+                (nsBind « v0» bv
+                   (... ... [... ] [«fd»; ... ; ... ] [fdv; nv; ... ]
+                      (merge_env TextIOProg_env_14
+                         (merge_env TextIOProg_env_10 (... ... (... ... ))))).
+                   v)))))
+  (IOxV Inv
+     (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+        (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+   W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)))
+  (POSTv nwv. SEP_EXISTS k.
+     IOFS_V Inv
+       (fsupdate fs fd k (n + pos)
+          (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)))
+    FREE_VARS nv2:v, nv1:v, bv1:v, v:v, nw:num, bv:v, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, rest:word8 list, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, fs:IO_fs, n:num, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, N:num
+  GOAL_END write_spec_V #1
+STEP write_spec_V 6 IH (1589-1594) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 23 (ASM 0 = newest)
+    ASM 0 T
+    ASM 1 Abbrev
+  (fs' =
+   fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+     (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content))
+    ASM 2 NUM (n − nw) nv2
+    ASM 3 NUM (i + nw) nv1
+    ASM 4 nw < n
+    ASM 5 BOOL T bv1
+    ASM 6 NUM nw v
+    ASM 7 nw > 0
+    ASM 8 T
+    ASM 9 T
+    ASM 10 BOOL F bv
+    ASM 11 write_event_ok Inv fd
+    ASM 12 LENGTH rest = 2048
+    ASM 13 bc = h1::h2::h3::h4::rest
+    ASM 14 NUM i iv
+    ASM 15 NUM n nv
+    ASM 16 FD fd fdv
+    ASM 17 get_mode fs fd = SOME WriteMode
+    ASM 18 get_fd_content fs fd = SOME (content,pos)
+    ASM 19 T
+    ASM 20 i + n ≤ 2048
+    ASM 21 wfFS fs
+    ASM 22 n ≤ SUC N
+    CONCL wfFS fs' ∧ get_mode fs' fd = SOME WriteMode ∧
+get_fd_content fs' fd =
+SOME
+  (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content,nw + pos) ∧
+∀x. ∃x'.
+  IOFS_V Inv
+    (fsupdate fs' fd x (n + pos)
+       (insert_atI (TAKE (n − nw) (MAP (CHR ∘ w2n) (DROP (... + ... ) rest)))
+          (nw + pos)
+          (insert_atI (TAKE nw (MAP (... ∘ ... ) (... ... rest))) pos content))) ==>>
+  IOFS_V Inv
+    (fsupdate fs fd x' (n + pos)
+       (insert_atI (TAKE n (MAP (... ∘ ... ) (... ... rest))) pos content)) *
+  GC
+    FREE_VARS fs':IO_fs, nv2:v, nv1:v, bv1:v, v:v, nw:num, bv:v, Inv:io_event -> bool, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, rest:word8 list, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, fs:IO_fs, N:num, n:num
+  GOAL_END write_spec_V #1
+STEP write_spec_V 7 IH side conditions (1595-1601) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 23 (ASM 0 = newest)
+    ASM 0 T
+    ASM 1 Abbrev
+  (fs' =
+   fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+     (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content))
+    ASM 2 NUM (n − nw) nv2
+    ASM 3 NUM (i + nw) nv1
+    ASM 4 nw < n
+    ASM 5 BOOL T bv1
+    ASM 6 NUM nw v
+    ASM 7 nw > 0
+    ASM 8 T
+    ASM 9 T
+    ASM 10 BOOL F bv
+    ASM 11 write_event_ok Inv fd
+    ASM 12 LENGTH rest = 2048
+    ASM 13 bc = h1::h2::h3::h4::rest
+    ASM 14 NUM i iv
+    ASM 15 NUM n nv
+    ASM 16 FD fd fdv
+    ASM 17 get_mode fs fd = SOME WriteMode
+    ASM 18 get_fd_content fs fd = SOME (content,pos)
+    ASM 19 T
+    ASM 20 i + n ≤ 2048
+    ASM 21 wfFS fs
+    ASM 22 n ≤ SUC N
+    CONCL ∀x. ∃x'.
+  IOFS_V Inv
+    (fsupdate fs' fd x (n + pos)
+       (insert_atI (TAKE (n − nw) (MAP (CHR ∘ w2n) (DROP (i + nw) rest)))
+          (nw + pos)
+          (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content))) ==>>
+  IOFS_V Inv
+    (fsupdate fs fd x' (n + pos)
+       (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  GC
+    FREE_VARS fs':IO_fs, nv2:v, nv1:v, bv1:v, v:v, nw:num, bv:v, Inv:io_event -> bool, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, rest:word8 list, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, fs:IO_fs, N:num, n:num
+  GOAL_END write_spec_V #1
+STEP_FAILED write_spec_V 8 final (1602-1606) HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+GOALS_BEFORE_STEP write_spec_V 8
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN write_spec_V #1 assumptions 23 (ASM 0 = newest)
+    ASM 0 T
+    ASM 1 Abbrev
+  (fs' =
+   fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+     (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content))
+    ASM 2 NUM (n − nw) nv2
+    ASM 3 NUM (i + nw) nv1
+    ASM 4 nw < n
+    ASM 5 BOOL T bv1
+    ASM 6 NUM nw v
+    ASM 7 nw > 0
+    ASM 8 T
+    ASM 9 T
+    ASM 10 BOOL F bv
+    ASM 11 write_event_ok Inv fd
+    ASM 12 LENGTH rest = 2048
+    ASM 13 bc = h1::h2::h3::h4::rest
+    ASM 14 NUM i iv
+    ASM 15 NUM n nv
+    ASM 16 FD fd fdv
+    ASM 17 get_mode fs fd = SOME WriteMode
+    ASM 18 get_fd_content fs fd = SOME (content,pos)
+    ASM 19 T
+    ASM 20 i + n ≤ 2048
+    ASM 21 wfFS fs
+    ASM 22 n ≤ SUC N
+    CONCL ∀x. ∃x'.
+  IOFS_V Inv
+    (fsupdate fs' fd x (n + pos)
+       (insert_atI (TAKE (n − nw) (MAP (CHR ∘ w2n) (DROP (i + nw) rest)))
+          (nw + pos)
+          (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content))) ==>>
+  IOFS_V Inv
+    (fsupdate fs fd x' (n + pos)
+       (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  GC
+    FREE_VARS fs':IO_fs, nv2:v, nv1:v, bv1:v, v:v, nw:num, bv:v, Inv:io_event -> bool, bc:word8 list, h1:word8, h2:word8, h3:word8, h4:word8, rest:word8 list, iv:v, nv:v, fdv:v, fd:num, content:string, pos:num, i:num, fs:IO_fs, N:num, n:num
+  GOAL_END write_spec_V #1
+ALT_FAILED write_spec_V 8 final (1602-1606) alt 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+STEP_STUCK write_spec_V 8 final (1602-1606)
+EXPLORE_END write_spec_V
+EXPLORE_LEMMA output_aux_spec_V required
+EXPLORE_BEGIN output_aux_spec_V (head-goal mode) steps 16
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fd fdv s sv i iv z zv fs content pos.
+  OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+  z ≤ strlen s ∧ get_fd_content fs fd = SOME (content,pos) ∧
+  get_mode fs fd = SOME WriteMode ∧ write_event_ok Inv fd ⇒
+  app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       SEP_EXISTS k.
+         IOFS_V Inv
+           (fsupdate fs fd k (pos + (z − i))
+              (insert_atI (explode (... ... i (z − i))) pos content)))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool
+  GOAL_END output_aux_spec_V #1
+STEP output_aux_spec_V 1 induct (1743) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 10 (ASM 0 = newest)
+    ASM 0 write_event_ok Inv fd
+    ASM 1 get_mode fs fd = SOME WriteMode
+    ASM 2 get_fd_content fs fd = SOME (content,pos)
+    ASM 3 z ≤ strlen s
+    ASM 4 i ≤ z
+    ASM 5 NUM z zv
+    ASM 6 NUM i iv
+    ASM 7 STRING_TYPE s sv
+    ASM 8 OUTSTREAM fd fdv
+    ASM 9 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+Using translator specification le_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOFS_V Inv fs * &BOOL (z ≤ i) bv
+STEP output_aux_spec_V 2 xcf, z <= i test, xif (1744-1746) goals 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 z ≤ i
+    ASM 1 BOOL (z ≤ i) bv
+    ASM 2 write_event_ok Inv fd
+    ASM 3 get_mode fs fd = SOME WriteMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 z ≤ strlen s
+    ASM 6 i ≤ z
+    ASM 7 NUM z zv
+    ASM 8 NUM i iv
+    ASM 9 STRING_TYPE s sv
+    ASM 10 OUTSTREAM fd fdv
+    ASM 11 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_con NONE []
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v0» bv
+       (extend_env_rec [«output_aux»] [TextIO_output_aux_v]
+          [«fd»; «s»; «i»; «z»] [fdv; sv; iv; zv]
+          (merge_env TextIOProg_env_15
+             (merge_env TextIOProg_env_10
+                (merge_env TextIOProg_env_8
+                   (merge_env TextIOProg_env_7
+                      (merge_env TextIOProg_env_3
+                         (merge_env empty_env (... ... init_env)))))))).v)
+  (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+  GOAL_BEGIN output_aux_spec_V #2 assumptions 12 (ASM 0 = newest)
+    ASM 0 ¬(z ≤ i)
+    ASM 1 BOOL (z ≤ i) bv
+    ASM 2 write_event_ok Inv fd
+    ASM 3 get_mode fs fd = SOME WriteMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 z ≤ strlen s
+    ASM 6 i ≤ z
+    ASM 7 NUM z zv
+    ASM 8 NUM i iv
+    ASM 9 STRING_TYPE s sv
+    ASM 10 OUTSTREAM fd fdv
+    ASM 11 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let (SOME «left»)
+  (cf_app p (Var (Short «-»)) [Var (Short «z»); Var (Short «i»)])
+  (cf_let (SOME « v1»)
+     (cf_app p (Var (Short «<=»)) [Var (Short «left»); Lit (IntLit 2048)])
+     (cf_let (SOME «n»)
+        (cf_if (Var (Short « v1»)) (cf_var (Short «left»))
+           (cf_lit (IntLit 2048)))
+        (cf_let NONE
+           (cf_app p (Var (Long «Word8Array» (Short «copyVec»)))
+              [Var (Short «s»); Var (Short «i»); Var (Short «n»);
+               Var (... ... ); ... ... ])
+           (cf_let (SOME « v2»)
+              (cf_app p (Var (Short «get_out»)) [Var (Short «fd»)])
+              (cf_let NONE
+                 (cf_app p (Var (Short «write»))
+                    [Var (Short « v2»); Var (... ... ); ... ... ])
+                 (cf_let (SOME « v3»)
+                    (cf_app p (Var (... ... )) [Var (... ... ); ... ... ])
+                    (cf_app p (Var (Short «output_aux»))
+                       [Var (Short «fd»); Var (... ... ); ... ... ; ... ])))))))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v0» bv
+       (extend_env_rec [«output_aux»] [TextIO_output_aux_v]
+          [«fd»; «s»; «i»; «z»] [fdv; sv; iv; zv]
+          (merge_env TextIOProg_env_15
+             (merge_env TextIOProg_env_10
+                (merge_env TextIOProg_env_8
+                   (merge_env TextIOProg_env_7
+                      (merge_env TextIOProg_env_3
+                         (merge_env empty_env (... ... init_env)))))))).v)
+  (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #2
+STEP output_aux_spec_V 3 done branch (1747-1753) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 ¬(z ≤ i)
+    ASM 1 BOOL (z ≤ i) bv
+    ASM 2 write_event_ok Inv fd
+    ASM 3 get_mode fs fd = SOME WriteMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 z ≤ strlen s
+    ASM 6 i ≤ z
+    ASM 7 NUM z zv
+    ASM 8 NUM i iv
+    ASM 9 STRING_TYPE s sv
+    ASM 10 OUTSTREAM fd fdv
+    ASM 11 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let (SOME «left»)
+  (cf_app p (Var (Short «-»)) [Var (Short «z»); Var (Short «i»)])
+  (cf_let (SOME « v1»)
+     (cf_app p (Var (Short «<=»)) [Var (Short «left»); Lit (IntLit 2048)])
+     (cf_let (SOME «n»)
+        (cf_if (Var (Short « v1»)) (cf_var (Short «left»))
+           (cf_lit (IntLit 2048)))
+        (cf_let NONE
+           (cf_app p (Var (Long «Word8Array» (Short «copyVec»)))
+              [Var (Short «s»); Var (Short «i»); Var (Short «n»);
+               Var (... ... ); ... ... ])
+           (cf_let (SOME « v2»)
+              (cf_app p (Var (Short «get_out»)) [Var (Short «fd»)])
+              (cf_let NONE
+                 (cf_app p (Var (Short «write»))
+                    [Var (Short « v2»); Var (... ... ); ... ... ])
+                 (cf_let (SOME « v3»)
+                    (cf_app p (Var (... ... )) [Var (... ... ); ... ... ])
+                    (cf_app p (Var (Short «output_aux»))
+                       [Var (Short «fd»); Var (... ... ); ... ... ; ... ])))))))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v0» bv
+       (extend_env_rec [«output_aux»] [TextIO_output_aux_v]
+          [«fd»; «s»; «i»; «z»] [fdv; sv; iv; zv]
+          (merge_env TextIOProg_env_15
+             (merge_env TextIOProg_env_10
+                (merge_env TextIOProg_env_8
+                   (merge_env TextIOProg_env_7
+                      (merge_env TextIOProg_env_3
+                         (merge_env empty_env (... ... init_env)))))))).v)
+  (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+Using translator specification minus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv. IOFS_V Inv fs * &NUM (z − i) nv
+Using translator specification le_v_thm from theory mlbasicsProg
+Post condition: POSTv bv1. IOFS_V Inv fs * &BOOL (z ≤ i + 2048) bv1
+STEP output_aux_spec_V 4 left, n (1754-1755) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 14 (ASM 0 = newest)
+    ASM 0 BOOL (z ≤ i + 2048) bv1
+    ASM 1 NUM (z − i) nv
+    ASM 2 ¬(z ≤ i)
+    ASM 3 BOOL (z ≤ i) bv
+    ASM 4 write_event_ok Inv fd
+    ASM 5 get_mode fs fd = SOME WriteMode
+    ASM 6 get_fd_content fs fd = SOME (content,pos)
+    ASM 7 z ≤ strlen s
+    ASM 8 i ≤ z
+    ASM 9 NUM z zv
+    ASM 10 NUM i iv
+    ASM 11 STRING_TYPE s sv
+    ASM 12 OUTSTREAM fd fdv
+    ASM 13 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let (SOME «n»)
+  (cf_if (Var (Short « v1»)) (cf_var (Short «left»)) (cf_lit (IntLit 2048)))
+  (cf_let NONE
+     (cf_app p (Var (Long «Word8Array» (Short «copyVec»)))
+        [Var (Short «s»); Var (Short «i»); Var (Short «n»);
+         Var (Short «iobuff»); Lit (IntLit 4)])
+     (cf_let (SOME « v2»)
+        (cf_app p (Var (Short «get_out»)) [Var (Short «fd»)])
+        (cf_let NONE
+           (cf_app p (Var (Short «write»))
+              [Var (Short « v2»); Var (Short «n»); Lit (IntLit 0)])
+           (cf_let (SOME « v3»)
+              (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «n»)])
+              (cf_app p (Var (Short «output_aux»))
+                 [Var (Short «fd»); Var (Short «s»); Var (Short « v3»);
+                  Var (... ... )])))))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v1» bv1
+       (nsBind «left» nv
+          (nsBind « v0» bv
+             (extend_env_rec [«output_aux»] [TextIO_output_aux_v]
+                [«fd»; «s»; «i»; ... ] [fdv; sv; iv; zv]
+                (merge_env TextIOProg_env_15
+                   (merge_env TextIOProg_env_10
+                      (merge_env TextIOProg_env_8
+                         (merge_env TextIOProg_env_7 (... ... (... ... ))))))).
+             v))) (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+STEP output_aux_spec_V 5 xlet MIN (1756-1760; IOFS -> IOFS_V Inv) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 15 (ASM 0 = newest)
+    ASM 0 NUM (MIN (z − i) 2048) nv'
+    ASM 1 BOOL (z ≤ i + 2048) bv1
+    ASM 2 NUM (z − i) nv
+    ASM 3 ¬(z ≤ i)
+    ASM 4 BOOL (z ≤ i) bv
+    ASM 5 write_event_ok Inv fd
+    ASM 6 get_mode fs fd = SOME WriteMode
+    ASM 7 get_fd_content fs fd = SOME (content,pos)
+    ASM 8 z ≤ strlen s
+    ASM 9 i ≤ z
+    ASM 10 NUM z zv
+    ASM 11 NUM i iv
+    ASM 12 STRING_TYPE s sv
+    ASM 13 OUTSTREAM fd fdv
+    ASM 14 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let NONE
+  (cf_app p (Var (Long «Word8Array» (Short «copyVec»)))
+     [Var (Short «s»); Var (Short «i»); Var (Short «n»);
+      Var (Short «iobuff»); Lit (IntLit 4)])
+  (cf_let (SOME « v2») (cf_app p (Var (Short «get_out»)) [Var (Short «fd»)])
+     (cf_let NONE
+        (cf_app p (Var (Short «write»))
+           [Var (Short « v2»); Var (Short «n»); Lit (IntLit 0)])
+        (cf_let (SOME « v3»)
+           (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «n»)])
+           (cf_app p (Var (Short «output_aux»))
+              [Var (Short «fd»); Var (Short «s»); Var (Short « v3»);
+               Var (Short «z»)]))))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind «n» nv'
+       (nsBind « v1» bv1
+          (nsBind «left» nv
+             (nsBind « v0» bv
+                (extend_env_rec [... ] [TextIO_output_aux_v]
+                   [«fd»; «s»; ... ; ... ] [fdv; sv; iv; ... ]
+                   (merge_env TextIOProg_env_15
+                      (merge_env TextIOProg_env_10
+                         (merge_env TextIOProg_env_8 (... ... (... ... )))))).
+                v)))) (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+STEP output_aux_spec_V 6 open IOFS_V in the precondition (1766-1767) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 17 (ASM 0 = newest)
+    ASM 0 wfFS fs
+    ASM 1 LENGTH buff = 2052
+    ASM 2 NUM (MIN (z − i) 2048) nv'
+    ASM 3 BOOL (z ≤ i + 2048) bv1
+    ASM 4 NUM (z − i) nv
+    ASM 5 ¬(z ≤ i)
+    ASM 6 BOOL (z ≤ i) bv
+    ASM 7 write_event_ok Inv fd
+    ASM 8 get_mode fs fd = SOME WriteMode
+    ASM 9 get_fd_content fs fd = SOME (content,pos)
+    ASM 10 z ≤ strlen s
+    ASM 11 i ≤ z
+    ASM 12 NUM z zv
+    ASM 13 NUM i iv
+    ASM 14 STRING_TYPE s sv
+    ASM 15 OUTSTREAM fd fdv
+    ASM 16 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let NONE
+  (cf_app p (Var (Long «Word8Array» (Short «copyVec»)))
+     [Var (Short «s»); Var (Short «i»); Var (Short «n»);
+      Var (Short «iobuff»); Lit (IntLit 4)])
+  (cf_let (SOME « v2») (cf_app p (Var (Short «get_out»)) [Var (Short «fd»)])
+     (cf_let NONE
+        (cf_app p (Var (Short «write»))
+           [Var (Short « v2»); Var (Short «n»); Lit (IntLit 0)])
+        (cf_let (SOME « v3»)
+           (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «n»)])
+           (cf_app p (Var (Short «output_aux»))
+              [Var (Short «fd»); Var (Short «s»); Var (Short « v3»);
+               Var (Short «z»)]))))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind «n» nv'
+       (nsBind « v1» bv1
+          (nsBind «left» nv
+             (nsBind « v0» bv
+                (extend_env_rec [... ] [TextIO_output_aux_v]
+                   [«fd»; «s»; ... ; ... ] [fdv; sv; iv; ... ]
+                   (merge_env TextIOProg_env_15
+                      (merge_env TextIOProg_env_10
+                         (merge_env TextIOProg_env_8 (... ... (... ... )))))).
+                v)))) (IOxV Inv fs * W8ARRAY iobuff_loc buff)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+Using CF specification w8array_copyVec_spec from theory Word8ArrayProof
+Post condition: POSTv uv.
+  W8ARRAY iobuff_loc
+    (TAKE 4 buff ++
+     MAP (n2w ∘ ORD)
+       (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+     DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs *
+  &UNIT_TYPE () uv
+STEP output_aux_spec_V 7 copyVec (1768) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 18 (ASM 0 = newest)
+    ASM 0 UNIT_TYPE () uv
+    ASM 1 wfFS fs
+    ASM 2 LENGTH buff = 2052
+    ASM 3 NUM (MIN (z − i) 2048) nv'
+    ASM 4 BOOL (z ≤ i + 2048) bv1
+    ASM 5 NUM (z − i) nv
+    ASM 6 ¬(z ≤ i)
+    ASM 7 BOOL (z ≤ i) bv
+    ASM 8 write_event_ok Inv fd
+    ASM 9 get_mode fs fd = SOME WriteMode
+    ASM 10 get_fd_content fs fd = SOME (content,pos)
+    ASM 11 z ≤ strlen s
+    ASM 12 i ≤ z
+    ASM 13 NUM z zv
+    ASM 14 NUM i iv
+    ASM 15 STRING_TYPE s sv
+    ASM 16 OUTSTREAM fd fdv
+    ASM 17 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let (SOME « v2») (cf_app p (Var (Short «get_out»)) [Var (Short «fd»)])
+  (cf_let NONE
+     (cf_app p (Var (Short «write»))
+        [Var (Short « v2»); Var (Short «n»); Lit (IntLit 0)])
+     (cf_let (SOME « v3»)
+        (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «n»)])
+        (cf_app p (Var (Short «output_aux»))
+           [Var (Short «fd»); Var (Short «s»); Var (Short « v3»);
+            Var (Short «z»)])))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind «n» nv'
+       (nsBind « v1» bv1
+          (nsBind «left» nv
+             (nsBind « v0» bv
+                (extend_env_rec [... ] [TextIO_output_aux_v]
+                   [«fd»; «s»; ... ; ... ] [fdv; sv; iv; ... ]
+                   (merge_env TextIOProg_env_15
+                      (merge_env TextIOProg_env_10
+                         (merge_env TextIOProg_env_8 (... ... (... ... )))))).
+                v))))
+  (W8ARRAY iobuff_loc
+     (TAKE 4 buff ++
+      MAP (n2w ∘ ORD)
+        (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+      DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+Using translator specification get_out_v_thm from theory TextIOProg
+xlet_auto : using heuristics
+Post condition: POSTv sv1.
+  W8ARRAY iobuff_loc
+    (TAKE 4 buff ++
+     MAP (n2w ∘ ORD)
+       (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+     DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs *
+  &STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))))
+    sv1
+STEP output_aux_spec_V 8 get_out (1769-1770) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 21 (ASM 0 = newest)
+    ASM 0 STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv1
+    ASM 1 fd < 256 ** 8
+    ASM 2 OUTSTREAM_TYPE (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) fdv
+    ASM 3 UNIT_TYPE () uv
+    ASM 4 wfFS fs
+    ASM 5 LENGTH buff = 2052
+    ASM 6 NUM (MIN (z − i) 2048) nv'
+    ASM 7 BOOL (z ≤ i + 2048) bv1
+    ASM 8 NUM (z − i) nv
+    ASM 9 ¬(z ≤ i)
+    ASM 10 BOOL (z ≤ i) bv
+    ASM 11 write_event_ok Inv fd
+    ASM 12 get_mode fs fd = SOME WriteMode
+    ASM 13 get_fd_content fs fd = SOME (content,pos)
+    ASM 14 z ≤ strlen s
+    ASM 15 i ≤ z
+    ASM 16 NUM z zv
+    ASM 17 NUM i iv
+    ASM 18 STRING_TYPE s sv
+    ASM 19 OUTSTREAM fd fdv
+    ASM 20 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let NONE
+  (cf_app p (Var (Short «write»))
+     [Var (Short « v2»); Var (Short «n»); Lit (IntLit 0)])
+  (cf_let (SOME « v3»)
+     (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «n»)])
+     (cf_app p (Var (Short «output_aux»))
+        [Var (Short «fd»); Var (Short «s»); Var (Short « v3»);
+         Var (Short «z»)]))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v2» sv1
+       (nsBind «n» nv'
+          (nsBind « v1» bv1
+             (nsBind «left» nv
+                (nsBind « v0» bv
+                   (... ... [... ] [«fd»; ... ; ... ] [fdv; sv; ... ; ... ]
+                      (merge_env TextIOProg_env_15
+                         (merge_env TextIOProg_env_10 (... ... (... ... ))))).
+                   v)))))
+  (W8ARRAY iobuff_loc
+     (TAKE 4 buff ++
+      MAP (n2w ∘ ORD)
+        (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+      DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS sv1:v, uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+STEP output_aux_spec_V 9 buff split (1772-1773) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 22 (ASM 0 = newest)
+    ASM 0 buff = h1::h2::h3::h4::t
+    ASM 1 STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv1
+    ASM 2 fd < 256 ** 8
+    ASM 3 OUTSTREAM_TYPE (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) fdv
+    ASM 4 UNIT_TYPE () uv
+    ASM 5 wfFS fs
+    ASM 6 LENGTH buff = 2052
+    ASM 7 NUM (MIN (z − i) 2048) nv'
+    ASM 8 BOOL (z ≤ i + 2048) bv1
+    ASM 9 NUM (z − i) nv
+    ASM 10 ¬(z ≤ i)
+    ASM 11 BOOL (z ≤ i) bv
+    ASM 12 write_event_ok Inv fd
+    ASM 13 get_mode fs fd = SOME WriteMode
+    ASM 14 get_fd_content fs fd = SOME (content,pos)
+    ASM 15 z ≤ strlen s
+    ASM 16 i ≤ z
+    ASM 17 NUM z zv
+    ASM 18 NUM i iv
+    ASM 19 STRING_TYPE s sv
+    ASM 20 OUTSTREAM fd fdv
+    ASM 21 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let NONE
+  (cf_app p (Var (Short «write»))
+     [Var (Short « v2»); Var (Short «n»); Lit (IntLit 0)])
+  (cf_let (SOME « v3»)
+     (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «n»)])
+     (cf_app p (Var (Short «output_aux»))
+        [Var (Short «fd»); Var (Short «s»); Var (Short « v3»);
+         Var (Short «z»)]))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v2» sv1
+       (nsBind «n» nv'
+          (nsBind « v1» bv1
+             (nsBind «left» nv
+                (nsBind « v0» bv
+                   (... ... [... ] [«fd»; ... ; ... ] [fdv; sv; ... ; ... ]
+                      (merge_env TextIOProg_env_15
+                         (merge_env TextIOProg_env_10 (... ... (... ... ))))).
+                   v)))))
+  (W8ARRAY iobuff_loc
+     (TAKE 4 buff ++
+      MAP (n2w ∘ ORD)
+        (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+      DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS h1:word8, h2:word8, h3:word8, h4:word8, t:word8 list, sv1:v, uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+STEP output_aux_spec_V 10 LENGTH t = 2048 (NEW) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 23 (ASM 0 = newest)
+    ASM 0 LENGTH t = 2048
+    ASM 1 buff = h1::h2::h3::h4::t
+    ASM 2 STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv1
+    ASM 3 fd < 256 ** 8
+    ASM 4 OUTSTREAM_TYPE (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) fdv
+    ASM 5 UNIT_TYPE () uv
+    ASM 6 wfFS fs
+    ASM 7 LENGTH buff = 2052
+    ASM 8 NUM (MIN (z − i) 2048) nv'
+    ASM 9 BOOL (z ≤ i + 2048) bv1
+    ASM 10 NUM (z − i) nv
+    ASM 11 ¬(z ≤ i)
+    ASM 12 BOOL (z ≤ i) bv
+    ASM 13 write_event_ok Inv fd
+    ASM 14 get_mode fs fd = SOME WriteMode
+    ASM 15 get_fd_content fs fd = SOME (content,pos)
+    ASM 16 z ≤ strlen s
+    ASM 17 i ≤ z
+    ASM 18 NUM z zv
+    ASM 19 NUM i iv
+    ASM 20 STRING_TYPE s sv
+    ASM 21 OUTSTREAM fd fdv
+    ASM 22 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let NONE
+  (cf_app p (Var (Short «write»))
+     [Var (Short « v2»); Var (Short «n»); Lit (IntLit 0)])
+  (cf_let (SOME « v3»)
+     (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «n»)])
+     (cf_app p (Var (Short «output_aux»))
+        [Var (Short «fd»); Var (Short «s»); Var (Short « v3»);
+         Var (Short «z»)]))
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v2» sv1
+       (nsBind «n» nv'
+          (nsBind « v1» bv1
+             (nsBind «left» nv
+                (nsBind « v0» bv
+                   (... ... [... ] [«fd»; ... ; ... ] [fdv; sv; ... ; ... ]
+                      (merge_env TextIOProg_env_15
+                         (merge_env TextIOProg_env_10 (... ... (... ... ))))).
+                   v)))))
+  (W8ARRAY iobuff_loc
+     (TAKE 4 buff ++
+      MAP (n2w ∘ ORD)
+        (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+      DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS h1:word8, h2:word8, h3:word8, h4:word8, t:word8 list, sv1:v, uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+xlet_auto : using heuristics
+Post condition: POSTv nwv. SEP_EXISTS k.
+  IOFS_V Inv
+    (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+       (insert_atI
+          (TAKE (if z < i + 2048 then z − i else 2048)
+             (STRCAT
+                (MAP (CHR ∘ w2n)
+                   (MAP (n2w ∘ ORD)
+                      (explode
+                         (... ... i (if ... < ... then ... − ... else 2048)))))
+                (MAP (CHR ∘ w2n)
+                   (DROP (if z < i + 2048 then z − i else 2048) t)))) pos
+          content))
+STEP output_aux_spec_V 11 write call (1774-1775; write_spec_V; side condition LENGTH rest = 2048) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 23 (ASM 0 = newest)
+    ASM 0 LENGTH t = 2048
+    ASM 1 buff = h1::h2::h3::h4::t
+    ASM 2 STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv1
+    ASM 3 fd < 256 ** 8
+    ASM 4 OUTSTREAM_TYPE (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) fdv
+    ASM 5 UNIT_TYPE () uv
+    ASM 6 wfFS fs
+    ASM 7 LENGTH buff = 2052
+    ASM 8 NUM (MIN (z − i) 2048) nv'
+    ASM 9 BOOL (z ≤ i + 2048) bv1
+    ASM 10 NUM (z − i) nv
+    ASM 11 ¬(z ≤ i)
+    ASM 12 BOOL (z ≤ i) bv
+    ASM 13 write_event_ok Inv fd
+    ASM 14 get_mode fs fd = SOME WriteMode
+    ASM 15 get_fd_content fs fd = SOME (content,pos)
+    ASM 16 z ≤ strlen s
+    ASM 17 i ≤ z
+    ASM 18 NUM z zv
+    ASM 19 NUM i iv
+    ASM 20 STRING_TYPE s sv
+    ASM 21 OUTSTREAM fd fdv
+    ASM 22 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_let (SOME « v3»)
+  (cf_app p (Var (Short «+»)) [Var (Short «i»); Var (Short «n»)])
+  (cf_app p (Var (Short «output_aux»))
+     [Var (Short «fd»); Var (Short «s»); Var (Short « v3»); Var (Short «z»)])
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v2» sv1
+       (nsBind «n» nv'
+          (nsBind « v1» bv1
+             (nsBind «left» nv
+                (nsBind « v0» bv
+                   (... ... [... ] [«fd»; ... ; ... ] [fdv; sv; ... ; ... ]
+                      (merge_env TextIOProg_env_15
+                         (merge_env TextIOProg_env_10 (... ... (... ... ))))).
+                   v)))))
+  (IOFS_V Inv
+     (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+        (insert_atI
+           (TAKE (if z < i + 2048 then z − i else 2048)
+              (STRCAT
+                 (MAP (CHR ∘ w2n)
+                    (MAP (n2w ∘ ORD)
+                       (explode (... ... (if ... then ... else ... )))))
+                 (MAP (CHR ∘ w2n)
+                    (DROP (if z < ... + ... then z − i else 2048) t)))) pos
+           content)))
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS k:num, h1:word8, h2:word8, h3:word8, h4:word8, t:word8 list, sv1:v, uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+Using translator specification plus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv1.
+  IOFS_V Inv
+    (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+       (insert_atI
+          (TAKE (if z < i + 2048 then z − i else 2048)
+             (STRCAT
+                (MAP (CHR ∘ w2n)
+                   (MAP (n2w ∘ ORD)
+                      (explode (... ... (if ... then ... else ... )))))
+                (MAP (CHR ∘ w2n)
+                   (DROP (if z < ... + ... then z − i else 2048) t)))) pos
+          content)) * &NUM (i + if z < i + 2048 then z − i else 2048) nv1
+STEP output_aux_spec_V 12 i + n (1776) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 24 (ASM 0 = newest)
+    ASM 0 NUM (i + if z < i + 2048 then z − i else 2048) nv1
+    ASM 1 LENGTH t = 2048
+    ASM 2 buff = h1::h2::h3::h4::t
+    ASM 3 STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv1
+    ASM 4 fd < 256 ** 8
+    ASM 5 OUTSTREAM_TYPE (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) fdv
+    ASM 6 UNIT_TYPE () uv
+    ASM 7 wfFS fs
+    ASM 8 LENGTH buff = 2052
+    ASM 9 NUM (MIN (z − i) 2048) nv'
+    ASM 10 BOOL (z ≤ i + 2048) bv1
+    ASM 11 NUM (z − i) nv
+    ASM 12 ¬(z ≤ i)
+    ASM 13 BOOL (z ≤ i) bv
+    ASM 14 write_event_ok Inv fd
+    ASM 15 get_mode fs fd = SOME WriteMode
+    ASM 16 get_fd_content fs fd = SOME (content,pos)
+    ASM 17 z ≤ strlen s
+    ASM 18 i ≤ z
+    ASM 19 NUM z zv
+    ASM 20 NUM i iv
+    ASM 21 STRING_TYPE s sv
+    ASM 22 OUTSTREAM fd fdv
+    ASM 23 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL cf_app p (Var (Short «output_aux»))
+  [Var (Short «fd»); Var (Short «s»); Var (Short « v3»); Var (Short «z»)]
+  (extend_env_rec [«output_aux»] [TextIO_output_aux_v] [«fd»; «s»; «i»; «z»]
+     [fdv; sv; iv; zv]
+     (merge_env TextIOProg_env_15
+        (merge_env TextIOProg_env_10
+           (merge_env TextIOProg_env_8
+              (merge_env TextIOProg_env_7
+                 (merge_env TextIOProg_env_3
+                    (merge_env empty_env
+                       (merge_env MarshallingProg_env_1 init_env))))))) with
+   v :=
+     nsBind « v3» nv1
+       (nsBind « v2» sv1
+          (nsBind «n» nv'
+             (nsBind « v1» bv1
+                (nsBind «left» nv
+                   (nsBind « v0» bv
+                      (... ... [... ; ... ] [fdv; ... ; ... ]
+                         (merge_env TextIOProg_env_15 (... ... (... ... )))).
+                      v))))))
+  (IOFS_V Inv
+     (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+        (insert_atI
+           (TAKE (if z < i + 2048 then z − i else 2048)
+              (STRCAT
+                 (MAP (CHR ∘ w2n)
+                    (MAP (n2w ∘ ORD)
+                       (explode (... ... (if ... then ... else ... )))))
+                 (MAP (CHR ∘ w2n)
+                    (DROP (if z < ... + ... then z − i else 2048) t)))) pos
+           content)))
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + z − i)
+            (insert_atI (explode (substring s i (z − i))) pos content)))
+    FREE_VARS k:num, nv1:v, h1:word8, h2:word8, h3:word8, h4:word8, t:word8 list, sv1:v, uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+Using a CF specification from the assumptions
+STEP output_aux_spec_V 13 recursive call (1777-1789) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 25 (ASM 0 = newest)
+    ASM 0 get_mode
+  (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+     (insert_atI
+        (TAKE (if z < i + 2048 then z − i else 2048)
+           (STRCAT
+              (MAP (CHR ∘ w2n)
+                 (MAP (n2w ∘ ORD)
+                    (explode (... ... (if ... then ... else ... )))))
+              (MAP (CHR ∘ w2n)
+                 (DROP (if z < ... + ... then z − i else 2048) t)))) pos
+        content)) fd = SOME WriteMode
+    ASM 1 NUM (i + if z < i + 2048 then z − i else 2048) nv1
+    ASM 2 LENGTH t = 2048
+    ASM 3 buff = h1::h2::h3::h4::t
+    ASM 4 STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv1
+    ASM 5 fd < 256 ** 8
+    ASM 6 OUTSTREAM_TYPE (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) fdv
+    ASM 7 UNIT_TYPE () uv
+    ASM 8 wfFS fs
+    ASM 9 LENGTH buff = 2052
+    ASM 10 NUM (MIN (z − i) 2048) nv'
+    ASM 11 BOOL (z ≤ i + 2048) bv1
+    ASM 12 NUM (z − i) nv
+    ASM 13 ¬(z ≤ i)
+    ASM 14 BOOL (z ≤ i) bv
+    ASM 15 write_event_ok Inv fd
+    ASM 16 get_mode fs fd = SOME WriteMode
+    ASM 17 get_fd_content fs fd = SOME (content,pos)
+    ASM 18 z ≤ strlen s
+    ASM 19 i ≤ z
+    ASM 20 NUM z zv
+    ASM 21 NUM i iv
+    ASM 22 STRING_TYPE s sv
+    ASM 23 OUTSTREAM fd fdv
+    ASM 24 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL ∀v x.
+  UNIT_TYPE () v ⇒
+  ∃x'.
+    IOFS_V Inv
+      (fsupdate
+         (... ... fd k (pos + if ... < ... then ... − ... else 2048)
+            (insert_atI (... ... ) pos content)) fd x (pos + z − i)
+         (insert_atI
+            (explode
+               (substring s (i + if ... < ... then ... − ... else 2048)
+                  (z − (i + if ... < ... then ... − ... else 2048))))
+            (pos + if z < i + 2048 then z − i else 2048)
+            (insert_atI
+               (TAKE (if z < ... + ... then z − i else 2048)
+                  (STRCAT (... ... (... ... ))
+                     (MAP (... ∘ ... )
+                        (... (if z < i + 2048 then z − i else 2048) t)))) pos
+               content))) ==>>
+    IOFS_V Inv
+      (fsupdate fs fd x' (pos + z − i)
+         (insert_atI (explode (substring s i (z − i))) pos content)) * GC
+    FREE_VARS k:num, nv1:v, h1:word8, h2:word8, h3:word8, h4:word8, t:word8 list, sv1:v, uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+STEP output_aux_spec_V 14 post: fsupdate_o, insert_atI (1790-1798) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 32 (ASM 0 = newest)
+    ASM 0 off + pos = pos + STRLEN pfx
+    ASM 1 Abbrev (sfx = explode (substring s (i + off) (z − (i + off))))
+    ASM 2 Abbrev
+  (pfx =
+   TAKE off
+     (STRCAT
+        (MAP (CHR ∘ w2n) (MAP (n2w ∘ ORD) (explode (substring s i off))))
+        (MAP (CHR ∘ w2n) (DROP off t))))
+    ASM 3 ∀pos2 pos1 k2 k1 fd c2 c1.
+  fsupdate (fsupdate fs fd k1 pos1 c1) fd k2 pos2 c2 =
+  fsupdate fs fd (k1 + k2) pos2 c2
+    ASM 4 liveFS fs
+    ASM 5 Abbrev (off = if z < i + 2048 then z − i else 2048)
+    ASM 6 UNIT_TYPE () v
+    ASM 7 get_mode (fsupdate fs fd k (pos + off) (insert_atI pfx pos content)) fd =
+SOME WriteMode
+    ASM 8 NUM (i + off) nv1
+    ASM 9 LENGTH t = 2048
+    ASM 10 buff = h1::h2::h3::h4::t
+    ASM 11 STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv1
+    ASM 12 fd < 256 ** 8
+    ASM 13 OUTSTREAM_TYPE (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) fdv
+    ASM 14 UNIT_TYPE () uv
+    ASM 15 wfFS fs
+    ASM 16 LENGTH buff = 2052
+    ASM 17 NUM (MIN (z − i) 2048) nv'
+    ASM 18 BOOL (z ≤ i + 2048) bv1
+    ASM 19 NUM (z − i) nv
+    ASM 20 ¬(z ≤ i)
+    ASM 21 BOOL (z ≤ i) bv
+    ASM 22 write_event_ok Inv fd
+    ASM 23 get_mode fs fd = SOME WriteMode
+    ASM 24 get_fd_content fs fd = SOME (content,pos)
+    ASM 25 z ≤ strlen s
+    ASM 26 i ≤ z
+    ASM 27 NUM z zv
+    ASM 28 NUM i iv
+    ASM 29 STRING_TYPE s sv
+    ASM 30 OUTSTREAM fd fdv
+    ASM 31 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL ∃x'.
+  IOFS_V Inv
+    (fsupdate fs fd (k + x) (pos + z − i)
+       (insert_atI (STRCAT pfx sfx) pos content)) ==>>
+  IOFS_V Inv
+    (fsupdate fs fd x' (pos + z − i)
+       (insert_atI (explode (substring s i (z − i))) pos content)) * GC
+    FREE_VARS x:num, sfx:string, v:v, k:num, pfx:string, off:num, nv1:v, h1:word8, h2:word8, h3:word8, h4:word8, t:word8 list, sv1:v, uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+STEP output_aux_spec_V 15 pfx ++ sfx (1799-1810; SEG_APPEND3_W) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_aux_spec_V #1 assumptions 33 (ASM 0 = newest)
+    ASM 0 STRCAT pfx sfx = explode (substring s i (z − i))
+    ASM 1 off + pos = pos + STRLEN pfx
+    ASM 2 Abbrev (sfx = explode (substring s (i + off) (z − (i + off))))
+    ASM 3 Abbrev
+  (pfx =
+   TAKE off
+     (STRCAT
+        (MAP (CHR ∘ w2n) (MAP (n2w ∘ ORD) (explode (substring s i off))))
+        (MAP (CHR ∘ w2n) (DROP off t))))
+    ASM 4 ∀pos2 pos1 k2 k1 fd c2 c1.
+  fsupdate (fsupdate fs fd k1 pos1 c1) fd k2 pos2 c2 =
+  fsupdate fs fd (k1 + k2) pos2 c2
+    ASM 5 liveFS fs
+    ASM 6 Abbrev (off = if z < i + 2048 then z − i else 2048)
+    ASM 7 UNIT_TYPE () v
+    ASM 8 get_mode (fsupdate fs fd k (pos + off) (insert_atI pfx pos content)) fd =
+SOME WriteMode
+    ASM 9 NUM (i + off) nv1
+    ASM 10 LENGTH t = 2048
+    ASM 11 buff = h1::h2::h3::h4::t
+    ASM 12 STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd))))) sv1
+    ASM 13 fd < 256 ** 8
+    ASM 14 OUTSTREAM_TYPE (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))) fdv
+    ASM 15 UNIT_TYPE () uv
+    ASM 16 wfFS fs
+    ASM 17 LENGTH buff = 2052
+    ASM 18 NUM (MIN (z − i) 2048) nv'
+    ASM 19 BOOL (z ≤ i + 2048) bv1
+    ASM 20 NUM (z − i) nv
+    ASM 21 ¬(z ≤ i)
+    ASM 22 BOOL (z ≤ i) bv
+    ASM 23 write_event_ok Inv fd
+    ASM 24 get_mode fs fd = SOME WriteMode
+    ASM 25 get_fd_content fs fd = SOME (content,pos)
+    ASM 26 z ≤ strlen s
+    ASM 27 i ≤ z
+    ASM 28 NUM z zv
+    ASM 29 NUM i iv
+    ASM 30 STRING_TYPE s sv
+    ASM 31 OUTSTREAM fd fdv
+    ASM 32 ∀m. m < z − i ⇒
+    ∀z i.
+      m = z − i ⇒
+      ∀fd fdv s sv iv zv fs content pos.
+        OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+        z ≤ strlen s ∧ ... ... = ... ... ∧ ... = ... ∧ ... ... ⇒
+        app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+          (POSTv uv.
+             &UNIT_TYPE () uv *
+             SEP_EXISTS k.
+               IOFS_V Inv
+                 (... ... k (pos + (... − ... )) (... ... pos content)))
+    CONCL ∃x'.
+  IOFS_V Inv
+    (fsupdate fs fd (k + x) (pos + z − i)
+       (insert_atI (STRCAT pfx sfx) pos content)) ==>>
+  IOFS_V Inv
+    (fsupdate fs fd x' (pos + z − i)
+       (insert_atI (explode (substring s i (z − i))) pos content)) * GC
+    FREE_VARS x:num, sfx:string, v:v, k:num, pfx:string, off:num, nv1:v, h1:word8, h2:word8, h3:word8, h4:word8, t:word8 list, sv1:v, uv:v, buff:word8 list, nv':v, bv1:v, nv:v, bv:v, fs:IO_fs, content:string, pos:num, zv:v, iv:v, s:mlstring, sv:v, fd:num, fdv:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, i:num, z:num
+  GOAL_END output_aux_spec_V #1
+STEP output_aux_spec_V 16 close (1811-1814) goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED output_aux_spec_V after_steps 16
+EXPLORE_END output_aux_spec_V
+EXPLORE_LEMMA output_spec_V required
+EXPLORE_BEGIN output_spec_V (head-goal mode) steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN output_spec_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀s fd fdv sv fs content pos.
+  OUTSTREAM fd fdv ⇒
+  STRING_TYPE s sv ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  write_event_ok Inv fd ⇒
+  app p TextIO_output_v [fdv; sv] (IOFS_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       SEP_EXISTS k.
+         IOFS_V Inv (... ... k (pos + ... ... ) (... ... pos content)))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool
+  GOAL_END output_spec_V #1
+Using translator specification string_size_v_thm from theory StringProg
+Post condition: POSTv nv. IOFS_V Inv fs * &NUM (strlen s) nv
+STEP output_spec_V 1 xcf, size (1826-1829) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_spec_V #1 assumptions 6 (ASM 0 = newest)
+    ASM 0 NUM (strlen s) nv
+    ASM 1 write_event_ok Inv fd
+    ASM 2 get_mode fs fd = SOME WriteMode
+    ASM 3 get_fd_content fs fd = SOME (content,pos)
+    ASM 4 STRING_TYPE s sv
+    ASM 5 OUTSTREAM fd fdv
+    CONCL cf_app p (Var (Short «output_aux»))
+  [Var (Short «fd»); Var (Short «s»); Lit (IntLit 0); Var (Short « v0»)]
+  (extend_env_rec [«output»] [TextIO_output_v] [«fd»; «s»] [fdv; sv]
+     (merge_env TextIOProg_env_17
+        (merge_env TextIOProg_env_16
+           (merge_env TextIOProg_env_10
+              (merge_env TextIOProg_env_8
+                 (merge_env TextIOProg_env_7
+                    (merge_env TextIOProg_env_3
+                       (merge_env empty_env
+                          (merge_env MarshallingProg_env_1 init_env)))))))) with
+   v :=
+     nsBind « v0» nv
+       (extend_env_rec [«output»] [TextIO_output_v] [«fd»; «s»] [fdv; sv]
+          (merge_env TextIOProg_env_17
+             (merge_env TextIOProg_env_16
+                (merge_env TextIOProg_env_10
+                   (merge_env TextIOProg_env_8
+                      (merge_env TextIOProg_env_7
+                         (merge_env TextIOProg_env_3 (... ... (... ... ))))))))).
+       v) (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + strlen s)
+            (insert_atI (explode s) pos content)))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, nv:v, Inv:io_event -> bool, fs:IO_fs, content:string, pos:num, s:mlstring, sv:v, fdv:v, fd:num
+  GOAL_END output_spec_V #1
+STEP_FAILED output_spec_V 2 call output_aux_spec_V (1830-1835) HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+GOALS_BEFORE_STEP output_spec_V 2
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_spec_V #1 assumptions 6 (ASM 0 = newest)
+    ASM 0 NUM (strlen s) nv
+    ASM 1 write_event_ok Inv fd
+    ASM 2 get_mode fs fd = SOME WriteMode
+    ASM 3 get_fd_content fs fd = SOME (content,pos)
+    ASM 4 STRING_TYPE s sv
+    ASM 5 OUTSTREAM fd fdv
+    CONCL cf_app p (Var (Short «output_aux»))
+  [Var (Short «fd»); Var (Short «s»); Lit (IntLit 0); Var (Short « v0»)]
+  (extend_env_rec [«output»] [TextIO_output_v] [«fd»; «s»] [fdv; sv]
+     (merge_env TextIOProg_env_17
+        (merge_env TextIOProg_env_16
+           (merge_env TextIOProg_env_10
+              (merge_env TextIOProg_env_8
+                 (merge_env TextIOProg_env_7
+                    (merge_env TextIOProg_env_3
+                       (merge_env empty_env
+                          (merge_env MarshallingProg_env_1 init_env)))))))) with
+   v :=
+     nsBind « v0» nv
+       (extend_env_rec [«output»] [TextIO_output_v] [«fd»; «s»] [fdv; sv]
+          (merge_env TextIOProg_env_17
+             (merge_env TextIOProg_env_16
+                (merge_env TextIOProg_env_10
+                   (merge_env TextIOProg_env_8
+                      (merge_env TextIOProg_env_7
+                         (merge_env TextIOProg_env_3 (... ... (... ... ))))))))).
+       v) (IOFS_V Inv fs)
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + strlen s)
+            (insert_atI (explode s) pos content)))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, nv:v, Inv:io_event -> bool, fs:IO_fs, content:string, pos:num, s:mlstring, sv:v, fdv:v, fd:num
+  GOAL_END output_spec_V #1
+ALT_FAILED output_spec_V 2 call output_aux_spec_V (1830-1835) alt 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+STEP_STUCK output_spec_V 2 call output_aux_spec_V (1830-1835)
+EXPLORE_END output_spec_V
+EXPLORE_LEMMA output_STDIO_spec_V required
+EXPLORE_BEGIN output_STDIO_spec_V (head-goal mode) steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN output_STDIO_spec_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fd fdv fs content pos s.
+  OUTSTREAM fd fdv ∧ get_fd_content fs fd = SOME (content,pos) ∧
+  get_mode fs fd = SOME WriteMode ∧ STRING_TYPE s sv ∧ write_event_ok Inv fd ⇒
+  app p TextIO_output_v [fdv; sv] (STDIO_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       STDIO_V Inv
+         (fsupdate fs fd 0 (pos + strlen s)
+            (insert_atI (explode s) pos content)))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, sv:v
+  GOAL_END output_STDIO_spec_V #1
+STEP output_STDIO_spec_V 1 unfold STDIO_V (1845-1847) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_STDIO_spec_V #1 assumptions 6 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 write_event_ok Inv fd
+    ASM 2 STRING_TYPE s sv
+    ASM 3 get_mode fs fd = SOME WriteMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 OUTSTREAM fd fdv
+    CONCL app p TextIO_output_v [fdv; sv] (IOFS_V Inv (fs with numchars := ll))
+  (POSTv uv.
+     &UNIT_TYPE () uv *
+     ((SEP_EXISTS ll.
+         IOFS_V Inv
+           (fsupdate fs fd 0 (pos + strlen s)
+              (insert_atI (explode s) pos content) with numchars := ll)) *
+      &STD_streams
+        (fsupdate fs fd 0 (pos + strlen s)
+           (insert_atI (explode s) pos content))))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, ll:num llist, Inv:io_event -> bool, s:mlstring, sv:v, fs:IO_fs, content:string, pos:num, fdv:v, fd:num
+  GOAL_END output_STDIO_spec_V #1
+STEP output_STDIO_spec_V 2 call output_spec_V (1848-1851) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN output_STDIO_spec_V #1 assumptions 6 (ASM 0 = newest)
+    ASM 0 get_mode (fs with numchars := ll) fd = SOME WriteMode
+    ASM 1 get_fd_content (fs with numchars := ll) fd = SOME (content,pos)
+    ASM 2 STD_streams fs
+    ASM 3 write_event_ok Inv fd
+    ASM 4 STRING_TYPE s sv
+    ASM 5 OUTSTREAM fd fdv
+    CONCL ∀v x.
+  UNIT_TYPE () v ⇒
+  ∃x'.
+    STD_streams
+      (fsupdate fs fd 0 (pos + strlen s) (insert_atI (explode s) pos content)) ∧
+    IOFS_V Inv
+      (fsupdate (fs with numchars := ll) fd x (pos + strlen s)
+         (insert_atI (explode s) pos content)) ==>>
+    IOFS_V Inv
+      (fsupdate fs fd 0 (pos + strlen s) (insert_atI (explode s) pos content) with
+       numchars := x') * GC
+    FREE_VARS ll:num llist, content:string, pos:num, fs:IO_fs, Inv:io_event -> bool, s:mlstring, sv:v, fdv:v, fd:num
+  GOAL_END output_STDIO_spec_V #1
+STEP output_STDIO_spec_V 3 post (1852-1866, one >> chain) goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED output_STDIO_spec_V after_steps 3
+EXPLORE_END output_STDIO_spec_V
+EXPLORE_LEMMA print_spec_V required
+EXPLORE_BEGIN print_spec_V (head-goal mode) steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN print_spec_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fs sv s.
+  STRING_TYPE s sv ⇒
+  write_event_ok Inv 1 ⇒
+  app p TextIO_print_v [sv] (STDIO_V Inv fs)
+    (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv (add_stdout fs s))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool
+  GOAL_END print_spec_V #1
+STEP print_spec_V 1 xcf, STD_streams case (1875-1877) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN print_spec_V #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 write_event_ok Inv 1
+    ASM 2 STRING_TYPE s sv
+    CONCL cf_app p (Var (Short «output»)) [Var (Short «stdOut»); Var (Short «s»)]
+  (extend_env_rec [«print»] [TextIO_print_v] [«s»] [sv]
+     (merge_env TextIOProg_env_18
+        (merge_env TextIOProg_env_16
+           (merge_env TextIOProg_env_10
+              (merge_env TextIOProg_env_8
+                 (merge_env TextIOProg_env_7
+                    (merge_env TextIOProg_env_3
+                       (merge_env empty_env
+                          (merge_env MarshallingProg_env_1 init_env)))))))))
+  (STDIO_V Inv fs)
+  (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv (add_stdout fs s))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, fs:IO_fs, Inv:io_event -> bool, sv:v, s:mlstring
+  GOAL_END print_spec_V #1
+STEP print_spec_V 2 call output_STDIO_spec_V + tac (1878-1879) goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED print_spec_V after_steps 2
+EXPLORE_END print_spec_V
+EXPLORE_LEMMA print_spec_refund required
+EXPLORE_BEGIN print_spec_refund (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN print_spec_refund #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fs sv s.
+  STRING_TYPE s sv ⇒
+  app p TextIO_print_v [sv] (STDIO_V refund_valid_event fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv * STDIO_V refund_valid_event (add_stdout fs s))
+    CONST_IN_CONCL forge_refundRouteA2c$refund_valid_event :io_event -> bool
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list
+  GOAL_END print_spec_refund #1
+STEP print_spec_refund 1 instance goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED print_spec_refund after_steps 1
+EXPLORE_END print_spec_refund
+PART_DONE r6w_explore_calls.sml
+EXPLORE_COMPLETE

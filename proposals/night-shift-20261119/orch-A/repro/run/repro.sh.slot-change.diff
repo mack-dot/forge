@@ -1,0 +1,17 @@
+--- repro.sh.prepared	2026-11-19 09:25:25.426705117 -0500
++++ repro.sh	2026-11-19 09:25:25.454402838 -0500
+@@ -54,10 +54,13 @@
+   [[ $started -eq 0 && $c == $1 ]] && started=1
+   [[ $started -eq 0 ]] && continue
+   if pgrep -f 'cakeml-heap|arm8-heap|cake_compile_heap|bin/hol |poly-install|bin/poly' > /dev/null; then say "STOP before $c: another HOL/poly process runs"; exit 98; fi
++  [[ -e /Users/mackianni/forge/results/night-shift-20261119/locks/heavy.lock ]] && { say "STOP before $c: locks/heavy.lock exists"; exit 95; }
++  pmset -g batt | head -1 | grep -q Battery && { say "STOP before $c: battery power"; exit 97; }
+   say "BEGIN $c cpu=$cpu deps=$deps"
+   if [[ $deps == LINK ]]; then
+     waitslot || exit 1
+-    bash $RUN/link/go.sh H1 contract-0001 > $RUN/link/contract-0001.go.log 2>&1; rc=$?
++    say "LINK_PRESTATE $(pmset -g batt | head -1 | tr -d "\t") swap_free_mib=$(sysctl -n vm.swapusage | sed -E 's/.*free = ([0-9]+)\..*/\1/') memory_free_percent=$(memory_pressure | tail -1 | sed -E 's/.*: ([0-9]+)%.*/\1/') ALLOW_SWAP=1 (orchestrator permission)"
++    ALLOW_SWAP=1 bash $RUN/link/go.sh H1 contract-0001 > $RUN/link/contract-0001.go.log 2>&1; rc=$?
+     say "go.sh H1 exit $rc"
+     check $RUN/link/contract-0001 EXPORTED_CONTRACT_COMPLETE || { say "STOP after $c"; exit 1; }
+   else

@@ -1,0 +1,13 @@
+# Failure reason of each negative control, read from its stderr.log (Orchestrator A, 2026-11-19T09:20:17Z); check.py does not read stderr (review A17, defects A and B)
+ctl-NC1 | actual_exit 1 | Failed to prove theorem "exported_ens1_value":;
+ctl-NC2 | actual_exit 1 | Failed to prove theorem "exported_ens2_value":;
+ctl-NC3 | actual_exit 1 | Failed to prove theorem "exported_ens3_value":;
+ctl-NC4 | actual_exit 1 | Fail "Expected exactly three ensures clauses";
+ctl-NC5 | actual_exit 1 | Failed to prove theorem "exported_ens1_value":;
+ctl-NC6 | actual_exit 1 | Fail "Trailing export bytes";
+ctl-NS1 | actual_exit 1 | Failed to prove theorem "exported_contract_on_refund_fields":;
+ctl-NS2 | actual_exit 1 | Failed to prove theorem "exported_contract_on_refund_fields":;
+ctl-NS3 | actual_exit 1 | Failed to prove theorem "exported_contract_on_refund_fields":;
+ctl-NR1-2 | actual_exit 1 | Failed to prove theorem "exported_contract_on_rendered_output":;
+ctl-NR1 | actual_exit 1 | No such file or directory;
+ctl-NB1 | actual_exit 1 | Failed to prove theorem "exported_ens2_value":; (control added 2026-11-19 after B's double-swap finding: input name binding of chargeId and requestId swapped on one side; SHA-256 9c55bb3f…)

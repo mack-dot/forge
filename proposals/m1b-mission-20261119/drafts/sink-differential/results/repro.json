@@ -1,0 +1,107 @@
+{
+ "issuer": {
+  "issuer_exit": 0,
+  "issuer_ready": {
+   "checkerSha256": "f42af94e32b2cb394c6a80a5013c2beadcb977ef9ca1814a97c5b0d2470520d8",
+   "specLockSha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b"
+  },
+  "control_equal_ids": {
+   "ok": true,
+   "body_requestId": "rq_A",
+   "intent_requestId": "rq_A"
+  },
+  "mismatch_intent_other": {
+   "id": 2,
+   "ok": false,
+   "reason": "core: Refuse"
+  },
+  "mismatch_intent_empty": {
+   "id": 3,
+   "ok": false,
+   "reason": "core: Refuse"
+  },
+  "mismatch_case_only": {
+   "id": 4,
+   "ok": false,
+   "reason": "core: Refuse"
+  },
+  "mismatch_trailing_space": {
+   "id": 5,
+   "ok": false,
+   "reason": "core: Refuse"
+  }
+ },
+ "real": {
+  "sink": "real",
+  "commit_mismatched": {
+   "status": "committed"
+  },
+  "commit_honest_for_intent_id": {
+   "status": "committed"
+  },
+  "state": {
+   "chargeId": "ch_z4",
+   "original": "1000",
+   "refundEnabled": true,
+   "remaining": "800"
+  },
+  "settled": [
+   {
+    "request_id": "rq_body",
+    "intent_requestId": "rq_victim"
+   },
+   {
+    "request_id": "rq_victim",
+    "intent_requestId": "rq_victim"
+   }
+  ],
+  "outbox": [
+   {
+    "request_id": "rq_body",
+    "intent_requestId": "rq_victim",
+    "amount": "100"
+   },
+   {
+    "request_id": "rq_victim",
+    "intent_requestId": "rq_victim",
+    "amount": "100"
+   }
+  ],
+  "audit": [],
+  "dispatcher_emitted": [
+   {
+    "effect_requestId": "rq_body",
+    "intent_requestId": "rq_victim",
+    "amount": "100"
+   },
+   {
+    "effect_requestId": "rq_victim",
+    "intent_requestId": "rq_victim",
+    "amount": "100"
+   }
+  ],
+  "dispatcher_refused": []
+ },
+ "patched": {
+  "sink": "patched-reqid",
+  "commit_mismatched": {
+   "status": "rejected",
+   "reason": "request id is not the intent's request id"
+  },
+  "commit_honest_for_intent_id": {
+   "status": "rejected",
+   "reason": "stored state is not the token's pre-state"
+  },
+  "state": {
+   "chargeId": "ch_z4",
+   "original": "1000",
+   "refundEnabled": true,
+   "remaining": "1000"
+  },
+  "settled": [],
+  "outbox": [],
+  "audit": [],
+  "dispatcher_emitted": [],
+  "dispatcher_refused": []
+ }
+}

@@ -314,3 +314,92 @@ labelled conditional result. Text 10's count is wrong: 58 of the 1489
 rows belong to the new modules (U474). Neither text approves the HOL
 probe M-B2c-0, a build, or any protected change. Steps 2 to 4 are the
 agent's work in that order; step 3 is already directed by text 9.)
+
+## Texts 12 to 14 (wave 4; received 2026-11-19)
+
+Text 12, the owner's own words: "spin up a shit load of sub agnets",
+with a pasted assessment (four goals from "ready for serious testing"
+to "open research"; four hard links: spec to HOL functions, machine
+model to real execution, executable to durable effect, proof to
+deployment authority; "don't wait to test the zero-code-review
+experience").
+
+Text 13, pasted: finish the replay and execute L1; close the
+Dafny-to-HOL link; decide the run-time architecture, with the Linux
+probe as "a bounded feasibility experiment first, not authorization to
+rewrite the system"; move the coding agent off the administrator
+credentials; make UNSUPPORTED mean not admitted for deployable code.
+
+Text 14, the owner's own words: "a ton of sub agents please opus with
+fabe orchestraotr".
+
+(Agent's reading: wave 4 of the tracker, twelve Opus workers, one per
+missing link, no HOL and no build by a worker. Text 13 names the Linux
+probe as the right next experiment but is a pasted text: I do not take
+it as the approval of a HOL run for the probe.)
+
+## Text 15 (after wave 4; pasted, received 2026-11-19)
+
+> Continue the existing M1-B Wave 4 mission. Do not restart the architecture, disturb the 158-case replay, or launch additional parallel workers. The `_cml_exit` finding is a proof-boundary problem, not authorization to rewrite ARM64.
+
+Eight items: 1 keep the disassembly evidence and the `x0 = 2^32`
+counterexample, and "Do not claim that this state is reachable without
+proof"; 2 correct the exit-status statements; 3 finish the corrected
+output-byte, halt-value range and strict-prefix HOL drafts and run
+them with independent negative controls when the HOL slot is free;
+4 inspect the fail-closed caller draft ("Never authorize based on exit
+status alone"); 5 reuse the existing finality checker, signed-token
+flow and SQLite sink; 6 keep machine-model proofs, native-runtime
+assumptions, executable tests and deployed enforcement apart; 7 finish
+the replay, case 005 included, and execute L1 in the authorized order;
+8 update the graph only after actual evidence is checked.
+
+> No Stage 9 signing, Stage 12, protected gate changes, Linux runtime probe, or administrator merges without separate authorization. Our priority is to close the chain we have—not create another system.
+
+(Agent's reading: no new worker from here; the Linux probe is NOT
+approved; the answer is `proposals/m1b-mission-20261119/NEXT_OBLIGATIONS.md`.)
+
+## Texts 16 and 17 (wave 5; received 2026-11-19)
+
+Text 16, the owner's own words: "fable orchestrator and opus agents
+here please", with a pasted review of pull request 58 (priorities:
+the agent can bypass deployment enforcement; the source verifier
+admits a program that never returns; the processor-state premise
+needs repair. Decisions it recommends: review 58 as research evidence;
+a narrow owner-ratified gate fix for `expect` with regression
+controls and stated termination and resource requirements; a plan
+that supports rulesets and an isolated agent without owner tokens; "I
+lean toward rejecting zero-value refund effects"; the Linux probe as
+a separately approved bounded probe; mains power and all replay
+cases. "Do not let it rebuild SinkCore, LinkedRefund, or the existing
+tests.")
+
+Text 17, the owner's own words: "fable orchestraoy and more sub
+agents opus pleasde", with a pasted mission "FORGE WAVE 5 —
+SILICON-TO-SINK PROOF CLOSURE" that ARRIVED CUT OFF in its section 0
+(last words: "Inspect the actual repository, active processes,
+worktrees, branches, proof"). The part that arrived: a proof-closure
+and enforcement-hardening mission, "Not another architecture
+exploration"; the target ∀e. Committed(e) ⇒ ApprovedSpec(e) ∧
+ValidArtifact(e) ∧ UniqueAuthorization(e); also required over the
+supported domain: functional correctness, safety, progress under
+approved termination and resource assumptions, artifact integrity,
+enforced admission; "Do not equate this goal with universal absence
+of all possible bugs. Prove the actual stated properties."; section 0:
+reconcile the current state first.
+
+(Agent's reading: the owner's own words of texts 16 and 17 come after
+the pasted text 15 ("no additional parallel workers") and are the
+basis of wave 5: eleven Opus workers. The recommendations inside the
+pasted parts are not approvals: no gate change, no spec change for
+amount 0, no Linux probe.)
+
+## Note on authority (after the audit G11)
+
+The owner's OWN words in this file: texts 6 and 7; the wave launches
+(the words with the mission text, texts 12, 14, 16, 17); "merge 55".
+Texts 1 to 5, 8 to 11, 13 and 15 are PASTED texts with no words of
+the owner's own. I acted on them as the owner's instructions; that is
+an inference. It covers: the answers Q1 to Q6 (so every "approved"
+assumption of the graph), the start of the replay, the merge of pull
+request 54, and the order to run L1.

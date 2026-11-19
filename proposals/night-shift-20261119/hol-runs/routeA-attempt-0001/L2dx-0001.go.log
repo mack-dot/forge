@@ -1,0 +1,69 @@
+2026-11-19T10:09:08Z
+Now drawing from 'AC Power'
+total = 6144.00M  used = 5503.44M  free = 640.56M  (encrypted)
+System-wide memory free percentage: 70%
+START_STATE swap_free_mib=640 memory_free_percent=70
+exit 0
+actual_exit 0 wall 93.393 cpu 112.396 rss_mib 4503 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+2446:EXPLORE_BEGIN ffi_read_short_array_returns_error_byte steps 2
+2447:  GOAL_COUNT 1
+2448:  GOAL_BEGIN ffi_read_short_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+2453:  GOAL_END ffi_read_short_array_returns_error_byte #1
+2454:STEP ffi_read_short_array_returns_error_byte 1 simp goals 1
+2455:  GOAL_COUNT 1
+2456:  GOAL_BEGIN ffi_read_short_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+2469:  GOAL_END ffi_read_short_array_returns_error_byte #1
+2470:STEP ffi_read_short_array_returns_error_byte 2 eval goals 1
+2471:  GOAL_COUNT 1
+2472:  GOAL_BEGIN ffi_read_short_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+2475:  GOAL_END ffi_read_short_array_returns_error_byte #1
+2476:EXPLORE_OPEN ffi_read_short_array_returns_error_byte goals 1
+2477:EXPLORE_END ffi_read_short_array_returns_error_byte
+2478:EXPLORE_BEGIN ffi_write_conf_length_0_returns_error_byte steps 2
+2479:  GOAL_COUNT 1
+2480:  GOAL_BEGIN ffi_write_conf_length_0_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+2484:  GOAL_END ffi_write_conf_length_0_returns_error_byte #1
+2485:STEP ffi_write_conf_length_0_returns_error_byte 1 simp goals 1
+2486:  GOAL_COUNT 1
+2487:  GOAL_BEGIN ffi_write_conf_length_0_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+2490:  GOAL_END ffi_write_conf_length_0_returns_error_byte #1
+2491:STEP ffi_write_conf_length_0_returns_error_byte 2 eval goals 0
+2492:  GOAL_COUNT 0
+2493:EXPLORE_CLOSED ffi_write_conf_length_0_returns_error_byte after_steps 2
+2494:VALIDATION ffi_write_conf_length_0_returns_error_byte concl_aconv_goal true hyps 0
+2495:EXPLORE_END ffi_write_conf_length_0_returns_error_byte
+2496:EXPLORE_BEGIN ffi_open_in_one_byte_array_returns_error_byte steps 2
+2497:  GOAL_COUNT 1
+2498:  GOAL_BEGIN ffi_open_in_one_byte_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+2501:  GOAL_END ffi_open_in_one_byte_array_returns_error_byte #1
+2502:STEP ffi_open_in_one_byte_array_returns_error_byte 1 simp goals 1
+2503:  GOAL_COUNT 1
+2504:  GOAL_BEGIN ffi_open_in_one_byte_array_returns_error_byte #1 assumptions 0 (ASM 0 = newest)
+2507:  GOAL_END ffi_open_in_one_byte_array_returns_error_byte #1
+2508:STEP ffi_open_in_one_byte_array_returns_error_byte 2 eval goals 0
+2509:  GOAL_COUNT 0
+2510:EXPLORE_CLOSED ffi_open_in_one_byte_array_returns_error_byte after_steps 2
+2511:VALIDATION ffi_open_in_one_byte_array_returns_error_byte concl_aconv_goal true hyps 0
+2512:EXPLORE_END ffi_open_in_one_byte_array_returns_error_byte
+2514:  GOAL_COUNT 1
+2515:  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 0 (ASM 0 = newest)
+2527:  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+2529:  GOAL_COUNT 1
+2530:  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 8 (ASM 0 = newest)
+2552:  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+2554:  GOAL_COUNT 1
+2555:  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 8 (ASM 0 = newest)
+2593:  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+2595:  GOAL_COUNT 1
+2596:  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 8 (ASM 0 = newest)
+2633:  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+2635:  GOAL_COUNT 1
+2636:  GOAL_BEGIN remaining_premise_met_by_the_abstract_effect #1 assumptions 8 (ASM 0 = newest)
+2665:  GOAL_END remaining_premise_met_by_the_abstract_effect #1
+2667:  GOAL_COUNT 0
+2673:CONTROL_OK ASSEMBLY conclusion is term-identical to the stored conclusion
+2674:CONTROL_OK ASSEMBLY premises do not mention ffi_calls_ok
+2675:CONTROL_OK ASSEMBLY does not mention the variable Vok
+2706:EXPLORE_COMPLETE
+hash_parents exit 0
+go exit 0

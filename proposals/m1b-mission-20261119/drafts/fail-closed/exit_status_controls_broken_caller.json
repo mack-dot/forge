@@ -1,0 +1,224 @@
+{
+ "what": "exit-status controls on planted process results; finite test; the executable is not run",
+ "rows": [
+  {
+   "case": "P0 status 0, empty stderr, the complete expected frame",
+   "expected": [
+    "AUTHORIZED",
+    null
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "0",
+    "b''"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "x0 = 2^32 shape: status 0, empty stderr, each of the 58 strict prefixes",
+   "expected": 58,
+   "actual": 0,
+   "as_expected": false
+  },
+  {
+   "case": "x0 = 2^32 shape, empty output",
+   "expected": [
+    "REFUSED",
+    "D6"
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "0",
+    "b''"
+   ],
+   "as_expected": false
+  },
+  {
+   "case": "x0 = 256 shape: status 0, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D4"
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "0",
+    "b''"
+   ],
+   "as_expected": false
+  },
+  {
+   "case": "x0 = 256 shape: status 0, stderr line, cut output",
+   "expected": [
+    "REFUSED",
+    "D4"
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "0",
+    "b''"
+   ],
+   "as_expected": false
+  },
+  {
+   "case": "status 1, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 1, EMPTY stderr, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 2, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 2, EMPTY stderr, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 3, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 3, EMPTY stderr, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 255, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 255, EMPTY stderr, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "signal, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D2"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 x"
+   ],
+   "as_expected": false
+  },
+  {
+   "case": "time limit, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D1"
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "0",
+    "b''"
+   ],
+   "as_expected": false
+  },
+  {
+   "case": "status 0, complete frame of another request",
+   "expected": [
+    "REFUSED",
+    "D"
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "0",
+    "b''"
+   ],
+   "as_expected": false
+  },
+  {
+   "case": "status 0, complete frame twice",
+   "expected": [
+    "REFUSED",
+    "D"
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "0",
+    "b''"
+   ],
+   "as_expected": false
+  },
+  {
+   "case": "status 0, complete frame + newline",
+   "expected": [
+    "REFUSED",
+    "D"
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "0",
+    "b''"
+   ],
+   "as_expected": false
+  }
+ ],
+ "not_as_expected": 9
+}

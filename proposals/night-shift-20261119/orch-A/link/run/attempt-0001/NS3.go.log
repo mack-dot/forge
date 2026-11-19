@@ -1,0 +1,29 @@
+2026-11-19T08:57:27Z
+START_STATE swap_free_mib=1391 memory_free_percent=68
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/controls/NS3-wrong-truth-value.sml sha256 c4a446693fa7009b5bb72a6aaacb196e5bad18dcb5cb821063788b3c3b3cb3c6 expected c4a446693fa7009b5bb72a6aaacb196e5bad18dcb5cb821063788b3c3b3cb3c6
+Thu Nov 19 03:57:27 EST 2026
+System-wide memory free percentage: 68%
+vm.swapusage: total = 7168.00M  used = 5776.94M  free = 1391.06M  (encrypted)
+/dev/disk3s5       460  338        90    80% 7990083 944012880    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 80
+COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=900 python3 -I -B run_case.py ctl-NS3 controls/NS3-wrong-truth-value.sml
+RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in ctl-NS3/command.json)
+2:FORGE_BEGIN exported_contract_decode
+4:FORGE_BEGIN exported_contract_shape
+6:FORGE_BEGIN exported_ens1_value
+8:FORGE_BEGIN exported_ens2_value
+10:FORGE_BEGIN exported_ens3_value
+12:FORGE_BEGIN exported_contract_value
+14:FORGE_BEGIN exported_contract_on_refund_fields
+
+Exception raised at boolLib.store_thm_at:
+at Tactical.TAC_PROOF:
+  Failed to prove theorem "exported_contract_on_refund_fields":
+unsolved goals
+  info: actual_exit=1 markers=[] last FORGE_BEGIN='exported_contract_on_refund_fields' *_COMPLETE lines=[] wall=23.238
+VERDICT NS3 ctl-NS3 PASS
+GO.SH EXIT 1
+go exit 1

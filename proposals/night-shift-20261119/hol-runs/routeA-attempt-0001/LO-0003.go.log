@@ -1,0 +1,40 @@
+2026-11-19T08:40:41Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 6457.00M  free = 711.00M  (encrypted)
+System-wide memory free percentage: 70%
+exit 1
+actual_exit 1 wall 73.496 cpu 97.317 rss_mib 4224 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0003/proof.sml:542: Fail "failed: read_stdout ffi_read_stdout_step fs_ffi_part_stdout_step extract_no_ext_stdout refund_L_OUT refund_L_OUT_prefix refund_profile_a_sl_fd1"
+65:CHECKED fd1_written_APPEND
+70:CHECKED fd1_written_prefix
+75:CHECKED STD_streams_facts
+89:CHECKED STD_streams_File_fd
+96:CHECKED w22n_lt
+101:CHECKED w22n_n2w2_bytes
+106:CHECKED write_stdout
+117:CHECKED ffi_write_cases
+129:CHECKED ffi_write_stdout_step
+140:LEMMA_FAILED read_stdout HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "CONJ_TAC", origin_structure = "Tactic", source_location = Loc_Unknown}]})
+142:LEMMA_FAILED ffi_read_stdout_step HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+145:CHECKED openFile_stdout
+152:CHECKED openFile_truncate_stdout
+161:CHECKED ffi_open_in_stdout_step
+170:CHECKED ffi_open_out_stdout_step
+179:CHECKED STD_streams_ADELKEY_File
+186:CHECKED closeFD_stdout
+193:CHECKED ffi_close_stdout_step
+202:CHECKED ALOOKUP_fs_ffi_part
+210:LEMMA_FAILED fs_ffi_part_stdout_step HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+213:CHECKED extract_no_ext_ExtCall
+225:LEMMA_FAILED extract_no_ext_stdout HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+228:CHECKED extract_fs_inode_tbl
+236:LEMMA_FAILED refund_L_OUT HOL_ERR (HOL_ERROR {message = "predicate not true", origins = [{origin_function = "assert", origin_structure = "Lib", source_location = Loc_Unknown}]})
+238:LEMMA_FAILED refund_L_OUT_prefix HOL_ERR (HOL_ERROR {message = "predicate not true", origins = [{origin_function = "assert", origin_structure = "Lib", source_location = Loc_Unknown}]})
+249:LEMMA_FAILED refund_profile_a_sl_fd1 HOL_ERR (HOL_ERROR {message = "first subgoal not solved by second tactic", origins = [{origin_function = "THEN1", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+268:CHECKED STD_streams_fs0
+273:CHECKED N_O1_free_ext_breaks
+301:CHECKED N_O2_failed_write_counted_without_success_test
+312:CHECKED N_O3_fd2_write_counted_without_fd_test
+320:CHECKED P_O4_partial_write_counts_nw
+hash_parents exit 0
+go exit 1

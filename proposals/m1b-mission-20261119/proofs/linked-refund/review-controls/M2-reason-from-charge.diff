@@ -1,0 +1,12 @@
+diff -ru proposals/m1b-mission-20261119/proofs/linked-refund/inputs/LinkedRefund.dfy M2-reason-from-charge/inputs/LinkedRefund.dfy
+--- proposals/m1b-mission-20261119/proofs/linked-refund/inputs/LinkedRefund.dfy	2026-11-19 00:33:50.343736715 -0500
++++ M2-reason-from-charge/inputs/LinkedRefund.dfy	2026-11-19 01:10:11.580909765 -0500
+@@ -46,7 +46,7 @@
+   function Unflatten(ok: bool, amount: int, reasonBytes: string, chargeBytes: string,
+                      requestBytes: string, count: int): (Decision, seq<RefundIntent>)
+   {
+-    (if ok then Authorized(amount, Decode(reasonBytes)) else Rejected,
++    (if ok then Authorized(amount, Decode(chargeBytes)) else Rejected,
+      if count == 1 then [Intent(Decode(chargeBytes), Decode(requestBytes), amount, Decode(reasonBytes))]
+      else [])
+   }

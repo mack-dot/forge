@@ -1,0 +1,15 @@
+macho header+load cmds: file [0,16384) equal=False ndiff=52 first=216 sha_orig=4bfc51908d88e30e sha_pat=708e235a94f53ce3
+cml_main stub 0x100004000: file [16384,16492) equal=True ndiff=0 first=None sha_orig=9e010ce30c58d792 sha_pat=9e010ce30c58d792
+ffi/install/exit stubs 0x10000406C..0x1000040D0: file [16492,16592) equal=False ndiff=6 first=16512 sha_orig=da502b157e34ac09 sha_pat=50f01c518d8272bc
+CakeML code slice cake_main..codebuffer_begin: file [16592,147028) equal=True ndiff=0 first=None sha_orig=3c67983c93b3f7bb sha_pat=3c67983c93b3f7bb
+codebuffer 0x100023e54..0x100024000: file [147028,147456) equal=True ndiff=0 first=None sha_orig=c9277da9f588078e sha_pat=c9277da9f588078e
+gap to C 0x100024000..0x100025000: file [147456,151552) equal=True ndiff=0 first=None sha_orig=ad7facb2586fc6e9 sha_pat=ad7facb2586fc6e9
+C text+stubs+cstring+unwind (TEXT tail) 0x100025000..0x100028000: file [151552,163840) equal=False ndiff=2506 first=151716 sha_orig=d0d51ee31c32c05c sha_pat=78c346034e369653
+__DATA_CONST __got page: file [163840,180224) equal=False ndiff=6 first=164022 sha_orig=462272eafe8e68ee sha_pat=0bee6a416abfdb48
+__DATA (cml_heap.., bitmaps): file [180224,200496) equal=True ndiff=0 first=None sha_orig=e4310a9c5c0658a4 sha_pat=e4310a9c5c0658a4
+  vm 0x100004070 orig 1400840a->0x100025098 patched 1400840a->0x100025098
+  vm 0x100004080 orig 14008478->0x100025260 patched 140084b2->0x100025348
+  vm 0x100004090 orig 14008454->0x1000251e0 patched 14008475->0x100025264
+  vm 0x1000040a0 orig 14008434->0x100025170 patched 1400843b->0x10002518c
+  vm 0x1000040b0 orig 14008515->0x100025504 patched 14008564->0x100025640
+  vm 0x1000040c0 orig 140084e9->0x100025464 patched 14008538->0x1000255a0

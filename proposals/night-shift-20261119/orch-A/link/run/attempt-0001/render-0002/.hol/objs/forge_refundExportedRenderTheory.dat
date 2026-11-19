@@ -1,0 +1,47 @@
+(theory
+ ("forge_refundExportedRender"
+  ("forge_refundExportedContract" .
+   "e8ca1d976203bbe7cd391f52af2da153b4809ea1")
+  ("forge_refundWireProg" . "db24847b088e6ab538b02e7f932defdd15baf2a6"))
+ (core-data
+  (tables
+   (string-table "integer" "int" "mlstring" "min" "bool"
+    "dafny_semanticPrimitives" "sem_env" "list" "heap_value" "string"
+    "char" "mlsexp" "sexp" "pair" "," "fun" "prod" "exp_result" "value"
+    "state" "/\\" "=" "sum" "==>" "BoolV" "CONS" "INR" "NIL" "Rval" "T"
+    "dafny_evaluate" "evaluate_exps" "dafny_ast" "exp" "explode"
+    "forge_refundExportedContract" "exported_contract_state"
+    "exported_ensures" "parse" "forge_refundCertifiedProg" "refund_fields"
+    "forge_refundWireProg" "refund_render_fields" "forge_refund_io"
+    "refund_response_fields" "exported_contract_on_rendered_output"
+    "forge_refundExportedRender")
+   (id-table (0 . 1) (2 . 2) (3 . 4) (5 . 6) (7 . 7) (5 . 8) (9 . 10)
+    (11 . 12) (13 . 14) (3 . 15) (13 . 16) (5 . 17) (5 . 18) (5 . 19)
+    (4 . 20) (3 . 21) (22 . 22) (3 . 23) (5 . 24) (7 . 25) (22 . 26)
+    (7 . 27) (5 . 28) (4 . 29) (30 . 31) (32 . 33) (2 . 34) (35 . 36)
+    (35 . 37) (11 . 38) (39 . 40) (41 . 42) (43 . 44))
+   (type-table (0) (1) (2) (3) (5) (4 4) (6) (4 6) (7) (10 1 0) (10 1 9)
+    (10 1 10) (10 0 11) (10 2 12) (9 12 13) (9 2 14) (9 11 12) (9 0 16)
+    (9 0 9) (9 1 18) (9 9 10) (9 1 20) (9 10 11) (9 1 22) (10 8 7) (9 7 24)
+    (9 8 25) (12) (4 27) (11 28) (13) (10 30 29) (9 29 31) (9 30 32)
+    (9 2 2) (9 2 34) (9 7 2) (9 7 36) (9 13 2) (9 13 38) (9 31 2) (9 31 40)
+    (16 1 13) (9 42 2) (9 42 43) (10 1 7) (16 45 24) (9 46 2) (9 46 47)
+    (9 2 27) (9 28 28) (9 27 50) (9 13 42) (9 24 46) (9 28 29) (25) (4 55)
+    (9 56 31) (9 3 57) (9 30 58) (9 1 7) (9 0 30) (9 1 61) (9 1 62)
+    (9 1 63) (9 0 64) (9 2 65) (9 1 66) (9 0 67) (9 2 68) (9 2 69) (9 2 70)
+    (9 0 71) (9 0 72) (9 1 73) (9 1 74) (9 5 75) (9 7 46) (9 1 13) (9 0 78)
+    (9 2 79) (9 2 80) (9 2 81) (9 0 82) (9 0 83) (9 1 84) (9 1 85) (9 13 1)
+    (9 8 42))
+   (term-table ("a" 0) ("a0" 0) ("amount" 0) ("c" 1) ("c0" 1)
+    ("candidate" 2) ("charge" 1) ("enabled" 2) ("env" 3) ("h" 5) ("n" 0)
+    ("n0" 0) ("ok" 2) ("ok0" 2) ("opened" 2) ("original" 0) ("q" 1)
+    ("q0" 1) ("r" 1) ("r0" 1) ("reason" 1) ("remaining" 0) ("request" 1)
+    ("rest" 7) ("se" 8) (8 15) (8 17) (8 19) (8 21) (8 23) (8 26) (8 33)
+    (14 35) (15 37) (15 39) (15 41) (15 44) (15 48) (17 35) (18 49) (19 51)
+    (20 52) (20 53) (21 7) (21 28) (22 54) (23 2) (24 59) (26 60) (27 76)
+    (28 56) (29 77) (30 86) (31 87) (32 88))) exports (nil) (nil)
+  ((45
+    (((46 0) (4 25 50 52 56 58 63 105 128) (5 296 330) (35 13) (41 3)
+      (7 747) (13 4) (22 86)) "DISK_THM") (2 0)
+    ("%6%22B52%15@%21@%7@%14@%5@%2@%20@%13%1%19%4%17%11B27B28B29B26B25B34%13%1%19%4%17%11B27B28B29B26B25U53U48U51%24%23B30U42B37%24U54%12%0%18%3%16%10B27B28B29B26B25U41B36B32B32%23%43B33%12%0%18%3%16%10B27B28B29B26B25%13%1%19%4%17%11B27B28B29B26B25B34%9%6B49%22@%15@%21@%7@%14@%5@%2@%20@%12@%0@%18@%3@%16@%10@%8B47%50@%9%6B49%22@%15@%21@%7@%14@%5@%2@%20@%12@%0@%18@%3@%16@%10@%46U39%46U39%46U39%44B40B40B40U45B31B35B32B32B38"))))
+ (incorporate (incorporate-types) incorporate-consts) (loadable-thydata))

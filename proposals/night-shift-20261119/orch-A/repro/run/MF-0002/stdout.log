@@ -1,0 +1,345 @@
+CONTRACT_LOAD already in the session (deps line)
+CONTRACT_MODE imported
+<<HOL message: Created theory "forge_refundModelFrame">>
+USED refund_profile_a_sl_fd1
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          (t = Success ∧
+           fd1_written io =
+           explode
+             (refund_render_fields
+                (refund_fields charge request original remaining enabled
+                   opened candidate amount reason)) ∨
+           t = Resource_limit_hit ∧
+           fd1_written io ≼
+           explode
+             (refund_render_fields
+                (refund_fields charge request original remaining enabled
+                   opened candidate amount reason)))
+USED refund_L_OUT
+⊢ ∀cl fs io out.
+    STD_streams fs ∧
+    extract_fs no_ext (cl,fs) io = SOME (add_stdout (fastForwardFD fs 0) out) ⇒
+    fd1_written io = explode out
+USED fd1_written_prefix
+⊢ ∀io' io. io' ≼ io ⇒ fd1_written io' ≼ fd1_written io
+USED refund_frame_decision
+⊢ ∀f out g.
+    out ≼ explode (refund_render_fields f) ∧ refund_strict_parse out = SOME g ⇒
+    out = explode (refund_render_fields f) ∧ g = f
+USED refund_strict_parse_complete
+⊢ ∀f. refund_strict_parse (explode (refund_render_fields f)) = SOME f
+USED refund_profile_a_sl_reach
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ∧
+  (∀ms k.
+     arm8_run 27 s = SOME ms ⇒
+     ffi_calls_ok Vok
+       (refund_mc (sl + 0x1000040D0w)
+          (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+       (basis_ffi ext cl fs) k ms) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) j
+         ms = (TimeOut,ms',ffi') ⇒
+       (refund_mc (sl + 0x1000040D0w) envmc).target.get_pc ms' ≠
+       (refund_mc (sl + 0x1000040D0w) envmc).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+        ms ⊆ extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+USED arm8_run_constants_agree
+⊢ ∀n s. arm8_run n s = arm8_run n s
+IMPORTED_OK refund_frame_decision
+IMPORTED_OK refund_strict_parse_complete
+IMPORTED_OK fd1_written_prefix
+IMPORTED_OK refund_L_OUT
+PIECE FT refund_fields charge request original remaining enabled opened candidate
+  amount reason
+CONST refund_fields forge_refundCertifiedProg
+CONST refund_render_fields forge_refundWireProg
+CONST refund_strict_parse forge_refundPrefixFree
+CONST Terminate ffi Success ffi
+ARM8_RUN_IN_FD1 forge_refundCmlMainSlide
+BEGIN refund_outcome_prefix
+Saved theorem _______ "refund_outcome_prefix"
+CHECKED refund_outcome_prefix
+⊢ ∀p1 p2 out x. p1 ∧ out = x ∨ p2 ∧ out ≼ x ⇒ out ≼ x
+BEGIN refund_frame_accept_of_prefix
+Saved theorem _______ "refund_frame_accept_of_prefix"
+CHECKED refund_frame_accept_of_prefix
+⊢ ∀f out.
+    out ≼ explode (refund_render_fields f) ⇒
+    ∀g. refund_strict_parse out = SOME g ⇒
+        g = f ∧ out = explode (refund_render_fields f)
+BEGIN refund_frame_accept_of_outcome
+Saved theorem _______ "refund_frame_accept_of_outcome"
+CHECKED refund_frame_accept_of_outcome
+⊢ ∀p1 p2 out f.
+    p1 ∧ out = explode (refund_render_fields f) ∨
+    p2 ∧ out ≼ explode (refund_render_fields f) ⇒
+    ∀g. refund_strict_parse out = SOME g ⇒
+        g = f ∧ out = explode (refund_render_fields f)
+BEGIN refund_success_accept
+Saved theorem _______ "refund_success_accept"
+CHECKED refund_success_accept
+⊢ ∀io0 f.
+    (∃t io.
+       Terminate Success io0 = Terminate t io ∧
+       (t = Success ∧ fd1_written io = explode (refund_render_fields f) ∨
+        t = Resource_limit_hit ∧
+        fd1_written io ≼ explode (refund_render_fields f))) ⇒
+    refund_strict_parse (fd1_written io0) = SOME f
+BEGIN extend_with_resource_limit_single_success
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundModelFrame)>>
+Saved theorem _______ "extend_with_resource_limit_single_success"
+CHECKED extend_with_resource_limit_single_success
+⊢ ∀M io0 b.
+    M ⊆ extend_with_resource_limit {Terminate Success io0} ∧ M b ⇒
+    b = Terminate Success io0 ∨
+    ∃io'. b = Terminate Resource_limit_hit io' ∧ io' ≼ io0
+BEGIN refund_fd1_frame_of_run
+Saved theorem _______ "refund_fd1_frame_of_run"
+CHECKED refund_fd1_frame_of_run
+⊢ ∀b io0 f.
+    (b = Terminate Success io0 ∨
+     ∃io'. b = Terminate Resource_limit_hit io' ∧ io' ≼ io0) ∧
+    fd1_written io0 = explode (refund_render_fields f) ⇒
+    ∃t io.
+      b = Terminate t io ∧
+      ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+          g = f ∧ fd1_written io = explode (refund_render_fields f)
+BEGIN refund_model_frame_decision
+Saved theorem _______ "refund_model_frame_decision"
+CHECKED refund_model_frame_decision
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason))
+BEGIN refund_model_success_gives_frame
+Saved theorem _______ "refund_model_success_gives_frame"
+CHECKED refund_model_success_gives_frame
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀io.
+      machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+        (basis_ffi no_ext cl fs) ms (Terminate Success io) ⇒
+      refund_strict_parse (fd1_written io) =
+      SOME
+        (refund_fields charge request original remaining enabled opened
+           candidate amount reason)
+PIECE L2R ms same variable as FD1
+PIECE L2R io_events io_events : :io_event list
+BEGIN refund_model_frame_decision_reach
+Saved theorem _______ "refund_model_frame_decision_reach"
+CHECKED refund_model_frame_decision_reach
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ∧
+  (∀ms k.
+     arm8_run 27 s = SOME ms ⇒
+     ffi_calls_ok Vok
+       (refund_mc (sl + 0x1000040D0w)
+          (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+       (basis_ffi no_ext cl fs) k ms) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason))
+BEGIN refund_strict_parse_common_prefix_rejected
+Saved theorem _______ "refund_strict_parse_common_prefix_rejected"
+CHECKED refund_strict_parse_common_prefix_rejected
+⊢ ∀p f1 f2.
+    p ≼ explode (refund_render_fields f1) ∧
+    p ≼ explode (refund_render_fields f2) ∧ f1 ≠ f2 ⇒
+    refund_strict_parse p = NONE
+BEGIN refund_strict_parse_empty_rejected
+Saved theorem _______ "refund_strict_parse_empty_rejected"
+CHECKED refund_strict_parse_empty_rejected
+⊢ refund_strict_parse "" = NONE
+USED exported_contract_on_refund_fields
+⊢ refund_fields charge request original remaining enabled opened candidate
+    amount reason = (ok,a,r,c,q,n) ⇒
+  evaluate_exps
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ensures =
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n,Rval [BoolV T; BoolV T; BoolV T])
+CONTRACT_REFUND_FIELDS_CONST forge_refundCertifiedProg
+BEGIN refund_frame_contract_key
+Saved theorem _______ "refund_frame_contract_key"
+CHECKED refund_frame_contract_key
+⊢ ∀p1 p2 out.
+    p1 ∧
+    out =
+    explode
+      (refund_render_fields
+         (refund_fields charge request original remaining enabled opened
+            candidate amount reason)) ∨
+    p2 ∧
+    out ≼
+    explode
+      (refund_render_fields
+         (refund_fields charge request original remaining enabled opened
+            candidate amount reason)) ⇒
+    ∀g. refund_strict_parse out = SOME g ⇒
+        g =
+        refund_fields charge request original remaining enabled opened
+          candidate amount reason ∧
+        out =
+        explode
+          (refund_render_fields
+             (refund_fields charge request original remaining enabled opened
+                candidate amount reason)) ∧
+        ∀ok a r c q n.
+          g = (ok,a,r,c,q,n) ⇒
+          evaluate_exps
+            (exported_contract_state dafny_heap charge request original
+               remaining enabled opened candidate amount reason ok a r c q n)
+            dafny_env exported_ensures =
+          (exported_contract_state dafny_heap charge request original
+             remaining enabled opened candidate amount reason ok a r c q n,
+           Rval [BoolV T; BoolV T; BoolV T])
+BEGIN refund_model_frame_meets_exported_contract
+Saved theorem _______ "refund_model_frame_meets_exported_contract"
+CHECKED refund_model_frame_meets_exported_contract
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                evaluate_exps
+                  (exported_contract_state dafny_heap charge request original
+                     remaining enabled opened candidate amount reason ok a r
+                     c q n) dafny_env exported_ensures =
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n,Rval [BoolV T; BoolV T; BoolV T])
+CONTROL_OK M3 premise is the stored premise term
+MARK CHECKS
+FAILED_LIST 
+DIAG_OK_UNDER_LIST 
+CONTROL_OK c1 refund_model_frame_decision premise is term-identical to the premise of refund_profile_a_sl_fd1
+CONTROL_OK M2 premise is the stored premise term
+CONTROL_OK M1 statement is the planned term
+CONTROL_OK M1 conclusion uses refund_strict_parse and has no free ext (no_ext)
+CONTROL_OK M1b premise is term-identical to the premise of refund_profile_a_sl_reach at ext := no_ext
+CONTROL_OK M1b conclusion is term-identical to the conclusion of M1
+CONTROL_OK M1b premise does not contain refund_env_ok_sl
+CONTROL_OK c2 refund_strict_parse of the empty output is NONE (a resource stop with no output is never accepted)
+NOTE PREMISE_STILL_FALSE_FOR_REAL_FFI refund_env_ok_sl : M1, M2 (and M3) inherit the stored all-states FFI premise (falsified for the real FFI by U393)
+NOTE M1B_PREMISE_UNPROVED ffi_calls_ok Vok at every clock (lemma L3) is not proved; M1b is conditional on it
+NOTE CONTRACT_MODE imported M3 proved
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+PARENTS forge_refundExportedContract forge_refundLOut forge_refundRouteA2 forge_refundPrefixExact
+STORED_THEOREMS 13
+STORED_DEFINITIONS 0
+Exporting theory "forge_refundModelFrame" ... done.
+Theory "forge_refundModelFrame" took 9.3s to build
+EXACT_COMPLETE

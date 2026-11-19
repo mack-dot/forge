@@ -1,0 +1,11 @@
+diff -ru proposals/m1b-mission-20261119/proofs/linked-refund/inputs/transport/spec/refund/RefundSpec.dfy M5-spec-extra-ensures/inputs/transport/spec/refund/RefundSpec.dfy
+--- proposals/m1b-mission-20261119/proofs/linked-refund/inputs/transport/spec/refund/RefundSpec.dfy	2026-11-19 00:33:50.329363492 -0500
++++ M5-spec-extra-ensures/inputs/transport/spec/refund/RefundSpec.dfy	2026-11-19 01:10:11.658998594 -0500
+@@ -54,6 +54,7 @@
+     ensures (decision.Authorized? <==> Eligible(context, response))
+     ensures (decision.Rejected? <==> |plan| == 0)
+     ensures |plan| <= 1
++    ensures decision.Authorized? ==> decision.amount > 0
+     ensures decision.Authorized? ==>
+       plan == [Intent(context.chargeId, context.requestId, decision.amount, decision.reason)]
+     ensures forall intent: RefundIntent :: intent in plan ==>

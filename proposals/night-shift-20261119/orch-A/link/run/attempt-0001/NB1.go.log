@@ -1,0 +1,24 @@
+2026-11-19T09:21:08Z
+START_STATE swap_free_mib=1719 memory_free_percent=62
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+Thu Nov 19 04:21:08 EST 2026
+System-wide memory free percentage: 62%
+vm.swapusage: total = 7168.00M  used = 5448.81M  free = 1719.19M  (encrypted)
+/dev/disk3s5       460  339        89    80% 7999594 942369560    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 76
+COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=900 python3 -I -B run_case.py ctl-NB1 controls/NB1-input-binding-ids-swapped.sml
+RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in ctl-NB1/command.json)
+2:FORGE_BEGIN exported_contract_decode
+4:FORGE_BEGIN exported_contract_shape
+6:FORGE_BEGIN exported_ens1_value
+8:FORGE_BEGIN exported_ens2_value
+
+Exception raised at boolLib.store_thm_at:
+at Tactical.TAC_PROOF:
+  Failed to prove theorem "exported_ens2_value":
+unsolved goals
+unknown case id NB1
+GO.SH EXIT 1
+go exit 1

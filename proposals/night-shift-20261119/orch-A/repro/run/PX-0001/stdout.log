@@ -1,0 +1,98 @@
+<<HOL message: Created theory "forge_refundPrefixExact">>
+USED refund_strict_parse_def
+⊢ ∀s. refund_strict_parse s =
+      case parse s of
+        INL v1 => NONE
+      | INR (se,rest) =>
+        if rest ≠ "" then NONE
+        else
+          case refund_response_fields se of
+            INL v => NONE
+          | INR f =>
+            if explode (refund_render_fields f) = s then SOME f else NONE
+USED refund_strict_parse_no_strict_prefix
+⊢ ∀f p.
+    p ≼ explode (refund_render_fields f) ∧
+    p ≠ explode (refund_render_fields f) ⇒
+    refund_strict_parse p = NONE
+USED refund_strict_parse_complete
+⊢ ∀f. refund_strict_parse (explode (refund_render_fields f)) = SOME f
+USED refund_render_fields_prefix_code
+⊢ ∀f g.
+    explode (refund_render_fields g) ≼ explode (refund_render_fields f) ⇒
+    g = f
+IMPORTED_OK refund_strict_parse_complete
+IMPORTED_OK refund_render_fields_prefix_code
+IMPORTED_OK refund_strict_parse_no_strict_prefix
+PARENT_OK forge_refundPrefixFree
+BEGIN refund_strict_parse_SOME_render
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundPrefixExact)>>
+Saved theorem _______ "refund_strict_parse_SOME_render"
+CHECKED refund_strict_parse_SOME_render
+⊢ ∀s f. refund_strict_parse s = SOME f ⇒ s = explode (refund_render_fields f)
+BEGIN refund_strict_parse_exact
+Saved theorem _______ "refund_strict_parse_exact"
+CHECKED refund_strict_parse_exact
+⊢ ∀s f. refund_strict_parse s = SOME f ⇔ s = explode (refund_render_fields f)
+BEGIN refund_strict_parse_accepts_only_one_frame
+Saved theorem _______ "refund_strict_parse_accepts_only_one_frame"
+CHECKED refund_strict_parse_accepts_only_one_frame
+⊢ ∀f g j.
+    refund_strict_parse (STRCAT (explode (refund_render_fields f)) j) =
+    SOME g ⇒
+    j = "" ∧ g = f
+BEGIN refund_strict_parse_rejects_extension
+Saved theorem _______ "refund_strict_parse_rejects_extension"
+CHECKED refund_strict_parse_rejects_extension
+⊢ ∀f j.
+    j ≠ "" ⇒
+    refund_strict_parse (STRCAT (explode (refund_render_fields f)) j) = NONE
+BEGIN refund_frame_decision
+Saved theorem _______ "refund_frame_decision"
+CHECKED refund_frame_decision
+⊢ ∀f out g.
+    out ≼ explode (refund_render_fields f) ∧ refund_strict_parse out = SOME g ⇒
+    out = explode (refund_render_fields f) ∧ g = f
+BEGIN refund_strict_parse_witness
+Saved theorem _______ "refund_strict_parse_witness"
+CHECKED refund_strict_parse_witness
+⊢ refund_strict_parse
+    (explode (refund_render_fields (T,40,«returned_item»,«c»,«r»,1))) =
+  SOME (T,40,«returned_item»,«c»,«r»,1)
+BEGIN refund_strict_parse_not_reject_all
+Saved theorem _______ "refund_strict_parse_not_reject_all"
+CHECKED refund_strict_parse_not_reject_all
+⊢ ¬∀s. refund_strict_parse s = NONE
+BEGIN refund_frame_decision_needs_prefix
+Saved theorem _______ "refund_frame_decision_needs_prefix"
+CHECKED refund_frame_decision_needs_prefix
+⊢ ¬∀f out g. refund_strict_parse out = SOME g ⇒ g = f
+BEGIN refund_strict_parse_extension_needs_nonempty
+Saved theorem _______ "refund_strict_parse_extension_needs_nonempty"
+CHECKED refund_strict_parse_extension_needs_nonempty
+⊢ ¬∀f j.
+    refund_strict_parse (STRCAT (explode (refund_render_fields f)) j) = NONE
+EVAL_DIAG ⊢ refund_strict_parse
+    (explode (refund_render_fields (T,40,«returned_item»,«c»,«r»,1))) =
+  SOME (T,40,«returned_item»,«c»,«r»,1)
+EVAL_WITNESS_AGREES
+MARK CHECKS
+FAILED_LIST 
+DIAG_OK_UNDER_LIST 
+CONTROL_OK refund_strict_parse_exact statement is the literal planned statement
+CONTROL_OK refund_strict_parse_rejects_extension statement is the literal planned statement
+CONTROL_OK refund_strict_parse_accepts_only_one_frame statement is the literal planned statement
+CONTROL_OK refund_frame_decision statement is the literal planned statement
+CONTROL_OK C1 witness is accepted (SOME)
+CONTROL_OK C2 is a proved negation
+CONTROL_OK C3 is a proved negation
+CONTROL_OK C4 is a proved negation
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+STORED_THEOREMS 9
+STORED_DEFINITIONS 0
+Exporting theory "forge_refundPrefixExact" ... done.
+Theory "forge_refundPrefixExact" took 21.7s to build
+EXACT_COMPLETE

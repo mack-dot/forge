@@ -1,0 +1,42 @@
+2026-11-19T14:25:41Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 8561.38M  free = 1678.62M  (encrypted)
+System-wide memory free percentage: 59%
+START_STATE swap_free_mib=1678 memory_free_percent=59
+USED_FILES_PRE 0 e3b0c44298fc1c14
+exit 0
+actual_exit 0 wall 108.046 cpu 110.414 rss_mib 2711 ['EXACT_COMPLETE'] inputs_unchanged_after True
+44:  <|PC := 0x1000040A0w; PSTATE := <|EL := 0w|>; exception := NoException;
+80:CONTROL_OK refund_ffi_contract_on = stored contract body + exactly one hypothesis (Vok index new_bytes ms2); conclusions identical
+81:TEXT_CHECK_OK refund_ffi_contract_on_def
+84:CHECKED refund_ffi_tot_valid
+89:CHECKED refund_ffi_tot_invalid
+95:CHECKED refund_ffi_tot_all_valid_is_identity
+98:CHECKED refund_ffi_tot_shift_seq
+104:CHECKED refund_ffi_contract_on_totalises
+108:STATEMENT_L1 ∀b dm Vok f.
+112:CHECKED refund_env_with_ffi_interfer_fields
+117:CHECKED refund_env_ok_sl_of_contract_on
+125:CHECKED refund_ffi_contract_on_all_valid_is_the_stored_contract
+131:CHECKED contract_on_without_totalisation_is_not_the_stored_contract
+135:CHECKED bad_return_ffi_totalised_with_empty_predicate_meets_contract
+141:CHECKED refund_close_call_valid_excludes_zero_alen
+144:CHECKED refund_close_call_valid_rejects_u393_witness
+148:CHECKED stored_contract_demands_return_at_u393_close_state
+153:CHECKED close_abort_model_satisfies_contract_on
+158:CHECKED close_abort_model_fails_stored_contract
+161:CHECKED close_abort_model_totalised_meets_stored_contract
+166:CONTROL_OK N1 is a proved negation: without totalisation the on-form does not give the stored contract
+167:CONTROL_OK N2 the stand-in that does not return at the U393 close state fails the stored contract
+168:CONTROL_OK N2 the close predicate rejects the U393 state (x1 = 0w, x3 = 0w at PC 0x100004080w)
+169:CONTROL_OK L1: premise is the on-form only; conclusion is the stored contract at the totalised effect
+170:CONTROL_OK L1 statement is the literal planned statement
+171:CLOSURE_AXIOM bool.SELECT_AX
+172:CLOSURE_AXIOM bool.INFINITY_AX
+173:CLOSURE_AXIOM bool.ETA_AX
+174:CLOSURE_AXIOM bool.BOOL_CASES_AX
+177:CLOSURE_NODES 543
+180:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

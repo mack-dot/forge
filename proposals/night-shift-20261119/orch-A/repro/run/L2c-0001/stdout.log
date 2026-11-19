@@ -1,0 +1,431 @@
+TIMEOUT_HELPER Timeout.apply loaded
+<<HOL message: Created theory "forge_refundRouteA2c">>
+MARK INPUTS
+INPUT R5 ffi_calls_ok_of_valid_events ⊢ ∀P E k mc ffi ms.
+    (∀i. i < LENGTH mc.ffi_entry_pcs ⇒
+         ∃nm. mc.ffi_names❲i❳ = ExtCall nm ∧ nm ≠ «») ∧
+    (∀j. EVERY E (SND (SND (evaluate mc ffi j ms))).io_events) ∧
+    (∀ffi1 ms1 i c ab ffi2 nb.
+       ffi1.oracle = ffi.oracle ∧ i < LENGTH mc.ffi_entry_pcs ∧
+       read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+       call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ∧
+       E (IO_event mc.ffi_names❲i❳ c (ZIP (ab,nb))) ⇒
+       P i nb ms1) ⇒
+    ffi_calls_ok P mc ffi k ms
+INPUT refund_mc_close_fields ⊢ ∀b envmc.
+    (refund_mc b envmc).target = arm8_target ∧
+    (refund_mc b envmc).len_reg = 1 ∧ (refund_mc b envmc).len2_reg = 3 ∧
+    (refund_mc b envmc).ffi_names =
+    [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] ∧
+    LENGTH (refund_mc b envmc).ffi_entry_pcs = 4
+MARK DEFS
+Saved definition ____ "VokY3_def"
+DEFINITION ⊢ ∀i nb s.
+    VokY3 i nb s ⇔
+    (i = 0 ⇒
+     s.REG 1w = 8w ∧ (∀j. j < 8 ⇒ s.MEM (s.REG 0w + n2w j) = (n2w8 0)❲j❳) ∧
+     w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] + 4 ≤ w2n (s.REG 3w) ∧
+     ¬word_msb (s.REG 3w)) ∧
+    (i = 1 ⇒
+     s.REG 1w = 8w ∧ (∀j. j < 8 ⇒ s.MEM (s.REG 0w + n2w j) = (n2w8 1)❲j❳) ∧
+     w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+     w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤ w2n (s.REG 3w) ∧
+     ¬word_msb (s.REG 3w)) ∧ (i = 2 ⇒ F) ∧ (i = 3 ⇒ F)
+Saved definition ____ "refund_valid_event_def"
+DEFINITION ⊢ ∀e. refund_valid_event e ⇔
+      (∃ab nb.
+         e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+         LENGTH ab = 4100 ∧ LENGTH nb = LENGTH ab ∧ TAKE 2 ab = n2w2 4096 ∧
+         HD nb = 0w) ∨
+      ∃ab nb.
+        e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+        LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+        w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w
+BEGIN VokY3_is_the_L2b_lambda
+TACTIC_USED VokY3_is_the_L2b_lambda 1
+Saved theorem _______ "VokY3_is_the_L2b_lambda"
+CHECKED VokY3_is_the_L2b_lambda
+⊢ VokY3 =
+  (λi nb s.
+     (i = 0 ⇒
+      s.REG 1w = 8w ∧ (∀j. j < 8 ⇒ s.MEM (s.REG 0w + n2w j) = (n2w8 0)❲j❳) ∧
+      w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] + 4 ≤ w2n (s.REG 3w) ∧
+      ¬word_msb (s.REG 3w)) ∧
+     (i = 1 ⇒
+      s.REG 1w = 8w ∧ (∀j. j < 8 ⇒ s.MEM (s.REG 0w + n2w j) = (n2w8 1)❲j❳) ∧
+      w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+      w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤
+      w2n (s.REG 3w) ∧ ¬word_msb (s.REG 3w)) ∧ (i = 2 ⇒ F) ∧ (i = 3 ⇒ F))
+BEGIN refund_valid_event_is_the_L2b_EVc_lambda
+TACTIC_USED refund_valid_event_is_the_L2b_EVc_lambda 1
+Saved theorem _______ "refund_valid_event_is_the_L2b_EVc_lambda"
+CHECKED refund_valid_event_is_the_L2b_EVc_lambda
+⊢ refund_valid_event =
+  (λe.
+     (∃ab nb.
+        e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+        LENGTH ab = 4100 ∧ LENGTH nb = LENGTH ab ∧ TAKE 2 ab = n2w2 4096 ∧
+        HD nb = 0w) ∨
+     ∃ab nb.
+       e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+       LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+       w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w)
+MARK HELPERS
+BEGIN call_FFI_return_keeps_length
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRouteA2c)>>
+TACTIC_USED call_FFI_return_keeps_length 1
+Saved theorem _______ "call_FFI_return_keeps_length"
+CHECKED call_FFI_return_keeps_length
+⊢ ∀st s c ab st' nb.
+    call_FFI st s c ab = FFI_return st' nb ⇒ LENGTH nb = LENGTH ab
+BEGIN zip_equal_lengths_injective
+TACTIC_USED zip_equal_lengths_injective 1
+Saved theorem _______ "zip_equal_lengths_injective"
+CHECKED zip_equal_lengths_injective
+⊢ ∀a b a' b'.
+    LENGTH a = LENGTH b ∧ LENGTH a' = LENGTH b' ∧ ZIP (a,b) = ZIP (a',b') ⇒
+    a = a' ∧ b = b'
+BEGIN refund_ffi_names_distinct
+TACTIC_USED refund_ffi_names_distinct 1
+Saved theorem _______ "refund_ffi_names_distinct"
+CHECKED refund_ffi_names_distinct
+⊢ «read» ≠ «write» ∧ «write» ≠ «read» ∧ «read» ≠ «close» ∧ «close» ≠ «read» ∧
+  «read» ≠ «open_in» ∧ «open_in» ≠ «read» ∧ «write» ≠ «close» ∧
+  «close» ≠ «write» ∧ «write» ≠ «open_in» ∧ «open_in» ≠ «write» ∧
+  «close» ≠ «open_in» ∧ «open_in» ≠ «close» ∧ «read» ≠ «» ∧ «write» ≠ «» ∧
+  «close» ≠ «» ∧ «open_in» ≠ «»
+BEGIN close_event_is_not_valid
+TACTIC_USED close_event_is_not_valid 1
+Saved theorem _______ "close_event_is_not_valid"
+CHECKED close_event_is_not_valid
+⊢ ∀c z. ¬refund_valid_event (IO_event (ExtCall «close») c z)
+BEGIN open_in_event_is_not_valid
+TACTIC_USED open_in_event_is_not_valid 1
+Saved theorem _______ "open_in_event_is_not_valid"
+CHECKED open_in_event_is_not_valid
+⊢ ∀c z. ¬refund_valid_event (IO_event (ExtCall «open_in») c z)
+BEGIN valid_read_event_shape
+TACTIC_USED valid_read_event_shape 1
+Saved theorem _______ "valid_read_event_shape"
+CHECKED valid_read_event_shape
+⊢ ∀c ab nb.
+    LENGTH nb = LENGTH ab ∧
+    refund_valid_event (IO_event (ExtCall «read») c (ZIP (ab,nb))) ⇒
+    c = n2w8 0 ∧ LENGTH ab = 4100 ∧ TAKE 2 ab = n2w2 4096
+BEGIN valid_write_event_shape
+TACTIC_USED valid_write_event_shape 1
+Saved theorem _______ "valid_write_event_shape"
+CHECKED valid_write_event_shape
+⊢ ∀c ab nb.
+    LENGTH nb = LENGTH ab ∧
+    refund_valid_event (IO_event (ExtCall «write») c (ZIP (ab,nb))) ⇒
+    c = n2w8 1 ∧ LENGTH ab = 2052 ∧
+    w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048
+BEGIN valid_event_index_and_shape
+TACTIC_USED valid_event_index_and_shape 1
+Saved theorem _______ "valid_event_index_and_shape"
+CHECKED valid_event_index_and_shape
+⊢ ∀i c ab nb.
+    i < 4 ∧ LENGTH nb = LENGTH ab ∧
+    refund_valid_event
+      (IO_event
+         [ExtCall «read»; ExtCall «write»; ExtCall «close»;
+          ExtCall «open_in»]❲
+           i
+         ❳ c (ZIP (ab,nb))) ⇒
+    i = 0 ∧ c = n2w8 0 ∧ LENGTH ab = 4100 ∧ TAKE 2 ab = n2w2 4096 ∨
+    i = 1 ∧ c = n2w8 1 ∧ LENGTH ab = 2052 ∧
+    w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048
+BEGIN word_add_n2w_suc
+TIMEOUT_ALT after 180 s
+TACTIC_ATTEMPT_FAILED word_add_n2w_suc 1 HOL_ERR (HOL_ERROR {message = "time limit", origins = [{origin_function = "tlim", origin_structure = "A19", source_location = Loc_Unknown}]})
+TACTIC_USED word_add_n2w_suc 2
+Saved theorem _______ "word_add_n2w_suc"
+CHECKED word_add_n2w_suc
+⊢ ∀a n. a + n2w (SUC n) = a + 1w + n2w n
+BEGIN read_bytearray_EL
+TACTIC_ATTEMPT_FAILED read_bytearray_EL 1 HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+TACTIC_USED read_bytearray_EL 2
+Saved theorem _______ "read_bytearray_EL"
+CHECKED read_bytearray_EL
+⊢ ∀n a g bs.
+    read_bytearray a n g = SOME bs ⇒ ∀j. j < n ⇒ g (a + n2w j) = SOME bs❲j❳
+BEGIN read_bytearray_EL_domain
+TACTIC_USED read_bytearray_EL_domain 1
+Saved theorem _______ "read_bytearray_EL_domain"
+CHECKED read_bytearray_EL_domain
+⊢ ∀n a P m bs.
+    read_bytearray a n (λx. if x ∈ P then SOME (m x) else NONE) = SOME bs ⇒
+    ∀j. j < n ⇒ m (a + n2w j) = bs❲j❳
+BEGIN refund_record_bytearrays
+TACTIC_USED refund_record_bytearrays 1
+Saved theorem _______ "refund_record_bytearrays"
+CHECKED refund_record_bytearrays
+⊢ ∀mc ms c ab.
+    mc.target = arm8_target ∧ mc.ptr_reg = 0 ∧ mc.len_reg = 1 ∧
+    mc.ptr2_reg = 2 ∧ mc.len2_reg = 3 ∧
+    read_ffi_bytearrays mc ms = (SOME c,SOME ab) ⇒
+    LENGTH c = w2n (ms.REG 1w) ∧ LENGTH ab = w2n (ms.REG 3w) ∧
+    (∀j. j < LENGTH c ⇒ ms.MEM (ms.REG 0w + n2w j) = c❲j❳) ∧
+    ∀j. j < LENGTH ab ⇒ ms.MEM (ms.REG 2w + n2w j) = ab❲j❳
+BEGIN first_two_elements_are_take_two
+TACTIC_USED first_two_elements_are_take_two 1
+Saved theorem _______ "first_two_elements_are_take_two"
+CHECKED first_two_elements_are_take_two
+⊢ ∀ab. 2 ≤ LENGTH ab ⇒ [ab❲0❳; ab❲1❳] = TAKE 2 ab
+MARK R4
+BEGIN valid_read_event_gives_VokY3
+TACTIC_USED valid_read_event_gives_VokY3 1
+Saved theorem _______ "valid_read_event_gives_VokY3"
+CHECKED valid_read_event_gives_VokY3
+⊢ ∀i ms1 c ab nb.
+    i = 0 ∧ LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w) ∧
+    (∀j. j < LENGTH c ⇒ ms1.MEM (ms1.REG 0w + n2w j) = c❲j❳) ∧
+    (∀j. j < LENGTH ab ⇒ ms1.MEM (ms1.REG 2w + n2w j) = ab❲j❳) ∧ c = n2w8 0 ∧
+    LENGTH ab = 4100 ∧ TAKE 2 ab = n2w2 4096 ⇒
+    VokY3 i nb ms1
+BEGIN valid_write_event_gives_VokY3
+TACTIC_USED valid_write_event_gives_VokY3 1
+Saved theorem _______ "valid_write_event_gives_VokY3"
+CHECKED valid_write_event_gives_VokY3
+⊢ ∀i ms1 c ab nb.
+    i = 1 ∧ LENGTH c = w2n (ms1.REG 1w) ∧ LENGTH ab = w2n (ms1.REG 3w) ∧
+    (∀j. j < LENGTH c ⇒ ms1.MEM (ms1.REG 0w + n2w j) = c❲j❳) ∧
+    (∀j. j < LENGTH ab ⇒ ms1.MEM (ms1.REG 2w + n2w j) = ab❲j❳) ∧ c = n2w8 1 ∧
+    LENGTH ab = 2052 ∧ w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ⇒
+    VokY3 i nb ms1
+BEGIN refund_valid_event_gives_VokY3
+SHOW STAGE_FAILED R4M-read : HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+  ASM w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048
+  ASM LENGTH ab = 2052
+  ASM c = n2w8 1
+  ASM i = 1
+  ASM ∀j. j < LENGTH ab ⇒ ms1.MEM (ms1.REG 2w + n2w j) = ab❲j❳
+  ASM ∀j. j < LENGTH c ⇒ ms1.MEM (ms1.REG 0w + n2w j) = c❲j❳
+  ASM LENGTH ab = w2n (ms1.REG 3w)
+  ASM LENGTH c = w2n (ms1.REG 1w)
+  ASM refund_valid_event (IO_event mc.ffi_names❲i❳ c (ZIP (ab,nb)))
+  ASM LENGTH nb = LENGTH ab
+  ASM read_ffi_bytearrays mc ms1 = (SOME c,SOME ab)
+  ASM i < 4
+  ASM mc.ffi_names =
+[ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»]
+  ASM mc.len2_reg = 3
+  ASM mc.ptr2_reg = 2
+  ASM mc.len_reg = 1
+  ASM mc.ptr_reg = 0
+  ASM mc.target = arm8_target
+  GOAL VokY3 i nb ms1
+TACTIC_USED refund_valid_event_gives_VokY3 1
+Saved theorem _______ "refund_valid_event_gives_VokY3"
+CHECKED refund_valid_event_gives_VokY3
+⊢ ∀mc ms1 i c ab nb.
+    mc.target = arm8_target ∧ mc.ptr_reg = 0 ∧ mc.len_reg = 1 ∧
+    mc.ptr2_reg = 2 ∧ mc.len2_reg = 3 ∧
+    mc.ffi_names =
+    [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] ∧
+    i < 4 ∧ read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+    LENGTH nb = LENGTH ab ∧
+    refund_valid_event (IO_event mc.ffi_names❲i❳ c (ZIP (ab,nb))) ⇒
+    VokY3 i nb ms1
+BEGIN refund_mc_pointer_fields
+TACTIC_USED refund_mc_pointer_fields 1
+Saved theorem _______ "refund_mc_pointer_fields"
+CHECKED refund_mc_pointer_fields
+⊢ ∀b envmc.
+    (refund_mc b envmc).ptr_reg = 0 ∧ (refund_mc b envmc).ptr2_reg = 2
+MARK STRUCT
+L2R_THIRD_PREMISE_WITH_VokY3 ∀ms k.
+  arm8_run 27 s = SOME ms ⇒
+  ffi_calls_ok VokY3
+    (refund_mc (sl + 0x1000040D0w)
+       (envmc with ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+    (basis_ffi ext cl fs) k ms
+CONTROL_OK R5 instance concludes exactly the premise-3 body
+MARK R5-HYPS
+BEGIN refund_names_are_nonempty_ExtCall
+TACTIC_USED refund_names_are_nonempty_ExtCall 1
+Saved theorem _______ "refund_names_are_nonempty_ExtCall"
+CHECKED refund_names_are_nonempty_ExtCall
+⊢ ∀b envmc i.
+    i < LENGTH (refund_mc b envmc).ffi_entry_pcs ⇒
+    ∃nm. (refund_mc b envmc).ffi_names❲i❳ = ExtCall nm ∧ nm ≠ «»
+BEGIN refund_calls_premise_VokY3
+TACTIC_USED refund_calls_premise_VokY3 1
+Saved theorem _______ "refund_calls_premise_VokY3"
+CHECKED refund_calls_premise_VokY3
+⊢ ∀b envmc ffi ffi1 ms1 i c ab ffi2 nb.
+    ffi1.oracle = ffi.oracle ∧ i < LENGTH (refund_mc b envmc).ffi_entry_pcs ∧
+    read_ffi_bytearrays (refund_mc b envmc) ms1 = (SOME c,SOME ab) ∧
+    call_FFI ffi1 (refund_mc b envmc).ffi_names❲i❳ c ab = FFI_return ffi2 nb ∧
+    refund_valid_event
+      (IO_event (refund_mc b envmc).ffi_names❲i❳ c (ZIP (ab,nb))) ⇒
+    VokY3 i nb ms1
+CONTROL_OK R4 instance is term-identical to the third hypothesis of the R5 instance
+CONTROL_OK names instance is term-identical to the first hypothesis of the R5 instance
+MARK ASSEMBLY
+BEGIN refund_events_premise_gives_l2r_third_premise
+TACTIC_USED refund_events_premise_gives_l2r_third_premise 1
+Saved theorem _______ "refund_events_premise_gives_l2r_third_premise"
+CHECKED refund_events_premise_gives_l2r_third_premise
+⊢ (∀ms j.
+     arm8_run 27 s = SOME ms ⇒
+     EVERY refund_valid_event
+       (SND
+          (SND
+             (evaluate
+                (refund_mc (sl + 0x1000040D0w)
+                   (envmc with
+                    ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+                (basis_ffi ext cl fs) j ms))).io_events) ⇒
+  ∀ms k.
+    arm8_run 27 s = SOME ms ⇒
+    ffi_calls_ok VokY3
+      (refund_mc (sl + 0x1000040D0w)
+         (envmc with ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+      (basis_ffi ext cl fs) k ms
+BEGIN refund_profile_a_sl_events
+TACTIC_USED refund_profile_a_sl_events 1
+Saved theorem _______ "refund_profile_a_sl_events"
+CHECKED refund_profile_a_sl_events
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses VokY3
+    envmc.ffi_interfer ∧
+  (∀ms j.
+     arm8_run 27 s = SOME ms ⇒
+     EVERY refund_valid_event
+       (SND
+          (SND
+             (evaluate
+                (refund_mc (sl + 0x1000040D0w)
+                   (envmc with
+                    ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+                (basis_ffi ext cl fs) j ms))).io_events) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    (∀j ms' ffi'.
+       evaluate (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs) j
+         ms = (TimeOut,ms',ffi') ⇒
+       (refund_mc (sl + 0x1000040D0w) envmc).target.get_pc ms' ≠
+       (refund_mc (sl + 0x1000040D0w) envmc).install_pc) ∧
+    ∃io_events.
+      machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi ext cl fs)
+        ms ⊆ extend_with_resource_limit {Terminate Success io_events} ∧
+      extract_fs ext (cl,fs) io_events =
+      SOME
+        (add_stdout (fastForwardFD fs 0)
+           (refund_render_fields
+              (refund_fields charge request original remaining enabled opened
+                 candidate amount reason)))
+MARK CONTROLS
+BEGIN valid_event_accepts_a_read_event
+TACTIC_USED valid_event_accepts_a_read_event 1
+Saved theorem _______ "valid_event_accepts_a_read_event"
+CHECKED valid_event_accepts_a_read_event
+⊢ refund_valid_event
+    (IO_event (ExtCall «read») (n2w8 0)
+       (ZIP (16w::0w::REPLICATE 4098 0w,REPLICATE 4100 0w)))
+BEGIN valid_event_accepts_a_write_event
+TACTIC_USED valid_event_accepts_a_write_event 1
+Saved theorem _______ "valid_event_accepts_a_write_event"
+CHECKED valid_event_accepts_a_write_event
+⊢ refund_valid_event
+    (IO_event (ExtCall «write») (n2w8 1)
+       (ZIP (REPLICATE 2052 0w,REPLICATE 2052 0w)))
+BEGIN valid_event_rejects_a_close_event
+TACTIC_USED valid_event_rejects_a_close_event 1
+Saved theorem _______ "valid_event_rejects_a_close_event"
+CHECKED valid_event_rejects_a_close_event
+⊢ ¬refund_valid_event (IO_event (ExtCall «close») (n2w8 3) (ZIP ([0w],[0w])))
+BEGIN valid_event_rejects_the_N4_short_read_event
+TACTIC_USED valid_event_rejects_the_N4_short_read_event 1
+Saved theorem _______ "valid_event_rejects_the_N4_short_read_event"
+CHECKED valid_event_rejects_the_N4_short_read_event
+⊢ ¬refund_valid_event
+    (IO_event (ExtCall «read») (n2w8 0) (ZIP (n2w2 4096,[0w; 0w])))
+BEGIN VokY3_rejects_close_and_open_in
+TACTIC_USED VokY3_rejects_close_and_open_in 1
+Saved theorem _______ "VokY3_rejects_close_and_open_in"
+CHECKED VokY3_rejects_close_and_open_in
+⊢ ∀nb s. ¬VokY3 2 nb s ∧ ¬VokY3 3 nb s
+BEGIN R4_L2b_literal
+TACTIC_USED R4_L2b_literal 1
+Saved theorem _______ "R4_L2b_literal"
+CHECKED R4_L2b_literal
+⊢ ∀mc ffi1 ms1 i c ab ffi2 nb.
+    mc.target = arm8_target ∧ mc.ptr_reg = 0 ∧ mc.len_reg = 1 ∧
+    mc.ptr2_reg = 2 ∧ mc.len2_reg = 3 ∧
+    mc.ffi_names =
+    [ExtCall «read»; ExtCall «write»; ExtCall «close»; ExtCall «open_in»] ∧
+    i < 4 ∧ read_ffi_bytearrays mc ms1 = (SOME c,SOME ab) ∧
+    call_FFI ffi1 mc.ffi_names❲i❳ c ab = FFI_return ffi2 nb ∧
+    (λe.
+       (∃ab nb.
+          e = IO_event (ExtCall «read») (n2w8 0) (ZIP (ab,nb)) ∧
+          LENGTH ab = 4100 ∧ LENGTH nb = LENGTH ab ∧ TAKE 2 ab = n2w2 4096 ∧
+          HD nb = 0w) ∨
+       ∃ab nb.
+         e = IO_event (ExtCall «write») (n2w8 1) (ZIP (ab,nb)) ∧
+         LENGTH ab = 2052 ∧ LENGTH nb = LENGTH ab ∧
+         w22n [ab❲0❳; ab❲1❳] + w22n [ab❲2❳; ab❲3❳] ≤ 2048 ∧ HD nb = 0w)
+      (IO_event mc.ffi_names❲i❳ c (ZIP (ab,nb))) ⇒
+    (λi nb s.
+       (i = 0 ⇒
+        s.REG 1w = 8w ∧
+        (∀j. j < 8 ⇒ s.MEM (s.REG 0w + n2w j) = (n2w8 0)❲j❳) ∧
+        w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] + 4 ≤ w2n (s.REG 3w) ∧
+        ¬word_msb (s.REG 3w)) ∧
+       (i = 1 ⇒
+        s.REG 1w = 8w ∧
+        (∀j. j < 8 ⇒ s.MEM (s.REG 0w + n2w j) = (n2w8 1)❲j❳) ∧
+        w22n [s.MEM (s.REG 2w); s.MEM (s.REG 2w + 1w)] +
+        w22n [s.MEM (s.REG 2w + 2w); s.MEM (s.REG 2w + 3w)] + 4 ≤
+        w2n (s.REG 3w) ∧ ¬word_msb (s.REG 3w)) ∧ (i = 2 ⇒ F) ∧ (i = 3 ⇒ F)) i
+      nb ms1
+CONTROL_OK ASSEMBLY conclusion is term-identical to the conclusion of the stored refund_profile_a_sl_reach
+CONTROL_OK conclusion of refund_profile_a_sl_reach does not mention Vok
+CONTROL_OK ASSEMBLY premise count 13
+CONTROL_OK ASSEMBLY premises = premises of refund_profile_a_sl_reach with Vok := VokY3, exactly premise 3 replaced by R6
+CONTROL_OK ASSEMBLY premises do not mention ffi_calls_ok
+CONTROL_OK R4 has no domain-size premise (R3 not used), no oracle and no program behaviour
+CONTROL_OK R4 statement is the literal statement of this file
+CONTROL_OK two positive events accepted; close event and N4 short read event rejected
+REMAINING_PREMISE_R6 ∀ms j.
+  arm8_run 27 s = SOME ms ⇒
+  EVERY refund_valid_event
+    (SND
+       (SND
+          (evaluate
+             (refund_mc (sl + 0x1000040D0w)
+                (envmc with
+                 ffi_interfer := refund_ffi_tot VokY3 envmc.ffi_interfer))
+             (basis_ffi ext cl fs) j ms))).io_events
+REMAINING_PREMISE_CONTRACT refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses VokY3
+  envmc.ffi_interfer
+CONTROL_OK exactly one contract premise
+ASSEMBLY_FREE_VARS reason amount candidate opened enabled remaining original request charge fs cl ext envmc e stk h s sl
+R3_STATUS NOT_NEEDED: R4 derives ~word_msb (REG 3w) from w2n (REG 3w) = 4100 or 2052 (read_bytearray_LENGTH and the exact array length of a valid event); premise 2 receives VokY3 (with ~word_msb) as its own hypothesis
+MARK CHECKS
+FAILED_LIST 
+DIAG_OK_UNDER_LIST 
+PARENTS forge_refundRouteA2b
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CONTROL_OK closure contains forge_refundRouteA2 and forge_refundRouteA2b
+STORED_THEOREMS 29
+STORED_DEFINITIONS 2
+CLOSURE_NODES 546
+Exporting theory "forge_refundRouteA2c" ... done.
+Theory "forge_refundRouteA2c" took 3m46s to build
+EXACT_COMPLETE

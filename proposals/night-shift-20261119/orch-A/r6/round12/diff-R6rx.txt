@@ -1,0 +1,27 @@
+--- ../round10/R6rx-0001.sml	2026-11-19 07:22:14.669478027 -0500
++++ R6rx-0002.sml	2026-11-19 08:02:51.518349635 -0500
+@@ -1,3 +1,6 @@
++(* R6rx-0002.sml (worker A37, round 12). EXPLORATION, NOT RUN. = round10/R6rx-0001.sml with only these changes: this first
++   comment, the scratch theory name forge_refundR6RExplore2, the directory R6RDIR (round12). The shared files changed
++   (round12/CHANGES.txt). Every tactic UNCHECKED. Round 10 header follows. *)
+ (* R6rx-0001.sml (worker A35, round 10). EXPLORATION of the R6 READ side. NOT RUN. NOT a proof attempt; no export_theory.
+    = round9/R6wx-0004.sml (ran as R6wx-0004: exit 0, EXPLORE_COMPLETE) with only these changes: this header, the scratch
+    theory name forge_refundR6RExplore1, NAMED_CONSTS + read_event_ok, the shared-files section (round10/r6r_common.sml,
+@@ -29,7 +32,7 @@
+    the runner from their files; THEORY_NAMES lines below show whether they are present. *)
+ 
+ val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
+-val _ = new_theory "forge_refundR6RExplore1";
++val _ = new_theory "forge_refundR6RExplore2";
+ val _ = pr "EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)";
+ 
+ (* fth : string -> string -> thm. A missing name prints FETCH_FAILED and gives TRUTH (no static error). *)
+@@ -208,7 +211,7 @@
+ 
+ (* ================= shared files ================= *)
+ val R6R_PROOF_MODE = false;
+-val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round10/";
++val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/";
+ fun use_part (f : string) : bool =
+   (pr ("MARK USE " ^ f); use (R6RDIR ^ f); pr ("PART_DONE " ^ f); true)
+   handle e => (pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e)); false);

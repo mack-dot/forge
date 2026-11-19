@@ -1,0 +1,12 @@
+diff -ru proposals/m1b-mission-20261119/proofs/linked-refund/inputs/LinkedRefund.dfy M4-decode-ascii-only/inputs/LinkedRefund.dfy
+--- proposals/m1b-mission-20261119/proofs/linked-refund/inputs/LinkedRefund.dfy	2026-11-19 00:33:50.343736715 -0500
++++ M4-decode-ascii-only/inputs/LinkedRefund.dfy	2026-11-19 01:10:11.629634611 -0500
+@@ -21,7 +21,7 @@
+   // Decoder. A total function of the byte string only. It returns "" for a string that has a
+   // character >= 256 or that is not well-formed UTF-8.
+   opaque function Decode(b: string): string {
+-    if forall i | 0 <= i < |b| :: b[i] as int < 256 then
++    if forall i | 0 <= i < |b| :: b[i] as int < 128 then
+       var bytes: E.CodeUnitSeq := seq(|b|, i requires 0 <= i < |b| && b[i] as int < 256 => b[i] as int as bv8);
+       var r := E.DecodeCodeUnitSequenceChecked(bytes);
+       if r.Success? then S.Map(U.FromScalar, r.value) else ""

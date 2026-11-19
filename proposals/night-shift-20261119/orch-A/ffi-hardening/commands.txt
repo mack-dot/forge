@@ -1,0 +1,18 @@
+A23 commands (all ACTUAL exit codes; cwd = this folder unless said). CL = Xcode clang 17.0.0 (clang-1700.0.13.5),
+sha256 4c458256...f4fe (= recorded clang_sha256); ld sha256 648a8aac...372b (= recorded linker_sha256); SDKSettings 58a13373...9c42 (= recorded).
+git show af5d1c2e:<recorded build files> > recorded/*                                  exit 0
+orig-rebuild: CL -arch arm64 -isysroot SDK -O2 -MD -MF basis_ffi.d -c basis_ffi.c -o basis_ffi.o   exit 0 (74f9efbf...4a55 = recorded)
+orig-rebuild: CL -arch arm64 -isysroot SDK -O2 -c refund.S -o refund.o                  exit 0 (5e8b6050...e7 = recorded)
+orig-rebuild: CL -arch arm64 -isysroot SDK refund.o basis_ffi.o -lm -o refund           exit 0 (b8ed5ec2...7bb8 = recorded; linker ad hoc signature, linker default)
+applytest: patch -p0 < ../basis_ffi_model_total.patch ; cmp with patched/basis_ffi.c    exit 0 ; 0
+patched: same three commands, output refund-model-total                                 exit 0, 0, 0
+python3 -I <macho-extraction>/y9_extract.py orig-rebuild/refund recorded/refund.S <dir>         exit 0 (ALL_EQUAL)
+python3 -I <macho-extraction>/y9_extract.py patched/refund-model-total recorded/refund.S <dir>  exit 1 (file digest and Mach-O header fields differ; code, bitmaps, stub slices equal)
+layout region compare (inline python, layout/region_compare.txt)                         exit 0
+tests: nice -n 15 python3 -I diff_conformance.py ./refund-orig ./refund-model-total conformance_diff.json   exit 0 (2684/2684 identical)
+tests: A23_EXE=./refund-orig A23_OUT=native_ffi_orig.json nice -n 15 python3 -I run_native_ffi_tests_a23.py               exit 0
+tests: A23_EXE=./refund-model-total A23_OUT=native_ffi_model-total.json nice -n 15 python3 -I run_native_ffi_tests_a23.py exit 0
+unit: CL ... -O2 -Dmain=basis_main -c <orig|patched>/basis_ffi.c ; CL ... harness.c stubs.c basis_ffi_<v>.o -lm -o harness_<v>   exit 0 (both)
+unit: python3 -I unit_cases.py > unit_results.json                                      exit 1 (by design: 47/48 patched = model; O05 open_in /dev/null is a NATIVE file-system divergence)
+xcrun dyld_info -fixups (layout/got_slots.txt); otool -tV (layout/disasm_*)               exit 0
+NOT RUN: any HOL, Holmake, poly; scripts/exit_m1_conformance.py itself; codesign; any deployment.

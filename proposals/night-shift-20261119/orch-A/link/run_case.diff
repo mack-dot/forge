@@ -1,0 +1,19 @@
+--- /Users/mackianni/forge/results/refund-profile-a-local-20261117/attempt-0001/run_case.py	2026-11-18 00:42:54.283587548 -0500
++++ /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/run_case.py	2026-11-19 02:54:30.679528033 -0500
+@@ -14,12 +14,14 @@
+ OUT = Path(__file__).resolve().parent
+ TC = ROOT / '.toolchain/experiments/refund-cakeml-20261104'
+ RECORDED = ROOT / 'results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/command.json'
+-CWD = str(ROOT / '.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment')
++CWD = os.environ.get('FORGE_CWD', str(ROOT / '.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundCertifiedProg_experiment'))
+ import os as _os
+ CPU_SECONDS = int(_os.environ.get('FORGE_CPU_SECONDS', '600'))
+ WALL_SECONDS = CPU_SECONDS + 300
+ MARKERS = ('P3_PROOF_COMPLETE', 'P3_IMPORT_COMPLETE', 'AFTER_POSITIVE_AUDIT',
+-           'UNEXPECTED_CONTROL_ACCEPTANCE', 'EXPLORE_COMPLETE', 'REPLAY_COMPLETE', 'EXACT_COMPLETE', 'DUMP_COMPLETE')
++           'UNEXPECTED_CONTROL_ACCEPTANCE', 'EXPLORE_COMPLETE', 'REPLAY_COMPLETE', 'EXACT_COMPLETE', 'DUMP_COMPLETE',
++           'SOURCE_BINDING_COMPLETE', 'SOURCE_RELATION_COMPLETE', 'SOURCE_BRIDGE_COMPLETE',
++           'SOURCE_IMPORT_COMPLETE', 'EXPORTED_CONTRACT_COMPLETE', 'EXPORTED_RENDER_COMPLETE')
+ 
+ 
+ def sha(path):

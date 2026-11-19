@@ -1,0 +1,1096 @@
+TIMEOUT_HELPER Timeout.apply loaded
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+LOAD_OK basisFunctionsLib
+<<HOL message: Created theory "forge_refundR6RExplore1">>
+EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)
+EXPLORE_MODE nothing is exported; the open lemmas are never stored
+MARK USE r6r_common.sml
+MARK GRAMMAR
+GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\187v. &T :v -> (\206\177 -> bool) -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and flatSem$v\n", origins = [{origin_function = "type-analysis", origin_structure  ...
+TYPE_REPRIVILEGED ffi_result was cfHeapsBase now ffi
+TYPE_REPRIVILEGED shift was wordLang now ast
+TYPE_REPRIVILEGED pat was pattern_semantics now ast
+TYPE_REPRIVILEGED op was flatLang now ast
+TYPE_REPRIVILEGED locs was location now ast
+TYPE_REPRIVILEGED lit was dafny_ast now ast
+TYPE_REPRIVILEGED exp was dafny_ast now ast
+TYPE_REPRIVILEGED arith was asm now ast
+TYPE_REPRIVILEGED v was flatSem now semanticPrimitives
+TYPE_REPRIVILEGED state was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED sem_env was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED result was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED dest_thunk_ret was flatSem now semanticPrimitives
+GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK
+GRAMMAR_FIX B
+MARK DEFS
+DEFINITION ⊢ ∀Inv fd.
+    read_event_ok Inv fd ⇔
+    ∀n h3 h4 rest nb.
+      n = 4096 ∧ LENGTH rest = 4096 ∧ LENGTH nb = 4 + LENGTH rest ∧
+      HD nb = 0w ⇒
+      Inv
+        (IO_event (ExtCall «read») (n2w8 fd)
+           (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+DEFINITION ⊢ ∀bactive fd is.
+    INSTREAM_BUFFERED_FD_V bactive fd is =
+    SEP_EXISTS bcontent.
+      INSTREAM_BUFFERED_BL_FD bcontent bactive fd is *
+      &(LENGTH bcontent = 4100)
+DEFINITION ⊢ ∀fd is s fs.
+    INSTREAM_STR_V fd is s fs =
+    SEP_EXISTS read active left.
+      INSTREAM_BUFFERED_FD_V (MAP (n2w ∘ ORD) active) fd is *
+      &(s = STRCAT active left ∧
+       get_fd_content fs fd =
+       SOME (STRCAT read s,STRLEN read + STRLEN active) ∧
+       get_mode fs fd = SOME ReadMode)
+DEFINITION ⊢ ∀fd is s fs non_empty is_empty.
+    INSTREAM_STRP_V fd is s fs non_empty is_empty =
+    SEP_EXISTS read active left.
+      INSTREAM_BUFFERED_FD_V (MAP (n2w ∘ ORD) active) fd is *
+      &(s = STRCAT active left ∧ (non_empty ⇒ active ≠ "") ∧
+       (is_empty ⇒ active = "") ∧
+       get_fd_content fs fd =
+       SOME (STRCAT read s,STRLEN read + STRLEN active) ∧
+       get_mode fs fd = SOME ReadMode)
+MARK SHORTCUTS
+FRAME_THM_PRESENT IOFS_V_HPROP_INJ
+FRAME_THM_PRESENT STDIO_V_HPROP_INJ
+MARK STATEMENTS
+STATEMENT read_event_ok_read_into
+∀Inv fd n h3 h4 rest.
+  read_event_ok Inv fd ∧ n = LENGTH rest ∧ LENGTH rest = 4096 ⇒
+  ∀nb.
+    LENGTH nb = 4 + LENGTH rest ∧ HD nb = 0w ⇒
+    Inv
+      (IO_event (ExtCall «read») (n2w8 fd) (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+STATEMENT read_event_ok_refund
+read_event_ok refund_valid_event 0
+STATEMENT STD_streams_fd0
+∀fs.
+  wfFS fs ∧ STD_streams fs ⇒
+  get_fd_content fs 0 ≠ NONE ∧ get_mode fs 0 = SOME ReadMode
+STATEMENT INSTREAM_STRP_V_F_F
+∀fd is s fs. INSTREAM_STRP_V fd is s fs F F = INSTREAM_STR_V fd is s fs
+STATEMENT INSTREAM_BUFFERED_FD_V_IMP
+∀bactive fd is.
+  INSTREAM_BUFFERED_FD_V bactive fd is ==>>
+  INSTREAM_BUFFERED_FD bactive fd is
+STATEMENT INSTREAM_STR_V_IMP
+∀fd is s fs. INSTREAM_STR_V fd is s fs ==>> INSTREAM_STR fd is s fs
+STATEMENT read_into_spec_R
+∀fs fd fdv n nv buf.
+  wfFS fs ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  n < 256² ⇒
+  MAX n 1024 ≤ LENGTH rest ⇒
+  get_fd_content fs fd ≠ NONE ⇒
+  get_mode fs fd = SOME ReadMode ⇒
+  n = LENGTH rest ⇒
+  LENGTH rest = 4096 ⇒
+  read_event_ok Inv fd ⇒
+  app p TextIO_read_into_v [fdv; buf; nv]
+    (W8ARRAY buf (h1::h2::h3::h4::rest) * IOxV Inv fs)
+    (POSTve
+       (λnrv.
+          SEP_EXISTS nr.
+            &NUM nr nrv *
+            SEP_EXISTS content pos.
+              &(get_fd_content fs fd = SOME (content,pos) ∧
+               get_mode fs fd = SOME ReadMode ∧
+               (nr ≤ MIN n (STRLEN content − pos) ∧
+                nr ≤ STRLEN content − pos) ∧
+               (nr = 0 ⇔ eof fd fs = SOME T ∨ n = 0)) *
+              IOxV Inv (bumpFD fd fs nr) *
+              W8ARRAY buf
+                (0w::n2w (nr DIV 256)::n2w nr::h4::
+                   MAP (n2w ∘ ORD) (TAKE nr (DROP pos content)) ++
+                 DROP nr rest))
+       (λe.
+          &InvalidFD_exn e *
+          &(get_fd_content fs fd = NONE ∨ get_mode fs fd ≠ SOME ReadMode) *
+          IOFS_WO_iobuff fs))
+STATEMENT refillBuffer_with_read_spec_V
+∀fd fdv fs content pos.
+  is = Conv instreambuffered_con_stamp [fdv; rr; wr; isbuff] ∧
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME ReadMode ⇒
+  LENGTH bcontent = 4100 ⇒
+  read_event_ok Inv fd ⇒
+  app p TextIO_refillBuffer_with_read_v [is]
+    (IOFS_V Inv fs * INSTREAM_BUFFERED_BL_FD bcontent bactive fd is)
+    (POSTv wv. SEP_EXISTS nr h4 rest.
+       &(NUM nr wv ∧
+        LENGTH bcontent = LENGTH (0w::n2w (nr DIV 256)::n2w nr::h4::rest) ∧
+        (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+        nr = LENGTH (explode_fromI nr content pos) ∧
+        nr ≤ STRLEN content − pos) *
+       INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+         (explode_fromI nr content pos) fd is * IOFS_V Inv (bumpFD fd fs nr))
+STATEMENT refillBuffer_with_read_spec_STR_V
+read_event_ok Inv fd ⇒
+app p TextIO_refillBuffer_with_read_v [is]
+  (STDIO_V Inv fs * INSTREAM_STRP_V fd is input fs F T)
+  (POSTv retv. SEP_EXISTS nr.
+     STDIO_V Inv (forwardFD fs fd nr) *
+     INSTREAM_STRP_V fd is input (forwardFD fs fd nr) (¬NULL input)
+       (NULL input))
+PART_DONE r6r_common.sml
+MARK USE r6r_steps.sml
+R6R_STEPS opened
+DELSIMPS_OK
+R6R_STEPS loaded
+PART_DONE r6r_steps.sml
+MARK USE r6r_explore_calls.sml
+TH_ASSUMED all statements
+TRY_HELPER_BEGIN read_event_ok_read_into
+STEP_USED read_event_ok_read_into 1 close candidate 0 goals_out 0
+Saved theorem _______ "read_event_ok_read_into"
+TRY_HELPER_CLOSED read_event_ok_read_into hyps 0
+TRY_HELPER_BEGIN read_event_ok_refund
+STEP_USED read_event_ok_refund 1 intro candidate 0 goals_out 1
+STEP_USED read_event_ok_refund 2 unfold candidate 0 goals_out 1
+STEP_USED read_event_ok_refund 3 witness candidate 0 goals_out 1
+STEP_USED read_event_ok_refund 4 close candidate 0 goals_out 0
+Saved theorem _______ "read_event_ok_refund"
+TRY_HELPER_CLOSED read_event_ok_refund hyps 0
+TRY_HELPER_BEGIN STD_streams_fd0
+STEP_USED STD_streams_fd0 1 intro candidate 0 goals_out 2
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundR6RExplore1)>>
+STEP_USED STD_streams_fd0 2 content candidate 0 goals_out 0
+STEP_USED STD_streams_fd0 3 mode candidate 0 goals_out 0
+Saved theorem _______ "STD_streams_fd0"
+TRY_HELPER_CLOSED STD_streams_fd0 hyps 0
+TRY_HELPER_BEGIN INSTREAM_STRP_V_F_F
+STEP_USED INSTREAM_STRP_V_F_F 1 close (5825) candidate 0 goals_out 0
+Saved theorem _______ "INSTREAM_STRP_V_F_F"
+TRY_HELPER_CLOSED INSTREAM_STRP_V_F_F hyps 0
+TRY_HELPER_BEGIN INSTREAM_BUFFERED_FD_V_IMP
+STEP_CANDIDATE_FAILED INSTREAM_BUFFERED_FD_V_IMP 1 candidate 0 HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED INSTREAM_BUFFERED_FD_V_IMP 1 candidate 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+STEP_USED INSTREAM_BUFFERED_FD_V_IMP 1 close candidate 2 goals_out 0
+Saved theorem _______ "INSTREAM_BUFFERED_FD_V_IMP"
+TRY_HELPER_CLOSED INSTREAM_BUFFERED_FD_V_IMP hyps 0
+TRY_HELPER_BEGIN INSTREAM_STR_V_IMP
+STEP_CANDIDATE_FAILED INSTREAM_STR_V_IMP 1 candidate 0 HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED INSTREAM_STR_V_IMP 1 candidate 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+SHOW STEP_ALL_FAILED INSTREAM_STR_V_IMP 1 close
+  GOAL ∀fd is s fs. INSTREAM_STR_V fd is s fs ==>> INSTREAM_STR fd is s fs
+TRY_HELPER_FAILED INSTREAM_STR_V_IMP HOL_ERR (HOL_ERROR {message = "all candidates failed at INSTREAM_STR_V_IMP step 1", origins = [{origin_function = "step_tac", origin_structure = "A35", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED INSTREAM_STR_V_IMP 1 candidate 0 HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED INSTREAM_STR_V_IMP 1 candidate 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+SHOW STEP_ALL_FAILED INSTREAM_STR_V_IMP 1 close
+  GOAL ∀fd is s fs. INSTREAM_STR_V fd is s fs ==>> INSTREAM_STR fd is s fs
+DIAG_FAILED INSTREAM_STR_V_IMP HOL_ERR (HOL_ERROR {message = "all candidates failed at INSTREAM_STR_V_IMP step 1", origins = [{origin_function = "step_tac", origin_structure = "A35", source_location = Loc_Unknown}]})
+TRY_HELPER_BEGIN read_into_spec_R
+STEP_USED read_into_spec_R 1 intro candidate 0 goals_out 1
+STEP_USED read_into_spec_R 2 H_inv from read_event_ok candidate 0 goals_out 1
+STEP_USED read_into_spec_R 3 apply read_into_spec_V candidate 0 goals_out 0
+Saved theorem _______ "read_into_spec_R"
+TRY_HELPER_CLOSED read_into_spec_R hyps 0
+TRY_HELPER_BEGIN refillBuffer_with_read_spec_V
+STEP_USED refillBuffer_with_read_spec_V 1 setup, case split (2745-2748) candidate 0 goals_out 2
+Adding nsLookup representation thms for [TextIOProg_env_35]
+Adding nsLookup representation thms for [TextIOProg_env_34]
+Adding nsLookup representation thms for [TextIOProg_env_33]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_32, TextIOProg_env_31, ..., TextIOProg_env_28]
+Adding nsLookup representation thms for [TextIOProg_env_27, TextIOProg_env_26, TextIOProg_env_25]
+Adding nsLookup representation thms for 8 consts [TextIOProg_env_24, TextIOProg_env_23, ..., TextIOProg_env_17]
+Adding nsLookup representation thms for 6 consts [TextIOProg_env_16, TextIOProg_env_15, ..., TextIOProg_env_11]
+Adding nsLookup representation thms for [TextIOProg_env_10, TextIOProg_env_9]
+Adding nsLookup representation thms for [TextIOProg_env_8]
+Adding nsLookup representation thms for 4 consts [TextIOProg_env_7, TextIOProg_env_6, ..., TextIOProg_env_4]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_3, TextIOProg_env_2, ..., TextIOProg_env]
+TIMEOUT_CANDIDATE after 240 s
+STEP_CANDIDATE_FAILED refillBuffer_with_read_spec_V 2 candidate 0 HOL_ERR (HOL_ERROR {message = "time limit", origins = [{origin_function = "tlim", origin_structure = "A35", source_location = Loc_Unknown}]})
+SHOW STEP_ALL_FAILED refillBuffer_with_read_spec_V 2 B1 open (2749-2752; IOFS_V_def)
+  ASM ¬(pos ≤ STRLEN content)
+  ASM read_event_ok Inv fd
+  ASM LENGTH bcontent = 4100
+  ASM get_mode fs fd = SOME ReadMode
+  ASM get_fd_content fs fd = SOME (content,pos)
+  ASM is = Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]
+  GOAL cf_match (Var (Short «is»))
+  [(Pcon (SOME (Short «InstreamBuffered»))
+      [Pvar «fd»; Pvar «rref»; Pvar «wref»; Pvar «surplus»],
+    cf_let (SOME « v1»)
+      (cf_app p (Var (Long «Word8Array» (Short «length»)))
+         [Var (Short «surplus»)])
+      (cf_let (SOME « v2»)
+         (cf_app p (Var (Short «-»)) [Var (Short « v1»); Lit (IntLit 4)])
+         (cf_let (SOME « v0»)
+            (cf_app p (Var (Short «get_in»)) [Var (Short «fd»)])
+            (cf_let (SOME « v3»)
+               (cf_app p (Var (... ... )) [Var (... ... ); ... ... ; ... ])
+               (cf_let (SOME « v4») (... ... (... ... ) [... ... ; ... ])
+                  (cf_let NONE (... ... [... ; ... ])
+                     (... ... (... ... ) (... ... (... ... )))))))))]
+  (extend_env_rec [«refillBuffer_with_read»]
+     [TextIO_refillBuffer_with_read_v] [«is»]
+     [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]]
+     (merge_env TextIOProg_env_35
+        (merge_env TextIOProg_env_34
+           (merge_env TextIOProg_env_33
+              (merge_env TextIOProg_env_32
+                 (merge_env TextIOProg_env_27
+                    (merge_env TextIOProg_env_24
+                       (merge_env TextIOProg_env_16
+                          (merge_env TextIOProg_env_10
+                             (merge_env TextIOProg_env_8 (... ... (... ... ))))))))))))
+  (IOFS_V Inv fs *
+   INSTREAM_BUFFERED_BL_FD bcontent bactive fd
+     (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]))
+  (POSTv wv. SEP_EXISTS nr h4 rest.
+     &(NUM nr wv ∧ 4100 = SUC (SUC (SUC (SUC (LENGTH rest)))) ∧
+      (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+      nr = LENGTH (TAKE nr (... ... (... ... ))) ∧ nr ≤ STRLEN content − pos) *
+     INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+       (TAKE nr (DROP pos (MAP (n2w ∘ ORD) content))) fd
+       (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]) *
+     IOFS_V Inv (bumpFD fd fs nr))
+TRY_HELPER_FAILED refillBuffer_with_read_spec_V HOL_ERR (HOL_ERROR {message = "all candidates failed at refillBuffer_with_read_spec_V step 2", origins = [{origin_function = "step_tac", origin_structure = "A35", source_location = Loc_Unknown}]})
+STEP_USED refillBuffer_with_read_spec_V 1 setup, case split (2745-2748) candidate 0 goals_out 2
+TIMEOUT_CANDIDATE after 240 s
+STEP_CANDIDATE_FAILED refillBuffer_with_read_spec_V 2 candidate 0 HOL_ERR (HOL_ERROR {message = "time limit", origins = [{origin_function = "tlim", origin_structure = "A35", source_location = Loc_Unknown}]})
+SHOW STEP_ALL_FAILED refillBuffer_with_read_spec_V 2 B1 open (2749-2752; IOFS_V_def)
+  ASM ¬(pos ≤ STRLEN content)
+  ASM read_event_ok Inv fd
+  ASM LENGTH bcontent = 4100
+  ASM get_mode fs fd = SOME ReadMode
+  ASM get_fd_content fs fd = SOME (content,pos)
+  ASM is = Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]
+  GOAL cf_match (Var (Short «is»))
+  [(Pcon (SOME (Short «InstreamBuffered»))
+      [Pvar «fd»; Pvar «rref»; Pvar «wref»; Pvar «surplus»],
+    cf_let (SOME « v1»)
+      (cf_app p (Var (Long «Word8Array» (Short «length»)))
+         [Var (Short «surplus»)])
+      (cf_let (SOME « v2»)
+         (cf_app p (Var (Short «-»)) [Var (Short « v1»); Lit (IntLit 4)])
+         (cf_let (SOME « v0»)
+            (cf_app p (Var (Short «get_in»)) [Var (Short «fd»)])
+            (cf_let (SOME « v3»)
+               (cf_app p (Var (... ... )) [Var (... ... ); ... ... ; ... ])
+               (cf_let (SOME « v4») (... ... (... ... ) [... ... ; ... ])
+                  (cf_let NONE (... ... [... ; ... ])
+                     (... ... (... ... ) (... ... (... ... )))))))))]
+  (extend_env_rec [«refillBuffer_with_read»]
+     [TextIO_refillBuffer_with_read_v] [«is»]
+     [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]]
+     (merge_env TextIOProg_env_35
+        (merge_env TextIOProg_env_34
+           (merge_env TextIOProg_env_33
+              (merge_env TextIOProg_env_32
+                 (merge_env TextIOProg_env_27
+                    (merge_env TextIOProg_env_24
+                       (merge_env TextIOProg_env_16
+                          (merge_env TextIOProg_env_10
+                             (merge_env TextIOProg_env_8 (... ... (... ... ))))))))))))
+  (IOFS_V Inv fs *
+   INSTREAM_BUFFERED_BL_FD bcontent bactive fd
+     (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]))
+  (POSTv wv. SEP_EXISTS nr h4 rest.
+     &(NUM nr wv ∧ 4100 = SUC (SUC (SUC (SUC (LENGTH rest)))) ∧
+      (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+      nr = LENGTH (TAKE nr (... ... (... ... ))) ∧ nr ≤ STRLEN content − pos) *
+     INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+       (TAKE nr (DROP pos (MAP (n2w ∘ ORD) content))) fd
+       (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]) *
+     IOFS_V Inv (bumpFD fd fs nr))
+DIAG_FAILED refillBuffer_with_read_spec_V HOL_ERR (HOL_ERROR {message = "all candidates failed at refillBuffer_with_read_spec_V step 2", origins = [{origin_function = "step_tac", origin_structure = "A35", source_location = Loc_Unknown}]})
+TRY_HELPER_BEGIN refillBuffer_with_read_spec_STR_V
+STEP_USED refillBuffer_with_read_spec_STR_V 1 open STDIO_V, INSTREAM_STRP_V, INSTREAM_BUFFERED_FD_V (6833-6835) candidate 0 goals_out 1
+STEP_CANDIDATE_FAILED refillBuffer_with_read_spec_STR_V 2 candidate 0 HOL_ERR (HOL_ERROR {message = "Could not apply specification", origins = [{origin_function = "xapp", origin_structure = "cfTacticsLib", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED refillBuffer_with_read_spec_STR_V 2 candidate 1 HOL_ERR (HOL_ERROR {message = "Could not apply specification", origins = [{origin_function = "xapp", origin_structure = "cfTacticsLib", source_location = Loc_Unknown}]})
+SHOW STEP_ALL_FAILED refillBuffer_with_read_spec_STR_V 2 xapp refillBuffer_with_read_spec_V + rest (6836-6869)
+  ASM LENGTH bcontent = 4100
+  ASM instream_buffered_inv r w bcontent []
+  ASM INSTREAM fd fdv
+  ASM get_mode fs fd = SOME ReadMode
+  ASM get_fd_content fs fd = SOME (STRCAT read' input,STRLEN read')
+  ASM STD_streams fs
+  ASM read_event_ok Inv fd
+  GOAL app p TextIO_refillBuffer_with_read_v
+  [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; buff]]
+  (IOFS_V Inv (fs with numchars := ll) * REF_NUM rr r * REF_NUM wr w *
+   W8ARRAY buff bcontent)
+  (POSTv retv. SEP_EXISTS nr.
+     STDIO_V Inv (forwardFD fs fd nr) *
+     SEP_EXISTS read active left.
+       (SEP_EXISTS bcontent'.
+          (SEP_EXISTS rr' r' wr' w' buff' fdv'.
+             &((... = ... ∧ ... ∧ ... ) ∧ ... ... ∧ ... ... ) *
+             REF_NUM rr' r' * REF_NUM wr' w' * W8ARRAY buff' bcontent') *
+          &(LENGTH bcontent' = 4100)) *
+       &(input = STRCAT active left ∧ (¬NULL input ⇒ active ≠ "") ∧
+        (NULL input ⇒ active = "") ∧ read' = read ∧
+        nr + STRLEN read' = STRLEN active + STRLEN read))
+TRY_HELPER_FAILED refillBuffer_with_read_spec_STR_V HOL_ERR (HOL_ERROR {message = "all candidates failed at refillBuffer_with_read_spec_STR_V step 2", origins = [{origin_function = "step_tac", origin_structure = "A35", source_location = Loc_Unknown}]})
+STEP_USED refillBuffer_with_read_spec_STR_V 1 open STDIO_V, INSTREAM_STRP_V, INSTREAM_BUFFERED_FD_V (6833-6835) candidate 0 goals_out 1
+STEP_CANDIDATE_FAILED refillBuffer_with_read_spec_STR_V 2 candidate 0 HOL_ERR (HOL_ERROR {message = "Could not apply specification", origins = [{origin_function = "xapp", origin_structure = "cfTacticsLib", source_location = Loc_Unknown}]})
+STEP_CANDIDATE_FAILED refillBuffer_with_read_spec_STR_V 2 candidate 1 HOL_ERR (HOL_ERROR {message = "Could not apply specification", origins = [{origin_function = "xapp", origin_structure = "cfTacticsLib", source_location = Loc_Unknown}]})
+SHOW STEP_ALL_FAILED refillBuffer_with_read_spec_STR_V 2 xapp refillBuffer_with_read_spec_V + rest (6836-6869)
+  ASM LENGTH bcontent = 4100
+  ASM instream_buffered_inv r w bcontent []
+  ASM INSTREAM fd fdv
+  ASM get_mode fs fd = SOME ReadMode
+  ASM get_fd_content fs fd = SOME (STRCAT read' input,STRLEN read')
+  ASM STD_streams fs
+  ASM read_event_ok Inv fd
+  GOAL app p TextIO_refillBuffer_with_read_v
+  [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; buff]]
+  (IOFS_V Inv (fs with numchars := ll) * REF_NUM rr r * REF_NUM wr w *
+   W8ARRAY buff bcontent)
+  (POSTv retv. SEP_EXISTS nr.
+     STDIO_V Inv (forwardFD fs fd nr) *
+     SEP_EXISTS read active left.
+       (SEP_EXISTS bcontent'.
+          (SEP_EXISTS rr' r' wr' w' buff' fdv'.
+             &((... = ... ∧ ... ∧ ... ) ∧ ... ... ∧ ... ... ) *
+             REF_NUM rr' r' * REF_NUM wr' w' * W8ARRAY buff' bcontent') *
+          &(LENGTH bcontent' = 4100)) *
+       &(input = STRCAT active left ∧ (¬NULL input ⇒ active ≠ "") ∧
+        (NULL input ⇒ active = "") ∧ read' = read ∧
+        nr + STRLEN read' = STRLEN active + STRLEN read))
+DIAG_FAILED refillBuffer_with_read_spec_STR_V HOL_ERR (HOL_ERROR {message = "all candidates failed at refillBuffer_with_read_spec_STR_V step 2", origins = [{origin_function = "step_tac", origin_structure = "A35", source_location = Loc_Unknown}]})
+EXPLORE_LEMMA read_event_ok_read_into required
+EXPLORE_BEGIN read_event_ok_read_into (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN read_event_ok_read_into #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀Inv fd n h3 h4 rest.
+  read_event_ok Inv fd ∧ n = LENGTH rest ∧ LENGTH rest = 4096 ⇒
+  ∀nb.
+    LENGTH nb = 4 + LENGTH rest ∧ HD nb = 0w ⇒
+    Inv
+      (IO_event (ExtCall «read») (n2w8 fd) (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+    CONST_IN_CONCL forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    FREE_VARS 
+  GOAL_END read_event_ok_read_into #1
+STEP read_event_ok_read_into 1 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED read_event_ok_read_into after_steps 1
+EXPLORE_END read_event_ok_read_into
+EXPLORE_LEMMA read_event_ok_refund required
+EXPLORE_BEGIN read_event_ok_refund (head-goal mode) steps 4
+  GOAL_COUNT 1
+  GOAL_BEGIN read_event_ok_refund #1 assumptions 0 (ASM 0 = newest)
+    CONCL read_event_ok refund_valid_event 0
+    CONST_IN_CONCL forge_refundRouteA2c$refund_valid_event :io_event -> bool
+    CONST_IN_CONCL forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    FREE_VARS 
+  GOAL_END read_event_ok_refund #1
+STEP read_event_ok_refund 1 intro goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN read_event_ok_refund #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 LENGTH nb = LENGTH rest + 4
+    ASM 2 LENGTH rest = 4096
+    CONCL refund_valid_event
+  (IO_event (ExtCall «read») (n2w8 0) (ZIP (n2w2 4096 ++ h3::h4::rest,nb)))
+    CONST_IN_CONCL forge_refundRouteA2c$refund_valid_event :io_event -> bool
+    FREE_VARS h3:word8, h4:word8, nb:word8 list, rest:word8 list
+  GOAL_END read_event_ok_refund #1
+STEP read_event_ok_refund 2 unfold goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN read_event_ok_refund #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 LENGTH nb = LENGTH rest + 4
+    ASM 2 LENGTH rest = 4096
+    CONCL ∃ab nb'.
+  ZIP (n2w2 4096 ++ [h3; h4] ++ rest,nb) = ZIP (ab,nb') ∧ LENGTH ab = 4100 ∧
+  LENGTH nb' = LENGTH ab ∧ TAKE 2 ab = n2w2 4096 ∧ HD nb' = 0w
+    FREE_VARS h3:word8, h4:word8, nb:word8 list, rest:word8 list
+  GOAL_END read_event_ok_refund #1
+STEP read_event_ok_refund 3 witness goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN read_event_ok_refund #1 assumptions 3 (ASM 0 = newest)
+    ASM 0 HD nb = 0w
+    ASM 1 LENGTH nb = LENGTH rest + 4
+    ASM 2 LENGTH rest = 4096
+    CONCL ZIP (n2w2 4096 ++ [h3; h4] ++ rest,nb) = ZIP (n2w2 4096 ++ h3::h4::rest,nb) ∧
+LENGTH (n2w2 4096 ++ h3::h4::rest) = 4100 ∧
+LENGTH nb = LENGTH (n2w2 4096 ++ h3::h4::rest) ∧
+TAKE 2 (n2w2 4096 ++ h3::h4::rest) = n2w2 4096 ∧ HD nb = 0w
+    FREE_VARS h3:word8, h4:word8, nb:word8 list, rest:word8 list
+  GOAL_END read_event_ok_refund #1
+STEP read_event_ok_refund 4 close goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED read_event_ok_refund after_steps 4
+EXPLORE_END read_event_ok_refund
+EXPLORE_LEMMA STD_streams_fd0 required
+EXPLORE_BEGIN STD_streams_fd0 (head-goal mode) steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN STD_streams_fd0 #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fs.
+  wfFS fs ∧ STD_streams fs ⇒
+  get_fd_content fs 0 ≠ NONE ∧ get_mode fs 0 = SOME ReadMode
+    FREE_VARS 
+  GOAL_END STD_streams_fd0 #1
+STEP STD_streams_fd0 1 intro goals 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN STD_streams_fd0 #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 wfFS fs
+    CONCL get_fd_content fs 0 ≠ NONE
+    FREE_VARS fs:IO_fs
+  GOAL_END STD_streams_fd0 #1
+  GOAL_BEGIN STD_streams_fd0 #2 assumptions 2 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 wfFS fs
+    CONCL get_mode fs 0 = SOME ReadMode
+    FREE_VARS fs:IO_fs
+  GOAL_END STD_streams_fd0 #2
+STEP STD_streams_fd0 2 content goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN STD_streams_fd0 #1 assumptions 2 (ASM 0 = newest)
+    ASM 0 STD_streams fs
+    ASM 1 wfFS fs
+    CONCL get_mode fs 0 = SOME ReadMode
+    FREE_VARS fs:IO_fs
+  GOAL_END STD_streams_fd0 #1
+STEP STD_streams_fd0 3 mode goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED STD_streams_fd0 after_steps 3
+EXPLORE_END STD_streams_fd0
+EXPLORE_LEMMA INSTREAM_STRP_V_F_F required
+EXPLORE_BEGIN INSTREAM_STRP_V_F_F (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN INSTREAM_STRP_V_F_F #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fd is s fs. INSTREAM_STRP_V fd is s fs F F = INSTREAM_STR_V fd is s fs
+    FREE_VARS 
+  GOAL_END INSTREAM_STRP_V_F_F #1
+STEP INSTREAM_STRP_V_F_F 1 close (5825) goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED INSTREAM_STRP_V_F_F after_steps 1
+EXPLORE_END INSTREAM_STRP_V_F_F
+EXPLORE_LEMMA INSTREAM_BUFFERED_FD_V_IMP optional
+EXPLORE_BEGIN INSTREAM_BUFFERED_FD_V_IMP (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN INSTREAM_BUFFERED_FD_V_IMP #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀bactive fd is.
+  INSTREAM_BUFFERED_FD_V bactive fd is ==>>
+  INSTREAM_BUFFERED_FD bactive fd is
+    FREE_VARS 
+  GOAL_END INSTREAM_BUFFERED_FD_V_IMP #1
+STEP_FAILED INSTREAM_BUFFERED_FD_V_IMP 1 close HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+GOALS_BEFORE_STEP INSTREAM_BUFFERED_FD_V_IMP 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN INSTREAM_BUFFERED_FD_V_IMP #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀bactive fd is.
+  INSTREAM_BUFFERED_FD_V bactive fd is ==>>
+  INSTREAM_BUFFERED_FD bactive fd is
+    FREE_VARS 
+  GOAL_END INSTREAM_BUFFERED_FD_V_IMP #1
+ALT_FAILED INSTREAM_BUFFERED_FD_V_IMP 1 close alt 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+ALT_WORKS INSTREAM_BUFFERED_FD_V_IMP 1 close alt 2
+STEP INSTREAM_BUFFERED_FD_V_IMP 1 close goals 0 (alt 2)
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED INSTREAM_BUFFERED_FD_V_IMP after_steps 1
+EXPLORE_END INSTREAM_BUFFERED_FD_V_IMP
+EXPLORE_LEMMA INSTREAM_STR_V_IMP optional
+EXPLORE_BEGIN INSTREAM_STR_V_IMP (head-goal mode) steps 1
+  GOAL_COUNT 1
+  GOAL_BEGIN INSTREAM_STR_V_IMP #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fd is s fs. INSTREAM_STR_V fd is s fs ==>> INSTREAM_STR fd is s fs
+    FREE_VARS 
+  GOAL_END INSTREAM_STR_V_IMP #1
+STEP_FAILED INSTREAM_STR_V_IMP 1 close HOL_ERR (HOL_ERROR {message = "no solution found", origins = [{origin_function = "FOL_FIND", origin_structure = "folTools", source_location = Loc_Unknown}]})
+GOALS_BEFORE_STEP INSTREAM_STR_V_IMP 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN INSTREAM_STR_V_IMP #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fd is s fs. INSTREAM_STR_V fd is s fs ==>> INSTREAM_STR fd is s fs
+    FREE_VARS 
+  GOAL_END INSTREAM_STR_V_IMP #1
+ALT_FAILED INSTREAM_STR_V_IMP 1 close alt 1 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+STEP_STUCK INSTREAM_STR_V_IMP 1 close
+EXPLORE_END INSTREAM_STR_V_IMP
+EXPLORE_LEMMA read_into_spec_R required
+EXPLORE_BEGIN read_into_spec_R (head-goal mode) steps 3
+  GOAL_COUNT 1
+  GOAL_BEGIN read_into_spec_R #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fs fd fdv n nv buf.
+  wfFS fs ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  n < 256² ⇒
+  MAX n 1024 ≤ LENGTH rest ⇒
+  get_fd_content fs fd ≠ NONE ⇒
+  get_mode fs fd = SOME ReadMode ⇒
+  n = LENGTH rest ⇒
+  LENGTH rest = 4096 ⇒
+  read_event_ok Inv fd ⇒
+  ... ... [... ; ... ] (... ... * ... ... )
+    (POSTve (λ... . ... ) (λe. ... * ... ))
+    CONST_IN_CONCL forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    FREE_VARS h4:word8, h3:word8, h2:word8, h1:word8, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, rest:word8 list
+  GOAL_END read_into_spec_R #1
+STEP read_into_spec_R 1 intro goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN read_into_spec_R #1 assumptions 10 (ASM 0 = newest)
+    ASM 0 read_event_ok Inv fd
+    CONST_IN_ASM_0 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    ASM 1 LENGTH rest = 4096
+    ASM 2 n = LENGTH rest
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd ≠ NONE
+    ASM 5 MAX n 1024 ≤ LENGTH rest
+    ASM 6 n < 256²
+    ASM 7 NUM n nv
+    ASM 8 FD fd fdv
+    ASM 9 wfFS fs
+    CONCL app p TextIO_read_into_v [fdv; buf; nv]
+  (W8ARRAY buf (h1::h2::h3::h4::rest) * IOxV Inv fs)
+  (POSTve
+     (λnrv.
+        SEP_EXISTS nr.
+          &NUM nr nrv *
+          SEP_EXISTS content pos.
+            &(get_fd_content fs fd = SOME (content,pos) ∧
+             ... ... fd = SOME ReadMode ∧ (... ≤ ... ∧ ... ≤ ... ) ∧
+             (... = ... ⇔ ... ∨ ... )) * IOxV Inv (bumpFD fd fs nr) *
+            W8ARRAY buf
+              (0w::n2w (nr DIV 256)::n2w nr::h4::... ... ++ DROP nr rest))
+     (λe.
+        &InvalidFD_exn e *
+        &(get_fd_content fs fd = NONE ∨ get_mode fs fd ≠ SOME ReadMode) *
+        IOFS_WO_iobuff fs))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, buf:v, h1:word8, h2:word8, h3:word8, h4:word8, Inv:io_event -> bool, rest:word8 list, n:num, nv:v, fd:num, fdv:v, fs:IO_fs
+  GOAL_END read_into_spec_R #1
+STEP read_into_spec_R 2 H_inv from read_event_ok goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN read_into_spec_R #1 assumptions 12 (ASM 0 = newest)
+    ASM 0 ∀nb.
+  HD nb = 0w ⇒
+  LENGTH nb = 4 + LENGTH rest ⇒
+  ∀h4 h3.
+    Inv
+      (IO_event (ExtCall «read») (n2w8 fd) (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+    ASM 1 ∀nb.
+  LENGTH nb = 4 + LENGTH rest ⇒
+  HD nb = 0w ⇒
+  ∀h4 h3.
+    Inv
+      (IO_event (ExtCall «read») (n2w8 fd) (ZIP (n2w2 n ++ h3::h4::rest,nb)))
+    ASM 2 read_event_ok Inv fd
+    CONST_IN_ASM_2 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    ASM 3 LENGTH rest = 4096
+    ASM 4 n = LENGTH rest
+    ASM 5 get_mode fs fd = SOME ReadMode
+    ASM 6 get_fd_content fs fd ≠ NONE
+    ASM 7 MAX n 1024 ≤ LENGTH rest
+    ASM 8 n < 256²
+    ASM 9 NUM n nv
+    ASM 10 FD fd fdv
+    ASM 11 wfFS fs
+    CONCL app p TextIO_read_into_v [fdv; buf; nv]
+  (W8ARRAY buf (h1::h2::h3::h4::rest) * IOxV Inv fs)
+  (POSTve
+     (λnrv.
+        SEP_EXISTS nr.
+          &NUM nr nrv *
+          SEP_EXISTS content pos.
+            &(get_fd_content fs fd = SOME (content,pos) ∧
+             ... ... fd = SOME ReadMode ∧ (... ≤ ... ∧ ... ≤ ... ) ∧
+             (... = ... ⇔ ... ∨ ... )) * IOxV Inv (bumpFD fd fs nr) *
+            W8ARRAY buf
+              (0w::n2w (nr DIV 256)::n2w nr::h4::... ... ++ DROP nr rest))
+     (λe.
+        &InvalidFD_exn e *
+        &(get_fd_content fs fd = NONE ∨ get_mode fs fd ≠ SOME ReadMode) *
+        IOFS_WO_iobuff fs))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, buf:v, h1:word8, h2:word8, h3:word8, h4:word8, Inv:io_event -> bool, rest:word8 list, n:num, nv:v, fd:num, fdv:v, fs:IO_fs
+  GOAL_END read_into_spec_R #1
+STEP read_into_spec_R 3 apply read_into_spec_V goals 0
+  HEAD_GOALS_TOTAL 0
+  GOAL_COUNT 0
+EXPLORE_HEAD_CLOSED read_into_spec_R after_steps 3
+EXPLORE_END read_into_spec_R
+EXPLORE_LEMMA refillBuffer_with_read_spec_V required
+EXPLORE_BEGIN refillBuffer_with_read_spec_V (head-goal mode) steps 9
+  GOAL_COUNT 1
+  GOAL_BEGIN refillBuffer_with_read_spec_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fd fdv fs content pos.
+  is = Conv instreambuffered_con_stamp [fdv; rr; wr; isbuff] ∧
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME ReadMode ⇒
+  LENGTH bcontent = 4100 ⇒
+  read_event_ok Inv fd ⇒
+  app p TextIO_refillBuffer_with_read_v [is]
+    (IOFS_V Inv fs * INSTREAM_BUFFERED_BL_FD bcontent bactive fd is)
+    (POSTv wv. SEP_EXISTS nr h4 rest.
+       &(NUM nr wv ∧ LENGTH bcontent = LENGTH (0w::... ) ∧
+        (... = ... ⇔ ... = ... ) ∧ (... ⇔ ... ) ∧ ... ∧ ... ) *
+       INSTREAM_BUFFERED_BL_FD (0w::... ::... ) (... ... content pos) fd is *
+       IOFS_V Inv (bumpFD fd fs nr))
+    CONST_IN_CONCL forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    FREE_VARS bactive:word8 list, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, bcontent:word8 list, isbuff:v, wr:v, rr:v, is:v
+  GOAL_END refillBuffer_with_read_spec_V #1
+STEP refillBuffer_with_read_spec_V 1 setup, case split (2745-2748) goals 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN refillBuffer_with_read_spec_V #1 assumptions 6 (ASM 0 = newest)
+    ASM 0 ¬(pos ≤ STRLEN content)
+    ASM 1 read_event_ok Inv fd
+    CONST_IN_ASM_1 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    ASM 2 LENGTH bcontent = 4100
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 is = Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]
+    CONCL cf_match (Var (Short «is»))
+  [(Pcon (SOME (Short «InstreamBuffered»))
+      [Pvar «fd»; Pvar «rref»; Pvar «wref»; Pvar «surplus»],
+    cf_let (SOME « v1»)
+      (cf_app p (Var (Long «Word8Array» (Short «length»)))
+         [Var (Short «surplus»)])
+      (cf_let (SOME « v2»)
+         (cf_app p (Var (Short «-»)) [Var (Short « v1»); Lit (IntLit 4)])
+         (cf_let (SOME « v0»)
+            (cf_app p (Var (Short «get_in»)) [Var (Short «fd»)])
+            (cf_let (SOME « v3»)
+               (cf_app p (Var (... ... )) [Var (... ... ); ... ... ; ... ])
+               (cf_let (SOME « v4») (... ... (... ... ) [... ... ; ... ])
+                  (cf_let NONE (... ... [... ; ... ])
+                     (... ... (... ... ) (... ... (... ... )))))))))]
+  (extend_env_rec [«refillBuffer_with_read»]
+     [TextIO_refillBuffer_with_read_v] [«is»]
+     [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]]
+     (merge_env TextIOProg_env_35
+        (merge_env TextIOProg_env_34
+           (merge_env TextIOProg_env_33
+              (merge_env TextIOProg_env_32
+                 (merge_env TextIOProg_env_27
+                    (merge_env TextIOProg_env_24
+                       (merge_env TextIOProg_env_16
+                          (merge_env TextIOProg_env_10
+                             (merge_env TextIOProg_env_8 (... ... (... ... ))))))))))))
+  (IOFS_V Inv fs *
+   INSTREAM_BUFFERED_BL_FD bcontent bactive fd
+     (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]))
+  (POSTv wv. SEP_EXISTS nr h4 rest.
+     &(NUM nr wv ∧ 4100 = SUC (SUC (SUC (SUC (LENGTH rest)))) ∧
+      (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+      nr = LENGTH (TAKE nr (... ... (... ... ))) ∧ nr ≤ STRLEN content − pos) *
+     INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+       (TAKE nr (DROP pos (MAP (n2w ∘ ORD) content))) fd
+       (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]) *
+     IOFS_V Inv (bumpFD fd fs nr))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, bactive:word8 list, Inv:io_event -> bool, bcontent:word8 list, fs:IO_fs, fd:num, content:string, pos:num, isbuff:v, wr:v, rr:v, fdv:v, is:v
+  GOAL_END refillBuffer_with_read_spec_V #1
+  GOAL_BEGIN refillBuffer_with_read_spec_V #2 assumptions 6 (ASM 0 = newest)
+    ASM 0 pos ≤ STRLEN content
+    ASM 1 read_event_ok Inv fd
+    CONST_IN_ASM_1 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    ASM 2 LENGTH bcontent = 4100
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 is = Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]
+    CONCL cf_match (Var (Short «is»))
+  [(Pcon (SOME (Short «InstreamBuffered»))
+      [Pvar «fd»; Pvar «rref»; Pvar «wref»; Pvar «surplus»],
+    cf_let (SOME « v1»)
+      (cf_app p (Var (Long «Word8Array» (Short «length»)))
+         [Var (Short «surplus»)])
+      (cf_let (SOME « v2»)
+         (cf_app p (Var (Short «-»)) [Var (Short « v1»); Lit (IntLit 4)])
+         (cf_let (SOME « v0»)
+            (cf_app p (Var (Short «get_in»)) [Var (Short «fd»)])
+            (cf_let (SOME « v3»)
+               (cf_app p (Var (... ... )) [Var (... ... ); ... ... ; ... ])
+               (cf_let (SOME « v4») (... ... (... ... ) [... ... ; ... ])
+                  (cf_let NONE (... ... [... ; ... ])
+                     (... ... (... ... ) (... ... (... ... )))))))))]
+  (extend_env_rec [«refillBuffer_with_read»]
+     [TextIO_refillBuffer_with_read_v] [«is»]
+     [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]]
+     (merge_env TextIOProg_env_35
+        (merge_env TextIOProg_env_34
+           (merge_env TextIOProg_env_33
+              (merge_env TextIOProg_env_32
+                 (merge_env TextIOProg_env_27
+                    (merge_env TextIOProg_env_24
+                       (merge_env TextIOProg_env_16
+                          (merge_env TextIOProg_env_10
+                             (merge_env TextIOProg_env_8 (... ... (... ... ))))))))))))
+  (IOFS_V Inv fs *
+   INSTREAM_BUFFERED_BL_FD bcontent bactive fd
+     (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]))
+  (POSTv wv. SEP_EXISTS nr h4 rest.
+     &(NUM nr wv ∧ 4100 = SUC (SUC (SUC (SUC (LENGTH rest)))) ∧
+      (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+      nr = LENGTH (TAKE nr (... ... (... ... ))) ∧ nr ≤ STRLEN content − pos) *
+     INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+       (TAKE nr (DROP pos (MAP (n2w ∘ ORD) content))) fd
+       (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]) *
+     IOFS_V Inv (bumpFD fd fs nr))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, bactive:word8 list, Inv:io_event -> bool, bcontent:word8 list, fs:IO_fs, fd:num, content:string, pos:num, isbuff:v, wr:v, rr:v, fdv:v, is:v
+  GOAL_END refillBuffer_with_read_spec_V #2
+STEP_FAILED refillBuffer_with_read_spec_V 2 B1 open (2749-2752; IOFS_V_def) TIMEOUT after 240 s
+GOALS_BEFORE_STEP refillBuffer_with_read_spec_V 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN refillBuffer_with_read_spec_V #1 assumptions 6 (ASM 0 = newest)
+    ASM 0 ¬(pos ≤ STRLEN content)
+    ASM 1 read_event_ok Inv fd
+    CONST_IN_ASM_1 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    ASM 2 LENGTH bcontent = 4100
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 is = Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]
+    CONCL cf_match (Var (Short «is»))
+  [(Pcon (SOME (Short «InstreamBuffered»))
+      [Pvar «fd»; Pvar «rref»; Pvar «wref»; Pvar «surplus»],
+    cf_let (SOME « v1»)
+      (cf_app p (Var (Long «Word8Array» (Short «length»)))
+         [Var (Short «surplus»)])
+      (cf_let (SOME « v2»)
+         (cf_app p (Var (Short «-»)) [Var (Short « v1»); Lit (IntLit 4)])
+         (cf_let (SOME « v0»)
+            (cf_app p (Var (Short «get_in»)) [Var (Short «fd»)])
+            (cf_let (SOME « v3»)
+               (cf_app p (Var (... ... )) [Var (... ... ); ... ... ; ... ])
+               (cf_let (SOME « v4») (... ... (... ... ) [... ... ; ... ])
+                  (cf_let NONE (... ... [... ; ... ])
+                     (... ... (... ... ) (... ... (... ... )))))))))]
+  (extend_env_rec [«refillBuffer_with_read»]
+     [TextIO_refillBuffer_with_read_v] [«is»]
+     [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]]
+     (merge_env TextIOProg_env_35
+        (merge_env TextIOProg_env_34
+           (merge_env TextIOProg_env_33
+              (merge_env TextIOProg_env_32
+                 (merge_env TextIOProg_env_27
+                    (merge_env TextIOProg_env_24
+                       (merge_env TextIOProg_env_16
+                          (merge_env TextIOProg_env_10
+                             (merge_env TextIOProg_env_8 (... ... (... ... ))))))))))))
+  (IOFS_V Inv fs *
+   INSTREAM_BUFFERED_BL_FD bcontent bactive fd
+     (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]))
+  (POSTv wv. SEP_EXISTS nr h4 rest.
+     &(NUM nr wv ∧ 4100 = SUC (SUC (SUC (SUC (LENGTH rest)))) ∧
+      (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+      nr = LENGTH (TAKE nr (... ... (... ... ))) ∧ nr ≤ STRLEN content − pos) *
+     INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+       (TAKE nr (DROP pos (MAP (n2w ∘ ORD) content))) fd
+       (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]) *
+     IOFS_V Inv (bumpFD fd fs nr))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, bactive:word8 list, Inv:io_event -> bool, bcontent:word8 list, fs:IO_fs, fd:num, content:string, pos:num, isbuff:v, wr:v, rr:v, fdv:v, is:v
+  GOAL_END refillBuffer_with_read_spec_V #1
+  GOAL_BEGIN refillBuffer_with_read_spec_V #2 assumptions 6 (ASM 0 = newest)
+    ASM 0 pos ≤ STRLEN content
+    ASM 1 read_event_ok Inv fd
+    CONST_IN_ASM_1 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    ASM 2 LENGTH bcontent = 4100
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 is = Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]
+    CONCL cf_match (Var (Short «is»))
+  [(Pcon (SOME (Short «InstreamBuffered»))
+      [Pvar «fd»; Pvar «rref»; Pvar «wref»; Pvar «surplus»],
+    cf_let (SOME « v1»)
+      (cf_app p (Var (Long «Word8Array» (Short «length»)))
+         [Var (Short «surplus»)])
+      (cf_let (SOME « v2»)
+         (cf_app p (Var (Short «-»)) [Var (Short « v1»); Lit (IntLit 4)])
+         (cf_let (SOME « v0»)
+            (cf_app p (Var (Short «get_in»)) [Var (Short «fd»)])
+            (cf_let (SOME « v3»)
+               (cf_app p (Var (... ... )) [Var (... ... ); ... ... ; ... ])
+               (cf_let (SOME « v4») (... ... (... ... ) [... ... ; ... ])
+                  (cf_let NONE (... ... [... ; ... ])
+                     (... ... (... ... ) (... ... (... ... )))))))))]
+  (extend_env_rec [«refillBuffer_with_read»]
+     [TextIO_refillBuffer_with_read_v] [«is»]
+     [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]]
+     (merge_env TextIOProg_env_35
+        (merge_env TextIOProg_env_34
+           (merge_env TextIOProg_env_33
+              (merge_env TextIOProg_env_32
+                 (merge_env TextIOProg_env_27
+                    (merge_env TextIOProg_env_24
+                       (merge_env TextIOProg_env_16
+                          (merge_env TextIOProg_env_10
+                             (merge_env TextIOProg_env_8 (... ... (... ... ))))))))))))
+  (IOFS_V Inv fs *
+   INSTREAM_BUFFERED_BL_FD bcontent bactive fd
+     (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]))
+  (POSTv wv. SEP_EXISTS nr h4 rest.
+     &(NUM nr wv ∧ 4100 = SUC (SUC (SUC (SUC (LENGTH rest)))) ∧
+      (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+      nr = LENGTH (TAKE nr (... ... (... ... ))) ∧ nr ≤ STRLEN content − pos) *
+     INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+       (TAKE nr (DROP pos (MAP (n2w ∘ ORD) content))) fd
+       (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]) *
+     IOFS_V Inv (bumpFD fd fs nr))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, bactive:word8 list, Inv:io_event -> bool, bcontent:word8 list, fs:IO_fs, fd:num, content:string, pos:num, isbuff:v, wr:v, rr:v, fdv:v, is:v
+  GOAL_END refillBuffer_with_read_spec_V #2
+STEP_STUCK refillBuffer_with_read_spec_V 2 B1 open (2749-2752; IOFS_V_def)
+EXPLORE_END refillBuffer_with_read_spec_V
+EXPLORE_LEMMA refillBuffer_with_read_spec_STR_V optional
+EXPLORE_BEGIN refillBuffer_with_read_spec_STR_V (head-goal mode) steps 2
+  GOAL_COUNT 1
+  GOAL_BEGIN refillBuffer_with_read_spec_STR_V #1 assumptions 0 (ASM 0 = newest)
+    CONCL read_event_ok Inv fd ⇒
+app p TextIO_refillBuffer_with_read_v [is]
+  (STDIO_V Inv fs * INSTREAM_STRP_V fd is input fs F T)
+  (POSTv retv. SEP_EXISTS nr.
+     STDIO_V Inv (forwardFD fs fd nr) *
+     INSTREAM_STRP_V fd is input (forwardFD fs fd nr) (¬NULL input)
+       (NULL input))
+    CONST_IN_CONCL forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    FREE_VARS input:string, fs:IO_fs, is:v, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, fd:num, Inv:io_event -> bool
+  GOAL_END refillBuffer_with_read_spec_STR_V #1
+STEP refillBuffer_with_read_spec_STR_V 1 open STDIO_V, INSTREAM_STRP_V, INSTREAM_BUFFERED_FD_V (6833-6835) goals 1
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refillBuffer_with_read_spec_STR_V #1 assumptions 7 (ASM 0 = newest)
+    ASM 0 LENGTH bcontent = 4100
+    ASM 1 instream_buffered_inv r w bcontent []
+    ASM 2 INSTREAM fd fdv
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd = SOME (STRCAT read' input,STRLEN read')
+    ASM 5 STD_streams fs
+    ASM 6 read_event_ok Inv fd
+    CONST_IN_ASM_6 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    CONCL app p TextIO_refillBuffer_with_read_v
+  [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; buff]]
+  (IOFS_V Inv (fs with numchars := ll) * REF_NUM rr r * REF_NUM wr w *
+   W8ARRAY buff bcontent)
+  (POSTv retv. SEP_EXISTS nr.
+     STDIO_V Inv (forwardFD fs fd nr) *
+     SEP_EXISTS read active left.
+       (SEP_EXISTS bcontent'.
+          (SEP_EXISTS rr' r' wr' w' buff' fdv'.
+             &((... = ... ∧ ... ∧ ... ) ∧ ... ... ∧ ... ... ) *
+             REF_NUM rr' r' * REF_NUM wr' w' * W8ARRAY buff' bcontent') *
+          &(LENGTH bcontent' = 4100)) *
+       &(input = STRCAT active left ∧ (¬NULL input ⇒ active ≠ "") ∧
+        (NULL input ⇒ active = "") ∧ read' = read ∧
+        nr + STRLEN read' = STRLEN active + STRLEN read))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, rr:v, wr:v, buff:v, ll:num llist, r:num, w:num, bcontent:word8 list, fdv:v, read':string, input:string, fs:IO_fs, fd:num, Inv:io_event -> bool
+  GOAL_END refillBuffer_with_read_spec_STR_V #1
+STEP_FAILED refillBuffer_with_read_spec_STR_V 2 xapp refillBuffer_with_read_spec_V + rest (6836-6869) HOL_ERR (HOL_ERROR {message = "Could not apply specification", origins = [{origin_function = "xapp", origin_structure = "cfTacticsLib", source_location = Loc_Unknown}]})
+GOALS_BEFORE_STEP refillBuffer_with_read_spec_STR_V 2
+  HEAD_GOALS_TOTAL 1
+  GOAL_COUNT 1
+  GOAL_BEGIN refillBuffer_with_read_spec_STR_V #1 assumptions 7 (ASM 0 = newest)
+    ASM 0 LENGTH bcontent = 4100
+    ASM 1 instream_buffered_inv r w bcontent []
+    ASM 2 INSTREAM fd fdv
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd = SOME (STRCAT read' input,STRLEN read')
+    ASM 5 STD_streams fs
+    ASM 6 read_event_ok Inv fd
+    CONST_IN_ASM_6 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    CONCL app p TextIO_refillBuffer_with_read_v
+  [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; buff]]
+  (IOFS_V Inv (fs with numchars := ll) * REF_NUM rr r * REF_NUM wr w *
+   W8ARRAY buff bcontent)
+  (POSTv retv. SEP_EXISTS nr.
+     STDIO_V Inv (forwardFD fs fd nr) *
+     SEP_EXISTS read active left.
+       (SEP_EXISTS bcontent'.
+          (SEP_EXISTS rr' r' wr' w' buff' fdv'.
+             &((... = ... ∧ ... ∧ ... ) ∧ ... ... ∧ ... ... ) *
+             REF_NUM rr' r' * REF_NUM wr' w' * W8ARRAY buff' bcontent') *
+          &(LENGTH bcontent' = 4100)) *
+       &(input = STRCAT active left ∧ (¬NULL input ⇒ active ≠ "") ∧
+        (NULL input ⇒ active = "") ∧ read' = read ∧
+        nr + STRLEN read' = STRLEN active + STRLEN read))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, rr:v, wr:v, buff:v, ll:num llist, r:num, w:num, bcontent:word8 list, fdv:v, read':string, input:string, fs:IO_fs, fd:num, Inv:io_event -> bool
+  GOAL_END refillBuffer_with_read_spec_STR_V #1
+ALT_FAILED refillBuffer_with_read_spec_STR_V 2 xapp refillBuffer_with_read_spec_V + rest (6836-6869) alt 1 HOL_ERR (HOL_ERROR {message = "Could not apply specification", origins = [{origin_function = "xapp", origin_structure = "cfTacticsLib", source_location = Loc_Unknown}]})
+STEP_STUCK refillBuffer_with_read_spec_STR_V 2 xapp refillBuffer_with_read_spec_V + rest (6836-6869)
+EXPLORE_END refillBuffer_with_read_spec_STR_V
+EXPLORE_EXTRA refillBuffer_with_read_spec_V__split
+EXPLORE_BEGIN refillBuffer_with_read_spec_V__split (head-goal mode) steps 11
+  GOAL_COUNT 1
+  GOAL_BEGIN refillBuffer_with_read_spec_V__split #1 assumptions 0 (ASM 0 = newest)
+    CONCL ∀fd fdv fs content pos.
+  is = Conv instreambuffered_con_stamp [fdv; rr; wr; isbuff] ∧
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME ReadMode ⇒
+  LENGTH bcontent = 4100 ⇒
+  read_event_ok Inv fd ⇒
+  app p TextIO_refillBuffer_with_read_v [is]
+    (IOFS_V Inv fs * INSTREAM_BUFFERED_BL_FD bcontent bactive fd is)
+    (POSTv wv. SEP_EXISTS nr h4 rest.
+       &(NUM nr wv ∧ LENGTH bcontent = LENGTH (0w::... ) ∧
+        (... = ... ⇔ ... = ... ) ∧ (... ⇔ ... ) ∧ ... ∧ ... ) *
+       INSTREAM_BUFFERED_BL_FD (0w::... ::... ) (... ... content pos) fd is *
+       IOFS_V Inv (bumpFD fd fs nr))
+    CONST_IN_CONCL forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    FREE_VARS bactive:word8 list, p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, Inv:io_event -> bool, bcontent:word8 list, isbuff:v, wr:v, rr:v, is:v
+  GOAL_END refillBuffer_with_read_spec_V__split #1
+STEP refillBuffer_with_read_spec_V__split 1 setup, case split (2745-2748) goals 2
+  HEAD_GOALS_TOTAL 2
+  GOAL_COUNT 2
+  GOAL_BEGIN refillBuffer_with_read_spec_V__split #1 assumptions 6 (ASM 0 = newest)
+    ASM 0 ¬(pos ≤ STRLEN content)
+    ASM 1 read_event_ok Inv fd
+    CONST_IN_ASM_1 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    ASM 2 LENGTH bcontent = 4100
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 is = Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]
+    CONCL cf_match (Var (Short «is»))
+  [(Pcon (SOME (Short «InstreamBuffered»))
+      [Pvar «fd»; Pvar «rref»; Pvar «wref»; Pvar «surplus»],
+    cf_let (SOME « v1»)
+      (cf_app p (Var (Long «Word8Array» (Short «length»)))
+         [Var (Short «surplus»)])
+      (cf_let (SOME « v2»)
+         (cf_app p (Var (Short «-»)) [Var (Short « v1»); Lit (IntLit 4)])
+         (cf_let (SOME « v0»)
+            (cf_app p (Var (Short «get_in»)) [Var (Short «fd»)])
+            (cf_let (SOME « v3»)
+               (cf_app p (Var (... ... )) [Var (... ... ); ... ... ; ... ])
+               (cf_let (SOME « v4») (... ... (... ... ) [... ... ; ... ])
+                  (cf_let NONE (... ... [... ; ... ])
+                     (... ... (... ... ) (... ... (... ... )))))))))]
+  (extend_env_rec [«refillBuffer_with_read»]
+     [TextIO_refillBuffer_with_read_v] [«is»]
+     [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]]
+     (merge_env TextIOProg_env_35
+        (merge_env TextIOProg_env_34
+           (merge_env TextIOProg_env_33
+              (merge_env TextIOProg_env_32
+                 (merge_env TextIOProg_env_27
+                    (merge_env TextIOProg_env_24
+                       (merge_env TextIOProg_env_16
+                          (merge_env TextIOProg_env_10
+                             (merge_env TextIOProg_env_8 (... ... (... ... ))))))))))))
+  (IOFS_V Inv fs *
+   INSTREAM_BUFFERED_BL_FD bcontent bactive fd
+     (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]))
+  (POSTv wv. SEP_EXISTS nr h4 rest.
+     &(NUM nr wv ∧ 4100 = SUC (SUC (SUC (SUC (LENGTH rest)))) ∧
+      (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+      nr = LENGTH (TAKE nr (... ... (... ... ))) ∧ nr ≤ STRLEN content − pos) *
+     INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+       (TAKE nr (DROP pos (MAP (n2w ∘ ORD) content))) fd
+       (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]) *
+     IOFS_V Inv (bumpFD fd fs nr))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, bactive:word8 list, Inv:io_event -> bool, bcontent:word8 list, fs:IO_fs, fd:num, content:string, pos:num, isbuff:v, wr:v, rr:v, fdv:v, is:v
+  GOAL_END refillBuffer_with_read_spec_V__split #1
+  GOAL_BEGIN refillBuffer_with_read_spec_V__split #2 assumptions 6 (ASM 0 = newest)
+    ASM 0 pos ≤ STRLEN content
+    ASM 1 read_event_ok Inv fd
+    CONST_IN_ASM_1 forge_refundR6RExplore1$read_event_ok :(io_event -> bool) -> num -> bool
+    ASM 2 LENGTH bcontent = 4100
+    ASM 3 get_mode fs fd = SOME ReadMode
+    ASM 4 get_fd_content fs fd = SOME (content,pos)
+    ASM 5 is = Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]
+    CONCL cf_match (Var (Short «is»))
+  [(Pcon (SOME (Short «InstreamBuffered»))
+      [Pvar «fd»; Pvar «rref»; Pvar «wref»; Pvar «surplus»],
+    cf_let (SOME « v1»)
+      (cf_app p (Var (Long «Word8Array» (Short «length»)))
+         [Var (Short «surplus»)])
+      (cf_let (SOME « v2»)
+         (cf_app p (Var (Short «-»)) [Var (Short « v1»); Lit (IntLit 4)])
+         (cf_let (SOME « v0»)
+            (cf_app p (Var (Short «get_in»)) [Var (Short «fd»)])
+            (cf_let (SOME « v3»)
+               (cf_app p (Var (... ... )) [Var (... ... ); ... ... ; ... ])
+               (cf_let (SOME « v4») (... ... (... ... ) [... ... ; ... ])
+                  (cf_let NONE (... ... [... ; ... ])
+                     (... ... (... ... ) (... ... (... ... )))))))))]
+  (extend_env_rec [«refillBuffer_with_read»]
+     [TextIO_refillBuffer_with_read_v] [«is»]
+     [Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]]
+     (merge_env TextIOProg_env_35
+        (merge_env TextIOProg_env_34
+           (merge_env TextIOProg_env_33
+              (merge_env TextIOProg_env_32
+                 (merge_env TextIOProg_env_27
+                    (merge_env TextIOProg_env_24
+                       (merge_env TextIOProg_env_16
+                          (merge_env TextIOProg_env_10
+                             (merge_env TextIOProg_env_8 (... ... (... ... ))))))))))))
+  (IOFS_V Inv fs *
+   INSTREAM_BUFFERED_BL_FD bcontent bactive fd
+     (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]))
+  (POSTv wv. SEP_EXISTS nr h4 rest.
+     &(NUM nr wv ∧ 4100 = SUC (SUC (SUC (SUC (LENGTH rest)))) ∧
+      (nr = 0 ⇔ eof fd fs = SOME T) ∧ (nr = 0 ⇔ ¬(pos < STRLEN content)) ∧
+      nr = LENGTH (TAKE nr (... ... (... ... ))) ∧ nr ≤ STRLEN content − pos) *
+     INSTREAM_BUFFERED_BL_FD (0w::n2w (nr DIV 256)::n2w nr::h4::rest)
+       (TAKE nr (DROP pos (MAP (n2w ∘ ORD) content))) fd
+       (Conv (SOME (TypeStamp «InstreamBuffered» 15)) [fdv; rr; wr; isbuff]) *
+     IOFS_V Inv (bumpFD fd fs nr))
+    FREE_VARS p:('ffi -> (mlstring |-> ffi)) #
+(mlstring list #
+ (mlstring ->
+  word8 list -> word8 list -> ffi -> ffi cfHeapsBase$ffi_result option)) list, bactive:word8 list, Inv:io_event -> bool, bcontent:word8 list, fs:IO_fs, fd:num, content:string, pos:num, isbuff:v, wr:v, rr:v, fdv:v, is:v
+  GOAL_END refillBuffer_with_read_spec_V__split #2

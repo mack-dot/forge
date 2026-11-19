@@ -1,0 +1,252 @@
+<<HOL message: Created theory "forge_refundRouteA2">>
+MARK D3
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved theorem _______ "ffi_calls_ok_compute"
+Saved definition ____ "ffi_calls_ok_def"
+DEFINITION ⊢ (∀P mc ffi ms. ffi_calls_ok P mc ffi 0 ms ⇔ T) ∧
+  ∀P mc ffi k ms.
+    ffi_calls_ok P mc ffi (SUC k) ms ⇔
+    if mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs then
+      if
+        encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+          (mc.target.get_byte ms) mc.prog_addresses
+      then
+        (let
+           ms1 = mc.target.next ms;
+           (ms2,new_oracle) = apply_oracle mc.next_interfer ms1;
+           mc = mc with next_interfer := new_oracle
+         in
+           if
+             EVERY mc.target.state_ok [ms; ms1; ms2] ∧
+             ∀x. x ∉ mc.prog_addresses ⇒
+                 mc.target.get_byte ms1 x = mc.target.get_byte ms x
+           then
+             ffi_calls_ok P mc ffi k ms2
+           else T)
+      else T
+    else if mc.target.get_pc ms = mc.halt_pc then T
+    else if mc.target.get_pc ms = mc.install_pc then
+      case read_ffi_bytearray mc mc.ptr_reg mc.len_reg ms of
+        NONE => T
+      | SOME bytes =>
+        (let
+           (ms1,new_oracle) = apply_oracle mc.install_interfer (bytes,ms);
+           mc = mc with install_interfer := new_oracle
+         in
+           ffi_calls_ok P mc ffi k ms1)
+    else
+      case find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 of
+        NONE => T
+      | SOME ffi_index =>
+        case mc.ffi_names❲ffi_index❳ of
+          ExtCall v1 =>
+            (case ALOOKUP mc.mmio_info ffi_index of
+               NONE =>
+                 (case read_ffi_bytearrays mc ms of
+                    (NONE,v3) => T
+                  | (SOME bytes,NONE) => T
+                  | (SOME bytes,SOME bytes2) =>
+                    case call_FFI ffi mc.ffi_names❲ffi_index❳ bytes bytes2 of
+                      FFI_return new_ffi new_bytes =>
+                        P ffi_index new_bytes ms ∧
+                        (let
+                           (ms1,new_oracle) =
+                             apply_oracle mc.ffi_interfer
+                               (ffi_index,new_bytes,ms);
+                           mc = mc with ffi_interfer := new_oracle
+                         in
+                           ffi_calls_ok P mc new_ffi k ms1)
+                    | FFI_final outcome => T)
+             | SOME v => T)
+        | SharedMem op => F
+Saved theorem _______ "read_ffi_bytearray_ffi_interfer_update"
+CHECKED read_ffi_bytearray_ffi_interfer_update
+⊢ ∀mc g r1 r2 ms.
+    read_ffi_bytearray (mc with ffi_interfer := g) r1 r2 ms =
+    read_ffi_bytearray mc r1 r2 ms
+Saved theorem _______ "read_ffi_bytearrays_ffi_interfer_update"
+CHECKED read_ffi_bytearrays_ffi_interfer_update
+⊢ ∀mc g ms.
+    read_ffi_bytearrays (mc with ffi_interfer := g) ms =
+    read_ffi_bytearrays mc ms
+Saved theorem _______ "ffi_calls_ok_false_at_a_returning_call"
+CHECKED ffi_calls_ok_false_at_a_returning_call
+⊢ ¬ffi_calls_ok (λi nb ms. F)
+    <|prog_addresses := ∅; shared_addresses := ∅; ffi_entry_pcs := [0w];
+      ffi_names := [ExtCall «x»]; ptr_reg := 0; len_reg := 1; ptr2_reg := 2;
+      len2_reg := 3; ffi_interfer := ARB; callee_saved_regs := [];
+      next_interfer := ARB; halt_pc := 4w; install_pc := 8w;
+      install_interfer := ARB; target := arm8_target; mmio_info := []|>
+    <|oracle := (λs st c b. Oracle_return st b); ffi_state := ();
+      io_events := []|> (SUC 0) <|PC := 0w; REG := (λr. 0w)|>
+MARK L2
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundRouteA2)>>
+SHOW L2-leaf
+  ASM ffi_calls_ok Vok
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (refund_ffi_tot Vok mc1.ffi_interfer 0 (x,l,ms))
+  ASM Vok x l ms
+  ASM call_FFI ffi (ExtCall m) x' x'' = FFI_return f l
+  ASM read_ffi_bytearrays mc1 ms = (SOME x',SOME x'')
+  ASM ALOOKUP mc1.mmio_info x = NONE
+  ASM mc1.ffi_names❲x❳ = ExtCall m
+  ASM find_index (mc1.target.get_pc ms) mc1.ffi_entry_pcs 0 = SOME x
+  ASM mc1.target.get_pc ms ≠ mc1.halt_pc
+  ASM mc1.target.get_pc ms ≠ mc1.install_pc
+  ASM MEM (mc1.target.get_pc ms) mc1.ffi_entry_pcs
+  GOAL evaluate (mc1 with ffi_interfer := shift_seq 1 mc1.ffi_interfer) f k
+  (mc1.ffi_interfer 0 (x,l,ms)) =
+evaluate
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (mc1.ffi_interfer 0 (x,l,ms))
+SHOW L2-leaf
+  ASM ffi_calls_ok Vok
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (refund_ffi_tot Vok mc1.ffi_interfer 0 (x,l,ms))
+  ASM Vok x l ms
+  ASM call_FFI ffi (ExtCall m) x' x'' = FFI_return f l
+  ASM read_ffi_bytearrays mc1 ms = (SOME x',SOME x'')
+  ASM ALOOKUP mc1.mmio_info x = NONE
+  ASM mc1.ffi_names❲x❳ = ExtCall m
+  ASM find_index (mc1.target.get_pc ms) mc1.ffi_entry_pcs 0 = SOME x
+  ASM mc1.target.get_pc ms ≠ mc1.halt_pc
+  ASM mc1.target.get_pc ms ≠ mc1.install_pc
+  ASM mc1.target.get_pc ms ∉ mc1.prog_addresses
+  GOAL evaluate (mc1 with ffi_interfer := shift_seq 1 mc1.ffi_interfer) f k
+  (mc1.ffi_interfer 0 (x,l,ms)) =
+evaluate
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (mc1.ffi_interfer 0 (x,l,ms))
+SHOW L2-leaf-after
+  ASM ffi_calls_ok Vok
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (refund_ffi_tot Vok mc1.ffi_interfer 0 (x,l,ms))
+  ASM Vok x l ms
+  ASM call_FFI ffi (ExtCall m) x' x'' = FFI_return f l
+  ASM read_ffi_bytearrays mc1 ms = (SOME x',SOME x'')
+  ASM ALOOKUP mc1.mmio_info x = NONE
+  ASM mc1.ffi_names❲x❳ = ExtCall m
+  ASM find_index (mc1.target.get_pc ms) mc1.ffi_entry_pcs 0 = SOME x
+  ASM mc1.target.get_pc ms ≠ mc1.halt_pc
+  ASM mc1.target.get_pc ms ≠ mc1.install_pc
+  ASM MEM (mc1.target.get_pc ms) mc1.ffi_entry_pcs
+  GOAL ffi_calls_ok Vok
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (mc1.ffi_interfer 0 (x,l,ms))
+SHOW L2-leaf-after
+  ASM ffi_calls_ok Vok
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (refund_ffi_tot Vok mc1.ffi_interfer 0 (x,l,ms))
+  ASM Vok x l ms
+  ASM call_FFI ffi (ExtCall m) x' x'' = FFI_return f l
+  ASM read_ffi_bytearrays mc1 ms = (SOME x',SOME x'')
+  ASM ALOOKUP mc1.mmio_info x = NONE
+  ASM mc1.ffi_names❲x❳ = ExtCall m
+  ASM find_index (mc1.target.get_pc ms) mc1.ffi_entry_pcs 0 = SOME x
+  ASM mc1.target.get_pc ms ≠ mc1.halt_pc
+  ASM mc1.target.get_pc ms ≠ mc1.install_pc
+  ASM mc1.target.get_pc ms ∉ mc1.prog_addresses
+  GOAL ffi_calls_ok Vok
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (mc1.ffi_interfer 0 (x,l,ms))
+SHOW L2-leaf
+  ASM ffi_calls_ok Vok
+  (mc1 with
+   <|ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer;
+     install_interfer := shift_seq 1 mc1.install_interfer|>) ffi k
+  (mc1.install_interfer 0 (x,ms))
+  ASM read_ffi_bytearray mc1 mc1.ptr_reg mc1.len_reg ms = SOME x
+  ASM mc1.install_pc ≠ mc1.halt_pc
+  ASM mc1.target.get_pc ms = mc1.install_pc
+  ASM MEM mc1.install_pc mc1.ffi_entry_pcs
+  GOAL evaluate (mc1 with install_interfer := shift_seq 1 mc1.install_interfer) ffi
+  k (mc1.install_interfer 0 (x,ms)) =
+evaluate
+  (mc1 with
+   <|ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer;
+     install_interfer := shift_seq 1 mc1.install_interfer|>) ffi k
+  (mc1.install_interfer 0 (x,ms))
+SHOW L2-leaf
+  ASM ffi_calls_ok Vok
+  (mc1 with
+   <|ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer;
+     install_interfer := shift_seq 1 mc1.install_interfer|>) ffi k
+  (mc1.install_interfer 0 (x,ms))
+  ASM read_ffi_bytearray mc1 mc1.ptr_reg mc1.len_reg ms = SOME x
+  ASM mc1.install_pc ≠ mc1.halt_pc
+  ASM mc1.target.get_pc ms = mc1.install_pc
+  ASM mc1.install_pc ∉ mc1.prog_addresses
+  GOAL evaluate (mc1 with install_interfer := shift_seq 1 mc1.install_interfer) ffi
+  k (mc1.install_interfer 0 (x,ms)) =
+evaluate
+  (mc1 with
+   <|ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer;
+     install_interfer := shift_seq 1 mc1.install_interfer|>) ffi k
+  (mc1.install_interfer 0 (x,ms))
+SHOW L2-leaf
+  ASM ffi_calls_ok Vok
+  (mc1 with
+   <|ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer;
+     next_interfer := shift_seq 1 mc1.next_interfer|>) ffi k
+  (mc1.next_interfer 0 (mc1.target.next ms))
+  ASM ∀x. x ∉ mc1.prog_addresses ⇒
+    mc1.target.get_byte (mc1.target.next ms) x = mc1.target.get_byte ms x
+  ASM mc1.target.state_ok (mc1.next_interfer 0 (mc1.target.next ms))
+  ASM mc1.target.state_ok (mc1.target.next ms)
+  ASM mc1.target.state_ok ms
+  ASM encoded_bytes_in_mem mc1.target.config (mc1.target.get_pc ms)
+  (mc1.target.get_byte ms) mc1.prog_addresses
+  ASM ¬MEM (mc1.target.get_pc ms) mc1.ffi_entry_pcs
+  ASM mc1.target.get_pc ms ∈ mc1.prog_addresses
+  GOAL evaluate (mc1 with next_interfer := shift_seq 1 mc1.next_interfer) ffi k
+  (mc1.next_interfer 0 (mc1.target.next ms)) =
+evaluate
+  (mc1 with
+   <|ffi_interfer := refund_ffi_tot Vok mc1.ffi_interfer;
+     next_interfer := shift_seq 1 mc1.next_interfer|>) ffi k
+  (mc1.next_interfer 0 (mc1.target.next ms))
+TACTIC_ATTEMPT_FAILED refund_ffi_tot_evaluate_agree 1 HOL_ERR (HOL_ERROR {message = "unsolved goals", origins = [{origin_function = "TAC_PROOF", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+SHOW L2-alt-leaf
+  ASM ffi_calls_ok Vok
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (refund_ffi_tot Vok mc1.ffi_interfer 0 (x'³',l,ms))
+  ASM Vok x'³' l ms
+  ASM mc1.target.get_pc ms ≠ mc1.halt_pc
+  ASM mc1.target.get_reg ms mc1.ptr_reg ≠ 0w
+  ASM MEM (mc1.target.get_pc ms) mc1.ffi_entry_pcs
+  ASM mc1.target.get_pc ms ≠ mc1.install_pc
+  ASM call_FFI ffi (ExtCall m) x'' x' = FFI_return f l
+  ASM mc1.ffi_names❲x'³'❳ = ExtCall m
+  ASM ALOOKUP mc1.mmio_info x'³' = NONE
+  ASM find_index (mc1.target.get_pc ms) mc1.ffi_entry_pcs 0 = SOME x'³'
+  ASM read_ffi_bytearrays mc1 ms = (SOME x'',SOME x')
+  ASM read_ffi_bytearray mc1 mc1.ptr_reg mc1.len_reg ms = SOME x
+  GOAL evaluate (mc1 with ffi_interfer := shift_seq 1 mc1.ffi_interfer) f k
+  (mc1.ffi_interfer 0 (x'³',l,ms)) =
+evaluate
+  (mc1 with ffi_interfer := refund_ffi_tot Vok (shift_seq 1 mc1.ffi_interfer))
+  f k (mc1.ffi_interfer 0 (x'³',l,ms))
+TACTIC_ATTEMPT_FAILED refund_ffi_tot_evaluate_agree 2 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+LEMMA_FAILED refund_ffi_tot_evaluate_agree Fail "all listed tactics failed"
+STATEMENT_L2 T
+LEMMA_FAILED refund_ffi_tot_machine_sem_agree HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 177", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+MARK L2R
+Saved theorem _______ "refund_mc_totalised_record"
+CHECKED refund_mc_totalised_record
+⊢ refund_mc b (envmc with ffi_interfer := g) =
+  refund_mc b envmc with ffi_interfer := g
+Saved theorem _______ "refund_mc_totalised_record_fields"
+CHECKED refund_mc_totalised_record_fields
+⊢ (refund_mc b (envmc with ffi_interfer := g)).target =
+  (refund_mc b envmc).target ∧
+  (refund_mc b (envmc with ffi_interfer := g)).install_pc =
+  (refund_mc b envmc).install_pc ∧
+  (refund_mc b envmc).ffi_interfer = envmc.ffi_interfer
+PREMISE_FOUND refund_env_ok_sl sl envmc
+LEMMA_FAILED refund_profile_a_sl_reach HOL_ERR (HOL_ERROR {message = "by's tactic failed to prove subgoal on line 211", origins = [{origin_function = "by", origin_structure = "BasicProvers", source_location = Loc_Unknown}]})
+MARK CHECKS
+CONTROL_OK C-NV ffi_calls_ok with the empty predicate is false at a concrete returning call
+UNEXPECTED_CONTROL_ACCEPTANCE L2-literal

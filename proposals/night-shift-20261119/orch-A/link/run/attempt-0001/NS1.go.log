@@ -1,0 +1,29 @@
+2026-11-19T08:56:37Z
+START_STATE swap_free_mib=1279 memory_free_percent=69
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/controls/NS1-amount-plus-one.sml sha256 8f65206be972518ede3f95820f7e89c64097e5666c6d7daaeee25dfeaa7b5321 expected 8f65206be972518ede3f95820f7e89c64097e5666c6d7daaeee25dfeaa7b5321
+Thu Nov 19 03:56:37 EST 2026
+System-wide memory free percentage: 69%
+vm.swapusage: total = 7168.00M  used = 5888.94M  free = 1279.06M  (encrypted)
+/dev/disk3s5       460  339        89    80% 7989890 941008320    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 82
+COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=900 python3 -I -B run_case.py ctl-NS1 controls/NS1-amount-plus-one.sml
+RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in ctl-NS1/command.json)
+2:FORGE_BEGIN exported_contract_decode
+4:FORGE_BEGIN exported_contract_shape
+6:FORGE_BEGIN exported_ens1_value
+8:FORGE_BEGIN exported_ens2_value
+10:FORGE_BEGIN exported_ens3_value
+12:FORGE_BEGIN exported_contract_value
+14:FORGE_BEGIN exported_contract_on_refund_fields
+
+Exception raised at boolLib.store_thm_at:
+at Tactical.TAC_PROOF:
+  Failed to prove theorem "exported_contract_on_refund_fields":
+unsolved goals
+  info: actual_exit=1 markers=[] last FORGE_BEGIN='exported_contract_on_refund_fields' *_COMPLETE lines=[] wall=25.345
+VERDICT NS1 ctl-NS1 PASS
+GO.SH EXIT 1
+go exit 1

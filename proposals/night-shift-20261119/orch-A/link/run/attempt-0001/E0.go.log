@@ -1,0 +1,21 @@
+2026-11-19T09:01:07Z
+START_STATE swap_free_mib=1671 memory_free_percent=63
+input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/inputs/FlatCore.sexp sha256 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d expected 58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d
+Thu Nov 19 04:01:07 EST 2026
+System-wide memory free percentage: 63%
+vm.swapusage: total = 7168.00M  used = 5496.81M  free = 1671.19M  (encrypted)
+/dev/disk3s5       460  338        89    80% 7991590 943510240    1%   /System/Volumes/Data
+other HOL children:
+pgrep exit 0
+swap used percent: 76
+COMMAND: FORGE_CWD=/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refund_call_experiment FORGE_CPU_SECONDS=900 python3 -I -B run_case.py eligible-link-0001 eligible/forge_refundEligibleLinkScript.sml /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/loadpath.sml
+RUNNER EXIT 0 (a signal or CPU-limit stop also gives 1; read actual_exit in eligible-link-0001/command.json)
+7:FORGE_THEOREM eligible_link_decode
+14:FORGE_THEOREM eligible_link_shape
+31:FORGE_THEOREM eligible_link_guard_value
+44:FORGE_THEOREM eligible_link_matches_compiled_guard
+56:FORGE_THEOREM eligible_link_operators
+  info: actual_exit=0 markers=[] last FORGE_BEGIN=None *_COMPLETE lines=['ELIGIBLE_LINK_COMPLETE'] wall=15.613
+VERDICT E0 eligible-link-0001 PASS
+GO.SH EXIT 0
+go exit 0
