@@ -1,0 +1,29 @@
+# owner=orchB-recheck start=2026-11-19T09:30:46Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-ser/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1237
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/recheck-s/RSerAttacks.csv RSerAttacks.dfy
+# memory free percent: 41
+
+Dafny program verifier finished with 1804 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/recheck-s/RSerAttacks.csv
+       66.02 real        45.96 user         4.32 sys
+           306626560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              155178  page reclaims
+                 302  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  13  signals received
+                5214  voluntary context switches
+              277905  involuntary context switches
+        395624583426  instructions retired
+        154847522565  cycles elapsed
+           362284376  peak memory footprint
+# end=2026-11-19T09:31:53Z
+exit 0

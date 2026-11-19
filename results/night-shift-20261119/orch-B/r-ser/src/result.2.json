@@ -1,0 +1,61 @@
+{
+ "node": "v24.3.0",
+ "total": 443,
+ "textAndBytesEqual": 443,
+ "different": 0,
+ "utf8BytesEqual": 443,
+ "wellFormedByIsTokenBody": 217,
+ "parseAgreesWithIsTokenBodyAndRoundTrips": 443,
+ "parseDisagrees": 0,
+ "firstDiffs": [],
+ "sink": {
+  "whitespace after first brace": {
+   "commit": {
+    "status": "rejected",
+    "reason": "token text is not canonical"
+   },
+   "parsedBodyEqualsSignedBody": true
+  },
+  "\\u0072 escape inside a request id": {
+   "commit": {
+    "status": "rejected",
+    "reason": "token text is not canonical"
+   },
+   "parsedBodyEqualsSignedBody": true
+  },
+  "\\/ escape of a slash-free text (escaped 'd' is not JSON; use \\u0064)": {
+   "commit": {
+    "status": "rejected",
+    "reason": "token text is not canonical"
+   },
+   "parsedBodyEqualsSignedBody": true
+  },
+  "keys of body reordered (signature first)": {
+   "commit": {
+    "status": "rejected",
+    "reason": "token text is not canonical"
+   },
+   "parsedBodyEqualsSignedBody": true
+  },
+  "duplicate key requestId in body": {
+   "commit": {
+    "status": "rejected",
+    "reason": "token text is not canonical"
+   },
+   "parsedBodyEqualsSignedBody": true
+  },
+  "canonical text (amount 0)": {
+   "commit": {
+    "status": "committed"
+   }
+  }
+ },
+ "dafnyParseOnBodyText": {
+  "whitespace after first brace": true,
+  "\\u0072 escape inside a request id": false,
+  "\\/ escape of a slash-free text (escaped 'd' is not JSON; use \\u0064)": false,
+  "keys of body reordered (signature first)": true,
+  "duplicate key requestId in body": false,
+  "canonical body text": true
+ }
+}

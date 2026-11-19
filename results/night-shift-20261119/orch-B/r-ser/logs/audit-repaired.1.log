@@ -1,0 +1,29 @@
+# owner=r-ser start=2026-11-19T09:14:10Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-ser/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1719
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit RepairedBytes.dfy
+# memory free percent: 70
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        6.33 real         6.82 user         0.21 sys
+           266551296  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20583  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                  33  voluntary context switches
+                7175  involuntary context switches
+         62767687606  instructions retired
+         21689466289  cycles elapsed
+           232768736  peak memory footprint
+# end=2026-11-19T09:14:17Z
+exit 0

@@ -1,0 +1,19 @@
+(node:6244) Warning: Failed to load the ES module: <REPO>/results/night-shift-20261119/orch-B/r-ser/conf/conf.ts. Make sure to set "type": "module" in the nearest package.json file or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+<REPO>/results/night-shift-20261119/orch-B/r-ser/conf/conf.ts:8
+import { resolve } from "node:path";
+^^^^^^
+
+SyntaxError: Cannot use import statement outside a module
+    at wrapSafe (node:internal/modules/cjs/loader:1624:18)
+    at Module._compile (node:internal/modules/cjs/loader:1666:20)
+    at Object..js (node:internal/modules/cjs/loader:1824:10)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at cjsLoader (node:internal/modules/esm/translators:316:5)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:208:7)
+    at ModuleJob.run (node:internal/modules/esm/module_job:365:25)
+
+Node.js v24.3.0

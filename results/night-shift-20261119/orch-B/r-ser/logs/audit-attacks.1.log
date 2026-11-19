@@ -1,0 +1,29 @@
+# owner=r-ser start=2026-11-19T09:27:22Z cwd=<REPO>/results/night-shift-20261119/orch-B/r-ser/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1727
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit RSerAttacks.dfy
+# memory free percent: 51
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        6.09 real         6.92 user         0.25 sys
+           259588096  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19656  page reclaims
+                 779  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   8  signals received
+                 112  voluntary context switches
+                4438  involuntary context switches
+         64980144879  instructions retired
+         22104340809  cycles elapsed
+           226723064  peak memory footprint
+# end=2026-11-19T09:27:28Z
+exit 0
