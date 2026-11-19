@@ -1,0 +1,58 @@
+baseline  | control                    | level | exit | expected reason | result
+REAL      | baseline                   | M1-A |    1 | - | LINK_NOT_ESTABLISHED NOT_SATISFIED OBLIGATION_OPEN OPEN_ISSUE PIN_NOT_PROTECTED PREMISE_LEDGER
+REAL      | baseline                   | M1-B |    1 | - | LINK_METHOD_WEAKER LINK_NOT_ESTABLISHED NOT_SATISFIED OBLIGATION_OPEN OPEN_ISSUE PIN_NOT_PROTECTED PREMISE_LEDGER
+SYNTHETIC | baseline                   | M1-A |    0 | - | (none)
+SYNTHETIC | baseline                   | M1-B |    0 | - | (none)
+REAL      | c_substituted              | M1-A |    1 | DIGEST_MISMATCH | PASS own reason, new
+REAL      | c_substituted              | M1-B |    1 | DIGEST_MISMATCH | PASS own reason, new
+REAL      | c_substituted_and_repinned | M1-A |    1 | ARTIFACT_SLICES | PASS own reason, new
+REAL      | c_substituted_and_repinned | M1-B |    1 | ARTIFACT_SLICES | PASS own reason, new
+REAL      | c_stale_proof              | M1-A |    1 | STALE_PROOF_RECORD | PASS own reason, new
+REAL      | c_stale_proof              | M1-B |    1 | STALE_PROOF_RECORD | PASS own reason, new
+REAL      | c_stale_proof_repinned     | M1-A |    1 | STALE_PROOF_RECORD | PASS own reason, new
+REAL      | c_stale_proof_repinned     | M1-B |    1 | STALE_PROOF_RECORD | PASS own reason, new
+REAL      | c_weaker_method            | M1-A |    1 | expect exit 1 | PASS
+REAL      | c_weaker_method            | M1-B |    1 | LINK_METHOD_WEAKER | PASS own reason, already in baseline
+REAL      | c_spec_change              | M1-A |    1 | SPEC_NOT_APPROVED | PASS own reason, new
+REAL      | c_spec_change              | M1-B |    1 | SPEC_NOT_APPROVED | PASS own reason, new
+REAL      | c_compiler_pin             | M1-A |    1 | TOOLCHAIN_MISMATCH | PASS own reason, new
+REAL      | c_compiler_pin             | M1-B |    1 | TOOLCHAIN_MISMATCH | PASS own reason, new
+REAL      | c_backend_config           | M1-A |    1 | COMPILER_CONFIG | PASS own reason, new
+REAL      | c_backend_config           | M1-B |    1 | COMPILER_CONFIG | PASS own reason, new
+REAL      | c_missing_field            | M1-A |    1 | MISSING_FIELD | PASS own reason, new
+REAL      | c_missing_field            | M1-B |    1 | MISSING_FIELD | PASS own reason, new
+REAL      | c_unknown_field            | M1-A |    1 | UNKNOWN_FIELD | PASS own reason, new
+REAL      | c_unknown_field            | M1-B |    1 | UNKNOWN_FIELD | PASS own reason, new
+REAL      | c_stated_level             | M1-A |    1 | PRODUCER_STATED_LEVEL | PASS own reason, new
+REAL      | c_stated_level             | M1-B |    1 | PRODUCER_STATED_LEVEL | PASS own reason, new
+REAL      | c_null_artifact            | M1-A |    1 | MISSING_EVIDENCE | PASS own reason, new
+REAL      | c_null_artifact            | M1-B |    1 | MISSING_EVIDENCE | PASS own reason, new
+REAL      | c_parent_swap              | M1-A |    1 | PARENT_LINK | PASS own reason, new
+REAL      | c_parent_swap              | M1-B |    1 | PARENT_LINK | PASS own reason, new
+SYNTHETIC | c_substituted              | M1-A |    1 | DIGEST_MISMATCH | PASS own reason, new
+SYNTHETIC | c_substituted              | M1-B |    1 | DIGEST_MISMATCH | PASS own reason, new
+SYNTHETIC | c_substituted_and_repinned | M1-A |    1 | ARTIFACT_SLICES | PASS own reason, new
+SYNTHETIC | c_substituted_and_repinned | M1-B |    1 | ARTIFACT_SLICES | PASS own reason, new
+SYNTHETIC | c_stale_proof              | M1-A |    1 | STALE_PROOF_RECORD | PASS own reason, new
+SYNTHETIC | c_stale_proof              | M1-B |    1 | STALE_PROOF_RECORD | PASS own reason, new
+SYNTHETIC | c_stale_proof_repinned     | M1-A |    1 | STALE_PROOF_RECORD | PASS own reason, new
+SYNTHETIC | c_stale_proof_repinned     | M1-B |    1 | STALE_PROOF_RECORD | PASS own reason, new
+SYNTHETIC | c_weaker_method            | M1-A |    0 | expect exit 0 | PASS
+SYNTHETIC | c_weaker_method            | M1-B |    1 | LINK_METHOD_WEAKER | PASS own reason, new
+SYNTHETIC | c_spec_change              | M1-A |    1 | SPEC_NOT_APPROVED | PASS own reason, new
+SYNTHETIC | c_spec_change              | M1-B |    1 | SPEC_NOT_APPROVED | PASS own reason, new
+SYNTHETIC | c_compiler_pin             | M1-A |    1 | TOOLCHAIN_MISMATCH | PASS own reason, new
+SYNTHETIC | c_compiler_pin             | M1-B |    1 | TOOLCHAIN_MISMATCH | PASS own reason, new
+SYNTHETIC | c_backend_config           | M1-A |    1 | COMPILER_CONFIG | PASS own reason, new
+SYNTHETIC | c_backend_config           | M1-B |    1 | COMPILER_CONFIG | PASS own reason, new
+SYNTHETIC | c_missing_field            | M1-A |    1 | MISSING_FIELD | PASS own reason, new
+SYNTHETIC | c_missing_field            | M1-B |    1 | MISSING_FIELD | PASS own reason, new
+SYNTHETIC | c_unknown_field            | M1-A |    1 | UNKNOWN_FIELD | PASS own reason, new
+SYNTHETIC | c_unknown_field            | M1-B |    1 | UNKNOWN_FIELD | PASS own reason, new
+SYNTHETIC | c_stated_level             | M1-A |    1 | PRODUCER_STATED_LEVEL | PASS own reason, new
+SYNTHETIC | c_stated_level             | M1-B |    1 | PRODUCER_STATED_LEVEL | PASS own reason, new
+SYNTHETIC | c_null_artifact            | M1-A |    1 | MISSING_EVIDENCE | PASS own reason, new
+SYNTHETIC | c_null_artifact            | M1-B |    1 | MISSING_EVIDENCE | PASS own reason, new
+SYNTHETIC | c_parent_swap              | M1-A |    1 | PARENT_LINK | PASS own reason, new
+SYNTHETIC | c_parent_swap              | M1-B |    1 | PARENT_LINK | PASS own reason, new
+ALL CONTROLS PASS

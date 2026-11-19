@@ -1,0 +1,12 @@
+--- a/transport/FlatCore.dfy
++++ b/transport/FlatCore.dfy
+@@ -14,9 +14,6 @@
+     ensures authorized ==>
+       outputAmount == amount && outputReason == reason &&
+       outputCharge == chargeId && outputRequest == requestId && intentCount == 1
+-    ensures !authorized ==>
+-      outputAmount == 0 && outputReason == "" &&
+-      outputCharge == "" && outputRequest == "" && intentCount == 0
+   {
+     authorized := chargeId != "" && requestId != "" && enabled && requestOpen &&
+       0 <= original <= 9223372036854775807 && 0 <= remaining <= original &&

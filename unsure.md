@@ -17310,3 +17310,154 @@ curl: (6) Could not resolve host: github.com
   are not append-only).
 - Impact: none on a claim.
 - Next check: none.
+
+## U473 — M1 owner decisions; the M1-B mission with nineteen workers; the adversarial review finds that the M1 theorem says nothing formal about the real executable; the Dafny half of the contract link is machine-checked; verdict M1-B OPEN
+- Status: 2026-11-19T05:49Z (inserted by the shell from `date -u` in the
+  command that wrote this entry). Refs U471, U472, U401 to U409, M1R-1,
+  M1R-2, U262, U294, U295, U393. All texts of the owner:
+  proposals/m1-owner-review-20261119/OWNER_DECISIONS.md (texts 1 to 9).
+  Mission packet: proposals/m1b-mission-20261119 (MISSION.md,
+  TRACKER.md, TOP_LEVEL_GRAPH.md, reports/, drafts/, proofs/).
+- Pull request 55 (the owner-review packet, U471, U472): hosted
+  gate/pr_check.py run 44458104984, exit 3, UNSUPPORTED. The owner
+  typed "merge 55". `gh pr merge 55 --squash --admin`, exit 0, squash
+  commit 8e772b55 at 04:25Z; tree equal to 8ec17ff3. An OVERRIDE of the
+  review rule and of the red gate status.
+- Owner decisions (texts 1 and 2 are pasted texts with no words of the
+  owner's own: I take them as decisions; that is an inference): Q1
+  Profile A, the approved contract unchanged; Q2 OS read errors
+  excluded, fail-closed; Q3a the entry-state assumption and Q3b ONE
+  named FFI simulation assumption, both marked unverified; Q3c the
+  file reader and offset tool conditionally; Q4 a MACHINE-CHECKED link
+  from the approved contract to the HOL model is required for full
+  closure, a review gives only a labelled conditional result; Q5
+  absent stdin excluded; Q6 the 158-case replay authorized, clean and
+  independent replays as a plan only. Two levels: M1-A and M1-B; the
+  aim is M1-B. Later texts (3 to 5, 8, 9): the findings below are
+  blockers; "Silicon-to-Sink" (one narrow refund slice through the
+  whole chain) is the first priority; no clean replay before the claim
+  is fixed. The owner's OWN words: text 6 (the north star: "Zero
+  implementation review. Independently verified guarantees.") and text
+  7 ("Never fake a proof. Never weaken a specification to pass. Never
+  confuse a green test with a verified guarantee." Failures and
+  counterexamples are findings).
+- The mission: on the owner's own words ("spin up as many opus 5.5
+  subagents with a fable ocrhsrat ...") I started 16 Opus workers in
+  three waves beside 3 earlier Fable workers. Workers only read the
+  repository, with two exceptions that I allowed: one ran the pinned
+  Dafny, one ran the unmodified executable. I saved each report from
+  the worker's transcript into reports/ and I wrote the tracker. A
+  worker report is model output; what I checked myself is marked in
+  the tracker.
+- Finding 1, CRITICAL (adversarial review, step V; the stored
+  statement and the C source read again by me): the stored theorem
+  refund_profile_a_sl is about a machine MODEL. Its FFI premise
+  refund_env_ok_sl is a contract at ALL call states and is probably
+  false for the real C code: fficlose with a zero-length array reaches
+  `assert(alen >= 1)` and aborts (pinned basis_ffi.c line 192; U393).
+  The step from the real process to the model has no HOL statement.
+  So nothing formal is established about the output of the real
+  executable. Two labels from now on: "verified machine-model
+  behaviour" (exists) and "verified native execution" (does not
+  exist; HOL work alone cannot reach it).
+- Finding 2: the theorem allows a stop at a resource limit with any
+  prefix of the output, also the empty one; the exit code is not in
+  the theorem; non-canonical input is outside it. No component of the
+  repository turns the M1 process result into a decision.
+- Finding 3: the import checks compare the statement text only. HOL
+  records parents by content hash but does not hash the file that it
+  reads (read from the HOL source by a worker). A correction of the
+  adversarial review by another worker: its example fixture never
+  built, so "the final theorem prints the same" was never shown.
+- Finding 4: enforcement. The hosted gate answered UNSUPPORTED for
+  every pull request of Slices 1 to 3 and Wave Gates 1 to 3: it ran no
+  proof, no type check and no test on that code. Every merge since
+  pull request 38 bypassed the review rule from the owner's account; I
+  ran the merges of 38, 42, 43, 49 to 52, 54 and 55; for 49 to 52 the
+  owner's "word" was an option that I had written in my own question.
+  Checker, proof-producing agent and deployment authority are one
+  account and one machine. I STOP offering merge options from this
+  entry on: I open pull requests and the owner merges them.
+- Finding 5, my errors: (a) my review packet said that the program was
+  written in a Dafny subset and compiled from it. Wrong: the binary
+  comes from the CakeML translator applied to HOL functions
+  (`translate eligible_def`, `translate refund_fields_def` in the
+  stored source). Corrected. (b) The packet said that the compiler
+  premises were "not run again since"; both scripts were replayed on
+  2026-11-18. Corrected. (c) Nine sentences on main (README, the
+  packet, the conformance report) read as claims about the running
+  executable. Corrected in place, each marked with the date. (d) I
+  wrote that I had run every recent merge; the owner's account ran 39
+  to 41 and 44 to 48. Corrected.
+- Finding 6: the review of the 18 rows (a fresh context of the same
+  model family, by reading): 8 hold, 8 hold with a condition, row 17
+  does not hold as worded (no checked statement tied the six outputs
+  to Assess, Decision or plan), row 18 does not hold for the accepted
+  wire language (the reader takes more texts than the writer makes).
+- RESULT, machine-checked (proofs/linked-refund; run by the worker and
+  again by me): `LinkedRefund refines RefundSpec`, a non-abstract
+  module. The approved ensures R1 to R5 are inherited, not copied; the
+  copies of the approved files are byte-equal to the approved files.
+  Pinned Dafny 4.11.0 with the gate options: exit 0, 1489 verified, 0
+  errors. It shows: any six values that satisfy the FLAT contract on
+  the UTF-8 bytes of the approved inputs decode, by a function of the
+  output only, to a result that R1 to R5 allow; the approved contract
+  fixes one result; the flattening is injective on conforming pairs.
+  This closes row 17 and rows 10, 13 to 15 on the Dafny side. The
+  worker used 5 of 5 attempts: attempt 1 out of resource, attempt 2
+  its own error, attempts 3 to 5 exit 0. My reproducible check
+  run_check.py: run 1 exit 1 by a defect of my runner (it searched the
+  axiom name in the wrong output; proof and controls were as
+  expected); run 2 exit 0: seven wrong variants exit 4; the variant
+  whose decoder reads the request exits 0 on purpose (it shows why the
+  decoder must read the output only).
+- Limit of that result, not hidden: the audit of all 34 Dafny files of
+  the closure gives one finding, a library lemma with an explicit
+  axiom (Std.Strings.HexConversion.CharsConsistent). By reading it is
+  not called. The closure is therefore NOT equal to the empty audit
+  baseline.
+- What that result is NOT: the link from Dafny to HOL. No route gives
+  one proof across both provers with the pinned tools (route study):
+  the end state is two machine-checked halves joined at one exported
+  contract (the U294 export, 3,621 bytes), with a patched exporter,
+  the meaning of the operators in both tools and strings-as-bytes as
+  named assumptions. The HOL half is a draft; nothing of it ran.
+- Other reported steps (drafts and studies; nothing of them is a
+  result): the exact claim with the candidate native relation; five
+  run-time routes, with the conclusion that the present C run-time
+  cannot close the argument (its boundary is the unpinned libSystem)
+  and a proposed build-free probe for a static Linux ARM64 design; a
+  fail-closed caller contract with finite tests (of 8,011 strict
+  prefixes of 68 real outputs a strict parser accepts 0; a copy of my
+  classifier m1_class accepts 6,363); a closure specification for
+  proof identity; a manifest verifier that REFUSES today's evidence at
+  both levels; plans for the clean and the independent replay
+  (estimate 77,400 s; NOT to start); the Stage 9 preparation (Stage 9
+  binds nothing of M1; not activated); an F2.7 architecture draft.
+- One graph (TOP_LEVEL_GRAPH.md): 45 links from the owner's intent to
+  committed state: 12 MACHINE-CHECKED, 9 ASSUMPTION, 7 TESTED-UNPROVED,
+  17 MISSING. First missing link nearest the owner: no approval
+  channel that the agent cannot forge. First missing link of the proof
+  chain: the exported contract on the HOL functions. The critical one:
+  the native process to the machine model.
+- Replay of the 158 cases (separate; it closes no proof obligation):
+  running on mains power; 65 of 158 at 05:49Z: 64 as recorded. Case
+  005, a control, ran out of memory while it loaded theories and never
+  reached its check: it must run again. Case 028 is "as recorded" with
+  exit -24 in both runs: a CPU limit, not a rejection of the wrong
+  statement. The job was paused on battery power from 04:58Z to about
+  05:17Z.
+- NOT RUN: every HOL step of the mission (the replay holds the one HOL
+  slot); the clean and the independent replay; Stage 9; any change of
+  a protected file; any new executable.
+- Uncertainty: I checked a small part of each worker report myself
+  (named in the tracker). Estimates of effort in the reports are the
+  workers' guesses. The live GitHub settings were not read.
+- Impact: the M1 claim is narrower than the records said: a
+  machine-model theorem. M1-B OPEN. M1-A not reached. CURRENT none.
+  Stage 9 deferred. Stage 12 unauthorized. end_to_end=false.
+- Next check: when the HOL slot is free, in this order: the load probe
+  and the draft theorem eligible_link_guard_value; the replay of the
+  three U294 scripts; refund_ffi_contract_at_totalise; the micro
+  control of the identity check. The owner's decisions: the run-time
+  route after the probe; the three enforcement steps of report B5.

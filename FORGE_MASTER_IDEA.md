@@ -14,6 +14,26 @@ owner; their code results and citations are NOT verified):
 Corrected claims, costs and limits:
 [FUTURE_PLANS.md](proposals/future-directions-20261117/FUTURE_PLANS.md).
 
+## North star (the owner's words, 2026-11-19)
+
+**Zero implementation review. Independently verified guarantees.**
+
+Three rules in the owner's words (same day): **Never fake a proof.
+Never weaken a specification to pass. Never confuse a green test with
+a verified guarantee.** Failures, counterexamples and unexpected
+assumptions are findings and are recorded as such.
+
+This is the aim, not the state. State on 2026-11-19: no guarantee is
+verified end to end (`end_to_end=false`); the hosted gate answered
+UNSUPPORTED for the new code of Slices 1 to 3 and Wave Gates 1 to 3;
+the M1 theorem is about a machine model and not yet about the native
+process (M1-B mission, [tracker](proposals/m1b-mission-20261119/TRACKER.md)).
+The owner's texts: [decisions file](proposals/m1-owner-review-20261119/OWNER_DECISIONS.md),
+texts 4 to 6. The order of research that follows from it: one narrow
+refund slice through the whole chain (approved contract, machine-checked
+link, compiled code, native execution, authorization, effect sink,
+identity and admission) before anything wider.
+
 ## The idea in three parts
 
 1. **Spec clearing (Pillar I).** Before a person approves a spec, a
@@ -225,7 +245,13 @@ chain is complete to S6 (U409). Its open items are owner decisions
 the replays. M1 is the template and the cost measure for the Pillar II
 binary claim. Since Wave Gate 1 the M1 executable and the Slice 1
 checker are compared on a finite corpus (row F2.6): a test, not a link
-in a proof. The replay steps that are not run and their time are in
+in a proof. Since 2026-11-19 (M1-B mission, U473): the M1 theorem is
+read as VERIFIED MACHINE-MODEL BEHAVIOUR only; nothing formal links the
+real process to the model, and its FFI premise is probably false for
+the real C code. The Dafny half of the contract link is machine-checked
+(`LinkedRefund refines RefundSpec`); the HOL half is a draft. M1-B is
+OPEN. The one graph of all links is
+[TOP_LEVEL_GRAPH.md](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md). The replay steps that are not run and their time are in
 section 9 of the [conformance report](proposals/forge2-m1-conformance/REPORT.md). If the two compete for time, this file has priority by
 the owner's word of 2026-11-17.
 

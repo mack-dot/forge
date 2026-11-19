@@ -1,0 +1,11 @@
+--- a/LinkedRefund.dfy
++++ b/LinkedRefund.dfy
+@@ -46,7 +46,7 @@
+   function Unflatten(ok: bool, amount: int, reasonBytes: string, chargeBytes: string,
+                      requestBytes: string, count: int): (Decision, seq<RefundIntent>)
+   {
+-    (if ok then Authorized(amount, Decode(reasonBytes)) else Rejected,
++    (if ok then Authorized(amount + 1, Decode(reasonBytes)) else Rejected,
+      if count == 1 then [Intent(Decode(chargeBytes), Decode(requestBytes), amount, Decode(reasonBytes))]
+      else [])
+   }

@@ -17,18 +17,30 @@ and the [conformance report](../forge2-m1-conformance/REPORT.md).
 
 ## 1. What M1 is, in four sentences
 
-One refund decision program was written in the Dafny subset that
-CakeML reads, compiled by the proved CakeML compiler to ARM64 code, and
-linked to the executable `b8ed5ec2…7bb8`. HOL4 theorems connect that
+One refund decision was written as HOL functions (`eligible`,
+`refund_fields`, a reader and a renderer). The CakeML translator made
+CakeML code from those functions, the proved CakeML compiler made ARM64
+code, and that code was linked to the executable `b8ed5ec2…7bb8`.
+(Corrected on 2026-11-19: the first text of this packet said that the
+program was written in a Dafny subset and compiled from it. That was
+wrong. A Dafny AST of the same decision exists in HOL as a side model
+that is related to `refund_fields`; the binary does not come from it.
+Found by the adversarial review of the M1-B mission.) HOL4 theorems connect that
 exact code, in a machine model and under explicit premises, to the
-output `refund_render_fields (refund_fields …)`. M1 closes when that
+output `refund_render_fields (refund_fields …)`. The real executable is
+linked to that model only by an assumption that has no HOL statement,
+and the theorem's FFI premise `refund_env_ok_sl` is probably false for
+the real C code (corrected 2026-11-19, M1-B mission step B1). M1 closes when that
 connection reaches the APPROVED refund contract (R1 to R5) under an
 APPROVED list of assumptions, and independent replays confirm the
 proofs. None of the three is done.
 
 The executable already exists and runs. Closing M1 builds no new
 binary. It turns "a program with a proof chain that has open ends" into
-"a program with a stated, approved and replayed claim".
+"a machine-model theorem about the program's code bytes, with an
+approved list of assumptions, replayed". A claim about the RUNNING
+executable needs the native-simulation relation, which is not stated
+in HOL (corrected 2026-11-19).
 
 ## 2. Decision 1: Profile A (the list of assumptions)
 
@@ -43,7 +55,7 @@ change the approved contract.
 | 3 | no other thread, process or signal changes the descriptors | |
 | 4 | `wfcl`, `wfFS`, `STD_streams`, live `numchars` | a well-formed command line and file system model |
 | 5 | a canonical wire request on standard input | one spelling per value; Wave Gate 1 showed that the reader also takes `040`, `+40`, `"40"` |
-| 6 | the machine state satisfies `installed` | code, data and heap are where the theorem says |
+| 6 | the state at `cml_main` satisfies `refund_entry_pre_sl` and the heap and domain premises (`installed` is derived from them; corrected 2026-11-19) | code, data and heap are where the theorem says |
 | 8 | the native C code of the CakeML basis behaves as the model | proposed as ONE simulation assumption, because the literal premise is probably false for the real C code (U393) |
 | 9 | no interference between machine steps | |
 | 10 | the processor is the L3 ARMv8 model; the loader gives the stated layout | |
@@ -116,10 +128,10 @@ person to read two proof texts; no test helps there.
 
 | Item | State in the records | Open |
 | --- | --- | --- |
-| `backend_config_ok`, `mc_init_ok` | discharged inside the U386 proof scripts from the published `arm8_backend_config_ok` and `arm8_init_ok`; `opt_eval_config_wf` by its definition (found by reading, U402) | the final theorems do not have them as premises; they must pass again in a clean replay. Not run again since |
+| `backend_config_ok`, `mc_init_ok` | discharged inside the U386 proof scripts from the published `arm8_backend_config_ok` and `arm8_init_ok`; `opt_eval_config_wf` by its definition (found by reading, U402) | the final theorems do not have them as premises. Both scripts were replayed with exit 0 on the same machine on 2026-11-18 (M1R-1; corrected on 2026-11-19: this cell said "not run again since", which was wrong). Open: a clean replay |
 | Output equation in the composed theorem (O3) | proved at slide 0 for every environment record that satisfies `refund_env_ok` (U404) | — |
 | Slide-generic chain (O2) | steps S1 to S6 proved in the model for every page-aligned, non-wrapping slide; `refund_profile_a_sl` (U405, U407, U409) | one run each; U409 had no repeat and no separate import check at that time |
-| Joint premises (O4) | the eleven premises of `refund_profile_a_sl` hold together for ONE constructed state at slide 0x4000 (M1R-1, theory `forge_refundInputSat`) | every permitted slide; the state is constructed, not observed |
+| Joint premises (O4) | the eleven premises of `refund_profile_a_sl` hold together for ONE constructed state at slide 0x4000 (M1R-1, theory `forge_refundInputSat`). The environment of that witness is the ideal abstract FFI environment `refund_abs_env`, which the real C code probably cannot match, and its heap is 128 KiB: the witness shows that the premises are consistent in the model, nothing about a real process | every permitted slide; the state is constructed, not observed |
 | The 95 theories of the chain | replayed with byte-equal exports on rebuilt tools, same machine (M1R-1, M1R-2) | a clean replay; an independent replay |
 | The 158 recorded controls, repeats and import checks | see section 5 | |
 

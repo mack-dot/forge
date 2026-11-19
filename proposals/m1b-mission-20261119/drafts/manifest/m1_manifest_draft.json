@@ -1,0 +1,1521 @@
+{
+ "manifest_format": "forge.m1.evidence-manifest/1",
+ "subject": "M1 refund decision program, ARM64 Mach-O, CakeML-compiled",
+ "end_to_end": false,
+ "notes": [
+  "W5 draft of 2026-11-19 under the scratch folder. Not evidence. Not under proposals/.",
+  "git locators name commit c003a982 (origin/backup/forge-local-2026-11-11); these files are not on main.",
+  "19 of the 71 closure .dat files exist only under results/ on this machine (untracked).",
+  "toolchain locators are relative to .toolchain/experiments/refund-cakeml-20261104 on this machine (untracked)."
+ ],
+ "approved_spec": {
+  "contract": {
+   "locator": {
+    "file": "spec/refund/RefundSpec.dfy"
+   },
+   "sha256": "90a21c71ae3a7e1cdb7c74d393ae8ed6f312548710bdf0ae71c62255c7ccfe57"
+  },
+  "protocol": {
+   "locator": {
+    "file": "spec/refund/protocol.md"
+   },
+   "sha256": "5ef4e8fa6c23a4a455b3cbdc3f5b14ae313762446fea8444ca5e6c570e86ecd4"
+  },
+  "lock": {
+   "locator": {
+    "file": "spec/refund/spec.lock"
+   },
+   "sha256": "8b131ab82d3d5bb8f284086e207fa4207c3599ffcae887aa70b13d225ce9375b"
+  },
+  "approval_record": {
+   "locator": {
+    "file": "proposals/refund-decision.md"
+   },
+   "sha256": "c7b579b062a59c72881c999f5302e1ceb8a9b71ce82bd23a9a823a0a343dee64"
+  },
+  "approval_commit": "e3aa546f86dc5b43ec8c754792e3db4cb413b410"
+ },
+ "implementation_sources": [
+  {
+   "role": "approved_assess_impl",
+   "locator": {
+    "file": "impl/Refund.dfy"
+   },
+   "sha256": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700"
+  },
+  {
+   "role": "boundary_dafny",
+   "locator": {
+    "git": {
+     "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+     "path": "proposals/refund-executable-feasibility/byte-boundary-20261104/records/inputs/Boundary.dfy"
+    }
+   },
+   "sha256": "8ab7cd8a22adc527cf8ac2ab22906adad79dfe9179a8c0f6c46650429c7a9314"
+  },
+  {
+   "role": "hol_dafny_ast_program",
+   "locator": {
+    "git": {
+     "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+     "path": "proposals/refund-executable-feasibility/verified-backend-20261104/refund_kernel/attempt-0003/forge_refundScript.sml"
+    }
+   },
+   "sha256": "381eeac200322362afc5436db742aed3714c72bb39cd70363336f7b7ac525dd9"
+  },
+  {
+   "role": "whole_program_script",
+   "locator": {
+    "git": {
+     "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+     "path": "proposals/refund-executable-feasibility/whole-program-20261104/records/proof-whole-repeat/forge_refundWholeProgScript.sml"
+    }
+   },
+   "sha256": "37d623cc2437f391d4a0e72afcc72ed0b541e82f985dc5a2dfbe73a29e3ef4d0"
+  },
+  {
+   "role": "compile_application_script",
+   "locator": {
+    "git": {
+     "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+     "path": "proposals/refund-executable-feasibility/arm8-compile-20261104/records/compile-repeat/forge_refundArm8CompileScript.sml"
+    }
+   },
+   "sha256": "b7e12fcf2754d115eb80d0f49fb07c06d629b956ed2e9f0d1a6213b2be60202c"
+  }
+ ],
+ "final_theorem": {
+  "theory": "forge_refundSlideProfileA",
+  "name": "refund_profile_a_sl",
+  "sig": {
+   "locator": {
+    "file": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/final-cases/e4-0001/theory-export/forge_refundSlideProfileATheory.sig"
+   },
+   "sha256": "d61d4460894ed51da204b6a0eb227de45803583c42b5f3f6e487f70b05a4e4cc"
+  },
+  "statement_log": {
+   "locator": {
+    "file": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/final-cases/e4-0001/stdout.log"
+   },
+   "sha256": "614dd1726f0a8a3ddf0531e48463301cf9cfac4541c31d514155d9a26e636b19"
+  },
+  "statement_sha256": "7d80ee5357a994ca683795f590c58570f94b1a32316cc498af0c5dafa59844d5",
+  "premises": [
+   [
+    "P1",
+    "refund_entry_pre_sl sl s h stk e"
+   ],
+   [
+    "P2",
+    "aligned 3 e"
+   ],
+   [
+    "P3",
+    "h ≤₊ e"
+   ],
+   [
+    "P4",
+    "8192w ≤₊ e − h"
+   ],
+   [
+    "P5",
+    "refund_heap_clear_sl sl h e"
+   ],
+   [
+    "P6",
+    "envmc.prog_addresses = refund_mem_dm_sl sl h e"
+   ],
+   [
+    "P7",
+    "refund_env_ok_sl sl envmc"
+   ],
+   [
+    "P8",
+    "stdin_content fs = SOME (explode (sexp_to_string (refund_request charge request original remaining enabled opened candidate amount reason)))"
+   ],
+   [
+    "P9",
+    "wfcl cl"
+   ],
+   [
+    "P10",
+    "wfFS fs"
+   ],
+   [
+    "P11",
+    "STD_streams fs"
+   ]
+  ]
+ },
+ "proof_dependencies": {
+  "allowed_tags": [
+   "DISK_THM"
+  ],
+  "forge_theories": [
+   {
+    "theory": "forge_compileCorrectControl",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-compile-correct-20261114/records/cc/control-0001/forge_compileCorrectControlTheory.dat"
+      }
+     },
+     "sha256": "57b0bc9ad401a401078849aa524a15f425ef6bb3bdcf3d26a2ed5f0f9a08a2ea"
+    },
+    "sig_sha256": "b564944e09b0293aa085a5b14cb1256fc114ee8a16404f288835a319289dce38"
+   },
+   {
+    "theory": "forge_compileCorrectLabFacts",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-compile-correct-20261114/records/cc/variant-0001/forge_compileCorrectLabFactsTheory.dat"
+      }
+     },
+     "sha256": "315941916bd398d0bdc31642c885c6cc36a0f14eefbcc46946b241c56ed59211"
+    },
+    "sig_sha256": "8f5e2ce60063645ad157a31e11c76b064de4b1a9a66fc304b766dab4c4f693ae"
+   },
+   {
+    "theory": "forge_installHandlerIrrelevant",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-exact-exclusion-20261114/records/exact/handler-0001/forge_installHandlerIrrelevantTheory.dat"
+      }
+     },
+     "sha256": "f4a7fbe23ec9311dea12e0bb2797323487258dd0f6b6372a2250c7b6416fdcda"
+    },
+    "sig_sha256": "5a876b9db1c7ea2cc52c15b98f922e2b497b928370bc3094b688533a9479b325"
+   },
+   {
+    "theory": "forge_labRegionAligned",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-lab-exclusion-20261113/records/aligned/aligned-0001/.hol/objs/forge_labRegionAlignedTheory.dat"
+      }
+     },
+     "sha256": "0c735af977fb8a6043057f4a589fef08909f1687cc648b58ae1e8fa9756fba7d"
+    },
+    "sig_sha256": "7fa91c388701ebfe444e55ff0add99e4d4bb82c0f0cb4c4c869b8f8004b3d3ea"
+   },
+   {
+    "theory": "forge_labRegionInvariant",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p1-lab-closure-20261113/records/p2/lemmas-0001/.hol/objs/forge_labRegionInvariantTheory.dat"
+      }
+     },
+     "sha256": "bca9b622f6566e4443bc2e179f4e3ce4979c9ff8f93d18f8ccde26d7c4861777"
+    },
+    "sig_sha256": "89f61d38c66be69d6b02f56d95c05a2425ddc41e91b94d40cc0294f116b33df5"
+   },
+   {
+    "theory": "forge_labRegionStep",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p2-lab-invariant-20261113/records/step/step-0002/.hol/objs/forge_labRegionStepTheory.dat"
+      }
+     },
+     "sha256": "7cf102992292a82c9c05efcfda13e908f4457fa9d21d00805426546d2ba42a53"
+    },
+    "sig_sha256": "0065660de55c946e5463f07d2db1f0b6f7a075eb0776ade0e32dfb03d32e86de"
+   },
+   {
+    "theory": "forge_labRegionWalk",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p2-lab-invariant-20261113/records/step/walk-0001/.hol/objs/forge_labRegionWalkTheory.dat"
+      }
+     },
+     "sha256": "9a16104455ea50a744d7a7ed28a18ec99a032fc33544275ac3c3618515dc758e"
+    },
+    "sig_sha256": "deb69117b752c7cc84bdc78abdf76b5532912d46d680712fec7e9a174fcc5bcf"
+   },
+   {
+    "theory": "forge_loaderMemLemmas",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-loader-memory-20261115/records/ld/lemmas-0003/forge_loaderMemLemmasTheory.dat"
+      }
+     },
+     "sha256": "a72efb89ed8c086df55cb979f8e329b55d7bd2283a06ee497210736a8b715d66"
+    },
+    "sig_sha256": "447fbbb0e1a8f74a728bb5a9b5abe16743a7181033c710f73a0541343311751b"
+   },
+   {
+    "theory": "forge_refund",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/verified-backend-20261104/refund_kernel/attempt-0003/objects/forge_refundTheory.dat"
+      }
+     },
+     "sha256": "8001b59be234763706df25ba09a194d707ff04d147c7e103621f6e5e04d85cd9"
+    },
+    "sig_sha256": "04ce5f1400371d9b2685753d0dea2cd96c9ba8f6ab9d654fe37d9259bf075c50"
+   },
+   {
+    "theory": "forge_refundArm8Compile",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/arm8-compile-20261104/records/compile-0001/objects/forge_refundArm8CompileTheory.dat"
+      }
+     },
+     "sha256": "30076203f55c9f0fa85dec0ebcb62d5ee41961b46055727fe26c9299e55dd78a"
+    },
+    "sig_sha256": "3ac607e21c9a043f47f904dac6412f62f0681854ab755da404702562543d2d60"
+   },
+   {
+    "theory": "forge_refundCallSite",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-callsite-20261116/records/site/site-0005/forge_refundCallSiteTheory.dat"
+      }
+     },
+     "sha256": "5897c22851cd5d880b7c648563fcafeb65708436f31b1f8f4b09bb66f19933e1"
+    },
+    "sig_sha256": "077237b3ed8529bfc69387a3ddbf73bf2c4b5fa2df50615fe5df0ea57200bd30"
+   },
+   {
+    "theory": "forge_refundCertifiedProg",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/certified-library-20261104/records/proof-library-0005/objects/forge_refundCertifiedProgTheory.dat"
+      }
+     },
+     "sha256": "5ffd9d6f201fb279acba5abbb30b24c55b950982f84dc2724c36fdd966e6c91a"
+    },
+    "sig_sha256": "26f92c544332d6e149b6018c092566d8e136761c8495a40b22c9aa467c4a5a65"
+   },
+   {
+    "theory": "forge_refundCmlMainFrame",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-loader-memory-20261115/records/ld/frame-0001/forge_refundCmlMainFrameTheory.dat"
+      }
+     },
+     "sha256": "6093a70b84e325c50c95c4c230fcd25b494333ffc38fc048a632e046f36faee0"
+    },
+    "sig_sha256": "5ea7a93e28f1b01fa2db9499c4593f4c386a23616b22812da5dfc621fe342417"
+   },
+   {
+    "theory": "forge_refundCmlMainFrameSlide",
+    "dat": {
+     "locator": {
+      "file": "results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/f1-0001/.hol/objs/forge_refundCmlMainFrameSlideTheory.dat"
+     },
+     "sha256": "f6fe1b87e6ceb6c067bb289db921cd2f6989c0ffd0e451818b2f07a7063a12b7"
+    },
+    "sig_sha256": "d52500e082878c4997bc93cc77dd1ad69fdd6dcc1d298ad102d4dd23248359e9"
+   },
+   {
+    "theory": "forge_refundCmlMainSlide",
+    "dat": {
+     "locator": {
+      "file": "results/refund-slide-local-20261117/attempt-0001/s1-0001/.hol/objs/forge_refundCmlMainSlideTheory.dat"
+     },
+     "sha256": "b83a641818b9594767e110f4c3c190633705e9933dbfdfcfb7e491fa899d9e0c"
+    },
+    "sig_sha256": "b88b27aca1f8c140f1d3499e8f47ea80acdd85fc59469bc936b6c1735a6268f2"
+   },
+   {
+    "theory": "forge_refundCmlMainStep",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-reject-startup-20261115/records/step/cml-0012/forge_refundCmlMainStepTheory.dat"
+      }
+     },
+     "sha256": "ff9d654e2c07ff6e978c6f798e6bb3d2881f4dbc78d0d8aadd8176e8432ec301"
+    },
+    "sig_sha256": "4671de4c6112a036b6b354bccc63191eec678a34b56e5d18a525dee36b008320"
+   },
+   {
+    "theory": "forge_refundCompileFacts",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-compile-facts-20261114/records/facts/facts-0004/forge_refundCompileFactsTheory.dat"
+      }
+     },
+     "sha256": "38ed5524cb8c5925321e45d4db00b7c3b154c97d4ba88ee25f7fb16979638339"
+    },
+    "sig_sha256": "13e97c005e5a282da3d97ce58417e80690371bbaf7e5ab33da27c6bbf6c0c8a4"
+   },
+   {
+    "theory": "forge_refundEntrySat",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-loader-memory-20261115/records/ld/entrysat-0002/forge_refundEntrySatTheory.dat"
+      }
+     },
+     "sha256": "648931187c10d63ce0f1a93dccb54a851697831291cf218517800d3859413e49"
+    },
+    "sig_sha256": "09fa5d011336b9ae4c93f982c360cca0f4571a4112d6a7aa7a7febde24ff9b3b"
+   },
+   {
+    "theory": "forge_refundEnvModel",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-env-model-20261116/records/env/env-0005/forge_refundEnvModelTheory.dat"
+      }
+     },
+     "sha256": "a7ae88e2adb04054bf14f1d6dd0ebf8c5167f00f4cac54541b762b298b636ea6"
+    },
+    "sig_sha256": "39d6c4d291fb999333ee93c17098b8ba44f80c3afd779265c9ef5b42450d5713"
+   },
+   {
+    "theory": "forge_refundExactExclusion",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-exact-exclusion-20261114/records/exact/exact-0010/forge_refundExactExclusionTheory.dat"
+      }
+     },
+     "sha256": "bc9e481f4ca2a57b952277a0ab04eba24450390f564ae180b364b17cdb1a6cd3"
+    },
+    "sig_sha256": "32432e761363994aeb818a2c9d30488e5905e13ead6e8af420a362cfcc4b1e87"
+   },
+   {
+    "theory": "forge_refundExclusionArm8",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-compile-facts-20261114/records/facts/arm8-0005/forge_refundExclusionArm8Theory.dat"
+      }
+     },
+     "sha256": "09234f42edd4e5fab31914bb1f3930c0185c547d7456683d62e54483e3fc36c5"
+    },
+    "sig_sha256": "48f4638dd7c304ca2dc36586afaf5b4f2d682a3309cf700bb31df8dbbbf21155"
+   },
+   {
+    "theory": "forge_refundExclusionChain",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-exact-exclusion-20261114/records/exact/chain-0018/forge_refundExclusionChainTheory.dat"
+      }
+     },
+     "sha256": "475868436cf3af59179c37024220592521edc89879eececc644178e22bd475f3"
+    },
+    "sig_sha256": "4be543eafffba36ce2c72ec4e774686f9f1ebb47623650ceb15eb4c045adc97a"
+   },
+   {
+    "theory": "forge_refundExclusionFinal",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-exact-exclusion-20261114/records/exact/final-0003/forge_refundExclusionFinalTheory.dat"
+      }
+     },
+     "sha256": "ec541e684536e4f73d36621d2c80af7d71679ccc1e213e6da6df0c3c34452c10"
+    },
+    "sig_sha256": "efbd57683efb125cad8dc477c706bfb72cd869e130ff42e72f924575a79b1a58"
+   },
+   {
+    "theory": "forge_refundExclusionReal",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-compile-correct-20261114/records/cc/real-0004/forge_refundExclusionRealTheory.dat"
+      }
+     },
+     "sha256": "07b2e57f66255696aa1b94f2b7c7aea8d7a3f8ee9709e73ee99d786f709068eb"
+    },
+    "sig_sha256": "d8d0907bfb347c0b167375defbf28e80563ddecd635718e2ebf2df51489ad179"
+   },
+   {
+    "theory": "forge_refundExclusionSource",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-compile-correct-20261114/records/cc/source-0006/forge_refundExclusionSourceTheory.dat"
+      }
+     },
+     "sha256": "1c1517ef81e6159698352f204fa669af7f326e68f300cadddc180be538b4cfed"
+    },
+    "sig_sha256": "19cab23351f9221aab85ed406914d06af673841c2baefd1ecca51c9d0563dd76"
+   },
+   {
+    "theory": "forge_refundFfiFacts",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-residual-20261115/records/res/ffi-0001/forge_refundFfiFactsTheory.dat"
+      }
+     },
+     "sha256": "1580fc6a5e24e174a058a64a56f4f9792b9949c4a38b011085282b9643ff60b8"
+    },
+    "sig_sha256": "e1419e2e56ac14dff725739b8ac022a4eaeb8b76e9887b7e253f76ec0cfabddb"
+   },
+   {
+    "theory": "forge_refundFficloseAssert",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-fficlose-compose-20261116/records/compose/assert-0001/forge_refundFficloseAssertTheory.dat"
+      }
+     },
+     "sha256": "9c79e5051f00fa568c07b0b8c2fdff16b030484ce766f88e8dd42e683b37e9eb"
+    },
+    "sig_sha256": "548bb08b1b1295c52eecc7a621c75b8bade4c115d06cc4a0790db154561f2945"
+   },
+   {
+    "theory": "forge_refundFficloseBridge",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-fficlose-stub-20261116/records/ffic/bridge-0001/forge_refundFficloseBridgeTheory.dat"
+      }
+     },
+     "sha256": "417a3d94fad2a38d60cdb1febdca3640ca640c92f8847a2ee4274e8d4969a726"
+    },
+    "sig_sha256": "db20cf22d9046cdb7a1678127d4133a72f6ad0c9aa0d10b1ce0674601e94c308"
+   },
+   {
+    "theory": "forge_refundFficloseCompose",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-fficlose-compose-20261116/records/compose/compose-0018/forge_refundFficloseComposeTheory.dat"
+      }
+     },
+     "sha256": "339a426daa6a14ab4ddd443f5a23c7fdfe7f2a3a72039b5ded6c3569ed11d8ec"
+    },
+    "sig_sha256": "a108e46c4bcf9f535b0d2785623a3dd8648b30d90b6589b33bc80820b6ebd98e"
+   },
+   {
+    "theory": "forge_refundFficloseStep",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-fficlose-stub-20261116/records/ffic/ffic-0006/forge_refundFficloseStepTheory.dat"
+      }
+     },
+     "sha256": "1b8bb2849b37ab8c07fd1961286159ddf464099ae951075ec7974da6771e434d"
+    },
+    "sig_sha256": "dae1ed2a8a36fb7f4447ce5f7c2c1b9c7a98fcab2e824e22ab0272e5572da5d5"
+   },
+   {
+    "theory": "forge_refundFfiwriteCompose",
+    "dat": {
+     "locator": {
+      "file": "results/refund-ffiwrite-local-20261116/attempt-0001/wcomp-0001/.hol/objs/forge_refundFfiwriteComposeTheory.dat"
+     },
+     "sha256": "9a4f4180ad01cfa3bb803c642e6f43d1484cdfdc29f6e155157a47fd6234f2b7"
+    },
+    "sig_sha256": "0182893765c188e98edf3a44c40b6b976a5bf4726b2b741b89a595cdad8dbf47"
+   },
+   {
+    "theory": "forge_refundFfiwriteFault",
+    "dat": {
+     "locator": {
+      "file": "results/refund-ffiwrite-success-local-20261116/attempt-0001/fault-0003/.hol/objs/forge_refundFfiwriteFaultTheory.dat"
+     },
+     "sha256": "9ec068607457e48a99c0b0bc77cc5c29dd6afad6a971d790fcf76dde6b7097bb"
+    },
+    "sig_sha256": "25ed64c7c3f77a75f2da40006fd7f766363893d3c2053313b5dad6a9754dc8db"
+   },
+   {
+    "theory": "forge_refundFfiwritePath",
+    "dat": {
+     "locator": {
+      "file": "results/refund-ffiwrite-local-20261116/attempt-0001/wpath-0002/.hol/objs/forge_refundFfiwritePathTheory.dat"
+     },
+     "sha256": "5cc31c306eade4095eaf61164d8486401b6886b062f0d728af29bff0dcbe1e0c"
+    },
+    "sig_sha256": "7904b6a0104268a036de42715203da003695db7d4539b6f668b85f20d5de7ac6"
+   },
+   {
+    "theory": "forge_refundFfiwriteSite",
+    "dat": {
+     "locator": {
+      "file": "results/refund-ffiwrite-local-20261116/attempt-0001/wsite-0003/.hol/objs/forge_refundFfiwriteSiteTheory.dat"
+     },
+     "sha256": "5ab93c20f9e122c5ae1b0734534ccb6d7a5221d93e067b97cea472f1bc05dd18"
+    },
+    "sig_sha256": "e7ad7b16bdc9aee06d119befd0246c5c551df21422dcb4a40b6030a755d20f7c"
+   },
+   {
+    "theory": "forge_refundFfiwriteStep",
+    "dat": {
+     "locator": {
+      "file": "results/refund-ffiwrite-local-20261116/attempt-0001/ffiw-0008/.hol/objs/forge_refundFfiwriteStepTheory.dat"
+     },
+     "sha256": "92a15d750117d42f4f41348d7ddefe039e0bb293eca56a4e4c5bac09d2360a07"
+    },
+    "sig_sha256": "e5cce74162aa14339d48ae710c80517951722f95ea4bfdc2100d34004849b8e8"
+   },
+   {
+    "theory": "forge_refundFfiwriteSuccess",
+    "dat": {
+     "locator": {
+      "file": "results/refund-ffiwrite-success-local-20261116/attempt-0001/wsucc-0002/.hol/objs/forge_refundFfiwriteSuccessTheory.dat"
+     },
+     "sha256": "60664fffc7bbf888898c6c7bb23d8027e22542cb15f2728734f13fdcfa0b1dc3"
+    },
+    "sig_sha256": "5c0f6941e1be2f830f1b9205c2cff596726a4c078e4fcd51050195397ae006f8"
+   },
+   {
+    "theory": "forge_refundFfiwriteUnaligned",
+    "dat": {
+     "locator": {
+      "file": "results/refund-ffiwrite-success-local-20261116/attempt-0001/uns-0007/.hol/objs/forge_refundFfiwriteUnalignedTheory.dat"
+     },
+     "sha256": "c05485de342477f11b67faa86ae26727ffa69349d132401491ba8b24eb499c0b"
+    },
+    "sig_sha256": "5ebd958fa2d6c74aa2cbf8cfea21a165947e00c4cb28392ffba7282baca0a1f6"
+   },
+   {
+    "theory": "forge_refundImage",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-loader-memory-20261115/records/ld/image-0001/forge_refundImageTheory.dat"
+      }
+     },
+     "sha256": "f778ed265fe02d5854278f34542eeaec5e47207b58be7c142380d097962b1a4a"
+    },
+    "sig_sha256": "32cedef9b8eb0dd2f0b7979229a7dbea6b44d9c069451a76b9bf6189e3d5878f"
+   },
+   {
+    "theory": "forge_refundInstallHandler",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-exclusion-profile-20261113/records/install-handler/proof-0001/.hol/objs/forge_refundInstallHandlerTheory.dat"
+      }
+     },
+     "sha256": "a1438f1b0db21378a95678a9b535200cb8eb5bb1d0f6b6803c9c1e86257123da"
+    },
+    "sig_sha256": "057dc71df28d2908fe8c6bd5a7696c629a080fe3ec637e994197845830ae2105"
+   },
+   {
+    "theory": "forge_refundInstalledAssembly",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-memory-domain-20261115/records/dom/asm-0002/forge_refundInstalledAssemblyTheory.dat"
+      }
+     },
+     "sha256": "26ac3856a3e5f02340c426c71af38cb6ab27eb4c231dc3a49c3924d10a9dece8"
+    },
+    "sig_sha256": "a5a009d00bef83e0875415e36113d7da9dd0f3aa614d64361f66b12f3765cc31"
+   },
+   {
+    "theory": "forge_refundInstalledDomains",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-memory-domain-20261115/records/dom/dom-0001/forge_refundInstalledDomainsTheory.dat"
+      }
+     },
+     "sha256": "66e9935c6586972aad0550dd7738245221ebc03ddcdf6fcd014b97974b3fea8c"
+    },
+    "sig_sha256": "8320ab36df589283f2b0ca36ddb19a1e8cd8f7f70047f64a23981c26a34ae433"
+   },
+   {
+    "theory": "forge_refundLabClosure",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p1-lab-closure-20261113/records/p1/proof-0001/.hol/objs/forge_refundLabClosureTheory.dat"
+      }
+     },
+     "sha256": "6899ad2a3e5469128087f6c4e947821ead95c0d11e683331f6de33833be1ae08"
+    },
+    "sig_sha256": "69c3ea6410de90eb14445010cf7f3284a2e6c818df4a6e575e51ec527024a2e6"
+   },
+   {
+    "theory": "forge_refundLabFiltered",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-exact-exclusion-20261114/records/exact/filtered-0001/forge_refundLabFilteredTheory.dat"
+      }
+     },
+     "sha256": "b016fcb86557a50111173e0fe64d3187ec7e13baf1081e052ce4fb5a73214b10"
+    },
+    "sig_sha256": "161e26d22cac2da590e592992483ebd8b47bba9291aeb0897b2d499f69e94ce4"
+   },
+   {
+    "theory": "forge_refundLabResolve",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p1-lab-closure-20261113/records/p1/resolve-0001/.hol/objs/forge_refundLabResolveTheory.dat"
+      }
+     },
+     "sha256": "b6246a203e9975a0bd56313f5c630bc5f6803dc0cb9b83c2192b617300f6c2d5"
+    },
+    "sig_sha256": "da5a15020c14f453949ddb82a3daaa7fec99b8b1a9d5adc6502716503039ac94"
+   },
+   {
+    "theory": "forge_refundLabRun",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p2-lab-invariant-20261113/records/run/run-0001/.hol/objs/forge_refundLabRunTheory.dat"
+      }
+     },
+     "sha256": "b83205b1a6b810bc6a2bd8c3ae64bf56b5e64f89c3a263e1bec13dac7b64e53a"
+    },
+    "sig_sha256": "423fb72218e236605aa1949849817c23ce0057be927bff73ebc6f692e4f58946"
+   },
+   {
+    "theory": "forge_refundLoaderMemory",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-loader-memory-20261115/records/ld/compose-0003/forge_refundLoaderMemoryTheory.dat"
+      }
+     },
+     "sha256": "b324b04ad146a83254366b3c4c0518ebd183c4d3a405137def5737912fec32fa"
+    },
+    "sig_sha256": "e3efd74becac0d2825cc9e94f156c51255eec6dc443c654d32e6fe779a677e87"
+   },
+   {
+    "theory": "forge_refundProfileA",
+    "dat": {
+     "locator": {
+      "file": "results/refund-profile-a-local-20261117/attempt-0001/prof-0002/.hol/objs/forge_refundProfileATheory.dat"
+     },
+     "sha256": "a5cb0494089fdf67557c70456779d9da3a6bdfcc40809181db222033e2bcb260"
+    },
+    "sig_sha256": "32991493329644848a64d1dec07f2085dc4464879f36da9c645abd1540d22dc1"
+   },
+   {
+    "theory": "forge_refundRejectNonFail",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-reject-startup-20261115/records/rej/reject-0009/forge_refundRejectNonFailTheory.dat"
+      }
+     },
+     "sha256": "cd31291ce36789d84259cafb629603f1628c5b65fd0ad75c0d23a8b70dc433cc"
+    },
+    "sig_sha256": "8beb429a9e123bdecc5de03913bb4ef1e217f2db5ea8cad3a7455d08d78ea822"
+   },
+   {
+    "theory": "forge_refundResidual",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-residual-20261115/records/res/res-0003/forge_refundResidualTheory.dat"
+      }
+     },
+     "sha256": "06f3c884cdf2e2892dc7d9ad485a2157004012c41fac3a42dbe3ce7166d0d0fd"
+    },
+    "sig_sha256": "a67f3a6ae83863e2c10d302c277459fab28c09f22e28554a4a6b33bd160bb485"
+   },
+   {
+    "theory": "forge_refundSignedLen",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-signed-len-20261116/records/signed/signed-0006/forge_refundSignedLenTheory.dat"
+      }
+     },
+     "sha256": "d36e6cf852f4e778ac4eec1b00d8bf72afdb0161655efa9753c4dd2a13e54400"
+    },
+    "sig_sha256": "50c5b3885e391f3262cd335267c735e2c3da593263f24b34e7440c9e6d34bd09"
+   },
+   {
+    "theory": "forge_refundSlideDomains",
+    "dat": {
+     "locator": {
+      "file": "results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/d3-0003/.hol/objs/forge_refundSlideDomainsTheory.dat"
+     },
+     "sha256": "439fe5149bb5c0894e626eddcfa4bfe98908b664bb9a705ff838aa075b5a7b15"
+    },
+    "sig_sha256": "bc793c6c1c5dbc9ea780bb0496322f117b4b74bac557e460405506d84a9d5ee6"
+   },
+   {
+    "theory": "forge_refundSlideEntry",
+    "dat": {
+     "locator": {
+      "file": "results/refund-slide-local-20261117/attempt-0001/s2-0003/.hol/objs/forge_refundSlideEntryTheory.dat"
+     },
+     "sha256": "41414daa1dc21f3fa1be0be9875353cc4d010292482f677d135332efc717b88f"
+    },
+    "sig_sha256": "d6465a5ddac3e854949181083733c3c021454c4fe9afe9ebd7775046821838e8"
+   },
+   {
+    "theory": "forge_refundSlideInstalled",
+    "dat": {
+     "locator": {
+      "file": "results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/a3-0006/.hol/objs/forge_refundSlideInstalledTheory.dat"
+     },
+     "sha256": "04d853588523918cb942396b9f34c63aac93203d68e9d501d24a84dd3812ca79"
+    },
+    "sig_sha256": "8d6041a6a2a8f59348309f3b59cc7b5b43c8a22e951f0727ffc4818f0c49b263"
+   },
+   {
+    "theory": "forge_refundSlideProfileA",
+    "dat": {
+     "locator": {
+      "file": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/final-cases/e4-0001/theory-export/forge_refundSlideProfileATheory.dat"
+     },
+     "sha256": "4ff2a7e2821a9a36fe84cc85bac2b61a7544bc45cd87a83623a2386a9c8212a1"
+    },
+    "sig_sha256": "d61d4460894ed51da204b6a0eb227de45803583c42b5f3f6e487f70b05a4e4cc"
+   },
+   {
+    "theory": "forge_refundSlideSat",
+    "dat": {
+     "locator": {
+      "file": "results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/sat-0002/.hol/objs/forge_refundSlideSatTheory.dat"
+     },
+     "sha256": "ff192cd52b2ad32231d421dfd8c37321f7e58f37c68209a9a3b8593d8eb827f5"
+    },
+    "sig_sha256": "6f3ff17bec6c52eba8d2123b466de82e72ca655c54fcd1abcf5bb1ddb7b8808b"
+   },
+   {
+    "theory": "forge_refundSourceNonFail",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-source-nonfail-20261115/records/nf/nonfail-0003/forge_refundSourceNonFailTheory.dat"
+      }
+     },
+     "sha256": "e83113a3d5e40371d4be475e1cb0e5783a7b6382a9fca88b55c63f519992fa1e"
+    },
+    "sig_sha256": "eec233863c83e58a05b76a23155d15771dba0ae5a511160d8b9c4ce1b6689976"
+   },
+   {
+    "theory": "forge_refundStartupBridge",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-reject-startup-20261115/records/rej/mc-0001/forge_refundStartupBridgeTheory.dat"
+      }
+     },
+     "sha256": "b0038b383f40bb4315b1c5eff7be4626f44d1142093a12b6d7dcf125b2f6311d"
+    },
+    "sig_sha256": "18b896f61c20b0adcdd7aefd71c15937dca51b165dbbe2dd1774ec7ac58910e6"
+   },
+   {
+    "theory": "forge_refundStartupClause",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-source-nonfail-20261115/records/nf/startup-0002/forge_refundStartupClauseTheory.dat"
+      }
+     },
+     "sha256": "aa906e682f559f0c8f083fa918b9e1db73b30dc57435f768fb9f216dc233a53d"
+    },
+    "sig_sha256": "4848ba4a180aedd9ec4687935606aec769de6a078926a8b898cb99e4e9e98592"
+   },
+   {
+    "theory": "forge_refundStdioProg",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-stdio-0004/objects/forge_refundStdioProgTheory.dat"
+      }
+     },
+     "sha256": "8971cd15449d1edbd0836aaba9f7339cd3a3da01268103cccd317d4df8054255"
+    },
+    "sig_sha256": "e9abc5d2734fec7618f295783d0ba7865286c1a8518e122f6aa5d2f5d270a79c"
+   },
+   {
+    "theory": "forge_refundWholeProg",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/whole-program-20261104/records/proof-whole-0001/objects/forge_refundWholeProgTheory.dat"
+      }
+     },
+     "sha256": "52b94fa448fa6de315cab80251ed5cdf46184a576e9478644b374e8071b19ded"
+    },
+    "sig_sha256": "08a4a5c7da14795df5f874772e44b0578ca88a745c4ea53ca54924da01229b7c"
+   },
+   {
+    "theory": "forge_refundWireProg",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/stdio-contract-20261104/records/proof-wire-repeat/objects/forge_refundWireProgTheory.dat"
+      }
+     },
+     "sha256": "17482ed974f856688298b957aee8d5155b5d56e2a104bbe3ec2a02056a690ae1"
+    },
+    "sig_sha256": "b60b86fce1c9a14f60a54c524e499ebae08e34605ebd631498b1f1b0ddfe3d29"
+   },
+   {
+    "theory": "forge_refundWriteReach",
+    "dat": {
+     "locator": {
+      "file": "results/refund-write-reach-local-20261116/attempt-0001/reach-0009/.hol/objs/forge_refundWriteReachTheory.dat"
+     },
+     "sha256": "27dd64d320f9cff95b1d2b242ed144c302daebeb230bf3a07aad242e178c5885"
+    },
+    "sig_sha256": "7cb8165eb29b0ec17eeb88da45afcbbf1e3aaf054bcc95ed924451ae39d01ae9"
+   },
+   {
+    "theory": "forge_refund_call",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/caller-20261104/proof-0003/objects/forge_refund_callTheory.dat"
+      }
+     },
+     "sha256": "d756c352edb5dee390d9004976a07ecd25d16cacf7b2aac7dec467ab19f996cd"
+    },
+    "sig_sha256": "ba0615db50693cae67e2f60adf76795d157818ea052414b2ba8f6dbe71aec791"
+   },
+   {
+    "theory": "forge_refund_compile",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/compiler-relation-20261104/proof-final/objects/forge_refund_compileTheory.dat"
+      }
+     },
+     "sha256": "c422a03764add97460c4280b3aab8015a30be9f4338402b12d27807d9dcf4b25"
+    },
+    "sig_sha256": "5a831900f9396afc7e457d84e71c9cfa8027575eebf0e46bb5e0a3404b343bd3"
+   },
+   {
+    "theory": "forge_refund_io",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/io-schema-20261104/proof-full-0002/objects/forge_refund_ioTheory.dat"
+      }
+     },
+     "sha256": "d9e7f1b77932f7e8c476e4a7230601f6b6cbe722a27764035e07ca01ea7becec"
+    },
+    "sig_sha256": "916c2294f744e366a8a5a45f40b66e3d39b697d0c8724e181204f8613590cf7d"
+   },
+   {
+    "theory": "forge_simLayout",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p3-layout-20261113/records/layout/layout-0001/.hol/objs/forge_simLayoutTheory.dat"
+      }
+     },
+     "sha256": "9e934bbc1608279d39d566fe985460fddd50d7759f9bd723cab62d861f867683"
+    },
+    "sig_sha256": "9cfd62c7e0fd3b140a84eee51e844bc8ab0d7a0c5c19c2b02f47f826b24da5ee"
+   },
+   {
+    "theory": "forge_simReplay",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p3-replay-20261113/records/replay/final-0003/forge_simReplayTheory.dat"
+      }
+     },
+     "sha256": "ae5ce5c25caa626c3d6c4c21273c729e9d24d5aaaaa49f98716303c46607ce6b"
+    },
+    "sig_sha256": "3c0a19f12e14414cee4f801491b52763afb920e6ee4ec5340d8d78995c54de01"
+   },
+   {
+    "theory": "forge_simRoot",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p3-root-20261113/records/root/root-0005/forge_simRootTheory.dat"
+      }
+     },
+     "sha256": "adbadc58fa0816e9f514278d78bc072df68af9c60138b01eefff8f49a084de05"
+    },
+    "sig_sha256": "3fdc6c0de0faa63ea564f55fe06b4c7702e0315ec30587f05a1fbf71b026b168"
+   },
+   {
+    "theory": "forge_simZeroCase",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p3-zero-case-20261113/records/zero/zero-0002/.hol/objs/forge_simZeroCaseTheory.dat"
+      }
+     },
+     "sha256": "98325415a4c9d4921e6a0ba1fb14cf54c91045f211a32b08bbc936815fccb24d"
+    },
+    "sig_sha256": "271357bec37872ca526cbbe9d07f7622f96f9fe4becb8aef6598b388a4f4a5d8"
+   },
+   {
+    "theory": "forge_targetInstallBridge",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/target-install-bridge-20261105/records/bridge-0005/.hol/objs/forge_targetInstallBridgeTheory.dat"
+      }
+     },
+     "sha256": "593eece0559495b4976b6afca7bada1dad9eca54af6fec252b06aa3b04aa602e"
+    },
+    "sig_sha256": "e0e2e4eb8245b499e14b105438a33793c777d24fe96eefc25e1119252a9ae4e3"
+   },
+   {
+    "theory": "forge_targetInstallPrefix",
+    "dat": {
+     "locator": {
+      "git": {
+       "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+       "path": "proposals/refund-executable-feasibility/m1-p3-prefix-20261113/records/prefix/prefix-0001/.hol/objs/forge_targetInstallPrefixTheory.dat"
+      }
+     },
+     "sha256": "9082b36f082bef72b2ececd2c6e88778fcbf6ff995fce44cb18a27f1f36658ec"
+    },
+    "sig_sha256": "b05e2b1177e0cdaec641be9e47d0e3563d13fd5092f2584f5bd3f3f7c5c533c5"
+   }
+  ],
+  "upstream_parents": [
+   {
+    "theory": "ArrayProof",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/basis/.hol/objs/ArrayProofTheory.dat"
+     },
+     "sha256": "ce9b7727cc827135470ca5b0018c5e725264178d27243e8ef692b153091d0264"
+    }
+   },
+   {
+    "theory": "ListProof",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/basis/.hol/objs/ListProofTheory.dat"
+     },
+     "sha256": "6805d7dc724c689ba9b48b735f71af84a1a94eeee1631dd6ac21813dc42925a5"
+    }
+   },
+   {
+    "theory": "SexpProg",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/basis/.hol/objs/SexpProgTheory.dat"
+     },
+     "sha256": "7fe7a895ded4ff325616c966a4d3d7d88fde232e3da23bc45fdc437166b2339e"
+    }
+   },
+   {
+    "theory": "arm8_configProof",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/compiler/backend/arm8/proofs/.hol/objs/arm8_configProofTheory.dat"
+     },
+     "sha256": "e2e555ba6a381fffe38a628a09d83a1c20baa22a27bf3f789d99e12a8c8b27ed"
+    }
+   },
+   {
+    "theory": "arm8_step",
+    "dat": {
+     "locator": {
+      "toolchain": "HOL/examples/l3-machine-code/arm8/step/.hol/objs/arm8_stepTheory.dat"
+     },
+     "sha256": "df00c29c6be57d9a95cac1a32fe55132ec252e34b91e2325dc215536163aa757"
+    }
+   },
+   {
+    "theory": "backend_arm8_cv",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/cv_translator/.hol/objs/backend_arm8_cvTheory.dat"
+     },
+     "sha256": "72b06b1349286e6f86a035052e0e511e5fcb4a0060dc23847207165417415d7b"
+    }
+   },
+   {
+    "theory": "backend_x64_cv",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/cv_translator/.hol/objs/backend_x64_cvTheory.dat"
+     },
+     "sha256": "662ba429806552c3a4e3c469e081cd6ccf27bc8c7485154a9d088a3473f00766"
+    }
+   },
+   {
+    "theory": "basisProg",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/basis/.hol/objs/basisProgTheory.dat"
+     },
+     "sha256": "3fce81697166ac3678271f98dfd779f3f17fb9169d40fe811dfe48fb82d7a013"
+    }
+   },
+   {
+    "theory": "basis_ffi",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/basis/.hol/objs/basis_ffiTheory.dat"
+     },
+     "sha256": "a3d794cdef02456a3720db52f3800788b6438fb5aea32809d4702e0388ccff99"
+    }
+   },
+   {
+    "theory": "dafny_evaluate",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/compiler/dafny/semantics/.hol/objs/dafny_evaluateTheory.dat"
+     },
+     "sha256": "03a5ac2752d268b108fbd08508ff0f3517d42c46a9b749fa6eb8b0ba5741147b"
+    }
+   },
+   {
+    "theory": "dafny_to_cakemlProof",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/compiler/dafny/proofs/.hol/objs/dafny_to_cakemlProofTheory.dat"
+     },
+     "sha256": "594cba54d5443ae9ebab3275e926550aff6ad0442e8e7fb3460ccc8509175d08"
+    }
+   },
+   {
+    "theory": "labProps",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/compiler/backend/semantics/.hol/objs/labPropsTheory.dat"
+     },
+     "sha256": "b1baaf822bc598bbcb1f8a9ec1d20dd385d904e0bd8a770e8f00a5403feae1f4"
+    }
+   },
+   {
+    "theory": "lab_to_targetProof",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/compiler/backend/proofs/.hol/objs/lab_to_targetProofTheory.dat"
+     },
+     "sha256": "ce6d0887a40d1d87df664f0b60766625c531b06db623684115184274830438ad"
+    }
+   },
+   {
+    "theory": "mlbasicsProg",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/basis/.hol/objs/mlbasicsProgTheory.dat"
+     },
+     "sha256": "be229eb3faa0c194d5007860525aa14a5fc86297b463afb8b8e83f63ae55bd8b"
+    }
+   },
+   {
+    "theory": "primSemEnv",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/semantics/proofs/.hol/objs/primSemEnvTheory.dat"
+     },
+     "sha256": "7ba90226cc8cc693d4c826d24bda16b218d98ff745d8e36154a10422ae625066"
+    }
+   },
+   {
+    "theory": "sexp_to_dafny",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/compiler/dafny/.hol/objs/sexp_to_dafnyTheory.dat"
+     },
+     "sha256": "223b1c40082ab3615f5e6bd4fb0adcf49c8724037a7a9eb4e0f66ee6c033e115"
+    }
+   },
+   {
+    "theory": "targetProps",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/compiler/backend/semantics/.hol/objs/targetPropsTheory.dat"
+     },
+     "sha256": "c47ff2ff9d27601e9a0063bdeb99f17dd356008e5ef95cf83a22e437307d20dc"
+    }
+   },
+   {
+    "theory": "wordConvs",
+    "dat": {
+     "locator": {
+      "toolchain": "cakeml/compiler/backend/semantics/.hol/objs/wordConvsTheory.dat"
+     },
+     "sha256": "7343a785a31b1acd1924c15a26f6fb199872bab6389b9d2cb1ba3a0b3c672b9b"
+    }
+   }
+  ],
+  "replay_comparisons": [
+   {
+    "locator": {
+     "file": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/comparison.json"
+    },
+    "sha256": "aa54ac2574cac7051009d11b50c6bd232699e43bc9e54cbe471dc71e89e88444"
+   },
+   {
+    "locator": {
+     "file": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/comparison-phase2.json"
+    },
+    "sha256": "0eaea64bcdc6c94b09cbf00b161873b0ce528e31a5d165e15dcd6f299c6c3de9"
+   }
+  ]
+ },
+ "toolchain": {
+  "pin_source": {
+   "locator": {
+    "file": "proposals/round2-20261117/m1-rebuild/rebuild.py"
+   },
+   "sha256": "7827b80259ec2c339ed5c69b147c692b9c9e02a1df776b4a2e43542286f1374e"
+  },
+  "polyml_commit": "4557554077078decce4ce5f90da00a713cfc32e4",
+  "hol_commit": "9783a49979c94c401ff8c0e51b2eefae7ea95ae3",
+  "cakeml_commit": "cd9155694c16831373ab695a670794f23282ed62",
+  "dafny_build": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+  "backend_config": "arm8_target$arm8_config",
+  "compile_theorem": {
+   "theory": "forge_refundArm8Compile",
+   "name": "refund_arm8_compiled",
+   "theory_log": {
+    "locator": {
+     "git": {
+      "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+      "path": "proposals/refund-executable-feasibility/arm8-compile-20261104/records/compile-0001/theory.log"
+     }
+    },
+    "sha256": "e0302a89e2574c75ac5d3a5eccf5f86546d1f7de48ecc1dab5b361051ea81361"
+   },
+   "assembly": {
+    "locator": {
+     "git": {
+      "commit": "c003a9827c6bdfb73c220eb15a40b87e8ce3ba60",
+      "path": "proposals/refund-executable-feasibility/arm8-compile-20261104/records/compile-0001/refund.S"
+     }
+    },
+    "sha256": "4c750e4f9ecf75ff1f0bf5af7bfbdd0600ee2ca0e1564fcadc299db55c3a1757"
+   }
+  }
+ },
+ "artifact": {
+  "file": {
+   "locator": {
+    "file": "proposals/forge2-m1-conformance/artifacts/refund-arm64-macho"
+   },
+   "sha256": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8"
+  },
+  "size": 238776,
+  "format": "Mach-O 64-bit arm64, MH_PIE, ad hoc linker signature",
+  "image_theory": "forge_refundImage",
+  "slices": [
+   {
+    "name": "code",
+    "offset": 16592,
+    "length": 130436,
+    "unit": "bytes",
+    "sha256": "3c67983c93b3f7bbb340c2c517f6315ae2dc6260f2b401fb09d3b5a24ba15deb",
+    "hol_theorem": "refund_file_code"
+   },
+   {
+    "name": "bitmaps",
+    "offset": 180248,
+    "length": 20248,
+    "unit": "bytes (2531 little-endian 64-bit words)",
+    "sha256": "68d3f080066fdaeb12ff1c061a875b1502172be0857a2af02f77f6f18f36fb76",
+    "hol_theorem": "refund_file_bitmaps"
+   }
+  ]
+ },
+ "assumption_profile": {
+  "profile": "A",
+  "decision_record": {
+   "locator": {
+    "file": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md"
+   },
+   "sha256": "517966ecf0da3189926fc41bca3387f13db17605d77daef2629e0b7001bc96a1"
+  },
+  "items": [
+   {
+    "id": "A-R1",
+    "kind": "assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q1",
+    "statement": "the published CakeML FFI oracle basis_ffi models the file calls",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R2",
+    "kind": "exclusion",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q2",
+    "statement": "no OS read error (EIO, EINTR) on an open readable descriptor; a run-time failure of that kind gives no decision",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R3",
+    "kind": "assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q1",
+    "statement": "no other thread, process or signal changes the descriptors",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R4",
+    "kind": "assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q1",
+    "statement": "wfcl, wfFS, STD_streams, live numchars",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R5",
+    "kind": "assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q1",
+    "statement": "a canonical wire request on standard input",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R6",
+    "kind": "assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q1",
+    "statement": "the machine state satisfies installed: code, data and heap are where the theorem says",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R8",
+    "kind": "simulation_assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q3b",
+    "statement": "ONE simulation assumption: the native C code of the CakeML basis behaves as the model; not a verified native C implementation",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R9",
+    "kind": "assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q1",
+    "statement": "no interference between machine steps",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R10",
+    "kind": "assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q1",
+    "statement": "the processor is the L3 ARMv8 model; the loader gives the stated layout",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-R13",
+    "kind": "trusted_base",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q1",
+    "statement": "the HOL4 kernel, Poly/ML, the published CakeML and L3 definitions",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-Q3A",
+    "kind": "assumption",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q3a",
+    "statement": "entry state: the loader and C run-time reach cml_main with the image mapped at some slide (unverified)",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-Q3C",
+    "kind": "conditional_trust",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q3c",
+    "statement": "the ML file reader and the offset tool of U389 are trusted only after independent validation, identity pinning and negative controls",
+    "status": "APPROVED",
+    "verified": false
+   },
+   {
+    "id": "A-Q5",
+    "kind": "exclusion",
+    "decision_ref": "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md#Q5",
+    "statement": "absent standard input is outside the theorem; the caller fails closed",
+    "status": "APPROVED",
+    "verified": false
+   }
+  ],
+  "premise_ledger": {
+   "status": "DRAFT",
+   "record": null,
+   "map": {
+    "P1": [
+     "A-Q3A",
+     "A-R6",
+     "A-R10"
+    ],
+    "P2": [
+     "A-Q3A"
+    ],
+    "P3": [
+     "A-Q3A"
+    ],
+    "P4": [
+     "A-Q3A"
+    ],
+    "P5": [
+     "A-Q3A",
+     "A-R6"
+    ],
+    "P6": [
+     "A-R6",
+     "A-R10"
+    ],
+    "P7": [
+     "A-R8",
+     "A-R9"
+    ],
+    "P8": [
+     "A-R5",
+     "A-Q5"
+    ],
+    "P9": [
+     "A-R4"
+    ],
+    "P10": [
+     "A-R4"
+    ],
+    "P11": [
+     "A-R4"
+    ]
+   },
+   "note": "map drafted by W5 by reading; NOT reviewed; step I.3 (W3) owns the ledger"
+  },
+  "conditions": [
+   {
+    "item": "A-Q3C",
+    "status": "NOT_DONE",
+    "record": null,
+    "note": "second, independent extraction of the file bytes and offsets is NOT DONE (OWNER_DECISIONS reading of Q3c)"
+   }
+  ]
+ },
+ "obligations": [
+  {
+   "id": "backend_config_ok",
+   "status": "DISCHARGED",
+   "ref": "U386 scripts; REVIEW_PACKET section 4; not re-checked by W5"
+  },
+  {
+   "id": "mc_init_ok",
+   "status": "DISCHARGED",
+   "ref": "U386 scripts; REVIEW_PACKET section 4; not re-checked by W5"
+  },
+  {
+   "id": "O2-slide-generic-chain",
+   "status": "DISCHARGED",
+   "ref": "refund_profile_a_sl quantifies sl under its premises (U405, U407, U409)"
+  },
+  {
+   "id": "O3-output-equation",
+   "status": "DISCHARGED",
+   "ref": "U404"
+  },
+  {
+   "id": "O4-joint-premises-every-slide",
+   "status": "OPEN",
+   "ref": "M1R-1: one constructed state at slide 0x4000 only"
+  },
+  {
+   "id": "O7-absent-stdin",
+   "status": "APPROVED_ASSUMPTION",
+   "ref": "A-Q5"
+  }
+ ],
+ "contract_link": {
+  "status": "NOT_ESTABLISHED",
+  "review": null,
+  "mechanical": null,
+  "note": "all 18 rows NOT REVIEWED on main (REVIEW_PACKET section 3). The model review of step I.2 is a report, not a dated independent review record; it found rows 17 and 18 do not hold as worded."
+ },
+ "replays": {
+  "chain_same_machine": {
+   "status": "PASSED",
+   "record": {
+    "locator": {
+     "file": "proposals/refund-executable-feasibility/m1-chain-replay-20261118/MANIFEST.json"
+    },
+    "sha256": "9de9a6c2b761822582740225219bdbb3d2fc5fbbb945cbc969e08501d9ceee2d"
+   }
+  },
+  "recorded_cases_158": {
+   "status": "RUNNING",
+   "record": null
+  },
+  "clean": {
+   "status": "NOT_RUN",
+   "record": null
+  },
+  "independent": {
+   "status": "NOT_RUN",
+   "record": null
+  }
+ },
+ "open_issues": [
+  {
+   "id": "I2-row17",
+   "status": "OPEN",
+   "text": "no checked statement ties the six outputs to Assess, Decision or plan (step I.2 report)"
+  },
+  {
+   "id": "I2-row18",
+   "status": "OPEN",
+   "text": "the reader accepts more wire texts than protocol.md allows (step I.2 report; Wave Gate 1)"
+  },
+  {
+   "id": "I2-dafny-axiom",
+   "status": "OPEN",
+   "text": "bodiless {:axiom} lemma in an included Dafny library; use not determined (step I.2 report)"
+  }
+ ]
+}

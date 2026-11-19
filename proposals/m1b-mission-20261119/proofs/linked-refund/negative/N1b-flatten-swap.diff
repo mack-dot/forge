@@ -1,0 +1,12 @@
+--- a/LinkedRefund.dfy
++++ b/LinkedRefund.dfy
+@@ -82,8 +82,8 @@
+     (d.Authorized?,
+      if d.Authorized? then d.amount else 0,
+      if d.Authorized? then U.Encoded(d.reason) else "",
++     if |p| > 0 then U.Encoded(p[0].requestId) else "",
+      if |p| > 0 then U.Encoded(p[0].chargeId) else "",
+-     if |p| > 0 then U.Encoded(p[0].requestId) else "",
+      |p|)
+   }
+ 
