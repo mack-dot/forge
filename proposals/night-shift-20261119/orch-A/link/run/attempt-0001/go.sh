@@ -128,6 +128,11 @@ case_E0r() { insha "$EXPORT" $EXPORT_SHA || return $?
   FORGE_CWD=$D/forge_refund_call_experiment FORGE_ELIGIBLE_SEXP=$EXPORT FORGE_CPU_SECONDS=900 \
     run E0r "${1:-eligible-link-repeat}" eligible/forge_refundEligibleLinkScript.sml "$RUN/loadpath.sml"; }
 
+# NB1 (added by Orchestrator A after B's double-swap finding): the INPUT name binding of chargeId and requestId swapped on
+# one side only (script line 129). Expected: a proof failure at exported_ens2_value (the clause then says outputCharge = request).
+case_NB1() { insha "$EXPORT" $EXPORT_SHA || return $?
+  FORGE_CONTRACT_SEXP=$EXPORT FORGE_CPU_SECONDS=900 run NB1 "${1:-ctl-NB1}" controls/NB1-input-binding-ids-swapped.sml; }
+
 [ $# -ge 1 ] || { sed -n 2,20p "$0"; exit 2; }
 c=$1; shift
 if [ "$c" = pre ]; then pre manual; exit $?; fi

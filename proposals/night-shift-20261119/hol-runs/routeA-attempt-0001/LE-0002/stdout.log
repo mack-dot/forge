@@ -1,0 +1,62 @@
+TIMEOUT_HELPER Timeout.apply loaded
+LOUT_MODE absent
+THEORY_NAME forge_refundLExitGen
+<<HOL message: Created theory "forge_refundLExitGen">>
+USED arm8_run_constants_agree
+⊢ ∀n s. arm8_run n s = arm8_run n s
+USED refund_mc_register_fields_sl
+⊢ (refund_mc (sl + 0x1000040D0w) envmc).ffi_interfer = envmc.ffi_interfer ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).next_interfer = envmc.next_interfer ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).ptr_reg = 0 ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).len_reg = 1 ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).ptr2_reg = 2 ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).len2_reg = 3 ∧
+  (refund_mc (sl + 0x1000040D0w) envmc).callee_saved_regs =
+  [19; 20; 21; 22; 23; 24; 25; 26; 27; 28]
+USED refund_mc_fields
+⊢ refund_lab_conf2.ffi_names = SOME (refund_mc base0 envmc).ffi_names ∧
+  (refund_mc base0 envmc).target = arm8_target ∧
+  (refund_mc base0 envmc).halt_pc = base0 − n2w ffi_offset ∧
+  (refund_mc base0 envmc).install_pc = base0 − n2w (2 * ffi_offset) ∧
+  (refund_mc base0 envmc).mmio_info = [] ∧
+  (refund_mc base0 envmc).shared_addresses = ∅ ∧
+  (refund_mc base0 envmc).prog_addresses = envmc.prog_addresses ∧
+  (refund_mc base0 envmc).next_interfer = envmc.next_interfer ∧
+  (refund_mc base0 envmc).ffi_interfer = envmc.ffi_interfer ∧
+  (refund_mc base0 envmc).install_interfer = envmc.install_interfer ∧
+  mmio_pcs_min_index (refund_mc base0 envmc).ffi_names =
+  SOME (LENGTH (refund_mc base0 envmc).ffi_names) ∧
+  LENGTH (refund_mc base0 envmc).ffi_entry_pcs =
+  LENGTH (refund_mc base0 envmc).ffi_names
+ARM8_RUN_IN_STORED forge_refundCmlMainStep
+NOT_USED refund_profile_a_sl_fd1 (L-OUT absent)
+BEGIN_AUX arm8_target_pc_reg
+AUX_OK arm8_target_pc_reg
+⊢ arm8_target.get_pc ms = ms.PC ∧ arm8_target.get_reg ms r = ms.REG (n2w r)
+BEGIN evaluate_Halt_reg
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundLExitGen)>>
+Saved theorem _______ "evaluate_Halt_reg"
+CHECKED evaluate_Halt_reg
+⊢ ∀k mc ffi ms t ms' ffi'.
+    evaluate mc ffi k ms = (Halt t,ms',ffi') ⇒
+    (∃e. t = FFI_outcome e) ∨
+    mc.target.get_pc ms' = mc.halt_pc ∧
+    (t = Success ∧ mc.target.get_reg ms' mc.ptr_reg = 0w ∨
+     t = Resource_limit_hit ∧ mc.target.get_reg ms' mc.ptr_reg ≠ 0w)
+END evaluate_Halt_reg 0.284 s
+STATEMENT_EVALUATE targetSem evaluate_Halt_reg
+BEGIN machine_sem_of_evaluate_Halt
+Saved theorem _______ "machine_sem_of_evaluate_Halt"
+CHECKED machine_sem_of_evaluate_Halt
+⊢ ∀mc st k ms t ms' st'.
+    evaluate mc st k ms = (Halt t,ms',st') ⇒
+    machine_sem mc st ms (Terminate t st'.io_events)
+END machine_sem_of_evaluate_Halt 0.038 s
+BEGIN refund_halt_address
+Saved theorem _______ "refund_halt_address"
+CHECKED refund_halt_address
+⊢ ∀sl. sl + 0x1000040D0w − n2w ffi_offset = sl + 0x1000040C0w
+END refund_halt_address 0.045 s
+HALTPC ⊢ (refund_mc (sl + 0x1000040D0w) envmc).halt_pc = sl + 0x1000040C0w
+MCF_TARGET ⊢ (refund_mc base0 envmc).target = arm8_target
+/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LE-0002/proof.sml:273:36: parse error: bad declaration

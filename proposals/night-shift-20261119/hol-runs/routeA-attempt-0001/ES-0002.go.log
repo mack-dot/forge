@@ -1,0 +1,62 @@
+2026-11-19T09:26:23Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 5440.81M  free = 1727.19M  (encrypted)
+System-wide memory free percentage: 54%
+START_STATE swap_free_mib=1727 memory_free_percent=54
+exit 1
+actual_exit 1 wall 411.655 cpu 354.94 rss_mib 4060 [] inputs_unchanged_after True
+Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/ES-0002/proof.sml:569: Fail "REQUIRED lemmas failed; nothing exported"
+10:CHECKED W_nonvacuous
+59:BEGIN frame_raise_exception REQUIRED cpu=0.4
+60:TACTIC_USED frame_raise_exception 1
+61:Saved theorem _______ "frame_raise_exception"
+62:PROVED frame_raise_exception
+84:LEMMA_FAILED frame_write_SP Fail "all listed tactics failed"
+93:LEMMA_FAILED frame_BranchTo Fail "all listed tactics failed"
+235:LEMMA_FAILED frame_LoadStoreSingle Fail "all listed tactics failed"
+246:LEMMA_FAILED frame_dfn_LoadStorePair Fail "all listed tactics failed"
+317:BEGIN frame_dfn_ExceptionReturn REQUIRED cpu=14.8
+318:TACTIC_USED frame_dfn_ExceptionReturn 1
+319:Saved theorem _______ "frame_dfn_ExceptionReturn"
+320:PROVED frame_dfn_ExceptionReturn
+333:LEMMA_FAILED frame_Run Fail "all listed tactics failed"
+369:CHECKED Next_frame
+376:CHECKED NextStateARM8_frame
+383:BEGIN erase_raise_exception REQUIRED cpu=16.1
+384:TACTIC_USED erase_raise_exception 1
+385:Saved theorem _______ "erase_raise_exception"
+386:PROVED erase_raise_exception
+403:LEMMA_FAILED erase_write_SP Fail "all listed tactics failed"
+440:LEMMA_FAILED erase_LoadStoreSingle Fail "all listed tactics failed"
+445:LEMMA_FAILED erase_dfn_LoadStoreImmediate Fail "all listed tactics failed"
+450:LEMMA_FAILED erase_dfn_LoadStoreRegister Fail "all listed tactics failed"
+497:CHECKED BranchImmediate_erase_untagged
+506:CHECKED BranchRegister_erase_untagged
+510:CHECKED LoadStoreSingle_erase (SP class)
+524:CONTROL_OK C1 is a proved negative
+525:CONTROL_OK C2 is a proved negative
+526:CONTROL_OK Next_frame is the literal E1-0003 statement
+527:CONTROL_OK W is the requested statement
+528:CONTROL_OK W has no hypotheses
+530:STATEMENT_TYPECHECKS Next_erase (E1-0003 text)
+531:STATEMENT_TYPECHECKS Next_erase_fault_mono (E1-0003 text)
+532:STATEMENT_TYPECHECKS NextStateARM8_erase_or_fault (E1-0003 text)
+533:STATEMENT_TYPECHECKS arm8_next_erase (bridge to the stored arm8_next)
+628:LEMMA_FAILED erase_dfn_LoadStorePair Fail "all listed tactics failed"
+633:LEMMA_FAILED erase_dfn_LoadStoreAcquire Fail "all listed tactics failed"
+638:LEMMA_FAILED erase_dfn_LoadStoreAcquirePair Fail "all listed tactics failed"
+695:BEGIN erase_dfn_ExceptionReturn OPTIONAL cpu=54.0
+696:TACTIC_USED erase_dfn_ExceptionReturn 1
+697:Saved theorem _______ "erase_dfn_ExceptionReturn"
+698:PROVED erase_dfn_ExceptionReturn
+714:LEMMA_FAILED Run_erase_pc Fail "all listed tactics failed"
+717:LEMMA_FAILED Run_pc Fail "all listed tactics failed"
+740:BEGIN Next_erase_exception OPTIONAL cpu=366.5
+741:TACTIC_USED Next_erase_exception 1
+742:DIAG_OK_UNDER Next_erase_exception hypotheses=1
+749:CHECKED NextStateARM8_erase
+751:⊢ s.PSTATE.EL = 0w ∧ s.exception = NoException ∧
+766:OPTIONAL_FAILED_LIST Next_erase_exception
+787:DIAG_OK_UNDER_LIST Next_erase_exception
+hash_parents exit 0
+go exit 1

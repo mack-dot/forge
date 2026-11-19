@@ -47,6 +47,8 @@ val cpu0 = Timer.startCPUTimer ();
 fun cpu_secs () = let val {usr, sys} = Timer.checkCPUTimer cpu0 in Time.toReal usr + Time.toReal sys end;
 (* script CPU budget for OPTIONAL work; the process limit (RUN_PLAN) is 1500 s including about 110 s of loading *)
 val OPT_BUDGET = 1100.0;
+(* hard script budget for every lemma, so that the summary lines and the gate are always reached before the CPU limit *)
+val ALL_BUDGET = 1250.0;
 val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
 val THY = "forge_m1bErasureStep";
 val _ = new_theory THY;
@@ -66,8 +68,10 @@ fun attempt req nm secs goal tacs =
   let fun go _ [] = raise Fail "all listed tactics failed"
         | go i (t :: ts) =
             if not req andalso cpu_secs () > OPT_BUDGET then raise Fail "OPTIONAL budget exhausted"
+            else if cpu_secs () > ALL_BUDGET then raise Fail "script budget exhausted (counts as a failure)"
             else
-              (let val th = Timeout.apply (Time.fromSeconds (Int.toLarge secs)) Tactical.TAC_PROOF (([], goal), t)
+              (let val lim = Int.max (5, Int.min (secs, Real.floor (ALL_BUDGET + 100.0 - cpu_secs ())))
+                   val th = Timeout.apply (Time.fromSeconds (Int.toLarge lim)) Tactical.TAC_PROOF (([], goal), t)
                in pr ("TACTIC_USED " ^ nm ^ " " ^ Int.toString i); th end
                handle Timeout.TIMEOUT _ =>
                         (pr ("TACTIC_TIMEOUT " ^ nm ^ " " ^ Int.toString i ^ " after " ^ Int.toString secs ^ " s");
@@ -95,13 +99,13 @@ val _ = pr ("FOR_ind " ^ thm_to_string state_transformerTheory.FOR_ind);
 val _ = pr "MARK W";
 val W_text = ``?s t. arm8_ok (erase s) /\ s.TCR_EL1.TBI0 /\ s.SCTLR_EL1.SA0 /\ untagged t /\ s.PSTATE.EL = 0w``;
 val W = lemma true "W_nonvacuous" 60 W_text
-  [qexists_tac `(ARB:arm8_state) with <| PSTATE := (ARB:ProcState) with EL := 0w;
-                  SCTLR_EL1 := (ARB:SCTLRType) with <| SA0 := T; E0E := F |>;
-                  TCR_EL1 := (ARB:TCR_EL1) with TBI0 := T; exception := NoException; PC := 0w |>` >>
+  [qexists_tac `(ARB:arm8_state) with <| PSTATE := ((ARB:ProcState) with EL := 0w);
+                  SCTLR_EL1 := ((ARB:SCTLRType) with <| SA0 := T; E0E := F |>);
+                  TCR_EL1 := ((ARB:TCR_EL1) with TBI0 := T); exception := NoException; PC := 0w |>` >>
      qexists_tac `0w` >> simp [arm8_ok_erase, untagged_def] >> EVAL_TAC,
-   qexists_tac `(ARB:arm8_state) with <| PSTATE := (ARB:ProcState) with EL := 0w;
-                  SCTLR_EL1 := (ARB:SCTLRType) with <| SA0 := T; E0E := F |>;
-                  TCR_EL1 := (ARB:TCR_EL1) with TBI0 := T; exception := NoException; PC := 0w |>` >>
+   qexists_tac `(ARB:arm8_state) with <| PSTATE := ((ARB:ProcState) with EL := 0w);
+                  SCTLR_EL1 := ((ARB:SCTLRType) with <| SA0 := T; E0E := F |>);
+                  TCR_EL1 := ((ARB:TCR_EL1) with TBI0 := T); exception := NoException; PC := 0w |>` >>
      qexists_tac `0w` >> rw [arm8_ok_erase, untagged_def, alignmentTheory.aligned_0]];
 val _ = show "W_nonvacuous" W;
 
@@ -121,8 +125,8 @@ val Asel   = rator ``(r:SCTLRType).A``;
 val SAsel  = rator ``(r:SCTLRType).SA``;
 val EEsel  = rator ``(r:SCTLRType).EE``;
 val E0Esel = rator ``(r:SCTLRType).E0E``;
-val FSTsel = ``FST : 'a # 'b -> 'a``;
-val SNDsel = ``SND : 'a # 'b -> 'b``;
+val FSTsel = ``FST : 'p # 'q -> 'p``;
+val SNDsel = ``SND : 'p # 'q -> 'q``;
 val erase_c = prim_mk_const {Thy = "forge_m1bErasureV2", Name = "erase"};
 fun mk_erase t = mk_comb (erase_c, t);
 fun inst_rand sel th =
@@ -369,7 +373,7 @@ fun e_engine req select =
              in erasers := th :: !erasers; etab := (cn, th) :: !etab end)) def_names;
 val _ = e_engine true (fn cn => mem cn e_required);
 fun getE cn = case List.find (fn (n, _) => n = cn) (!etab) of SOME (_, th) => th
-                | NONE => raise Fail ("no erasure lemma for " ^ cn);
+                | NONE => (pr ("NO_ERASE_LEMMA " ^ cn); TRUTH);
 
 (* ================= E2. Branch class ================= *)
 val _ = pr "MARK E2";
@@ -432,10 +436,12 @@ val C1 = lemma true "C1_tagged_BranchImmediate_breaks" 90
 val C2 = lemma true "C2_misaligned_SP_breaks" 90
   ``!s. s.PSTATE.EL = 0w /\ s.exception = NoException /\ s.SCTLR_EL1.SA0 /\ s.SP_EL0 = 8w ==>
         CheckSPAlignment (erase s) <> erase (CheckSPAlignment s)``
-  [rpt strip_tac >> mp_tac N2_misaligned_sp_breaks >> simp [erase_reads],
-   rpt strip_tac >> mp_tac N2_misaligned_sp_breaks >> asm_simp_tac (srw_ss()) [erase_reads] >> strip_tac >>
-     qpat_x_assum `CheckSPAlignment _ = _` (fn th => mp_tac (AP_TERM EXsel th)) >> simp [erase_reads],
-   metis_tac [N2_misaligned_sp_breaks, erase_reads, TypeBase.distinct_of ``:exception``]];
+  [metis_tac [N2_misaligned_sp_breaks, erase_reads, TypeBase.distinct_of ``:exception``],
+   rpt strip_tac >>
+     `(CheckSPAlignment (erase s)).exception = NoException /\ (CheckSPAlignment s).exception = ALIGNMENT_FAULT`
+        by metis_tac [N2_misaligned_sp_breaks] >>
+     qpat_x_assum `CheckSPAlignment (erase s) = _` (fn th => fs [th, erase_reads]),
+   rpt strip_tac >> mp_tac N2_misaligned_sp_breaks >> simp [erase_reads]];
 fun negchk name th = if is_neg (snd (dest_imp (snd (strip_forall (concl th))))) andalso null (hyp th)
                      then pr ("CONTROL_OK " ^ name ^ " is a proved negative") else bad (name ^ "-not-a-proved-negative");
 val _ = negchk "C1" C1; val _ = negchk "C2" C2;
@@ -487,7 +493,8 @@ val Next_alt = lemma false "Next_alt" 120
    gen_tac >> rw [Next_def, NX_def, boolTheory.LET_THM, pairTheory.UNCURRY]];
 val NX_erase = lemma false "NX_erase" 90
   ``!r p. NX (erase (r with PC := p)) = erase (NX r with PC := (NX (erase (r with PC := p))).PC)``
-  [rw [NX_def] >> simp (ERset ()),
+  [rpt gen_tac >> Cases_on `r.branch_hint` >> simp (NX_def :: ERset ()),
+   rpt gen_tac >> Cases_on `r.branch_hint` >> simp (NX_def :: arm8_state_component_equality :: ERset ()),
    rpt gen_tac >> simp [NX_def] >> rw [] >> simp (arm8_state_component_equality :: ERset ())];
 val NX_pc = lemma false "NX_pc" 90
   ``!r q tcr. (r.PC = q.PC \/ (IS_SOME r.branch_hint /\ r.PC = tbi_pc tcr q.PC)) /\ q.branch_hint = r.branch_hint ==>
@@ -530,7 +537,7 @@ val NE1 = lemma false "Next_erase_exception" 120
 val NE2 = lemma false "Next_erase_same_pc" 120
   ``!s. s.PSTATE.EL = 0w /\ (~s.SCTLR_EL1.SA0 \/ aligned 4 s.SP_EL0) /\ (arm8$Next s).PC = (arm8$Next (erase s)).PC ==>
         arm8$Next (erase s) = erase (arm8$Next s)``
-  [gen_tac >> DISCH_TAC >> qspec_then `s` mp_tac NEP >> impl_tac >- fs [] >>
+  [gen_tac >> DISCH_TAC >> qspec_then `s` mp_tac NEP >> impl_tac >- simp [] >>
      disch_then (fn th => once_rewrite_tac [th]) >>
      qpat_x_assum `_ /\ _` (fn th => rewrite_tac [GSYM (CONJUNCT2 (CONJUNCT2 th))]) >>
      AP_TERM_TAC >> simp [arm8_state_component_equality]];

@@ -18027,3 +18027,42 @@ curl: (6) Could not resolve host: github.com
 - Impact: graph link X9 stays MISSING; L-EXIT needs it.
 - Next check: an exploration run that prints each goal (it proves
   nothing), then one more proof run.
+
+## U490 — night shift, proof track: L-OUT and L-EXIT-0 pass in HOL after an exploration run (refers to U489, U476, U480)
+
+- Evidence: `LOx-0001` (an exploration: exit 0, marker
+  EXPLORE_COMPLETE, no export, nothing stored; it printed the goal
+  after every step); `LO-0006` (exit 0; 41 theorems printed as
+  CHECKED; 43 stored, the count includes `fd1_written_ind`);
+  `LE-0002` (exit 1, an ML parse error), `LE-0003` (exit 0, 6
+  theorems, without the L-OUT theory), `LE-0004` (exit 0, 7 theorems,
+  with it); `ATTEMPT_COUNTS.md` in the run folder.
+- Proved (machine model, oracle `no_ext`, stored premises):
+  `refund_L_OUT`: the bytes of the trace's writes to descriptor 1
+  are the replayed standard output; `refund_profile_a_sl_fd1`: every
+  behaviour of the run is Terminate Success with exactly the rendered
+  result, or Terminate Resource_limit_hit with a prefix of it;
+  `evaluate_Halt_reg`: a halt is an FFI outcome, or it is at the halt
+  address with (Success and register 0 = 0) or (resource stop and
+  register 0 ≠ 0); `refund_profile_a_sl_halt`: the two facts joined
+  for the refund program.
+- Method note: after five failed case runs I did not start a sixth
+  proof run on a guess. I ran one exploration (the project's recorded
+  method), then one proof run that replays the explored steps. A
+  reviewer is asked whether this bent the five-attempt rule; its
+  answer is not in this entry.
+- An unqualified `arm8_run` in a quotation parses to
+  `forge_refundCmlMainSlide$arm8_run`; the stored theorems use
+  `forge_refundCmlMainStep$arm8_run`; the stored bridge
+  `arm8_run_constants_agree` joins them. The new statements contain
+  the Slide constant.
+- NOT proved: the halt-value range (statement L-EXIT-V stays open and
+  is not derivable, U480); anything for an oracle other than
+  `no_ext`; anything about the real process. Both theorems keep the
+  stored all-states FFI premise (false for the real C code, U393);
+  the L2 form (U482) is not yet joined with them.
+- Impact: graph links X9 and the model part of X10 move. With U487:
+  the model chain "behaviour → descriptor-1 bytes → strict parse →
+  value" exists in pieces; the composed statement is in work.
+- Next check: the review of LO-0006; the composed theorem; the same
+  results under the L2 premises.

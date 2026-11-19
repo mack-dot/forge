@@ -1,0 +1,13 @@
+2026-11-19T09:22:54Z
+Now drawing from 'AC Power'
+total = 7168.00M  used = 5448.81M  free = 1719.19M  (encrypted)
+System-wide memory free percentage: 52%
+START_STATE swap_free_mib=1719 memory_free_percent=52
+exit 1
+actual_exit 1 wall 69.109 cpu 77.36 rss_mib 3957 [] inputs_unchanged_after True
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"
+10:CHECKED W_nonvacuous
+49:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/ES-0001/proof.sml:221: error: Value or constructor (every_case_tac) has not been declared
+56:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/ES-0001/proof.sml:222: error: Value or constructor (every_case_tac) has not been declared
+hash_parents exit 0
+go exit 1
