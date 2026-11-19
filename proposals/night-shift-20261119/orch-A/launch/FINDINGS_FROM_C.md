@@ -20,3 +20,13 @@ So the process-lifecycle rows (prefix, extra byte, non-zero exit, signal, time-o
 environment, SIGCHLD ignored) now have ONE independent conformance run, with a /bin/bash test child. NOT covered by
 any independent run: the real refund program, injected code at load, a wrong image hash, the FFI C code.
 The column "independent attack run: none" in CONTROL_MATRIX_v2.md is stale for those lifecycle rows only.
+
+## Update 2026-11-19T17:12:10Z: C's last reading audit (static leads from C's worker; not checked by C; NOT checked by A; nothing run)
+- CONTROL_MATRIX_v2 rows judged too strong: N11/N22 "ENFORCED" (after a time-out launcher_v2 does not drain stdout; safe
+  only because D1 refuses); N20 "ENFORCED" (only for the bytes Python rendered; "Python render = HOL render" unproven);
+  most rows tested on fake children only; the read-back refusal branch of the SIGCHLD repair is never exercised; a
+  missing SHA-256 pin is not tested.
+- Reporting fault (not a false authorization): a terminating signal late in launcher_v2 can give exit 4 or 1 AFTER an
+  AUTHORIZED line was written; a caller that reads only stdout could act on it. The 30 s deadline does not bound a
+  blocking fd 1 of the launcher itself.
+State: OPEN leads. A consumer rule follows: accept only "AUTHORIZED line AND launcher exit 0".

@@ -1,0 +1,109 @@
+{
+ "case": "TR1-0001",
+ "parent_theories": 0,
+ "parents": [
+  {
+   "listed": "/Users/mackianni/forge/results/refund-loader-memory-local-20261115/attempt-0001/preload.sml",
+   "theory": null,
+   "files": {
+    "preload.sml": {
+     "path": "/Users/mackianni/forge/results/refund-loader-memory-local-20261115/attempt-0001/preload.sml",
+     "sha256": "42169f809d83487b9544d11892ec43bc2a8c045d46056866957f0b26710094b9"
+    }
+   }
+  }
+ ],
+ "produced_objects": {
+  ".hol/objs/forge_machineTraceTheory.dat": "b48745a44b275789cf322916641ded296ac495a85ec63c0f1a1225e456915271",
+  ".hol/objs/forge_machineTraceTheory.sig": "d8fd6750a2f1c244fe437951e6d2680a1a75b9129e0c6a689d62b048e0bb80c5",
+  ".hol/objs/forge_machineTraceTheory.sml": "df8ad427c3c042f43be31283482adf9aaf26cee3ddaee703f9a1f17bcaa846f7"
+ },
+ "tools_and_logs": {
+  "hol": {
+   "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+   "sha256": "cd6a5b303ae0d5e6ccec4e854a217f21666639bc652e4ff0f3bdb86866962c26"
+  },
+  "heap": {
+   "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+   "sha256": "2f5dbb718599026ba1129a4d641cf9c4df62c906e111f5340edf42f2bc922932"
+  },
+  "stdout.log": "e0b22e6d62f19f62af728926ab9c507923160d745142fd1a47c28dc849f03174",
+  "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "proof.sml": "752eeaf71bc71ee78173cd16468186a9c7ccdd645e54338953eb3a8faf2915d6",
+  "command.json": "e990e3d296f6b765f83977e1e426c988bd756ef756c038d896f7307df496e115"
+ },
+ "statements": {
+  "DEFINITION@38": "step_event_ok_def\n⊢ ∀mc ms s.\n    step_event_ok mc ms s ⇔\n    mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧\n    encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)\n      (mc.target.get_byte ms) mc.prog_addresses ∧\n    EVERY mc.target.state_ok [ms; mc.target.next ms; s] ∧\n    ∀x. x ∉ mc.prog_addresses ⇒\n        mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x",
+  "DEFINITION@48": "ffi_event_ok_def\n⊢ ∀mc st ms i nb.\n    ffi_event_ok mc st ms i nb ⇔\n    MEM (mc.target.get_pc ms) mc.ffi_entry_pcs ∧\n    mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms ≠ mc.install_pc ∧\n    find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ∧\n    ALOOKUP mc.mmio_info i = NONE ∧\n    ∃nm b1 b2 st1.\n      mc.ffi_names❲i❳ = ExtCall nm ∧\n      read_ffi_bytearrays mc ms = (SOME b1,SOME b2) ∧\n      call_FFI st (ExtCall nm) b1 b2 = FFI_return st1 nb",
+  "DEFINITION@64": "ffi_post_st_def\n⊢ ∀mc st ms i.\n    ffi_post_st mc st ms i =\n    case read_ffi_bytearrays mc ms of\n      (NONE,v3) => st\n    | (SOME b1,NONE) => st\n    | (SOME b1,SOME b2) =>\n      case call_FFI st mc.ffi_names❲i❳ b1 b2 of\n        FFI_return st1 nb => st1\n      | FFI_final e => st",
+  "DEFINITION@79": "ffi_call_event_def\n⊢ ∀mc ms i nb.\n    ffi_call_event mc ms i nb =\n    case read_ffi_bytearrays mc ms of\n      (NONE,v3) => []\n    | (SOME b1,NONE) => []\n    | (SOME b1,SOME b2) =>\n      if mc.ffi_names❲i❳ = ExtCall «» then []\n      else [IO_event mc.ffi_names❲i❳ b1 (ZIP (b2,nb))]",
+  "DEFINITION@91": "trace_next_interfer_def\n⊢ (∀ms1 m P. trace_next_interfer P [] m ms1 = ms1) ∧\n  (∀tr s ms1 m P.\n     trace_next_interfer P (TrStep s::tr) m ms1 =\n     if m = 0 then if P ms1 = P s then s else ms1\n     else trace_next_interfer P tr (m − 1) ms1) ∧\n  ∀tr s nb ms1 m i P.\n    trace_next_interfer P (TrFfi i nb s::tr) m ms1 =\n    trace_next_interfer P tr m ms1",
+  "DEFINITION@102": "trace_ffi_interfer_def\n⊢ (∀x ms0 k g G. trace_ffi_interfer G g ms0 [] k x = g k x) ∧\n  (∀x tr s ms0 k g G.\n     trace_ffi_interfer G g ms0 (TrStep s::tr) k x =\n     trace_ffi_interfer G g s tr k x) ∧\n  ∀x tr s nb ms0 k i g G.\n    trace_ffi_interfer G g ms0 (TrFfi i nb s::tr) k x =\n    if k = 0 then if x = (i,nb,ms0) ∧ G x s then s else g 0 x\n    else trace_ffi_interfer G (shift_seq 1 g) s tr (k − 1) x",
+  "DEFINITION@113": "nffis_def\n⊢ nffis [] = 0 ∧ (∀tr s. nffis (TrStep s::tr) = nffis tr) ∧\n  ∀tr s nb i. nffis (TrFfi i nb s::tr) = nffis tr + 1",
+  "DEFINITION@118": "trace_last_def\n⊢ (∀ms. trace_last ms [] = ms) ∧\n  (∀tr s ms. trace_last ms (TrStep s::tr) = trace_last s tr) ∧\n  ∀tr s nb ms i. trace_last ms (TrFfi i nb s::tr) = trace_last s tr",
+  "DEFINITION@124": "trace_st_def\n⊢ (∀st ms mc. trace_st mc st ms [] = st) ∧\n  (∀tr st s ms mc. trace_st mc st ms (TrStep s::tr) = trace_st mc st s tr) ∧\n  ∀tr st s nb ms mc i.\n    trace_st mc st ms (TrFfi i nb s::tr) =\n    trace_st mc (ffi_post_st mc st ms i) s tr",
+  "DEFINITION@132": "trace_events_def\n⊢ (∀ms mc. trace_events mc ms [] = []) ∧\n  (∀tr s ms mc. trace_events mc ms (TrStep s::tr) = trace_events mc s tr) ∧\n  ∀tr s nb ms mc i.\n    trace_events mc ms (TrFfi i nb s::tr) =\n    ffi_call_event mc ms i nb ++ trace_events mc s tr",
+  "DEFINITION@140": "trace_ok_def\n⊢ (∀st ms mc P G. trace_ok P G mc st ms [] ⇔ T) ∧\n  (∀tr st s ms mc P G.\n     trace_ok P G mc st ms (TrStep s::tr) ⇔\n     step_event_ok mc ms s ∧ P (mc.target.next ms) = P s ∧\n     trace_ok P G mc st s tr) ∧\n  ∀tr st s nb ms mc i P G.\n    trace_ok P G mc st ms (TrFfi i nb s::tr) ⇔\n    ffi_event_ok mc st ms i nb ∧ G (i,nb,ms) s ∧\n    trace_ok P G mc (ffi_post_st mc st ms i) s tr",
+  "DEFINITION@150": "toy_config_def\n⊢ toy_config =\n  <|ISA := ARMv8; encode := (λi. [0w]); big_endian := F; code_alignment := 0;\n    link_reg := NONE; avoid_regs := []; reg_count := 0; fp_reg_count := 0;\n    two_reg_arith := F; valid_imm := (λb i. F); addr_offset := (0,0);\n    hw_offset := (0,0); byte_offset := (0,0); jump_offset := (0,0);\n    cjump_offset := (0,0); loc_offset := (0,0)|>",
+  "DEFINITION@157": "toy_target_def\n⊢ toy_target =\n  <|config := toy_config; next := (λs. s + 1w); get_pc := (λs. s);\n    get_reg := (λs r. 0w); get_fp_reg := (λs r. 0w); get_byte := (λs a. 0w);\n    state_ok := (λs. T); proj := (λd s. s)|>",
+  "DEFINITION@162": "toy_mc_def\n⊢ toy_mc =\n  <|prog_addresses := {0w}; shared_addresses := ∅; ffi_entry_pcs := [1w];\n    ffi_names := [ExtCall «f»]; ptr_reg := 0; len_reg := 0; ptr2_reg := 0;\n    len2_reg := 0; ffi_interfer := (λk x. 0w); callee_saved_regs := [];\n    next_interfer := (λm s. s); halt_pc := 2w; install_pc := 3w;\n    install_interfer := (λk x. 0w); target := toy_target; mmio_info := []|>",
+  "DEFINITION@169": "toy_st_def\n⊢ toy_st =\n  <|oracle := (λn s c b. Oracle_return s b); ffi_state := ();\n    io_events := []|>",
+  "shift_seq_shift_seq": "⊢ ∀m n f. shift_seq m (shift_seq n f) = shift_seq (m + n) f",
+  "shift_seq_0": "⊢ ∀f. shift_seq 0 f = f",
+  "shift_seq_1_pred": "⊢ ∀g k. k ≠ 0 ⇒ shift_seq 1 g (k − 1) = g k",
+  "trace_next_interfer_ffi": "⊢ ∀P i nb s tr.\n    trace_next_interfer P (TrFfi i nb s::tr) = trace_next_interfer P tr",
+  "trace_next_interfer_shift": "⊢ ∀P s tr.\n    shift_seq 1 (trace_next_interfer P (TrStep s::tr)) =\n    trace_next_interfer P tr",
+  "trace_ffi_interfer_nil": "⊢ ∀G g ms0. trace_ffi_interfer G g ms0 [] = g",
+  "trace_ffi_interfer_step": "⊢ ∀G g ms0 s tr.\n    trace_ffi_interfer G g ms0 (TrStep s::tr) = trace_ffi_interfer G g s tr",
+  "trace_ffi_interfer_shift": "⊢ ∀G g ms0 i nb s tr.\n    shift_seq 1 (trace_ffi_interfer G g ms0 (TrFfi i nb s::tr)) =\n    trace_ffi_interfer G (shift_seq 1 g) s tr",
+  "trace_next_interfer_proj": "⊢ ∀P tr m ms1. P (trace_next_interfer P tr m ms1) = P ms1",
+  "trace_next_interfer_ok": "⊢ ∀P tr. interference_ok (trace_next_interfer P tr) P",
+  "trace_ffi_interfer_guard": "⊢ ∀G tr g ms0 k x.\n    trace_ffi_interfer G g ms0 tr k x = g k x ∨\n    G x (trace_ffi_interfer G g ms0 tr k x)",
+  "trace_ffi_interfer_off": "⊢ ∀G g ms0 tr k x.\n    ¬G x (trace_ffi_interfer G g ms0 tr k x) ⇒\n    trace_ffi_interfer G g ms0 tr k x = g k x",
+  "step_event_ok_upd": "⊢ ∀mc ms s f f'.\n    (step_event_ok (mc with next_interfer := f) ms s ⇔ step_event_ok mc ms s) ∧\n    (step_event_ok (mc with ffi_interfer := f') ms s ⇔ step_event_ok mc ms s)",
+  "ffi_event_ok_upd": "⊢ ∀mc st ms i nb f f'.\n    (ffi_event_ok (mc with next_interfer := f) st ms i nb ⇔\n     ffi_event_ok mc st ms i nb) ∧\n    (ffi_event_ok (mc with ffi_interfer := f') st ms i nb ⇔\n     ffi_event_ok mc st ms i nb)",
+  "ffi_post_st_upd": "⊢ ∀mc st ms i f f'.\n    ffi_post_st (mc with next_interfer := f) st ms i = ffi_post_st mc st ms i ∧\n    ffi_post_st (mc with ffi_interfer := f') st ms i = ffi_post_st mc st ms i",
+  "trace_ok_upd": "⊢ ∀P G tr mc st ms f f'.\n    (trace_ok P G (mc with next_interfer := f) st ms tr ⇔\n     trace_ok P G mc st ms tr) ∧\n    (trace_ok P G (mc with ffi_interfer := f') st ms tr ⇔\n     trace_ok P G mc st ms tr)",
+  "trace_st_upd": "⊢ ∀tr mc st ms f f'.\n    trace_st (mc with next_interfer := f) st ms tr = trace_st mc st ms tr ∧\n    trace_st (mc with ffi_interfer := f') st ms tr = trace_st mc st ms tr",
+  "evaluate_cong": "⊢ ∀mc1 mc2 st1 st2 ms1 ms2 k.\n    mc1 = mc2 ∧ st1 = st2 ∧ ms1 = ms2 ⇒\n    evaluate mc1 st1 k ms1 = evaluate mc2 st2 k ms2",
+  "evaluate_zero": "⊢ ∀mc st ms. evaluate mc st 0 ms = (TimeOut,ms,st)",
+  "evaluate_one_step_event": "⊢ ∀mc st ms s k.\n    step_event_ok mc ms s ∧ mc.next_interfer 0 (mc.target.next ms) = s ⇒\n    evaluate mc st (SUC k) ms =\n    evaluate (mc with next_interfer := shift_seq 1 mc.next_interfer) st k s",
+  "evaluate_one_ffi_event": "⊢ ∀mc st ms i nb s k.\n    ffi_event_ok mc st ms i nb ∧ mc.ffi_interfer 0 (i,nb,ms) = s ⇒\n    evaluate mc st (SUC k) ms =\n    evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer)\n      (ffi_post_st mc st ms i) k s",
+  "trace_gen": "⊢ ∀P G tr mc st ms g k.\n    trace_ok P G mc st ms tr ∧ mc.next_interfer = trace_next_interfer P tr ∧\n    mc.ffi_interfer = trace_ffi_interfer G g ms tr ⇒\n    evaluate mc st (LENGTH tr + k) ms =\n    evaluate\n      (mc with\n       <|next_interfer := trace_next_interfer P [];\n         ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr) k\n      (trace_last ms tr)",
+  "evaluate_follows_trace": "⊢ ∀P G g tr mc st ms k.\n    trace_ok P G mc st ms tr ⇒\n    evaluate\n      (mc with\n       <|next_interfer := trace_next_interfer P tr;\n         ffi_interfer := trace_ffi_interfer G g ms tr|>) st (LENGTH tr + k)\n      ms =\n    evaluate\n      (mc with\n       <|next_interfer := trace_next_interfer P [];\n         ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr) k\n      (trace_last ms tr)",
+  "call_FFI_return_io": "⊢ ∀st n b1 b2 st1 nb.\n    call_FFI st n b1 b2 = FFI_return st1 nb ⇒\n    st1.io_events =\n    st.io_events ++\n    if n = ExtCall «» then [] else [IO_event n b1 (ZIP (b2,nb))]",
+  "ffi_post_st_io": "⊢ ∀mc st ms i nb.\n    ffi_event_ok mc st ms i nb ⇒\n    (ffi_post_st mc st ms i).io_events =\n    st.io_events ++ ffi_call_event mc ms i nb",
+  "trace_io": "⊢ ∀P G tr mc st ms.\n    trace_ok P G mc st ms tr ⇒\n    (trace_st mc st ms tr).io_events = st.io_events ++ trace_events mc ms tr",
+  "add_clock_swap": "⊢ ∀mc st k ms r a b.\n    evaluate mc st k ms = (r,a,b) ⇒\n    r ≠ TimeOut ⇒\n    ∀k1. evaluate mc st (k1 + k) ms = (r,a,b)",
+  "prefix_of_halt": "⊢ ∀mc st k ms t a b.\n    evaluate mc st k ms = (Halt t,a,b) ⇒ st.io_events ≼ b.io_events",
+  "fst_error": "⊢ ∀x. FST x = Error ⇒ ∃a b. x = (Error,a,b)",
+  "term_after": "⊢ ∀mc st ms mc2 st2 ms2 n t io.\n    (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧\n    machine_sem mc st ms (Terminate t io) ⇒\n    machine_sem mc2 st2 ms2 (Terminate t io) ∧ st2.io_events ≼ io",
+  "fail_after": "⊢ ∀mc st ms mc2 st2 ms2 n.\n    (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧\n    machine_sem mc st ms Fail ⇒\n    machine_sem mc2 st2 ms2 Fail",
+  "div_after": "⊢ ∀mc st ms mc2 st2 ms2 n l.\n    (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧\n    machine_sem mc st ms (Diverge l) ⇒\n    LPREFIX (fromList st2.io_events) l",
+  "toy_target_fields": "⊢ toy_target.next = (λs. s + 1w) ∧ toy_target.get_pc = (λs. s) ∧\n  toy_target.get_reg = (λs r. 0w) ∧ toy_target.get_byte = (λs a. 0w) ∧\n  toy_target.state_ok = (λs. T)",
+  "toy_encoded": "⊢ ∀pc m md.\n    pc ∈ md ∧ m pc = 0w ⇒ encoded_bytes_in_mem toy_target.config pc m md",
+  "toy_trace_ok": "⊢ trace_ok (λs. s) (λx s. T) toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [] 2w]",
+  "toy_trace_events": "⊢ trace_events toy_mc 0w [TrStep 1w; TrFfi 0 [] 2w] =\n  [IO_event (ExtCall «f») [] []]",
+  "toy_bad_rejected": "⊢ ¬trace_ok (λs. s) (λx s. T) toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [7w] 2w]"
+ },
+ "markers": [
+  "CONTROL_OK no axiom in forge_machineTrace",
+  "CLOSURE_AXIOM bool.SELECT_AX",
+  "CLOSURE_AXIOM bool.INFINITY_AX",
+  "CLOSURE_AXIOM bool.ETA_AX",
+  "CLOSURE_AXIOM bool.BOOL_CASES_AX",
+  "CONTROL_OK closure contains targetSem",
+  "CONTROL_OK closure contains targetProps",
+  "CONTROL_OK closure contains ffi",
+  "CONTROL_OK closure contains misc",
+  "CONTROL_OK closure contains asmProps",
+  "CONTROL_OK generic: no forge_, refund or ISA constant in any stored item",
+  "CONTROL_OK all 37 required lemmas stored",
+  "CONTROL_OK stored list = part 1 exactly (37 lemmas)",
+  "STORED_NAMES shift_seq_shift_seq shift_seq_0 shift_seq_1_pred trace_next_interfer_ffi trace_next_interfer_shift trace_ffi_interfer_nil trace_ffi_interfer_step trace_ffi_interfer_shift trace_next_interfer_proj trace_next_interfer_ok trace_ffi_interfer_guard trace_ffi_interfer_off step_event_ok_upd ffi_event_ok_upd ffi_post_st_upd trace_ok_upd trace_st_upd evaluate_cong evaluate_zero evaluate_one_step_event evaluate_one_ffi_event trace_gen evaluate_follows_trace call_FFI_return_io ffi_post_st_io trace_io add_clock_swap prefix_of_halt fst_error term_after fail_after div_after toy_target_fields toy_encoded toy_trace_ok toy_trace_events toy_bad_rejected",
+  "STORED_THEOREMS 71",
+  "STORED_DEFINITIONS 29",
+  "EXACT_COMPLETE"
+ ],
+ "missing": []
+}

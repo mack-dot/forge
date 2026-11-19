@@ -12,3 +12,11 @@ Wording: N03 must compare only the bits L3 reads (EL, SPS, SCTLR_EL1.A/E0E/SA0, 
 for calls with n = 0; no FP/SIMD field exists in `arm8_state`; trace end and H event index; demand paging in `rstate.mem`.
 HOLDS by reading: index by normal steps; the LEAST-k repair; no circularity; the killed clause (given F3 repaired).
 Open check: are close, open_in or 0-byte writes reached in a real run of the executable?
+
+## Addendum 2026-11-19T17:12:10Z: leads on X8 v3 from the red team's last reading audit (static; not checked by A; v3 file unchanged)
+- Stale: v3 line 317 says MT-0001 is not run (it has actual exit 0 now); v3 says the launcher is not implemented (a
+  prototype exists, tested only).
+- N01 in v3 quantifies over more states than in v2; it can hold only if ML-05 (MISSING) is true; if ML-05 is false the
+  statement is vacuous. This change is missing from the list of changed clauses in v3.
+- Clause C6 says N05, N07, N08, N10, N23 "must be ENFORCED by the launcher": no launcher can enforce them; they are
+  ASSUMPTIONS.

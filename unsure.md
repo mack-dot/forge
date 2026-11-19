@@ -18368,3 +18368,46 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label. M1-B OPEN. end_to_end=false.
 - Next check: the staged cases; the reviews in work; the remaining
   two reproduction cases.
+
+## U501 — proof track, wind-down: the trace lemmas, the R6 top glue, the non-negative output lemma; the reproduction is complete; what stays open (refers to U499, U500)
+
+- Evidence: HOL run folder cases TR1-0001, TR2-0001, R6t-0004,
+  NN-0002 (actual exit 0 each) and NN-0001 (exit 1);
+  `proposals/night-shift-20261119/orch-A/review-TR/`, `review-NN/`,
+  `review-NV/`; `orch-A/repro/RESULT.json`; `orch-A/x8glue/`;
+  `orch-A/END_TO_END_GAPS_v2.md`; `orch-A/FINAL.md`.
+- MACHINE-CHECKED (same machine, stored older parents), each
+  reviewed by a separate worker, each "holds with limits":
+  the generic trace lemmas (`evaluate_follows_trace`, `trace_io`,
+  `trace_terminate`, `trace_fail`): a machine whose two interference
+  functions are built from a recorded trace follows that trace; the
+  premise is `trace_ok`; no arm8 or refund content. The top glue of
+  plan R6 (18 theorems): its conclusion reaches the io events of the
+  source semantics; the main specification and the state facts are
+  hypotheses. The non-negative lemma: every output of the program
+  has amount >= 0 and count 0 or 1; about the HOL parser only.
+- NV-0003 review: the joint witness is at model level only; it does
+  not show a run that ends in success with a strict frame.
+- Reproduction from the branch: 18 of 18 cases, exported theory
+  files byte-identical; two failed attempts kept (one Poly/ML
+  "Run out of store"; one watchdog stop after a system sleep).
+  The cases proved after the reproduction set was fixed (MT-0001,
+  R6r-0004, R6t-0004, NV-0003, TR1-0001, TR2-0001, NN-0002) are not
+  reproduced.
+- By reading only, NOT machine-checked: with the predicate "every
+  call is valid" the environment built from a trace meets every
+  environment premise of MT-0001 for every trace; then only
+  `trace_ok` of a real trace carries content. The HOL drivers for
+  this are not written.
+- Corrections to my own wording: "the two parsers agree on program
+  output" was an overclaim (the lemma is about the HOL parser);
+  rows "ENFORCED by the launcher" for kernel results were too strong
+  (red team, static).
+- Disclosure: the owner's wind-down said to start no HOL case after
+  the current one. The reproduction driver started its last queued
+  case 15 s before the worker stopped it. I let it finish. No case
+  started after it.
+- Impact: none on any stage label. M1-B OPEN. end_to_end=false.
+- Next check: the X8 glue case; the instance of `trace_ok` for a
+  real run (the content of the boundary); a clean replay on another
+  machine; the owner items A-3 and A-5.

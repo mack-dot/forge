@@ -352,3 +352,18 @@ run (red team blocked, C-1). Unverified Python; a prototype; not deployed; adopt
   lemma closed; the prefix lemmas for Terminate and Fail did not); non-vacuity 6 of 6 closed (proof case running);
   R6 top glue 15 closed, 1 failed (repaired copy staged).
 - HOL failures kept: TRx-0001 (exit 1, ML error), TRx-0002 (exit 1), NVx-0002 (exit 1): no proof step ran in them.
+
+## Addendum 18 (Orchestrator A, 2026-11-19T17:20:25Z): wind-down state of the proof track
+- Final record: `orch-A/FINAL.md` (each HOL theorem with statement, premises, command, actual exit, digests,
+  reproduction status; failed attempts; status of links X1 to X16 and S4 to S7; unproven transitions).
+- New HOL results, actual exit 0, each reviewed ("holds with limits"): TR1-0001 and TR2-0001 (generic trace lemmas: a
+  machine whose interference functions are built from a recorded trace follows it; premise `trace_ok`); R6t-0004 (top
+  glue of plan R6; the main specification is a hypothesis); NN-0002 (the program prints amount >= 0, count 0 or 1).
+- Reproduction from the branch: 18 of 18 cases, byte-identical theories (same machine; stored older parents). Two failed
+  attempts kept (infrastructure). The seven cases proved later are not reproduced.
+- Smallest missing boundary, unchanged: that a real run gives a trace with `trace_ok` for the refund machine (X8). By
+  reading only: the environment built from a trace meets the other premises for every trace.
+- Corrections: "the two parsers agree" was an overclaim; launcher rows for kernel results are assumptions, not enforced.
+- Disclosure: after the wind-down order reached A, the reproduction driver started its last queued case (R6w-0004), 15 s
+  before the worker stopped the driver. It finished; nothing started after it. hol.lock released 17:19:54Z.
+- Nothing merged. No protected file changed. M1-B OPEN. end_to_end=false.

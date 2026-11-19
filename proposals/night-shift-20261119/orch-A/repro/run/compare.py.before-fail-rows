@@ -1,0 +1,130 @@
+"""W-repro step 4: compare reproduced cases with the committed records. Starts no prover; reads files only.
+
+Usage: python3 -I -B compare.py > ../RESULT.json   (from repro/run). Writes ../diffs/<case>.<obj>.diff for differing objects.
+Acceptance core per case: actual exit equal, marker equal, every CHECKED/FORGE_STATEMENT/STATEMENT block equal,
+.sig digest equal. A .sml/.dat difference is EXPLAINED only when it disappears after the repro folder paths are
+mapped back to the original folder paths (the committed objects are read from the branch with git show).
+"""
+from pathlib import Path
+import difflib, hashlib, json, re, subprocess, sys
+
+RUN = Path(__file__).resolve().parent
+COMMITTED = RUN.parent / 'committed'
+DIFFS = RUN.parent / 'diffs'
+HEAD = 'dae1b93e0e5ce5c59feefd699497c125d355d3ee'
+REPO = '/Users/mackianni/forge'
+ORIG_A = '/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/'
+ORIG_L = '/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/'
+ORIG_R6 = '/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/'
+NEW_A = str(RUN) + '/'
+NEW_L = str(RUN) + '/link/'
+NEW_R6 = str(RUN) + '/r6/'
+BR_A = 'proposals/night-shift-20261119/hol-runs/routeA-attempt-0001/'
+BR_L = 'proposals/night-shift-20261119/orch-A/link/run/attempt-0001/'
+CASES = ['L1-0001', 'L2-0003', 'L2b-0003', 'L2c-0001', 'PF-0004', 'PX-0001', 'LO-0006', 'LE-0004', 'contract-0001',
+         'MF-0002', 'MG-0001', 'L2d-0001', 'E1-0003', 'EF-0001', 'EE-0001', 'R6base-0001', 'R6ffi-0002', 'R6w-0004']
+CHANGED_SOURCE = {'R6ffi-0002', 'R6w-0004'}
+
+
+def sha(b):
+    return hashlib.sha256(b).hexdigest()
+
+
+def back(text):
+    """Map repro paths back to the original paths (longest prefix first)."""
+    return text.replace(NEW_R6, ORIG_R6).replace(NEW_L, ORIG_L).replace(NEW_A, ORIG_A)
+
+
+TIMING = re.compile(r'^(BEGIN|END) .*\d+(\.\d+)?\s*s\s*$')
+
+
+def blocks(text):
+    lines = text.splitlines()
+    out, i = [], 0
+    while i < len(lines):
+        l = lines[i]
+        if l.startswith(('CHECKED', 'FORGE_STATEMENT', 'STATEMENT')):
+            j = i + 1
+            while j < len(lines) and (lines[j].startswith('⊢') or lines[j][:1] in (' ', '\t')):
+                j += 1
+            out.append('\n'.join(lines[i:j]))
+            i = j
+            continue
+        i += 1
+    return out
+
+
+def norm_log(text):
+    return [back(l) for l in text.splitlines() if not TIMING.match(l)]
+
+
+def git_bytes(path):
+    r = subprocess.run(['git', '-C', REPO, 'show', HEAD + ':' + path], capture_output=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+result = {'branch_head': HEAD, 'kind': 'same-machine reproduction from committed sources on stored older parents; '
+          'NOT a clean or independent-machine replay', 'cases': {}}
+DIFFS.mkdir(exist_ok=True)
+for c in CASES:
+    link = c == 'contract-0001'
+    folder = (RUN / 'link' / c) if link else (RUN / c)
+    rec_c = json.loads((COMMITTED / c / 'command.json').read_text())
+    entry = {'run': folder.joinpath('command.json').is_file()}
+    if not entry['run']:
+        entry['classification'] = 'NOT RUN'
+        result['cases'][c] = entry
+        continue
+    rec_r = json.loads((folder / 'command.json').read_text())
+    entry['source_sha256_committed'] = rec_c['source_sha256']
+    entry['source_sha256_repro'] = rec_r['source_sha256']
+    entry['source_equal'] = rec_c['source_sha256'] == rec_r['source_sha256']
+    if c in CHANGED_SOURCE:
+        entry['source_note'] = 'only the r6 directory string differs; see %s.source.diff' % c
+    entry['exit'] = {'committed': rec_c['actual_exit'], 'repro': rec_r['actual_exit']}
+    entry['markers'] = {'committed': rec_c['markers'], 'repro': rec_r['markers']}
+    entry['inputs_unchanged_after'] = rec_r['inputs_unchanged_after']
+    so_c = (COMMITTED / c / 'stdout.log').read_text(errors='replace')
+    so_r = (folder / 'stdout.log').read_text(errors='replace')
+    bc, br = blocks(back(so_c)), blocks(back(so_r))
+    entry['statement_blocks'] = {'committed': len(bc), 'repro': len(br), 'equal': bc == br}
+    if bc != br:
+        (DIFFS / (c + '.statements.diff')).write_text('\n'.join(difflib.unified_diff(
+            '\n'.join(bc).splitlines(), '\n'.join(br).splitlines(), 'committed', 'repro', lineterm='')) + '\n')
+    nc, nr = norm_log(so_c), norm_log(so_r)
+    entry['stdout_lines_differing_after_normalisation'] = sum(1 for d in difflib.unified_diff(nc, nr, lineterm='', n=0)
+                                                              if d[:1] in '+-' and d[:3] not in ('+++', '---'))
+    objs = {}
+    for name, h in rec_c['objects'].items():
+        if not name.startswith('.hol/objs/'):
+            continue
+        p = folder / name
+        o = {'committed': h, 'repro': sha(p.read_bytes()) if p.is_file() else None}
+        o['equal'] = o['committed'] == o['repro']
+        if not o['equal'] and p.is_file():
+            cb = git_bytes((BR_L if link else BR_A) + c + '/' + name)
+            if cb is None or sha(cb) != h:
+                o['explained'] = 'committed object bytes not available on the branch with the recorded digest'
+            else:
+                ct, rt = cb.decode(errors='replace'), back(p.read_text(errors='replace'))
+                d = list(difflib.unified_diff(ct.splitlines(), p.read_text(errors='replace').splitlines(),
+                                              'committed', 'repro', lineterm='', n=0))
+                (DIFFS / (c + '.' + Path(name).name + '.diff')).write_text('\n'.join(d) + '\n')
+                o['differing_lines'] = sum(1 for x in d if x[:1] in '+-' and x[:3] not in ('+++', '---'))
+                o['explained_by_paths_only'] = ct == rt
+        objs[Path(name).name] = o
+    entry['objects'] = objs
+    sig_ok = all(v['equal'] for k, v in objs.items() if k.endswith('.sig')) and any(k.endswith('.sig') for k in objs)
+    rest_ok = all(v['equal'] or v.get('explained_by_paths_only') for k, v in objs.items())
+    core = (entry['exit']['committed'] == entry['exit']['repro'] == 0 and entry['markers']['committed'] == entry['markers']['repro']
+            and entry['statement_blocks']['equal'] and sig_ok)
+    if core and rest_ok:
+        entry['classification'] = 'REPRODUCED-FROM-BRANCH'
+    else:
+        why = [k for k, ok in (('exit', entry['exit']['committed'] == entry['exit']['repro'] == 0),
+                               ('markers', entry['markers']['committed'] == entry['markers']['repro']),
+                               ('statements', entry['statement_blocks']['equal']), ('sig', sig_ok),
+                               ('sml/dat unexplained', rest_ok)) if not ok]
+        entry['classification'] = 'DIFFERS (' + ', '.join(why) + ')'
+    result['cases'][c] = entry
+print(json.dumps(result, indent=1))

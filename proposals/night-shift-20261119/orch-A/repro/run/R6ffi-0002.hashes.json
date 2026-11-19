@@ -1219,7 +1219,11 @@
    }
   }
  ],
- "produced_objects": {},
+ "produced_objects": {
+  ".hol/objs/forge_refundR6FfiTheory.dat": "9bd6e4d295206830a7de112119f3e9d7bca831fc5e1b468cf80f249bd46e8294",
+  ".hol/objs/forge_refundR6FfiTheory.sig": "ab3b7581bc47a155eda9c19697cadbaa25bf23e826265b546dd29667bf91d38a",
+  ".hol/objs/forge_refundR6FfiTheory.sml": "56a4f132c5d5effa26b47ac1a0b110fd3acf199ac235464990749c3c072800ae"
+ },
  "tools_and_logs": {
   "hol": {
    "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
@@ -1229,12 +1233,31 @@
    "path": "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
    "sha256": "2f5dbb718599026ba1129a4d641cf9c4df62c906e111f5340edf42f2bc922932"
   },
-  "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout.log": "95dc8058b10d17c67eb793c70b7d05da26020be320771aaaa10263f634e1ba29",
   "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "proof.sml": "6aebb858ab0711da9357b6b3a221bcfaa8b263e3c90d5796e67e64b15894a23f",
-  "command.json": "cd3e8533dc82e20cc81f5bb1e638cce0a12b04f2a92b25925c2f6824d8c7ce65"
+  "command.json": "a34707546adf7291f08463847559a8b3666e680e49f1d674c1a881b4cd8d1500"
  },
- "statements": {},
- "markers": [],
+ "statements": {
+  "DEFINITION@40": "⊢ ∀Inv fs.\n    IOxV Inv fs =\n    SEP_EXISTS events.\n      one\n        (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)\n           (MAP FST (SND (SND fs_ffi_part))) events) * &EVERY Inv events *\n      &¬MEM «» (MAP FST (SND (SND fs_ffi_part)))",
+  "DEFINITION@47": "⊢ ∀Inv fs.\n    IOFS_V Inv fs =\n    IOxV Inv fs * (SEP_EXISTS v. W8ARRAY iobuff_loc v * &(LENGTH v = 2052)) *\n    &wfFS fs",
+  "DEFINITION@51": "⊢ ∀Inv fs.\n    STDIO_V Inv fs =\n    (SEP_EXISTS ll. IOFS_V Inv (fs with numchars := ll)) * &STD_streams fs",
+  "IOFS_V_FFI_part_hprop": "⊢ ∀Inv fs. FFI_part_hprop (IOFS_V Inv fs)",
+  "IOxV_IMP_IOx": "⊢ ∀Inv fs. IOxV Inv fs ==>> IOx fs_ffi_part fs",
+  "writei_spec_V": "⊢ wfFS fs ⇒\n  0 < n ⇒\n  MAX (i + n) 2048 ≤ LENGTH rest ⇒\n  i + n < 256² ⇒\n  get_fd_content fs fd = SOME (content,pos) ⇒\n  get_mode fs fd = SOME WriteMode ⇒\n  FD fd fdv ⇒\n  NUM n nv ⇒\n  NUM i iv ⇒\n  bc = h1::h2::h3::... ::... ⇒\n  (∀nb. ... = ... ∧ ... = 0w ⇒ Inv (... ... )) ⇒\n  ... ... [... ; ... ] (... ... * ... ... )\n    (POSTve (λ... . ... ) (λe. ... * ... ))",
+  "read_into_spec_V": "⊢ ∀fs fd fdv n nv buf.\n    wfFS fs ⇒\n    FD fd fdv ⇒\n    NUM n nv ⇒\n    n < 256² ⇒\n    MAX n 1024 ≤ LENGTH rest ⇒\n    get_fd_content fs fd ≠ NONE ⇒\n    get_mode fs fd = SOME ReadMode ⇒\n    (∀nb.\n       LENGTH nb = 4 + ... ... ∧ HD nb = 0w ⇒\n       Inv (... ... (... ... ) (ZIP (... ,... )))) ⇒\n    app p TextIO_read_into_v [fdv; buf; ... ]\n      (W8ARRAY buf (h1::... ::... ) * IOxV Inv fs)\n      (POSTve (λnrv. SEP_EXISTS nr. ... * ... )\n         (λe. &... * &... * IOFS_WO_iobuff fs))"
+ },
+ "markers": [
+  "CLOSURE_AXIOM bool.SELECT_AX",
+  "CLOSURE_AXIOM bool.INFINITY_AX",
+  "CLOSURE_AXIOM bool.ETA_AX",
+  "CLOSURE_AXIOM bool.BOOL_CASES_AX",
+  "CONTROL_OK closure contains forge_refundR6Base",
+  "CONTROL_OK closure contains TextIOProof",
+  "STORED_THEOREMS 4",
+  "STORED_DEFINITIONS 3",
+  "CONTROL_OK 4 theorems, 3 definitions",
+  "EXACT_COMPLETE"
+ ],
  "missing": []
 }

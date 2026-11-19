@@ -1,0 +1,517 @@
+TIMEOUT_HELPER Timeout.apply loaded
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+LOAD_OK basisFunctionsLib
+<<HOL message: Created theory "forge_refundR6Write">>
+MARK USE r6w_common.sml
+MARK GRAMMAR
+GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\187v. &T :v -> (\206\177 -> bool) -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and flatSem$v\n", origins = [{origin_function = "type-analysis", origin_structure  ...
+TYPE_REPRIVILEGED ffi_result was cfHeapsBase now ffi
+TYPE_REPRIVILEGED shift was wordLang now ast
+TYPE_REPRIVILEGED pat was pattern_semantics now ast
+TYPE_REPRIVILEGED op was flatLang now ast
+TYPE_REPRIVILEGED locs was location now ast
+TYPE_REPRIVILEGED lit was dafny_ast now ast
+TYPE_REPRIVILEGED exp was dafny_ast now ast
+TYPE_REPRIVILEGED arith was asm now ast
+TYPE_REPRIVILEGED v was flatSem now semanticPrimitives
+TYPE_REPRIVILEGED state was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED sem_env was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED result was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED dest_thunk_ret was flatSem now semanticPrimitives
+GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK
+GRAMMAR_FIX B
+MARK DEFS
+DEFINITION ⊢ ∀Inv fd.
+    write_event_ok Inv fd ⇔
+    ∀n i rest nb.
+      LENGTH rest = 2048 ∧ i + n ≤ 2048 ∧ LENGTH nb = 4 + LENGTH rest ∧
+      HD nb = 0w ⇒
+      Inv
+        (IO_event (ExtCall «write») (n2w8 fd)
+           (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+MARK SHORTCUTS
+MARK STATEMENTS
+STATEMENT write_event_ok_writei
+∀Inv fd n i rest.
+  write_event_ok Inv fd ∧ LENGTH rest = 2048 ∧ i + n ≤ 2048 ⇒
+  ∀nb.
+    LENGTH nb = 4 + LENGTH rest ∧ HD nb = 0w ⇒
+    Inv
+      (IO_event (ExtCall «write») (n2w8 fd)
+         (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+STATEMENT write_event_ok_refund
+write_event_ok refund_valid_event 1
+STATEMENT SEG_APPEND3_W
+∀len off z l.
+  len + off ≤ z ∧ z ≤ LENGTH l ⇒
+  SEG len off l ++ SEG (z − (off + len)) (off + len) l = SEG (z − off) off l
+STATEMENT IOxV_FFI_part_IN
+∀Inv fs H h.
+  (IOxV Inv fs * H) h ⇒
+  ∃ev.
+    FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+      (MAP FST (SND (SND fs_ffi_part))) ev ∈ h
+STATEMENT UNIQUE_IOFS_V
+∀s. VALID_HEAP s ⇒
+    ∀Inv1 Inv2 fs1 fs2 H1 H2.
+      (IOFS_V Inv1 fs1 * H1) s ∧ (IOFS_V Inv2 fs2 * H2) s ⇒ fs1 = fs2
+STATEMENT IOFS_V_HPROP_INJ
+∀Inv fs1 fs2. HPROP_INJ (IOFS_V Inv fs1) (IOFS_V Inv fs2) (fs2 = fs1)
+STATEMENT STDIO_V_numchars
+∀Inv fs x. STDIO_V Inv (fs with numchars := x) = STDIO_V Inv fs
+STATEMENT UNIQUE_STDIO_V
+∀s. VALID_HEAP s ⇒
+    ∀fs1 fs2 Inv H1 H2.
+      (STDIO_V Inv fs1 * H1) s ∧ (STDIO_V Inv fs2 * H2) s ⇒
+      fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+      fs1.inode_tbl = fs2.inode_tbl
+STATEMENT STDIO_V_HPROP_INJ
+∀Inv fs1 fs2.
+  HPROP_INJ (STDIO_V Inv fs1) (STDIO_V Inv fs2)
+    (fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧ fs1.maxFD = fs2.maxFD ∧
+     fs1.inode_tbl = fs2.inode_tbl)
+STATEMENT STD_streams_fd0
+∀fs.
+  wfFS fs ∧ STD_streams fs ⇒
+  get_fd_content fs 0 ≠ NONE ∧ get_mode fs 0 = SOME ReadMode
+STATEMENT writei_spec_W
+wfFS fs ⇒
+0 < n ⇒
+MAX (i + n) 2048 ≤ LENGTH rest ⇒
+i + n < 256² ⇒
+get_fd_content fs fd = SOME (content,pos) ⇒
+get_mode fs fd = SOME WriteMode ⇒
+FD fd fdv ⇒
+NUM n nv ⇒
+NUM i iv ⇒
+bc = h1::h2::h3::h4::rest ⇒
+LENGTH rest = 2048 ⇒
+write_event_ok Inv fd ⇒
+app p TextIO_writei_v [fdv; nv; iv] (IOxV Inv fs * W8ARRAY iobuff_loc bc)
+  (POSTve
+     (λnwv.
+        SEP_EXISTS nw.
+          &NUM nw nwv * &(nw > 0) * &(nw ≤ n) *
+          W8ARRAY iobuff_loc (0w::n2w2 nw ++ n2w i::rest) *
+          IOxV Inv
+            (fsupdate fs fd (1 + Lnext_pos fs.numchars) (pos + nw)
+               (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos
+                  content)))
+     (λe.
+        &InvalidFD_exn e * W8ARRAY iobuff_loc (1w::n2w n::n2w2 i ++ rest) *
+        &F *
+        IOFS
+          (fs with
+           numchars := THE (LDROP (1 + Lnext_pos fs.numchars) fs.numchars))))
+STATEMENT write_spec_V
+∀n fs fd i pos h1 h2 h3 h4 rest bc fdv nv iv content.
+  wfFS fs ⇒
+  MAX (i + n) 2048 ≤ LENGTH rest ⇒
+  i + n < 256² ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  NUM i iv ⇒
+  bc = h1::h2::h3::h4::rest ⇒
+  LENGTH rest = 2048 ⇒
+  write_event_ok Inv fd ⇒
+  app p TextIO_write_v [fdv; nv; iv] (IOxV Inv fs * W8ARRAY iobuff_loc bc)
+    (POSTv nwv. SEP_EXISTS k.
+       IOFS_V Inv
+         (fsupdate fs fd k (pos + n)
+            (insert_atI (TAKE n (MAP (CHR ∘ w2n) (DROP i rest))) pos content)))
+STATEMENT output_aux_spec_V
+∀fd fdv s sv i iv z zv fs content pos.
+  OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+  z ≤ strlen s ∧ get_fd_content fs fd = SOME (content,pos) ∧
+  get_mode fs fd = SOME WriteMode ∧ write_event_ok Inv fd ⇒
+  app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       SEP_EXISTS k.
+         IOFS_V Inv
+           (fsupdate fs fd k (pos + (z − i))
+              (insert_atI (explode (substring s i (z − i))) pos content)))
+STATEMENT output_spec_V
+∀s fd fdv sv fs content pos.
+  OUTSTREAM fd fdv ⇒
+  STRING_TYPE s sv ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  write_event_ok Inv fd ⇒
+  app p TextIO_output_v [fdv; sv] (IOFS_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       SEP_EXISTS k.
+         IOFS_V Inv
+           (fsupdate fs fd k (pos + strlen s)
+              (insert_atI (explode s) pos content)))
+STATEMENT output_STDIO_spec_V
+∀fd fdv fs content pos s.
+  OUTSTREAM fd fdv ∧ get_fd_content fs fd = SOME (content,pos) ∧
+  get_mode fs fd = SOME WriteMode ∧ STRING_TYPE s sv ∧ write_event_ok Inv fd ⇒
+  app p TextIO_output_v [fdv; sv] (STDIO_V Inv fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv *
+       STDIO_V Inv
+         (fsupdate fs fd 0 (pos + strlen s)
+            (insert_atI (explode s) pos content)))
+STATEMENT print_spec_V
+∀fs sv s.
+  STRING_TYPE s sv ⇒
+  write_event_ok Inv 1 ⇒
+  app p TextIO_print_v [sv] (STDIO_V Inv fs)
+    (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv (add_stdout fs s))
+STATEMENT print_spec_refund
+∀fs sv s.
+  STRING_TYPE s sv ⇒
+  app p TextIO_print_v [sv] (STDIO_V refund_valid_event fs)
+    (POSTv uv.
+       &UNIT_TYPE () uv * STDIO_V refund_valid_event (add_stdout fs s))
+PART_DONE r6w_common.sml
+MARK USE r6w_steps.sml
+R6W_STEPS opened
+DELSIMPS_OK
+R6W_STEPS loaded
+PART_DONE r6w_steps.sml
+MARK USE r6w_prove.sml
+BEGIN write_event_ok_writei required
+STEP_USED write_event_ok_writei 1 close candidate 0 goals_out 0
+Saved theorem _______ "write_event_ok_writei"
+CHECKED write_event_ok_writei
+⊢ ∀Inv fd n i rest.
+    write_event_ok Inv fd ∧ LENGTH rest = 2048 ∧ i + n ≤ 2048 ⇒
+    ∀nb.
+      LENGTH nb = 4 + LENGTH rest ∧ HD nb = 0w ⇒
+      Inv
+        (IO_event (ExtCall «write») (n2w8 fd)
+           (ZIP (n2w2 n ++ n2w2 i ++ rest,nb)))
+BEGIN write_event_ok_refund required
+STEP_USED write_event_ok_refund 1 intro candidate 0 goals_out 1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundR6Write)>>
+STEP_USED write_event_ok_refund 2 nums candidate 0 goals_out 1
+STEP_USED write_event_ok_refund 3 unfold candidate 0 goals_out 1
+STEP_USED write_event_ok_refund 4 witness candidate 0 goals_out 1
+STEP_USED write_event_ok_refund 5 close candidate 0 goals_out 0
+Saved theorem _______ "write_event_ok_refund"
+CHECKED write_event_ok_refund
+⊢ write_event_ok refund_valid_event 1
+BEGIN SEG_APPEND3_W required
+STEP_USED SEG_APPEND3_W 1 all candidate 0 goals_out 0
+Saved theorem _______ "SEG_APPEND3_W"
+CHECKED SEG_APPEND3_W
+⊢ ∀len off z l.
+    len + off ≤ z ∧ z ≤ LENGTH l ⇒
+    SEG len off l ++ SEG (z − (off + len)) (off + len) l =
+    SEG (z − off) off l
+BEGIN IOxV_FFI_part_IN required
+STEP_USED IOxV_FFI_part_IN 1 close candidate 0 goals_out 0
+Saved theorem _______ "IOxV_FFI_part_IN"
+CHECKED IOxV_FFI_part_IN
+⊢ ∀Inv fs H h.
+    (IOxV Inv fs * H) h ⇒
+    ∃ev.
+      FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+        (MAP FST (SND (SND fs_ffi_part))) ev ∈ h
+BEGIN UNIQUE_IOFS_V required
+STEP_USED UNIQUE_IOFS_V 1 unfold candidate 0 goals_out 1
+STEP_USED UNIQUE_IOFS_V 2 close candidate 0 goals_out 0
+Saved theorem _______ "UNIQUE_IOFS_V"
+CHECKED UNIQUE_IOFS_V
+⊢ ∀s. VALID_HEAP s ⇒
+      ∀Inv1 Inv2 fs1 fs2 H1 H2.
+        (IOFS_V Inv1 fs1 * H1) s ∧ (IOFS_V Inv2 fs2 * H2) s ⇒ fs1 = fs2
+BEGIN IOFS_V_HPROP_INJ required
+STEP_USED IOFS_V_HPROP_INJ 1 close candidate 0 goals_out 0
+Saved theorem _______ "IOFS_V_HPROP_INJ"
+CHECKED IOFS_V_HPROP_INJ
+⊢ ∀Inv fs1 fs2. HPROP_INJ (IOFS_V Inv fs1) (IOFS_V Inv fs2) (fs2 = fs1)
+FRAME_THM_REGISTERED IOFS_V_HPROP_INJ
+BEGIN STDIO_V_numchars optional
+STEP_USED STDIO_V_numchars 1 close candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_numchars"
+CHECKED STDIO_V_numchars
+⊢ ∀Inv fs x. STDIO_V Inv (fs with numchars := x) = STDIO_V Inv fs
+BEGIN UNIQUE_STDIO_V optional
+STEP_USED UNIQUE_STDIO_V 1 close candidate 0 goals_out 0
+Saved theorem _______ "UNIQUE_STDIO_V"
+CHECKED UNIQUE_STDIO_V
+⊢ ∀s. VALID_HEAP s ⇒
+      ∀fs1 fs2 Inv H1 H2.
+        (STDIO_V Inv fs1 * H1) s ∧ (STDIO_V Inv fs2 * H2) s ⇒
+        fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧
+        fs1.maxFD = fs2.maxFD ∧ fs1.inode_tbl = fs2.inode_tbl
+BEGIN STDIO_V_HPROP_INJ optional
+STEP_USED STDIO_V_HPROP_INJ 1 split candidate 0 goals_out 2
+STEP_USED STDIO_V_HPROP_INJ 2 => (lines 141-153) candidate 0 goals_out 0
+STEP_USED STDIO_V_HPROP_INJ 3 <= (lines 154-162) candidate 0 goals_out 0
+Saved theorem _______ "STDIO_V_HPROP_INJ"
+CHECKED STDIO_V_HPROP_INJ
+⊢ ∀Inv fs1 fs2.
+    HPROP_INJ (STDIO_V Inv fs1) (STDIO_V Inv fs2)
+      (fs1.infds = fs2.infds ∧ fs1.files = fs2.files ∧
+       fs1.maxFD = fs2.maxFD ∧ fs1.inode_tbl = fs2.inode_tbl)
+FRAME_THM_REGISTERED STDIO_V_HPROP_INJ
+BEGIN writei_spec_W required
+STEP_USED writei_spec_W 1 intro candidate 0 goals_out 1
+STEP_USED writei_spec_W 2 bound candidate 0 goals_out 1
+STEP_CANDIDATE_FAILED writei_spec_W 3 candidate 0 HOL_ERR (HOL_ERROR {message = "predicate not true", origins = [{origin_function = "assert", origin_structure = "Lib", source_location = Loc_Unknown}]})
+STEP_USED writei_spec_W 3 H_inv from write_event_ok candidate 1 goals_out 1
+STEP_USED writei_spec_W 4 apply writei_spec_V candidate 0 goals_out 0
+Saved theorem _______ "writei_spec_W"
+CHECKED writei_spec_W
+⊢ wfFS fs ⇒
+  0 < n ⇒
+  MAX (i + n) 2048 ≤ LENGTH rest ⇒
+  i + n < 256² ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  NUM i iv ⇒
+  bc = h1::h2::h3::... ::... ⇒
+  LENGTH rest = 2048 ⇒
+  write_event_ok Inv fd ⇒
+  ... ... (... * ... ) (... ... (λ... . ... ))
+BEGIN write_spec_V required
+Adding nsLookup representation thms for 4 consts [TextIOProg_env_14, TextIOProg_env_13, ..., TextIOProg_env_11]
+Adding nsLookup representation thms for [TextIOProg_env_10, TextIOProg_env_9]
+Adding nsLookup representation thms for [TextIOProg_env_8]
+Adding nsLookup representation thms for 4 consts [TextIOProg_env_7, TextIOProg_env_6, ..., TextIOProg_env_4]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_3, TextIOProg_env_2, ..., TextIOProg_env]
+Adding nsLookup representation thms for 528 consts [MarshallingProg_env_1, MarshallingProg_env_0, ..., CommandLineProg_env_2]
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOxV Inv fs * W8ARRAY iobuff_loc bc * &BOOL (n = 0) bv
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOxV Inv fs * W8ARRAY iobuff_loc bc * &BOOL T bv
+STEP_USED write_spec_V 1 setup+n=0 (1568-1578) candidate 0 goals_out 1
+xlet_auto : using heuristics
+Post condition: POSTve
+  (λnwv.
+     SEP_EXISTS nw.
+       IOxV Inv
+         (fsupdate fs fd (Lnext_pos ... .numchars + 1) (nw + pos)
+            (insert_atI (... ... (... ... )) pos content)) *
+       W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &(nw ≤ n) *
+       &(nw > 0) * &NUM nw nwv)
+  (λe.
+     IOFS
+       (fs with
+        numchars := THE (LDROP (Lnext_pos fs.numchars + 1) fs.numchars)) *
+     W8ARRAY iobuff_loc (1w::n2w n::(n2w2 i ++ rest)) * &F * &InvalidFD_exn e)
+STEP_USED write_spec_V 2 writei call (1579-1580, writei_spec_W) candidate 0 goals_out 1
+Using translator specification lt_v_thm from theory mlbasicsProg
+Post condition: POSTv bv1.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &BOOL (nw < n) bv1
+STEP_USED write_spec_V 3 nw < n test (1581) candidate 0 goals_out 1
+STEP_USED write_spec_V 4 done branch (1581-1587) candidate 0 goals_out 1
+Using translator specification plus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv1.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &NUM (i + nw) nv1
+Using translator specification minus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv2.
+  IOxV Inv
+    (fsupdate fs fd (Lnext_pos fs.numchars + 1) (nw + pos)
+       (insert_atI (TAKE nw (MAP (CHR ∘ w2n) (DROP i rest))) pos content)) *
+  W8ARRAY iobuff_loc (0w::(n2w2 nw ++ n2w i::rest)) * &NUM (n − nw) nv2
+STEP_USED write_spec_V 5 n-nw, i+nw (1588) candidate 0 goals_out 1
+STEP_USED write_spec_V 6 IH (1589-1594) candidate 0 goals_out 1
+STEP_USED write_spec_V 7 IH side conditions (1595-1601) candidate 0 goals_out 1
+STEP_USED write_spec_V 8 final (1602-1606) candidate 0 goals_out 0
+Saved theorem _______ "write_spec_V"
+CHECKED write_spec_V
+⊢ ∀n fs fd i pos h1 h2 h3 h4 rest bc fdv nv iv content.
+    wfFS fs ⇒
+    MAX (i + n) 2048 ≤ LENGTH rest ⇒
+    i + n < 256² ⇒
+    get_fd_content fs fd = SOME (content,pos) ⇒
+    get_mode fs fd = SOME WriteMode ⇒
+    FD fd fdv ⇒
+    NUM n nv ⇒
+    NUM i iv ⇒
+    bc = h1::h2::h3::... ::... ⇒
+    LENGTH rest = 2048 ⇒
+    write_event_ok Inv fd ⇒
+    ... ... (... * ... ) (POSTv nwv. SEP_EXISTS k. ... ... )
+BEGIN output_aux_spec_V required
+STEP_USED output_aux_spec_V 1 induct (1743) candidate 0 goals_out 1
+Adding nsLookup representation thms for [TextIOProg_env_15]
+Using translator specification le_v_thm from theory mlbasicsProg
+Post condition: POSTv bv. IOFS_V Inv fs * &BOOL (z ≤ i) bv
+STEP_USED output_aux_spec_V 2 xcf, z <= i test, xif (1744-1746) candidate 0 goals_out 2
+STEP_USED output_aux_spec_V 3 done branch (1747-1753) candidate 0 goals_out 0
+Using translator specification minus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv. IOFS_V Inv fs * &NUM (z − i) nv
+Using translator specification le_v_thm from theory mlbasicsProg
+Post condition: POSTv bv1. IOFS_V Inv fs * &BOOL (z ≤ i + 2048) bv1
+STEP_USED output_aux_spec_V 4 left, n (1754-1755) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 5 xlet MIN (1756-1760; IOFS -> IOFS_V Inv) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 6 open IOFS_V in the precondition (1766-1767) candidate 0 goals_out 1
+Using CF specification w8array_copyVec_spec from theory Word8ArrayProof
+Post condition: POSTv uv.
+  W8ARRAY iobuff_loc
+    (TAKE 4 buff ++
+     MAP (n2w ∘ ORD)
+       (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+     DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs *
+  &UNIT_TYPE () uv
+STEP_USED output_aux_spec_V 7 copyVec (1768) candidate 0 goals_out 1
+Using translator specification get_out_v_thm from theory TextIOProg
+xlet_auto : using heuristics
+Post condition: POSTv sv1.
+  W8ARRAY iobuff_loc
+    (TAKE 4 buff ++
+     MAP (n2w ∘ ORD)
+       (explode (substring s i (if z < i + 2048 then z − i else 2048))) ++
+     DROP ((if z < i + 2048 then z − i else 2048) + 4) buff) * IOxV Inv fs *
+  &STRING_TYPE (get_out (Outstream (implode (MAP (CHR ∘ w2n) (n2w8 fd)))))
+    sv1
+STEP_USED output_aux_spec_V 8 get_out (1769-1770) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 9 buff split (1772-1773) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 10 LENGTH t = 2048 (NEW) candidate 0 goals_out 1
+xlet_auto : using heuristics
+Post condition: POSTv nwv. SEP_EXISTS k.
+  IOFS_V Inv
+    (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+       (insert_atI
+          (TAKE (if z < i + 2048 then z − i else 2048)
+             (STRCAT
+                (MAP (CHR ∘ w2n)
+                   (MAP (n2w ∘ ORD)
+                      (explode
+                         (... ... i (if ... < ... then ... − ... else 2048)))))
+                (MAP (CHR ∘ w2n)
+                   (DROP (if z < i + 2048 then z − i else 2048) t)))) pos
+          content))
+STEP_USED output_aux_spec_V 11 write call (1774-1775; write_spec_V; side condition LENGTH rest = 2048) candidate 0 goals_out 1
+Using translator specification plus_v_thm from theory mlbasicsProg
+Post condition: POSTv nv1.
+  IOFS_V Inv
+    (fsupdate fs fd k (pos + if z < i + 2048 then z − i else 2048)
+       (insert_atI
+          (TAKE (if z < i + 2048 then z − i else 2048)
+             (STRCAT
+                (MAP (CHR ∘ w2n)
+                   (MAP (n2w ∘ ORD)
+                      (explode (... ... (if ... then ... else ... )))))
+                (MAP (CHR ∘ w2n)
+                   (DROP (if z < ... + ... then z − i else 2048) t)))) pos
+          content)) * &NUM (i + if z < i + 2048 then z − i else 2048) nv1
+STEP_USED output_aux_spec_V 12 i + n (1776) candidate 0 goals_out 1
+Using a CF specification from the assumptions
+STEP_USED output_aux_spec_V 13 recursive call (1777-1789) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 14 post: fsupdate_o, insert_atI (1790-1798) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 15 pfx ++ sfx (1799-1810; SEG_APPEND3_W) candidate 0 goals_out 1
+STEP_USED output_aux_spec_V 16 close (1811-1814) candidate 0 goals_out 0
+Saved theorem _______ "output_aux_spec_V"
+CHECKED output_aux_spec_V
+⊢ ∀fd fdv s sv i iv z zv fs content pos.
+    OUTSTREAM fd fdv ∧ STRING_TYPE s sv ∧ NUM i iv ∧ NUM z zv ∧ i ≤ z ∧
+    z ≤ strlen s ∧ get_fd_content fs fd = SOME (content,pos) ∧
+    get_mode fs fd = SOME WriteMode ∧ write_event_ok Inv fd ⇒
+    app p TextIO_output_aux_v [fdv; sv; iv; zv] (IOFS_V Inv fs)
+      (POSTv uv.
+         &UNIT_TYPE () uv *
+         SEP_EXISTS k.
+           IOFS_V Inv
+             (fsupdate fs fd k (pos + (z − i))
+                (insert_atI (explode (... ... i (z − i))) pos content)))
+BEGIN output_spec_V required
+Adding nsLookup representation thms for [TextIOProg_env_17]
+Adding nsLookup representation thms for [TextIOProg_env_16]
+Using translator specification string_size_v_thm from theory StringProg
+Post condition: POSTv nv. IOFS_V Inv fs * &NUM (strlen s) nv
+STEP_USED output_spec_V 1 xcf, size (1826-1829) candidate 0 goals_out 1
+STEP_USED output_spec_V 2 call output_aux_spec_V (1830-1835) candidate 0 goals_out 0
+Saved theorem _______ "output_spec_V"
+CHECKED output_spec_V
+⊢ ∀s fd fdv sv fs content pos.
+    OUTSTREAM fd fdv ⇒
+    STRING_TYPE s sv ⇒
+    get_fd_content fs fd = SOME (content,pos) ⇒
+    get_mode fs fd = SOME WriteMode ⇒
+    write_event_ok Inv fd ⇒
+    app p TextIO_output_v [fdv; sv] (IOFS_V Inv fs)
+      (POSTv uv.
+         &UNIT_TYPE () uv *
+         SEP_EXISTS k.
+           IOFS_V Inv (... ... k (pos + ... ... ) (... ... pos content)))
+BEGIN output_STDIO_spec_V required
+STEP_USED output_STDIO_spec_V 1 unfold STDIO_V (1845-1847) candidate 0 goals_out 1
+STEP_USED output_STDIO_spec_V 2 call output_spec_V (1848-1851) candidate 0 goals_out 1
+STEP_USED output_STDIO_spec_V 3 post (1852-1866, one >> chain) candidate 0 goals_out 0
+Saved theorem _______ "output_STDIO_spec_V"
+CHECKED output_STDIO_spec_V
+⊢ ∀fd fdv fs content pos s.
+    OUTSTREAM fd fdv ∧ get_fd_content fs fd = SOME (content,pos) ∧
+    get_mode fs fd = SOME WriteMode ∧ STRING_TYPE s sv ∧
+    write_event_ok Inv fd ⇒
+    app p TextIO_output_v [fdv; sv] (STDIO_V Inv fs)
+      (POSTv uv.
+         &UNIT_TYPE () uv *
+         STDIO_V Inv
+           (fsupdate fs fd 0 (pos + strlen s)
+              (insert_atI (explode s) pos content)))
+BEGIN print_spec_V required
+STEP_USED print_spec_V 1 xcf, STD_streams case (1875-1877) candidate 0 goals_out 1
+Adding nsLookup representation thms for [TextIOProg_env_18]
+STEP_USED print_spec_V 2 call output_STDIO_spec_V + tac (1878-1879) candidate 0 goals_out 0
+Saved theorem _______ "print_spec_V"
+CHECKED print_spec_V
+⊢ ∀fs sv s.
+    STRING_TYPE s sv ⇒
+    write_event_ok Inv 1 ⇒
+    app p TextIO_print_v [sv] (STDIO_V Inv fs)
+      (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv (add_stdout fs s))
+BEGIN print_spec_refund required
+STEP_USED print_spec_refund 1 instance candidate 0 goals_out 0
+Saved theorem _______ "print_spec_refund"
+CHECKED print_spec_refund
+⊢ ∀fs sv s.
+    STRING_TYPE s sv ⇒
+    app p TextIO_print_v [sv] (STDIO_V refund_valid_event fs)
+      (POSTv uv.
+         &UNIT_TYPE () uv * STDIO_V refund_valid_event (add_stdout fs s))
+OPTIONAL_FAILED 
+PART_DONE r6w_prove.sml
+MARK CHECKS
+FAILED_LIST 
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CONTROL_OK closure contains forge_refundR6Ffi
+CONTROL_OK closure contains forge_refundRouteA2c
+CONTROL_OK closure contains TextIOProof
+STORED_THEOREMS 16
+STORED_DEFINITIONS 1
+STORED_NAMES write_event_ok_writei write_event_ok_refund SEG_APPEND3_W IOxV_FFI_part_IN UNIQUE_IOFS_V IOFS_V_HPROP_INJ STDIO_V_numchars UNIQUE_STDIO_V STDIO_V_HPROP_INJ writei_spec_W write_spec_V output_aux_spec_V output_spec_V output_STDIO_spec_V print_spec_V print_spec_refund
+CONTROL_OK theorems = stored list, 1 definition
+CONTROL_OK print_spec_refund stored
+CLOSURE_NODES 549
+Exporting theory "forge_refundR6Write" ... done.
+Theory "forge_refundR6Write" took 56.6s to build
+EXACT_COMPLETE

@@ -75,6 +75,12 @@ machine-model result on the same machine with stored parent theories.
 | TRx-0001, TRx-0002, NVx-0002 |1|ML or statement-construction error; no proof step ran |
 | Launcher tests: 4 files on version 1, 2 files on version 2 (re-run by A) |0|TESTED only; unverified prototype; version 1 has a known defect |
 | NN-0001, TR1-0001, TRx-0004, TR2-0001, R6t-0004 |NOT RUN|staged |
+| The row above is superseded by the next rows (U501) | | |
+| TR1-0001 (trace lemmas, part 1), TR2-0001 (prefix lemmas), R6t-0004 (R6 top glue, 18 theorems), NN-0002 (non-negative output) |0|each reviewed: holds with limits |
+| NN-0001 |1|ML error: a comment ended early; no proof step ran |
+| TRx-0004 (41 of 41 closed) |0|exploration only |
+| Reproduction from the branch, final: 18 of 18 cases, incl. R6ffi-0002 (second run) and R6w-0004 |0|byte-identical theories; same machine; two failed attempts kept (rows above) |
+| X8 glue case (`orch-A/x8glue/`) |NOT RUN|incomplete static draft |
 
 [State](proposals/night-shift-20261119/orch-A/STATE.md).
 [Morning report](proposals/night-shift-20261119/MORNING_REPORT.md).

@@ -1,0 +1,428 @@
+review_TR1_R6t.txt - worker W-TRrev (adversarial review), Night-Shift Orchestrator A, proof track, 2026-11-19.
+READING ONLY. No HOL, no Dafny, no git, no network. No existing file changed. This file is the only file written.
+Statements below are copied from the run logs and transcribed from Unicode to HOL ASCII syntax (! ? /\ \/ ==> <=> ~
+IN NOTIN <<= for isPREFIX, b2 for EL). The transcription is the only change.
+
+Objects
+  1. TR1-0001 (theory forge_machineTrace): /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001*
+     + orch-A/trace/{tr_common2,tr_steps2,tr_part1,tr_select_part1,tr_prove}.sml
+  2. R6t-0004 (theory forge_refundR6Top): attempt-0001/R6t-0004* + orch-A/r6/round15/r6t_{common,steps,prove}.sml
+
+VERDICTS
+  OBJECT 1 TR1-0001: HOLDS WITH LIMITS. The 37 lemmas are machine-checked, no HOL hypothesis, no oracle except
+    DISK_THM, only the 4 bool axioms in the closure. No defect breaks soundness. Limits: hygiene defect D1 (the
+    theory is not generic in its ancestry), latent harness weaknesses D2/D3, weak controls D4. The lemma is a
+    correct but thin packaging of the evaluate unfolding; all real-to-model content of ML-11 stays open.
+  OBJECT 2 R6t-0004: HOLDS WITH LIMITS. 18 theorems, 0 definitions, machine-checked, same harness quality.
+    The conclusion DOES reach the source-semantics io_events list (this closes item R7 of review_R6r-0004.txt
+    at the source level). Remaining hypotheses: the main V-spec AND program facts (Decls, st2.ffi, st2.refs shape,
+    LENGTH bs2 = 2052, wfFS, STD_streams). Nothing at machine level.
+
+==================================================================================================================
+OBJECT 1. TR1-0001
+==================================================================================================================
+
+1a. EXIT, MARKERS, STDERR, DIGESTS, USED FILES, HARNESS
+- TR1-0001.run.json: actual_exit 0, wall_timeout false, wall 204.284 s, markers ["EXACT_COMPLETE"].
+  TR1-0001.go.log ends: "actual_exit 0 ... inputs_unchanged_after True", "hash_parents exit 0",
+  "USED_FILES_UNCHANGED true", "go exit 0".
+- stderr.log: 0 bytes; sha256 e3b0c442... = sha256 of empty input = run.json stderr_sha256.
+- Recomputed by this review (shasum -a 256): stdout.log e0b22e6d... = run.json stdout_sha256; .dat b48745a4...,
+  .sig d8fd6750..., .sml df8ad427... = run.json "objects". TR1-0001/proof.sml is byte-equal to TR1-0001.sml
+  (cmp exit 0), sha256 752eeaf7... = source_sha256 = orch-A/trace/TR1-0001.sml.
+- used-files: TR1-0001.used-files.pre.txt (20 lines) = .post.txt (diff exit 0). Every listed file re-hashed on disk
+  NOW: all 20 equal (diff of shasum output vs pre.txt exit 0). The five files the driver uses (tr_common2, tr_steps2,
+  tr_part1, tr_select_part1, tr_prove) are in the list.
+- stdout scan: 0 hits for LEMMA_FAILED, DEFINITION_FAILED, DEFINITION_SKIPPED, STATEMENT_PARSE_FAILED, WATCHDOG,
+  TIMEOUT_CANDIDATE, LOAD_FAILED. One STEP_CANDIDATE_FAILED (a fallback candidate; not a failure of a lemma).
+  stdout:173 "TOY_DEFS_OK true"; stdout:700 "OPTIONAL_FAILED " (empty); stdout:703 "FAILED_LIST " (empty).
+  stdout:88 is the usual Context.snapshot warning (harmless).
+- Soundness harness (TR1-0001.sml checks section):
+  * tags over DB.theorems @ DB.definitions of the theory: hyp = [], axioms = [], oracles subset of {DISK_THM}.
+    This covers ALL 71 theorems and ALL 29 definitions, not only the 37 selected lemmas.
+  * DB.axioms of the theory = []; closure (481 nodes) axioms = exactly the 4 bool axioms (stdout:705-708).
+  * prove_steps (tr_prove.sml:8-17): TAC_PROOF from ([], stmt), then null hyp AND aconv concl stmt, else fail.
+    The catch-all handler only records the failure; a required failure is fatal at the checks
+    (FAILED_LIST non-empty -> raise). No ASSUME, mk_thm, cheat, mk_oracle_thm or new_axiom in any used file
+    (grep; the only "assum" hits are qpat_x_assum / assume_tac tactic uses in tr_steps2.sml).
+  * "stored list = part 1 exactly" (rev stored_names = map #1 TR_LEMMAS) can fail and is meaningful.
+- Counts. STORED_THEOREMS 71 = 37 selected lemmas + 34 generated:
+    20 from Datatype trace_event: datatype_trace_event, trace_event_11, _Axiom, _MAP_CONG, _MAP_ID, _MAP_IMAGE,
+       _MAP_O, _bnd, _case_cong, _case_eq, _distinct, _induction, _inh, _nchotomy, _size_MAP, _wit,
+       trace_eventMAP_ind, trace_eventMAP_thm, trace_eventSET_ind, trace_eventSET_thm;
+    14 from the 7 recursive Define calls (the clause theorem f_def and f_ind each): nffis, trace_events,
+       trace_ffi_interfer, trace_last, trace_next_interfer, trace_ok, trace_st.
+  Checked against forge_machineTraceTheory.sig: 88 bindings, 17 under "Definitions", 71 under "Theorems".
+  STORED_DEFINITIONS 29 = 17 named definitions in the .sig (ffi_call_event_def, ffi_event_ok_def, ffi_post_st_def,
+    nffis_def_primitive, step_event_ok_def, 4 toy_*_def, trace_eventMAP_def, trace_eventREL_def,
+    trace_eventSET_def, trace_event_ABSREP, trace_event_CONS_def, trace_event_TY_DEF, trace_event_case_def,
+    trace_event_size_def) + 12 definitions with no ML binding in the .sig. UNCERTAIN (not identified by reading):
+    most likely the internal primitive definitions of the six multi-argument recursive functions and datatype
+    internals. They are inside DB.definitions, so the tags check covered them.
+
+DEFECTS (Object 1)
+  D1 (hygiene; no soundness effect) Ancestry is NOT generic. forge_machineTraceTheory.dat:3-4 lists the parents
+     ("arm8_configProof" ...) and ("forge_refundArm8Compile" ...): they come from the preload
+     (refund-loader-memory-local-20261115/attempt-0001/preload.sml loads forge_refundArm8CompileTheory and
+     arm8_configProofTheory before new_theory). tr_common2.sml:7 says "Parents: targetSem, targetProps, ffi, misc,
+     asmProps only". The "generic" control (TR1-0001.sml:118-127) checks only the theories of CONSTANTS in stored
+     statements (stdout:714 CONSTANT_THEORIES: no forge_/arm8/refund theory), not the ancestry. The controls
+     "closure contains X" (TR1-0001.sml:113) only show presence, never absence. Effect: loading this theory pulls in
+     the refund compile theory; statements are generic; axioms of the closure were still checked (4 bool).
+  D2 (latent vacuity path; NOT realised) tr_common2.sml:197-199: tr_term returns T when an OPTIONAL statement
+     (OPTIONAL_NAMES, :195, incl. div_after and all toy_*) does not parse. tr_part1.sml then marks every kept entry
+     REQUIRED, so a "toy_trace_ok" or "div_after" stored as |- T would pass "stored list = part 1 exactly".
+     Not realised here: TR1-0001.hashes.json "statements" shows the real statements for all 37 names.
+     Fix: in proof mode, raise on any parse failure, or assert ~(aconv stmt T).
+  D3 (latent silent drop; NOT realised) tr_common2.sml:126-145 toy_define + tr_part1.sml:15-16: if a toy definition
+     fails, TOY_DEFS_OK := false and the five controls are silently DROPPED from part 1; the run still prints
+     EXACT_COMPLETE. Here stdout:173 TOY_DEFS_OK true, so all five ran.
+  D4 (weak controls) The toy controls use P = (\s. s) and G = (\x s. T) on a word64 toy machine with get_byte = 0
+     and get_reg = 0. They show trace_ok is satisfiable for a 2-event trace (one step, one FFI call with nb = [])
+     and can be FALSE (toy_bad_rejected: nb = [7w] disagrees with the oracle). They do NOT exercise a projection
+     P other than identity, a non-trivial G, or a conclusion-level negative (toy_bad_not_followed is excluded from
+     part 1 by design, TR1-0001.sml:1-5).
+
+1b. EXACT STATEMENTS (from TR1-0001.hashes.json "statements"; stdout CHECKED lines)
+  datatype (tr_common2.sml): trace_event = TrStep 'a | TrFfi num (word8 list) 'a
+  step_event_ok_def
+    |- !mc ms s. step_event_ok mc ms s <=>
+         mc.target.get_pc ms IN mc.prog_addresses DIFF set mc.ffi_entry_pcs /\
+         encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms) (mc.target.get_byte ms) mc.prog_addresses /\
+         EVERY mc.target.state_ok [ms; mc.target.next ms; s] /\
+         !x. x NOTIN mc.prog_addresses ==> mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x
+  ffi_event_ok_def
+    |- !mc st ms i nb. ffi_event_ok mc st ms i nb <=>
+         MEM (mc.target.get_pc ms) mc.ffi_entry_pcs /\
+         mc.target.get_pc ms <> mc.halt_pc /\ mc.target.get_pc ms <> mc.install_pc /\
+         find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i /\ ALOOKUP mc.mmio_info i = NONE /\
+         ?nm b1 b2 st1. EL i mc.ffi_names = ExtCall nm /\ read_ffi_bytearrays mc ms = (SOME b1,SOME b2) /\
+                        call_FFI st (ExtCall nm) b1 b2 = FFI_return st1 nb
+  ffi_post_st_def
+    |- !mc st ms i. ffi_post_st mc st ms i =
+         case read_ffi_bytearrays mc ms of (NONE,v3) => st | (SOME b1,NONE) => st
+         | (SOME b1,SOME b2) => case call_FFI st (EL i mc.ffi_names) b1 b2 of
+                                  FFI_return st1 nb => st1 | FFI_final e => st
+  ffi_call_event_def
+    |- !mc ms i nb. ffi_call_event mc ms i nb =
+         case read_ffi_bytearrays mc ms of (NONE,v3) => [] | (SOME b1,NONE) => []
+         | (SOME b1,SOME b2) => if EL i mc.ffi_names = ExtCall (strlit "") then []
+                                else [IO_event (EL i mc.ffi_names) b1 (ZIP (b2,nb))]
+  trace_next_interfer_def
+    |- (!ms1 m P. trace_next_interfer P [] m ms1 = ms1) /\
+       (!tr s ms1 m P. trace_next_interfer P (TrStep s::tr) m ms1 =
+          if m = 0 then if P ms1 = P s then s else ms1 else trace_next_interfer P tr (m - 1) ms1) /\
+       !tr s nb ms1 m i P. trace_next_interfer P (TrFfi i nb s::tr) m ms1 = trace_next_interfer P tr m ms1
+  trace_ffi_interfer_def
+    |- (!x ms0 k g G. trace_ffi_interfer G g ms0 [] k x = g k x) /\
+       (!x tr s ms0 k g G. trace_ffi_interfer G g ms0 (TrStep s::tr) k x = trace_ffi_interfer G g s tr k x) /\
+       !x tr s nb ms0 k i g G. trace_ffi_interfer G g ms0 (TrFfi i nb s::tr) k x =
+          if k = 0 then if x = (i,nb,ms0) /\ G x s then s else g 0 x
+          else trace_ffi_interfer G (shift_seq 1 g) s tr (k - 1) x
+  nffis_def    |- nffis [] = 0 /\ (!tr s. nffis (TrStep s::tr) = nffis tr) /\
+                  !tr s nb i. nffis (TrFfi i nb s::tr) = nffis tr + 1
+  trace_last_def |- (!ms. trace_last ms [] = ms) /\ (!tr s ms. trace_last ms (TrStep s::tr) = trace_last s tr) /\
+                  !tr s nb ms i. trace_last ms (TrFfi i nb s::tr) = trace_last s tr
+  trace_st_def |- (!st ms mc. trace_st mc st ms [] = st) /\
+                  (!tr st s ms mc. trace_st mc st ms (TrStep s::tr) = trace_st mc st s tr) /\
+                  !tr st s nb ms mc i. trace_st mc st ms (TrFfi i nb s::tr) = trace_st mc (ffi_post_st mc st ms i) s tr
+  trace_events_def |- (!ms mc. trace_events mc ms [] = []) /\
+                  (!tr s ms mc. trace_events mc ms (TrStep s::tr) = trace_events mc s tr) /\
+                  !tr s nb ms mc i. trace_events mc ms (TrFfi i nb s::tr) = ffi_call_event mc ms i nb ++ trace_events mc s tr
+  trace_ok_def |- (!st ms mc P G. trace_ok P G mc st ms [] <=> T) /\
+                  (!tr st s ms mc P G. trace_ok P G mc st ms (TrStep s::tr) <=>
+                     step_event_ok mc ms s /\ P (mc.target.next ms) = P s /\ trace_ok P G mc st s tr) /\
+                  !tr st s nb ms mc i P G. trace_ok P G mc st ms (TrFfi i nb s::tr) <=>
+                     ffi_event_ok mc st ms i nb /\ G (i,nb,ms) s /\ trace_ok P G mc (ffi_post_st mc st ms i) s tr
+  evaluate_follows_trace (stdout CHECKED at :574)
+    |- !P G g tr mc st ms k. trace_ok P G mc st ms tr ==>
+         evaluate (mc with <|next_interfer := trace_next_interfer P tr;
+                             ffi_interfer := trace_ffi_interfer G g ms tr|>) st (LENGTH tr + k) ms =
+         evaluate (mc with <|next_interfer := trace_next_interfer P [];
+                             ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr) k (trace_last ms tr)
+  trace_gen: same conclusion with the machine mc itself, under mc.next_interfer = trace_next_interfer P tr /\
+             mc.ffi_interfer = trace_ffi_interfer G g ms tr.
+  trace_io (:611)
+    |- !P G tr mc st ms. trace_ok P G mc st ms tr ==>
+         (trace_st mc st ms tr).io_events = st.io_events ++ trace_events mc ms tr
+  trace_next_interfer_ok   |- !P tr. interference_ok (trace_next_interfer P tr) P
+  trace_next_interfer_proj |- !P tr m ms1. P (trace_next_interfer P tr m ms1) = P ms1
+  trace_ffi_interfer_guard |- !G tr g ms0 k x. trace_ffi_interfer G g ms0 tr k x = g k x \/
+                                                G x (trace_ffi_interfer G g ms0 tr k x)
+  trace_ffi_interfer_off   |- !G g ms0 tr k x. ~G x (trace_ffi_interfer G g ms0 tr k x) ==>
+                                                trace_ffi_interfer G g ms0 tr k x = g k x
+  term_after |- !mc st ms mc2 st2 ms2 n t io. (!k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) /\
+                  machine_sem mc st ms (Terminate t io) ==> machine_sem mc2 st2 ms2 (Terminate t io) /\ st2.io_events <<= io
+  fail_after, div_after: the same shape for Fail and for Diverge (LPREFIX (fromList st2.io_events) l).
+  ("with no hypothesis": correct for the HOL hypothesis list. trace_ok is an implication antecedent, as intended.)
+
+  Strength of trace_ok. It does NOT demand that the model step equals the recorded state outright. It demands
+  P (mc.target.next ms) = P s, i.e. agreement under the free projection P, plus the evaluate guards of the
+  normal-step branch on (ms, next ms, s). The equality is outright only for P = identity (the toy). For X8 one
+  instantiates P := arm8_target.proj dm = arm8_proj dm, and arm8_proj d s = (s.PSTATE, s.SCTLR_EL1, s.TCR_EL1,
+  s.exception, s.REG, fun2set (s.MEM,d), s.PC) (arm8_targetScript.sml:365-368). So s may differ from the model
+  step only in SP_EL0, the EL1-3 SP/SCTLR/TCR copies, branch_hint and memory outside dm. This is the same freedom
+  as X8 v3 (E1) (UPD + proj guard). Not trivial, not over-strong; it is exactly the CakeML interference_ok slack.
+  At FFI events trace_ok demands the RECORDED nb to equal the oracle answer (call_FFI ... = FFI_return st1 nb):
+  this is the X8 F-event induction step (N10/N12 -> NB_k = basis_ffi answer); it is moved INTO trace_ok, not proved.
+  Satisfiable for a non-trivial trace: only shown on the toy (D4). Not shown for any arm8 or refund trace.
+
+  Clock and right-hand side. Yes: the equation is only at clock LENGTH tr + k (each event = one clock tick; TrFfi
+  ticks once, as evaluate does). The right machine has next_interfer = trace_next_interfer P [] = (\m ms1. ms1)
+  (identity; interference_ok trivially) and ffi_interfer = shift_seq (nffis tr) g. Well-formed for composition:
+  the proved refund theorems (MT1) are applied to the LEFT machine from the start state; term_after/fail_after
+  move the behaviour to the right machine and give the prefix. The right machine is only needed for the H step
+  (halt branch does not read either oracle) or for nothing (CUT). Note: after the trace the constructed
+  environment has NO minor interference; the lemma says nothing about real interference after the trace. For a
+  trace that covers the whole real run (X8 v3 design) that is enough.
+
+1c. COVERAGE OF targetSem$evaluate (targetSemScript.sml:118-219)
+  - normal step (:122-136): TrStep, exact tests copied (step_event_ok_def). Covered.
+  - halt (:137-139): not an event; it ends the run. Reached through the right-hand evaluate with k >= 1.
+  - Install (:140-147): excluded. ffi_event_ok demands pc <> install_pc; step_event_ok demands pc in
+    prog_addresses DIFF ffi pcs (that branch is tested FIRST in evaluate, so install_pc inside prog_addresses never
+    reaches the install branch anyway). refund_mc has install_pc = 0x1000040B0w (refund_mc_concrete_fields,
+    round4 replay res-0003/stdout.log:14). A real run that jumps there makes trace_ok false, so this is an
+    obligation on the real side (to show no such jump), not a silent unsoundness.
+  - SharedMem (:153-206): excluded (ExtCall nm and ALOOKUP mmio_info i = NONE). refund_mc has mmio_info = []
+    (res-0003:15), so the ALOOKUP test is always true there; the ffi_names must be ExtCall (4 names; not re-checked
+    here which strings they are).
+  - ExtCall with FFI_final (:213): excluded (FFI_return demanded). It halts with FFI_outcome; like halt it can only
+    be the step after the trace. Not a problem for the refund basis_ffi oracle unless it returns FFI_final.
+  - error branches (find_index NONE, read failures, guard false): excluded; trace_ok false.
+  Nothing is excluded SILENTLY: every exclusion is a conjunct of trace_ok and so becomes a proof obligation.
+
+1d. FIT WITH X8 v3 (x8-x11/X8_statement_v3.txt 1.2, 1.4, 1.6)
+  Index convention: MATCHES. trace_next_interfer decrements m only at TrStep (normal-step count = NU, :96);
+  trace_ffi_interfer decrements k only at TrFfi (call count = NF, :97); the default g is shifted with k so the
+  default sees the global index (as F_R). Both count from the trace start; with the trace started at ms_27 this is
+  "counted from event 27" (:99).
+  ML-01 from trace_next_interfer_ok: YES, directly. ISPEC P := arm8_target.proj envmc.prog_addresses gives
+    interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) for
+    envmc.next_interfer := trace_next_interfer (arm8_target.proj dm) tr. No new lemma; but trace_ok must then be
+    proved with that same P. This REPLACES X8 (E1) next_R; it is not a lemma about next_R.
+  ML-02 from trace_ffi_interfer_guard: YES, with a choice of G and g; X8 (E2) Vok_R / F_R / LEAST become unnecessary.
+    Contract (L1-0001/stdout.log:58-75): refund_ffi_contract_on b dm Vok ffi_i <=> !k index new_bytes ms2 t1 bytes
+    bytes2. PRE(index,new_bytes,ms2,t1,bytes,bytes2) /\ Vok index new_bytes ms2 ==> CONCL(ffi_i k (index,new_bytes,ms2), t1),
+    CONCL independent of k. Choose
+      G_b (index,new_bytes,ms2) s := !t1 bytes bytes2. PRE(...) ==> CONCL(s,t1)      (dm, b fixed)
+      g := refund_abs_ffi,  F := trace_ffi_interfer G_b refund_abs_ffi ms_27 tr,  Vok := (\i nb ms. T).
+    By the guard, F k x = refund_abs_ffi k x or G_b x (F k x); hence refund_ffi_contract_at b dm F, and by
+    refund_ffi_contract_on_all_valid_is_the_stored_contract (L1-0001) the "on" form with Vok = T; and
+    refund_ffi_tot (\i nb ms. T) F = F (refund_ffi_tot_all_valid_is_identity). So MT1 speaks about
+    refund_mc b (envmc with ffi_interfer := F) exactly. (Alternative keeping a Vok: Vok x := ?s. G_b x s; then
+    trace_ffi_interfer_off gives refund_ffi_tot Vok F = F.)
+  MISSING GLUE (exact names proposed; none exists in TR1-0001):
+    GL-1 refund_abs_ffi_contract_slide: !b dm k x t1 bytes bytes2. PRE(...) ==> CONCL(refund_abs_ffi k x, t1)
+         for b = sl + 0x1000040D0w (slide form). A link-base form may exist (refund-env-model-local-20261116,
+         "an ABSTRACT FFI function that satisfies it"); slide form NOT verified by me.
+    GL-2 trace_ffi_contract_at: (!k x. PRE ==> CONCL(g k x)) ==>
+         refund_ffi_contract_at b dm (trace_ffi_interfer G_b g ms0 tr). From trace_ffi_interfer_guard + G_b def.
+    GL-3 refund_mc_with_interfer: refund_mc b (e with <|next_interfer := A; ffi_interfer := B|>) =
+         (refund_mc b e) with <|next_interfer := A; ffi_interfer := B|>, or the field lemmas
+         (refund_mc b e).next_interfer = e.next_interfer /\ (refund_mc b e).ffi_interfer = e.ffi_interfer.
+         Needed to match MC_C of evaluate_follows_trace with the MT1 machine. Not in refund_mc_concrete_fields
+         as far as the printed lines show (res-0003:8-17 do not list the interferers).
+    GL-4 the trace itself: a HOL definition tr_R X (states s_(i+1) built from real records, e.g.
+         UPD r_(i+1) (arm8_next s_i) for U events, the real post-call state for F events) and
+         trace_ok (arm8_target.proj dm) G_b mc_R st_R ms_27 tr_R from N01-N12 + ML-05..ML-10. This is the real
+         content of ML-11 and is entirely open. Plus trace_events mc_R ms_27 tr_R = EV_n X and
+         OBS (trace_last ms_27 tr_R) = OBS (absM sr r_n).
+    GL-5 evaluate_halt_one: get_pc ms = halt_pc /\ halt_pc NOTIN prog_addresses DIFF set ffi_entry_pcs ==>
+         evaluate mc st (SUC k) ms = (Halt _, ms, st) (for ML-11(b), clock K n + 1).
+    GL-6 (only if ML-11(a) is needed at every i, not just i = n) trace append/prefix lemmas: trace_ok_append,
+         trace_last_append, trace_st_append, and evaluate at LENGTH pre with the FULL-trace oracles. TR1 gives the
+         equation only at the end of the trace the oracles are built from.
+    GL-7 composition: machine_sem_total (existence of a behaviour, LIBRARY) + term_after + trace_io +
+         (basis_ffi no_ext cl fs).io_events = [] (LIBRARY fact, to state) -> EV_n X <<= io.
+  X8 v3 text must change: (E1), (E2) and ML-01/02/03/11 still name next_R / F_R / Vok_R. With the trace
+  construction, ML-03 is MT1 at envmc := envmc0 with next_interfer, ffi_interfer := the trace oracles, Vok = T.
+
+1e. WHAT TR1-0001 DOES NOT GIVE
+  - No statement about arm8, refund, real records, OBS/RD/absM, or any concrete trace: it is generic.
+  - No proof that any non-toy trace satisfies trace_ok (GL-4 = the bulk of ML-11, plus ML-05..ML-10).
+  - Equation only at the end of the trace (GL-6). No interference after the trace.
+  - No Install, SharedMem, FFI_final events inside a trace.
+  - The prefix corollaries trace_terminate / trace_fail / trace_diverge are NOT in TR1 (they are in TR2-0001).
+    TR2-0001 status as seen by me: TR2-0001.go.log ends with the START_STATE / USED_FILES_PRE lines, no
+    "go exit" line; TR2-0001/ has no .hol/objs; no run.json actual_exit. So TR2 is still running or did not
+    finish: NOT reviewed, NOT counted. Note: term_after + evaluate_follows_trace + trace_io in TR1 already give
+    the content of trace_terminate by a short composition (that composition is not stored).
+
+==================================================================================================================
+OBJECT 2. R6t-0004
+==================================================================================================================
+
+2a. EXIT, MARKERS, STDERR, DIGESTS, USED FILES, HARNESS
+- R6t-0004.run.json: actual_exit 0, wall_timeout false, wall 503.378 s, markers ["EXACT_COMPLETE"]. go.log ends
+  "hash_parents exit 0", "USED_FILES_UNCHANGED true", "go exit 0".
+- stderr.log 0 bytes (sha e3b0c442...). stdout dd8aae2f..., .dat 3ed28538..., .sig 1d18da0f..., .sml a3b35263...
+  recomputed = run.json. proof.sml = R6t-0004.sml (sha af8eaf1e... = source_sha256 = round15/R6t-0004.sml).
+- used-files pre (6 files, round15/) = post; re-hashed on disk now: equal. Parent theory objects are covered by
+  hash_parents (exit 0), not re-hashed by me.
+- stdout: OPTIONAL_FAILED empty (:430), FAILED_LIST empty (:433). stdout:23 "GRAMMAR_BEFORE ... FAILED" is the
+  known diagnostic probe before the grammar repair (same as R6r review item 1); stdout:38-39 grammar fix OK.
+  stdout:226 "PARTS_STORED_FACT simp ..." is a printed step note inside a proof that closed (no hypothesis).
+- Harness: same prove_steps (r6t_prove.sml:8-17: TAC_PROOF, null hyp, aconv). Tags over all theorems and
+  definitions; closure 550 nodes, 4 bool axioms; STORED_THEOREMS 18 = stored list, STORED_DEFINITIONS 0
+  (:445-448, checked equal by the driver); every stored statement aconv the r6t_common.sml statement (:451-468).
+  The exploration-only ASSUME table (r6t_common.sml:52-53) is filled by save_thm in proof mode; any ASSUMEd
+  prerequisite would leave a hypothesis and fail prove_steps and the tags check. r6t_term (r6t_common.sml:89-91)
+  raises in proof mode (no T fallback). Same latent weakness as D1 for "closure contains" (presence only).
+- Constant check (stdout CONST lines): app = cfApp$app, sem_satisfies = semanticsProps$sem_satisfies,
+  semantics_dec_list = evaluate_dec$semantics_dec_list, Terminate/Success = ffi$, Decls/init_state = ml_prog$.
+  The intended constants; the grammar repair did not leave a flatSem/other homonym in the statements.
+
+2b. EXACT STATEMENTS (stdout CHECKED; whole_prog_spec_V_init from the depth-unlimited STATEMENT print)
+  IOFS_V_init
+    |- !Inv fs v events. wfFS fs /\ LENGTH v = 2052 /\ EVERY Inv events ==>
+         IOFS_V Inv fs ({FFI_part (encode fs) (mk_ffi_next fs_ffi_part) (MAP FST (SND (SND fs_ffi_part))) events}
+                        UNION {Mem 1 (W8array v)})
+  init_heap_V
+    |- !Inv st ext cl fs bs1 bs2 rest.
+         st.ffi = basis_ffi ext cl fs /\ st.refs = W8array bs1::W8array bs2::rest /\ LENGTH bs2 = 2052 /\
+         wfFS fs /\ STD_streams fs ==>
+         ?h1 h2. SPLIT (st2heap (basis_proj1,basis_proj2) st) (h1,h2) /\ STDIO_V Inv fs h1 /\
+           FFI_part (encode cl) (mk_ffi_next cl_ffi_part) (MAP FST (SND (SND cl_ffi_part))) [] IN h2 /\
+           FFI_part (encode ()) (mk_ffi_next runtime_ffi_part) (MAP FST (SND (SND runtime_ffi_part))) [] IN h2
+  every_basis_events
+    |- !Inv f. parts_ok f (basis_proj1,basis_proj2) /\
+         FILTER (ffi_has_index_in (MAP FST (SND (SND cl_ffi_part)))) f.io_events = [] /\
+         FILTER (ffi_has_index_in (MAP FST (SND (SND runtime_ffi_part)))) f.io_events = [] /\
+         EVERY Inv (FILTER (ffi_has_index_in (MAP FST (SND (SND fs_ffi_part)))) f.io_events) ==>
+         EVERY Inv f.io_events
+  final_heap_events
+    |- !Inv fs' st3 h2 h3 h4 s1 u1 s3 u3.
+         SPLIT3 (st2heap (basis_proj1,basis_proj2) st3) (h3,h2,h4) /\ STDIO_V Inv fs' h3 /\
+         FFI_part s1 u1 (MAP FST (SND (SND cl_ffi_part))) [] IN h2 /\
+         FFI_part s3 u3 (MAP FST (SND (SND runtime_ffi_part))) [] IN h2 ==>
+         EVERY Inv st3.ffi.io_events
+  whole_prog_spec_V_events
+    |- !Inv fv fs fs' ext cl es env1 prog env2 st2 fname h1 h2 s1 u1 s3 u3.
+         Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2 st2 /\
+         lookup_var fname env2 = SOME fv /\
+         app (basis_proj1,basis_proj2) fv [Conv NONE []] (STDIO_V Inv fs) (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs') /\
+         SPLIT (st2heap (basis_proj1,basis_proj2) st2) (h1,h2) /\ STDIO_V Inv fs h1 /\
+         FFI_part s1 u1 (MAP FST (SND (SND cl_ffi_part))) [] IN h2 /\
+         FFI_part s3 u3 (MAP FST (SND (SND runtime_ffi_part))) [] IN h2 ==>
+         sem_satisfies (semantics_dec_list (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+                          (SNOC (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit])) prog))
+                       (\behavior. ?io_events. behavior = Terminate Success io_events /\ EVERY Inv io_events)
+  whole_prog_spec_V_init
+    |- !Inv fv fs fs' ext cl es env1 prog env2 st2 fname bs1 bs2 rest.
+         Decls env1 (init_state (basis_ffi ext cl fs) with eval_state := es) prog env2 st2 /\
+         lookup_var fname env2 = SOME fv /\ st2.ffi = basis_ffi ext cl fs /\
+         st2.refs = W8array bs1::W8array bs2::rest /\ LENGTH bs2 = 2052 /\ wfFS fs /\ STD_streams fs /\
+         app (basis_proj1,basis_proj2) fv [Conv NONE []] (STDIO_V Inv fs) (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs') ==>
+         sem_satisfies (semantics_dec_list (init_state (basis_ffi ext cl fs) with eval_state := es) env1
+                          (SNOC (Dlet NoLocs (Pcon NONE []) (App Opapp [Var (Short fname); Unit])) prog))
+                       (\behavior. ?io_events. behavior = Terminate Success io_events /\ EVERY Inv io_events)
+  (Decls / lookup_var / semantics_dec_list parts are cut out of the stock basis_ffi.whole_prog_spec_semantics_prog
+   by term surgery, stdout:42-49; the conclusion is NOT copied from a hypothesis.)
+
+  Remaining hypotheses of whole_prog_spec_V_init (the top theorem):
+    H1 the main V-spec: app ... fv [Conv NONE []] (STDIO_V Inv fs) (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs')
+       - a NORMAL return only (POSTv). An exception path of refund main (refund_main_error / Fail, review_R6r R5)
+         makes H1 false for that input; a POSTve variant or a proof that main catches it is needed.
+    H2 Decls env1 (init_state ... with eval_state := es) prog env2 st2 /\ lookup_var fname env2 = SOME fv
+       (program facts; es free, so the eval_state bridge is an instantiation).
+    H3 st2.ffi = basis_ffi ext cl fs /\ st2.refs = W8array bs1::W8array bs2::rest /\ LENGTH bs2 = 2052
+       (program facts about the refund declarations: no FFI during Decls, iobuff is the 2nd ref with 2052 bytes).
+       NOT proved for the refund program here.
+    H4 wfFS fs /\ STD_streams fs (also premises of MT1).
+  Does the conclusion reach the semantic io_events? YES at the SOURCE level: the behaviour set of
+  semantics_dec_list (the CakeML source semantics of the whole program incl. the main call), and EVERY Inv over the
+  WHOLE io_events list of Terminate (all FFI parts, via every_basis_events + parts_ok + the frame keeping the cl and
+  runtime parts at []). This answers review_R6r-0004.txt D4/R7 for the source level. It does NOT reach the machine
+  (R8: compiler correctness to targetSem, the MT1/X8 side).
+
+2c. VACUITY
+  - sem_satisfies s P <=> s <> {} /\ !b. b IN s ==> P b (semanticsPropsScript.sml:243-245): the conclusion includes
+    non-emptiness and forces Terminate Success; not vacuous given the hypotheses.
+  - Inv is free. With Inv = K T the hypotheses are the stock whole_prog_spec ones (satisfiable in CakeML practice);
+    with Inv = refund_valid_event H1 is the real content. NO run shows the hypotheses satisfiable for the refund
+    program (no non-vacuity control in R6t-0004). IOFS_V_init with events = [] matches the initial fs part.
+  - The "Mem 1" iobuff location and 2052 are pins: consistent inside the theory (proofs closed), but their truth for
+    the refund program's st2 is H3, open.
+
+2d. WHAT R6t-0004 DOES NOT GIVE
+  - No V-spec of refund main (H1): R1-R5 of review_R6r-0004 remain (openStdIn, guard/inputBuff/inputAll*, input1,
+    consume_rest, open_option, the main spec incl. the exception path).
+  - No H2/H3 facts for the refund program; no link to forge_refundWholeProg's Decls theorem.
+  - No machine-level statement; no link to MT1, X8 or forge_machineTrace.
+  - Only Terminate Success behaviours; nothing for Diverge/Fail/FFI_outcome (excluded by the conclusion, which is
+    correct only if H1 holds).
+
+==================================================================================================================
+SUMMARY OF DEFECTS WITH FILE:LINE
+  D1 forge_machineTraceTheory.dat:3-4 parents arm8_configProof, forge_refundArm8Compile vs tr_common2.sml:7
+     "Parents ... only"; generic control TR1-0001.sml:118-127 checks constants only. Hygiene, no soundness effect.
+  D2 tr_common2.sml:197-199 + :195: optional statement parse failure -> T, would be stored as REQUIRED. Latent.
+  D3 tr_common2.sml:126-145 + tr_part1.sml:15-16: toy definition failure silently drops the controls. Latent.
+  D4 TR1 controls only P = identity, G = T, toy machine; no arm8/projection/G control.
+  D5 (claim wording, Object 2) "TOP GLUE": true for heap-to-semantics; but H3 (st2.ffi, refs, 2052) are program
+     facts still open, not only the main V-spec.
+
+==================================================================================================================
+OBJECT 1b. TR2-0001 (theory forge_machineTracePrefix) - added after Orchestrator A reported the run ended.
+The note in 1e ("TR2 still running") was true when I read it; this section supersedes it.
+==================================================================================================================
+VERDICT: HOLDS WITH LIMITS. 4 theorems, 0 definitions, machine-checked; no hypothesis, DISK_THM only, 4 bool axioms.
+
+Run record (re-checked by me)
+- TR2-0001.run.json: actual_exit 0, wall 215.649 s, markers EXACT_COMPLETE. go.log ends "hash_parents exit 0",
+  "USED_FILES_UNCHANGED true", "go exit 0". stderr 0 bytes (e3b0c442...).
+- Recomputed sha256: stdout bd492adc..., .dat f4be3852..., .sig 3d2b7a71..., .sml a2975bc9... = run.json.
+  proof.sml = TR2-0001.sml = orch-A/trace/TR2-0001.sml (bac9d9dc...). used-files pre = post; all 20 on disk equal.
+- Parent = the TR1-0001 object: TR2-0001.hashes.json lists TR1-0001/.hol/objs/forge_machineTraceTheory.{sig,sml,dat}
+  with sha256 d8fd6750..., df8ad427..., b48745a4... = the TR1-0001 run.json "objects" digests. DIGEST MATCH.
+  forge_machineTracePrefixTheory.dat:3 names the single parent forge_machineTrace. stdout:10 PARENT_OK.
+- Harness: same tags loop over all theorems + definitions, closure axioms = 4 bool (stdout:164-167), closure 482
+  nodes (= TR1 481 + 1). STORED_THEOREMS 4 = STORED_NAMES (stdout:177-179). FAILED_LIST, OPTIONAL_FAILED empty.
+  No ASSUME / mk_thm / cheat in tr2_common.sml, tr_steps_fix.sml, tr2_select.sml (grep). tr2_common.sml:13 replaces
+  a missing parent theorem by TRUTH (FETCH_FAILED): that can only break a proof, not pass one; 0 FETCH_FAILED lines.
+  Weaknesses: (i) trace_diverge and toy_bad_not_followed are OPTIONAL (tr_steps_fix.sml:117-118); TR2 has no
+  "stored list = selected list exactly" check, so their loss would not stop the run (here both stored).
+  (ii) tr2_common.sml:73-74 keeps the T fallback for optional statements (D2 pattern); not realised: the stored
+  statements below are real. (iii) label "CONTROL_OK no axiom in forge_machineTrace" (TR2-0001.sml:111) checks
+  forge_machineTracePrefix; wording slip only.
+
+Exact statements (stdout CHECKED)
+  trace_terminate
+    |- !P G g tr mc st ms t io.
+         trace_ok P G mc st ms tr /\
+         machine_sem (mc with <|next_interfer := trace_next_interfer P tr;
+                                ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms (Terminate t io) ==>
+         machine_sem (mc with <|next_interfer := trace_next_interfer P [];
+                                ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr) (trace_last ms tr)
+                     (Terminate t io) /\
+         st.io_events ++ trace_events mc ms tr <<= io
+  trace_fail
+    |- !P G g tr mc st ms. trace_ok P G mc st ms tr /\ machine_sem (MC_C) st ms Fail ==>
+         machine_sem (MC_F) (trace_st mc st ms tr) (trace_last ms tr) Fail
+       (MC_C, MC_F = the two machines of trace_terminate, printed in full at stdout CHECKED trace_fail)
+  trace_diverge
+    |- !P G g tr mc st ms l. trace_ok P G mc st ms tr /\ machine_sem (MC_C) st ms (Diverge l) ==>
+         LPREFIX (fromList (st.io_events ++ trace_events mc ms tr)) l
+  toy_bad_not_followed
+    |- evaluate (toy_mc with <|next_interfer := trace_next_interfer (\s. s) [TrStep 1w; TrFfi 0 [7w] 2w];
+                               ffi_interfer := trace_ffi_interfer (\x s. T) (\k x. 5w) 0w [TrStep 1w; TrFfi 0 [7w] 2w]|>)
+                toy_st (LENGTH [TrStep 1w; TrFfi 0 [7w] 2w] + 0) 0w <>
+       evaluate (toy_mc with <|next_interfer := trace_next_interfer (\s. s) [];
+                               ffi_interfer := shift_seq (nffis [TrStep 1w; TrFfi 0 [7w] 2w]) (\k x. 5w)|>)
+                (trace_st toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [7w] 2w]) 0 (trace_last 0w [TrStep 1w; TrFfi 0 [7w] 2w])
+
+Answers
+- trace_terminate gives exactly: machine_sem of the constructed machine = Terminate t io ==> machine_sem of the
+  after-trace machine (from trace_st / trace_last) = Terminate t io AND (st.io_events ++ trace_events) <<= io.
+  The only extra premise is trace_ok (an antecedent conjunct), no HOL hypothesis. Note the prefix is
+  st.io_events ++ trace_events, so for X8 one still needs (basis_ffi no_ext cl fs).io_events = [] (GL-7) to get
+  trace_events mc ms tr <<= io. Existence of a behaviour (machine_sem_total) is still an outside step.
+- toy_bad_not_followed: for the BAD trace (recorded nb = [7w], oracle returns []), trace_ok is false
+  (toy_bad_rejected, TR1) and the conclusion of evaluate_follows_trace is FALSE at k = 0: the constructed machine
+  does not reproduce the recorded end state (the FFI guard x = (0,[7w],1w) fails, so the default (\k x. 5w) fires
+  and the machine lands in 5w, not 2w; my reading of the evaluate steps, the theorem itself only states <>).
+  So the trace_ok premise is not removable: the theorem is not true for arbitrary traces. Limit: toy machine,
+  P = identity, G = T (D4 still applies).
+- What TR2 does NOT give: nothing new about which traces satisfy trace_ok (GL-4), no refund/arm8 content, no
+  prefix result at intermediate points (GL-6). trace_terminate is the composition I noted in 1e, now stored.

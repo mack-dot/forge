@@ -1,0 +1,23 @@
+--- compare.py.before-fail-rows	2026-11-19 12:02:57.904340652 -0500
++++ compare.py	2026-11-19 12:02:57.937468507 -0500
+@@ -127,4 +127,20 @@
+                                ('sml/dat unexplained', rest_ok)) if not ok]
+         entry['classification'] = 'DIFFERS (' + ', '.join(why) + ')'
+     result['cases'][c] = entry
++FAIL_NOTES = {'MG-0001.fail-1': "infrastructure stop: 'Run out of store' during parent-theory load (stderr); not a proof result",
++              'R6ffi-0002.fail-1': 'killed (SIGTERM, actual_exit -15) by the W-repro watchdog after a system sleep (pmset log 15:16:31Z-15:24:22Z); not a proof result'}
++for f, note in FAIL_NOTES.items():
++    p = RUN / f / 'command.json'
++    if not p.is_file():
++        continue
++    r = json.loads(p.read_text())
++    c = f.split('.fail-')[0]
++    rec_c = json.loads((COMMITTED / c / 'command.json').read_text())
++    result['cases'][f] = {'run': True, 'attempt_of': c, 'source_sha256_repro': r['source_sha256'],
++                          'source_equal': r['source_sha256'] == rec_c['source_sha256'],
++                          'exit': {'committed': rec_c['actual_exit'], 'repro': r['actual_exit']},
++                          'markers': {'committed': rec_c['markers'], 'repro': r['markers']},
++                          'cpu_seconds': r['child_user_cpu_seconds'], 'wall_seconds': r['wall_seconds'],
++                          'objects_produced': sorted(r['objects']), 'note': note,
++                          'classification': 'FAILED ATTEMPT (infrastructure; superseded by the later run of ' + c + ')'}
+ print(json.dumps(result, indent=1))

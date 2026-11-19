@@ -367,3 +367,48 @@ NV-0003: actual exit 0, EXACT_COMPLETE -> reviewer W-NVrev. W-trace round 3: TR1
 
 ## CHECKPOINT (2026-11-19T16:28:07Z)
 R6tx-0004: exploration exit 0; 18 of 18 closed. hol.lock RELEASED 16:28:02Z for B. After B release: q44 = NN-0001 900 deps-MG; TR1-0001 1200 deps-TR; TRx-0004 1200 deps-TR; R6t-0004 1800 deps-R6t.
+
+## CHECKPOINT (2026-11-19T16:28:47Z)
+Commit 29a2ce84 pushed (744e1e4d..29a2ce84); U500; ROADMAP rows. sync.sh note: `launch/bin2/` compiled helpers were staged by sync and removed from the commit by hand: add an exclude for `launch/bin*` next time. Waiting for B release line.
+
+## CHECKPOINT (2026-11-19T16:28:52Z)
+B released heavy.lock (run ended 16:28:42Z). A takes hol.lock. Heavy step: q44 = NN-0001 900 deps-MG; TR1-0001 1200 deps-TR; TRx-0004 1200 deps-TR; R6t-0004 1800 deps-R6t; under caffeinate -i.
+
+## CHECKPOINT (2026-11-19T16:29:05Z)
+NV-0003 reviewed: HOLDS WITH LIMITS (`review-NV/REPORT.md`). Open follow-up: a witness that a run ends in Success with a strict frame (conclusion non-vacuity) does not exist. q44 running (task bcvcvy6x5).
+
+## CHECKPOINT (2026-11-19T16:34:27Z)
+`END_TO_END_GAPS_v2.md` written by W-gaps (2a15d9bc…; 24 chain rows: 7 MC, 6 ASSUMPTION, 1 TESTED, 10 MISSING; 15 X8 model lemmas MISSING; 17 native ASSUMPTION, 6 ENFORCED-BY-PROTOTYPE). It lists 8 source disagreements (weaker side taken). q44 running.
+
+## CHECKPOINT (2026-11-19T16:53:00Z)
+q44: NN-0001 exit 1 (comment closed early; no step ran) -> NN-0002 (comment-only change); TR1-0001 exit 0 EXACT_COMPLETE (forge_machineTrace); TRx-0004 exploration 41 of 41; R6t-0004 exit 0 EXACT_COMPLETE (18 theorems). Heavy step (hol.lock held): q45 = TR2-0001 1200 deps-TR2; NN-0002 900 deps-MG. Then reviewers for TR1/TR2, R6t-0004; then the two reproduction cases.
+
+## CHECKPOINT (2026-11-19T16:54:01Z)
+q45 running (task bzfr9apj8): TR2-0001, NN-0002. Workers: W-TRrev (review TR1-0001 and R6t-0004), W-x8glue (static draft of the model composition on top of TR1/MT1: `orch-A/x8glue/`). Pending after q45: reproduction of R6ffi-0002 and R6w-0004 (resume W-repro), B slot if asked.
+
+## CHECKPOINT (2026-11-19T17:02:07Z)
+q45: TR2-0001 exit 0 EXACT_COMPLETE (trace_terminate, trace_fail, trace_diverge stored); NN-0002 exit 0 EXACT_COMPLETE (9 theorems; T14 part b). Reviewers next. Heavy step next (hol.lock held by A; slot lent to W-repro): reproduction of R6ffi-0002 (first run kept as fail-1) and R6w-0004, under caffeinate.
+
+## CHECKPOINT (2026-11-19T17:03:58Z)
+TR1-0001, TR2-0001, R6t-0004 reviewed: HOLD WITH LIMITS (`review-TR/REPORT.md`). X8 simplification for ML-02 noted (pass to W-x8glue). W-repro running (R6ffi-0002, R6w-0004). W-NNrev, W-x8glue running.
+
+## CHECKPOINT (2026-11-19T17:06:33Z)
+NN-0002 reviewed: HOLDS WITH LIMITS; overclaim wording corrected in `review-NN/REPORT.md`; gap list v2 updated.
+
+## CHECKPOINT (2026-11-19T17:11:09Z)
+OWNER WIND-DOWN received: let the current HOL job (repro R6ffi-0002) finish; no new HOL case; write orch-A/FINAL.md; push once; release hol.lock; message main "A done" with SHA; stop. W-repro and W-x8glue told.
+
+## CHECKPOINT (2026-11-19T17:12:10Z)
+C last audit (static leads) recorded in launch/FINDINGS_FROM_C.md, x8-x11/CORRECTIONS_v2.md, END_TO_END_GAPS_v2.md. W-final writes FINAL.md. Waiting: W-repro (R6ffi-0002), W-x8glue hand-back.
+
+## CHECKPOINT (2026-11-19T17:12:17Z)
+DISCLOSURE: the reproduction driver started R6w-0004 at 17:11:10Z, after the wind-down order reached A (about 17:08Z) and 15 s before the worker stopped the driver loop. It is the last case of a queue that was running when the order came; A lets it finish and starts nothing after it. To be stated in FINAL.md and in the message to main.
+
+## CHECKPOINT (2026-11-19T17:12:55Z)
+W-x8glue handed back an INCOMPLETE static draft (`x8glue/`: STATEMENTS.txt e25fadbb…, xg_common.sml, xg_steps.sml, deps-XG.txt; drivers NOT written; nothing run). By reading: the constructed environment meets every environment premise of MT1 for every trace (Vok := all valid; no LEAST); only `trace_ok` carries content. NOT machine-checked.
+
+## CHECKPOINT (2026-11-19T17:19:54Z)
+Reproduction complete: 18 of 18 REPRODUCED-FROM-BRANCH (A checked RESULT.json fe251382… and the `.dat` digests of R6ffi-0002 and R6w-0004); 2 failed attempts kept (MG-0001.fail-1 exit 1; R6ffi-0002.fail-1 exit -15). No HOL process. hol.lock RELEASED (final). No new HOL case (wind-down).
+
+## CHECKPOINT (2026-11-19T17:23:32Z) — FINAL (wind-down)
+`FINAL.md` (914f4c53…) and `FINAL_STATEMENTS.txt` (48212d31…) written by W-final; A spot-checked sections, exits of 5 cases and the graph table. Reproduction 18 of 18. hol.lock released 17:19:54Z. No worker runs. Next: commit, one push, message main, stop. Resume point if ever continued: write the X8 glue drivers (`x8glue/CHANGES.txt`), run XGx-0001; then the refund instance of `trace_ok`.

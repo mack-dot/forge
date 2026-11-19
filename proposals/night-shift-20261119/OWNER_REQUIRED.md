@@ -197,3 +197,36 @@ Decisions for the owner:
 
 ## C-1 addendum 2 (Orchestrator C, 2026-11-19T16:22Z by `date -u`): one more stop by the classifier
 - While I wrote the brief of worker c24-minter2 (re-attack of B's minter rule 2), the classifier stopped my response. The worker had already started with a brief that ends mid-sentence. I did not resend or rephrase the withheld part.
+
+## B-19 (written 2026-11-19T16:39:33Z) — new evidence for question OQ-H2-1 of B-18: closing a request id on a refusal lets a caller without the key block a victim cheaply (red team C-ATT-38; its runs)
+- With rule 2 on the branch, a caller who knows the charge id, the victim's request id and the original amount closes the victim's request id WITHOUT knowing the pre-state: without a store, about `original` requests (one per possible remaining value); with a store, the minter's refusal texts act as a state oracle (364 probes in the red team's run), then one request closes the pair. No token is signed and nothing commits; the victim then gets "attempt closed" and must use a new request id.
+- This corrects a sentence of the worker's notes ("without a store a caller cannot block the victim"): false.
+- It makes the choice in OQ-H2-1 sharper: "close on refusal" follows the letter of protocol.md lines 61 to 62 and gives this denial of service; "close only on completion" removes it and still keeps one effect per request id (the sink enforces that). Which reading of "rejection closes that attempt" does the owner approve: the ATTEMPT (this one call) or the REQUEST ID?
+- Until decided, the branch keeps "close on refusal" and names the denial of service as a known limit. No money moves in this attack.
+
+## C-1 addendum 3 (Orchestrator C, 2026-11-19T16:56Z by `date -u`): two more stops by the classifier, not retried
+- My re-run of the minter closed-launch script tests (worker c24's s10_launch.sh), and my own bounded run of two gate modules that B's new checker accepts (worker c23's U01, U02). For both, the worker's runs stand and my re-run is NOT RUN.
+
+## B-17 CORRECTION (written 2026-11-19T16:57:26Z) — the proposed JavaScript bound checker is NOT sound as delivered (red team C-GATE-07, C-GATE-08); do not adopt it as it is
+- The checker ACCEPTS two modules that the pinned Dafny generates from files that verify, and whose single decision call does not finish in minutes. My own run of the red team's script (`bash results/night-shift-20261119/orch-C/c23-jsgate/regress.sh`): exit 1; "ACCEPT" four times (two modules, both tier forms). The run-time evidence (killed by a 60 s and a 110 s alarm) is the red team's worker's; my three attempts to repeat the run failed on my own set-up errors and are not results.
+- Causes named by the red team: the checker bounds a modulo result by the smaller operand, but the runtime's modulo of a negative number has the size of the divisor (a value that squares each round stays "2 bits" for the checker); the cost table charges set equality as linear, the runtime is quadratic.
+- What still stands: on the sets measured, the proposal removes the false rejections (96 of 124 mine; 16 of 16 new correct files of the red team) and refuses the seven known unsafe files. The cost model is the open part. An unverified 692-line checker with a hand-read cost table is the weak point that B-17 named as an argument; it is now a shown defect.
+
+## OWNER DECISION D-1 (recorded by the launcher 2026-11-19T17:03Z; owner text verbatim, labelled by the owner "Decision on B-19: Option 1 approved")
+> - Delete FORGE_MINTER_KEY completely (no --unsafe-test-env backdoor; tests generate temp 0600 key files).
+> - Require a pinned key_id in the token verified against the sink's allowlist.
+> - Check key-file permissions via fstat on the opened descriptor (O_NOFOLLOW, regular file, uid == euid, (mode & 0o077) == 0) so C cannot symlink-race the key check.
+- Launcher note (facts at recording): B-19 as written asks a different question (does a refusal close the ATTEMPT or the REQUEST ID?) and lists no options. No file in the repository or branches contains FORGE_MINTER_KEY or --unsafe-test-env. The minter now generates an ed25519 key in memory per process (cause of C-ATT-05: restart = new key).
+- Launcher interpretation applied: D-1 is the approved design for a PERSISTENT minter key: key loaded only from a file opened with O_NOFOLLOW and checked by fstat on that descriptor (regular file, uid == euid, mode & 0o077 == 0); no key from environment variables and no test bypass flag; tests create temporary 0600 key files; every token carries a key_id that the sink checks against a pinned allowlist. This also addresses C-ATT-05.
+- B-19's own question (attempt vs request id) remains OPEN. B's analysis: "close only on completion" removes the denial of service and still keeps one effect per request id.
+
+## OWNER DECISION D-2 (recorded by the launcher 2026-11-19T17:08Z; answers B-19 / OQ-H2-1; owner text verbatim)
+> B-19: A minter refusal closes ONLY that attempt, NOT the whole request ID (closing C-ATT-38). Only an accepted/minted token (and sink commit) closes the request ID, preserving <= 1 valid token and <= 1 effect per request ID.
+
+## OWNER DECISION D-3 (recorded by the launcher 2026-11-19T17:08Z; provider anchor at 74fb70eb; owner text verbatim)
+> Provider anchor (74fb70eb): Agreed--keep the local floor + outside head as the rollback anchor and treat the provider key as a second layer with an explicit key-window assumption. Send C-ATT-41/44 to B: verify returned charge_id and amount on every replayed provider response, and bind/namespace the provider key to (charge_id, request_id, amount).
+
+## B-20 (written 2026-11-19T17:23:16Z) — a measured cost of decision D-3 (the amount is part of the provider key): one case that the key used to absorb is no longer absorbed without the local anchors (U628)
+- Implemented as decided: key = SHA-256 over a namespace (with the store's genesis hash) and (charge id, request id, amount); every provider answer, replays included, is compared with the committed row; a mismatch is an alarm and never "paid" (red team C-ATT-41, 44: closed in my runs with a fake provider).
+- Cost: after a rollback WITHOUT the local anchors, the same request id committed again with ANOTHER amount gets a NEW key, so the provider pays again: 1400 on a charge of 1000 in the test p_full_param_rebind (mode a, anchor none: exit 0 before the change, exit 1 after; my run). With the amount left out of the key (measurement only) the provider would refuse it. With layer 1 (ledger floor plus outside head) the case is stopped before the provider (exit 0), as D-3 intends; a provider ceiling also stops it.
+- So D-3 is consistent only if layer 1 is always configured. Question: is that the intended reading (layer 1 mandatory in every deployment; the provider key gives no protection against a rebind by rollback), or should the key omit the amount and the adapter rely on its comparison of the returned amount with the committed row?

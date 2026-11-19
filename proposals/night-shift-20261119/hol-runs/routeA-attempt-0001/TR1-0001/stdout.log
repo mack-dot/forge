@@ -1,0 +1,724 @@
+TIMEOUT_HELPER Timeout.apply loaded
+GUARD_DEFINED guarded_apply
+MARK LOAD
+LOAD_OK miscTheory
+LOAD_OK ffiTheory
+LOAD_OK asmPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK lprefix_lubTheory
+<<HOL message: Created theory "forge_machineTrace">>
+MARK USE tr_common2.sml
+MARK DATATYPE
+Saved theorem _______ "trace_event_bnd"
+Saved theorem _______ "trace_event_MAP_ID"
+Saved theorem _______ "trace_event_MAP_O"
+Saved theorem _______ "trace_event_MAP_IMAGE"
+Saved theorem _______ "trace_event_MAP_CONG"
+Saved theorem _______ "trace_event_wit"
+Saved theorem _______ "trace_event_inh"
+Saved theorem _______ "trace_event_size_def"
+Saved theorem _______ "trace_event_size_MAP"
+Saved theorem _______ "trace_eventMAP_thm"
+Saved theorem _______ "trace_eventMAP_ind"
+Saved theorem _______ "trace_eventSET_thm"
+Saved theorem _______ "trace_eventSET_ind"
+Saved theorem _______ "datatype_trace_event"
+Saved theorem _______ "trace_event_11"
+Saved theorem _______ "trace_event_distinct"
+Saved theorem _______ "trace_event_nchotomy"
+Saved theorem _______ "trace_event_Axiom"
+Saved theorem _______ "trace_event_induction"
+Saved theorem _______ "trace_event_case_cong"
+Saved theorem _______ "trace_event_case_eq"
+<<HOL message: Defined type: "trace_event">>
+DATATYPE_OK trace_event
+MARK DEFS
+Saved definition ____ "step_event_ok_def"
+DEFINITION step_event_ok_def
+⊢ ∀mc ms s.
+    step_event_ok mc ms s ⇔
+    mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+    encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+      (mc.target.get_byte ms) mc.prog_addresses ∧
+    EVERY mc.target.state_ok [ms; mc.target.next ms; s] ∧
+    ∀x. x ∉ mc.prog_addresses ⇒
+        mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x
+Saved definition ____ "ffi_event_ok_def"
+DEFINITION ffi_event_ok_def
+⊢ ∀mc st ms i nb.
+    ffi_event_ok mc st ms i nb ⇔
+    MEM (mc.target.get_pc ms) mc.ffi_entry_pcs ∧
+    mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms ≠ mc.install_pc ∧
+    find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ∧
+    ALOOKUP mc.mmio_info i = NONE ∧
+    ∃nm b1 b2 st1.
+      mc.ffi_names❲i❳ = ExtCall nm ∧
+      read_ffi_bytearrays mc ms = (SOME b1,SOME b2) ∧
+      call_FFI st (ExtCall nm) b1 b2 = FFI_return st1 nb
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "ffi_post_st_def"
+DEFINITION ffi_post_st_def
+⊢ ∀mc st ms i.
+    ffi_post_st mc st ms i =
+    case read_ffi_bytearrays mc ms of
+      (NONE,v3) => st
+    | (SOME b1,NONE) => st
+    | (SOME b1,SOME b2) =>
+      case call_FFI st mc.ffi_names❲i❳ b1 b2 of
+        FFI_return st1 nb => st1
+      | FFI_final e => st
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "ffi_call_event_def"
+DEFINITION ffi_call_event_def
+⊢ ∀mc ms i nb.
+    ffi_call_event mc ms i nb =
+    case read_ffi_bytearrays mc ms of
+      (NONE,v3) => []
+    | (SOME b1,NONE) => []
+    | (SOME b1,SOME b2) =>
+      if mc.ffi_names❲i❳ = ExtCall «» then []
+      else [IO_event mc.ffi_names❲i❳ b1 (ZIP (b2,nb))]
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_machineTrace)>>
+Saved definition ____ "trace_next_interfer_def"
+Saved induction _____ "trace_next_interfer_ind"
+DEFINITION trace_next_interfer_def
+⊢ (∀ms1 m P. trace_next_interfer P [] m ms1 = ms1) ∧
+  (∀tr s ms1 m P.
+     trace_next_interfer P (TrStep s::tr) m ms1 =
+     if m = 0 then if P ms1 = P s then s else ms1
+     else trace_next_interfer P tr (m − 1) ms1) ∧
+  ∀tr s nb ms1 m i P.
+    trace_next_interfer P (TrFfi i nb s::tr) m ms1 =
+    trace_next_interfer P tr m ms1
+Saved definition ____ "trace_ffi_interfer_def"
+Saved induction _____ "trace_ffi_interfer_ind"
+DEFINITION trace_ffi_interfer_def
+⊢ (∀x ms0 k g G. trace_ffi_interfer G g ms0 [] k x = g k x) ∧
+  (∀x tr s ms0 k g G.
+     trace_ffi_interfer G g ms0 (TrStep s::tr) k x =
+     trace_ffi_interfer G g s tr k x) ∧
+  ∀x tr s nb ms0 k i g G.
+    trace_ffi_interfer G g ms0 (TrFfi i nb s::tr) k x =
+    if k = 0 then if x = (i,nb,ms0) ∧ G x s then s else g 0 x
+    else trace_ffi_interfer G (shift_seq 1 g) s tr (k − 1) x
+Saved definition ____ "nffis_def"
+Saved induction _____ "nffis_ind"
+DEFINITION nffis_def
+⊢ nffis [] = 0 ∧ (∀tr s. nffis (TrStep s::tr) = nffis tr) ∧
+  ∀tr s nb i. nffis (TrFfi i nb s::tr) = nffis tr + 1
+Saved definition ____ "trace_last_def"
+Saved induction _____ "trace_last_ind"
+DEFINITION trace_last_def
+⊢ (∀ms. trace_last ms [] = ms) ∧
+  (∀tr s ms. trace_last ms (TrStep s::tr) = trace_last s tr) ∧
+  ∀tr s nb ms i. trace_last ms (TrFfi i nb s::tr) = trace_last s tr
+Saved definition ____ "trace_st_def"
+Saved induction _____ "trace_st_ind"
+DEFINITION trace_st_def
+⊢ (∀st ms mc. trace_st mc st ms [] = st) ∧
+  (∀tr st s ms mc. trace_st mc st ms (TrStep s::tr) = trace_st mc st s tr) ∧
+  ∀tr st s nb ms mc i.
+    trace_st mc st ms (TrFfi i nb s::tr) =
+    trace_st mc (ffi_post_st mc st ms i) s tr
+Saved definition ____ "trace_events_def"
+Saved induction _____ "trace_events_ind"
+DEFINITION trace_events_def
+⊢ (∀ms mc. trace_events mc ms [] = []) ∧
+  (∀tr s ms mc. trace_events mc ms (TrStep s::tr) = trace_events mc s tr) ∧
+  ∀tr s nb ms mc i.
+    trace_events mc ms (TrFfi i nb s::tr) =
+    ffi_call_event mc ms i nb ++ trace_events mc s tr
+Saved definition ____ "trace_ok_def"
+Saved induction _____ "trace_ok_ind"
+DEFINITION trace_ok_def
+⊢ (∀st ms mc P G. trace_ok P G mc st ms [] ⇔ T) ∧
+  (∀tr st s ms mc P G.
+     trace_ok P G mc st ms (TrStep s::tr) ⇔
+     step_event_ok mc ms s ∧ P (mc.target.next ms) = P s ∧
+     trace_ok P G mc st s tr) ∧
+  ∀tr st s nb ms mc i P G.
+    trace_ok P G mc st ms (TrFfi i nb s::tr) ⇔
+    ffi_event_ok mc st ms i nb ∧ G (i,nb,ms) s ∧
+    trace_ok P G mc (ffi_post_st mc st ms i) s tr
+DEFINITION toy_config_def
+⊢ toy_config =
+  <|ISA := ARMv8; encode := (λi. [0w]); big_endian := F; code_alignment := 0;
+    link_reg := NONE; avoid_regs := []; reg_count := 0; fp_reg_count := 0;
+    two_reg_arith := F; valid_imm := (λb i. F); addr_offset := (0,0);
+    hw_offset := (0,0); byte_offset := (0,0); jump_offset := (0,0);
+    cjump_offset := (0,0); loc_offset := (0,0)|>
+DEFINITION toy_target_def
+⊢ toy_target =
+  <|config := toy_config; next := (λs. s + 1w); get_pc := (λs. s);
+    get_reg := (λs r. 0w); get_fp_reg := (λs r. 0w); get_byte := (λs a. 0w);
+    state_ok := (λs. T); proj := (λd s. s)|>
+DEFINITION toy_mc_def
+⊢ toy_mc =
+  <|prog_addresses := {0w}; shared_addresses := ∅; ffi_entry_pcs := [1w];
+    ffi_names := [ExtCall «f»]; ptr_reg := 0; len_reg := 0; ptr2_reg := 0;
+    len2_reg := 0; ffi_interfer := (λk x. 0w); callee_saved_regs := [];
+    next_interfer := (λm s. s); halt_pc := 2w; install_pc := 3w;
+    install_interfer := (λk x. 0w); target := toy_target; mmio_info := []|>
+DEFINITION toy_st_def
+⊢ toy_st =
+  <|oracle := (λn s c b. Oracle_return s b); ffi_state := ();
+    io_events := []|>
+TOY_DEFS_OK true
+MARK STATEMENTS
+STATEMENT shift_seq_shift_seq
+∀m n f. shift_seq m (shift_seq n f) = shift_seq (m + n) f
+STATEMENT shift_seq_0
+∀f. shift_seq 0 f = f
+STATEMENT shift_seq_1_pred
+∀g k. k ≠ 0 ⇒ shift_seq 1 g (k − 1) = g k
+STATEMENT trace_next_interfer_ffi
+∀P i nb s tr.
+  trace_next_interfer P (TrFfi i nb s::tr) = trace_next_interfer P tr
+STATEMENT trace_next_interfer_shift
+∀P s tr.
+  shift_seq 1 (trace_next_interfer P (TrStep s::tr)) =
+  trace_next_interfer P tr
+STATEMENT trace_ffi_interfer_nil
+∀G g ms0. trace_ffi_interfer G g ms0 [] = g
+STATEMENT trace_ffi_interfer_step
+∀G g ms0 s tr.
+  trace_ffi_interfer G g ms0 (TrStep s::tr) = trace_ffi_interfer G g s tr
+STATEMENT trace_ffi_interfer_shift
+∀G g ms0 i nb s tr.
+  shift_seq 1 (trace_ffi_interfer G g ms0 (TrFfi i nb s::tr)) =
+  trace_ffi_interfer G (shift_seq 1 g) s tr
+STATEMENT trace_next_interfer_proj
+∀P tr m ms1. P (trace_next_interfer P tr m ms1) = P ms1
+STATEMENT trace_next_interfer_ok
+∀P tr. interference_ok (trace_next_interfer P tr) P
+STATEMENT trace_ffi_interfer_guard
+∀G tr g ms0 k x.
+  trace_ffi_interfer G g ms0 tr k x = g k x ∨
+  G x (trace_ffi_interfer G g ms0 tr k x)
+STATEMENT trace_ffi_interfer_off
+∀G g ms0 tr k x.
+  ¬G x (trace_ffi_interfer G g ms0 tr k x) ⇒
+  trace_ffi_interfer G g ms0 tr k x = g k x
+STATEMENT step_event_ok_upd
+∀mc ms s f f'.
+  (step_event_ok (mc with next_interfer := f) ms s ⇔ step_event_ok mc ms s) ∧
+  (step_event_ok (mc with ffi_interfer := f') ms s ⇔ step_event_ok mc ms s)
+STATEMENT ffi_event_ok_upd
+∀mc st ms i nb f f'.
+  (ffi_event_ok (mc with next_interfer := f) st ms i nb ⇔
+   ffi_event_ok mc st ms i nb) ∧
+  (ffi_event_ok (mc with ffi_interfer := f') st ms i nb ⇔
+   ffi_event_ok mc st ms i nb)
+STATEMENT ffi_post_st_upd
+∀mc st ms i f f'.
+  ffi_post_st (mc with next_interfer := f) st ms i = ffi_post_st mc st ms i ∧
+  ffi_post_st (mc with ffi_interfer := f') st ms i = ffi_post_st mc st ms i
+STATEMENT trace_ok_upd
+∀P G tr mc st ms f f'.
+  (trace_ok P G (mc with next_interfer := f) st ms tr ⇔
+   trace_ok P G mc st ms tr) ∧
+  (trace_ok P G (mc with ffi_interfer := f') st ms tr ⇔
+   trace_ok P G mc st ms tr)
+STATEMENT trace_st_upd
+∀tr mc st ms f f'.
+  trace_st (mc with next_interfer := f) st ms tr = trace_st mc st ms tr ∧
+  trace_st (mc with ffi_interfer := f') st ms tr = trace_st mc st ms tr
+STATEMENT evaluate_cong
+∀mc1 mc2 st1 st2 ms1 ms2 k.
+  mc1 = mc2 ∧ st1 = st2 ∧ ms1 = ms2 ⇒
+  evaluate mc1 st1 k ms1 = evaluate mc2 st2 k ms2
+STATEMENT evaluate_zero
+∀mc st ms. evaluate mc st 0 ms = (TimeOut,ms,st)
+STATEMENT evaluate_one_step_event
+∀mc st ms s k.
+  step_event_ok mc ms s ∧ mc.next_interfer 0 (mc.target.next ms) = s ⇒
+  evaluate mc st (SUC k) ms =
+  evaluate (mc with next_interfer := shift_seq 1 mc.next_interfer) st k s
+STATEMENT evaluate_one_ffi_event
+∀mc st ms i nb s k.
+  ffi_event_ok mc st ms i nb ∧ mc.ffi_interfer 0 (i,nb,ms) = s ⇒
+  evaluate mc st (SUC k) ms =
+  evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer)
+    (ffi_post_st mc st ms i) k s
+STATEMENT trace_gen
+∀P G tr mc st ms g k.
+  trace_ok P G mc st ms tr ∧ mc.next_interfer = trace_next_interfer P tr ∧
+  mc.ffi_interfer = trace_ffi_interfer G g ms tr ⇒
+  evaluate mc st (LENGTH tr + k) ms =
+  evaluate
+    (mc with
+     <|next_interfer := trace_next_interfer P [];
+       ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr) k
+    (trace_last ms tr)
+STATEMENT evaluate_follows_trace
+∀P G g tr mc st ms k.
+  trace_ok P G mc st ms tr ⇒
+  evaluate
+    (mc with
+     <|next_interfer := trace_next_interfer P tr;
+       ffi_interfer := trace_ffi_interfer G g ms tr|>) st (LENGTH tr + k) ms =
+  evaluate
+    (mc with
+     <|next_interfer := trace_next_interfer P [];
+       ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr) k
+    (trace_last ms tr)
+STATEMENT call_FFI_return_io
+∀st n b1 b2 st1 nb.
+  call_FFI st n b1 b2 = FFI_return st1 nb ⇒
+  st1.io_events =
+  st.io_events ++
+  if n = ExtCall «» then [] else [IO_event n b1 (ZIP (b2,nb))]
+STATEMENT ffi_post_st_io
+∀mc st ms i nb.
+  ffi_event_ok mc st ms i nb ⇒
+  (ffi_post_st mc st ms i).io_events =
+  st.io_events ++ ffi_call_event mc ms i nb
+STATEMENT trace_io
+∀P G tr mc st ms.
+  trace_ok P G mc st ms tr ⇒
+  (trace_st mc st ms tr).io_events = st.io_events ++ trace_events mc ms tr
+STATEMENT add_clock_swap
+∀mc st k ms r a b.
+  evaluate mc st k ms = (r,a,b) ⇒
+  r ≠ TimeOut ⇒
+  ∀k1. evaluate mc st (k1 + k) ms = (r,a,b)
+STATEMENT prefix_of_halt
+∀mc st k ms t a b.
+  evaluate mc st k ms = (Halt t,a,b) ⇒ st.io_events ≼ b.io_events
+STATEMENT fst_error
+∀x. FST x = Error ⇒ ∃a b. x = (Error,a,b)
+STATEMENT term_after
+∀mc st ms mc2 st2 ms2 n t io.
+  (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧
+  machine_sem mc st ms (Terminate t io) ⇒
+  machine_sem mc2 st2 ms2 (Terminate t io) ∧ st2.io_events ≼ io
+STATEMENT fail_after
+∀mc st ms mc2 st2 ms2 n.
+  (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧
+  machine_sem mc st ms Fail ⇒
+  machine_sem mc2 st2 ms2 Fail
+STATEMENT trace_terminate
+∀P G g tr mc st ms t io.
+  trace_ok P G mc st ms tr ∧
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P tr;
+       ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms (Terminate t io) ⇒
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P [];
+       ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr)
+    (trace_last ms tr) (Terminate t io) ∧
+  st.io_events ++ trace_events mc ms tr ≼ io
+STATEMENT trace_fail
+∀P G g tr mc st ms.
+  trace_ok P G mc st ms tr ∧
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P tr;
+       ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms Fail ⇒
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P [];
+       ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr)
+    (trace_last ms tr) Fail
+STATEMENT div_after
+∀mc st ms mc2 st2 ms2 n l.
+  (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧
+  machine_sem mc st ms (Diverge l) ⇒
+  LPREFIX (fromList st2.io_events) l
+STATEMENT trace_diverge
+∀P G g tr mc st ms l.
+  trace_ok P G mc st ms tr ∧
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P tr;
+       ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms (Diverge l) ⇒
+  LPREFIX (fromList (st.io_events ++ trace_events mc ms tr)) l
+STATEMENT toy_target_fields
+toy_target.next = (λs. s + 1w) ∧ toy_target.get_pc = (λs. s) ∧
+toy_target.get_reg = (λs r. 0w) ∧ toy_target.get_byte = (λs a. 0w) ∧
+toy_target.state_ok = (λs. T)
+STATEMENT toy_encoded
+∀pc m md.
+  pc ∈ md ∧ m pc = 0w ⇒ encoded_bytes_in_mem toy_target.config pc m md
+STATEMENT toy_trace_ok
+trace_ok (λs. s) (λx s. T) toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [] 2w]
+STATEMENT toy_trace_events
+trace_events toy_mc 0w [TrStep 1w; TrFfi 0 [] 2w] =
+[IO_event (ExtCall «f») [] []]
+STATEMENT toy_bad_rejected
+¬trace_ok (λs. s) (λx s. T) toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [7w] 2w]
+STATEMENT toy_bad_not_followed
+evaluate
+  (toy_mc with
+   <|next_interfer :=
+       trace_next_interfer (λs. s) [TrStep 1w; TrFfi 0 [7w] 2w];
+     ffi_interfer :=
+       trace_ffi_interfer (λx s. T) (λk x. 5w) 0w
+         [TrStep 1w; TrFfi 0 [7w] 2w]|>) toy_st
+  (LENGTH [TrStep 1w; TrFfi 0 [7w] 2w] + 0) 0w ≠
+evaluate
+  (toy_mc with
+   <|next_interfer := trace_next_interfer (λs. s) [];
+     ffi_interfer :=
+       shift_seq (nffis [TrStep 1w; TrFfi 0 [7w] 2w]) (λk x. 5w)|>)
+  (trace_st toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [7w] 2w]) 0
+  (trace_last 0w [TrStep 1w; TrFfi 0 [7w] 2w])
+TR_COMMON loaded
+PART_DONE tr_common2.sml
+MARK USE tr_steps2.sml
+TR_STEPS opened
+TR_LEMMAS 41 of 41
+TR_STEPS loaded
+PART_DONE tr_steps2.sml
+MARK USE tr_part1.sml
+PART1_SELECTED 37 shift_seq_shift_seq shift_seq_0 shift_seq_1_pred trace_next_interfer_ffi trace_next_interfer_shift trace_ffi_interfer_nil trace_ffi_interfer_step trace_ffi_interfer_shift trace_next_interfer_proj trace_next_interfer_ok trace_ffi_interfer_guard trace_ffi_interfer_off step_event_ok_upd ffi_event_ok_upd ffi_post_st_upd trace_ok_upd trace_st_upd evaluate_cong evaluate_zero evaluate_one_step_event evaluate_one_ffi_event trace_gen evaluate_follows_trace call_FFI_return_io ffi_post_st_io trace_io add_clock_swap prefix_of_halt fst_error term_after fail_after div_after toy_target_fields toy_encoded toy_trace_ok toy_trace_events toy_bad_rejected
+PART_DONE tr_part1.sml
+MARK USE tr_select_part1.sml
+PART_DONE tr_select_part1.sml
+MARK USE tr_prove.sml
+BEGIN shift_seq_shift_seq required
+STEP_USED shift_seq_shift_seq 1 close candidate 0 goals_out 0
+Saved theorem _______ "shift_seq_shift_seq"
+CHECKED shift_seq_shift_seq
+⊢ ∀m n f. shift_seq m (shift_seq n f) = shift_seq (m + n) f
+BEGIN shift_seq_0 required
+STEP_USED shift_seq_0 1 close candidate 0 goals_out 0
+Saved theorem _______ "shift_seq_0"
+CHECKED shift_seq_0
+⊢ ∀f. shift_seq 0 f = f
+BEGIN shift_seq_1_pred required
+STEP_USED shift_seq_1_pred 1 close candidate 0 goals_out 0
+Saved theorem _______ "shift_seq_1_pred"
+CHECKED shift_seq_1_pred
+⊢ ∀g k. k ≠ 0 ⇒ shift_seq 1 g (k − 1) = g k
+BEGIN trace_next_interfer_ffi required
+STEP_USED trace_next_interfer_ffi 1 close candidate 0 goals_out 0
+Saved theorem _______ "trace_next_interfer_ffi"
+CHECKED trace_next_interfer_ffi
+⊢ ∀P i nb s tr.
+    trace_next_interfer P (TrFfi i nb s::tr) = trace_next_interfer P tr
+BEGIN trace_next_interfer_shift required
+STEP_USED trace_next_interfer_shift 1 close candidate 0 goals_out 0
+Saved theorem _______ "trace_next_interfer_shift"
+CHECKED trace_next_interfer_shift
+⊢ ∀P s tr.
+    shift_seq 1 (trace_next_interfer P (TrStep s::tr)) =
+    trace_next_interfer P tr
+BEGIN trace_ffi_interfer_nil required
+STEP_USED trace_ffi_interfer_nil 1 close candidate 0 goals_out 0
+Saved theorem _______ "trace_ffi_interfer_nil"
+CHECKED trace_ffi_interfer_nil
+⊢ ∀G g ms0. trace_ffi_interfer G g ms0 [] = g
+BEGIN trace_ffi_interfer_step required
+STEP_USED trace_ffi_interfer_step 1 close candidate 0 goals_out 0
+Saved theorem _______ "trace_ffi_interfer_step"
+CHECKED trace_ffi_interfer_step
+⊢ ∀G g ms0 s tr.
+    trace_ffi_interfer G g ms0 (TrStep s::tr) = trace_ffi_interfer G g s tr
+BEGIN trace_ffi_interfer_shift required
+STEP_USED trace_ffi_interfer_shift 1 close candidate 0 goals_out 0
+Saved theorem _______ "trace_ffi_interfer_shift"
+CHECKED trace_ffi_interfer_shift
+⊢ ∀G g ms0 i nb s tr.
+    shift_seq 1 (trace_ffi_interfer G g ms0 (TrFfi i nb s::tr)) =
+    trace_ffi_interfer G (shift_seq 1 g) s tr
+BEGIN trace_next_interfer_proj required
+STEP_USED trace_next_interfer_proj 1 induct candidate 0 goals_out 2
+STEP_USED trace_next_interfer_proj 2 base candidate 0 goals_out 0
+STEP_USED trace_next_interfer_proj 3 step candidate 0 goals_out 0
+Saved theorem _______ "trace_next_interfer_proj"
+CHECKED trace_next_interfer_proj
+⊢ ∀P tr m ms1. P (trace_next_interfer P tr m ms1) = P ms1
+BEGIN trace_next_interfer_ok required
+STEP_USED trace_next_interfer_ok 1 close candidate 0 goals_out 0
+Saved theorem _______ "trace_next_interfer_ok"
+CHECKED trace_next_interfer_ok
+⊢ ∀P tr. interference_ok (trace_next_interfer P tr) P
+BEGIN trace_ffi_interfer_guard required
+STEP_USED trace_ffi_interfer_guard 1 induct candidate 0 goals_out 2
+STEP_USED trace_ffi_interfer_guard 2 base candidate 0 goals_out 0
+STEP_USED trace_ffi_interfer_guard 3 cases candidate 0 goals_out 2
+STEP_USED trace_ffi_interfer_guard 4 TrStep candidate 0 goals_out 0
+STEP_USED trace_ffi_interfer_guard 5 TrFfi split on k candidate 0 goals_out 2
+STEP_USED trace_ffi_interfer_guard 6 k = 0 candidate 0 goals_out 0
+STEP_USED trace_ffi_interfer_guard 7 k <> 0 candidate 0 goals_out 0
+Saved theorem _______ "trace_ffi_interfer_guard"
+CHECKED trace_ffi_interfer_guard
+⊢ ∀G tr g ms0 k x.
+    trace_ffi_interfer G g ms0 tr k x = g k x ∨
+    G x (trace_ffi_interfer G g ms0 tr k x)
+BEGIN trace_ffi_interfer_off required
+STEP_USED trace_ffi_interfer_off 1 close candidate 0 goals_out 0
+Saved theorem _______ "trace_ffi_interfer_off"
+CHECKED trace_ffi_interfer_off
+⊢ ∀G g ms0 tr k x.
+    ¬G x (trace_ffi_interfer G g ms0 tr k x) ⇒
+    trace_ffi_interfer G g ms0 tr k x = g k x
+BEGIN step_event_ok_upd required
+STEP_USED step_event_ok_upd 1 close candidate 0 goals_out 0
+Saved theorem _______ "step_event_ok_upd"
+CHECKED step_event_ok_upd
+⊢ ∀mc ms s f f'.
+    (step_event_ok (mc with next_interfer := f) ms s ⇔ step_event_ok mc ms s) ∧
+    (step_event_ok (mc with ffi_interfer := f') ms s ⇔ step_event_ok mc ms s)
+BEGIN ffi_event_ok_upd required
+STEP_USED ffi_event_ok_upd 1 close candidate 0 goals_out 0
+Saved theorem _______ "ffi_event_ok_upd"
+CHECKED ffi_event_ok_upd
+⊢ ∀mc st ms i nb f f'.
+    (ffi_event_ok (mc with next_interfer := f) st ms i nb ⇔
+     ffi_event_ok mc st ms i nb) ∧
+    (ffi_event_ok (mc with ffi_interfer := f') st ms i nb ⇔
+     ffi_event_ok mc st ms i nb)
+BEGIN ffi_post_st_upd required
+STEP_USED ffi_post_st_upd 1 close candidate 0 goals_out 0
+Saved theorem _______ "ffi_post_st_upd"
+CHECKED ffi_post_st_upd
+⊢ ∀mc st ms i f f'.
+    ffi_post_st (mc with next_interfer := f) st ms i = ffi_post_st mc st ms i ∧
+    ffi_post_st (mc with ffi_interfer := f') st ms i = ffi_post_st mc st ms i
+BEGIN trace_ok_upd required
+STEP_USED trace_ok_upd 1 induct candidate 0 goals_out 2
+STEP_USED trace_ok_upd 2 base candidate 0 goals_out 0
+STEP_USED trace_ok_upd 3 step candidate 0 goals_out 0
+Saved theorem _______ "trace_ok_upd"
+CHECKED trace_ok_upd
+⊢ ∀P G tr mc st ms f f'.
+    (trace_ok P G (mc with next_interfer := f) st ms tr ⇔
+     trace_ok P G mc st ms tr) ∧
+    (trace_ok P G (mc with ffi_interfer := f') st ms tr ⇔
+     trace_ok P G mc st ms tr)
+BEGIN trace_st_upd required
+STEP_USED trace_st_upd 1 induct candidate 0 goals_out 2
+STEP_USED trace_st_upd 2 base candidate 0 goals_out 0
+STEP_USED trace_st_upd 3 step candidate 0 goals_out 0
+Saved theorem _______ "trace_st_upd"
+CHECKED trace_st_upd
+⊢ ∀tr mc st ms f f'.
+    trace_st (mc with next_interfer := f) st ms tr = trace_st mc st ms tr ∧
+    trace_st (mc with ffi_interfer := f') st ms tr = trace_st mc st ms tr
+BEGIN evaluate_cong required
+STEP_USED evaluate_cong 1 close candidate 0 goals_out 0
+Saved theorem _______ "evaluate_cong"
+CHECKED evaluate_cong
+⊢ ∀mc1 mc2 st1 st2 ms1 ms2 k.
+    mc1 = mc2 ∧ st1 = st2 ∧ ms1 = ms2 ⇒
+    evaluate mc1 st1 k ms1 = evaluate mc2 st2 k ms2
+BEGIN evaluate_zero required
+STEP_USED evaluate_zero 1 close candidate 0 goals_out 0
+Saved theorem _______ "evaluate_zero"
+CHECKED evaluate_zero
+⊢ ∀mc st ms. evaluate mc st 0 ms = (TimeOut,ms,st)
+BEGIN evaluate_one_step_event required
+STEP_USED evaluate_one_step_event 1 intro candidate 0 goals_out 1
+STEP_USED evaluate_one_step_event 2 unfold evaluate once (left side only) candidate 0 goals_out 1
+STEP_USED evaluate_one_step_event 3 close candidate 0 goals_out 0
+Saved theorem _______ "evaluate_one_step_event"
+CHECKED evaluate_one_step_event
+⊢ ∀mc st ms s k.
+    step_event_ok mc ms s ∧ mc.next_interfer 0 (mc.target.next ms) = s ⇒
+    evaluate mc st (SUC k) ms =
+    evaluate (mc with next_interfer := shift_seq 1 mc.next_interfer) st k s
+BEGIN evaluate_one_ffi_event required
+STEP_USED evaluate_one_ffi_event 1 intro candidate 0 goals_out 1
+STEP_USED evaluate_one_ffi_event 2 unfold evaluate once (left side only) candidate 0 goals_out 1
+STEP_USED evaluate_one_ffi_event 3 close candidate 0 goals_out 0
+Saved theorem _______ "evaluate_one_ffi_event"
+CHECKED evaluate_one_ffi_event
+⊢ ∀mc st ms i nb s k.
+    ffi_event_ok mc st ms i nb ∧ mc.ffi_interfer 0 (i,nb,ms) = s ⇒
+    evaluate mc st (SUC k) ms =
+    evaluate (mc with ffi_interfer := shift_seq 1 mc.ffi_interfer)
+      (ffi_post_st mc st ms i) k s
+BEGIN trace_gen required
+STEP_USED trace_gen 1 induct candidate 0 goals_out 2
+STEP_USED trace_gen 2 base candidate 0 goals_out 0
+STEP_USED trace_gen 3 cases candidate 0 goals_out 2
+STEP_USED trace_gen 4 TrStep intro candidate 0 goals_out 1
+STEP_USED trace_gen 5 TrStep oracle value candidate 0 goals_out 1
+STEP_USED trace_gen 6 TrStep one event candidate 0 goals_out 1
+STEP_USED trace_gen 7 TrStep IH candidate 0 goals_out 1
+STEP_USED trace_gen 8 TrStep apply IH candidate 0 goals_out 1
+STEP_USED trace_gen 9 TrStep same end machine candidate 0 goals_out 0
+STEP_USED trace_gen 10 TrFfi intro candidate 0 goals_out 1
+STEP_USED trace_gen 11 TrFfi oracle value candidate 0 goals_out 1
+STEP_USED trace_gen 12 TrFfi one event candidate 0 goals_out 1
+STEP_USED trace_gen 13 TrFfi IH candidate 0 goals_out 1
+STEP_USED trace_gen 14 TrFfi apply IH candidate 0 goals_out 1
+STEP_USED trace_gen 15 TrFfi same end machine candidate 0 goals_out 0
+Saved theorem _______ "trace_gen"
+CHECKED trace_gen
+⊢ ∀P G tr mc st ms g k.
+    trace_ok P G mc st ms tr ∧ mc.next_interfer = trace_next_interfer P tr ∧
+    mc.ffi_interfer = trace_ffi_interfer G g ms tr ⇒
+    evaluate mc st (LENGTH tr + k) ms =
+    evaluate
+      (mc with
+       <|next_interfer := trace_next_interfer P [];
+         ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr) k
+      (trace_last ms tr)
+BEGIN evaluate_follows_trace required
+STEP_USED evaluate_follows_trace 1 instantiate candidate 0 goals_out 1
+STEP_USED evaluate_follows_trace 2 apply candidate 0 goals_out 1
+STEP_USED evaluate_follows_trace 3 same end machine candidate 0 goals_out 0
+Saved theorem _______ "evaluate_follows_trace"
+CHECKED evaluate_follows_trace
+⊢ ∀P G g tr mc st ms k.
+    trace_ok P G mc st ms tr ⇒
+    evaluate
+      (mc with
+       <|next_interfer := trace_next_interfer P tr;
+         ffi_interfer := trace_ffi_interfer G g ms tr|>) st (LENGTH tr + k)
+      ms =
+    evaluate
+      (mc with
+       <|next_interfer := trace_next_interfer P [];
+         ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr) k
+      (trace_last ms tr)
+BEGIN call_FFI_return_io required
+STEP_USED call_FFI_return_io 1 close candidate 0 goals_out 0
+Saved theorem _______ "call_FFI_return_io"
+CHECKED call_FFI_return_io
+⊢ ∀st n b1 b2 st1 nb.
+    call_FFI st n b1 b2 = FFI_return st1 nb ⇒
+    st1.io_events =
+    st.io_events ++
+    if n = ExtCall «» then [] else [IO_event n b1 (ZIP (b2,nb))]
+BEGIN ffi_post_st_io required
+STEP_USED ffi_post_st_io 1 close candidate 0 goals_out 0
+Saved theorem _______ "ffi_post_st_io"
+CHECKED ffi_post_st_io
+⊢ ∀mc st ms i nb.
+    ffi_event_ok mc st ms i nb ⇒
+    (ffi_post_st mc st ms i).io_events =
+    st.io_events ++ ffi_call_event mc ms i nb
+BEGIN trace_io required
+STEP_USED trace_io 1 induct candidate 0 goals_out 2
+STEP_USED trace_io 2 base candidate 0 goals_out 0
+STEP_USED trace_io 3 cases candidate 0 goals_out 2
+STEP_USED trace_io 4 TrStep candidate 0 goals_out 0
+STEP_USED trace_io 5 TrFfi candidate 0 goals_out 0
+Saved theorem _______ "trace_io"
+CHECKED trace_io
+⊢ ∀P G tr mc st ms.
+    trace_ok P G mc st ms tr ⇒
+    (trace_st mc st ms tr).io_events = st.io_events ++ trace_events mc ms tr
+BEGIN add_clock_swap required
+STEP_USED add_clock_swap 1 close candidate 0 goals_out 0
+Saved theorem _______ "add_clock_swap"
+CHECKED add_clock_swap
+⊢ ∀mc st k ms r a b.
+    evaluate mc st k ms = (r,a,b) ⇒
+    r ≠ TimeOut ⇒
+    ∀k1. evaluate mc st (k1 + k) ms = (r,a,b)
+BEGIN prefix_of_halt required
+STEP_USED prefix_of_halt 1 close candidate 0 goals_out 0
+Saved theorem _______ "prefix_of_halt"
+CHECKED prefix_of_halt
+⊢ ∀mc st k ms t a b.
+    evaluate mc st k ms = (Halt t,a,b) ⇒ st.io_events ≼ b.io_events
+BEGIN fst_error required
+STEP_USED fst_error 1 close candidate 0 goals_out 0
+Saved theorem _______ "fst_error"
+CHECKED fst_error
+⊢ ∀x. FST x = Error ⇒ ∃a b. x = (Error,a,b)
+BEGIN term_after required
+STEP_USED term_after 1 intro candidate 0 goals_out 1
+STEP_USED term_after 2 add clock n candidate 0 goals_out 1
+STEP_USED term_after 3 transfer candidate 0 goals_out 1
+STEP_USED term_after 4 behaviour candidate 0 goals_out 1
+STEP_CANDIDATE_FAILED term_after 5 candidate 0 HOL_ERR (HOL_ERROR {message = "NO_TAC", origins = [{origin_function = "FAIL_TAC", origin_structure = "Tactical", source_location = Loc_Unknown}]})
+STEP_USED term_after 5 prefix candidate 1 goals_out 0
+Saved theorem _______ "term_after"
+CHECKED term_after
+⊢ ∀mc st ms mc2 st2 ms2 n t io.
+    (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧
+    machine_sem mc st ms (Terminate t io) ⇒
+    machine_sem mc2 st2 ms2 (Terminate t io) ∧ st2.io_events ≼ io
+BEGIN fail_after required
+STEP_USED fail_after 1 intro candidate 0 goals_out 1
+STEP_USED fail_after 2 triple candidate 0 goals_out 1
+STEP_USED fail_after 3 add clock n candidate 0 goals_out 1
+STEP_USED fail_after 4 close candidate 0 goals_out 0
+Saved theorem _______ "fail_after"
+CHECKED fail_after
+⊢ ∀mc st ms mc2 st2 ms2 n.
+    (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧
+    machine_sem mc st ms Fail ⇒
+    machine_sem mc2 st2 ms2 Fail
+BEGIN div_after required
+STEP_USED div_after 1 intro candidate 0 goals_out 1
+STEP_USED div_after 2 k = 0 candidate 0 goals_out 1
+STEP_USED div_after 3 lub instance candidate 0 goals_out 1
+STEP_USED div_after 4 close candidate 0 goals_out 0
+Saved theorem _______ "div_after"
+CHECKED div_after
+⊢ ∀mc st ms mc2 st2 ms2 n l.
+    (∀k. evaluate mc st (n + k) ms = evaluate mc2 st2 k ms2) ∧
+    machine_sem mc st ms (Diverge l) ⇒
+    LPREFIX (fromList st2.io_events) l
+BEGIN toy_target_fields required
+STEP_USED toy_target_fields 1 close candidate 0 goals_out 0
+Saved theorem _______ "toy_target_fields"
+CHECKED toy_target_fields
+⊢ toy_target.next = (λs. s + 1w) ∧ toy_target.get_pc = (λs. s) ∧
+  toy_target.get_reg = (λs r. 0w) ∧ toy_target.get_byte = (λs a. 0w) ∧
+  toy_target.state_ok = (λs. T)
+BEGIN toy_encoded required
+STEP_USED toy_encoded 1 intro candidate 0 goals_out 1
+STEP_USED toy_encoded 2 witness candidate 0 goals_out 1
+STEP_USED toy_encoded 3 close candidate 0 goals_out 0
+Saved theorem _______ "toy_encoded"
+CHECKED toy_encoded
+⊢ ∀pc m md.
+    pc ∈ md ∧ m pc = 0w ⇒ encoded_bytes_in_mem toy_target.config pc m md
+BEGIN toy_trace_ok required
+STEP_USED toy_trace_ok 1 close candidate 0 goals_out 0
+Saved theorem _______ "toy_trace_ok"
+CHECKED toy_trace_ok
+⊢ trace_ok (λs. s) (λx s. T) toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [] 2w]
+BEGIN toy_trace_events required
+STEP_USED toy_trace_events 1 close candidate 0 goals_out 0
+Saved theorem _______ "toy_trace_events"
+CHECKED toy_trace_events
+⊢ trace_events toy_mc 0w [TrStep 1w; TrFfi 0 [] 2w] =
+  [IO_event (ExtCall «f») [] []]
+BEGIN toy_bad_rejected required
+STEP_USED toy_bad_rejected 1 close candidate 0 goals_out 0
+Saved theorem _______ "toy_bad_rejected"
+CHECKED toy_bad_rejected
+⊢ ¬trace_ok (λs. s) (λx s. T) toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [7w] 2w]
+OPTIONAL_FAILED 
+PART_DONE tr_prove.sml
+MARK CHECKS
+FAILED_LIST 
+CONTROL_OK no axiom in forge_machineTrace
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CONTROL_OK closure contains targetSem
+CONTROL_OK closure contains targetProps
+CONTROL_OK closure contains ffi
+CONTROL_OK closure contains misc
+CONTROL_OK closure contains asmProps
+CONSTANT_THEORIES cardinalityCore llist sum one string integer words asm pred_set arithmetic combin relation alist num misc asmProps mlstring ffi list option targetSem pair forge_machineTrace min bool
+CONTROL_OK generic: no forge_, refund or ISA constant in any stored item
+CONTROL_OK all 37 required lemmas stored
+CONTROL_OK stored list = part 1 exactly (37 lemmas)
+STORED_NAMES shift_seq_shift_seq shift_seq_0 shift_seq_1_pred trace_next_interfer_ffi trace_next_interfer_shift trace_ffi_interfer_nil trace_ffi_interfer_step trace_ffi_interfer_shift trace_next_interfer_proj trace_next_interfer_ok trace_ffi_interfer_guard trace_ffi_interfer_off step_event_ok_upd ffi_event_ok_upd ffi_post_st_upd trace_ok_upd trace_st_upd evaluate_cong evaluate_zero evaluate_one_step_event evaluate_one_ffi_event trace_gen evaluate_follows_trace call_FFI_return_io ffi_post_st_io trace_io add_clock_swap prefix_of_halt fst_error term_after fail_after div_after toy_target_fields toy_encoded toy_trace_ok toy_trace_events toy_bad_rejected
+STORED_THEOREMS 71
+STORED_DEFINITIONS 29
+CLOSURE_NODES 481
+Exporting theory "forge_machineTrace" ... done.
+Theory "forge_machineTrace" took 24.5s to build
+EXACT_COMPLETE
