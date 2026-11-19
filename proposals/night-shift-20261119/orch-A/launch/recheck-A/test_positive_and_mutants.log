@@ -1,0 +1,17 @@
+POS accept base                    naive[direct(env {})]=AUTHORIZED(40) attack_ok=None(exp None) | launcher=AUTHORIZED(40) / cli AUTHORIZED(40) expected=True
+POS reject amount>remaining        naive[direct(env {})]=NOT_AUTHORIZED attack_ok=None(exp None) | launcher=NOT_AUTHORIZED / cli NOT_AUTHORIZED expected=True
+POS accept amount 0                naive[direct(env {})]=AUTHORIZED(0) attack_ok=None(exp None) | launcher=AUTHORIZED(0) / cli AUTHORIZED(0) expected=True
+POS accept duplicate_charge        naive[direct(env {})]=AUTHORIZED(40) attack_ok=None(exp None) | launcher=AUTHORIZED(40) / cli AUTHORIZED(40) expected=True
+POS reject disabled                naive[direct(env {})]=NOT_AUTHORIZED attack_ok=None(exp None) | launcher=NOT_AUTHORIZED / cli NOT_AUTHORIZED expected=True
+POS quoted ids a)"b and q\1        naive[direct(env {})]=AUTHORIZED(40) attack_ok=None(exp None) | launcher=AUTHORIZED(40) / cli AUTHORIZED(40) expected=True
+POS ids with TAB and LF            naive[direct(env {})]=AUTHORIZED(40) attack_ok=None(exp None) | launcher=AUTHORIZED(40) / cli AUTHORIZED(40) expected=True
+POS big ids 2000+2000              naive[direct(env {})]=AUTHORIZED(40) attack_ok=None(exp None) | launcher=AUTHORIZED(40) / cli AUTHORIZED(40) expected=True
+POS reject unknown reason          naive[direct(env {})]=NOT_AUTHORIZED attack_ok=None(exp None) | launcher=NOT_AUTHORIZED / cli NOT_AUTHORIZED expected=True
+POS accept amount = remaining      naive[direct(env {})]=AUTHORIZED(60) attack_ok=None(exp None) | launcher=AUTHORIZED(60) / cli AUTHORIZED(60) expected=True
+MUT-1 no env scrub (AC2-b)         naive[mutant launcher]=AUTHORIZED(400) attack_ok=True(exp True) | launcher=NOT_AUTHORIZED expected=True
+MUT-2 no digest/image pin (AC2-h)  naive[mutant launcher]=AUTHORIZED(400) attack_ok=True(exp True) | launcher=REFUSED L2 expected=True
+MUT-3 exit-status decision (AC1-d) naive[mutant launcher]=AUTHORIZED(-1) attack_ok=True(exp True) | launcher=REFUSED D7 expected=True
+MUT-4 no L7 image check (AC2-m)    naive[mutant launcher]=AUTHORIZED(400) attack_ok=True(exp True) | launcher=REFUSED L7 expected=True
+MUT-5 no child setup (AC3-a)       naive[mutant launcher]=env_count=0 cwd=/private/tmp/wl-mut5-ikhz1esf fds=0:fifo+ro,1:fifo+wo,2:fifo+wo, blocked=30, nondefault=13,25, rlimit_core=0 attack_ok=True(exp True) | launcher=env_count=0 cwd=/private/tmp/wl-mut5-ikhz1esf fds=0:fifo+ro,1:fifo+wo,2:fifo+wo, blocked= nondefault= rlimit_core=0 expected=True
+positive controls equal: 10 of 10
+test_positive_and_mutants: 15 rows, 0 not as expected

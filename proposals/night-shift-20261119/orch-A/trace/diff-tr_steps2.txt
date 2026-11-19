@@ -1,0 +1,45 @@
+--- tr_steps.sml	2026-11-19 10:12:04.559813818 -0500
++++ tr_steps2.sml	2026-11-19 10:59:59.975932745 -0500
+@@ -1,4 +1,6 @@
+-(* tr_steps.sml (worker W-trace, 2026-11-19). The ONE file of step lists, read with use by BOTH TRx-0001.sml
++(* tr_steps2.sml = tr_steps.sml with the changes of CHANGES_TR.txt (toy_config_def in TOY_ENC; optional lemmas
++   dropped when their statement or the toy definitions failed). Needs tr_common2.sml.
++   tr_steps.sml (worker W-trace, 2026-11-19). The ONE file of step lists, read with use by BOTH TRx-0001.sml
+    (exploration) and trace_v1.sml (proof, case TR-0001), after tr_common.sml. NOT RUN: every tactic UNCHECKED.
+    Method = round13/r6r_steps.sml: a step = (label, main, alternatives); the proof takes the FIRST candidate that
+    succeeds on the HEAD goal; the exploration prints goals after each step. Every reference to a proved lemma goes
+@@ -239,9 +241,9 @@
+ val TOY_ENC : step list =
+   [("intro", rpt strip_tac \\ REWRITE_TAC [targetSemTheory.encoded_bytes_in_mem_def], []),
+    ("witness", qexists_tac (Q "ARB") \\ qexists_tac (Q "0"), [qexistsl [Q "ARB", Q "0"]]),
+-   ("close", closing (simp [toy_target_def, miscTheory.bytes_in_memory_def]),
+-      [closing (fs [toy_target_def, miscTheory.bytes_in_memory_def]),
+-       closing (simp [toy_target_def, miscTheory.bytes_in_memory_def] \\ EVAL_TAC \\ fs [])])];
++   ("close", closing (simp [toy_target_def, toy_config_def, miscTheory.bytes_in_memory_def]),
++      [closing (fs [toy_target_def, toy_config_def, miscTheory.bytes_in_memory_def]),
++       closing (simp [toy_target_def, toy_config_def, miscTheory.bytes_in_memory_def] \\ EVAL_TAC \\ fs [])])];
+ fun TOY_SET () : thm list =
+   [trace_ok_def, step_event_ok_def, ffi_event_ok_def, toy_mc_def, TH "toy_target_fields", TH "toy_encoded",
+    RFB, RFB1, miscTheory.read_bytearray_def, ffiTheory.call_FFI_def, toy_st_def, miscTheory.find_index_def];
+@@ -284,7 +286,7 @@
+       [closing (LATE (fn () => REWRITE_TAC [TH "evaluate_zero"] \\ simp [trace_last_def] \\ EVAL_TAC))])];
+ 
+ (* ================= the lemma list (dependency order; true = required) ================= *)
+-val TR_LEMMAS : (string * term * step list * bool) list =
++val TR_LEMMAS0 : (string * term * step list * bool) list =
+   [("shift_seq_shift_seq", ST "shift_seq_shift_seq", SS_SS, true),
+    ("shift_seq_0", ST "shift_seq_0", SS_0, true),
+    ("shift_seq_1_pred", ST "shift_seq_1_pred", SS_1P, true),
+@@ -326,4 +328,12 @@
+    ("toy_trace_events", ST "toy_trace_events", TOY_EVENTS, false),
+    ("toy_bad_rejected", ST "toy_bad_rejected", TOY_BAD, false),
+    ("toy_bad_not_followed", ST "toy_bad_not_followed", TOY_NEG, false)];
++(* tr_steps2: an optional lemma is dropped when its statement did not parse (T) or, for a control, when the toy
++   definitions failed; required lemmas are never dropped *)
++fun keep ((nm, t, _, req) : string * term * step list * bool) : bool =
++  req orelse
++  (not (aconv t T) andalso (not (String.isPrefix "toy_" nm) orelse !TOY_DEFS_OK)) orelse
++  (pr ("OPTIONAL_DROPPED " ^ nm); false);
++val TR_LEMMAS = List.filter keep TR_LEMMAS0;
++val _ = pr ("TR_LEMMAS " ^ Int.toString (length TR_LEMMAS) ^ " of " ^ Int.toString (length TR_LEMMAS0));
+ val _ = pr "TR_STEPS loaded";

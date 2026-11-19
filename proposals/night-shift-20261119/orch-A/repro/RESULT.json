@@ -698,6 +698,114 @@
    "source_note": "only the r6 directory string differs; see R6ffi-0002.source.diff",
    "exit": {
     "committed": 0,
+    "repro": 0
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": [
+     "EXACT_COMPLETE"
+    ]
+   },
+   "inputs_unchanged_after": true,
+   "statement_blocks": {
+    "committed": 8,
+    "repro": 8,
+    "equal": true
+   },
+   "stdout_lines_differing_after_normalisation": 2,
+   "objects": {
+    "forge_refundR6FfiTheory.dat": {
+     "committed": "9bd6e4d295206830a7de112119f3e9d7bca831fc5e1b468cf80f249bd46e8294",
+     "repro": "9bd6e4d295206830a7de112119f3e9d7bca831fc5e1b468cf80f249bd46e8294",
+     "equal": true
+    },
+    "forge_refundR6FfiTheory.sig": {
+     "committed": "ab3b7581bc47a155eda9c19697cadbaa25bf23e826265b546dd29667bf91d38a",
+     "repro": "ab3b7581bc47a155eda9c19697cadbaa25bf23e826265b546dd29667bf91d38a",
+     "equal": true
+    },
+    "forge_refundR6FfiTheory.sml": {
+     "committed": "56a4f132c5d5effa26b47ac1a0b110fd3acf199ac235464990749c3c072800ae",
+     "repro": "56a4f132c5d5effa26b47ac1a0b110fd3acf199ac235464990749c3c072800ae",
+     "equal": true
+    }
+   },
+   "classification": "REPRODUCED-FROM-BRANCH"
+  },
+  "R6w-0004": {
+   "run": true,
+   "source_sha256_committed": "d47a8e68e045402c079cb2d48a0e2c639be170e4bd3ffc2a3e1b602921622ddc",
+   "source_sha256_repro": "f85cf5b931109228f74124a5aeeb599daaad4c6a0ac935fa8a8268ef77fed475",
+   "source_equal": false,
+   "source_note": "only the r6 directory string differs; see R6w-0004.source.diff",
+   "exit": {
+    "committed": 0,
+    "repro": 0
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": [
+     "EXACT_COMPLETE"
+    ]
+   },
+   "inputs_unchanged_after": true,
+   "statement_blocks": {
+    "committed": 33,
+    "repro": 33,
+    "equal": true
+   },
+   "stdout_lines_differing_after_normalisation": 2,
+   "objects": {
+    "forge_refundR6WriteTheory.dat": {
+     "committed": "832ae0b79545441e8ca49926d05049e7cf848698d8c5fca322c6660ccc767e8e",
+     "repro": "832ae0b79545441e8ca49926d05049e7cf848698d8c5fca322c6660ccc767e8e",
+     "equal": true
+    },
+    "forge_refundR6WriteTheory.sig": {
+     "committed": "afa7c1e3952247019a43891a9d323eb10197e541faad530e8988aa362d0be46b",
+     "repro": "afa7c1e3952247019a43891a9d323eb10197e541faad530e8988aa362d0be46b",
+     "equal": true
+    },
+    "forge_refundR6WriteTheory.sml": {
+     "committed": "04eb1904049bbf51a923be4027d1570423ba0156868811ee59fb1a2e604e7c7b",
+     "repro": "04eb1904049bbf51a923be4027d1570423ba0156868811ee59fb1a2e604e7c7b",
+     "equal": true
+    }
+   },
+   "classification": "REPRODUCED-FROM-BRANCH"
+  },
+  "MG-0001.fail-1": {
+   "run": true,
+   "attempt_of": "MG-0001",
+   "source_sha256_repro": "80c190daef57526743cc82ef55106b2ea5c445c1303bf78eedad613a04fe5d8e",
+   "source_equal": true,
+   "exit": {
+    "committed": 0,
+    "repro": 1
+   },
+   "markers": {
+    "committed": [
+     "EXACT_COMPLETE"
+    ],
+    "repro": []
+   },
+   "cpu_seconds": 17.645,
+   "wall_seconds": 14.378,
+   "objects_produced": [],
+   "note": "infrastructure stop: 'Run out of store' during parent-theory load (stderr); not a proof result",
+   "classification": "FAILED ATTEMPT (infrastructure; superseded by the later run of MG-0001)"
+  },
+  "R6ffi-0002.fail-1": {
+   "run": true,
+   "attempt_of": "R6ffi-0002",
+   "source_sha256_repro": "6aebb858ab0711da9357b6b3a221bcfaa8b263e3c90d5796e67e64b15894a23f",
+   "source_equal": false,
+   "exit": {
+    "committed": 0,
     "repro": -15
    },
    "markers": {
@@ -706,35 +814,11 @@
     ],
     "repro": []
    },
-   "inputs_unchanged_after": true,
-   "statement_blocks": {
-    "committed": 8,
-    "repro": 0,
-    "equal": false
-   },
-   "stdout_lines_differing_after_normalisation": 312,
-   "objects": {
-    "forge_refundR6FfiTheory.dat": {
-     "committed": "9bd6e4d295206830a7de112119f3e9d7bca831fc5e1b468cf80f249bd46e8294",
-     "repro": null,
-     "equal": false
-    },
-    "forge_refundR6FfiTheory.sig": {
-     "committed": "ab3b7581bc47a155eda9c19697cadbaa25bf23e826265b546dd29667bf91d38a",
-     "repro": null,
-     "equal": false
-    },
-    "forge_refundR6FfiTheory.sml": {
-     "committed": "56a4f132c5d5effa26b47ac1a0b110fd3acf199ac235464990749c3c072800ae",
-     "repro": null,
-     "equal": false
-    }
-   },
-   "classification": "DIFFERS (exit, markers, statements, sig, sml/dat unexplained)"
-  },
-  "R6w-0004": {
-   "run": false,
-   "classification": "NOT RUN"
+   "cpu_seconds": 103.552,
+   "wall_seconds": 149.349,
+   "objects_produced": [],
+   "note": "killed (SIGTERM, actual_exit -15) by the W-repro watchdog after a system sleep (pmset log 15:16:31Z-15:24:22Z); not a proof result",
+   "classification": "FAILED ATTEMPT (infrastructure; superseded by the later run of R6ffi-0002)"
   }
  }
 }

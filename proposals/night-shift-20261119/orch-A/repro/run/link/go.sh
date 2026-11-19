@@ -1,7 +1,7 @@
 #!/bin/bash
 # Run package for links S5/S6 (worker A4, 2026-11-19). NOT RUN. Every case starts HOL: one case per call.
 #
-# Usage:  bash /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/go.sh <CASE> [case-folder-name]
+# Usage:  bash /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/go.sh <CASE> [case-folder-name]
 # CASE:   pre | H0 | H0p | R1 | R2 | R3 | I1 | H1 | H2 | NC1..NC6 | PC1 | NS1..NS3 | H4 | NR1 | E0 | E0r
 # Order:  pre, H0 (H0p only if H0 fails on a load), R1, R2, R3, I1, H1, H2, then H3 = NC1..NC6 PC1 NS1..NS3,
 #         H4, NR1, optional E0 E0r. Stop at the first verdict that is not PASS and report it.
@@ -17,8 +17,8 @@
 #                            U294 cwd forge_refund_call_experiment (default: recorded)
 #               ALLOW_SWAP=1 start although swap use is above 85 % (RUN_PLAN.md section 0 says: wait)
 set -u
-RUN=/Users/mackianni/forge/results/night-shift-20261119/orch-A/repro/run/link
-F=/Users/mackianni/forge
+RUN=/Users/USER/forge/results/night-shift-20261119/orch-A/repro/run/link
+F=/Users/USER/forge
 D=$F/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny
 EXPORT=$RUN/inputs/FlatCore.sexp
 EXPORT_SHA=58154ddffc3b54d875c51bcd9dd2f36a93334c5cc302c899987aec0d7333dd0d

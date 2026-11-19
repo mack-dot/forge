@@ -74,8 +74,8 @@ Static checks (actual exit codes):
   Not checkable statically: SML type-checking, DB.find results, the form of TextIOProg_st defs, every tactic.
 
 Commands (orchestrator only, single HOL slot; NOT RUN):
-  cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-  R=/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round14
+  cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+  R=/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round14
   cp $R/R6tx-0002.sml R6tx-0002.sml; cp $R/deps-R6t.txt deps-R6t.txt; shasum -a 256 R6tx-0002.sml deps-R6t.txt
   ./nightshift-run.sh R6tx-0002 1800 deps-R6t.txt
   # only if GUARD_DEFINED, EXPLORE_COMPLETE, no STATEMENT_PARSE_FAILED, and TRY_HELPER_CLOSED or EXPLORE_HEAD_CLOSED

@@ -1,0 +1,30 @@
+{
+ "case": "TR1-0001",
+ "cwd": "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "TR1-0001.sml",
+ "source_sha256": "752eeaf71bc71ee78173cd16468186a9c7ccdd645e54338953eb3a8faf2915d6",
+ "resource_guard": {
+  "memory_free_percent": 39,
+  "disk_free_gib": 81.38,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 1200,
+ "wall_seconds_limit": 1500,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 204.284,
+ "child_user_cpu_seconds": 91.862,
+ "child_max_rss_bytes": 1396752384,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "e0b22e6d62f19f62af728926ab9c507923160d745142fd1a47c28dc849f03174",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_machineTraceTheory.dat": "b48745a44b275789cf322916641ded296ac495a85ec63c0f1a1225e456915271",
+  ".hol/objs/forge_machineTraceTheory.sig": "d8fd6750a2f1c244fe437951e6d2680a1a75b9129e0c6a689d62b048e0bb80c5",
+  ".hol/objs/forge_machineTraceTheory.sml": "df8ad427c3c042f43be31283482adf9aaf26cee3ddaee703f9a1f17bcaa846f7"
+ },
+ "inputs_unchanged_after": true
+}

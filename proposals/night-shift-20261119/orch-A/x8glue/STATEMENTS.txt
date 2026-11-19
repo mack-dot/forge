@@ -1,0 +1,110 @@
+X8 MODEL-SIDE GLUE: STATEMENTS (worker W-x8glue, Night-Shift Orchestrator A, 2026-11-19)
+TRUTH LABEL: DRAFT. NOTHING HERE WAS RUN. No HOL, no Holmake, no git. Every lemma below is UNPROVED.
+The HOL text lives in xg_common.sml (statements) and xg_steps.sml (tactics). M1-B stays OPEN. end_to_end stays false.
+Parents relied on (each case's go.log ends with "go exit 0"; statements read in its stdout.log):
+ MF-0002 (M3), MT-0001 (MT1), L1-0001, TR1-0001 (forge_machineTrace), TR2-0001 (forge_machineTracePrefix; optional).
+ Not cases of tonight, names checked in .sig only: forge_refundSlideProfileA (refund_ffi_contract_at_def,
+ refund_env_ok_sl_def, refund_abs_ffi_contract_at), forge_refundEnvModel (refund_abs_ffi_def),
+ forge_refundStartupBridge (refund_mc_def), forge_refundStartupClause (arm8_fix_def).
+Notation: dm = refund_mem_dm_sl sl h e; pc0 = sl + 0x1000040D0w; stB = basis_ffi no_ext cl fs;
+ TFI = trace_ffi_interfer (refund_trace_guard dm) refund_abs_ffi ms0 tr; KT = (\i nb ms. T).
+
+0. WHAT refund_ffi_contract_on DEMANDS (copied from L1-0001/stdout.log, transliterated)
+ refund_ffi_contract_on b dm Vok ffi_i <=>
+  !k index new_bytes ms2 t1 bytes bytes2.
+    index < 4 /\ t1.mem_domain = dm /\
+    read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w)) (\a. if a IN dm then SOME (ms2.MEM a) else NONE) = SOME bytes /\
+    read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w)) (\a. if a IN dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 /\
+    LENGTH new_bytes = LENGTH bytes2 /\
+    target_state_rel arm8_target (t1 with pc := b - n2w ((3 + index) * 16)) ms2 /\ aligned 2 (t1.regs 30) /\
+    Vok index new_bytes ms2 ==>
+    arm8_ok (ffi_i k (index,new_bytes,ms2)) /\ (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 /\
+    (!a. a IN dm ==> (ffi_i k (index,new_bytes,ms2)).MEM a = asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) /\
+    !r. MEM r [19;20;21;22;23;24;25;27;28] ==> (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+ refund_ffi_contract_at = the same without the Vok hypothesis.
+
+1. DEFINITIONS (new; theory forge_refundX8Glue)
+ D1 refund_trace_guard dm x s <=>                                        (the guard G of the trace theory)
+      arm8_ok s /\ s.PC = (refund_abs_ffi 0 x).PC /\ (!a. a IN dm ==> s.MEM a = (refund_abs_ffi 0 x).MEM a) /\
+      (!r. MEM r [19;20;21;22;23;24;25;27;28] ==> s.REG (n2w r) = (refund_abs_ffi 0 x).REG (n2w r))
+    Reading (lemma XG_guard_unfold): s is arm8_ok, s.PC = ms.REG 30w, s.MEM on dm = asm_write_bytearray (ms.REG 2w)
+    nb ms.MEM, and s keeps x19-x25, x27, x28 of ms. This is the contract conclusion with every t1 term replaced by
+    the ms2 term that target_state_rel makes equal to it, as refund_abs_ffi does.
+ D2 refund_trace_env envmc0 dm ms0 tr = envmc0 with <| prog_addresses := dm;
+      next_interfer := trace_next_interfer (arm8_target.proj dm) tr; ffi_interfer := TFI |>
+    refund_mc (refund_mc_def, mc-0001) overwrites ffi_names, ffi_entry_pcs, halt_pc, install_pc, mmio_info,
+    shared_addresses, and (arm8_fix) target, ptr/len regs, callee_saved_regs. It READS from envmc only
+    prog_addresses, next_interfer, ffi_interfer, install_interfer. The last one comes from the free envmc0.
+
+2. LEMMAS (role; X8 v3 lemma it is or serves; required/optional)
+ XG_abs_ffi_any_k  |- !k1 k2 x. refund_abs_ffi k1 x = refund_abs_ffi k2 x            helper, required
+ XG_guard_unfold   |- refund_trace_guard dm (i,nb,ms) s <=> (reading of D1 above)   readability, optional
+ G1 XG_next_interfer_ok (= ML-01 T-ENV-NEXT), required:
+   |- !dm tr. interference_ok (trace_next_interfer (arm8_target.proj dm) tr) (arm8_target.proj dm)
+   Instance of trace_next_interfer_ok (TR1). No trace premise.
+ G2 XG_contract_at (= ML-02 T-ENV-FFI, STRONGER), required:
+   |- !pc0 dm ms0 tr. refund_ffi_contract_at pc0 dm TFI
+   Proof idea: trace_ffi_interfer_guard gives TFI k x = refund_abs_ffi k x \/ refund_trace_guard dm x (TFI k x).
+   First case: refund_abs_ffi_contract_at. Second case: the guard gives agreement with refund_abs_ffi 0 x =
+   refund_abs_ffi k x on all four contract parts. NO tie of Vok to the trace is needed: the guard lemma suffices,
+   because the default g = refund_abs_ffi meets the contract at every argument.
+ G2' XG_contract_on, required: |- !pc0 dm Vok ms0 tr. refund_ffi_contract_on pc0 dm Vok TFI   (for ANY Vok)
+ G3 XG_tot_id, required: |- !envmc. (envmc with ffi_interfer := refund_ffi_tot KT envmc.ffi_interfer) = envmc
+   From refund_ffi_tot_all_valid_is_identity (L1). Answer to G3: with the contract proved for the constructed f
+   itself, take Vok := KT. Then the totalisation is the identity on ALL calls (not only valid ones), so MT1 speaks
+   about the constructed machine itself. No LEAST, no Vok_R. (refund_ffi_tot_valid alone gives only valid calls.)
+   This agrees with the reviewer suggestion relayed by the orchestrator; GL-1 "refund_abs_ffi_contract_slide" does not
+   exist; refund_abs_ffi_contract_at (!b dm, forge_refundSlideProfileA) is used instead.
+ XG_env_fields, required: the three fields of refund_trace_env (prog_addresses = dm, next_interfer, ffi_interfer).
+ G4 XG_env_ok (= ML-03 T-ENV, MT1 form), required:
+   |- !pc0 Vok envmc0 dm ms0 tr. interference_ok (E).next_interfer (arm8_target.proj (E).prog_addresses) /\
+        refund_ffi_contract_on pc0 (E).prog_addresses Vok (E).ffi_interfer        where E = refund_trace_env envmc0 dm ms0 tr
+ G4' XG_env_ok_sl (M3 form), required: |- !sl envmc0 dm ms0 tr. refund_env_ok_sl sl (refund_trace_env envmc0 dm ms0 tr)
+   FINDING: the constructed environment meets every environment premise for EVERY trace, valid or not. trace_ok is
+   NOT needed for G4. All content about the real run sits in trace_ok (G5) and, beyond it, in ML-11.
+ XG_mc_eq, required (GL-3):
+   |- refund_mc pc0 (refund_trace_env envmc0 dm ms0 tr) =
+      (refund_mc pc0 (envmc0 with prog_addresses := dm)) with <| next_interfer := trace_next_interfer
+      (arm8_target.proj dm) tr; ffi_interfer := TFI |>
+ G5a XG_model_frame_trace_env (= MT1 instance), required. BUILT from M3 in HOL:
+   [9 non-environment premises of M3: refund_entry_pre_sl sl s h stk e, aligned 3 e, h <=+ e, 8192w <=+ e - h,
+    refund_heap_clear_sl sl h e, stdin_content fs = SOME req, wfcl cl, wfFS fs, STD_streams fs] ==>
+   M3's conclusion at envmc := refund_trace_env envmc0 dm ms0 tr.
+   Proof candidate 0: MT1 at envmc := that env and Vok := KT, premises by G1/G2'/fields, then XG_tot_id.
+   Candidate 1: M3 directly with XG_env_ok_sl. A control checks that the MT1 instance conclusion, after replacing
+   the totalised env by the env, IS the M3 instance conclusion.
+ G5b XG_trace_follows, required (TR1 only). With PR = arm8_target.proj dm, GR = refund_trace_guard dm,
+   mcB = refund_mc pc0 (envmc0 with prog_addresses := dm), mcR = refund_mc pc0 (refund_trace_env envmc0 dm ms0 tr):
+   |- !pc0 envmc0 dm ms0 tr st. trace_ok PR GR mcB st ms0 tr ==>
+        (!k. evaluate mcR st (LENGTH tr + k) ms0 =
+             evaluate (mcB with <| next_interfer := trace_next_interfer PR []; ffi_interfer := shift_seq (nffis tr)
+                       refund_abs_ffi |>) (trace_st mcB st ms0 tr) k (trace_last ms0 tr)) /\
+        (trace_st mcB st ms0 tr).io_events = st.io_events ++ trace_events mcB ms0 tr
+ G5c XG_trace_prefix, required (TR1 term_after):
+   |- !pc0 envmc0 dm ms0 tr st. trace_ok PR GR mcB st ms0 tr ==>
+        !t io. machine_sem mcR st ms0 (Terminate t io) ==> isPREFIX (st.io_events ++ trace_events mcB ms0 tr) io
+ XG_trace_prefix_TR2, optional, only with SWITCH_TR2 on (deps-XG2.txt): the same statement via trace_terminate.
+ G5 XG_compose (the requested composition), required:
+   [the 9 premises] /\ arm8_run 27 s = SOME ms0 /\ trace_ok PR GR mcB stB ms0 tr   (dm, pc0 as in Notation) ==>
+   (arm8_run 27 s = SOME ms0 /\ ms0.PC = pc0) /\
+   (!b. machine_sem mcR stB ms0 b ==> ?t io. b = Terminate t io /\ [M3's decision clause on fd1_written io]) /\
+   (G5b both parts at st := stB) /\ (G5c at st := stB)
+   arm8_run is M3's own constant (taken from the stored term; two constants of that name exist).
+   Reading: IF a trace of the refund machine satisfies trace_ok with P = arm8_target.proj dm and G = D1 from the
+   state ms0 that the 27 entry steps reach, THEN the machine with the environment built from that trace satisfies
+   every environment premise of MT1/M3, terminates with M3's decision clause, follows the trace step for step, and
+   every terminating io list extends stB.io_events ++ trace_events (stB.io_events = [] by XG_basis_io_nil, optional).
+ XG_trace_ok_nil, optional: trace_ok P G mc st ms [] (shows the trace premise is satisfiable; it is then empty of
+   content, so G5 is not vacuous but carries content only for long traces).
+
+3. WHAT G5 DOES NOT GIVE (stays open; honest list)
+ - GL-4 / ML-11: that a REAL run gives a trace that satisfies trace_ok. trace_ok demands at each step event the
+   model step guards (pc in dm minus FFI pcs, encoded bytes, arm8_ok of three states, frame outside dm) and
+   arm8_proj dm equality of the model next state and the observed state; at each FFI event the model oracle answer
+   (call_FFI of basis_ffi) equals the recorded bytes AND guard D1. These are N01-N10, N12, N23 in HOL form. Not here.
+ - The real process and its abstraction to arm8 states (rstate, full, absM, erase; ML-05, ML-08, ML-09).
+ - The 27 entry steps: "arm8_run 27 s = SOME ms0" only names the state; ML-10 must tie it to the real r_27.
+ - Killed / cut runs: G5b gives evaluate-prefix facts; ML-12, ML-13 are not done.
+ - M3's entry premises (N16), the file system premises (ML-04) and the halt event are not discharged here.
+ - The constructed oracle differs from X8 v3 (E1)/(E2): states are MODEL states of the trace, not UPD of real
+   states; X8 v3 section 1.4 must be re-aligned to this construction (Vok_R and LEAST are no longer needed).

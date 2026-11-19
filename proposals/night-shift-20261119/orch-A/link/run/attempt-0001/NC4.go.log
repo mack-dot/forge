@@ -1,6 +1,6 @@
 2026-11-19T08:55:34Z
 START_STATE swap_free_mib=1263 memory_free_percent=68
-input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/controls/NC4-third-clause-dropped.sexp sha256 a06630b07bb56ab225b16bfe05276d1e1060022a11f972bb74e923c78c7394ef expected a06630b07bb56ab225b16bfe05276d1e1060022a11f972bb74e923c78c7394ef
+input /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/controls/NC4-third-clause-dropped.sexp sha256 a06630b07bb56ab225b16bfe05276d1e1060022a11f972bb74e923c78c7394ef expected a06630b07bb56ab225b16bfe05276d1e1060022a11f972bb74e923c78c7394ef
 Thu Nov 19 03:55:34 EST 2026
 System-wide memory free percentage: 68%
 vm.swapusage: total = 7168.00M  used = 5904.94M  free = 1263.06M  (encrypted)
@@ -10,7 +10,7 @@ pgrep exit 0
 swap used percent: 82
 COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=900 python3 -I -B run_case.py ctl-NC4 forge_refundExportedContractScript.sml
 RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in ctl-NC4/command.json)
-Uncaught exception at /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/ctl-NC4/proof.sml:76: Fail "Expected exactly three ensures clauses"
+Uncaught exception at /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/ctl-NC4/proof.sml:76: Fail "Expected exactly three ensures clauses"
   info: actual_exit=1 markers=[] last FORGE_BEGIN=None *_COMPLETE lines=[] wall=8.032
 VERDICT NC4 ctl-NC4 PASS
 GO.SH EXIT 1

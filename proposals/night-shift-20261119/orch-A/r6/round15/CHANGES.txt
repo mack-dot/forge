@@ -1,0 +1,90 @@
+round15 CHANGES (worker W-top2, Night-Shift Orchestrator A). STATIC work. NOTHING in this folder ran.
+No HOL, no Holmake, no Dafny, no git. Every new tactic is UNCHECKED, except where an actual run is cited.
+
+BASE (the bytes that ran in R6tx-0003; matched against attempt-0001/R6tx-0003.used-files.pre.txt lines 3-6)
+  round14/r6t_steps.sml          ddbb84682f501a50973bb8a3ce77102cf6857264a2a17c6dae0e28c3cdc02eb8
+  round14/r6t_common.sml         5d20178df4303f59c4fa0df3839b651b207a1107350116d7743920a9a930fbb4
+  round14/r6t_explore_calls.sml  8f26ee0f7c44fcd1ec433b15190d2a642684598c399374e84393f390065cb0b5
+  attempt-0001/R6tx-0003.sml     d00358da751cbb2a97b7027cecca238270d400990584d77a8226e8694881e83c (= run.json source_sha256)
+  attempt-0001/R6t-0003.sml      9060a7fb12ab607b64466329de076d3c43fdd0a1feec7976f2dfb5ad2bf62ce4
+
+ACTUAL RESULT OF THE BASE (R6tx-0003, attempt-0001/R6tx-0003.run.json): actual_exit 0, marker EXPLORE_COMPLETE,
+  wall 181 s, RSS 2.7 GB. 15 lemmas TRY_HELPER_CLOSED hyps 0. IOFS_V_init: TRY_HELPER_FAILED, "all candidates failed at
+  IOFS_V_init step 3" (stdout 308-330, 376-400). init_heap_V and whole_prog_spec_V_init: all steps used, but
+  TRY_HELPER_HYPS 1 (stdout 411, 971): the one hypothesis is the ASSUMEd IOFS_V_init. Extra exploration
+  IOFS_V_init_precond_copy (tactic IOFSI_PRECOND_COPY, on the SAME statement IOFSI): EXPLORE_HEAD_CLOSED after_steps 1
+  (stdout 1078-1094).
+
+ROOT CAUSE (from the log; the exact residual goal inside the by-subgoal was NOT printed, so the detail is inferred)
+  Step 3 asked xsimpl to prove  one X * W8ARRAY iobuff_loc v ==>> IOFS_V Inv fs  (X = the fs FFI_part with events).
+  After IOFS_V_def/IOxV_def the right side has two SEP_EXISTS (events', v') and four pure conditions
+  (EVERY Inv events', ~MEM <<>> names, LENGTH v' = 2052, wfFS fs). All four candidates (xsimpl + simp / EVAL_TAC / rw)
+  left a goal open. CakeML never proves IOFS_precond (basis_ffiScript.sml 495-505) with xsimpl: it unfolds to the set
+  level (one_def, W8ARRAY_def, cell_def, SEP_EXISTS_THM, cond_STAR, SEP_CLAUSES), gives the three witnesses
+  (events, v, the location number) by qexists_tac and closes with one_STAR/append_hprop. The round11 copy of that proof
+  (IOFSI_PRECOND_COPY) closed the statement in R6tx-0003. So the xsimpl route is the wrong route; the statement is TRUE
+  (it has a closing tactic run on it, not validated by TAC_PROOF yet: explore_head only).
+  Related CakeML names (grep): basis_ffiTheory.IOFS_precond, STDIO_precond (basis_ffiScript.sml 507-518),
+  append_hprop (485-489), iobuff_loc_eq (847-851); set_sep cond_STAR, one_STAR, SEP_EXISTS_THM, SEP_CLAUSES;
+  pred_set EQUAL_SING [simp], DISJOINT_INSERT [simp].
+
+R15-C1  r6t_steps.sml: the T4 IOFS_V_init step list ONLY.
+  diff round14/r6t_steps.sml round15/r6t_steps.sml: exit 1; 14 lines deleted, 28 lines added (diff-r6t_steps.txt).
+  - 2 header comment lines at the top of the file.
+  - the old 4-step IOFSI_STEPS (intro / heap by append_hprop / SEP_IMP by xsimpl / close) deleted (14 lines).
+  - after IOFSI_PRECOND_COPY (byte-identical, kept; r6t_explore_calls.sml still uses it): a comment, a helper
+    iofsi_split, a simp list IOFSI_PART_SIMPS, and the new IOFSI_STEPS. The new list has ONE closing step
+    "all (IOFS_precond copy ...)", run from the original goal. Candidates, most likely first:
+      0  closing IOFSI_PRECOND_COPY  - the path that closed in R6tx-0003 (stdout 1091-1094). Same tactic, same goal.
+      1  closing (iofsi_split true \\ simp IOFSI_PART_SIMPS): REWRITE_TAC [IOFS_V_def, cond_STAR] gives
+         wfFS fs /\ (IOxV Inv fs * SE) H; the first conjunct by the assumption; irule append_hprop (the irule form that
+         closed old step 2 in R6tx-0003); then simp on IOxV {X}, SE {Mem 1 ..} and DISJOINT. UNCHECKED.
+      2  as 1 with match_mp_tac (REWRITE_RULE [AND_IMP_INTRO] append_hprop) and fs. UNCHECKED.
+      3  as 1 with PULL_EXISTS, TRY qexists_tac events, fs_ffi_part_def and EVAL_TAC at the end. UNCHECKED.
+    Every candidate closes (0 goals out), so the "same number of goals" rule holds. Old steps 2-4 are gone, so no
+    later step can be stuck; the later lemmas that use IOFS_V_init (init_heap_V step 6, whole_prog_spec_V_init via
+    init_heap_V) already used all their steps in R6tx-0003 with IOFS_V_init ASSUMEd; they need no change.
+  - the old helper values XFS_EV, HEAP_Q, IMP_Q, W8_SIMPS are kept (now unused) to keep the diff small.
+  - pure ASCII (grep for non-ASCII bytes: exit 1 = none). Quotations only through Q "...". No backquote.
+
+R15-C2  R6tx-0004.sml (exploration main) = attempt-0001/R6tx-0003.sml (the file that ran, with the Thread/Mutex fix)
+  plus: 3-line header comment; new_theory "forge_refundR6TExplore3" (was ...Explore2); R6TDIR = round15/.
+  diff: exit 1; 2 lines deleted, 5 lines added (diff-R6tx.txt).
+R15-C3  R6t-0004.sml (proof main, theory forge_refundR6Top) = attempt-0001/R6t-0003.sml plus: 3-line header comment;
+  R6TDIR = round15/. diff: exit 1; 1 line deleted, 4 lines added (diff-R6t.txt). Counts and controls unchanged.
+
+UNCHANGED (diff -q exit 0, cmp exit 0): r6t_common.sml, r6t_explore_calls.sml, r6t_prove.sml.
+STATEMENTS: all 18 statements (incl. IOFSI) are built in r6t_common.sml only; that file is byte-identical to round14
+  (diff exit 0). r6t_steps.sml defines no statement. So every statement is byte-identical. No statement was weakened.
+
+FILES (sha256)
+  R6tx-0004.sml          17a7b7a863ef697503d16b55cf9d93281f6de7cfa857e7d298f943170040797b
+  R6t-0004.sml           af8eaf1e6ba1399fe5d0d67925c422cd3d6da7d75893f4b950c1e6d4e3e26e10
+  r6t_steps.sml          c99b0c98d16c80e0b9c2db4e3a9634623cb9c2386c55bd2f681d0d76f570a4b8
+  r6t_common.sml         5d20178df4303f59c4fa0df3839b651b207a1107350116d7743920a9a930fbb4 (= round14)
+  r6t_explore_calls.sml  8f26ee0f7c44fcd1ec433b15190d2a642684598c399374e84393f390065cb0b5 (= round14)
+  r6t_prove.sml          2f34209a3db24e0a26d5cdc92036483f801941a7ea437ab24bc400d69386c9f3 (= round14)
+  deps: use round14/deps-R6t.txt unchanged (not copied).
+
+COMMANDS (orchestrator only; NOT RUN; expected outcomes, not actual exit codes)
+  cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+  cp .../round15/R6tx-0004.sml R6tx-0004.sml; ./nightshift-run.sh R6tx-0004 1800 deps-R6t.txt
+    expected: exit 0, EXPLORE_COMPLETE, TRY_HELPER_CLOSED for all 18 (IOFS_V_init via candidate 0;
+    init_heap_V and whole_prog_spec_V_init then hyps 0).
+  only then: cp .../round15/R6t-0004.sml R6t-0004.sml; ./nightshift-run.sh R6t-0004 1800 deps-R6t.txt
+
+WHAT THIS TOP LAYER STILL NEEDS FROM THE BOTTOM LAYER (R6r) - by reading, not checked
+  - The 18 R6t lemmas need NO R6r lemma: deps-R6t.txt = R6w-0004 (forge_refundR6Write) + its ancestors
+    forge_refundR6Ffi, forge_refundR6Base; r6t_common.sml reads only IOxV_def, IOFS_V_def, STDIO_V_def,
+    IOFS_V_FFI_part_hprop, every_of_three_parts. After IOFS_V_init closes, R6t can close on its own.
+  - whole_prog_spec_V_events / _init take the main V-spec as a HYPOTHESIS:
+      app (basis_proj1,basis_proj2) fv [Conv NONE []] (STDIO_V Inv fs) (POSTv uv. &UNIT_TYPE () uv * STDIO_V Inv fs').
+    Discharging it for refund main needs the read side (round12/r6r_steps.sml R6R_LEMMAS), required:
+    read_event_ok_read_into, read_event_ok_refund, STD_streams_fd0, INSTREAM_STRP_V_F_F, read_into_spec_R,
+    refillBuffer_with_read_spec_V; optional: INSTREAM_BUFFERED_FD_V_IMP, INSTREAM_STR_V_IMP,
+    refillBuffer_with_read_spec_STR_V. With the write side (forge_refundR6Write writei_spec_V etc.).
+  - Not in R6r and not in R6t (gaps, round11/RUN_PLAN_R6t.md "NOT covered"): the refund main V-spec itself
+    (refund_main_valid with STDIO_V refund_valid_event); the concrete refs fact for refund_prog
+    (st.refs = W8array bs1 :: W8array bs2 :: rest, LENGTH bs2 = 2052; is_refs_basis gives only 2052 <=);
+    init_state ... with eval_state := es versus plain init_state; the transfer from source semantics_dec_list to
+    the machine-level R6 premise.

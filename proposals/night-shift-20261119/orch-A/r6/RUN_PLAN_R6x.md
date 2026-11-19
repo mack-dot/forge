@@ -3,18 +3,18 @@
 EXPLORATION run, not a proof attempt. No `export_theory`, no `save_thm`, no `new_definition`. It proves nothing.
 
 ## Inputs
-- `/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/R6x-0001.sml` — SHA-256 `5b4a9809de417f90ee198c9f0081a51f8ec39642ef1fa46a38d43a5243136074` (465 lines).
+- `/Users/USER/forge/results/night-shift-20261119/orch-A/r6/R6x-0001.sml` — SHA-256 `5b4a9809de417f90ee198c9f0081a51f8ec39642ef1fa46a38d43a5243136074` (465 lines).
   Stepper = `LOx-0001.sml` lines 420–525, byte-identical except `NAMED_CONSTS` (checked with `diff`).
-- `/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/R6x-0001-cf.sml` — SHA-256 `0ebcea32cae9523a6333f198d3da2dc88d489242a6220212bbc72ca687a07b7e`.
+- `/Users/USER/forge/results/night-shift-20261119/orch-A/r6/R6x-0001-cf.sml` — SHA-256 `0ebcea32cae9523a6333f198d3da2dc88d489242a6220212bbc72ca687a07b7e`.
   The main script reads it by ABSOLUTE path with `use`, inside a handler (it needs cfLib). Do not move it.
-- `/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/deps-R6x.txt` — SHA-256 `ce8ebac18f6c3f8cef976274c2a7ceaa78e0c310f5ecc27ed330bcef75e18b0d`
+- `/Users/USER/forge/results/night-shift-20261119/orch-A/r6/deps-R6x.txt` — SHA-256 `ce8ebac18f6c3f8cef976274c2a7ceaa78e0c310f5ecc27ed330bcef75e18b0d`
   = `deps-L2c.txt` (131 lines, unchanged) + the two files of `forge_refundRouteA2c` (L2c-0001 export).
 
 ## Command (orchestrator only, single HOL slot)
 ```
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/R6x-0001.sml R6x-0001.sml
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/deps-R6x.txt deps-R6x.txt
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/R6x-0001.sml R6x-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/deps-R6x.txt deps-R6x.txt
 shasum -a 256 R6x-0001.sml deps-R6x.txt   # 5b4a9809…6074 and ce8ebac1…b0d
 ./nightshift-run.sh R6x-0001 1200 deps-R6x.txt
 ```

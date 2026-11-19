@@ -1,0 +1,79 @@
+{
+ "case": "TR2-0001",
+ "parent_theories": 1,
+ "parents": [
+  {
+   "listed": "/Users/USER/forge/results/refund-loader-memory-local-20261115/attempt-0001/preload.sml",
+   "theory": null,
+   "files": {
+    "preload.sml": {
+     "path": "/Users/USER/forge/results/refund-loader-memory-local-20261115/attempt-0001/preload.sml",
+     "sha256": "42169f809d83487b9544d11892ec43bc2a8c045d46056866957f0b26710094b9"
+    }
+   }
+  },
+  {
+   "listed": "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/forge_machineTraceTheory.sig",
+   "theory": "forge_machineTraceTheory",
+   "files": {
+    "forge_machineTraceTheory.sig": {
+     "path": "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/.hol/objs/forge_machineTraceTheory.sig",
+     "sha256": "d8fd6750a2f1c244fe437951e6d2680a1a75b9129e0c6a689d62b048e0bb80c5"
+    },
+    "forge_machineTraceTheory.sml": {
+     "path": "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/.hol/objs/forge_machineTraceTheory.sml",
+     "sha256": "df8ad427c3c042f43be31283482adf9aaf26cee3ddaee703f9a1f17bcaa846f7"
+    },
+    "forge_machineTraceTheory.dat": {
+     "path": "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/.hol/objs/forge_machineTraceTheory.dat",
+     "sha256": "b48745a44b275789cf322916641ded296ac495a85ec63c0f1a1225e456915271"
+    }
+   }
+  }
+ ],
+ "produced_objects": {
+  ".hol/objs/forge_machineTracePrefixTheory.dat": "f4be385243b3ae4a1045522054ed17fc8253fcb931ce3b4fd549c8c6bd2a9575",
+  ".hol/objs/forge_machineTracePrefixTheory.sig": "3d2b7a7158871fa90448092555dd520a1c7a0009f652007651a399a0a0794bc9",
+  ".hol/objs/forge_machineTracePrefixTheory.sml": "a2975bc9680560f3330903208ce19bbf242d01e860396930984c80fa5b123a83"
+ },
+ "tools_and_logs": {
+  "hol": {
+   "path": "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+   "sha256": "cd6a5b303ae0d5e6ccec4e854a217f21666639bc652e4ff0f3bdb86866962c26"
+  },
+  "heap": {
+   "path": "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+   "sha256": "2f5dbb718599026ba1129a4d641cf9c4df62c906e111f5340edf42f2bc922932"
+  },
+  "stdout.log": "bd492adc16d2177dbd72a9e2dbc972219dd132a8d5a7b289e9305d6a3c5b3717",
+  "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "proof.sml": "bac9d9dc518c0dc8a87a2c8c6d0d8111f23b48b6d527247c8742eafbabc5a6c9",
+  "command.json": "30850ab1ff74bb2435cc3c329e3c48d8c23f00a830c4af7f35668d49c9fe33d3"
+ },
+ "statements": {
+  "trace_terminate": "⊢ ∀P G g tr mc st ms t io.\n    trace_ok P G mc st ms tr ∧\n    machine_sem\n      (mc with\n       <|next_interfer := trace_next_interfer P tr;\n         ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms\n      (Terminate t io) ⇒\n    machine_sem\n      (mc with\n       <|next_interfer := trace_next_interfer P [];\n         ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr)\n      (trace_last ms tr) (Terminate t io) ∧\n    st.io_events ++ trace_events mc ms tr ≼ io",
+  "trace_fail": "⊢ ∀P G g tr mc st ms.\n    trace_ok P G mc st ms tr ∧\n    machine_sem\n      (mc with\n       <|next_interfer := trace_next_interfer P tr;\n         ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms Fail ⇒\n    machine_sem\n      (mc with\n       <|next_interfer := trace_next_interfer P [];\n         ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr)\n      (trace_last ms tr) Fail",
+  "trace_diverge": "⊢ ∀P G g tr mc st ms l.\n    trace_ok P G mc st ms tr ∧\n    machine_sem\n      (mc with\n       <|next_interfer := trace_next_interfer P tr;\n         ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms (Diverge l) ⇒\n    LPREFIX (fromList (st.io_events ++ trace_events mc ms tr)) l",
+  "toy_bad_not_followed": "⊢ evaluate\n    (toy_mc with\n     <|next_interfer :=\n         trace_next_interfer (λs. s) [TrStep 1w; TrFfi 0 [7w] 2w];\n       ffi_interfer :=\n         trace_ffi_interfer (λx s. T) (λk x. 5w) 0w\n           [TrStep 1w; TrFfi 0 [7w] 2w]|>) toy_st\n    (LENGTH [TrStep 1w; TrFfi 0 [7w] 2w] + 0) 0w ≠\n  evaluate\n    (toy_mc with\n     <|next_interfer := trace_next_interfer (λs. s) [];\n       ffi_interfer :=\n         shift_seq (nffis [TrStep 1w; TrFfi 0 [7w] 2w]) (λk x. 5w)|>)\n    (trace_st toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [7w] 2w]) 0\n    (trace_last 0w [TrStep 1w; TrFfi 0 [7w] 2w])"
+ },
+ "markers": [
+  "CONTROL_OK no axiom in forge_machineTrace",
+  "CLOSURE_AXIOM bool.SELECT_AX",
+  "CLOSURE_AXIOM bool.INFINITY_AX",
+  "CLOSURE_AXIOM bool.ETA_AX",
+  "CLOSURE_AXIOM bool.BOOL_CASES_AX",
+  "CONTROL_OK closure contains forge_machineTrace",
+  "CONTROL_OK closure contains targetSem",
+  "CONTROL_OK closure contains targetProps",
+  "CONTROL_OK closure contains ffi",
+  "CONTROL_OK closure contains misc",
+  "CONTROL_OK closure contains asmProps",
+  "CONTROL_OK generic: no forge_, refund or ISA constant in any stored item",
+  "CONTROL_OK all 2 required lemmas stored",
+  "STORED_NAMES trace_terminate trace_fail trace_diverge toy_bad_not_followed",
+  "STORED_THEOREMS 4",
+  "STORED_DEFINITIONS 0",
+  "EXACT_COMPLETE"
+ ],
+ "missing": []
+}

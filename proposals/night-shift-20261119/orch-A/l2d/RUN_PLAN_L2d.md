@@ -16,8 +16,8 @@ Parent theorems used (by `DB.fetch`, never retyped): `forge_refundRouteA2b`: `ff
 
 ## Command 1: exploration (orchestrator only, in the single HOL slot; NOT RUN)
 ```
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/l2d/L2dx-0001.sml L2dx-0001.sml
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/l2d/L2dx-0001.sml L2dx-0001.sml
 shasum -a 256 L2dx-0001.sml   # must be 183b8ded…63ae9
 ./nightshift-run.sh L2dx-0001 900 deps-L2c.txt
 ```
@@ -41,7 +41,7 @@ first `STEP_STUCK`/`EXPLORE_OPEN` goal block to A24; do not run Command 2.
 
 ## Command 2: final proof (after the replay is written; NOT RUN)
 ```
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/l2d/routeA-L2d.sml L2d-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/l2d/routeA-L2d.sml L2d-0001.sml
 ./nightshift-run.sh L2d-0001 1500 deps-L2c.txt
 ```
 Success = `actual_exit 0`, marker `EXACT_COMPLETE`, `FAILED_LIST` empty, 4 `CLOSURE_AXIOM` lines, objects
@@ -70,7 +70,7 @@ Final source `routeA-L2d.sml` SHA-256 `f9a2545247dbc30da939fd8b09216bfcca03860c0
 draft is kept as `routeA-L2d.draft-650b7dce.sml`, diff `routeA-L2d.draft-to-final.diff`). Deps: `deps-MG.txt`
 (SHA-256 `9669fdf5…a9a9`, superset of deps-L2c). NOT RUN:
 ```
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/l2d/routeA-L2d.sml L2d-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/l2d/routeA-L2d.sml L2d-0001.sml
 ./nightshift-run.sh L2d-0001 1500 deps-MG.txt
 ```
 Pass = actual_exit 0, `EXACT_COMPLETE`, `FAILED_LIST` empty, 24 to 29 `CHECKED` lines = `STORED_THEOREMS` (24 required,

@@ -93,8 +93,8 @@
  
  (* ================= shared files ================= *)
  val R6T_PROOF_MODE = false;
--val R6TDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round11/";
-+val R6TDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round14/";
+-val R6TDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round11/";
++val R6TDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round14/";
  fun use_part (f : string) : bool =
    (pr ("MARK USE " ^ f); use (R6TDIR ^ f); pr ("PART_DONE " ^ f); true)
    handle e => (pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e)); false);

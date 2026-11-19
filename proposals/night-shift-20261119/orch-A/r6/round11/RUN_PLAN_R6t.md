@@ -4,7 +4,7 @@ Top and bottom glue of R6: (c) the initial heap satisfies the V-predicates; (d) 
 characteristic-formula specification of `main` with `STDIO_V Inv` to `EVERY Inv io_events` of every behaviour of
 `semantics_dec_list`. Two-file method of round 9. Every tactic is UNCHECKED. No file outside `round11/` was changed.
 
-## Inputs (all in `/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round11/`)
+## Inputs (all in `/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round11/`)
 | file | role | SHA-256 |
 |---|---|---|
 | `R6tx-0001.sml` | EXPLORATION main (scratch theory, no export) | `6277ebceebff23bf638747eaf76ac3ca946044cd80232ffb6526fd9f09cbfa69` |
@@ -20,8 +20,8 @@ The main files read the four `r6t_*.sml` files with `use` from the directory nam
 
 ## Commands (orchestrator only, single HOL slot)
 ```
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-R=/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round11
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+R=/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round11
 cp $R/R6tx-0001.sml R6tx-0001.sml; cp $R/deps-R6t.txt deps-R6t.txt
 shasum -a 256 R6tx-0001.sml deps-R6t.txt     # 6277ebce...fa69, 37017fc8...f279
 ./nightshift-run.sh R6tx-0001 1800 deps-R6t.txt

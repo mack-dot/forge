@@ -1,0 +1,448 @@
+X8 DRAFT v3: "the real process refines the machine model" (constructed environment)
+Worker W-x8v2 for Night-Shift Orchestrator A (proof track), 2026-11-19.
+=====================================================================================================================
+TRUTH LABEL: EVERYTHING IN THIS FILE IS BY READING. NOTHING HERE IS MACHINE-CHECKED BY THIS WORKER.
+No HOL run, no Dafny run, no native run, no git command was made for this file. M1-B stays OPEN.
+end_to_end stays false. A lemma is called PROVED only when its case go.log ends with `go exit 0` AND I saw its
+statement in the case's stdout.log.
+Status words: PROVED (case named) / STAGED (source exists, never run) / MISSING (no source) /
+  LIBRARY (stored CakeML or HOL library theorem; source read; not a case of tonight; not re-checked).
+Native classes: ENFORCED-BY-LAUNCHER (a launcher can make it true by construction; the launcher contract is a DRAFT
+  and is NOT implemented, so today every such row is an assumption in practice) / ASSUMPTION.
+Inputs: v2 = X8_statement_v2.txt (sha256 77822531...9a22; unchanged); review = review/X8_v2_review.txt;
+  summary = CORRECTIONS_v2.md (F1-F3, G1-G3, wording items, open check). v1 corrections 1-6 stay applied.
+  I checked every review claim that v3 applies against the cited source lines myself (section 3).
+=====================================================================================================================
+
+SOURCES AND ABBREVIATIONS (paths under /Users/USER/forge/)
+ RA   = results/m1b-routeA-20261119/attempt-0001          (case X: RA/X/stdout.log, RA/X.go.log)
+ OA   = results/night-shift-20261119/orch-A
+ TC   = .toolchain/experiments/refund-cakeml-20261104
+ CK   = TC/cakeml
+ L3   = TC/HOL/examples/l3-machine-code/arm8/model/arm8Script.sml
+ STEP = TC/HOL/examples/l3-machine-code/arm8/step/arm8_stepScript.sml
+ TS   = CK/compiler/backend/semantics/targetSemScript.sml   (evaluate_def :118-219, apply_oracle_def :47-50)
+ TP   = CK/compiler/backend/semantics/targetPropsScript.sml (evaluate_add_clock :1059, evaluate_add_clock_io_events_mono
+        :1108, machine_sem_total :1134, machine_sem_unique :1163)
+ FS   = CK/basis/fsFFIScript.sml
+ TIO  = CK/basis/TextIOProgScript.sml (sha256 e2ddab18...6ddb6a, computed by me)
+ PRG  = CK/compiler/dafny/forge_refundStdioProg_experiment/forge_refundStdioProgScript.sml (sha256 6f7aa17a...0a68)
+ ENV  = results/refund-env-model-local-20261116/attempt-0001/env-0005/stdout.log (earlier session; no go.log line)
+ S2   = results/refund-slide-local-20261117/attempt-0001/s2-0003/stdout.log (earlier session; no go.log line)
+ C9   = results/night-shift-20261119/orch-C/c9-x8 (red team C runs; data only)
+ b    = sl + 0x1000040D0w (cake_main);  halt_pc = sl + 0x1000040C0w;  dm = refund_mem_dm_sl sl h e
+ req  = explode (sexp_to_string (refund_request charge request original remaining enabled opened candidate amount
+        reason));  f_vals = refund_fields charge request original remaining enabled opened candidate amount reason
+TRANSLITERATION: logs print Unicode; I replace symbol by symbol and change nothing else:
+ forall -> !, exists -> ?, and -> /\, or -> \/, not -> ~, implies -> ==>, iff -> <=>, element -> IN,
+ isPREFIX -> <<=, word <= unsigned -> <=+, word < unsigned -> <+, minus -> -, turnstile -> |-, universal set -> UNIV.
+
+=====================================================================================================================
+1. THE STATEMENT
+=====================================================================================================================
+
+1.0 TARGET (PROVED; the route rests on MF-0002 ONLY -- review G3)
+ M3 = refund_model_frame_meets_exported_contract. RA/MF-0002/stdout.log:286-320; RA/MF-0002.go.log: go exit 0.
+  |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+     refund_heap_clear_sl sl h e /\
+     envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+     refund_env_ok_sl sl envmc /\
+     stdin_content fs = SOME (explode (sexp_to_string (refund_request charge request original remaining enabled
+       opened candidate amount reason))) /\ wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+     ?ms. (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+       !b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi no_ext cl fs) ms b ==>
+         ?t io. b = Terminate t io /\
+           !g. refund_strict_parse (fd1_written io) = SOME g ==>
+             g = refund_fields charge request original remaining enabled opened candidate amount reason /\
+             fd1_written io = explode (refund_render_fields (refund_fields charge ... reason)) /\
+             !ok a r c q n. g = (ok,a,r,c,q,n) ==>
+               evaluate_exps (exported_contract_state dafny_heap charge ... q n) dafny_env exported_ensures =
+               (exported_contract_state dafny_heap charge ... q n, Rval [BoolV T; BoolV T; BoolV T])
+ ("..." abbreviates the same argument list as in the log.)
+ s, envmc, fs, cl are universally quantified in M3; X8 CONSTRUCTS them from one real run.
+ G3 (review R3.4, agreed): MG-0001 (refund_model_frame_decision_events) is NOT on this route. Its contract premise is
+ at the fixed predicate VokY3 and it carries the R6 premise; v3 has no discharger for either, and its conclusion
+ speaks about the non-totalised machine. Nobody may plug v3's construction into MG-0001 without new lemmas.
+ Correction 6 (kept): the CakeML analogy is only the logical shape; CakeML builds its oracles from a MODEL run.
+
+1.1 THE REAL OBSERVATION (HOL-side representation; review R4(b), R6.5)
+ Executable sha256 b8ed5ec2...7bb8; main thread; from the first instruction of _cml_main (PC = sl + 0x100004000)
+ to process end. A real user state is a record of a NEW HOL type (definition MISSING):
+   rstate = <| PC : word64; X : num -> word64 (0..30); SP : word64; NZCV : bool # bool # bool # bool;
+               mem : word64 -> word8 option |>
+   mem a = SOME v iff a load of address a by the process at that point WOULD return v (the content of the VM map,
+   whether or not the page is resident; demand paging does not make a byte NONE); NONE iff such a load would fault.
+ A real run: X = (r_0, ev_0, r_1, ev_1, ..., r_n, ev_n, END).
+   r_i is the state IMMEDIATELY BEFORE the attempt that retires event ev_i. Kernel activity of NON-retiring attempts
+   (for example a page fault taken by the first attempt of an instruction, before it retires) belongs to the
+   PREVIOUS event ev_(i-1) (for i = 0: to the loader phase, outside X).
+   U : one user instruction retires at r_i.PC, then any kernel activity, up to r_(i+1).
+   F : r_i.PC IN FFI_PCS; the whole call segment up to the first user instruction at r_i.X 30 is ONE event.
+       FFI_PCS = [sl+0x1000040A0 (J=0 read); sl+0x100004090 (J=1 write); sl+0x100004080 (J=2 close);
+       sl+0x100004070 (J=3 open_in)].
+   H : r_i.PC = halt_pc; `b _cml_exit`, cml_exit, exit.
+ END is one of:
+   EXIT_AFTER_H(status): ev_n = H, i.e. r_n.PC = halt_pc and H is the step out of r_n. No state after r_n.
+   CUT(n): the process was killed (any signal), stopped by the supervisor's time-out, or exited while ev_n was in
+     progress (this includes an exit or abort inside a call segment). ev_n did not complete; r_0..r_n completed.
+   Under PREM (1.7) SIGPIPE cannot occur: it needs a closed read end, which N11 and N22 exclude (review R5(f)).
+ Nothing is claimed about states inside events.
+
+1.2 INDEX FUNCTIONS (correction 2; F3 repair)
+ The first 27 U events (ev_0..ev_26) are the cml_main stub; the model runs them with arm8_run 27 (no oracle).
+ TS evaluate_def (checked by me): a NORMAL step applies apply_oracle mc.next_interfer to the POST-step state and
+ shifts only next_interfer; an FFI step applies apply_oracle mc.ffi_interfer to the PRE-call state and shifts only
+ ffi_interfer; apply_oracle oracle x = (oracle 0 x, shift_seq 1 oracle) (TS:47-50).
+   NU(i)  := #{ j | 27 <= j < i /\ ev_j = U }                    (next_interfer index of ev_i)
+   NF(i)  := #{ j | 27 <= j < i /\ ev_j = F }                    (ffi_interfer index of ev_i)
+   NRW(i) := #{ j | 27 <= j < i /\ ev_j = F /\ J_j IN {0;1} }    (numchars index of ev_i; F3)
+   u(m), f(k): the event of the m-th normal step / of the k-th FFI step (both counted from 0, from event 27).
+   #U := NU(n), #F := NF(n), #RW := NRW(n) (completed events before ev_n).
+ F3 (agreed; FS checked by me): only read (bumpFD: numchars := THE (LTL ...), FS:181-184, read_def :187-197) and
+ write (fsupdate ... 1 ..., numchars := THE (LDROP k ...), FS:201-207, write_def :214-230) consume numchars. closeFD
+ (FS:234-241), ffi_close (FS:351-362), openFile (FS:126-136) and ffi_open_in (FS:265-279) do not touch numchars.
+ The error branch `++ return (FFIreturn (LUPDATE 1w 0 bytes) fs)` of ffi_read/ffi_write consumes nothing either.
+
+1.3 ABSTRACTION (correction 1, narrowed per review R2.3; F2 repair)
+ The L3 record (L3:367-376, checked by me) has fields MEM, PC, PSTATE, REG, SCTLR_EL1, SCTLR_EL2, SCTLR_EL3, SP_EL0,
+ SP_EL1, SP_EL2, SP_EL3, TCR_EL1, TCR_EL2, TCR_EL3, branch_hint, exception. ProcState (L3:8-10) has only C, EL, N,
+ SPS, V, Z. There is NO FP/SIMD field (v2 was wrong to name one).
+ Read set at PSTATE.EL = 0w (review R2.1; I checked SP_def L3:487-497, TranslationRegime/SCTLR L3:515-529,
+ CheckSPAlignment, CheckAlignment, BigEndian in L3:600-665, Next_def L3:7203-7220, raise'exception L3:379-387):
+   PSTATE.EL; PSTATE.N,Z,C,V; PSTATE.SPS (read, but at EL0 both arms of SP_def give SP_EL0: value irrelevant);
+   SCTLR_EL1.A, SCTLR_EL1.E0E, SCTLR_EL1.SA0; TCR_EL1.TBI0, TCR_EL1.TBI1; exception.
+ sr := (sr_A, sr_E0E, sr_SA0, sr_TBI0, sr_TBI1) : bool^5, the REAL bits with this encoding (L3 rec'SCTLRType and
+   rec'TCR_EL1, L3:389-443, checked by me): sr_A = SCTLR_EL1 bit 1; sr_E0E = SCTLR_EL1 bit 24; sr_SA0 = SCTLR_EL1
+   bit 4; sr_TBI0 = TCR_EL1 bit 37; sr_TBI1 = TCR_EL1 bit 38. EL is not a parameter: N02 fixes EL = 0.
+ F0 = one fixed arm8_state. It supplies every field NOT in the read set: SCTLR_EL2/3, SP_EL1/2/3, TCR_EL2/3,
+   branch_hint, PSTATE.SPS, SCTLR_EL1.{EE, SA, rst bits}, TCR_EL1 rst bits. (The v2 parameter "all of PSTATE,
+   SCTLR_EL1, TCR_EL1" is REMOVED: see N03.)
+   regs r     := \i. if i = 18w \/ i = 31w then 0w else r.X (w2n i)                      (x18 normalised)
+   memv r     := \a. case r.mem a of SOME v => v | NONE => 0w
+   full sr r  := F0 with <| PC := r.PC; REG := regs r; SP_EL0 := r.SP;
+                   PSTATE := F0.PSTATE with <| N,Z,C,V := r.NZCV; EL := 0w |>;
+                   SCTLR_EL1 := F0.SCTLR_EL1 with <| A := sr_A; E0E := sr_E0E; SA0 := sr_SA0 |>;
+                   TCR_EL1 := F0.TCR_EL1 with <| TBI0 := sr_TBI0; TBI1 := sr_TBI1 |>;
+                   exception := NoException; MEM := memv r |>                 (the FAITHFUL state; F2)
+   absM sr r  := erase (full sr r)                                               (the model state)
+   UPD r ms   := ms with <| PC := r.PC; REG := regs r; SP_EL0 := r.SP;
+                   PSTATE := ms.PSTATE with <| N,Z,C,V := r.NZCV |>; MEM := memv r |>
+   OBS ms     := (ms.PC, ms.REG, ms.SP_EL0, (ms.PSTATE.N, .Z, .C, .V), ms.MEM)
+   RD ms      := (ms.PSTATE.EL, ms.SCTLR_EL1.A, ms.SCTLR_EL1.E0E, ms.SCTLR_EL1.SA0, ms.TCR_EL1.TBI0,
+                  ms.TCR_EL1.TBI1, ms.exception)                                (the read system fields)
+ erase (RA/E1-0003/stdout.log:3-6; go exit 0):
+   |- !s. erase s = s with
+        <|TCR_EL1 := s.TCR_EL1 with <|TBI0 := F; TBI1 := F|>; SCTLR_EL1 := s.SCTLR_EL1 with SA0 := F|>
+ erase keeps A, E0E, EE, SA, PSTATE, exception (erase_fields, RA/E1-0003/stdout.log:28-35; go exit 0).
+ F2 is repaired by construction: `full` and `absM` both set exception := NoException; every quantified state in
+ N01, ML-05, ML-09 carries the explicit conjunct `exception = NoException` (see there).
+
+1.4 THE CONSTRUCTED ENVIRONMENT (MODEL side; total definitions)
+ (E1) next_R X m ms := let ms' = UPD r_(u(m)+1) ms in
+                       if m < #U /\ arm8_proj dm ms' = arm8_proj dm ms then ms' else ms
+ (E2) For k < #F with i = f(k): J_k := index of r_i.PC in FFI_PCS; PRE_k := r_i; POST_k := r_(i+1);
+      NB_k := the REAL bytes of [r_i.X 2, r_i.X 2 + r_i.X 3) in POST_k   (non-circular; correction 5)
+      VALID k (j, nb, ms) := j = J_k /\ nb = NB_k /\ OBS ms = OBS (absM sr PRE_k) /\ RD ms = RD (absM sr PRE_k)
+      Vok_R j nb ms := ?k. k < #F /\ VALID k (j, nb, ms)
+      F_R k x := let k* = (if k < #F /\ VALID k x then k else LEAST k'. k' < #F /\ VALID k' x) in
+                 UPD POST_(k*) (SND (SND x))
+      (Review R3.2: the LEAST repair HOLDS by reading; F_R sees k via refund_ffi_tot_shift_seq, Vok_R does not.)
+ (E3) envmc0_R := <| prog_addresses := dm; next_interfer := next_R X; ffi_interfer := F_R; ... |>
+      envmc_R  := envmc0_R with ffi_interfer := refund_ffi_tot Vok_R F_R
+      mc_R     := refund_mc b envmc_R
+      (Review R3.3 P7 note applied: refund_env_ok_sl_of_contract_on is instantiated at envmc := envmc0_R, whose
+      ffi_interfer is F_R; its conclusion is then refund_env_ok_sl sl envmc_R.)
+ (E4) fs_R (F3 repaired: indexed by reads and writes only):
+        for each completed F event ev_i with J_i IN {0;1} and j = NRW(i):
+          c_j := nread_i - 1 if J_i = 0;  c_j := nw_i if J_i = 1
+          (nread_i / nw_i = the count the real C function stored in NB bytes 1..2, big-endian; num subtraction, so
+          nread = 0 gives 0; the model read at end of input returns 0 for any c_j, FS read_def).
+        c_#RW := n_req if END X = CUT(n) and ev_n is an in-flight WRITE with requested length n_req; else omitted.
+        fs_R := the standard basis file system: stdin content = req, stdout empty, fd 0 ReadMode offset 0,
+                fd 1 and 2 WriteMode, numchars := LAPPEND (fromList [c_0; c_1; ...]) (LREPEAT [1]).
+        Close and open_in events get NO numchars entry. Under N23 they do not occur at all (see G1).
+ (E5) cl_R := any wfcl list (the four FFI names exclude get_arg*).
+ (E6) s_R := absM sr r_0.
+
+1.5 NATIVE ASSUMPTIONS (exact wording; class; falsifier)
+ All are about ONE real run X with parameters sl h e sr.
+ N01 A-CPU-ISA [ASSUMPTION] (F2 repaired). For every U event ev_i with i < n or ev_n = U completed: for EVERY
+     arm8_state s^ with OBS s^ = OBS (full sr r_i) /\ RD s^ = RD (full sr r_i) (so s^.PSTATE.EL = 0w and
+     s^.exception = NoException): if the hardware retires the instruction at r_i.PC without a synchronous exception
+     with result q_i (before any kernel activity), then NextStateARM8 s^ = SOME t /\ OBS t = OBS (full sr q_i).
+     Only encoder-subset words are concerned (TS encoded_bytes_in_mem). The "for EVERY s^" form is satisfiable only
+     if ML-05 holds; ML-05 removes that hidden model content (review R1.5).
+     Falsifier: a single-step differential (T3) with one OBS difference between M1 and L3 on a reached word.
+ N02 A-PROC-N1 [ASSUMPTION]. At every user step: EL = 0, AArch64, SCTLR_EL1.E0E = 0 (so sr_E0E = F), no pending
+     exception. Falsifier: none from EL0 directly; a big-endian load result; an N01 test mismatch.
+ N03 A-F0-REAL [ASSUMPTION] (correction 1, NARROWED per review R2.3). The five real bits SCTLR_EL1.A, .E0E, .SA0,
+     TCR_EL1.TBI0, .TBI1 (encoding in 1.3) are constant over all user steps of X and equal sr. NOTHING is assumed
+     about other bits (PSTATE.SSBS, PSTATE.DIT, DAIF, PAN, SCTLR_EL1.EE, rst bits, ...). This is strictly weaker than
+     v2's N03; the price is ML-05 in its v3 form (F0 fields are never read at EL0).
+     Falsifier: an alignment fault on a misaligned access in one run and not in another (A changed); an N01 test
+     difference that disappears when one of the five bits is flipped. If the subset never makes a misaligned access,
+     the A falsifier never fires (review R2.3, agreed).
+ N04 A-PROC-N2-SP [ASSUMPTION]. At every user step: ~sr_SA0 \/ aligned 4 r_i.SP. With ML-07 this reduces to: SP is
+     16-aligned at r_0, and N05 and N07 keep SP equal or 16-aligned. Falsifier: a recorded SP mod 16 <> 0 (T2/T4).
+ N05 A-KERNEL-PRESERVE(+SP) [ASSUMPTION]. For every U event ev_i with result q_i and i >= 27:
+     arm8_proj dm (absM sr r_(i+1)) = arm8_proj dm (absM sr q_i) /\ (r_(i+1).SP = q_i.SP \/ aligned 4 r_(i+1).SP).
+     For the 27 entry U events (i < 27; no oracle): STRONG form OBS (full sr r_(i+1)) = OBS (full sr q_i).
+     Falsifier: T6 (below) with a different stdout; a T3 record with a register or dm byte change across preemption.
+ N06 A-SINGLE-THREAD [ASSUMPTION]. No other thread writes dm or a main-thread register during X. Evidence (RUN by C,
+     exit 0): C9/threads_probe.log, threads=1 in one run. Falsifier: thread count > 1; a dm checksum change.
+ N07 A-FFI-EFFECT-AT-CALLS(+SP) [ASSUMPTION]. For every completed F event ev_i: r_(i+1).PC = r_i.X 30 /\
+     (!j. MEM j [19;20;21;22;23;24;25;27;28] ==> r_(i+1).X j = r_i.X j) /\
+     (r_(i+1).SP = r_i.SP \/ aligned 4 r_(i+1).SP) /\ aligned 2 (r_i.X 30). Falsifier: T4 with any inequality.
+ N08 A-FFI-FRAME [ASSUMPTION]. For every completed F event ev_i: the array [r_i.X 2, r_i.X 2 + r_i.X 3) lies in dm,
+     and every byte of dm outside it is unchanged from r_i to r_(i+1). Falsifier: T4 checksum; T2 layout.
+ N09 A-FD0-SETUP [ENFORCED-BY-LAUNCHER]. fd 0 = fresh BLOCKING pipe; the process is its sole reader; the launcher
+     writes exactly req, then closes the write end. Falsifier: launcher record; class CE-2 is what it removes.
+ N10 A-FD0-SEM [ASSUMPTION] (review R6.3 applied; R7 applied: REAL facts only). Under N09, every completed read
+     F event (J = 0) with requested n returns nread with 0 <= nread <= n and no error; the nread bytes are the next
+     unread bytes of req; nread = 0 only if req is exhausted or n = 0; the C code writes a[0] = 0 and a[1..2] = nread
+     big-endian; no byte of a outside [0,3) U [4, 4+nread) changes. (The equality NB_k = model answer moved to ML-11.)
+     Falsifier: T4 on reads.
+ N11 A-FD1-SETUP [ENFORCED-BY-LAUNCHER]. fd 1 = fresh BLOCKING pipe; the launcher is the only reader and drains it to
+     EOF, ALSO after it kills the process on time-out (review R5(g)); no other process holds the write end; SIGPIPE
+     SIG_DFL; empty mask; stderr separate. Falsifier: launcher record; CE-1 and T08 are the classes it removes.
+ N12 A-FD1-SEM [ASSUMPTION] (review R6.3 applied; R7 applied). Every completed write F event (J = 1) with requested n
+     returns nw with 0 <= nw <= n /\ (n > 0 ==> nw >= 1), no error; it appends exactly a[4+off .. 4+off+nw) to the
+     pipe in order; the C code writes a[0] = 0 and a[1..2] = nw; no other byte of a changes.
+     Falsifier: T4 on writes; a stdout byte outside every reached write's range.
+ N13 A-FD1-PARTIAL [ASSUMPTION] (correction 3). If END X = CUT(n) and ev_n is a write with buffer
+     a[4+off .. 4+off+n_req), the bytes ev_n put into the pipe are a prefix of that buffer (possibly empty).
+     PIPE_BUF = 512 here (RUN by C); chunks up to 2048. Falsifier: a cut run whose stdout tail is not such a prefix.
+ N14 A-SIG-DFL [ENFORCED-BY-LAUNCHER]. All dispositions SIG_DFL, empty mask at exec; the program installs no handler.
+     Evidence (RUN by C, exit 0): C9/sig_stop_cont (9 runs). Falsifier: a record of SIG_IGN or a handler.
+ N15 A-LOADER [ENFORCED-BY-LAUNCHER]. Empty or allow-listed environment (no DYLD_*); no injected library. The binary
+     has no hardened runtime (static T1). Falsifier: CE-3 shows the threat when not enforced.
+ N16 A-ENTRY [ASSUMPTION]. absM sr r_0 meets P1-P5 of M3 with the real sl and the h, stk, e that cml_init_memory
+     stored; and sl + 0x100030F30w <=+ 0x80000000000000w /\ e <=+ 0x80000000000000w (untagged bounds; N4 in
+     RA/E1-0003 shows slide_ok alone does not give them). Falsifier: T2 values outside the bounds.
+ N17 A-IMG-STABLE [ASSUMPTION]. The two image slices keep the file bytes during X (as VM-map content, 1.1).
+     Static T1 PASS (__TEXT r-x/r-x). Falsifier: a slice digest at exit different from the file.
+ N18 A-NO-SHARED [ASSUMPTION]. No other process writes dm. Falsifier: a dm checksum change with one thread.
+ N19 A-NO-DEBUGGER [ASSUMPTION]. No debugger, exception port or foreign task port changes registers or memory.
+     Falsifier: an attach record during a run.
+ N20 A-ENTRY-STDIN [ENFORCED-BY-LAUNCHER]. fd 0 carries exactly req. Falsifier: launcher log differs from req.
+ N21 A-STDOUT-EMPTY [ENFORCED-BY-LAUNCHER]. The stdout pipe is empty at exec. Falsifier: launcher record.
+ N22 A-OUT-DELIVER [ENFORCED-BY-LAUNCHER]. The consumer reads every byte the process put into fd 1 and no other byte,
+     until EOF; libSystem exit writes nothing to fd 1. Falsifier: byte total differs from the sum of nw (+ prefix).
+ N23 A-NO-CLOSE-OPEN [ASSUMPTION] (NEW; review G1). X contains no F event with J IN {2;3} (no close, no open_in).
+     Reason: for J = 2 the model and the real answer DIFFER (FS closeFD asserts isFile, so ffi_close of a standard
+     stream returns a[0] = 1 (FS:234-241, 351-362), while the real fficlose of fd 0/1 writes 0); for J = 3, open_in
+     on fs_R has no files and fails. So VALID would fail and the simulation would lose the real run.
+     Falsifier: a call trace with a close or open_in call. Replaceable by the MODEL lemma ML-15 (MISSING); then
+     N23 follows from ML-11 (the real run follows the model) and stops being an assumption. Open-check answer: 1.9.
+ Not native: A-X18 (x18 normalised; only the MODEL lemma ML-06 remains).
+
+1.6 MODEL LEMMAS NEEDED (MODEL level; name, statement sketch, rests on, status)
+ ML-01 T-ENV-NEXT. |- !X sr. interference_ok (next_R X) (arm8_target.proj dm). Rests on interference_ok_arm8_iff
+       (ENV:5-12; earlier session; not counted PROVED) and the guard of (E1). MISSING.
+ ML-02 T-ENV-FFI. |- FFI_FACTS X sr ==> refund_ffi_contract_on b dm Vok_R F_R (FFI_FACTS = HOL form of N02, N07,
+       N08 at the observed calls). Rests on refund_ffi_contract_on_def (RA/L1-0001/stdout.log:58-75). MISSING.
+ ML-03 T-ENV. ML-01 /\ ML-02 ==> refund_env_ok_sl sl envmc_R, by refund_env_ok_sl_of_contract_on at
+       envmc := envmc0_R. Rests on refund_env_ok_sl_of_contract_on, PROVED (L1-0001; stdout.log:117-123):
+         |- interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) /\
+            refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok envmc.ffi_interfer ==>
+            refund_env_ok_sl sl (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+       MISSING (an instantiation).
+ ML-04 T-FS. wfFS fs_R /\ STD_streams fs_R /\ stdin_content fs_R = SOME req for every finite list c. Rests on
+       fsFFIProps liveFS (LIBRARY). MISSING.
+ ML-05 L-GHOST (F1 repaired; widened for the narrowed N03). For every encoder-subset word at a PC in dm and all
+       s1 s2: s1.PSTATE.EL = 0w /\ s1.exception = NoException /\ OBS s1 = OBS s2 /\ RD s1 = RD s2 ==>
+       (NextStateARM8 s1 = NONE <=> NextStateARM8 s2 = NONE) /\
+       (!t1 t2. NextStateARM8 s1 = SOME t1 /\ NextStateARM8 s2 = SOME t2 ==> OBS t1 = OBS t2 /\ RD t1 = RD t2).
+       (RD equality gives EL = 0 and NoException for s2.) By reading (review R1.2-R1.4, checked by me): Next
+       overwrites branch_hint before any read (L3:7203-7220); at EL0, SCTLR = SCTLR_EL1, SP = SP_EL0, BigEndian
+       reads only E0E, BranchTo reads only TCR_EL1.TBI0/TBI1; so fields outside OBS and RD are not read. Without
+       the EL premise the lemma is FALSE (EL2: SCTLR_EL2.A is read). MISSING.
+ ML-06 L-X18-DECODE. No word of the code slice (file 16592..147028) names register 18. Test oracle: T5 PASS
+       (TESTED-UNPROVED). MISSING.
+ ML-07 L-SP-NOWRITE. No word of the slice uses SP_EL0 as a base or writes register 31 as SP. T5: 0 uses. MISSING.
+ ML-08 L-UNTAGGED-RUN (G2: extended to the entry). For the 27 entry steps from absM sr r_0 AND for every normal
+       step of the model run from ms_27, the next PC is untagged. Entry part: the stub PCs lie in refund_code_dm_sl sl
+       (to be checked: the stub is at sl+0x100004000, inside the code slice) and its last branch goes to b
+       (refund_entry_run_sl, S2:48-57). Run part: no-Error
+       of M3 puts every reached PC in dm U {halt_pc} U FFI_PCS. With N16 bounds and slide forms of U2/U3.
+       Rests on, PROVED in EE-0001 (go exit 0; stdout.log:457-475; slide-0 forms only):
+         U2_code_dm_untagged  |- !a. a IN refund_code_dm ==> untagged a
+         U3_mem_dm_untagged   |- !h e a. a IN refund_mem_dm h e /\ e <=+ 0x80000000000000w ==> untagged a
+         U4_next_pc_from_code_invariant
+           |- (!t. NextStateARM8 (erase s) = SOME t ==> t.PC IN refund_code_dm) ==>
+              !t. NextStateARM8 (erase s) = SOME t ==> untagged t.PC
+       Slide forms: MISSING. ML-08: MISSING.
+ ML-09 L-ERASE-RUN (F2 and G2 repaired). For the 27 entry steps AND every normal step: with s^ = full-state
+       counterpart (s^.PSTATE.EL = 0w, s^.exception = NoException, real TBI0/TBI1/SA0 from sr),
+       NextStateARM8 (erase s^) = OPTION_MAP erase (NextStateARM8 s^).
+       Rests on NextStateARM8_erase, PROVED (EE-0001; stdout.log:409-413; go exit 0):
+         |- s.PSTATE.EL = 0w /\ s.exception = NoException /\ (~s.SCTLR_EL1.SA0 \/ aligned 4 s.SP_EL0) /\
+            (!t. NextStateARM8 (erase s) = SOME t ==> untagged t.PC) ==>
+            NextStateARM8 (erase s) = OPTION_MAP erase (NextStateARM8 s)
+       arm8_ok_erase, PROVED (E1-0003; stdout.log:47-50; go exit 0):
+         |- arm8_ok (erase s) <=> s.PSTATE.EL = 0w /\ ~s.SCTLR_EL1.E0E /\ s.exception = NoException /\ aligned 2 s.PC
+       erase_fields, PROVED (E1-0003; stdout.log:28-35). Plus ML-07, ML-08, N02, N04. MISSING.
+ ML-10 T-ENTRY27 (G2 repaired). If the 27 entry U events meet N01 and the STRONG N05, then
+       ?ms. arm8_run 27 (absM sr r_0) = SOME ms /\ OBS ms = OBS (absM sr r_27) /\ RD ms = RD (absM sr r_0).
+       Rests on ML-09 and ML-08 (entry parts), ML-05, N01, N05 (strong), refund_entry_run_sl (S2:48-57; earlier
+       session; not counted PROVED). MISSING.
+ ML-11 T-TRACE (induction on REAL events). mc_R, st_R = basis_ffi no_ext cl_R fs_R, ms_27 from ML-10.
+       Hypotheses: HOL forms of N01-N08, N10, N12, N23 for X; ML-05..ML-10. K(i) := NU(i) + NF(i).
+        (a) for completed i with 27 <= i <= n (i = n only if END = CUT(n)): ?ms st. evaluate mc_R st_R (K i) ms_27 =
+            (TimeOut, ms, st) /\ OBS ms = OBS (absM sr r_i) /\ RD ms = RD (absM sr r_0) /\ st.io_events = EV_i X,
+            EV_i X = the IO_event list of the completed F events before i (name J_k, conf, (before, after) bytes
+            from PRE_k and NB_k);
+        (b) END X = EXIT_AFTER_H: ?t ms st. evaluate mc_R st_R (K n + 1) ms_27 = (Halt t, ms, st) /\
+            st.io_events = EV_n X (r_n.PC = halt_pc; the H step is not counted in K; clock K n + 1 > 0, TS:120).
+        Induction step for an F event (moved here from N10/N12, review R7): from N10/N12 and the model fs state
+        after the earlier reads/writes, NB_k = the basis_ffi answer for call k (FS ffi_read :307-327, ffi_write
+        :333-348, numchars head = c_(NRW i)); hence VALID k holds and refund_ffi_tot_valid applies:
+          |- !Vok f k index new_bytes ms2. Vok index new_bytes ms2 ==>
+             refund_ffi_tot Vok f k (index,new_bytes,ms2) = f k (index,new_bytes,ms2)   (PROVED, L1-0001:84-87)
+        MISSING. (W-trace's draft orch-A/trace/ was absent when I read v2; I did not re-check it for v3.)
+ ML-12 T-KILLED-PREFIX. |- evaluate mc st K ms = (TimeOut, ms1, st1) /\ machine_sem mc st ms (Terminate t io) ==>
+       st1.io_events <<= io. Rests on evaluate_add_clock (TP:1059), evaluate_add_clock_io_events_mono (TP:1108);
+       existence by machine_sem_total (TP:1134); all LIBRARY. Review R5: proof idea HOLDS. MISSING.
+ ML-13 T-INFLIGHT. If END X = CUT(n), ev_n is a write, and the numchars head at the model state for ev_n is
+       c_#RW = n_req (F3 repaired: index NRW(n)), then evaluate mc_R st_R (K n + 1) ms_27 = (_, _, st') with
+       st'.io_events = EV_n X ++ [w] and write_chunk of w = a[4+off .. 4+off+n_req) of r_n.
+       Rests on FS write_def (k = MIN n strm), fd1_written_def (RA/LO-0006/stdout.log:58-65). MISSING.
+ ML-14 T-X8-COMPOSE. Composition in 1.8. Rests on M3 (PROVED, MF-0002); machine_sem_of_evaluate_Halt (PROVED,
+       LE-0004; stdout.log:79-82); fd1_written_prefix (PROVED, LO-0006; stdout.log:73-74);
+       refund_frame_decision (PROVED, PX-0001; stdout.log:52-55); refund_frame_accept_of_prefix (PROVED, MF-0002;
+       stdout.log:100-104); refund_profile_a_sl_fd1 (PROVED, LO-0006; stdout.log:467-496); machine_sem_unique
+       (LIBRARY). MISSING.
+ ML-15 L-NO-CLOSE-OPEN (NEW; G1). For the model run of mc_R from ms_27 under fs_R: no FFI step has index 2 or 3.
+       Would replace N23. Not implied by any PROVED theorem I found (1.9). MISSING.
+ STAGED (optional): ST-1 MT1 refund_model_frame_totalised (RA/MT-0001.sml; not run); ST-2 non-vacuity
+       (RA/NV-0001.sml; not run).
+ PROVED theorems used (14; go exit 0 and statement seen): M3 and refund_frame_accept_of_prefix (MF-0002);
+       refund_env_ok_sl_of_contract_on and refund_ffi_tot_valid (L1-0001); NextStateARM8_erase, U2, U3, U4
+       (EE-0001); erase_fields and arm8_ok_erase (E1-0003); machine_sem_of_evaluate_Halt (LE-0004);
+       fd1_written_prefix and refund_profile_a_sl_fd1 (LO-0006); refund_frame_decision (PX-0001).
+
+1.7 CONCLUSION CLAUSES
+ PREM X sl h e sr := N01 /\ ... /\ N23 (all 23 rows). STDOUT X := the bytes the consumer read.
+ (C1) ENTRY. M3's premises hold at s := absM sr r_0, envmc := envmc_R, fs := fs_R, cl := cl_R. Premise map
+      (review R3.3, agreed): P1-P5 by N16; P6 by (E3); P7 by ML-03; P8, P10, P11 by ML-04; P9 by (E5).
+      M3's ms is ms_27 (ML-10).
+ (C2) BEHAVIOUR. ?t io. machine_sem mc_R st_R ms_27 (Terminate t io) (machine_sem_total, M3, machine_sem_unique).
+ (C3) COMPLETED RUN (EXIT_AFTER_H): io = EV_n X and STDOUT X = fd1_written io.
+ (C4) CUT RUN (kill, supervisor time-out, exit inside a call segment): STDOUT X is a prefix of fd1_written of an
+      EXTENSION of the observed events: EV_n X <<= io /\ STDOUT X <<= fd1_written io. If ev_n is an in-flight write,
+      the extension contains it with its full requested length (ML-13) and N13 makes the delivered bytes a prefix
+      of that chunk. SIGPIPE does not occur under PREM (1.1).
+ (C5) DECISION. In (C3) and (C4): !g. refund_strict_parse (STDOUT X) = SOME g ==> g = f_vals /\
+      STDOUT X = explode (refund_render_fields f_vals) /\ [exported clauses = T,T,T]. Exit status is NOT used.
+ (C6) SCOPE (correction 4). X8 concludes NOTHING about a run X for which any premise in PREM fails. A strict parse
+      of STDOUT X is then no evidence of correctness. Premises the consumer cannot observe afterwards (N05, N07,
+      N08, N10, N23 in production) must be ENFORCED by the launcher or accepted by the owner as ASSUMPTIONS.
+
+1.8 THEOREM SHAPE (TARGET; NOT PROVED)
+ refund_native_x8_v3:
+  !X sl h e sr charge request original remaining enabled opened candidate amount reason.
+    REAL_RUN X b8ed5ec2...7bb8 /\ PREM X sl h e sr ==>
+    ?t io.
+      machine_sem (refund_mc (sl + 0x1000040D0w) (envmc_R X sr)) (basis_ffi no_ext cl_R (fs_R X))
+                  (ms_27 X sr) (Terminate t io) /\
+      (END X = EXIT_AFTER_H _ ==> io = EV_n X /\ STDOUT X = fd1_written io) /\
+      (END X = CUT n ==> EV_n X <<= io /\ STDOUT X <<= fd1_written io) /\
+      !g. refund_strict_parse (STDOUT X) = SOME g ==>
+          g = f_vals /\ STDOUT X = explode (refund_render_fields f_vals) /\ [exported clauses = T,T,T]
+ REAL_RUN, PREM, STDOUT, END, EV_i, rstate are HOL definitions still MISSING. HOL can prove ML-01..ML-15 at most;
+ it cannot prove the native rows. X8 stays a conditional statement.
+
+1.9 OPEN CHECK: ARE CLOSE, OPEN_IN OR 0-BYTE CALLS REACHED?
+ From PROVED theorems: NOT answered. I found no PROVED theorem that excludes FFI index 2 or 3 for the whole model
+ run (R6 for the read side and the main program is OPEN, END_TO_END_GAPS T9). write_event_ok_refund (RA/R6w-0004;
+ go exit 0; stdout.log:213-215, with write_event_ok_def :40-47) admits write events with any n, i such that
+ i + n <= 2048, so n = 0 is not excluded by it either.
+ From CakeML source (BY READING; hashes above computed by me; matches results/refund-signed-len-local-20261116/
+ attempt-0001/reachability-evidence.txt of an earlier session):
+  - PRG:12-15: refund_main = case TextIO.inputAllFrom None of None => raise Fail ... | Some wire => TextIO.print
+    (refund_dispatch wire). No closeIn, closeOut, openIn in PRG (grep: no match).
+  - TIO:604-612 inputAllFrom; open_option None (TIO:524-533; consume_rest TIO:517) gives openStdIn and the close
+    action consume_rest (input1 loop: reads only). The only #(close) sites are TIO:167 (closeIn) and TIO:238
+    (closeOut); the only #(open_in) site is TIO:158 (openIn). None is on this path.
+  - 0-byte writes: TIO:191-193 `fun write fd n i = if n = 0 then () else ...`; output_aux
+    (TIO:198-205; `if z <= i then ()` at :199) calls write
+    only when z > i. So TextIO issues no write FFI call with n = 0 on this path. writei RE-ISSUES the call when the
+    kernel returns nw = 0 (TIO:187), which the model mirrors (c = 0 gives k = 0).
+  - 0-byte reads: openStdIn uses buffer size 4096 (TIO:298-305); refillBuffer_with_read calls read_into with
+    n = length surplus - 4 = 4096 (TIO:387-391). So n = 0 reads are not issued on this path.
+ Answer: by source reading, close, open_in and 0-byte calls are NOT reached; this is NOT machine-checked. Hence N23
+ stays an ASSUMPTION (or ML-15 MISSING), and the n = 0 relaxations of N10/N12 are harmless but kept.
+
+1.10 TESTS (correction 6; unchanged from v2)
+ T2 and T4 cannot fail in the relevant direction (not under the launcher contract). NEW T6 (proposed, NOT RUN, owner
+ approval needed): perturbation differential UNDER the launcher contract (STOP/CONT, TSTP/CONT, 1-byte stdin chunks,
+ stalled reader, CPU load, memory pressure). Pass: completed runs give exactly explode (refund_render_fields
+ f_vals); cut runs give a prefix. C9 runs are first instances only.
+
+=====================================================================================================================
+2. REVIEW ITEM -> WHERE REPAIRED IN V3
+=====================================================================================================================
+| Item  | Review content (CORRECTIONS_v2.md / X8_v2_review.txt)      | Where repaired in v3                         |
+| F1    | ML-05 L-GHOST lacks PSTATE.EL = 0w                          | 1.6 ML-05 (EL and exception premises)        |
+| F2    | N01 leaves exception free -> X8 vacuous; ML-09 same gap     | 1.3 full/absM; 1.5 N01; 1.6 ML-05, ML-09     |
+| F3    | numchars indexed by all FFI calls                           | 1.2 NRW; 1.4 (E4); 1.6 ML-11, ML-13          |
+| G1    | no native row for close/open_in                             | 1.5 N23 (new); 1.6 ML-15 (new); 1.9          |
+| G2    | ML-10 lacks the erase bridge for the 27 entry steps         | 1.6 ML-08, ML-09 (entry parts), ML-10        |
+| G3    | MG-0001 not usable; route rests on MF-0002 only             | 1.0 (explicit); 1.7 (C1) premise map         |
+| W-N03 | N03 over-strong and type-incoherent                         | 1.3 sr = 5 named bits with encoding; 1.5 N03 |
+| W-N10 | N10/N12 false for n = 0 calls                               | 1.5 N10, N12 (n = 0 cases)                   |
+| W-FP  | no FP/SIMD field in arm8_state                              | 1.3 (field list; F0 fields named)            |
+| W-END | trace end and H event index ambiguous                       | 1.1 (ev_n, EXIT_AFTER_H, CUT); ML-11 (b)     |
+| W-MEM | demand paging vs rstate.mem; fault attempts                 | 1.1 (mem = VM-map content; event boundary)   |
+| R3.3  | P7 instantiation at envmc0_R (F_R), not ffi_R               | 1.4 (E3); 1.6 ML-03                          |
+| R5(f) | SIGPIPE clause vacuous under PREM                           | 1.1; 1.7 (C4)                                |
+| R5(g) | supervisor must drain after a time-out kill                 | 1.5 N11                                      |
+| R7    | "Then NB_k = ..." is derived, not assumed                   | 1.5 N10, N12; 1.6 ML-11 induction step       |
+| Open  | close, open_in, 0-byte writes reached?                      | 1.9 (source reading: no; not proved)         |
+
+=====================================================================================================================
+3. MY CHECK OF THE REVIEW, DISAGREEMENTS, DOUBTS, WEAKER CLAUSES
+=====================================================================================================================
+Checked against source by me (agree): L3:8-10 (ProcState fields), L3:367-376 (arm8_state fields), L3:379-387
+ (raise'exception keeps a non-NoException exception), L3:487-529 (SP_def, TranslationRegime, SCTLR_def), L3:600-665
+ (CheckSPAlignment reads SA0 at EL0; BigEndian reads E0E at EL0, EE otherwise), L3:7203-7220 (Next_def overwrites
+ branch_hint first), STEP:19-22 (NextStateARM8 = NONE unless exception = NoException), L3:389-443 (bit positions),
+ FS:126-136, 181-241, 265-279, 351-362 (numchars use; close/open_in), TIO lines in 1.9.
+Disagreements (minor; no change of substance):
+ X1 Review R6.1 says N01 is "unsatisfiable". Precisely: N01 is a universally quantified claim that is FALSE for any
+    s^ with exception <> NoException (STEP:19-22), so PREM is false and X8 vacuous. Same consequence; I agree with
+    the repair.
+ X2 Review R2.3(b) calls the narrowed N03 "strictly weaker". True for the NATIVE side; it moves work to the MODEL
+    side (ML-05 must now also cover SPS, EE, SA and rst bits as unread at EL0). Not free.
+ X3 Review R3.5 says the error branches of ffi_read/ffi_write consume nothing: agreed, but under N10/N12 no error
+    branch is taken, so this only matters outside PREM.
+Doubts (open):
+ D1 ML-05 holds by reading only; I did not read every instruction class's semantics (e.g. LoadStoreImmediate paths).
+ D2 The F0 fields PSTATE.SPS etc. are claimed unread at EL0 from the review's grep plus my reading of SP_def; an
+    unread-field lemma over all subset classes is part of ML-05 and MISSING.
+ D3 N23 / ML-15: source reading says close and open_in are unreached; the compiled code is assumed to be PRG + TIO
+    with the hashes above; the link "these sources -> these 130,436 code bytes" is the earlier M1 chain (T7).
+ D4 Uncaught exception path (raise Fail in PRG): I did not trace what CakeML emits (an fd 2 write, then halt?).
+    If it issues any FFI other than read/write, N23 fails for that input; for the request req it is not taken if
+    stdin is available (by reading PRG).
+ D5 U2/U3/U4 are slide-0 forms; slide forms MISSING; N16 bounds are my reading of N4/N5 (E1-0003).
+ D6 ML-08 entry part: I cite S2 for "the stub stays in the code slice and branches to b"; S2 has no go.log line.
+ D7 Exit inside a call segment (assert/abort): fd 1 untouched only if abort writes nothing to fd 1 (believed).
+ D8 ENFORCED-BY-LAUNCHER rows are not enforced today (launcher not implemented).
+ D9 rstate, REAL_RUN, EV_i, STDOUT, PREM are not HOL definitions yet; N19 and N22 may stay prose only.
+ D10 W-trace's draft was not re-read for v3; ML-11 names may differ.
+Clauses weaker than v2 (stated):
+ V1 N10/N12 now admit n = 0 calls (weaker premises, so X8 covers more runs; not a weaker conclusion).
+ V2 N03 assumes constancy of 5 bits instead of whole registers (weaker premise; more model work, X2).
+ V3 New premise N23 makes PREM STRONGER than v2 (v2 silently lost runs with close/open_in; v3 states it).
+ Clauses weaker than v1 (W1-W6 of v2) are unchanged and still apply.
+
+=====================================================================================================================
+4. COUNTS
+=====================================================================================================================
+ Model lemmas needed: MISSING 15 (ML-01..ML-15). STAGED 2 (ST-1, ST-2; optional).
+ PROVED theorems used: 14. LIBRARY cited: evaluate_add_clock, evaluate_add_clock_io_events_mono, machine_sem_total,
+ machine_sem_unique, liveFS.
+ Native assumptions: 23 = ASSUMPTION 16 (N01-N08, N10, N12, N13, N16, N17, N18, N19, N23)
+                         + ENFORCED-BY-LAUNCHER 7 (N09, N11, N14, N15, N20, N21, N22; launcher NOT implemented).
+END OF FILE (by reading; not machine-checked).

@@ -10,7 +10,7 @@ guard refuses to start when memory or disk is low or another HOL child runs.
 from pathlib import Path
 import hashlib, json, os, resource, shutil, subprocess, sys, time
 
-ROOT = Path('/Users/mackianni/forge')
+ROOT = Path('/Users/USER/forge')
 OUT = Path(__file__).resolve().parent
 TC = ROOT / '.toolchain/experiments/refund-cakeml-20261104'
 RECORDED = ROOT / 'results/refund-target-install-bridge-2026-11-05/attempt-0001/bridge-0005/command.json'

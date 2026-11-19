@@ -1,4 +1,4 @@
---- /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/R6rx-0002.sml	2026-11-19 08:02:51.518349635 -0500
+--- /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round12/R6rx-0002.sml	2026-11-19 08:02:51.518349635 -0500
 +++ R6rx-0003.sml	2026-11-19 09:26:36.841228037 -0500
 @@ -1,3 +1,6 @@
 +(* R6rx-0003.sml (worker W-pre, preflight round13). EXPLORATION, NOT RUN. = round12/R6rx-0002.sml with only: this comment,
@@ -91,8 +91,8 @@
  
  (* ================= shared files ================= *)
  val R6R_PROOF_MODE = false;
--val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/";
-+val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/preflight/round13/";
+-val R6RDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round12/";
++val R6RDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/preflight/round13/";
  fun use_part (f : string) : bool =
    (pr ("MARK USE " ^ f); use (R6RDIR ^ f); pr ("PART_DONE " ^ f); true)
    handle e => (pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e)); false);

@@ -1,0 +1,16 @@
+2026-11-19T15:53:55Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 8764.06M  free = 1475.94M  (encrypted)
+System-wide memory free percentage: 54%
+DISK_FREE_GIB 83
+START_STATE swap_free_mib=1475 memory_free_percent=54
+USED_FILES_PRE 7 8e4d845a272c8b46
+exit 1
+actual_exit 1 wall 64.268 cpu 78.248 rss_mib 1891 [] inputs_unchanged_after True
+
+Exception raised at TotalDefn.xDefine:
+at Defn.Hol_defn: on frag 0 row 0, between cols 1 and 319:
+at Defn.prim_mk_defn: Nullary definition failed - giving up
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 1

@@ -1,0 +1,49 @@
+2026-11-19T16:16:21Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 8566.88M  free = 1673.12M  (encrypted)
+System-wide memory free percentage: 52%
+DISK_FREE_GIB 82
+START_STATE swap_free_mib=1673 memory_free_percent=52
+USED_FILES_PRE 7 e43fe47ac9d38155
+exit 0
+actual_exit 0 wall 159.146 cpu 119.164 rss_mib 1810 ['EXACT_COMPLETE'] inputs_unchanged_after True
+84:CONTROL_OK the antecedent has exactly 17 free variables (8 premise + 9 request)
+85:CONTROL_OK antecedent of refund_profile_a_sl_shape = antecedent of refund_model_frame_decision_shape
+86:CONTROL_OK no free ext in the antecedent (ext := no_ext changes nothing in it)
+91:CONTROL_OK the bound variables of the old witness = s h stk e envmc fs cl of the antecedent (names and types)
+92:CONTROL_OK the free variables of the old witness are request fields of the antecedent
+93:CONTROL_OK the entry witness is at the same slide
+107:CONTROL_OK NV1 body is the stored antecedent (aconv)
+108:CONTROL_OK NV1 has no free variable
+109:CONTROL_OK NV2 has no free variable
+110:CONTROL_OK NV0: only request fields are free
+111:CONTROL_OK NV0 is an instance of the antecedent
+123:    exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+270:CHECKED refund_ffi_contract_at_imp_on
+276:CHECKED refund_abs_env_fields
+285:CHECKED refund_shape_premises_hold_at_a_constructed_state
+288:      exception := NoException; SCTLR_EL1 := <|E0E := F; SA0 := F|>;
+345:CHECKED refund_shape_premises_satisfiable_for_every_request
+369:CHECKED refund_shape_premises_satisfiable
+400:CHECKED refund_shape_run_is_accepted
+453:CONTROL_WITNESS_FFI_INTERFER
+467:CONTROL_OK NV1 body aconv the antecedent of refund_profile_a_sl_shape
+468:CONTROL_OK stored NV1: no hypothesis, conclusion = statement, body aconv the stored antecedent
+469:CONTROL_OK stored NV2: no hypothesis, conclusion = statement
+474:CONTROL_OK every stored theorem: no hypothesis, no oracle, no axiom tag
+475:CLOSURE_AXIOM bool.SELECT_AX
+476:CLOSURE_AXIOM bool.INFINITY_AX
+477:CLOSURE_AXIOM bool.ETA_AX
+478:CLOSURE_AXIOM bool.BOOL_CASES_AX
+479:CONTROL_OK closure axioms are the four of bool
+480:CONTROL_OK closure contains forge_refundRouteA2d
+481:CONTROL_OK closure contains forge_refundInputSat
+482:CONTROL_OK closure contains forge_refundRouteA1
+483:CONTROL_OK closure contains forge_refundModelFrame
+487:CONTROL_OK theorems = stored list, 0 definitions
+488:CONTROL_OK NV1 and NV2 stored
+489:CLOSURE_NODES 554
+492:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

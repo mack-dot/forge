@@ -1,0 +1,22 @@
+2026-11-19T16:28:57Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 8740.00M  free = 1500.00M  (encrypted)
+System-wide memory free percentage: 47%
+DISK_FREE_GIB 82
+START_STATE swap_free_mib=1500 memory_free_percent=47
+USED_FILES_PRE 0 e3b0c44298fc1c14
+exit 1
+actual_exit 1 wall 478.095 cpu 149.383 rss_mib 1531 [] inputs_unchanged_after True
+Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"
+1:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:4: error: Value or constructor (HOL) has not been declared
+3:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:4: error: Value or constructor (refund_strict_parse) has not been declared
+5:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:4: error: Value or constructor (PF) has not been declared
+7:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:4: error: Structure (stdout) has not been declared
+9:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:4: error: Type error in function application.
+14:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:4: error: Value or constructor (line) has not been declared
+16:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:4: error: Value or constructor (accepts) has not been declared
+18:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:4: error: Value or constructor (the) has not been declared
+20:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/NN-0001/proof.sml:5: error: Value or constructor (rendering) has not been declared
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 1

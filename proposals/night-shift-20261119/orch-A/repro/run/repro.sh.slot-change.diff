@@ -4,7 +4,7 @@
    [[ $started -eq 0 && $c == $1 ]] && started=1
    [[ $started -eq 0 ]] && continue
    if pgrep -f 'cakeml-heap|arm8-heap|cake_compile_heap|bin/hol |poly-install|bin/poly' > /dev/null; then say "STOP before $c: another HOL/poly process runs"; exit 98; fi
-+  [[ -e /Users/mackianni/forge/results/night-shift-20261119/locks/heavy.lock ]] && { say "STOP before $c: locks/heavy.lock exists"; exit 95; }
++  [[ -e /Users/USER/forge/results/night-shift-20261119/locks/heavy.lock ]] && { say "STOP before $c: locks/heavy.lock exists"; exit 95; }
 +  pmset -g batt | head -1 | grep -q Battery && { say "STOP before $c: battery power"; exit 97; }
    say "BEGIN $c cpu=$cpu deps=$deps"
    if [[ $deps == LINK ]]; then

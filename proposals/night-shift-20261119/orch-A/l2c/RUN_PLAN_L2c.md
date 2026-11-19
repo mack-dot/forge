@@ -6,16 +6,16 @@ Source: `routeA-L2c.sml`, SHA-256 `ca624cc50a313a318aea19cfa528b503a9df4cd297fc4
 ## Deps recipe
 `deps-L2c.txt` = `deps-L2b2.txt` (129 lines, SHA-256 `4d7708dd…580c`) plus two lines:
 ```
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2b-0003/forge_refundRouteA2bTheory.sig
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2b-0003/forge_refundRouteA2bTheory.sml
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L2b-0003/forge_refundRouteA2bTheory.sig
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L2b-0003/forge_refundRouteA2bTheory.sml
 ```
 A ready copy is in this folder: `deps-L2c.txt` (131 lines, SHA-256 `17d737f2…d054`).
 
 ## Commands (orchestrator only, single HOL slot; NOT RUN)
 ```
-A=/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/l2c/routeA-L2c.sml $A/L2c-0001.sml
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/l2c/deps-L2c.txt   $A/deps-L2c.txt
+A=/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/l2c/routeA-L2c.sml $A/L2c-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/l2c/deps-L2c.txt   $A/deps-L2c.txt
 cd $A && ./nightshift-run.sh L2c-0001 1500 deps-L2c.txt
 ```
 

@@ -1,0 +1,66 @@
+2026-11-19T16:44:14Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 9564.88M  free = 675.12M  (encrypted)
+System-wide memory free percentage: 47%
+DISK_FREE_GIB 82
+START_STATE swap_free_mib=675 memory_free_percent=47
+USED_FILES_PRE 6 e47e37ee6dc85c53
+exit 0
+actual_exit 0 wall 503.378 cpu 208.877 rss_mib 1748 ['EXACT_COMPLETE'] inputs_unchanged_after True
+23:GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argume
+36:TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+230:CHECKED parts_ok_basis_ffi
+238:CHECKED init_fs_part_IN
+249:CHECKED init_cl_part_IN
+260:CHECKED init_rt_part_IN
+269:CHECKED init_iobuff_IN
+276:CHECKED IOFS_V_init
+285:CHECKED STDIO_V_of_IOFS_V
+297:CHECKED init_heap_V
+312:CHECKED FFI_part_IN_st2heap_FILTER
+320:CHECKED basis_proj2_names
+329:CHECKED every_basis_events
+343:CHECKED sem_satisfies_imp_V
+348:CHECKED STDIO_V_FFI_part_hprop
+353:CHECKED IOxV_events_IN
+363:CHECKED STDIO_V_events
+375:CHECKED final_heap_events
+388:CHECKED whole_prog_spec_V_events
+412:CHECKED whole_prog_spec_V_init
+434:CLOSURE_AXIOM bool.SELECT_AX
+435:CLOSURE_AXIOM bool.INFINITY_AX
+436:CLOSURE_AXIOM bool.ETA_AX
+437:CLOSURE_AXIOM bool.BOOL_CASES_AX
+438:CONTROL_OK closure contains forge_refundR6Write
+439:CONTROL_OK closure contains forge_refundR6Ffi
+440:CONTROL_OK closure contains forge_refundR6Base
+441:CONTROL_OK closure contains forge_refundRouteA2c
+442:CONTROL_OK closure contains TextIOProof
+443:CONTROL_OK closure contains basis_ffi
+444:CONTROL_OK closure contains cfMain
+448:CONTROL_OK theorems = stored list, 0 definitions
+449:CONTROL_OK stored init_heap_V
+450:CONTROL_OK stored whole_prog_spec_V_events
+451:CONTROL_OK statement parts_ok_basis_ffi
+452:CONTROL_OK statement init_fs_part_IN
+453:CONTROL_OK statement init_cl_part_IN
+454:CONTROL_OK statement init_rt_part_IN
+455:CONTROL_OK statement init_iobuff_IN
+456:CONTROL_OK statement IOFS_V_init
+457:CONTROL_OK statement STDIO_V_of_IOFS_V
+458:CONTROL_OK statement init_heap_V
+459:CONTROL_OK statement FFI_part_IN_st2heap_FILTER
+460:CONTROL_OK statement basis_proj2_names
+461:CONTROL_OK statement every_basis_events
+462:CONTROL_OK statement sem_satisfies_imp_V
+463:CONTROL_OK statement STDIO_V_FFI_part_hprop
+464:CONTROL_OK statement IOxV_events_IN
+465:CONTROL_OK statement STDIO_V_events
+466:CONTROL_OK statement final_heap_events
+467:CONTROL_OK statement whole_prog_spec_V_events
+468:CONTROL_OK statement whole_prog_spec_V_init
+469:CLOSURE_NODES 550
+472:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

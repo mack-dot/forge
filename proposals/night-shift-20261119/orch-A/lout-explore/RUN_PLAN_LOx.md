@@ -4,7 +4,7 @@ This is an EXPLORATION run, not a proof attempt. It does not count as an L-OUT a
 It calls no `export_theory`. It stores no theorem of an open lemma. It proves nothing.
 
 ## Inputs
-- Source: `/Users/mackianni/forge/results/night-shift-20261119/orch-A/lout-explore/LOx-0001.sml`
+- Source: `/Users/USER/forge/results/night-shift-20261119/orch-A/lout-explore/LOx-0001.sml`
   SHA-256 `5ef71604873048d3b4e4f5e815406a87815a48f8d529232c05b574b031331d7d` (842 lines).
 - Part 1 = `LO-0005.sml` lines 1-404 (SHA-256 `9db45d73…71bb30`). One line differs: `new_theory` name.
   Diff: `LOx-0001.vs-LO-0005.diff` (same folder).
@@ -12,8 +12,8 @@ It calls no `export_theory`. It stores no theorem of an open lemma. It proves no
 
 ## Command (orchestrator only, in the single HOL slot)
 ```
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/lout-explore/LOx-0001.sml LOx-0001.sml
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/lout-explore/LOx-0001.sml LOx-0001.sml
 shasum -a 256 LOx-0001.sml   # must be 5ef71604…331d7d
 ./nightshift-run.sh LOx-0001 900 deps-LO.txt
 ```

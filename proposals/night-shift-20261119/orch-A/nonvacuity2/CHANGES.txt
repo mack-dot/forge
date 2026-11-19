@@ -1,0 +1,82 @@
+nonvacuity2 CHANGES (worker W-nv2, Night-Shift Orchestrator A, 2026-11-19). STATIC work only. NOTHING HERE HAS RUN.
+No HOL run, no Holmake, no poly. Every line is UNCHECKED by HOL. No lemma statement is changed.
+
+ROOT CAUSE of NVx-0002 (actual exit 1 after 114 s)
+- Failing item: ACC_FFI in nonvacuity/nv_common.sml line 102: accessor "ffi_interfer" = find_term over ANTE
+  (the antecedent of forge_refundRouteA2d.refund_profile_a_sl_shape) for a term "C envmc" where C is a constant
+  whose name n satisfies n = "ffi_interfer" or n ends with "_ffi_interfer".
+- The sub-term IS present: the stored theorem (L2d-0001/stdout.log, CHECKED refund_profile_a_sl_shape) contains
+  "refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses (VokS) envmc.ffi_interfer".
+- The NAME test is wrong for the pinned HOL. Evidence:
+  HOL/src/1/TypeBasePure.sml lines 21-22: mk_recordtype_fieldsel = concatWith "." ["recordtype",ty,"seldef",s];
+  cakeml/compiler/backend/semantics/.hol/objs/targetSemTheory.dat: the constant table has
+  "recordtype.machine_config.seldef.ffi_interfer"; "machine_config_ffi_interfer" and "ffi_interfer" occur only as
+  overload (OO) entries, that is, print and parse names, not constant names.
+  dest_const gives "recordtype.machine_config.seldef.ffi_interfer". It ends with ".ffi_interfer", not
+  "_ffi_interfer". So no sub-term matched and find_term raised HOL_ERR (origin find_term, message "").
+- nv_stmt printed STATEMENT_FAILED and re-raised; the use of nv_common.sml did not handle it; the run ended.
+  ACC_NEXT and ACC_PROG have the same defect (they were never reached).
+- Inference, not run: the fix below is expected to remove this failure. Not confirmed by HOL.
+
+CHANGES (files copied from nonvacuity/; only the lines named here differ)
+C1 nv_common.sml: new is_field_name: n = fld, or n ends with "." ^ fld, or n ends with "_" ^ fld. accessor uses it.
+   New print line "ACCESSOR <field> constant <name>" (or UNAVAILABLE) for each of the three fields.
+   The _fupd constants end with "_fupd", so they do not match.
+C2 nv_common.sml: nv_stmt (REQUIRED items) now prints STATEMENT_FAILED and REQUIRED_STATEMENT_FAILED <name> (fatal),
+   then raises Fail. New nv_opt (OPTIONAL items): prints OPTIONAL_STATEMENT_FAILED <name> ... (not fatal) and gives
+   NONE. New need: takes an optional item or raises (used only inside optional constructions and handled code).
+C3 nv_common.sml: the items used only by OPTIONAL lemmas are optional values: ENV0_O, BFFI_O, CL0_O, FS0_O,
+   ACC_FFI_O, ACC_NEXT_O, ACC_PROG_O, ABS_FFI_C_O, ID_C_O, AE_O. WITNESS_ENVMC/FS/CL lines print the value or
+   <tag>_UNAVAILABLE.
+C4 nv_common.sml: FIELDS_STMT -> FIELDS_STMT_O, NV0_STMT -> NV0_STMT_O (nv_opt). The terms built are the SAME
+   terms as before (same subst, same mk_eq, same mk_forall).
+C5 nv_common.sml: the two NV0 controls run only when NV0_STMT_O is SOME, otherwise CONTROL_SKIPPED. The STATEMENT
+   print list prints STATEMENT_UNAVAILABLE <name> (optional) for a missing optional statement.
+   Required items unchanged and still fatal: ANTE, DEC_BODY, ANTE_DEC, CONCL3, OTH, REQ, VOKS, SLV, ATON, NV1B, NV1,
+   NV2_PARTS, NV2_EXM, NV2. (JS_VARS/JS_BODY, WIT_ARGS: unchanged, outside nv_stmt as before.)
+C6 nv_steps.sml: NV_LEMMAS_ALL holds (name, term option, steps, required). NV_LEMMAS (same type as before) drops an
+   optional lemma with NONE (marker OPTIONAL_LEMMA_SKIPPED); a required lemma with NONE is fatal
+   (REQUIRED_STATEMENT_FAILED). Prints "NV_LEMMAS <names>". Required flags unchanged: ATON, NV1B, NV1, NV2 required;
+   FIELDS, NV0 optional. Step lists unchanged.
+C7 nv_controls.sml line 9: "rand ENV0" -> "rand (need "ENV0" ENV0_O)" (inside the existing handler).
+C8 nv_explore_calls.sml, nv_prove.sml, deps-NV.txt: byte-identical copies (sha256 equal to nonvacuity/).
+C9 NVx-0003.sml = attempt-0001/NVx-0002.sml (sha256 dd972944...) with two lines changed: NVDIR -> nonvacuity2/,
+   scratch theory forge_refundShapeSatExplore1 -> forge_refundShapeSatExplore3 (never exported).
+   NV-0003.sml = attempt-0001/NV-0002.sml (sha256 8c2844ee...) with one line changed: NVDIR -> nonvacuity2/.
+   The proof theory name forge_refundShapeSat is unchanged. The header comments still name NVx-0001/NV-0001.
+   NV-0001.sml and NVx-0001.sml were not copied (they point to nonvacuity/ and are replaced by the -0003 drivers).
+   The drivers are not in attempt-0001/; the orchestrator places them (runner and deps file are unchanged).
+
+sha256 of source files (nonvacuity/): nv_common 521e0b03..., nv_steps f4bae416..., nv_controls 6ea74ec7...,
+nv_explore_calls 5693014..., nv_prove 780d0888..., deps-NV.txt 84e124e4...
+
+EXPECTED (not run) premise status of the CONCRETE witness (optional lemma refund_shape_premises_hold_at_a_constructed_state):
+  s  = <|MEM := sat_mem_sl; PC := 0x100008000w; PSTATE := <|EL := 0w|>; exception := NoException; SCTLR_EL1 := ..;
+        TCR_EL1 := ..|>  (a DEFINED term; the other arm8_state fields are ARB); h = 0x200000000w, stk = 0x200010000w,
+        e = 0x200020000w; sl = 16384w. The code image is in sat_mem_sl (sat-0002: refund_image_mem 16384w sat_mem_sl).
+  envmc = refund_abs_env (ARB with prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w)
+  fs = sat_fs (explode (sexp_to_string (refund_request ..))); cl = [strlit "refund"].
+  P1 refund_entry_pre_sl: stored theorem forge_refundSlideSat.refund_entry_pre_sl_witness_0x4000 (sat-0002). The state
+     is DEFINED, not only assumed to exist. Expected to hold.
+  P2-P5 aligned, h <=+ e, 8192w <=+ e - h, refund_heap_clear_sl: stored sat_sl_heap_premises. Expected to hold.
+  P6 prog_addresses: refund_abs_env_def + record simp. Expected to hold.
+  P7 interference_ok refund_id_interfer (..): stored refund_id_interfer_ok (for every proj). Expected to hold.
+  P8 refund_ffi_contract_on (16384w + 0x1000040D0w) dm VokS refund_abs_ffi: stored
+     remaining_premise_met_by_the_abstract_effect (for every b dm). Expected to hold.
+  P9-P12 stdin_content, wfcl, wfFS, STD_streams: stored sat_fs_* and sat_cl_wfcl. Expected to hold.
+  The older theorem refund_profile_a_sl_all_premises_satisfiable_at_0x4000 already proved the same premises with
+  refund_env_ok_sl (at-form) at this witness (fs-r4-0001).
+
+DOUBTS
+D1 Tactics: none of the step lists has run. NV0 depends on rewrite_tac reaching refund_abs_ffi before REM2 matches,
+   then simp [] for (ARB with prog_addresses := X).prog_addresses. NV2 depends on MATCH_ACCEPT_TAC machine_sem_total
+   (its conclusion has free mc st ms; metis_tac [MST] is the alternative).
+D2 Vacuity of meaning, not of logic: envmc is ARB except prog_addresses, next_interfer, ffi_interfer; the other
+   machine_config fields are unconstrained by the premises. refund_abs_ffi is a MODEL of the FFI, not the real OS.
+   s has ARB registers. The witness says the premise set is consistent in the MODEL; it says nothing about the real
+   machine or a real kernel.
+D3 NV1/NV1b/NV2 (required) use the EXISTENTIAL older theorem JS, not the concrete witness. The concrete witness is
+   only in the OPTIONAL lemma NV0. If NV0 fails, the required lemmas can still pass; then no stored theorem names
+   the concrete values. The orchestrator should decide if NV0 must become required (not changed here).
+D4 NV2 does not claim a Terminate Success behaviour exists; machine_sem_total gives only some behaviour.
+D5 Root cause is from static reading of the pinned HOL source and .dat; the new suffix test is not run.

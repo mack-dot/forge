@@ -1,0 +1,215 @@
+review_NN-0002.txt -- adversarial review of HOL case NN-0002 (worker W-NNrev, Orchestrator A, 2026-11-19)
+Mode: READING ONLY. No HOL, no Dafny, no git, no network, no test run. Only sha256 and diff were run on disk files.
+
+VERDICT: HOLDS WITH LIMITS.
+The 9 stored theorems are real, unconditional (except O1/O2, which carry the MF-0002 premises) and use the
+right constants. The run record is consistent. But the claim text overstates two points (see D1, D2), and
+T14 part (a) stays unproved. By reading, I found NO dangerous-direction candidate (Python accepts a frame with
+a value that differs from the HOL value).
+
+======================================================================================================
+1. RUN RECORD
+======================================================================================================
+diff NN-0001.sml NN-0002.sml: one line differs, line 4 of the header comment:
+  "(0|[1-9][0-9]*)" -> "(0|[1-9][0-9]STAR)". The "*)" closed the comment early in NN-0001. Confirmed.
+cmp NN-0002.sml NN-0002/proof.sml: equal.
+NN-0002.run.json: actual_exit 0, markers [EXACT_COMPLETE], wall_timeout false, inputs_unchanged_after true.
+NN-0002.go.log: "exit 0", "hash_parents exit 0", "USED_FILES_UNCHANGED true", "go exit 0".
+sha256 on disk (recomputed) = run.json for all six:
+  NN-0002.sml       4d3f7451...6d8a   stdout.log 97468a17...dbb0   stderr.log e3b0c442...b855 (empty, 0 bytes)
+  .dat ecd5c4bb...5495   .sig fd3e5b77...36ac   .sml a93c71ed...3dde
+command.json input_sha256: 147 entries recomputed against disk: 147 equal, 0 differ, 0 missing.
+  Includes PF-0004, PX-0001, LO-0006, L1-0001, L2c-0001, MF-0002 theory objects.
+Theory parents (.dat header): forge_refundModelFrame, forge_refundRouteA2c.
+stdout: 0 occurrences of LEMMA_FAILED, OPTIONAL_FAILED, OPTIONAL_SKIPPED, UNEXPECTED, STAGE_FAILED, UNSOLVED,
+  TRY_ALL_ENTRY, DIAG_OK_UNDER. FAILED_LIST empty. OPTIONAL_OK_LIST has O1 and O2. STORED_THEOREMS 9,
+  STORED_DEFINITIONS 0. 4 CLOSURE_AXIOM lines (bool only). One benign warning (stdout line 79,
+  "Context.snapshot: ambient context read while a proof was running").
+.sig lists exactly the 9 names. .dat: 9 tags, each "DISK_THM" only.
+
+Harness (NN-0002.sml):
+  - tags (38-40): no hypothesis, no axiom tag, oracles only DISK_THM. Applied at save (chk, 60) and again to ALL
+    stored theorems and definitions of the theory (286). Good.
+  - thm (65-78): on failure, ASSUME g is returned, NOT saved, and the name goes to failed; line 267 raises
+    before export (293). A DIAG_OK_UNDER result also goes to failed. Good.
+  - opt_thm (84-92): failure is not added to failed (by design), but nothing is saved, and line 286 checks every
+    stored theorem anyway. Both O1/O2 are OPTIONAL_OK. Good.
+  - Controls can fail: imp/lit/C2/C3 shape checks call bad -> problems -> raise at 285, before export. Good.
+  - CONST checks (110-114): refund_fields in forge_refundCertifiedProg, refund_render_fields in
+    forge_refundWireProg, eligible in forge_refund. .dat string table shows one refund_fields under
+    forge_refundCertifiedProg, one refund_strict_parse under forge_refundPrefixFree, one fd1_written under
+    forge_refundLOut.
+  - Axiom closure (287-290): exactly 4 axioms over the whole ancestry. Good.
+  Weak spots (not defects in the result): C1 is checked only by is_neg (280), and N1P, N3 have no literal
+  statement check. Their printed statements (below) are correct, so this has no effect.
+
+======================================================================================================
+2. THE 9 STORED STATEMENTS (copied from NN-0002/stdout.log) AND ASSESSMENT
+======================================================================================================
+N1 refund_fields_ints_bounded
+  |- !charge request original remaining enabled opened candidate amount reason ok a r c q n.
+       refund_fields charge request original remaining enabled opened candidate amount reason =
+       (ok,a,r,c,q,n) ==> 0 <= a /\ 0 <= n /\ n <= 1
+  Not vacuous (C3 gives a satisfying instance with a = 40, n = 1). True for the right reason
+  (eligible has 0 <= amount; count is 1 or 0).
+N1P refund_fields_ints_bounded_proj
+  |- !charge ... reason.
+       0 <= FST (SND (refund_fields ...)) /\ 0 <= SND (SND (SND (SND (SND (refund_fields ...))))) /\
+       SND (SND (SND (SND (SND (refund_fields ...))))) <= 1
+  Same content as N1. Projections are amount (field 2) and count (field 6). Correct.
+N3 refund_run_wire_output_nonneg
+  |- !wire out. refund_run_wire wire = INR out ==>
+       ?f. out = refund_render_fields f /\ 0 <= FST (SND f) /\ 0 <= SND (SND (SND (SND (SND f)))) /\
+           SND (SND (SND (SND (SND f)))) <= 1
+  Every wire. Source-level dispatcher only. Note: the claim text groups "N3/N4" as the prefix statement;
+  only N4 is the prefix statement. N3 is the dispatcher statement.
+N4 refund_frame_decision_nonneg
+  |- !charge request original remaining enabled opened candidate amount reason out ok a r c q n.
+       out <<= explode (refund_render_fields
+                 (refund_fields charge request original remaining enabled opened candidate amount reason)) /\
+       refund_strict_parse out = SOME (ok,a,r,c,q,n) ==> 0 <= a /\ 0 <= n /\ n <= 1
+  Quantifies over EVERY argument tuple (a superset of decodable requests) and EVERY out. The literal
+  statement is checked by aconv (274-279). Uses the same refund_render_fields (forge_refundWireProg) and
+  refund_strict_parse (forge_refundPrefixFree) as the imported PX-0001 refund_frame_decision (aconv import
+  check, 105-107) and the same refund_fields as MF-0002 (the O1/O2 proofs substitute MF-0002's
+  "g = refund_fields .." into N1P'; a look-alike constant would make that step fail).
+  Not vacuous: out = full rendering satisfies the antecedent by PF-0004 refund_strict_parse_complete.
+  Not shown as a stored witness here, but follows from P0 in one step.
+  Limit: it is a statement about the HOL parser on program prefixes. It is a corollary of
+  X4 (PX-0001) + N1; it says nothing about the Python parser.
+C1 refund_strict_parse_accepts_negative_frame
+  |- ~!s ok a r c q n. refund_strict_parse s = SOME (ok,a,r,c,q,n) ==> 0 <= a
+  Witness in the script: render (F,-1,"","","",0) = "(refund-result-v1 False ~1 \"\" \"\" \"\" 0)".
+  Proves: the HOL parser accepts a string that frame.py refuses. So HOL-accepts is NOT a subset of
+  Python-accepts. It does NOT prove the other inclusion (Python-accepts subset of HOL-accepts). See D2.
+C2 refund_fields_negative_amount_rejected
+  |- refund_fields «c» «r» 100 60 T T T (-5) «returned_item» = (F,0,«»,«»,«»,0)
+C3 refund_fields_positive_witness
+  |- refund_fields «c» «r» 100 60 T T T 40 «returned_item» = (T,40,«returned_item»,«c»,«r»,1)
+O1 refund_model_frame_decision_nonneg
+  |- refund_entry_pre_sl sl s h stk e /\ aligned 3 e /\ h <=+ e /\ 8192w <=+ e - h /\
+     refund_heap_clear_sl sl h e /\ envmc.prog_addresses = refund_mem_dm_sl sl h e /\
+     refund_env_ok_sl sl envmc /\
+     stdin_content fs = SOME (explode (sexp_to_string (refund_request charge ... reason))) /\
+     wfcl cl /\ wfFS fs /\ STD_streams fs ==>
+     ?ms. (arm8_run 27 s = SOME ms /\ ms.PC = sl + 0x1000040D0w) /\
+       !b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc) (basis_ffi no_ext cl fs) ms b ==>
+         ?t io. b = Terminate t io /\
+           !g. refund_strict_parse (fd1_written io) = SOME g ==>
+               0 <= FST (SND g) /\ 0 <= SND (SND (SND (SND (SND g)))) /\ SND (SND (SND (SND (SND g)))) <= 1
+  Genuinely about machine_sem (refund_mc ...) at the arm8 model. Premises are term-identical to MF-0002 M1
+  (compare the USED block). It INHERITS refund_env_ok_sl, which U393 falsified for the real FFI, so O1 may be
+  vacuous for the real environment. Conclusion is about the WHOLE fd1 output, not a prefix.
+O2 refund_model_frame_decision_reach_nonneg
+  Same conclusion. Premises (term-identical to MF-0002 M1b): entry/heap/alignment premises,
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses),
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok envmc.ffi_interfer,
+  !ms k. arm8_run 27 s = SOME ms ==> ffi_calls_ok Vok (refund_mc .. (envmc with ffi_interfer :=
+    refund_ffi_tot Vok envmc.ffi_interfer)) (basis_ffi no_ext cl fs) k ms,
+  stdin = rendered request, wfcl, wfFS, STD_streams.
+  This is the totalised form (no refund_env_ok_sl). But interference_ok and refund_ffi_contract_on for a
+  constructed environment are still MISSING (END_TO_END_GAPS_v2.md lines 57-59, ML-01..ML-03), and
+  ffi_calls_ok is an open premise. So O2 is conditional on open premises; no witness is given here.
+
+======================================================================================================
+3. DEFECTS (wording; none breaks a stored theorem)
+======================================================================================================
+D1 NN-0002.sml:1-2 and :21 -- stale header: says "NN-0001", "DRAFT: NOT RUN", "Every tactic below is
+   UNCHECKED". The file is the run source of NN-0002 (exit 0). Misleading in an evidence file.
+D2 Claim text "(C1: so the Python consumer ... is strictly stricter)": NOT proved. C1 proves only
+   HOL-accepts is not a subset of Python-accepts. "Strictly stricter" also needs Python-accepts subset of
+   HOL-accepts with equal values, which is T14a (unproved; red-team test only).
+D3 NN-0002.sml:178-179 (comment) and ANALYSIS.txt:72, :89 -- "on every program output the two parsers agree
+   at the integer level" / "NOT on any string the program prints (N4)": overclaim. N4 is about
+   refund_strict_parse only. Python agreement on those strings needs render_py = render_HOL (section 4).
+D4 Claim groups "N3/N4" as the prefix statement; N3 is the dispatcher statement (minor).
+D5 O1 is under refund_env_ok_sl (U393: false for the real FFI). O2 is under ML-01..ML-03 open premises.
+   The claim should say "conditional machine-model forms", not just "derived from MF-0002".
+
+======================================================================================================
+4. WHAT REMAINS OF T14 (part a) AFTER NN-0002
+======================================================================================================
+Key structural fact (by reading; not proved):
+  HOL: refund_strict_parse s = SOME f  <=>  s = explode (refund_render_fields f)
+       (definition, PF-0004 stdout.log line 191: the last step re-renders and compares; with
+        refund_strict_parse_complete this also gives: refund_render_fields is injective).
+  Python: strict_parse(s) returns t only if render_fields(*t) == s (frame.py:258), and only if both
+       integer atoms match CANON_INT (frame.py:199, 254-256), tag and boolean are exact (250-253).
+  So: Python accepts s with value t  ==>  s = render_py(t), t has amount, count >= 0.
+  If render_py(t) = render_HOL(t) for all such t, then HOL accepts s with the SAME value t (by
+  refund_strict_parse_complete). Then Python-accepts is a subset of HOL-accepts, with equal values.
+  The Python scanner (_strict_atom, the separator checks) can only ADD refusals.
+
+Therefore the residual of T14a reduces to (each item unproved):
+  R1 render_py = refund_render_fields on every 6-tuple with amount >= 0 and count >= 0, where
+     render_py = frame.py render_fields (52-56). Sub-items:
+     R1.1 int_to_string (44-45) = mlint toString for i >= 0: Python str(i) decimal vs num_to_dec_string
+          (mlintScript.sml 337-339). Both: no sign, no leading zero, "0" for zero. Not proved in HOL or Python.
+     R1.2 make_str_safe (36-41) = mlsexp make_str_safe (mlsexpScript.sml 352-366): is_safe_char excludes
+          ( ) " NUL and isSpace (32, 9..13); empty -> two quote bytes; else bare if all safe; else
+          escape_str. Matches by reading.
+     R1.3 ESCAPES (33) = mlstring char_escape_seq (mlstringScript.sml 1513-1524): only TAB, LF, backslash,
+          quote are escaped. Matches by reading. (CR, VT, FF, NUL stay RAW inside quotes in both.)
+     R1.4 bool atoms "True"/"False"; tag; join with one space; outer parentheses
+          (sexp_to_app_list / sexps_to_app_list, mlsexpScript.sml 375-389). Matches by reading.
+     R1.5 one CakeML char = one byte (chars 0..255); the consumer passes raw bytes (not decoded text).
+  R2 Python runtime semantics are trusted: re (bytes mode, \Z), int(bytes), bytes comparison, str(int).
+  R3 The channel: bytes the consumer reads = fd1_written bytes (T14o, assumed; separate row).
+  R4 The O1/O2 premises (refund_env_ok_sl for O1; ML-01..ML-03 and ffi_calls_ok for O2) for any
+     machine-level reading.
+  Liveness only (not safety): Python must ACCEPT every program frame. This needs R1 plus the scanner
+  accepting every canonical rendering; by reading it does (bare atoms of safe bytes; quoted atoms with only
+  the four escapes and raw other bytes).
+  To close R1 formally: define py_render in HOL as a literal transcription of frame.py 24-56, prove
+  py_render t = refund_render_fields t for 0 <= amount, 0 <= count (main lemma: toString i =
+  implode (num_to_dec_string (Num i)) for i >= 0, already int_to_string_thm). The transcription
+  frame.py -> HOL itself stays a trusted, reviewed step.
+
+======================================================================================================
+5. CANDIDATE DIVERGENCES (example byte strings; direction)
+======================================================================================================
+Each line: input bytes -> HOL refund_strict_parse / Python strict_parse -> direction.
+ V1 (refund-result-v1 False ~1 "" "" "" 0) -> HOL SOME (F,-1,..) / Python refuses -> refuse only (C1).
+ V2 (refund-result-v1 False -1 "" "" "" 0) -> HOL: fromString "-1" = -1, re-render "~1" differs -> NONE /
+    Python refuses -> both refuse.
+ V3 ... +40 ..., ... 040 ..., ... ~0 ..., ... -0 ... -> HOL fromString accepts, re-render differs -> NONE /
+    Python CANON_INT refuses -> both refuse.
+ V4 ... 1_0 ... (Python int(b'1_0') = 10!) -> CANON_INT refuses BEFORE int() (frame.py:255-257) /
+    HOL fromString refuses -> both refuse. Safe only because the regex runs first.
+ V5 ... "40" ... (quoted digits) -> HOL re-render is bare 40 -> NONE / Python make_str_safe check refuses.
+ V6 quoted atom with escape \r or \0 (bytes 5C 72, 5C 30) -> HOL read_string decodes, but render puts CR/NUL
+    raw -> NONE / Python refuses the escape (frame.py:213) -> both refuse.
+ V7 quoted atom with RAW CR, VT, FF or NUL (e.g. "a<0D>b") -> canonical in both (escape_str leaves them raw);
+    both accept the same value -> no divergence in the parsers. RISK OUTSIDE the parser: a consumer that
+    reads text lines or C strings could cut at NUL or translate CR. Belongs to R1.5/R3.
+ V8 bytes >= 0x80 (e.g. \xd3\x84) -> safe in both, bare -> same value. Divergence only if the consumer
+    decodes to str (frame.py:234 then refuses: "not bytes") -> refuse only.
+ V9 leading/trailing whitespace or trailing LF, e.g. b'(...)\n' -> HOL: parse leaves rest "\n" -> NONE /
+    Python "bytes after the frame" -> both refuse. (A consumer that strips before parsing is outside frame.py.)
+ V10 amount with more than 4300 digits (Python >= 3.11 int-digit limit) -> HOL: fine (no Python limit);
+    Python: int(amb) raises ValueError, NOT Err; strict_accepts (263-267) does not catch it -> exception
+    propagates. Refuse-or-crash; dangerous ONLY if the caller turns an unexpected exception into acceptance.
+    Program never prints this (amount <= 2^63-1 when ok; not in NN-0002, see ANALYSIS.txt section 3).
+ V11 count > 1 or ok=False with amount > 0 (e.g. (refund-result-v1 False 5 a b c 7)) -> both accept the same
+    value -> no parser divergence; a semantic check is the decision code's duty, not T14.
+Dangerous direction (Python ACCEPTS with a value different from HOL): NONE found by reading. Structural reason:
+the Python re-render check (frame.py:258) plus HOL render injectivity reduce it to R1.
+
+======================================================================================================
+6. CAN A NEGATIVE OR NON-CANONICAL INTEGER REACH THE CONSUMER AND BE ACCEPTED?
+======================================================================================================
+Program side: N3 (source dispatcher, every wire) and O1/O2 (machine model, conditional) say no negative
+amount/count is printed. Non-canonical spelling: render uses mlint toString, canonical for i >= 0 (R1.1, by
+reading).
+Consumer side: frame.py strict_parse refuses any negative ("~" or "-") or non-canonical atom (CANON_INT
+before int()). The only non-Err path is V10 (exception, not acceptance). The lenient readers in frame.py
+(271-329) are test foils; if a deployed consumer used one of them, it WOULD accept "~"-free prefixes and
+truncated frames -- the deployed consumer's identity with strict_parse is not established here.
+Machine-level gap: O1 premise refund_env_ok_sl is false for the real FFI (U393); with the real FFI the
+program bytes are covered by no theorem in this case.
+
+Evidence read: NN-0002.sml, NN-0002/{stdout.log,stderr.log,command.json,proof.sml}, NN-0002.run.json,
+NN-0002.go.log, .hol/objs/forge_refundNonNegTheory.{sig,sml,dat}, PF-0004/stdout.log (1-60, 150-260),
+cakeml basis/pure/mlsexpScript.sml, mlstringScript.sml 1513-1534, mlintScript.sml 250-343, frame.py,
+orch-A/nonneg/ANALYSIS.txt, END_TO_END_GAPS_v2.md (T14 rows, ML table), orch-C/c14-parser/hol_strict.py,
+logs_diff1.txt (200,000 frames, py_only 0, field_diff 0, hol_only 5545 all negative).

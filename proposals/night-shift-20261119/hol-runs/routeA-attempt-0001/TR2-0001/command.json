@@ -1,0 +1,47 @@
+{
+ "case": "TR2-0001",
+ "argv": [
+  "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol",
+  "run",
+  "--holstate=/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap",
+  "/Users/USER/forge/results/refund-loader-memory-local-20261115/attempt-0001/preload.sml",
+  "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/forge_machineTraceTheory.sig",
+  "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/forge_machineTraceTheory.sml",
+  "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR2-0001/proof.sml"
+ ],
+ "cwd": "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny/forge_refundArm8Compile_experiment",
+ "source": "TR2-0001.sml",
+ "source_sha256": "bac9d9dc518c0dc8a87a2c8c6d0d8111f23b48b6d527247c8742eafbabc5a6c9",
+ "input_sha256": {
+  "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/bin/hol": "cd6a5b303ae0d5e6ccec4e854a217f21666639bc652e4ff0f3bdb86866962c26",
+  "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml/cv_translator/cake_compile_heap": "2f5dbb718599026ba1129a4d641cf9c4df62c906e111f5340edf42f2bc922932",
+  "/Users/USER/forge/results/refund-loader-memory-local-20261115/attempt-0001/preload.sml": "42169f809d83487b9544d11892ec43bc2a8c045d46056866957f0b26710094b9",
+  "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/.hol/objs/forge_machineTraceTheory.sig": "d8fd6750a2f1c244fe437951e6d2680a1a75b9129e0c6a689d62b048e0bb80c5",
+  "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/TR1-0001/.hol/objs/forge_machineTraceTheory.sml": "df8ad427c3c042f43be31283482adf9aaf26cee3ddaee703f9a1f17bcaa846f7",
+  "/Users/USER/forge/results/refund-native-audit-2026-11-04/attempt-0004/native-build-0001/refund": "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8"
+ },
+ "resource_guard": {
+  "memory_free_percent": 34,
+  "disk_free_gib": 82.21,
+  "other_hol_pids": []
+ },
+ "cpu_seconds_limit": 1200,
+ "wall_seconds_limit": 1500,
+ "end_to_end": false,
+ "actual_exit": 0,
+ "wall_timeout": false,
+ "wall_seconds": 215.649,
+ "child_user_cpu_seconds": 99.385,
+ "child_max_rss_bytes": 1168441344,
+ "markers": [
+  "EXACT_COMPLETE"
+ ],
+ "stdout_sha256": "bd492adc16d2177dbd72a9e2dbc972219dd132a8d5a7b289e9305d6a3c5b3717",
+ "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "objects": {
+  ".hol/objs/forge_machineTracePrefixTheory.dat": "f4be385243b3ae4a1045522054ed17fc8253fcb931ce3b4fd549c8c6bd2a9575",
+  ".hol/objs/forge_machineTracePrefixTheory.sig": "3d2b7a7158871fa90448092555dd520a1c7a0009f652007651a399a0a0794bc9",
+  ".hol/objs/forge_machineTracePrefixTheory.sml": "a2975bc9680560f3330903208ce19bbf242d01e860396930984c80fa5b123a83"
+ },
+ "inputs_unchanged_after": true
+}

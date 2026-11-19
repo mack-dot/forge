@@ -259,10 +259,10 @@ SHOW TRY_ALL_ENTRY extract_no_ext_stdout_step
       ALOOKUP fs1.inode_tbl (UStream «stdout») =
       SOME (STRCAT c0 (fd1_written [e]))
 LEMMA_FAILED extract_no_ext_stdout_step HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "FIRST_ASSUM", origin_structure = "Tactical", source_location = Loc_Unknown}]})
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6-9: parse error: expected identifier
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6-9: parse error: expected close delimiter
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6: parse error: expected closing parenthesis
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:463: error: Type error in function application.
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6-9: parse error: expected identifier
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6-9: parse error: expected close delimiter
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:492:6: parse error: expected closing parenthesis
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LO-0005/proof.sml:463: error: Type error in function application.
    Function: thm "extract_no_ext_stdout" (fn () => Parse.Term [... ...]) :
       (unit -> tactic) -> thm
    Argument: (fn () => let fun inv_tac ... = ... in () end) : unit -> unit

@@ -1,6 +1,6 @@
 2026-11-19T08:56:04Z
 START_STATE swap_free_mib=1263 memory_free_percent=69
-input /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/controls/NC6-trailing-bytes.sexp sha256 fc5f2635ab3eb184440efda970408652d191a2c30ac2bf0209bd8dbf0f9e8248 expected fc5f2635ab3eb184440efda970408652d191a2c30ac2bf0209bd8dbf0f9e8248
+input /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/controls/NC6-trailing-bytes.sexp sha256 fc5f2635ab3eb184440efda970408652d191a2c30ac2bf0209bd8dbf0f9e8248 expected fc5f2635ab3eb184440efda970408652d191a2c30ac2bf0209bd8dbf0f9e8248
 Thu Nov 19 03:56:04 EST 2026
 System-wide memory free percentage: 69%
 vm.swapusage: total = 7168.00M  used = 5904.94M  free = 1263.06M  (encrypted)
@@ -10,7 +10,7 @@ pgrep exit 0
 swap used percent: 82
 COMMAND: FORGE_CWD=<default> FORGE_CPU_SECONDS=900 python3 -I -B run_case.py ctl-NC6 forge_refundExportedContractScript.sml
 RUNNER EXIT 1 (a signal or CPU-limit stop also gives 1; read actual_exit in ctl-NC6/command.json)
-Uncaught exception at /Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/ctl-NC6/proof.sml:59: Fail "Trailing export bytes"
+Uncaught exception at /Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001/ctl-NC6/proof.sml:59: Fail "Trailing export bytes"
   info: actual_exit=1 markers=[] last FORGE_BEGIN=None *_COMPLETE lines=[] wall=7.555
 VERDICT NC6 ctl-NC6 PASS
 GO.SH EXIT 1

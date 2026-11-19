@@ -1,0 +1,447 @@
+{
+ "class": "TESTED-UNPROVED; run by the author of the control",
+ "rows": [
+  {
+   "finding": "F-01",
+   "subcase": "inproc-ign fake_accept_exit7",
+   "v1": {
+    "inproc": "inproc-ign",
+    "launcher": "launcher.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_IGN",
+    "decision": [
+     "AUTHORIZED",
+     40,
+     "returned_item"
+    ],
+    "driver_sigchld_after": "SIG_IGN",
+    "seconds": 0.48,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.72
+   },
+   "v2": {
+    "inproc": "inproc-ign",
+    "launcher": "launcher_v2.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_IGN",
+    "decision": [
+     "REFUSED",
+     "D3 exit code 7 is not 0"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.13,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.35
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "finding": "F-01",
+   "subcase": "inproc-ign fake_accept_abort",
+   "v1": {
+    "inproc": "inproc-ign",
+    "launcher": "launcher.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_IGN",
+    "decision": [
+     "AUTHORIZED",
+     40,
+     "returned_item"
+    ],
+    "driver_sigchld_after": "SIG_IGN",
+    "seconds": 0.17,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.39
+   },
+   "v2": {
+    "inproc": "inproc-ign",
+    "launcher": "launcher_v2.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_IGN",
+    "decision": [
+     "REFUSED",
+     "D2 process ended by signal 6"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.12,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.32
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "finding": "F-01",
+   "subcase": "inproc-nocldwait fake_accept_exit7",
+   "v1": {
+    "inproc": "inproc-nocldwait",
+    "launcher": "launcher.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "AUTHORIZED",
+     40,
+     "returned_item"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.08,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.3
+   },
+   "v2": {
+    "inproc": "inproc-nocldwait",
+    "launcher": "launcher_v2.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "REFUSED",
+     "D3 exit code 7 is not 0"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.1,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.32
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "finding": "F-01",
+   "subcase": "inproc-nocldwait fake_accept_abort",
+   "v1": {
+    "inproc": "inproc-nocldwait",
+    "launcher": "launcher.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "AUTHORIZED",
+     40,
+     "returned_item"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.15,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.37
+   },
+   "v2": {
+    "inproc": "inproc-nocldwait",
+    "launcher": "launcher_v2.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "REFUSED",
+     "D2 process ended by signal 6"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.09,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.34
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "finding": "F-01",
+   "subcase": "caller SIG_IGN then exec (exit 7)",
+   "v1": {
+    "inproc": null,
+    "launcher": "launcher.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_IGN",
+    "decision": [
+     "REFUSED",
+     "D3 exit code 7 is not 0"
+    ],
+    "driver_sigchld_after": "SIG_IGN",
+    "seconds": 0.06,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.3
+   },
+   "v2": {
+    "inproc": null,
+    "launcher": "launcher_v2.py",
+    "action": "decide",
+    "driver_sigchld_before": "SIG_IGN",
+    "decision": [
+     "REFUSED",
+     "D3 exit code 7 is not 0"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.07,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.31
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": "v1 NOT reproduced via exec: SIG_IGN is inherited (driver sees it) but the status was still delivered; recorded as no failing side for this route"
+  },
+  {
+   "finding": "F-02",
+   "subcase": "FIFO at the --exe path",
+   "v1": {
+    "hang": true,
+    "seconds": 6.01,
+    "stderr": ""
+   },
+   "v2": {
+    "inproc": null,
+    "launcher": "launcher_v2.py",
+    "action": "decide-real",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "REFUSED",
+     "L2 not a regular file of at most 16 MiB"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.0,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.19
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": "production pins; the driver itself does not open the path"
+  },
+  {
+   "finding": "F-02",
+   "subcase": "non-reading child, 1 MB request",
+   "v1": {
+    "hang": true,
+    "seconds": 9.01,
+    "stderr": ""
+   },
+   "v2": {
+    "inproc": "1000000",
+    "launcher": "launcher_v2.py",
+    "action": "decide-bigreq",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "REFUSED",
+     "D1 time limit reached"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 5.43,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 5.67
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": "v1 driver killed by the outer time-out leaves an orphan fake_noread (sleeps 30 s) and a copy dir"
+  },
+  {
+   "finding": "F-02",
+   "subcase": "request 2 MB > MAX_REQUEST_BYTES",
+   "v1": "(not run on v1)",
+   "v2": {
+    "inproc": "2000000",
+    "launcher": "launcher_v2.py",
+    "action": "decide-bigreq",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "REFUSED",
+     "V4 request longer than 1048576 bytes"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.61,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.86
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": "v2 only: the bound is new"
+  },
+  {
+   "finding": "F-07",
+   "subcase": "EPIPE on request write",
+   "v1": {
+    "inproc": "0.1",
+    "launcher": "launcher.py",
+    "action": "hold",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "AUTHORIZED",
+     40,
+     "returned_item"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.33,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.51
+   },
+   "v2": {
+    "inproc": "0.1",
+    "launcher": "launcher_v2.py",
+    "action": "hold",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "REFUSED",
+     "V4 EPIPE after 0 of 44 request bytes"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.14,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.32
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "finding": "F-08",
+   "subcase": "pinned_cdhash=None (fake binary, its own SHA pin)",
+   "v1": {
+    "inproc": null,
+    "launcher": "launcher.py",
+    "action": "decide-nocd",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "AUTHORIZED",
+     40,
+     "returned_item"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.08,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.4
+   },
+   "v2": {
+    "inproc": null,
+    "launcher": "launcher_v2.py",
+    "action": "decide-nocd",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "REFUSED",
+     "V5 no pinned CDHash"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.02,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.21
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "finding": "F-03",
+   "subcase": "caller exception port inherited by the child",
+   "v1": "excports: 0xc00,0x2000, excports_set=2 exc_mask_all=0x1bfe",
+   "v2": "excports:  excports_set=0 exc_mask_all=0x1bfe",
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": "caller wrapper stderr v1: excport_exec: alloc=0 insert=0 set=0. The CALLER masks (0x66) were NOT seen in the v1 child: route not reproduced (no failing side). The ports 0xc00,0x2000 seen by v1 are present at every exec in this session (origin unknown); v2 clears them for its child."
+  },
+  {
+   "finding": "T-1",
+   "subcase": "caller soft rlimits (nofile 32, stack 1 MiB, cpu 3)",
+   "v1": "stack=1048576/67092480 fsize=-1/-1 cpu=3/-1 nofile=32/-1",
+   "v2": "stack=8388608/8388608 fsize=0/0 cpu=10/10 nofile=64/64",
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "finding": "T-1",
+   "subcase": "caller HARD nofile 32 (< 64)",
+   "v1": {
+    "inproc": null,
+    "launcher": "launcher.py",
+    "action": "decide-real",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "AUTHORIZED",
+     40,
+     "returned_item"
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.05,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.23
+   },
+   "v2": {
+    "inproc": null,
+    "launcher": "launcher_v2.py",
+    "action": "decide-real",
+    "driver_sigchld_before": "SIG_DFL",
+    "decision": [
+     "REFUSED",
+     "D12 launcher exception: SubprocessError: Exception occurred in preexec_fn."
+    ],
+    "driver_sigchld_after": "SIG_DFL",
+    "seconds": 0.01,
+    "rc": 0,
+    "stderr_tail": "",
+    "wall": 0.18
+   },
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": "v2 refuses (FALSE REFUSAL by design; fail closed); v1 decides normally: no failing side"
+  },
+  {
+   "finding": "F-13",
+   "subcase": "SIGTERM to the launcher",
+   "v1": "rc=-15 child_alive=False leftover_dirs=1",
+   "v2": "rc=1 child_alive=False leftover_dirs=0",
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "finding": "F-13",
+   "subcase": "SIGKILL to the launcher (cannot be caught)",
+   "v1": "rc=-9 child_alive=False leftover_dirs=1",
+   "v2": "rc=-9 child_alive=False leftover_dirs=1",
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": "expected: copy dir LEFT by both (recorded); child ends by EOF on stdin"
+  },
+  {
+   "finding": "F-09",
+   "subcase": "launcher own stdout full + O_NONBLOCK",
+   "v1": "rc=0 line_complete=True M1-LAUNCHER-DECISION {\"amount\": 40, \"decision\": \"AUTHORIZED\"",
+   "v2": "rc=0 line_complete=True M1-LAUNCHER-DECISION {\"amount\": 40, \"decision\": \"AUTHORIZED\"",
+   "v1_fails_as_expected": true,
+   "v2_passes": true,
+   "as_expected": true,
+   "note": "exercised on both; no failing side expected"
+  }
+ ],
+ "failures": 0
+}

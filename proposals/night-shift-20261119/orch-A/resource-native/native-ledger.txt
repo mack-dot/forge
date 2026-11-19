@@ -6,18 +6,18 @@ evidence: rows that depend on it say "UNKNOWN (D11 says ...)".
 
 Abbreviations
  T    = forge_refundSlideProfileA.refund_profile_a_sl_every_machine_run (and refund_profile_a_sl): premises P1-P11,
-        E4 = /Users/mackianni/forge/results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/e4-0001/stdout.log 298-307.
- EP   = refund_entry_pre_sl definition, /Users/mackianni/forge/results/refund-slide-local-20261117/attempt-0001/s2-0003/stdout.log 29-37:
+        E4 = /Users/USER/forge/results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/e4-0001/stdout.log 298-307.
+ EP   = refund_entry_pre_sl definition, /Users/USER/forge/results/refund-slide-local-20261117/attempt-0001/s2-0003/stdout.log 29-37:
         ¬E0E ∧ ¬SA0 ∧ ¬TBI0 ∧ ¬TBI1 ∧ EL = 0w ∧ exception = NoException ∧ PC = sl+0x100004000w ∧ slots (sl+0x10002C000/8/10)
         hold h/stk/e ∧ aligned 3 h ∧ 40-byte header separation ∧ refund_image_mem sl s.MEM ∧ slide_ok sl.
- CK   = /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml
+ CK   = /Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml
  C    = CK/basis/basis_ffi.c, SHA-256 e65a5812...a1 = source_sha256 of the recorded runtime build
-        (/Users/mackianni/forge/results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/
+        (/Users/USER/forge/results/round4-m1-replay-20261118/phase3/packets-from-backup/proposals/refund-executable-feasibility/
         runtime-premises-20261104/records/runtime-command.json; clang -O2, no -DEVAL, no -DNDEBUG: asserts are live).
         That this object is the one linked into b8ed5ec2: NOT checked by me.
  ST   = CK/compiler/backend/semantics/targetSemScript.sml. state_ok is checked at EVERY step (line 129); arm8_ok =
         CK/compiler/encoders/arm8/arm8_targetScript.sml:20-26.
- M    = /Users/mackianni/forge/proposals/m1b-mission-20261119
+ M    = /Users/USER/forge/proposals/m1b-mission-20261119
  Status words: REALISTIC (believed true; evidence given) / FALSIFIED (shown false; evidence given) / UNKNOWN.
 
 | ID | Real-machine assumption | HOL premise it stands for | Status, evidence | Test that touches it | Smallest discharge or test |
@@ -27,9 +27,9 @@ Abbreviations
 | A-PROC-ALIGN | SCTLR_EL1.A (alignment check) any value | none: EP does not constrain A; the theorem holds for both values | REALISTIC for the model (the model's no-Fail result covers A = 1 too, by reading D11 finding 3; not checked); real value UNKNOWN (D11 says 0) | none | none needed for the CakeML code; the C FFI code is outside the model |
 | A-PROC-ENDIAN | little-endian data at EL0 (SCTLR_EL1.E0E = 0) | EP `¬s.SCTLR_EL1.E0E`; arm8_ok | UNKNOWN (D11 says 0) | indirectly: Wave Gate 1 runs give the expected bytes (M/TOP_LEVEL_GRAPH.md row X12) | probe: store halfword 0x0102, read byte 0 |
 | A-PROC-EL0 | user code runs at EL0, AArch64, no pending exception | EP `s.PSTATE.EL = 0w ∧ s.exception = NoException`; arm8_ok | UNKNOWN (D11 says EL0t AArch64) | indirect only | none by proof; name it |
-| A-PROC-L3 | each real instruction step equals one L3 NextStateARM8 step (pinned HOL L3 model) | the target semantics itself (ST 118-218, mc.target.next) | UNKNOWN (X11; in L3 an SVC is a fault, so every route ends at a kernel assumption) | Wave Gate 1: 2,466 vectors, 0 findings (M/TOP_LEVEL_GRAPH.md X12; /Users/mackianni/forge/proposals/forge2-m1-conformance/REPORT.md) | none by proof; differential test of the code slice on L3 vs hardware |
+| A-PROC-L3 | each real instruction step equals one L3 NextStateARM8 step (pinned HOL L3 model) | the target semantics itself (ST 118-218, mc.target.next) | UNKNOWN (X11; in L3 an SVC is a fault, so every route ends at a kernel assumption) | Wave Gate 1: 2,466 vectors, 0 findings (M/TOP_LEVEL_GRAPH.md X12; /Users/USER/forge/proposals/forge2-m1-conformance/REPORT.md) | none by proof; differential test of the code slice on L3 vs hardware |
 | A-ENTRY-DYLD | dyld maps the two proved slices at a slide sl with slide_ok sl, unchanged | EP `refund_image_mem sl s.MEM ∧ slide_ok sl` (P1); slide_ok = `aligned 12 sl ∧ sl <=+ 0xFFFFFFFEFFFCF0CFw` | UNKNOWN (only static otool: U404; joint premises shown satisfiable only at sl = 0x4000: E4 333-339) | none | probe: print the image slide and dump the two ranges at cml_main entry (lldb), compare with the slice hashes 3c67983c.../68d3f080... (D9) |
-| A-ENTRY-MAIN | `_main` runs, stores argc/argv, cml_init_memory mallocs heap+stack, stores cml_heap/cml_stack/cml_stackend, then calls cml_main; nothing else runs first that changes the image | EP slots `mem_dword s.MEM (sl+0x10002C000w) = h` (and +8 stk, +0x10 e), `aligned 3 h`, header separation; P2 `aligned 3 e`; P3 `h <=+ e`; P4 `8192w <=+ e − h`; P5 refund_heap_clear_sl | UNKNOWN for malloc alignment and placement (no source); by reading C 836-890: sizes are whole MiB (default 1024 MiB each; CML_HEAP_SIZE/CML_STACK_SIZE), e = h + heap + stack | conformance runs used 256 MiB heap and stack (/Users/mackianni/forge/proposals/forge2-m1-conformance/REPORT.md:250) | step theorem for `_main` from its instructions plus a malloc contract (report D9 item 6); test: print h, stk, e and check P2-P5 |
+| A-ENTRY-MAIN | `_main` runs, stores argc/argv, cml_init_memory mallocs heap+stack, stores cml_heap/cml_stack/cml_stackend, then calls cml_main; nothing else runs first that changes the image | EP slots `mem_dword s.MEM (sl+0x10002C000w) = h` (and +8 stk, +0x10 e), `aligned 3 h`, header separation; P2 `aligned 3 e`; P3 `h <=+ e`; P4 `8192w <=+ e − h`; P5 refund_heap_clear_sl | UNKNOWN for malloc alignment and placement (no source); by reading C 836-890: sizes are whole MiB (default 1024 MiB each; CML_HEAP_SIZE/CML_STACK_SIZE), e = h + heap + stack | conformance runs used 256 MiB heap and stack (/Users/USER/forge/proposals/forge2-m1-conformance/REPORT.md:250) | step theorem for `_main` from its instructions plus a malloc contract (report D9 item 6); test: print h, stk, e and check P2-P5 |
 | A-ENTRY-ENV | CML_HEAP_SIZE / CML_STACK_SIZE valid or absent | none (outside the model) | REALISTIC fail-closed: invalid value -> cml_runtime_error -> exit(3) with a stderr line BEFORE cml_main (C 71-82, 836-849); no model run, no stdout | none | consumer refuses status 3 (rule D3 of the fail-closed caller) |
 | A-ENTRY-REGS | registers at cml_main other than PC are irrelevant | EP fixes PC, PSTATE bits and memory only; the stub sets x0-x3 (refund_entry_run_sl, s2-0003 stdout.log 48-57) | REALISTIC by reading (the 27 stub steps define x0 = code base, x1 = h, x2 = stk, x3 = e) | none | none |
 | A-ENTRY-ARGV | argv/argc content | P9 `wfcl cl` (cl free) | REALISTIC: the program's FFI names are read, write, close, open_in only (E4 proof, names4), so cl is never read. UNKNOWN: whether _argc at 0x100030F30 (= _cake_bitmaps_buffer_end, report D9 item 7) lies in refund_mem_dm_sl; if it does, `_main` writes model memory before entry (allowed: entry state is after `_main`) | none | EVAL `0x100030F30w ∈ refund_bitmaps_dm_sl 0w` |

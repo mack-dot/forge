@@ -1,12 +1,12 @@
 Outcome classification for the refund executable's machine model (worker A6, 2026-11-19). Reading only. NOT RUN.
 Stored theorem: forge_refundSlideProfileA.refund_profile_a_sl_every_machine_run, printed at
-  E4 = /Users/mackianni/forge/results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/e4-0001/stdout.log
+  E4 = /Users/USER/forge/results/round4-m1-replay-20261118/slide-s3-copy/attempt-0001/e4-0001/stdout.log
   lines 297-331 (statement), 240-265 (refund_profile_a_sl). The .sig files list names only:
   E4/../e4-0001/.hol/objs/forge_refundSlideProfileATheory.sig lines 20-22; the slide-0 forms in
-  /Users/mackianni/forge/results/refund-profile-a-local-20261117/attempt-0001/prof-0002/.hol/objs/forge_refundProfileATheory.sig
+  /Users/USER/forge/results/refund-profile-a-local-20261117/attempt-0001/prof-0002/.hol/objs/forge_refundProfileATheory.sig
   lines 14-16 (refund_profile_a_slide0, _abstract_env, _every_machine_run); E4/stdout.log 353-400 shows the slide-0
   instance is term-identical (S6).
-CK = /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml
+CK = /Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml
 
 1. Premises (all 11; E4/stdout.log 298-307; ledger in reports/I3-I4b-premise-ledger.md section B):
  P1 refund_entry_pre_sl sl s h stk e   P2 aligned 3 e   P3 h <=+ e   P4 8192w <=+ e - h   P5 refund_heap_clear_sl sl h e
@@ -72,5 +72,5 @@ CK = /Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml
  AUTHORIZE only if: exit status 0 AND no signal AND stderr empty AND stdout is exactly one complete frame under a strict
  parser (and the caller wrote the whole request and closed stdin). This uses the theorem only through X8 + X9 + X13.
  REFUSE otherwise. Exit status alone carries no proof meaning (row 2). The existing planted-result tests of this rule:
- /Users/mackianni/forge/proposals/m1b-mission-20261119/drafts/fail-closed/run_exit_status_controls.py and
+ /Users/USER/forge/proposals/m1b-mission-20261119/drafts/fail-closed/run_exit_status_controls.py and
  exit_status_controls_results.json (rows for x0 = 2^32 and x0 = 256 shapes; the executable was not run there).

@@ -1,0 +1,183 @@
+TIMEOUT_HELPER Timeout.apply loaded
+GUARD_DEFINED guarded_apply
+MARK LOAD
+LOAD_OK miscTheory
+LOAD_OK ffiTheory
+LOAD_OK asmPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK lprefix_lubTheory
+PARENT_OK forge_machineTrace loaded
+<<HOL message: Created theory "forge_machineTracePrefix">>
+MARK USE tr2_common.sml
+TOY_DEFS_OK true
+TH_FROM_PARENT 71
+MARK STATEMENTS
+STATEMENT trace_terminate
+∀P G g tr mc st ms t io.
+  trace_ok P G mc st ms tr ∧
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P tr;
+       ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms (Terminate t io) ⇒
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P [];
+       ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr)
+    (trace_last ms tr) (Terminate t io) ∧
+  st.io_events ++ trace_events mc ms tr ≼ io
+STATEMENT trace_fail
+∀P G g tr mc st ms.
+  trace_ok P G mc st ms tr ∧
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P tr;
+       ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms Fail ⇒
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P [];
+       ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr)
+    (trace_last ms tr) Fail
+STATEMENT trace_diverge
+∀P G g tr mc st ms l.
+  trace_ok P G mc st ms tr ∧
+  machine_sem
+    (mc with
+     <|next_interfer := trace_next_interfer P tr;
+       ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms (Diverge l) ⇒
+  LPREFIX (fromList (st.io_events ++ trace_events mc ms tr)) l
+STATEMENT toy_bad_not_followed
+evaluate
+  (toy_mc with
+   <|next_interfer :=
+       trace_next_interfer (λs. s) [TrStep 1w; TrFfi 0 [7w] 2w];
+     ffi_interfer :=
+       trace_ffi_interfer (λx s. T) (λk x. 5w) 0w
+         [TrStep 1w; TrFfi 0 [7w] 2w]|>) toy_st
+  (LENGTH [TrStep 1w; TrFfi 0 [7w] 2w] + 0) 0w ≠
+evaluate
+  (toy_mc with
+   <|next_interfer := trace_next_interfer (λs. s) [];
+     ffi_interfer :=
+       shift_seq (nffis [TrStep 1w; TrFfi 0 [7w] 2w]) (λk x. 5w)|>)
+  (trace_st toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [7w] 2w]) 0
+  (trace_last 0w [TrStep 1w; TrFfi 0 [7w] 2w])
+TR2_COMMON loaded
+PART_DONE tr2_common.sml
+MARK USE tr_steps_fix.sml
+TR_STEPS_FIX opened
+TR_STEPS_FIX loaded
+PART_DONE tr_steps_fix.sml
+MARK USE tr2_select.sml
+TR2_SELECTED trace_terminate trace_fail trace_diverge toy_bad_not_followed
+PART_DONE tr2_select.sml
+MARK USE tr_prove.sml
+BEGIN trace_terminate required
+STEP_USED trace_terminate 1 intro candidate 0 goals_out 1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_machineTracePrefix)>>
+STEP_USED trace_terminate 2 io fact candidate 0 goals_out 1
+STEP_USED trace_terminate 3 all clocks (explicit !k) candidate 0 goals_out 1
+STEP_USED trace_terminate 4 instantiate term_after candidate 0 goals_out 1
+STEP_USED trace_terminate 5 discharge candidate 0 goals_out 1
+STEP_USED trace_terminate 6 split candidate 0 goals_out 2
+STEP_USED trace_terminate 7 behaviour candidate 0 goals_out 0
+STEP_USED trace_terminate 8 prefix candidate 0 goals_out 0
+Saved theorem _______ "trace_terminate"
+CHECKED trace_terminate
+⊢ ∀P G g tr mc st ms t io.
+    trace_ok P G mc st ms tr ∧
+    machine_sem
+      (mc with
+       <|next_interfer := trace_next_interfer P tr;
+         ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms
+      (Terminate t io) ⇒
+    machine_sem
+      (mc with
+       <|next_interfer := trace_next_interfer P [];
+         ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr)
+      (trace_last ms tr) (Terminate t io) ∧
+    st.io_events ++ trace_events mc ms tr ≼ io
+BEGIN trace_fail required
+STEP_USED trace_fail 1 intro candidate 0 goals_out 1
+STEP_USED trace_fail 2 all clocks (explicit !k) candidate 0 goals_out 1
+STEP_USED trace_fail 3 instantiate fail_after candidate 0 goals_out 1
+STEP_USED trace_fail 4 discharge candidate 0 goals_out 1
+STEP_USED trace_fail 5 close candidate 0 goals_out 0
+Saved theorem _______ "trace_fail"
+CHECKED trace_fail
+⊢ ∀P G g tr mc st ms.
+    trace_ok P G mc st ms tr ∧
+    machine_sem
+      (mc with
+       <|next_interfer := trace_next_interfer P tr;
+         ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms Fail ⇒
+    machine_sem
+      (mc with
+       <|next_interfer := trace_next_interfer P [];
+         ffi_interfer := shift_seq (nffis tr) g|>) (trace_st mc st ms tr)
+      (trace_last ms tr) Fail
+BEGIN trace_diverge optional
+STEP_USED trace_diverge 1 intro candidate 0 goals_out 1
+STEP_USED trace_diverge 2 io fact candidate 0 goals_out 1
+STEP_USED trace_diverge 3 all clocks (explicit !k) candidate 0 goals_out 1
+STEP_USED trace_diverge 4 instantiate div_after candidate 0 goals_out 1
+STEP_USED trace_diverge 5 discharge candidate 0 goals_out 1
+STEP_USED trace_diverge 6 rewrite io candidate 0 goals_out 0
+Saved theorem _______ "trace_diverge"
+CHECKED trace_diverge
+⊢ ∀P G g tr mc st ms l.
+    trace_ok P G mc st ms tr ∧
+    machine_sem
+      (mc with
+       <|next_interfer := trace_next_interfer P tr;
+         ffi_interfer := trace_ffi_interfer G g ms tr|>) st ms (Diverge l) ⇒
+    LPREFIX (fromList (st.io_events ++ trace_events mc ms tr)) l
+BEGIN toy_bad_not_followed optional
+STEP_USED toy_bad_not_followed 1 clock 2 candidate 0 goals_out 1
+STEP_USED toy_bad_not_followed 2 step facts candidate 0 goals_out 1
+STEP_USED toy_bad_not_followed 3 one step (full instance) candidate 0 goals_out 1
+STEP_USED toy_bad_not_followed 4 ffi facts (oracle answers [], the trace records [7w]) candidate 0 goals_out 1
+STEP_USED toy_bad_not_followed 5 one ffi event (full instance) candidate 0 goals_out 1
+STEP_USED toy_bad_not_followed 6 states differ (5w versus 2w) candidate 0 goals_out 0
+Saved theorem _______ "toy_bad_not_followed"
+CHECKED toy_bad_not_followed
+⊢ evaluate
+    (toy_mc with
+     <|next_interfer :=
+         trace_next_interfer (λs. s) [TrStep 1w; TrFfi 0 [7w] 2w];
+       ffi_interfer :=
+         trace_ffi_interfer (λx s. T) (λk x. 5w) 0w
+           [TrStep 1w; TrFfi 0 [7w] 2w]|>) toy_st
+    (LENGTH [TrStep 1w; TrFfi 0 [7w] 2w] + 0) 0w ≠
+  evaluate
+    (toy_mc with
+     <|next_interfer := trace_next_interfer (λs. s) [];
+       ffi_interfer :=
+         shift_seq (nffis [TrStep 1w; TrFfi 0 [7w] 2w]) (λk x. 5w)|>)
+    (trace_st toy_mc toy_st 0w [TrStep 1w; TrFfi 0 [7w] 2w]) 0
+    (trace_last 0w [TrStep 1w; TrFfi 0 [7w] 2w])
+OPTIONAL_FAILED 
+PART_DONE tr_prove.sml
+MARK CHECKS
+FAILED_LIST 
+CONTROL_OK no axiom in forge_machineTrace
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CONTROL_OK closure contains forge_machineTrace
+CONTROL_OK closure contains targetSem
+CONTROL_OK closure contains targetProps
+CONTROL_OK closure contains ffi
+CONTROL_OK closure contains misc
+CONTROL_OK closure contains asmProps
+CONSTANT_THEORIES llist ffi misc num arithmetic words list forge_machineTrace combin targetSem min bool
+CONTROL_OK generic: no forge_, refund or ISA constant in any stored item
+CONTROL_OK all 2 required lemmas stored
+STORED_NAMES trace_terminate trace_fail trace_diverge toy_bad_not_followed
+STORED_THEOREMS 4
+STORED_DEFINITIONS 0
+CLOSURE_NODES 482
+Exporting theory "forge_machineTracePrefix" ... done.
+Theory "forge_machineTracePrefix" took 10.8s to build
+EXACT_COMPLETE

@@ -3,8 +3,8 @@
 Every command below is PLANNED. No exit code in this file is an actual exit code. Run it only in the single HOL slot,
 by the orchestrator, after the usual resource check (`nightshift-run.sh` does it: swap, memory, battery, other HOL).
 
-E = `/Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step` (source)
-A = `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001` (attempt folder; runner, deps, E1-0003 parent)
+E = `/Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step` (source)
+A = `/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001` (attempt folder; runner, deps, E1-0003 parent)
 
 ## Inputs (SHA-256, measured by A11 with `shasum -a 256`, exit 0)
 | File | SHA-256 |
@@ -19,8 +19,8 @@ folder (`OS.Path.base (#(FILE)) ^ ".dat"`), and it opens `forge_refundSlideProfi
 
 ## Setup (once)
 ```zsh
-E=/Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step
-A=/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
+E=/Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step
+A=/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
 cd $A
 cp $E/erasure_step_v1.sml ES-0001.sml
 cp deps-L1.txt deps-ES.txt

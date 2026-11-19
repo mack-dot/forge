@@ -1,0 +1,104 @@
+TIMEOUT_HELPER Timeout.apply loaded
+GUARD_DEFINED guarded_apply
+<<HOL message: Created theory "forge_refundShapeSatExplore1">>
+EXPLORE_MODE nothing is exported (scratch theorems only)
+MARK USE nv_common.sml
+MARK COMMON
+MARK FETCH
+USED refund_env_ok_sl_def
+⊢ ∀sl envmc.
+    refund_env_ok_sl sl envmc ⇔
+    interference_ok envmc.next_interfer
+      (arm8_target.proj envmc.prog_addresses) ∧
+    refund_ffi_contract_at (sl + 0x1000040D0w) envmc.prog_addresses
+      envmc.ffi_interfer
+USED refund_ffi_contract_at_def
+⊢ ∀b dm ffi_i.
+    refund_ffi_contract_at b dm ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+USED refund_ffi_contract_on_def
+⊢ ∀b dm Vok ffi_i.
+    refund_ffi_contract_on b dm Vok ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ∧ Vok index new_bytes ms2 ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+USED refund_abs_env_def
+⊢ ∀envmc.
+    refund_abs_env envmc =
+    envmc with
+    <|next_interfer := refund_id_interfer; ffi_interfer := refund_abs_ffi|>
+USED refund_id_interfer_ok
+⊢ ∀proj. interference_ok refund_id_interfer proj
+USED remaining_premise_met_by_the_abstract_effect
+⊢ ∀b dm.
+    refund_ffi_contract_on b dm
+      (λi nb s.
+         (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+         (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+      refund_abs_ffi
+USED machine_sem_total
+⊢ ∃b. machine_sem mc st ms b
+USED refund_profile_a_sl_all_premises_satisfiable_at_0x4000
+⊢ ∃s h stk e envmc fs cl.
+    refund_entry_pre_sl 16384w s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧
+    8192w ≤₊ e − h ∧ refund_heap_clear_sl 16384w h e ∧
+    envmc.prog_addresses = refund_mem_dm_sl 16384w h e ∧
+    refund_env_ok_sl 16384w envmc ∧
+    stdin_content fs =
+    SOME
+      (explode
+         (sexp_to_string
+            (refund_request charge request original remaining enabled opened
+               candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧
+    STD_streams fs
+MARK TERMS
+ANTE_CONJUNCTS 12
+ANTE_FREE_VARS cl reason amount candidate opened enabled remaining original request charge fs envmc e stk h s sl
+CONTROL_OK the antecedent has exactly 17 free variables (8 premise + 9 request)
+CONTROL_OK antecedent of refund_profile_a_sl_shape = antecedent of refund_model_frame_decision_shape
+CONTROL_OK no free ext in the antecedent (ext := no_ext changes nothing in it)
+VOKS λi nb s.
+  (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+  (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w)
+SLIDE_OF_OLD_WITNESS 16384w
+CONTROL_OK the bound variables of the old witness = s h stk e envmc fs cl of the antecedent (names and types)
+CONTROL_OK the free variables of the old witness are request fields of the antecedent
+CONTROL_OK the entry witness is at the same slide
+WITNESS_ENVMC refund_abs_env
+  <|prog_addresses := refund_mem_dm_sl 16384w 0x200000000w 0x200020000w|>
+WITNESS_FS sat_fs
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason)))
+WITNESS_CL [«refund»]
+STATEMENT_FAILED ACC_FFI HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "find_term", origin_structure = "HolKernel", source_location = Loc_Unknown}]})
+Exception- HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "find_term", origin_structure = "HolKernel", source_location = Loc_Unknown}]}) raised

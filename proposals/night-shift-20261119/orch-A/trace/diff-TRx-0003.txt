@@ -1,0 +1,70 @@
+--- TRx-0001.sml	2026-11-19 10:13:41.664410961 -0500
++++ TRx-0003.sml	2026-11-19 10:59:59.976342580 -0500
+@@ -1,5 +1,8 @@
++(* TRx-0003.sml (worker W-trace, round 2): = TRx-0001.sml with Thread.Thread. -> Thread., Thread.Mutex. -> Mutex.
++   (pinned HOL, ConcIsaLib.sml lines 1, 6), shared files tr_common2.sml / tr_steps2.sml, scratch theory forge_machineTraceExplore3.
++   NOT RUN. See CHANGES_TR.txt. *)
+ (* TRx-0001.sml (worker W-trace, Night-Shift Orchestrator A, 2026-11-19). EXPLORATION of case TR-0001. NOT RUN.
+-   NOT a proof attempt; no export_theory. Scratch theory forge_machineTraceExplore1. Shared files (the SAME bytes as the
++   NOT a proof attempt; no export_theory. Scratch theory forge_machineTraceExplore3. Shared files (the SAME bytes as the
+    proof trace_v1.sml): tr_common.sml, tr_steps.sml; exploration-only: tr_explore_calls.sml.
+    (1) every statement ASSUMEd into TH; (2) every lemma tried as a real proof in dependency order (TRY_HELPER_CLOSED);
+    (3) explore_head prints the goals after every step of every lemma that did not close.
+@@ -21,12 +24,12 @@
+ val GUARD_HARD = 300;
+ fun guarded_apply (secs : int) (f : unit -> 'a) : 'a =
+   let
+-    val self = Thread.Thread.self ()
+-    val lock = Thread.Mutex.mutex ()
++    val self = Thread.self ()
++    val lock = Mutex.mutex ()
+     val finished = ref false
+     val start = Time.now ()
+     fun is_finished () : bool =
+-      (Thread.Mutex.lock lock; let val b = !finished in Thread.Mutex.unlock lock; b end)
++      (Mutex.lock lock; let val b = !finished in Mutex.unlock lock; b end)
+     fun since () : int = LargeInt.toInt (Time.toSeconds (Time.- (Time.now (), start)))
+     fun dog () : unit =
+       if is_finished () then ()
+@@ -36,15 +39,15 @@
+              Int.toString secs ^ " s)");
+          Posix.Process.exit 0w3)
+       else
+-        (Thread.Mutex.lock lock;
+-         (if !finished then () else (Thread.Thread.interrupt self handle _ => ()));
+-         Thread.Mutex.unlock lock;
++        (Mutex.lock lock;
++         (if !finished then () else (Thread.interrupt self handle _ => ()));
++         Mutex.unlock lock;
+          pr ("WATCHDOG_INTERRUPT_AGAIN after " ^ Int.toString (since ()) ^ " s (limit " ^ Int.toString secs ^ " s)");
+          OS.Process.sleep (Time.fromSeconds 5);
+          dog ())
+-    val _ = Thread.Thread.fork (fn () => (dog () handle _ => ()), [])
+-    fun finish () : unit = (Thread.Mutex.lock lock; finished := true; Thread.Mutex.unlock lock)
+-    fun run () = (Thread.Thread.setAttributes [Thread.Thread.InterruptState Thread.Thread.InterruptAsynch]; f ())
++    val _ = Thread.fork (fn () => (dog () handle _ => ()), [])
++    fun finish () : unit = (Mutex.lock lock; finished := true; Mutex.unlock lock)
++    fun run () = (Thread.setAttributes [Thread.InterruptState Thread.InterruptAsynch]; f ())
+   in
+     (Timeout.apply (Time.fromSeconds (Int.toLarge secs)) run () before finish ())
+     handle e => (finish (); raise e)
+@@ -63,7 +66,7 @@
+   ["miscTheory", "ffiTheory", "asmPropsTheory", "targetSemTheory", "targetPropsTheory", "lprefix_lubTheory"];
+ 
+ val _ = OS.FileSys.chDir (valOf (OS.Process.getEnv "FORGE_P3_OUT"));
+-val _ = new_theory "forge_machineTraceExplore1";
++val _ = new_theory "forge_machineTraceExplore3";
+ val _ = pr "EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)";
+ 
+ (* ================= the stepper: LOx-0001.sml lines 420-525, copied; NAMED_CONSTS changed ================= *)
+@@ -241,8 +244,8 @@
+ fun use_part (f : string) : bool =
+   (pr ("MARK USE " ^ f); use (TRDIR ^ f); pr ("PART_DONE " ^ f); true)
+   handle e => (pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e)); false);
+-val ok_common = use_part "tr_common.sml";
+-val ok_steps = ok_common andalso use_part "tr_steps.sml";
++val ok_common = use_part "tr_common2.sml";
++val ok_steps = ok_common andalso use_part "tr_steps2.sml";
+ val _ = if ok_steps then ignore (use_part "tr_explore_calls.sml") else pr "EXPLORE_SKIPPED shared files failed";
+ val _ = pr "EXPLORE_COMPLETE";
+ val _ = OS.Process.exit OS.Process.success;

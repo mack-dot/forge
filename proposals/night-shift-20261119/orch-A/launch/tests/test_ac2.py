@@ -8,7 +8,7 @@ import subprocess
 import sys
 import tempfile
 
-sys.path.insert(0, '/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch/tests')
+sys.path.insert(0, '/Users/USER/forge/results/night-shift-20261119/orch-A/launch/tests')
 import common as C  # noqa: E402
 
 L = C.L

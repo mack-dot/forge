@@ -104,8 +104,8 @@
            [("writei_spec_V", WRITEI_V), ("read_into_spec_V", READ_INTO_V)];
  
  (* ---------- the three CF files ---------- *)
--val R6DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/";
-+val R6DIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round3/";
+-val R6DIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/";
++val R6DIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round3/";
  fun use_part (f : string) =
    (pr ("MARK USE " ^ f); use (R6DIR ^ f); pr ("PART_DONE " ^ f))
    handle e => pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e));

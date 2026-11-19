@@ -16,8 +16,8 @@ Pattern: `proposals/m1b-mission-20261119/drafts/route-a/RUN_PLAN.md` (X7) and `v
 | option B only: `prefix/preload-prefix-min.sml` (one line: `load "forge_refundArm8CompileTheory";`) | `78c24b8cb44b85233a367e4f5b0dfdeb27ccb059c497725dd76dfde552ea7737` |
 | option B only: `prefix/deps-PF-min.txt` (one line: the path of that preload) | `dad10a7e21db8ce1e5dddc98c567f0e29744a02bccef29f51eefdeeaab6f188c` |
 
-`A` = `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001` (exists; holds `run_case.py`, `deps-L1.txt`,
-`go-routeA.sh`, `hash_parents.py`, `L1-0001.sml`). `P` = `/Users/mackianni/forge/results/night-shift-20261119/orch-A/prefix`.
+`A` = `/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001` (exists; holds `run_case.py`, `deps-L1.txt`,
+`go-routeA.sh`, `hash_parents.py`, `L1-0001.sml`). `P` = `/Users/USER/forge/results/night-shift-20261119/orch-A/prefix`.
 
 What the deps give. Line 1 of `deps-L1.txt` is `preload.sml`; its first command `load "forge_refundArm8CompileTheory"`
 loads (through the `.uo` chain) forge_refundWholeProg → forge_refundStdioProg → forge_refundWireProg →
@@ -42,8 +42,8 @@ pgrep -fl 'cake_compile_heap|arm8-heap|cakeml-heap|poly' || echo "no HOL process
 ## Command (option A, recommended: the proven deps pattern of e4-0001 / L1)
 
 ```zsh
-A=/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-P=/Users/mackianni/forge/results/night-shift-20261119/orch-A/prefix
+A=/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+P=/Users/USER/forge/results/night-shift-20261119/orch-A/prefix
 cd $A
 cp $P/prefix_lemma_v3.sml PF-0001.sml
 shasum -a 256 PF-0001.sml $P/prefix_lemma_v3.sml          # both must be 820de134…95e8

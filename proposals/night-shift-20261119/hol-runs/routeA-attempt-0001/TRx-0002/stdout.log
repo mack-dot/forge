@@ -1,0 +1,151 @@
+TIMEOUT_HELPER Timeout.apply loaded
+GUARD_DEFINED guarded_apply
+MARK LOAD
+LOAD_OK miscTheory
+LOAD_OK ffiTheory
+LOAD_OK asmPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK lprefix_lubTheory
+<<HOL message: Created theory "forge_machineTraceExplore1">>
+EXPLORE_MODE nothing is exported (scratch definitions and helper theorems only)
+EXPLORE_MODE nothing is exported; the open lemmas are never stored
+MARK USE tr_common.sml
+MARK DATATYPE
+Saved theorem _______ "trace_event_bnd"
+Saved theorem _______ "trace_event_MAP_ID"
+Saved theorem _______ "trace_event_MAP_O"
+Saved theorem _______ "trace_event_MAP_IMAGE"
+Saved theorem _______ "trace_event_MAP_CONG"
+Saved theorem _______ "trace_event_wit"
+Saved theorem _______ "trace_event_inh"
+Saved theorem _______ "trace_event_size_def"
+Saved theorem _______ "trace_event_size_MAP"
+Saved theorem _______ "trace_eventMAP_thm"
+Saved theorem _______ "trace_eventMAP_ind"
+Saved theorem _______ "trace_eventSET_thm"
+Saved theorem _______ "trace_eventSET_ind"
+Saved theorem _______ "datatype_trace_event"
+Saved theorem _______ "trace_event_11"
+Saved theorem _______ "trace_event_distinct"
+Saved theorem _______ "trace_event_nchotomy"
+Saved theorem _______ "trace_event_Axiom"
+Saved theorem _______ "trace_event_induction"
+Saved theorem _______ "trace_event_case_cong"
+Saved theorem _______ "trace_event_case_eq"
+<<HOL message: Defined type: "trace_event">>
+DATATYPE_OK trace_event
+MARK DEFS
+Saved definition ____ "step_event_ok_def"
+DEFINITION step_event_ok_def
+⊢ ∀mc ms s.
+    step_event_ok mc ms s ⇔
+    mc.target.get_pc ms ∈ mc.prog_addresses DIFF set mc.ffi_entry_pcs ∧
+    encoded_bytes_in_mem mc.target.config (mc.target.get_pc ms)
+      (mc.target.get_byte ms) mc.prog_addresses ∧
+    EVERY mc.target.state_ok [ms; mc.target.next ms; s] ∧
+    ∀x. x ∉ mc.prog_addresses ⇒
+        mc.target.get_byte (mc.target.next ms) x = mc.target.get_byte ms x
+Saved definition ____ "ffi_event_ok_def"
+DEFINITION ffi_event_ok_def
+⊢ ∀mc st ms i nb.
+    ffi_event_ok mc st ms i nb ⇔
+    MEM (mc.target.get_pc ms) mc.ffi_entry_pcs ∧
+    mc.target.get_pc ms ≠ mc.halt_pc ∧ mc.target.get_pc ms ≠ mc.install_pc ∧
+    find_index (mc.target.get_pc ms) mc.ffi_entry_pcs 0 = SOME i ∧
+    ALOOKUP mc.mmio_info i = NONE ∧
+    ∃nm b1 b2 st1.
+      mc.ffi_names❲i❳ = ExtCall nm ∧
+      read_ffi_bytearrays mc ms = (SOME b1,SOME b2) ∧
+      call_FFI st (ExtCall nm) b1 b2 = FFI_return st1 nb
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "ffi_post_st_def"
+DEFINITION ffi_post_st_def
+⊢ ∀mc st ms i.
+    ffi_post_st mc st ms i =
+    case read_ffi_bytearrays mc ms of
+      (NONE,v3) => st
+    | (SOME b1,NONE) => st
+    | (SOME b1,SOME b2) =>
+      case call_FFI st mc.ffi_names❲i❳ b1 b2 of
+        FFI_return st1 nb => st1
+      | FFI_final e => st
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+<<HOL message: mk_functional: 
+  pattern completion has added 1 clause to the original specification.>>
+Saved definition ____ "ffi_call_event_def"
+DEFINITION ffi_call_event_def
+⊢ ∀mc ms i nb.
+    ffi_call_event mc ms i nb =
+    case read_ffi_bytearrays mc ms of
+      (NONE,v3) => []
+    | (SOME b1,NONE) => []
+    | (SOME b1,SOME b2) =>
+      if mc.ffi_names❲i❳ = ExtCall «» then []
+      else [IO_event mc.ffi_names❲i❳ b1 (ZIP (b2,nb))]
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_machineTraceExplore1)>>
+Saved definition ____ "trace_next_interfer_def"
+Saved induction _____ "trace_next_interfer_ind"
+DEFINITION trace_next_interfer_def
+⊢ (∀ms1 m P. trace_next_interfer P [] m ms1 = ms1) ∧
+  (∀tr s ms1 m P.
+     trace_next_interfer P (TrStep s::tr) m ms1 =
+     if m = 0 then if P ms1 = P s then s else ms1
+     else trace_next_interfer P tr (m − 1) ms1) ∧
+  ∀tr s nb ms1 m i P.
+    trace_next_interfer P (TrFfi i nb s::tr) m ms1 =
+    trace_next_interfer P tr m ms1
+Saved definition ____ "trace_ffi_interfer_def"
+Saved induction _____ "trace_ffi_interfer_ind"
+DEFINITION trace_ffi_interfer_def
+⊢ (∀x ms0 k g G. trace_ffi_interfer G g ms0 [] k x = g k x) ∧
+  (∀x tr s ms0 k g G.
+     trace_ffi_interfer G g ms0 (TrStep s::tr) k x =
+     trace_ffi_interfer G g s tr k x) ∧
+  ∀x tr s nb ms0 k i g G.
+    trace_ffi_interfer G g ms0 (TrFfi i nb s::tr) k x =
+    if k = 0 then if x = (i,nb,ms0) ∧ G x s then s else g 0 x
+    else trace_ffi_interfer G (shift_seq 1 g) s tr (k − 1) x
+Saved definition ____ "nffis_def"
+Saved induction _____ "nffis_ind"
+DEFINITION nffis_def
+⊢ nffis [] = 0 ∧ (∀tr s. nffis (TrStep s::tr) = nffis tr) ∧
+  ∀tr s nb i. nffis (TrFfi i nb s::tr) = nffis tr + 1
+Saved definition ____ "trace_last_def"
+Saved induction _____ "trace_last_ind"
+DEFINITION trace_last_def
+⊢ (∀ms. trace_last ms [] = ms) ∧
+  (∀tr s ms. trace_last ms (TrStep s::tr) = trace_last s tr) ∧
+  ∀tr s nb ms i. trace_last ms (TrFfi i nb s::tr) = trace_last s tr
+Saved definition ____ "trace_st_def"
+Saved induction _____ "trace_st_ind"
+DEFINITION trace_st_def
+⊢ (∀st ms mc. trace_st mc st ms [] = st) ∧
+  (∀tr st s ms mc. trace_st mc st ms (TrStep s::tr) = trace_st mc st s tr) ∧
+  ∀tr st s nb ms mc i.
+    trace_st mc st ms (TrFfi i nb s::tr) =
+    trace_st mc (ffi_post_st mc st ms i) s tr
+Saved definition ____ "trace_events_def"
+Saved induction _____ "trace_events_ind"
+DEFINITION trace_events_def
+⊢ (∀ms mc. trace_events mc ms [] = []) ∧
+  (∀tr s ms mc. trace_events mc ms (TrStep s::tr) = trace_events mc s tr) ∧
+  ∀tr s nb ms mc i.
+    trace_events mc ms (TrFfi i nb s::tr) =
+    ffi_call_event mc ms i nb ++ trace_events mc s tr
+Saved definition ____ "trace_ok_def"
+Saved induction _____ "trace_ok_ind"
+DEFINITION trace_ok_def
+⊢ (∀st ms mc P G. trace_ok P G mc st ms [] ⇔ T) ∧
+  (∀tr st s ms mc P G.
+     trace_ok P G mc st ms (TrStep s::tr) ⇔
+     step_event_ok mc ms s ∧ P (mc.target.next ms) = P s ∧
+     trace_ok P G mc st s tr) ∧
+  ∀tr st s nb ms mc i P G.
+    trace_ok P G mc st ms (TrFfi i nb s::tr) ⇔
+    ffi_event_ok mc st ms i nb ∧ G (i,nb,ms) s ∧
+    trace_ok P G mc (ffi_post_st mc st ms i) s tr

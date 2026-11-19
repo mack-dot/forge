@@ -66,8 +66,8 @@ fun tlim secs (tac : tactic) (g : goal) (ctxt : Context.t) =
 
 (* ================= LOAD (generic: the CakeML machine semantics only) ================= *)
 val _ = pr "MARK LOAD";
-val CK = "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
-val HOLX = "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/pl-semantics/lprefix_lub";
+val CK = "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
+val HOLX = "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/HOL/examples/pl-semantics/lprefix_lub";
 val _ = loadPath := !loadPath @ (map (fn d => CK ^ "/" ^ d)
           ["misc", "semantics/ffi", "compiler/encoders/asm", "compiler/backend/semantics"]) @ [HOLX];
 fun tryload s = (load s; pr ("LOAD_OK " ^ s))
@@ -83,7 +83,7 @@ fun chk name th = (tags name th; pr ("CHECKED " ^ name ^ "\n" ^ thm_to_string th
 
 (* ================= shared files (the same bytes as in TRx-0001) ================= *)
 val TR_PROOF_MODE = true;
-val TRDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/";
+val TRDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/trace/";
 val _ = (pr "MARK USE tr_common.sml"; use (TRDIR ^ "tr_common.sml"); pr "PART_DONE tr_common.sml");
 val _ = (pr "MARK USE tr_steps.sml"; use (TRDIR ^ "tr_steps.sml"); pr "PART_DONE tr_steps.sml");
 val _ = (pr "MARK USE tr_prove.sml"; use (TRDIR ^ "tr_prove.sml"); pr "PART_DONE tr_prove.sml");

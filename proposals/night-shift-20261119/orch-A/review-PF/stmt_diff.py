@@ -1,6 +1,6 @@
 # Extract lemma statements and definitions from PF-000N.sml and compare (pure, read-only).
 import re, sys, hashlib
-D = "/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/"
+D = "/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/"
 def stmts(path):
     s = open(path).read()
     out = {}
