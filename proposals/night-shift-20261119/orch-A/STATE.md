@@ -135,3 +135,15 @@ RUNNING: `queue.sh q32 "R6ffi-0002 3600 deps-R6ffi.txt"` (PROOF run; sub-files i
 ## CHECKPOINT (2026-11-19T11:19:06Z)
 Review A32 of R6ffi-0002: holds; evidence gap (files read with `use` hashed only after the run) recorded; wrapper now hashes them before and after each run.
 B holds `heavy.lock` (fifth window, up to 30 minutes from 11:19Z). A33 (write side) works. No HOL case runs.
+
+## CHECKPOINT (2026-11-19T11:36:42Z)
+RUNNING: `queue.sh q33 "R6wx-0001 1800 deps-R6w.txt"` (write-side EXPLORATION; files in `orch-A/r6/round6/`). Staged, NOT RUN: `R6w-0001` (proof; `deps-R6w.txt`, 3600).
+
+## CHECKPOINT (2026-11-19T11:39:20Z)
+`R6wx-0001` (exploration): exit 0; 13 pieces closed; STUCK: `write_spec_V` step 2, `output_aux_spec_V` step 10, `print_spec_refund` step 1, optional `STD_streams_fd0`. A33 repairs into `orch-A/r6/round7/` (`R6wx-0002`, `R6w-0002`). HOL slot idle, held by A.
+
+## CHECKPOINT (2026-11-19T11:42:35Z)
+RUNNING: `queue.sh q34 "R6wx-0002 3600 deps-R6w.txt"` (exploration, round7). Staged, NOT RUN: `R6w-0002` (proof).
+
+## CHECKPOINT (2026-11-19T11:47:21Z)
+`R6wx-0002` (exploration, round7): exit 0; 12 of 17 lemmas close as real proofs; OPEN: `write_spec_V` step 8, `output_spec_V` step 2, `print_spec_V` (statement/alpha problem), optional `STD_streams_fd0`. A33 repairs into `orch-A/r6/round8/` (`R6wx-0003`, `R6w-0003`). `R6w-0002` NOT RUN (not to be run). HOL slot idle, held by A.
