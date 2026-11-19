@@ -1,0 +1,14 @@
+baseline v6: regress FAIL=['X6-Z1-zero-row-deleted-recommitted'] lines=14; spec non-SILENT={}
+m_accept_bad_sig         regress newFAIL=- lines=14 exit 1 | spec={} | PASSED BY BOTH (blind spot)
+m_accept_noncanon        regress newFAIL=- lines=14 exit 1 | spec={} | PASSED BY BOTH (blind spot)
+m_skip_prestate          regress newFAIL=- lines=14 exit 1 | spec={} | PASSED BY BOTH (blind spot)
+m_replay_says_rejected   regress newFAIL=- lines=14 exit 1 | spec={} | PASSED BY BOTH (blind spot)
+m_replayed_any           regress newFAIL=- lines=14 exit 1 | spec={} | PASSED BY BOTH (blind spot)
+m_id_gt32_or_nonascii    regress newFAIL=- lines=14 exit 1 | spec={} | PASSED BY BOTH (blind spot)
+m_late20                 regress newFAIL=- lines=14 exit 1 | spec={} | PASSED BY BOTH (blind spot)
+m_wipe_on_open           regress newFAIL=- lines=14 exit 0 | spec={} | PASSED BY BOTH (blind spot)
+md_ignore_sig            regress newFAIL=- lines=14 exit 1 | spec=no dispatcher in spec judge | PASSED BY BOTH (blind spot)
+md_ignore_chain          regress newFAIL=- lines=14 exit 1 | spec=no dispatcher in spec judge | PASSED BY BOTH (blind spot)
+md_emit_before_ledger    regress newFAIL=- lines=14 exit 1 | spec=no dispatcher in spec judge | PASSED BY BOTH (blind spot)
+enc_unsigned_body        regress newFAIL=- lines=14 exit 1 | spec={} | PASSED BY BOTH (blind spot)
+# mutants passed by both judges: 12
