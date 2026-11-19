@@ -337,3 +337,24 @@ fabe orchestraotr".
 missing link, no HOL and no build by a worker. Text 13 names the Linux
 probe as the right next experiment but is a pasted text: I do not take
 it as the approval of a HOL run for the probe.)
+
+## Text 15 (after wave 4; pasted, received 2026-11-19)
+
+> Continue the existing M1-B Wave 4 mission. Do not restart the architecture, disturb the 158-case replay, or launch additional parallel workers. The `_cml_exit` finding is a proof-boundary problem, not authorization to rewrite ARM64.
+
+Eight items: 1 keep the disassembly evidence and the `x0 = 2^32`
+counterexample, and "Do not claim that this state is reachable without
+proof"; 2 correct the exit-status statements; 3 finish the corrected
+output-byte, halt-value range and strict-prefix HOL drafts and run
+them with independent negative controls when the HOL slot is free;
+4 inspect the fail-closed caller draft ("Never authorize based on exit
+status alone"); 5 reuse the existing finality checker, signed-token
+flow and SQLite sink; 6 keep machine-model proofs, native-runtime
+assumptions, executable tests and deployed enforcement apart; 7 finish
+the replay, case 005 included, and execute L1 in the authorized order;
+8 update the graph only after actual evidence is checked.
+
+> No Stage 9 signing, Stage 12, protected gate changes, Linux runtime probe, or administrator merges without separate authorization. Our priority is to close the chain we have—not create another system.
+
+(Agent's reading: no new worker from here; the Linux probe is NOT
+approved; the answer is `proposals/m1b-mission-20261119/NEXT_OBLIGATIONS.md`.)

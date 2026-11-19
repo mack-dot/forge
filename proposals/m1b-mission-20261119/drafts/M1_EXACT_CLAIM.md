@@ -1,5 +1,27 @@
 # M1 exact claim (worker X1, step B1; read-only; nothing here is proved unless a stored record says so)
 
+> CORRECTIONS of 2026-11-19T06:35Z (reports D4 and D11; owner text 15). Read these
+> before sections 3 and 4.
+> 1. The output-bytes lemma L-OUT as stated in section 3.1, with a free
+>    external oracle `ext`, is FALSE (control N-O1 of report D4). The
+>    corrected statement fixes `ext := no_ext`; draft
+>    `drafts/route-a/L_OUT_DRAFT.sml`, not run.
+> 2. "Exit status 0 implies a complete standard output" is NOT a
+>    theorem and is false as an implication from the model: `_cml_exit`
+>    tests `cbz w0` (32 bits) and the status is 8 bits; the model tests
+>    64 bits. Counterexample STATE: x0 = 2^32 at a resource stop gives
+>    status 0 and an empty stderr. Its reachability is unknown.
+> 3. "A non-zero exit implies a strict prefix" is false: the prefix
+>    relation of `extend_with_resource_limit` is not strict; the output
+>    can be complete.
+> 4. What is true in the model: the bytes on descriptor 1 are a prefix
+>    of the result on every behaviour. With the strict-prefix lemma
+>    (draft, not run) a strict parse succeeds only on the complete
+>    result, whatever the exit status.
+> 5. The processor premise `arm8_ok` requires TBI0 = F and SA0 = F;
+>    real kernels set both to 1 (report D11). The premise holds only
+>    for an erased copy of the real state.
+
 R = `proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/` (on `main`).
 E4 = `R/final-cases/e4-0001/stdout.log`; E4P = `R/final-cases/e4-0001/proof.sml`.
 CK = `.toolchain/experiments/refund-cakeml-20261104/cakeml/`.

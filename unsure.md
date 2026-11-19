@@ -17589,3 +17589,41 @@ curl: (6) Could not resolve host: github.com
   unauthorized. end_to_end=false.
 - Next check: mains power; the replay end; L1; my own run of the
   proof without the axiom; then the link theorem H0 probe.
+
+## U476 — after wave 4: exit-status statements corrected; the fail-closed caller inspected; next obligations listed; nothing ran in HOL
+- Status: 2026-11-19T06:35Z (inserted by the shell from `date -u`). Refs U475.
+  Owner text 15 (pasted): no new workers, no Linux probe, no protected
+  change; close the present chain.
+- Pull request 58 (head 685d07f5): hosted gate/pr_check.py run
+  44472601209, exit 3, UNSUPPORTED. My first reading of the log
+  printed "exit_code 0" from another field; the result line says 3.
+  Open; this entry is pushed to the same request.
+- My own run after U475: the LinkedRefund proof on the closure
+  without the library axiom module: exit 0, 1486 verified; the audit
+  of its 34 files has 0 findings and is byte-equal to
+  gate/expected-audit.md. Link S3a is MACHINE-CHECKED: the result
+  does not need the axiom.
+- The exit-status counterexample is a STATE, not a run: x0 = 2^32 at
+  a resource stop gives status 0 and an empty stderr on the real exit
+  path (`cbz w0`). Whether any run reaches such a state is NOT
+  known. No claim of reachability is made.
+- Corrected in the exact-claim draft: the output-bytes lemma with a
+  free external oracle is false; "exit 0 implies complete output" and
+  "non-zero exit implies a strict prefix" are not theorems.
+- The fail-closed caller draft: D0 to D12 already require a bounded,
+  complete, exactly framed, strictly parsed output and process
+  completion, and never decide on the exit status alone. New test
+  run_exit_status_controls.py on planted results: exit 0, 18 rows as
+  expected; with a caller that authorizes on status 0 alone the test
+  exits 1 (9 rows differ). A finite test. Missing in the draft and
+  added as requirement D13, without code: an M1 result is never an
+  authorization of an effect; the existing Check, token and sink stay.
+- NOT RUN: L1 and every other HOL step; the replay stands at 108 of
+  158 because the machine is on battery power.
+- Uncertainty: three HOL drafts (prefix lemma, output bytes, halt
+  value range) have fixed statements but unfinished tactics; the halt
+  value range may not be provable with the stored theorems.
+- Impact: none on any class of the graph beyond S3a. M1-B OPEN.
+  CURRENT none. Stage 9 deferred. Stage 12 unauthorized.
+  end_to_end=false.
+- Next check: mains power; replay to 158 and case 005; L1.

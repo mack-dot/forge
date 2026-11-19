@@ -15,7 +15,7 @@ Status words: NOT STARTED, RUNNING, REPORTED (the worker reported;
 the orchestrator has not yet checked it), DONE, BLOCKED (with the
 reason), OPEN.
 
-Last update: 2026-11-19T06:27Z (inserted by the shell).
+Last update: 2026-11-19T06:35Z (inserted by the shell).
 
 | Step | What | Worker | Model | Status | Evidence or blocker |
 | --- | --- | --- | --- | --- | --- |
@@ -80,6 +80,16 @@ Twelve Opus workers, started together. Rules: write only in the own scratch fold
 | D11 | X5, X11 | Processor state bits that CakeML requires against what Linux and macOS give user space, from primary sources | Y11 | Opus | REPORTED | [report](reports/D11-processor-state-bits.md). FINDING: `arm8_ok` demands TBI0 = F and SA0 = F at EVERY step (definition read again by the orchestrator). Linux v6.12 and the public XNU source both set TBI0 = 1 and SA0 = 1 for user space (the worker's quotes from the kernel sources; the orchestrator checked only the Linux lines in the saved files). So the premise is literally FALSE for a state that copies the real registers; it holds only for an 'erased' copy, and the soundness of that erasure is unproved. It hits the present macOS theorem too. A repair lemma is a draft (not type-checked); the wording of a named assumption A-PROC is given. Not determined: the shipped macOS kernel configuration; the Arm manual was not quoted |
 | D12 | S4, S7 | The export against the Dafny text by an independent parser; the operator fragment and the exact residual assumption | Y12 | Opus | REPORTED | [report](reports/D12-export-and-operator-semantics.md); files in drafts/export-semantics. Checked by the orchestrator: the Dafny source of the export is byte-equal to `FlatCore.dfy` of the new proof (one SHA-256), and the export has the recorded digest. So the flat contract of the Dafny half IS the contract that was exported. The worker's runs: its own reader compares 62 clauses of the export with the source: 0 differences; Dafny's resolved print, the Boogie output and HOL's stored pretty-print agree; changed copies are flagged. The fragment is small: variables, three integer literals, four ASCII strings, not, and, or, implies, equality, `<=` on integers; no arithmetic, no quantifier. Exact wording of the residual assumption given (strings related by character codes below 256). A Dafny 'mirror' of the HOL evaluation rules proves agreement on this contract (exit 0, 246 verified): a proof about a transcription of about 45 lines, NOT about HOL. Latent exporter defects found by reading (backslash in literals), not triggered here |
 | D13 | X7 | Run L1 in HOL after the replay and after D1 | orchestrator | Fable | NOT STARTED | waits for the HOL slot |
+
+## After wave 4 (owner text 15: no new workers; close the chain we have)
+
+| Step | What | Who | Status | Evidence or blocker |
+| --- | --- | --- | --- | --- |
+| F1 | Correct the exit-status and output-bytes statements | orchestrator | DONE | the correction block at the head of [drafts/M1_EXACT_CLAIM.md](drafts/M1_EXACT_CLAIM.md) |
+| F2 | Inspect the fail-closed caller against text 15 item 4 | orchestrator | DONE | [contract, section 11](drafts/fail-closed/FAIL_CLOSED_CONTRACT.md): four of five requirements met by D0 to D12; independent request and state authorization added as requirement D13 (no code); `run_exit_status_controls.py`: exit 0, 18 rows; with a caller that authorizes on status 0 alone: exit 1 |
+| F3 | Smallest next theorem, consumer tests, remaining links | orchestrator | DONE | [NEXT_OBLIGATIONS.md](NEXT_OBLIGATIONS.md) |
+| F4 | Finish the HOL drafts (prefix, output bytes, halt value) | orchestrator | PARTLY | statements fixed; three scripts lack tactics that need the prover |
+| F5 | Replay to 158 and case 005; then L1 | orchestrator | BLOCKED | the machine is on battery power; the driver waits |
 
 ## Rules that every worker got
 

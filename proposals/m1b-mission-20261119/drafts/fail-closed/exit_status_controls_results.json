@@ -1,0 +1,217 @@
+{
+ "what": "exit-status controls on planted process results; finite test; the executable is not run",
+ "rows": [
+  {
+   "case": "P0 status 0, empty stderr, the complete expected frame",
+   "expected": [
+    "AUTHORIZED",
+    null
+   ],
+   "actual": [
+    "AUTHORIZED",
+    "40",
+    "b'returned_item'"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "x0 = 2^32 shape: status 0, empty stderr, each of the 58 strict prefixes",
+   "expected": 58,
+   "actual": 58,
+   "as_expected": true
+  },
+  {
+   "case": "x0 = 2^32 shape, empty output",
+   "expected": [
+    "REFUSED",
+    "D6"
+   ],
+   "actual": [
+    "REFUSED",
+    "D6 stdout is empty (no decision)"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "x0 = 256 shape: status 0, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D4"
+   ],
+   "actual": [
+    "REFUSED",
+    "D4 stderr is not empty"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "x0 = 256 shape: status 0, stderr line, cut output",
+   "expected": [
+    "REFUSED",
+    "D4"
+   ],
+   "actual": [
+    "REFUSED",
+    "D4 stderr is not empty"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 1, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 exit code 1 is not 0"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 1, EMPTY stderr, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 exit code 1 is not 0"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 2, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 exit code 2 is not 0"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 2, EMPTY stderr, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 exit code 2 is not 0"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 3, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 exit code 3 is not 0"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 3, EMPTY stderr, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 exit code 3 is not 0"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 255, stderr line, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 exit code 255 is not 0"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 255, EMPTY stderr, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D3"
+   ],
+   "actual": [
+    "REFUSED",
+    "D3 exit code 255 is not 0"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "signal, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D2"
+   ],
+   "actual": [
+    "REFUSED",
+    "D2 process ended by signal 9"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "time limit, COMPLETE output",
+   "expected": [
+    "REFUSED",
+    "D1"
+   ],
+   "actual": [
+    "REFUSED",
+    "D1 time limit reached"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 0, complete frame of another request",
+   "expected": [
+    "REFUSED",
+    "D"
+   ],
+   "actual": [
+    "REFUSED",
+    "D9 echoed charge id or request id differs from the sent one"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 0, complete frame twice",
+   "expected": [
+    "REFUSED",
+    "D"
+   ],
+   "actual": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "as_expected": true
+  },
+  {
+   "case": "status 0, complete frame + newline",
+   "expected": [
+    "REFUSED",
+    "D"
+   ],
+   "actual": [
+    "REFUSED",
+    "D5 stdout longer than the bound 58"
+   ],
+   "as_expected": true
+  }
+ ],
+ "not_as_expected": 0
+}
