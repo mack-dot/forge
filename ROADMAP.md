@@ -28,6 +28,30 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Stage 9 stays deferred: a lock rebind proposal was made on the owner's word, then the owner reversed the unlock; pull request 53 closed without a merge; records of pull request 52 — U469, U470
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. For about 30 minutes on 2026-11-19 the owner's word made
+Stage 9 CURRENT for a closeout; that state was only on the branch of
+pull request 53 and never on `main`. No protected file of `main`
+changed. No EXIT case of Stage 9 ran.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| hosted `gate/pr_check.py`, pull request 52, head `32dff973`, run 44450884898 |3|UNSUPPORTED, as expected for documents |
+| `gh pr merge 52 --squash --admin` (the owner's word: "Merge 52 for me") |0|squash commit `982890e5`, 2026-11-19 03:25Z; OVERRIDE; tree equal to `32dff973` |
+| clean clone of `982890e5` with the two candidate lock files: `gate/provenance/bootstrap.py --implementation-sha256 190f938e… --check` |0|`BOOTSTRAP_VERIFIED` (a lock check, not a Stage 9 EXIT) |
+| the same clone with `main`'s own locks and lock value `76b983ac…` |1|`BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py`: the present lock cannot pass on the present `main` |
+| hosted `gate/pr_check.py`, pull request 53 (two protected files changed), head `04a2811f`, run 44454558079 |1|REJECTED, as expected for a protected change without a ratification record |
+| `gh pr close 53` (the owner's decision: defer Stage 9) |0|closed without a merge; branch `proposal/stage9-lock-rebind` kept |
+| `scripts/exit_stage_9.py`, six cases; hosted signing run; the benchmark |NOT RUN|Stage 9 is deferred |
+
+[Lock rebind proposal, NOT APPLIED](proposals/stage9-lock-rebind-20261119/PROPOSAL.md).
+Finding to keep: the Stage 9 lock must list every code file under
+`scripts/`; each new script makes it stale. Its rebind belongs after
+the code work that is planned before Stage 9.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Wave Gate 4: Stage 9 lock inspection and a printed benchmark plan (no protected file changed; Stage 9 NOT unlocked) — U468
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
