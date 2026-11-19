@@ -239,3 +239,16 @@ No earlier pasted suggestion was treated as authorization. The stage labels and 
   `TextIO.print` hold with the event invariant: `print_spec_refund`: `print` keeps "every recorded FFI event is a valid
   event" and appends only valid descriptor-1 write events. Step 2 of the R6 plan. R6 stays open (read side, main program,
   initial heap, transfer to the machine). Review running. The files read with `use` were hashed before and after the run.
+
+## Addendum 10 (added by A at 2026-11-19T12:05:40Z): B's sink result that removes assumptions at the sink boundary; A's review
+- From B (proved by run, review not finished; U555; `orch-B/d-v6sink/dafny/ShellCoreV6.dfy`, B's run exit 0, 192
+  verified): a DRAFT sink step that evaluates the approved relation on the STORED charge at commit. Lemma
+  `V6ConformanceNoAssumption`: with only 0 ≤ remaining ≤ original at the start, and tokens, signature results and hash
+  compares arbitrary: every commit is authorized by the approved relation; money bounds; sum; one effect per request id.
+  So at the sink boundary of that draft, "Committed ⇒ ApprovedSpec" needs no issuance, unforgeability or collision
+  assumption in the model; those remain only for "the issuer minted it". The draft makes the sink enforce three choices of
+  `RefundFinality.dfy` that are not ratified intent: an owner decision. Not applied.
+- Consequence for the joint picture: ValidArtifact (A's HOL side) is then needed only for the ISSUER's decision path, not
+  for the sink's refusal of unapproved effects. The tracks still meet at A6x / `exported_contract_exact`.
+- A: review of the write side of R6 (`R6w-0004`) is done: holds (`orch-A/review-R6w/REPORT.md`). Open for R6: read
+  side, main program, initial heap, event link, machine transfer (workers on the read side and on the heap/event glue).
