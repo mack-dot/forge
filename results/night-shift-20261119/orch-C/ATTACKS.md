@@ -490,3 +490,20 @@ Overlay <SCRATCH>/redteam-C/fix-e9c79928. My fake provider realprov.ts (local; n
 - STILL PRESENT, stated by B (owner item B-20), a direct consequence of the amount in the key: after a rollback WITHOUT the local anchors, the same request id with ANOTHER amount is a new key, so the provider pays again: p3_rollback_rebind.ts first none -> EXIT 1 ("moved money 2 times"). With both local anchors: 0.
 - Still present, stated: a restore older than the provider's key window (C-ATT-43); a provider that lies in its answer.
 - Note on my own run: my first attempt with my unadapted helper gave "exit 1" in every case because it looked up movements under the old key; that was my harness, not a result (logs without the r2- prefix). My first run of k1_key_variants.ts gave exit 1 from an uncaught refusal of a non-hex store value; fixed in the script; runs 3 and 4 count.
+
+=========================================================================
+RE-TEST by C (17:34:53Z) of owner decision D-2 at B's 219bf0ca (a refusal records nothing; only a minted token and the sink's settled row close a request id). Notes orch-B/h-minter3/SINGLE_USE_3.md. Module orch-B/h-minter3/build/issueauth.cjs (SHA-256 fa855506…).
+Overlay <SCRATCH>/redteam-C/fix-219bf0ca. Command (cwd = overlay; scrubbed env; C7_ROOT=<overlay> C7_CORE=<module>): node --import tsx orch-C/c24-minter2/<script>.ts <work> [mode]. My scripts unchanged (B's copies in orch-B/h-minter3/rt/c24 are identical: diff 0 lines). Logs orch-C/refix/219bf0ca/. exit 1 = defect.
+| Item | Script and mode | Exit | Recorded outcome | Verdict |
+|---|---|---|---|---|
+| C-ATT-38 spray (no state knowledge) | s11_nostore_spray.ts | 0 | 1001 refused requests; then victimOnRealState "issued", victimOnLaterState "issued" | CLOSED |
+| C-ATT-38 state oracle | s8_squat_search.ts close | 0 | answer is the generic "core: Refuse"; victim "issued -> committed" | CLOSED |
+| C-ATT-39 store replaced by mv | s4_paths.ts mv | 0 | | CLOSED |
+| C-ATT-40 identical retry in off mode | s2_stale.ts off | 0 | | CLOSED |
+| honest flows | s1_honest.ts; s2_stale.ts on; s6_200.ts | 0; 0; 0 | | no false rejection |
+| minter decision | c7-minter/fuzz_diff.ts 2000 7 | 0 | 428 issued, 224 zero-amount, 208 full, 0 divergences | no false rejection |
+| NEW: two tokens or two effects for one request id (refusals first; a refusal between candidates; a burst of 12 candidates in one write; a restart; commits in two orders) | d2_two_tokens.ts (SHA-256 7f161f29…0f6b) | 0 in 2 runs | one distinct token per id from one minter process; burst: 1 of 12 issued; outbox rows per id: 1 | SAFE |
+| B's entry tests | m3_refusal_does_not_close, m3_one_effect_per_request_id, m3_store_replaced_by_mv, m3_off_identical_retry | 0 each | | as B reports |
+- STILL PRESENT, stated by B: an AUTHORIZED zero-amount mint on the real state with the victim's request id takes that id (no caller identity): B's m3_zero_squat_limit.ts -> EXIT 1. My s8_squat_search.ts zero gives 0 here but is NOT VALID as a test of this limit (it searches for a refusal text that no longer exists; B's worker saw that).
+- NOTE for owner decision D-1 (not a defect today): in d2_two_tokens.ts a RESTARTED minter (memory lost) issued another token for the same, not yet committed, request ids (rq_A 300, rq_C 77). Today it is signed with a new key, so the sink pinned to the first key refuses it. With a persistent key (D-1) it becomes a second VALID token for one request id. The sink still allows one effect per id (tested here for one minter only). The D-1 re-test must cover: restart with the same key, then two different tokens for one id offered to the sink and the dispatcher in both orders.
+- Correction of my own runs: d2_two_tokens.ts runs 1 and 2 gave exit 3 from my script (parallel calls through a one-at-a-time helper); fixed (one write of 12 lines); runs 3 and 4 count.

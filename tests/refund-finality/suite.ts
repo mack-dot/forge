@@ -19,6 +19,7 @@ import {
 } from "../../ts/refund-finality/encoding";
 import { Dispatcher, DispatcherConfig, Effect, FlushResult } from "../../ts/refund-finality/dispatcher";
 import { MinterClient, Minted, propose } from "../../ts/refund-finality/proposer";
+import { makeKeyFile, makeMemoryFile } from "./regress/kf_lib";   // D-1: test key FILES (mode 0600, temp directory)
 import { CommitResult, Sink, SinkConfig, genesisOf, linkOf } from "../../ts/refund-finality/sink";
 
 // OWNER DECISION PENDING (owner item B-15, results/night-shift-20261119/OWNER_REQUIRED.md; U428; U575). The issuer's
@@ -85,7 +86,7 @@ class UncheckedSink {
 }
 
 const verifies = (key: KeyObject, m: Minted): boolean => {
-  try { return !!m.ok && !!m.token && verify(null, signedBytes(m.token.body), key, Buffer.from(m.token.signature, "base64")); } catch { return false; }
+  try { return !!m.ok && !!m.token && verify(null, signedBytes(m.token.body, m.token.keyId), key, Buffer.from(m.token.signature, "base64")); } catch { return false; }
 };
 // Waits until the condition holds, at most `ms` milliseconds. Returns false at the time limit.
 async function until(condition: () => boolean, ms: number): Promise<boolean> {
@@ -110,7 +111,8 @@ function run(args: string[]): Promise<{ code: number | null; stdout: string }> {
 process.exitCode = 2;
 
 async function main() {
-  const minter = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "off");
+  const minterKey = makeKeyFile();
+  const minter = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "off", minterKey.path);
   const pem = minter.ready.publicKeyPem, key = createPublicKey(pem);
   const checkerSha256 = checkerSha256Of(readFileSync(CORE), readFileSync(join(GLUE, "encoding.ts")), readFileSync(join(GLUE, "minter.ts")));
   const specLockSha256 = sha256hex(readFileSync(SPEC_LOCK));
@@ -120,10 +122,10 @@ async function main() {
   add("setup", "the issuer reports the ids that the operator computes from the files", "equal", String(idsEqual), idsEqual);
   {
     // Key isolation: code that loads the issuer module in its own process gets no key and no signing function.
-    const probe = await run([join(__dirname, "issuer_exports_probe.ts"), CORE, SPEC_LOCK, "off"]);
+    const probe = await run([join(__dirname, "issuer_exports_probe.ts"), CORE, SPEC_LOCK, "off", makeKeyFile().path]);
     const lines = probe.stdout.split("\n").filter(l => l.length > 0).map(l => { try { return JSON.parse(l); } catch { return {}; } });
     const names = lines.find(l => l.probe === true)?.exportedNames, ready = lines.find(l => l.ready === true) ?? {};
-    const publicOnly = canon(Object.keys(ready).sort()) === canon(["checkerSha256", "publicKeyPem", "ready", "singleUse", "specLockSha256"]) &&
+    const publicOnly = canon(Object.keys(ready).sort()) === canon(["checkerSha256", "keyId", "publicKeyPem", "ready", "singleUse", "specLockSha256"]) &&
       String(ready.publicKeyPem).includes("BEGIN PUBLIC KEY") && !JSON.stringify(lines).includes("PRIVATE");
     add("issuer", "code that loads the issuer module gets no key and no signing function", "0 exported names; the ready message holds a public key only",
       `${Array.isArray(names) ? names.length : "NO ANSWER"} exported names; ${publicOnly ? "the ready message holds a public key only" : "THE READY MESSAGE HAS OTHER FIELDS"}`,
@@ -299,7 +301,9 @@ async function main() {
     add(control, name, "problems found: 0", `problems found: ${problems.length}${problems.length ? ": " + problems.join("; ") : ""}`, problems.length === 0);
   };
   const attacker = generateKeyPairSync("ed25519");
-  const signWith = (privateKey: KeyObject, body: TokenBody): Token => ({ body, signature: sign(null, signedBytes(body), privateKey).toString("base64") });
+  // D-1: an attacker's token claims the PINNED key id (the strongest form); a foreign key id is refused before any signature check.
+  const keyId = minter.ready.keyId;
+  const signWith = (privateKey: KeyObject, body: TokenBody): Token => ({ body, keyId, signature: sign(null, signedBytes(body, keyId), privateKey).toString("base64") });
   const SHAPE = "token shape", SIG = "signature does not verify", STALE = "stored state is not the token's pre-state",
     USED = "request id is already settled with another token", NOTEXT = "token is not a text", NONCANON = "token text is not canonical";
   // Processes of one race wait for a common start time. A process that is ready too late makes the row fail.
@@ -315,7 +319,7 @@ async function main() {
     const zeros = Buffer.alloc(64).toString("base64");
     const spki = createPublicKey(pem).export({ type: "spki", format: "der" });
     const fromPublic = createPrivateKey({ key: Buffer.concat([Buffer.from("302e020100300506032b657004220420", "hex"), spki.subarray(spki.length - 32)]), format: "der", type: "pkcs8" });
-    const other = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "off");
+    const other = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "off", makeKeyFile().path);
     const otherToken = await mustMint(other, pre, req("a_good", "200"));
     other.stop();
     // The last base64 character of 64 bytes carries 2 data bits. Another character with the same 2 bits decodes to the same bytes.
@@ -331,34 +335,34 @@ async function main() {
       ["missing token: a text that is not JSON", new AsIs("token"), SHAPE, false],
       ["a valid token handed over as an object, not as its text", new AsIs(good), NOTEXT, true],
       ["a valid token as JSON text with other spacing", new AsIs(JSON.stringify(good, null, 1)), NONCANON, true],
-      ["a valid token as JSON text with the keys in another order", new AsIs(JSON.stringify({ signature: good.signature, body: good.body })), NONCANON, true],
-      ["JSON text with the key `body` twice: an attacker's body first, the signed body last", new AsIs(`{"body":${canon(evil)},"body":${canon(body)},"signature":"${good.signature}"}`), NONCANON, true],
-      ["JSON text with the key `body` twice: the signed body first, an attacker's body last", new AsIs(`{"body":${canon(body)},"body":${canon(evil)},"signature":"${good.signature}"}`), NONCANON, true],
+      ["a valid token as JSON text with the keys in another order", new AsIs(JSON.stringify({ signature: good.signature, keyId, body: good.body })), NONCANON, true],
+      ["JSON text with the key `body` twice: an attacker's body first, the signed body last", new AsIs(`{"body":${canon(evil)},"body":${canon(body)},"keyId":"${keyId}","signature":"${good.signature}"}`), NONCANON, true],
+      ["JSON text with the key `body` twice: the signed body first, an attacker's body last", new AsIs(`{"body":${canon(body)},"body":${canon(evil)},"keyId":"${keyId}","signature":"${good.signature}"}`), NONCANON, true],
       ["direct call with an intent and a post-state, no signature field", { body }, SHAPE, true],
       ["direct call with the intent only", { intent: body.intent }, SHAPE, false],
-      ["empty signature", { body, signature: "" }, SHAPE, true],
-      ["signature of 63 bytes", { body, signature: Buffer.alloc(63, 7).toString("base64") }, SHAPE, true],
-      ["signature text that is not canonical base64 (same 64 bytes)", { body, signature: nonCanonical }, SHAPE, true],
-      ["signature of 64 zero bytes", { body, signature: zeros }, SIG, true],
+      ["empty signature", { body, keyId, signature: "" }, SHAPE, true],
+      ["signature of 63 bytes", { body, keyId, signature: Buffer.alloc(63, 7).toString("base64") }, SHAPE, true],
+      ["signature text that is not canonical base64 (same 64 bytes)", { body, keyId, signature: nonCanonical }, SHAPE, true],
+      ["signature of 64 zero bytes", { body, keyId, signature: zeros }, SIG, true],
       ["forged: the body of a valid token, signed with the attacker's key", signWith(attacker.privateKey, body), SIG, true],
       ["forged: signed with a key made from the public key bytes", signWith(fromPublic, body), SIG, true],
       ["forged: an attacker's body (remaining 0, amount 900), signed with the attacker's key", signWith(attacker.privateKey, evil), SIG, true],
-      ["forged: an attacker's body with the signature of the valid token", { body: evil, signature: good.signature }, SIG, true],
-      ["forged: the valid body with the signature of an earlier committed token", { body, signature: earlier.signature }, SIG, true],
+      ["forged: an attacker's body with the signature of the valid token", { body: evil, keyId, signature: good.signature }, SIG, true],
+      ["forged: the valid body with the signature of an earlier committed token", { body, keyId, signature: earlier.signature }, SIG, true],
       ["a token of a second issuer process (same files, another key)", otherToken, SIG, true],
-      ["tampered: post-state remaining 700 -> 0", { body: { ...body, post: { ...body.post, remaining: "0" } }, signature: good.signature }, SIG, true],
-      ["tampered: intent amount 200 -> 900", { body: { ...body, intent: { ...body.intent, amount: "900" } }, signature: good.signature }, SIG, true],
-      ["tampered: intent reason", { body: { ...body, intent: { ...body.intent, reason: "returned_item" } }, signature: good.signature }, SIG, true],
-      ["tampered: intent charge id", { body: { ...body, intent: { ...body.intent, chargeId: "ch_other" } }, signature: good.signature }, SIG, true],
-      ["tampered: request id", { body: { ...body, requestId: "rq_a_other" }, signature: good.signature }, SIG, true],
-      ["tampered: pre-state hash", { body: { ...body, preStateSha256: "0".repeat(64) }, signature: good.signature }, SIG, true],
-      ["tampered: domain text", { body: { ...body, domain: DOMAIN + "X" }, signature: good.signature }, SHAPE, true],
-      ["tampered: another spec lock hash (the signature does not fit either)", { body: { ...body, specLockSha256: "1".repeat(64) }, signature: good.signature }, "spec lock is not the pinned one", true],
-      ["tampered: another checker id (the signature does not fit either)", { body: { ...body, checkerSha256: "2".repeat(64) }, signature: good.signature }, "checker is not the pinned one", true],
-      ["tampered: extra field in the body", { body: { ...body, note: "x" }, signature: good.signature }, SHAPE, true],
+      ["tampered: post-state remaining 700 -> 0", { body: { ...body, post: { ...body.post, remaining: "0" } }, keyId, signature: good.signature }, SIG, true],
+      ["tampered: intent amount 200 -> 900", { body: { ...body, intent: { ...body.intent, amount: "900" } }, keyId, signature: good.signature }, SIG, true],
+      ["tampered: intent reason", { body: { ...body, intent: { ...body.intent, reason: "returned_item" } }, keyId, signature: good.signature }, SIG, true],
+      ["tampered: intent charge id", { body: { ...body, intent: { ...body.intent, chargeId: "ch_other" } }, keyId, signature: good.signature }, SIG, true],
+      ["tampered: request id", { body: { ...body, requestId: "rq_a_other" }, keyId, signature: good.signature }, SIG, true],
+      ["tampered: pre-state hash", { body: { ...body, preStateSha256: "0".repeat(64) }, keyId, signature: good.signature }, SIG, true],
+      ["tampered: domain text", { body: { ...body, domain: DOMAIN + "X" }, keyId, signature: good.signature }, SHAPE, true],
+      ["tampered: another spec lock hash (the signature does not fit either)", { body: { ...body, specLockSha256: "1".repeat(64) }, keyId, signature: good.signature }, "spec lock is not the pinned one", true],
+      ["tampered: another checker id (the signature does not fit either)", { body: { ...body, checkerSha256: "2".repeat(64) }, keyId, signature: good.signature }, "checker is not the pinned one", true],
+      ["tampered: extra field in the body", { body: { ...body, note: "x" }, keyId, signature: good.signature }, SHAPE, true],
       ["tampered: extra field beside the body", { ...good, admin: "true" }, SHAPE, true],
-      ["tampered: intent amount as a JSON number", { body: { ...body, intent: { ...body.intent, amount: 200 } }, signature: good.signature }, SHAPE, true],
-      ["tampered: post-state remaining beyond 19 digits", { body: { ...body, post: { ...body.post, remaining: "9".repeat(20) } }, signature: good.signature }, SHAPE, true],
+      ["tampered: intent amount as a JSON number", { body: { ...body, intent: { ...body.intent, amount: 200 } }, keyId, signature: good.signature }, SHAPE, true],
+      ["tampered: post-state remaining beyond 19 digits", { body: { ...body, post: { ...body.post, remaining: "9".repeat(20) } }, keyId, signature: good.signature }, SHAPE, true],
       ["a body whose request id holds U+0000, signed with the attacker's key", signWith(attacker.privateKey, nul), SHAPE, true],
     ];
     for (const [name, token, reason, needUnchecked] of cases) {
@@ -388,7 +392,7 @@ async function main() {
     writeFileSync(otherCore, Buffer.concat([readFileSync(CORE), Buffer.from("\n// another build of the same core\n")]));
     for (const [label, corePath, lockPath, reason] of [
       ["another spec lock", CORE, otherLock, "spec lock is not the pinned one"], ["another checker id", otherCore, SPEC_LOCK, "checker is not the pinned one"]] as const) {
-      const issuer = await MinterClient.start(ROOT, corePath, lockPath, "off");
+      const issuer = await MinterClient.start(ROOT, corePath, lockPath, "off", minterKey.path);
       const wOther = await world("a_" + label.replace(/ /g, "_"), issuer, []);
       const token = await mustMint(issuer, wOther.current(), req("a_ids", "100"));
       const differs = label === "another spec lock" ? token.body.specLockSha256 !== specLockSha256 && token.body.checkerSha256 === checkerSha256
@@ -718,7 +722,7 @@ async function main() {
 
   // ---------------- Option: the issuer rule "one signed transition per pre-state". ----------------
   {
-    const strict = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "on");
+    const strict = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "on", makeKeyFile().path);
     const pre = state("opt"), a = await strict.mint(pre, propose(pre, req("opt_a", "100"))), again = await strict.mint(pre, propose(pre, req("opt_a", "100")));
     const b = await strict.mint(pre, propose(pre, req("opt_b", "200")));
     add("option", "single-use on: the same transition again for one pre-state", "the same token", a.ok && again.ok && canon(a.token) === canon(again.token) ? "the same token" : "DIFFERENT OR REFUSED",
@@ -741,7 +745,7 @@ async function main() {
   // rows start the issuer process here, with the same 0x0A framing.
   {
     const path = join(outDir, "option-store.sqlite");
-    const child = spawn(process.execPath, ["--import", "tsx", join(GLUE, "minter.ts"), CORE, SPEC_LOCK, "on", path],
+    const child = spawn(process.execPath, ["--import", "tsx", join(GLUE, "minter.ts"), CORE, SPEC_LOCK, "on", makeKeyFile().path, path, makeMemoryFile()],
       { cwd: ROOT, stdio: ["pipe", "pipe", "ignore"] });
     const answers: any[] = []; let wake: (() => void) | null = null, buf = "";
     child.stdout.on("data", (c: Buffer) => {

@@ -161,7 +161,8 @@ export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: Stat
     const post = { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() };
     const body = { domain: E.DOMAIN, ...{ specLockSha256: ids.specLockSha256, checkerSha256: ids.checkerSha256 },
       preStateSha256: E.stateSha256(pre), requestId, post, intent: { chargeId: pre.chargeId, requestId, amount, reason } };
-    return E.canon({ body, signature: sign(null, E.signedBytes(body), keys.privateKey).toString("base64") });
+    const keyId = E.keyIdOf(keys.publicKey);
+    return E.canon({ body, keyId, signature: sign(null, E.signedBytes(body, keyId), keys.privateKey).toString("base64") });
   };
   const state = (): State | null => sink === null ? null : JSON.parse(sink.stateBlob());
   const commitText = (text: string): string => {

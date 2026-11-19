@@ -25,7 +25,7 @@ const S0 = { chargeId: "ch_kill", original: "1000000000000000", remaining: "1000
 if (mode === "--child") {
   guard((() => {
     const { root } = argv();
-    const { sign, createPrivateKey } = require("node:crypto");   // eslint-disable-line @typescript-eslint/no-require-imports
+    const { sign, createPrivateKey, createPublicKey } = require("node:crypto");   // eslint-disable-line @typescript-eslint/no-require-imports
     const E = require(join(root, "ts/refund-finality/encoding.ts"));   // eslint-disable-line @typescript-eslint/no-require-imports
     const { Sink } = require(join(root, "ts/refund-finality/sink.ts"));   // eslint-disable-line @typescript-eslint/no-require-imports
     const cfg = JSON.parse(readFileSync(join(dirArg, "cfg.json"), "utf8")), pk = createPrivateKey(readFileSync(join(dirArg, "key.pem"), "utf8"));
@@ -36,7 +36,8 @@ if (mode === "--child") {
       const pre = JSON.parse(s.stateBlob()), rid = "k" + roundArg + "_" + i, amount = i % 2 === 0 ? "0" : "1";
       const body = { domain: E.DOMAIN, specLockSha256: cfg.specLockSha256, checkerSha256: cfg.checkerSha256, preStateSha256: E.stateSha256(pre), requestId: rid,
         post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() }, intent: { chargeId: pre.chargeId, requestId: rid, amount, reason: "duplicate_charge" } };
-      const r = s.commit(E.canon({ body, signature: sign(null, E.signedBytes(body), pk).toString("base64") }));
+      const keyId = E.keyIdOf(createPublicKey(pk));
+      const r = s.commit(E.canon({ body, keyId, signature: sign(null, E.signedBytes(body, keyId), pk).toString("base64") }));
       if (r.status !== "committed") { process.stderr.write("child: " + JSON.stringify(r) + "\n"); process.exit(4); }
       anchor.committed = r.head; delete anchor.pending;
       durable(outside, JSON.stringify({ committed: r.head }));          // persist committed, THEN acknowledge

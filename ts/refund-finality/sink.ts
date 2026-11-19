@@ -49,21 +49,22 @@
 // NOT proved: this file, core/store.ts (DDL and triggers: TESTED-UNPROVED), the Dafny JS compiler and runtime,
 // bignumber.js, SQLite (triggers, constraints, integrity_check, IMMEDIATE transactions, data_version, hot-journal
 // rollback, fullfsync), the file system, Node, OpenSSL, SHA-256, Ed25519. Durability against power loss: NOT TESTED.
-import { createPublicKey } from "node:crypto";
 import { closeSync, copyFileSync, existsSync, fsyncSync, mkdtempSync, openSync, readFileSync, rmSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { ChargeState, isState, canon, sha256hex } from "./encoding";
 import { AuditedRow, CoreMod, Pos, SinkHead, StoreAuditor, StoreFile, STORE_FORMAT, checkStoreFile, classifyJournal, conv, createSchema, decodeToken, isHead,
-  linkOf, loadCore, must, presentCompanions, readStateBlob, realStorePath, sameStoreFile, sigOkOf, validInitial } from "./core/store";
+  linkOf, loadCore, must, presentCompanions, readStateBlob, realStorePath, sameStoreFile, sigOkOf, validInitial, IssuerKey, keyRingOf } from "./core/store";
 export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "./core/store";
 export type { SinkHead } from "./core/store";
 
 // outsideHead: the host's persisted outside head (see the header): committed = the head of the last acknowledged commit;
 // pending = the value that onHead received for a commit not yet acknowledged (absent when none).
 export type OutsideHead = { committed: SinkHead; pending?: SinkHead };
-export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialState: ChargeState; expectedHead?: SinkHead;
+// D-1 (h-key): the issuer key pin is cfg.issuerKeys (the allowlist: core/store.ts keyRingOf) or, as before, cfg.publicKeyPem
+// alone (= one ACTIVE key). A new commit needs an active key; stored rows may use a retired key up to its verifyUpToSeq.
+export type SinkConfig = { publicKeyPem?: string; issuerKeys?: IssuerKey[]; specLockSha256: string; checkerSha256: string; initialState: ChargeState; expectedHead?: SinkHead;
   outsideHead?: OutsideHead; onHead?: (next: SinkHead) => void };
 // head: the audited head after this call (absent when the sink is halted or the decoder refused the input).
 export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string; head?: SinkHead };
@@ -109,7 +110,9 @@ export class Sink {
     if (!validInitial(this.M, this.cv, cfg.initialState)) {
       throw new Error("h1 sink refuses to serve: cfg.initialState is not a valid context (charge id, refunds enabled, original <= MaxMoney, 0 <= remaining <= original)");
     }
-    this.au = new StoreAuditor(this.M, this.cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
+    let ring;
+    try { ring = keyRingOf(cfg); } catch (error) { throw new Error("h1 sink refuses to serve: " + String((error as Error).message)); }
+    this.au = new StoreAuditor(this.M, this.cv, ring, cfg, cfg.initialState);
     this.pos = this.au.start();
     // C-ATT-21/23: the files, BEFORE the first SQLite lock (no -journal, -wal, -shm; one link; rollback-journal header).
     try { checkStoreFile(path); } catch (error) { throw new Error("h1 sink refuses to serve: " + String((error as Error).message)); }
@@ -231,7 +234,7 @@ export class Sink {
     if (this.halted !== null || this.fileCheck() !== null) return { status: "rejected", reason: "sink halted: " + this.halted };
     const { M, cv } = this, b = token.body;
     const tokenText = input as string, tokenSha256 = sha256hex(tokenText);
-    const sigOk = sigOkOf(this.au.key, token);
+    const sigOk = sigOkOf(this.au.ring, token, { kind: "commit" });
     const tok = M.Shell.ShellToken.create_ShellToken(
       new M.BigNumber(b.specLockSha256 === this.cfg.specLockSha256 ? 1 : 0), new M.BigNumber(b.checkerSha256 === this.cfg.checkerSha256 ? 2 : 0),
       cv.text(b.requestId), cv.charge(b.post), cv.intent(b.intent), cv.text(""));
@@ -346,7 +349,7 @@ export class Sink {
   static validPrefix(path: string, cfg: SinkConfig): { tokens: string[]; prefixHead: SinkHead; complete: boolean; problem: string } {
     const M = loadCore(), cv = conv(M);
     if (!isState(cfg.initialState) || !validInitial(M, cv, cfg.initialState)) throw new Error("cfg.initialState is not a valid context");
-    const au = new StoreAuditor(M, cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
+    const au = new StoreAuditor(M, cv, keyRingOf(cfg), cfg, cfg.initialState);
     checkStoreFile(path);
     const db = new DatabaseSync(path, { readOnly: true }), tokens: string[] = [];
     let head: SinkHead = { count: 0, chainHash: au.genesis }, problem = "";
@@ -401,7 +404,7 @@ export class Sink {
     report.journalClass = jc.kind; report.journalWhy = jc.why;
     const M = loadCore(), cv = conv(M);
     if (!isState(cfg.initialState) || !validInitial(M, cv, cfg.initialState)) return refuse("cfg.initialState is not a valid context");
-    const au = new StoreAuditor(M, cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
+    const au = new StoreAuditor(M, cv, keyRingOf(cfg), cfg, cfg.initialState);
     const auditAt = (p: string, anchor?: SinkHead): Pos => {
       const db = new DatabaseSync(p);
       try {

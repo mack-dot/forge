@@ -1,0 +1,9 @@
+TypeError [ERR_INVALID_ARG_TYPE]: The "key" argument must be of type string or an instance of ArrayBuffer, Buffer, TypedArray, DataView, KeyObject, or CryptoKey. Received undefined
+    at prepareAsymmetricKey (node:internal/crypto/keys:660:9)
+    at createPublicKey (node:internal/crypto/keys:706:5)
+    at new Sink (<REPO>/results/night-shift-20261119/orch-B/h-key/pristine/ts/refund-finality/sink.ts:112:49)
+    at mk (<REPO>/results/night-shift-20261119/orch-B/h-key/tree/tests/refund-finality/regress/kf_positive_controls.ts:22:43)
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-key/tree/tests/refund-finality/regress/kf_positive_controls.ts:23:45)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}

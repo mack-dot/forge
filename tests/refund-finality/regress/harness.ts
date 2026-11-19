@@ -58,6 +58,7 @@ export class Harness {
   private readonly keys = generateKeyPairSync("ed25519");
   readonly foreignKeys = generateKeyPairSync("ed25519");
   readonly publicKeyPem: string;
+  readonly keyId: string;   // D-1 (h-key): the trusted test key's key id (encoding.ts keyIdOf); every token names it
   readonly specLockSha256 = TE.sha256hex("h-regress test spec lock");
   readonly checkerSha256 = TE.sha256hex("h-regress test checker");
   remote!: Remote;
@@ -71,6 +72,7 @@ export class Harness {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     this.anchor = anchorPath ? require(resolve(anchorPath)) as AnchorAdapter : null;
     this.publicKeyPem = this.keys.publicKey.export({ type: "spki", format: "pem" }) as string;
+    this.keyId = TE.keyIdOf(this.keys.publicKey);
   }
   // ---- per-regression lifecycle: a fresh directory and a fresh child process
   async begin(id: string): Promise<void> {
@@ -109,9 +111,10 @@ export class Harness {
   body(pre: State, requestId: string, post: State, intent: Intent): TE.TokenBody {
     return { domain: TE.DOMAIN, specLockSha256: this.specLockSha256, checkerSha256: this.checkerSha256, preStateSha256: TE.stateSha256(pre), requestId, post, intent };
   }
+  // D-1: a foreign-key token claims the TRUSTED key id (the strongest form of the attack).
   signBody(body: TE.TokenBody, foreign = false, bytes?: Buffer): string {
     const key = foreign ? this.foreignKeys.privateKey : this.keys.privateKey;
-    return TE.canon({ body, signature: sign(null, bytes ?? TE.signedBytes(body), key).toString("base64") });
+    return TE.canon({ body, keyId: this.keyId, signature: sign(null, bytes ?? TE.signedBytes(body, this.keyId), key).toString("base64") });
   }
   sign(pre: State, requestId: string, post: State, intent: Intent): string { return this.signBody(this.body(pre, requestId, post, intent)); }
   honest(pre: State, requestId: string, amount: string, reason = "returned_item"): string {

@@ -1,6 +1,10 @@
 #!/bin/sh
 # Night shift 2026-11-19, task h-minter2 (C-ATT-14, C-ATT-31). The CLOSED LAUNCH of the issuer. TESTED-UNPROVED.
-# Usage: minter-launch.sh <built directory> <pinned manifest SHA-256> <refund spec lock> on <sink store path>
+# Usage: minter-launch.sh <built directory> <pinned manifest SHA-256> <refund spec lock> on <key file> <sink store path> <mint memory file>
+# The mint memory file (mintmemory.ts) must exist (created empty by the operator); minter.cjs opens and checks it.
+# The key file (OWNER DECISION D-1) is NOT in the built directory and NOT in the manifest. This script does not stat,
+# test or read it: it only makes the path absolute (the directory part is resolved; the last component is kept as
+# given, so a symbolic link there still reaches minter.cjs and is refused by its O_NOFOLLOW open: keyfile.ts).
 # h-minter3 (owner decision D-2): the closed launch is the PRODUCTION launch: memory rule "on" and the sink's store are
 # REQUIRED (I1: at most one valid token per (charge id, request id)). The test modes (no store, or "off") run only
 # through `node --import tsx minter.ts` and print a warning.
@@ -14,8 +18,12 @@
 set -eu
 NODE=/opt/homebrew/bin/node
 NODE_VERSION=v24.3.0
-[ $# -eq 5 ] || { echo "usage: minter-launch.sh <built dir> <manifest sha256> <spec lock> on <store>" >&2; exit 2; }
+[ $# -eq 7 ] || { echo "usage: minter-launch.sh <built dir> <manifest sha256> <spec lock> on <key file> <store> <mint memory file>" >&2; exit 2; }
+case "$7" in "") echo "minter-launch.sh: refused: empty mint memory path" >&2; exit 2;; esac
+MEM=$(cd "$(dirname "$7")" && pwd -P)/$(basename "$7")
 DIR=$(cd "$1" && pwd -P); PIN=$2; LOCK=$3; MODE=$4
+case "$5" in "") echo "minter-launch.sh: refused: empty key file path" >&2; exit 2;; esac
+KEY=$(cd "$(dirname "$5")" && pwd -P)/$(basename "$5")
 [ "$MODE" = on ] || { echo "minter-launch.sh: refused: production needs memory rule \"on\" (owner decision D-2)" >&2; exit 2; }
 case "$PIN" in *[!0-9a-f]*|"") echo "minter-launch.sh: refused: the pin is not lowercase hex" >&2; exit 2;; esac
 [ ${#PIN} -eq 64 ] || { echo "minter-launch.sh: refused: the pin is not 64 hex digits" >&2; exit 2; }
@@ -30,6 +38,6 @@ present=$(find . -type f ! -name MANIFEST.sha256 | LC_ALL=C sort)
 [ -z "$(find . -type l)" ] || { echo "minter-launch.sh: refused: the directory holds a symbolic link" >&2; exit 2; }
 v=$(/usr/bin/env -i "$NODE" --version)
 [ "$v" = "$NODE_VERSION" ] || { echo "minter-launch.sh: refused: node is $v, not $NODE_VERSION" >&2; exit 2; }
-if [ $# -eq 5 ]; then STORE=$(cd "$(dirname "$5")" && pwd -P)/$(basename "$5"); set -- "$STORE"; else set --; fi
+STORE=$(cd "$(dirname "$6")" && pwd -P)/$(basename "$6"); set -- "$STORE" "$MEM"
 exec /usr/bin/env -i PATH=/usr/bin:/bin LANG=C TZ=UTC HOME=/var/empty FORGE_MINTER_CLOSED="$PIN" \
-  "$NODE" --no-addons --disallow-code-generation-from-strings "$DIR/minter.cjs" "$DIR/core.cjs" "$LOCK" "$MODE" "$@"
+  "$NODE" --no-addons --disallow-code-generation-from-strings "$DIR/minter.cjs" "$DIR/core.cjs" "$LOCK" "$MODE" "$KEY" "$@"

@@ -6,11 +6,11 @@
 // dispatcher uses it before every flush (C-ATT-06): an effect leaves only for a row that the compiled AuditStep accepted
 // on the REPLAYED charge, in a store whose whole log passed AuditEnd.
 // NOT proved: this file, the DDL and its triggers (TESTED-UNPROVED), SQLite, Node, the Dafny JS compiler and runtime.
-import { KeyObject, verify } from "node:crypto";
+import { KeyObject, createPublicKey, verify } from "node:crypto";
 import { closeSync, existsSync, lstatSync, openSync, readFileSync, readSync, realpathSync, statSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import { ChargeState, Intent, Token, canon, isIntent, isState, isToken, sha256hex, signatureBytes, signedBytes } from "../encoding";
+import { ChargeState, Intent, Token, canon, isIntent, isKeyId, isState, isToken, keyIdOf, sha256hex, signatureBytes, signedBytes } from "../encoding";
 
 export const MAX_TOKEN_TEXT = 8192;
 // C-ATT-26 (h-sink2): the bound of a stored INTENT text. The intent is a sub-text of an accepted token (decodeToken refuses
@@ -321,8 +321,65 @@ export function decodeToken(input: unknown): Token | string {
 }
 export const isHead = (h: unknown): h is SinkHead => h !== null && typeof h === "object" && Number.isSafeInteger((h as any).count) &&
   (h as any).count >= 0 && typeof (h as any).chainHash === "string" && /^[0-9a-f]{64}$/.test((h as any).chainHash);
-export function sigOkOf(key: KeyObject, token: Token): boolean {
-  try { const raw = signatureBytes(token.signature); return raw !== null && verify(null, signedBytes(token.body), key, raw); } catch { return false; }
+// ---- THE PINNED ISSUER-KEY ALLOWLIST (OWNER DECISION D-1, h-key). TESTED-UNPROVED. orch-B/h-key/KEY_DESIGN.md.
+// cfg.issuerKeys: [{keyId, publicKeyPem, status: "active"} | {keyId, publicKeyPem, status: "retired", verifyUpToSeq}], 1..64
+// entries, keyId = keyIdOf(publicKeyPem) (checked), ids unique. cfg.publicKeyPem alone (the old single pin) = an
+// allowlist of ONE active key with the derived id. Both given: publicKeyPem must equal issuerKeys[0].publicKeyPem.
+// Entry 0 is the GENESIS key: the store's h_0 binds its PEM text (genesisOf, unchanged), so a one-key pin and the
+// same key as entry 0 of a list give the same h_0. Rotation appends entries and never removes or reorders entry 0.
+// RULE: a NEW commit (Sink.commit) needs an ACTIVE key. A STORED row at position seq (start-up audit, foreign-change
+// audit, repair prefix, dispatcher) needs an active key, or a retired key with seq <= verifyUpToSeq (rows committed
+// before the retirement still verify; a row appended later with a retired key is refused). Every case: the key is
+// selected BY the token's keyId (inside the signed bytes) and the Ed25519 signature must verify under it.
+export type IssuerKey = { keyId: string; publicKeyPem: string; status: "active" | "retired"; verifyUpToSeq?: number };
+export type KeyRing = { genesisPem: string; entries: ReadonlyMap<string, { key: KeyObject; status: "active" | "retired"; verifyUpToSeq: number }> };
+export type KeyUse = { kind: "commit" } | { kind: "stored"; seq: number };
+export const MAX_ISSUER_KEYS = 64;
+export function keyRingOf(cfg: { publicKeyPem?: unknown; issuerKeys?: unknown }): KeyRing {
+  const bad = (why: string): never => { throw new Error("issuer key allowlist: " + why); };
+  const one = (pem: unknown): KeyObject => {
+    if (typeof pem !== "string" || pem.length > 1024) return bad("a publicKeyPem is not a PEM text");
+    let k: KeyObject;
+    try { k = createPublicKey(pem); } catch { return bad("a publicKeyPem does not parse"); }
+    if (k.asymmetricKeyType !== "ed25519") bad("a key is not Ed25519");
+    return k;
+  };
+  const list = cfg.issuerKeys;
+  if (list === undefined) {
+    const key = one(cfg.publicKeyPem);
+    return { genesisPem: cfg.publicKeyPem as string, entries: new Map([[keyIdOf(key), { key, status: "active" as const, verifyUpToSeq: Number.MAX_SAFE_INTEGER }]]) };
+  }
+  if (!Array.isArray(list) || list.length < 1 || list.length > MAX_ISSUER_KEYS) return bad("issuerKeys is not a list of 1 to " + MAX_ISSUER_KEYS + " entries");
+  const entries = new Map<string, { key: KeyObject; status: "active" | "retired"; verifyUpToSeq: number }>();
+  for (const e of list as unknown[]) {
+    if (e === null || typeof e !== "object" || Array.isArray(e) || Object.getPrototypeOf(e) !== Object.prototype) bad("an entry is not an object");
+    const x = e as Record<string, unknown>, names = Object.keys(x).sort().join(",");
+    const key = one(x.publicKeyPem);
+    if (!isKeyId(x.keyId) || keyIdOf(key) !== x.keyId) bad("an entry's keyId is not the SHA-256 of its key's SPKI DER bytes");
+    if (entries.has(x.keyId as string)) bad("a keyId appears twice");
+    if (x.status === "active" && names === "keyId,publicKeyPem,status") entries.set(x.keyId as string, { key, status: "active", verifyUpToSeq: Number.MAX_SAFE_INTEGER });
+    else if (x.status === "retired" && names === "keyId,publicKeyPem,status,verifyUpToSeq" && Number.isSafeInteger(x.verifyUpToSeq) && (x.verifyUpToSeq as number) >= 0) {
+      entries.set(x.keyId as string, { key, status: "retired", verifyUpToSeq: x.verifyUpToSeq as number });
+    } else bad("an entry is not {keyId, publicKeyPem, status: \"active\"} or {keyId, publicKeyPem, status: \"retired\", verifyUpToSeq}");
+  }
+  const genesisPem = (list[0] as IssuerKey).publicKeyPem;
+  if (cfg.publicKeyPem !== undefined && cfg.publicKeyPem !== genesisPem) bad("publicKeyPem is given and is not the PEM of issuerKeys[0] (the genesis key)");
+  return { genesisPem, entries };
+}
+// Why a token's key is refused for this use, or null (then the signature still decides). Diagnostics and tests.
+export function keyRefusal(ring: KeyRing, token: Token, use: KeyUse): string | null {
+  const e = ring.entries.get(token.keyId);
+  if (e === undefined) return "key id is not in the pinned allowlist";
+  if (use.kind === "commit" && e.status !== "active") return "key id is retired: not accepted for a new commit";
+  if (use.kind === "stored" && !(Number.isSafeInteger(use.seq) && use.seq >= 1 && use.seq <= e.verifyUpToSeq)) return "key id is retired before this row";
+  return null;
+}
+export function sigOkOf(ring: KeyRing, token: Token, use: KeyUse): boolean {
+  if (keyRefusal(ring, token, use) !== null) return false;
+  try {
+    const raw = signatureBytes(token.signature);
+    return raw !== null && verify(null, signedBytes(token.body, token.keyId), ring.entries.get(token.keyId)!.key, raw);
+  } catch { return false; }
 }
 // S7: the compiled check of the core (Refund.ValidContext of RefundFinality.ContextOf(initial, "init")).
 export function validInitial(M: CoreMod, cv: Conv, s: ChargeState): boolean {
@@ -331,13 +388,13 @@ export function validInitial(M: CoreMod, cv: Conv, s: ChargeState): boolean {
 
 // One audited commit as read from the store (exact bytes).
 export type AuditedRow = { seq: number; requestId: string; token: string; tokenSha256: string; intent: string; self: string; body: Token["body"] };
-export type Ids = { specLockSha256: string; checkerSha256: string; publicKeyPem: string };
+export type Ids = { specLockSha256: string; checkerSha256: string };
 
-// The auditor: one supplied initial charge (THE ANCHOR), one key, one pair of pinned ids.
+// The auditor: one supplied initial charge (THE ANCHOR), one pinned key allowlist (D-1), one pair of pinned ids.
 export class StoreAuditor {
   readonly initText: string; readonly initCore: any; readonly genesis: string;
-  constructor(readonly M: CoreMod, readonly cv: Conv, readonly key: KeyObject, readonly ids: Ids, readonly init: ChargeState) {
-    this.initText = canon(init); this.initCore = cv.charge(init); this.genesis = genesisOf(this.initText, ids.specLockSha256, ids.checkerSha256, ids.publicKeyPem);
+  constructor(readonly M: CoreMod, readonly cv: Conv, readonly ring: KeyRing, readonly ids: Ids, readonly init: ChargeState) {
+    this.initText = canon(init); this.initCore = cv.charge(init); this.genesis = genesisOf(this.initText, ids.specLockSha256, ids.checkerSha256, ring.genesisPem);
   }
   start(): Pos { return { st: this.M.Shell5.__default.AInit(this.initCore), count: 0, chain: this.genesis }; }
   // Schema TEXT, integrity, meta. true: a store with a meta row; false: a fresh one; throws to refuse.
@@ -398,7 +455,7 @@ export class StoreAuditor {
         const self = linkOf(chain, tokenText, intent);
         if (sprev !== chain || oprev !== chain || sself !== self || oself !== self) throw new Error("row " + k + ": chain link");
         const body = tk.body;
-        const sigOk = sigOkOf(this.key, tk);
+        const sigOk = sigOkOf(this.ring, tk, { kind: "stored", seq: k });
         const preOk = sha256hex(canon(cv.backCharge(st.dtor_cur))) === body.preStateSha256;   // A4' on the replay
         const t = M.Shell.ShellToken.create_ShellToken(
           new M.BigNumber(body.specLockSha256 === this.ids.specLockSha256 ? 1 : 0), new M.BigNumber(body.checkerSha256 === this.ids.checkerSha256 ? 2 : 0),

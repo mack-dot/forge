@@ -10,11 +10,12 @@
 // Usage and exit codes: m_lib.ts.
 import { spawn } from "node:child_process";
 import { join } from "node:path";
+import { makeKeyFile, makeMemoryFile } from "./kf_lib";
 import { State, argv, guard, load, tempDir, verdict, world } from "./m_lib";
 // ---- issuer driver (own copy in each m2_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
 // Returns null when the issuer does not start with these arguments (the earlier issuer has no store argument).
 async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string): Promise<Issuer | null> {
-  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : [])];
+  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, makeKeyFile().path, ...(store ? [store, ...(mode === "on" ? [makeMemoryFile()] : [])] : [])];
   const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
   child.stderr.on("data", () => { /* identity information: not used */ });
   let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;

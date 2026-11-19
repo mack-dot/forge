@@ -1,0 +1,5 @@
+{"test":"p_timeout_retry","phase1":{"emitted":["r1"],"refused":[],"error":""},"phase2":{"emitted":[],"refused":[],"error":"provider timeout: no answer (the money moved)"},"rerun":{"emitted":[],"refused":["r2: in doubt: claimed by run dce2ce71813748c7255e451f02d67bb9 (p"],"error":""},"reconcile":"returned","money":{"total":"800","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:400","r2:400"]},"attackEvents":[{"phase":"attack","layer":"provider key","detail":"r2 replayed"}]}
+mode a, anchor full
+layers seen after the attack started: provider key
+stopped by: provider key
+SAFE

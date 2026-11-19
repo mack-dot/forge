@@ -27,7 +27,7 @@ guard((() => {
       s.init(K.S0);
       r.commits = [K.tok(K.S0, "r1", "100"), K.tok(st("900"), "z", "0"), K.tok(st("900"), "r2", "100")].map(t => s.commit(t).status);
       let bad = K.tok(st("800"), "r3", "50");
-      if (kase === "unsigned") { const o = JSON.parse(bad); o.signature = sign(null, K.E.signedBytes(o.body), other.privateKey).toString("base64"); bad = K.E.canon(o); }
+      if (kase === "unsigned") { const o = JSON.parse(bad); o.signature = sign(null, K.E.signedBytes(o.body, o.keyId), other.privateKey).toString("base64"); bad = K.E.canon(o); }
       const d = new DatabaseSync(db); d.exec("PRAGMA busy_timeout = 5000");
       const last = d.prepare("SELECT self FROM outbox ORDER BY seq DESC LIMIT 1").get() as any;
       const self = kase === "wrong-self" ? "e".repeat(64) : K.SK.linkOf(last.self, bad, K.intentOf(bad));

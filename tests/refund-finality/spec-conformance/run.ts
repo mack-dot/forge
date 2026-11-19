@@ -24,7 +24,7 @@ import { tmpdir } from "node:os";
 import * as sqlite from "node:sqlite";
 import { ChildGone, Remote } from "../regress/remote";
 import { TRUSTED_ENCODING_PATH } from "../regress/harness";
-import { ChargeState, DOMAIN, TokenBody, canon, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
+import { ChargeState, DOMAIN, TokenBody, canon, keyIdOf, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
 import { Delivery, History, Oracle, Prop, Snapshot } from "./oracle";
 
 const MAX = 9223372036854775807n;
@@ -136,7 +136,8 @@ async function main(): Promise<number> {
           else {
             const body = buildBody(kind, R, pre, preText, states, before, fresh, specLockSha256, checkerSha256);
             const signer = kind === "bad-sig" ? keys.otherPriv : keys.priv;
-            const tok = { body, signature: sign(null, signedBytes(body as TokenBody), signer).toString("base64") };
+            const keyId = keyIdOf(keys.pub);   // D-1: the pinned key id (also for a "bad-sig" token of the other key)
+            const tok = { body, keyId, signature: sign(null, signedBytes(body as TokenBody, keyId), signer).toString("base64") };
             text = kind === "noncanon" ? JSON.stringify(tok, null, 1) : canon(tok);
           }
           sent.push(text);

@@ -1,0 +1,5 @@
+(node:91167) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"a":{"first":"token","identicalAfterRestart":true,"otherCandidate":"REFUSED: other candidate: use a new request id"},"b":{"secondValidTokenSigned":true,"commitSecond":"committed","commitFirst":"rejected: request id is already settled with another token","settledRowsRqA":1,"effectsRqA":1,"layer":"sink: settled row of rq_A (request id already settled) + pre-state check"},"c":{"recordWritten":true,"retryIsRecordedBody":true,"otherCandidate":"REFUSED: other candidate: use a new request id","appendInIssueBeforeAnswer":true},"files":{"tornCutAndStarted":true,"damagedRefused":true,"mode0644Refused":true,"noMemoryFileRefused":true}}
+PASS
+exit 0

@@ -8,7 +8,8 @@
 // Files go to a fresh temp directory (removed at exit). Attacker model of the hostile cases: a FILE writer without the
 // key (drops the triggers, edits, may recompute the unkeyed chain, re-creates the identical trigger text), or a party
 // that can only CREATE files next to the database (planted journal).
-import { generateKeyPairSync, sign } from "node:crypto";
+import { generateKeyPairSync } from "node:crypto";
+import { signedTokenText, testKeyIdOf } from "./kf_lib";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -39,7 +40,7 @@ export const st = (remaining: string, chargeId = "ch_s", original = "1000"): Sta
 // One test key, one sink config, a token maker, a dispatcher config.
 export function kit(root: string, S0: State = st("1000")) {
   const L = load(root);
-  const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+  const { publicKey, privateKey } = generateKeyPairSync("ed25519"), keyId = testKeyIdOf(publicKey);
   const pem = publicKey.export({ type: "spki", format: "pem" }) as string;
   const cfg: any = { publicKeyPem: pem, specLockSha256: "1".repeat(64), checkerSha256: "2".repeat(64), initialState: S0 };
   const genesis = L.SK.genesisOf(L.E.canon(S0), cfg.specLockSha256, cfg.checkerSha256, pem);
@@ -48,7 +49,7 @@ export function kit(root: string, S0: State = st("1000")) {
     const body = { domain: L.E.DOMAIN, specLockSha256: cfg.specLockSha256, checkerSha256: cfg.checkerSha256, preStateSha256: L.E.stateSha256(pre),
       requestId: rid, post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
       intent: { chargeId: pre.chargeId, requestId: rid, amount, reason } };
-    return L.E.canon({ body, signature: sign(null, L.E.signedBytes(body), privateKey).toString("base64") });
+    return signedTokenText(L.E, body, { privateKey, keyId });
   };
   const postOf = (t: string): State => JSON.parse(t).body.post;
   const intentOf = (t: string): string => L.E.canon(JSON.parse(t).body.intent);

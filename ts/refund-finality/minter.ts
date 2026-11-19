@@ -1,9 +1,8 @@
 // Slice 1 (F2.1): the token issuer. Its own operating-system process. TESTED-UNPROVED as a whole.
-// The Ed25519 private key exists only in the memory of this process. A new test key is made at every start
-// (C-ATT-05: a restart changes the key; key persistence is an open owner decision: see KEY_OPTIONS in the
-// night-shift evidence h-minter).
+// The Ed25519 private key comes ONLY from the key file argument (OWNER DECISION D-1; keyfile.ts: O_NOFOLLOW open, fstat
+// of the opened descriptor, read from it). A restart with the same key file keeps the key and its key id (C-ATT-05).
 // The same interface as the earlier minter.ts (arguments, ready line, one JSON message per line in, one answer
-// line out), plus an OPTIONAL fourth argument: the path of the sink's store (read only). PRODUCTION = mode "on" WITH
+// line out), plus a REQUIRED fourth argument (the key file, D-1) and an OPTIONAL fifth: the sink's store path (read only). PRODUCTION = mode "on" WITH
 // a store (the closed launch, minter-launch.sh, refuses anything else). Every other mode is a TEST mode: it does not
 // give I1 (at most one valid token per (charge id, request id)); it writes a warning line on stderr and its ready line
 // has "singleUse":"none" (h-minter3, owner decision D-2).
@@ -37,8 +36,10 @@
 // values, ONE call of IssueAuth.Issue, refuse-only consistency checks, sign(bytes), and the answer text.
 // NOT proved: this file, encoding.ts (canon, the shape checks, SHA-256 call), the Dafny JavaScript back end and
 // runtime, bignumber.js, Node, SQLite and OpenSSL, process isolation, the store's contents (assumption STORE-READ).
-// The memory of mode "on" is PROCESS MEMORY: it is lost at restart (and the key is lost with it).
-// Arguments: <compiled IssueAuth module> <refund spec lock> <memory rule: on | off> [<sink store path>]
+// The memory of mode "on" is PROCESS MEMORY, except in PRODUCTION ("on" with a store): there it starts from, and every
+// new minted token is first appended (fsynced) to, the DURABLE mint memory file (mintmemory.ts; REQUIRED there), so a
+// restart with the same key file keeps "at most one valid token per (charge id, request id)" (D-1 with D-2).
+// Arguments: <compiled IssueAuth module> <refund spec lock> <memory rule: on | off> <key file> [<sink store path> [<mint memory file>]]
 //   on : the IssueAuth memory rule for the life of the process. With a store: PRODUCTION (I1, I2, I3).
 //        Without a store: TEST MODE (key = (charge id, request id, pre-state hash); two tokens can exist for one request
 //        id on two pre-states; the sink still commits at most one).
@@ -52,7 +53,7 @@
 //        after the sink has settled THIS token for its id (Replayed from the settled row). EXCEPTION: when the store
 //        moved on without settling this request id, the identical request is refused ("pre-state is not the
 //        authoritative stored state"); its old token cannot commit at the sink anyway (stale pre-state).
-//   A new process (new key) never gives the same token bytes: C-ATT-05.
+//   A new process with the same key file gives the same token bytes for an identical signed request (D-1, C-ATT-05).
 // Refusal reasons (fixed texts; a client may compare them): "core: Refuse" (the GENERIC text: not authorized, or not
 // on the authoritative stored state; h-minter3, C-ATT-38 state oracle); "stale candidate: use a new request id";
 // "other candidate: use a new request id"; "attempt closed: use a new request id" (only for a memory entry Closed,
@@ -69,22 +70,32 @@
 // IssueAuth; in a CLOSED LAUNCH
 // (minter-launch.sh sets FORGE_MINTER_CLOSED to the pinned manifest digest): any other environment variable, other
 // node options, a manifest with another digest, a listed file with another digest, a loaded file that is not listed.
-import { generateKeyPairSync, sign, createHash } from "node:crypto";
+import { sign, createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import BigNumber from "bignumber.js";
 import {
-  ChargeState, Transition, canon, checkerSha256Of, isState, isTokenBody, isTransition, sha256hex, stateSha256,
+  ChargeState, KEYID_DOMAIN, Transition, canon, checkerSha256Of, isState, isTokenBody, isTransition, sha256hex, signedBytes, stateSha256,
 } from "./encoding";
+import { SigningKey, loadSigningKey } from "./keyfile";
+import { MintMemory } from "./mintmemory";
 
-const [corePath, specLockPath, memoryArg, storePath] = process.argv.slice(2);
-if (!corePath || !specLockPath || (memoryArg !== "on" && memoryArg !== "off") || process.argv.length > 6 || storePath === "") {
-  process.stderr.write("usage: minter.ts <compiled IssueAuth module> <refund spec lock> <on|off> [<sink store path>]\n");
+const [corePath, specLockPath, memoryArg, keyPath, storePath, memoryPath] = process.argv.slice(2);
+if (!corePath || !specLockPath || (memoryArg !== "on" && memoryArg !== "off") || !keyPath || process.argv.length > 8 || storePath === "" ||
+    memoryPath === "" || (memoryPath !== undefined && memoryArg !== "on")) {
+  process.stderr.write("usage: minter.ts <compiled IssueAuth module> <refund spec lock> <on|off> <key file> [<sink store path> [<mint memory file>]]\n" +
+    "  production (on + store) needs the mint memory file; it is given only with \"on\" and a store\n");
   process.exit(2);
 }
 // PRODUCTION = "on" with a store (I1). Any other mode is a TEST mode (owner decision D-2; see the header).
 const production = memoryArg === "on" && storePath !== undefined;
+// Durable mint memory (mintmemory.ts): REQUIRED in production, so that a restart with the same key file (D-1) cannot
+// sign a second valid token for a request id that this issuer minted before.
+if (production && memoryPath === undefined) {
+  process.stderr.write("minter.ts: refused to start: production (\"on\" with a store) needs the mint memory file (6th argument)\n");
+  process.exit(2);
+}
 if (!production) {
   process.stderr.write("minter.ts: WARNING: TEST MODE (" + (storePath === undefined ? "no store" : "memory off") +
     "): at most one valid token per (charge id, request id) is NOT kept by this issuer; production needs \"on\" and the sink's store\n");
@@ -211,6 +222,21 @@ function preStateOf(pre: ChargeState): { corePre: any; preStateSha256: string } 
 }
 
 let memory: any = runtime.Map.Empty;      // IssueAuth.Memory: key -> Signed(bytes) | Closed (mode "on")
+// Production: the memory starts as the DURABLE records (one per minted token): Key(chargeId, requestId, false, "") ->
+// Signed(body bytes), the key that IssueAuth.KeyFor gives in Store mode. It is the `m` of the one proved call.
+let durable: MintMemory | null = null;
+if (memoryPath !== undefined) {
+  try { durable = MintMemory.open(memoryPath); } catch (error) {
+    process.stderr.write("minter.ts: refused to start: " + String((error as Error).message) + "\n");
+    process.exit(2);
+  }
+  if (durable.cutBytes > 0) process.stderr.write(JSON.stringify({ mintMemory: { tornLastRecordCut: durable.cutBytes } }) + "\n");
+  for (const r of durable.records) {
+    memory = memory.update(O.Key.create_Key(text(r.chargeId), text(r.requestId), false, text("")),
+      O.Rec.create_Signed(runtime.Seq.of(...Array.from(r.body))));
+  }
+  process.stderr.write(JSON.stringify({ mintMemory: { records: durable.records.length } }) + "\n");
+}
 
 // What the store says for this request: IssueAuth.Auth, and (C-ATT-40) the body bytes of the token that the store
 // has settled for this request id, if any. NoStore when no store is configured.
@@ -302,14 +328,26 @@ function issue(pre: ChargeState, t: Transition): { bytes: Buffer; bodyText: stri
   // [C4] binding check (refuse-only): the body holds the request's values and the hash of the SAME pre.
   if (body.preStateSha256 !== preStateSha256 || body.requestId !== t.request.requestId ||
       canon(body.post) !== canon(t.post) || canon(body.intent) !== canon(t.intent)) throw new Error("conversion: token");
+  // DURABLE first (production): a NEW minted token is appended and fsynced BEFORE the memory changes and BEFORE the
+  // answer is written (handle). A failed append throws: the caller gets a refusal, no token; the memory is unchanged.
+  if (durable !== null && o.is_Issued === true) {
+    if (key.dtor_scoped !== false || back(key.dtor_requestId) !== t.request.requestId) throw new Error("conversion: memory key");
+    try { durable.append({ chargeId: back(key.dtor_chargeId), requestId: back(key.dtor_requestId), body: bytes }); }
+    catch (error) { throw new Error("mint memory: the record was not written: " + String((error as Error).message)); }
+  }
   // The memory changes only after every check passed (a failed check leaves it as it was).
   if (memoryOn) memory = m2;
   return { bytes, bodyText, body };
 }
 
-const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+let signingKey: SigningKey;
+try { signingKey = loadSigningKey(keyPath as string); } catch (error) {
+  process.stderr.write("minter.ts: refused to start: " + String((error as Error).message) + "\n");
+  process.exit(2);
+}
+const { privateKey, keyId } = signingKey;
 process.stdout.write(JSON.stringify({
-  ready: true, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }), specLockSha256, checkerSha256, singleUse: production ? true : "none" }) + "\n");
+  ready: true, publicKeyPem: signingKey.publicKeyPem, keyId, specLockSha256, checkerSha256, singleUse: production ? true : "none" }) + "\n");
 function handle(line: string): void {
   let id: number | null = null;
   try {
@@ -322,11 +360,15 @@ function handle(line: string): void {
     if (!isState(pre) || !isTransition(transitionMsg)) throw new Error("shape");                            // [S4]
     const issued = issue(pre, transitionMsg);
     if (typeof issued === "string") throw new Error(issued);
-    const signature = sign(null, issued.bytes, privateKey).toString("base64");
-    // The token text embeds the returned body text verbatim. canon sorts "body" before "signature".
-    const tokenText = "{\"body\":" + issued.bodyText + ",\"signature\":" + JSON.stringify(signature) + "}";
+    // D-1 (KEYID-GLUE): the signed message holds the returned body bytes VERBATIM and the key id (encoding.ts signedBytes).
+    const envelope = Buffer.concat([Buffer.from("{\"body\":", "utf8"), issued.bytes,
+      Buffer.from(",\"keyId\":" + JSON.stringify(keyId) + ",\"sigDomain\":" + JSON.stringify(KEYID_DOMAIN) + "}", "utf8")]);
+    if (!envelope.equals(signedBytes(issued.body, keyId))) throw new Error("conversion: signed bytes");
+    const signature = sign(null, envelope, privateKey).toString("base64");
+    // The token text embeds the returned body text verbatim. canon sorts "body", "keyId", "signature".
+    const tokenText = "{\"body\":" + issued.bodyText + ",\"keyId\":" + JSON.stringify(keyId) + ",\"signature\":" + JSON.stringify(signature) + "}";
     // [C5] consistency check (refuse-only): this is the one canonical token text (encoding.ts tokenText).
-    if (canon({ body: issued.body, signature }) !== tokenText) throw new Error("conversion: token text");
+    if (canon({ body: issued.body, keyId, signature }) !== tokenText) throw new Error("conversion: token text");
     process.stdout.write("{\"id\":" + String(id) + ",\"ok\":true,\"token\":" + tokenText + "}\n");
   } catch (error) {
     process.stdout.write(JSON.stringify({ id, ok: false, reason: String((error as Error).message) }) + "\n");

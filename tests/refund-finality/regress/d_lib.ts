@@ -5,9 +5,10 @@
 // tests/refund-finality/{dispatch,commit}_cli.ts) are under test. <compiledIssuerModule>: the module that this tree's
 // minter.ts expects (this branch: the IssueOnce build).
 // Exit 0: PASS (the safe outcome). Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
-// Test keys only: each issuer process makes its own throwaway key. Files go to a fresh temp directory (removed at exit).
+// Test keys only (D-1): each issuer process gets a NEW throwaway key FILE (kf_lib.ts). Files go to a fresh temp directory (removed at exit).
 // The dispatcher config always carries newLedgerH0 (as suite.ts does), so a NEW ledger is allowed by configuration.
 import { spawn } from "node:child_process";
+import { makeKeyFile } from "./kf_lib";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -38,7 +39,7 @@ export function load(root: string): any {
 // One issuer (memory rule "on"), one sink store, one ledger path, one list of effects.
 export async function world(root: string, core: string, S0: State) {
   const L = load(root);
-  const m = await L.MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on");
+  const m = await L.MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on", makeKeyFile().path);
   const ids = { publicKeyPem: m.ready.publicKeyPem, specLockSha256: m.ready.specLockSha256, checkerSha256: m.ready.checkerSha256 };
   const dir = tempDir(), db = join(dir, "sink.sqlite"), ledger = join(dir, "ledger.jsonl");
   const sinkCfg = { ...ids, initialState: S0 };

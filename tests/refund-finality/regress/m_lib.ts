@@ -5,8 +5,10 @@
 // <compiledIssuerModule>: the module that this tree's minter.ts expects (merged: the RefundFinality build; the v6
 // draft: the IssueBytes2 build; this branch: the IssueOnce build). Every file starts the issuer with memory rule "on".
 // Exit 0: PASS (the safe outcome). Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
-// Test keys only: each issuer process makes its own throwaway key. Sink files go to a fresh temp directory.
+// Test keys only (D-1): each issuer process gets a NEW throwaway key FILE (kf_lib.ts, mode 0600, temp directory). Sink files
+// go to a fresh temp directory.
 import { spawn } from "node:child_process";
+import { makeKeyFile } from "./kf_lib";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -33,7 +35,7 @@ export function load(root: string): { E: any; Sink: any; MinterClient: any; prop
 // An issuer with memory rule "on", a sink pinned to its key, and mint/commit helpers.
 export async function world(root: string, core: string, S0: State) {
   const { E, Sink, MinterClient, propose } = load(root);
-  const m = await MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on");
+  const m = await MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on", makeKeyFile().path);
   const ids = { publicKeyPem: m.ready.publicKeyPem, specLockSha256: m.ready.specLockSha256, checkerSha256: m.ready.checkerSha256 };
   const sink = new Sink(join(tempDir(), "s.sqlite"), { ...ids, initialState: S0 });
   sink.init(S0);
@@ -51,7 +53,7 @@ export async function world(root: string, core: string, S0: State) {
 // A raw issuer process: bytes in, one parsed answer per 0x0A-ended line out.
 export function rawIssuer(root: string, core: string) {
   const child = spawn(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core,
-    join(root, "spec/refund/spec.lock"), "on"], { cwd: root, stdio: ["pipe", "pipe", "ignore"] });
+    join(root, "spec/refund/spec.lock"), "on", makeKeyFile().path], { cwd: root, stdio: ["pipe", "pipe", "ignore"] });
   let buf = Buffer.alloc(0); const lines: any[] = []; let wake: (() => void) | null = null;
   child.stdout.on("data", (c: Buffer) => {
     buf = Buffer.concat([buf, c]);

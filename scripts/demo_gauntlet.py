@@ -192,12 +192,24 @@ def canon(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'))
 
 
+def issuer_test_key(work):
+    """OWNER DECISION D-1 (h-key): the issuer reads its key ONLY from a key file. A NEW throwaway Ed25519 TEST key,
+    written with mode 0600 (O_EXCL) under this run's work directory. No real key is read."""
+    path = Path(work) / 'issuer-test-key.pem'
+    made = subprocess.run(['node', '-e', "process.stdout.write(require('node:crypto').generateKeyPairSync('ed25519')"
+                           ".privateKey.export({type: 'pkcs8', format: 'pem'}))"], capture_output=True, check=True)
+    fd = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, 'wb') as out:
+        out.write(made.stdout)
+    return str(path)
+
+
 class Issuer:
     """The real Slice 1 token issuer as its own process. Raw bytes in, lines out."""
 
     def __init__(self, run, module):
         self.errors = open(run.work / 'issuer.stderr', 'wb')
-        self.process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off'], cwd=ROOT,
+        self.process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off', issuer_test_key(run.work)], cwd=ROOT,
                                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=self.errors, bufsize=0)
         self.next, self.attempts = 0, 0
         self.ready = self.line()

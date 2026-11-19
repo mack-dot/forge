@@ -34,7 +34,7 @@ export class LineSplitter {
   }
 }
 
-export type Ready = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; singleUse: boolean };
+export type Ready = { publicKeyPem: string; keyId: string; specLockSha256: string; checkerSha256: string; singleUse: boolean };
 export type Minted = { ok: boolean; token?: Token; reason?: string };
 
 export class MinterClient {
@@ -44,8 +44,9 @@ export class MinterClient {
   // Answers that carry no known id (the issuer answers a message with a bad id with id null).
   readonly unmatched: Minted[] = [];
   private constructor(private readonly child: ChildProcessWithoutNullStreams) {}
-  static start(root: string, corePath: string, specLockPath: string, singleUse: "on" | "off"): Promise<MinterClient> {
-    const child = spawn(process.execPath, ["--import", "tsx", join(__dirname, "minter.ts"), corePath, specLockPath, singleUse],
+  // keyPath (D-1): the issuer's key file (a regular file of this uid, mode 0600 or 0400; minter.ts / keyfile.ts check it).
+  static start(root: string, corePath: string, specLockPath: string, singleUse: "on" | "off", keyPath: string): Promise<MinterClient> {
+    const child = spawn(process.execPath, ["--import", "tsx", join(__dirname, "minter.ts"), corePath, specLockPath, singleUse, keyPath],
       { cwd: root, stdio: ["pipe", "pipe", "inherit"] }) as unknown as ChildProcessWithoutNullStreams;
     const client = new MinterClient(child);
     return new Promise((done, fail) => {

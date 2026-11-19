@@ -1,0 +1,175 @@
+diff --git a/tests/refund-finality/regress/harness.ts b/tests/refund-finality/regress/harness.ts
+index 940872ce..0b8d04a4 100644
+--- a/tests/refund-finality/regress/harness.ts
++++ b/tests/refund-finality/regress/harness.ts
+@@ -49,6 +49,7 @@ export class Harness {
+   private readonly keys = generateKeyPairSync("ed25519");
+   readonly foreignKeys = generateKeyPairSync("ed25519");
+   readonly publicKeyPem: string;
++  readonly keyId: string;   // D-1 (h-key): the trusted test key's key id (encoding.ts keyIdOf); every token names it
+   readonly specLockSha256 = TE.sha256hex("h-regress test spec lock");
+   readonly checkerSha256 = TE.sha256hex("h-regress test checker");
+   remote!: Remote;
+@@ -59,6 +60,7 @@ export class Harness {
+     // eslint-disable-next-line @typescript-eslint/no-require-imports
+     this.anchor = anchorPath ? require(resolve(anchorPath)) as AnchorAdapter : null;
+     this.publicKeyPem = this.keys.publicKey.export({ type: "spki", format: "pem" }) as string;
++    this.keyId = TE.keyIdOf(this.keys.publicKey);
+   }
+   // ---- per-regression lifecycle: a fresh directory and a fresh child process
+   async begin(id: string): Promise<void> {
+@@ -92,9 +94,10 @@ export class Harness {
+   body(pre: State, requestId: string, post: State, intent: Intent): TE.TokenBody {
+     return { domain: TE.DOMAIN, specLockSha256: this.specLockSha256, checkerSha256: this.checkerSha256, preStateSha256: TE.stateSha256(pre), requestId, post, intent };
+   }
++  // D-1: a foreign-key token claims the TRUSTED key id (the strongest form of the attack).
+   signBody(body: TE.TokenBody, foreign = false, bytes?: Buffer): string {
+     const key = foreign ? this.foreignKeys.privateKey : this.keys.privateKey;
+-    return TE.canon({ body, signature: sign(null, bytes ?? TE.signedBytes(body), key).toString("base64") });
++    return TE.canon({ body, keyId: this.keyId, signature: sign(null, bytes ?? TE.signedBytes(body, this.keyId), key).toString("base64") });
+   }
+   sign(pre: State, requestId: string, post: State, intent: Intent): string { return this.signBody(this.body(pre, requestId, post, intent)); }
+   honest(pre: State, requestId: string, amount: string, reason = "returned_item"): string {
+diff --git a/tests/refund-finality/regress/worker.ts b/tests/refund-finality/regress/worker.ts
+index d5c2473a..2e4deef5 100644
+--- a/tests/refund-finality/regress/worker.ts
++++ b/tests/refund-finality/regress/worker.ts
+@@ -54,7 +54,7 @@ function op(name: string, a: any): unknown {
+     // signedBytes of the encoding.ts NEXT TO the sink (if any), as base64, for two bodies. Probe only.
+     case "neighborSignedBytes": {
+       if (!encNext || typeof encNext.signedBytes !== "function") return null;
+-      try { return a.bodies.map((b: unknown) => Buffer.from(encNext.signedBytes(b)).toString("base64")); } catch (e) { return { error: msg(e) }; }
++      try { return a.bodies.map((b: unknown) => Buffer.from(encNext.signedBytes(b, a.keyId)).toString("base64")); } catch (e) { return { error: msg(e) }; }
+     }
+     case "flush": {
+       // Effects are recorded by this file's emit callback with the ledger bytes AT THE MOMENT OF THE EMIT, so the
+diff --git a/tests/refund-finality/regress/k_judge_blindspots.ts b/tests/refund-finality/regress/k_judge_blindspots.ts
+index 7c5c166f..630184fb 100644
+--- a/tests/refund-finality/regress/k_judge_blindspots.ts
++++ b/tests/refund-finality/regress/k_judge_blindspots.ts
+@@ -35,7 +35,7 @@ export const judges: Regression[] = [
+     async run(h) {
+       const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = await h.newStore("k2", S0);
+       const t = h.honest(S0, "rq_1", "100"); const v = JSON.parse(t);
+-      const texts: [string, string][] = [["indent", JSON.stringify(v, null, 1)], ["key-order", JSON.stringify({ signature: v.signature, body: v.body })],
++      const texts: [string, string][] = [["indent", JSON.stringify(v, null, 1)], ["key-order", JSON.stringify({ signature: v.signature, keyId: v.keyId, body: v.body })],
+         ["escaped-letter", t.replace('"requestId":"rq_1"', '"requestId":"\\u0072q_1"')]];
+       const why: Why = [];
+       for (const [name, x] of texts) {
+@@ -253,9 +253,9 @@ export const judges: Regression[] = [
+       const B = h.body(S0, "rq_1", h.dec(S0, "100"), h.intent("ch_1", "rq_1", "100"));
+       const Balt = { ...B, post: h.dec(S0, "900"), intent: h.intent("ch_1", "rq_1", "900") };
+       const sig = JSON.parse(h.signBody(B)).signature;
+-      const a = await h.commit(sink, h.E.canon({ body: Balt, signature: sig }));
++      const a = await h.commit(sink, h.E.canon({ body: Balt, keyId: h.keyId, signature: sig }));
+       if (!unchanged(h, db, S0, 0)) return fail("ALTERED POST/INTENT COMMITTED (trusted bytes): a=" + a);
+-      const nb = await h.remote.call<string[] | null | { error: string }>("neighborSignedBytes", { bodies: [B, Balt] });
++      const nb = await h.remote.call<string[] | null | { error: string }>("neighborSignedBytes", { bodies: [B, Balt], keyId: h.keyId });
+       let probe = "no neighbor encoding";
+       if (Array.isArray(nb)) {
+         if (nb[0] === nb[1]) {
+diff --git a/tests/refund-finality/spec-conformance/oracle.ts b/tests/refund-finality/spec-conformance/oracle.ts
+index 8bbf02e4..4afc0000 100644
+--- a/tests/refund-finality/spec-conformance/oracle.ts
++++ b/tests/refund-finality/spec-conformance/oracle.ts
+@@ -13,7 +13,7 @@
+ import { createPublicKey, verify, KeyObject } from "node:crypto";
+ import { createRequire } from "node:module";
+ import { resolve } from "node:path";
+-import { ChargeState, DOMAIN, canon, isToken, sha256hex, signatureBytes, signedBytes } from "../../../ts/refund-finality/encoding";
++import { ChargeState, DOMAIN, canon, isToken, keyIdOf, sha256hex, signatureBytes, signedBytes } from "../../../ts/refund-finality/encoding";
+ 
+ export type OutRow = { request_id: string; intent: string };
+ export type Snapshot = { state: string | null; settled: string[]; outbox: OutRow[] };
+@@ -61,14 +61,15 @@ function parseIntent(v: unknown): LIntent | null {
+   return { chargeId: v.chargeId, requestId: v.requestId, amount: v.amount as string, reason: v.reason };
+ }
+ // Lenient token decoder: the token structure WITHOUT the encoding.ts limits (256 units, U+0000, 8192 units).
+-export function lenientToken(text: string): { body: LBody; signature: string; raw: unknown } | null {
++// D-1 (h-key): a token is {body, keyId, signature}; the oracle's pin is ONE key (h.publicKeyPem), its key id = keyIdOf.
++export function lenientToken(text: string): { body: LBody; keyId: string; signature: string; raw: unknown } | null {
+   let v: unknown; try { v = JSON.parse(text); } catch { return null; }
+-  if (!isObj(v) || !keysAre(v, ["body", "signature"]) || typeof v.signature !== "string") return null;
++  if (!isObj(v) || !keysAre(v, ["body", "keyId", "signature"]) || typeof v.signature !== "string" || typeof v.keyId !== "string") return null;
+   const b = v.body;
+   if (!isObj(b) || !keysAre(b, ["domain", "specLockSha256", "checkerSha256", "preStateSha256", "requestId", "post", "intent"])) return null;
+   const intent = parseIntent(b.intent);
+   if (typeof b.requestId !== "string" || intent === null) return null;
+-  return { body: { ...(b as any), requestId: b.requestId, intent }, signature: v.signature, raw: v };
++  return { body: { ...(b as any), requestId: b.requestId, intent }, keyId: v.keyId, signature: v.signature, raw: v };
+ }
+ 
+ export class Oracle {
+@@ -104,7 +105,7 @@ export class Oracle {
+   check(h: History): Verdict {
+     const vs: Violation[] = [];
+     const flag = (property: Prop, index: number, detail: string) => vs.push({ property, index, detail });
+-    const key: KeyObject = createPublicKey(h.publicKeyPem);
++    const key: KeyObject = createPublicKey(h.publicKeyPem), pinnedKeyId = keyIdOf(key);
+     const c0Text = canon(h.initial), c0 = parseState(c0Text);
+     if (c0 === null) throw new Error("initial charge is not a charge state");
+     // A sink that refuses to start on an initial charge that is an approved ValidContext (RS 27-31: charge id
+@@ -145,7 +146,7 @@ export class Oracle {
+           const pinned = b.domain === DOMAIN && b.specLockSha256 === h.specLockSha256 && b.checkerSha256 === h.checkerSha256;
+           let sigOk = false;
+           try { const raw = Buffer.from(tok.signature, "base64");
+-            sigOk = raw.length === 64 && verify(null, signedBytes(b as any), key, raw); } catch { sigOk = false; }
++            sigOk = raw.length === 64 && tok.keyId === pinnedKeyId && verify(null, signedBytes(b as any, tok.keyId), key, raw); } catch { sigOk = false; }
+           const fresh = !prev.settled.includes(b.requestId);
+           const current = prev.state !== null && b.preStateSha256 === sha256hex(prev.state);
+           const auth = pinned && sigOk && fresh && current ? this.assess(pre, b.requestId, fresh, b.intent.amount, b.intent.reason) : null;
+@@ -171,7 +172,7 @@ export class Oracle {
+           if (canon(parsed) !== d.text) p8.push("token text is not canonical");
+           if (b.domain !== DOMAIN || b.specLockSha256 !== h.specLockSha256 || b.checkerSha256 !== h.checkerSha256) p8.push("domain or ids are not the pinned ones");
+           let sigOk = false;
+-          try { const raw = signatureBytes(parsed.signature); sigOk = raw !== null && verify(null, signedBytes(b), key, raw); } catch { sigOk = false; }
++          try { const raw = signatureBytes(parsed.signature); sigOk = raw !== null && parsed.keyId === pinnedKeyId && verify(null, signedBytes(b, parsed.keyId), key, raw); } catch { sigOk = false; }
+           if (!sigOk) p8.push("signature does not verify under the pinned key over the trusted signed bytes");
+           if (prev.state === null || b.preStateSha256 !== sha256hex(prev.state)) p8.push("pre-state hash is not the hash of the persisted state");
+           const newRows = after.outbox.slice(prev.outbox.length);
+diff --git a/tests/refund-finality/spec-conformance/run.ts b/tests/refund-finality/spec-conformance/run.ts
+index d16d7f94..03440a9f 100644
+--- a/tests/refund-finality/spec-conformance/run.ts
++++ b/tests/refund-finality/spec-conformance/run.ts
+@@ -22,7 +22,7 @@ import { tmpdir } from "node:os";
+ import * as sqlite from "node:sqlite";
+ import { ChildGone, Remote } from "../regress/remote";
+ import { TRUSTED_ENCODING_PATH } from "../regress/harness";
+-import { ChargeState, DOMAIN, TokenBody, canon, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
++import { ChargeState, DOMAIN, TokenBody, canon, keyIdOf, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
+ import { Delivery, History, Oracle, Prop, Snapshot } from "./oracle";
+ 
+ const MAX = 9223372036854775807n;
+@@ -134,7 +134,8 @@ async function main(): Promise<number> {
+           else {
+             const body = buildBody(kind, R, pre, preText, states, before, fresh, specLockSha256, checkerSha256);
+             const signer = kind === "bad-sig" ? keys.otherPriv : keys.priv;
+-            const tok = { body, signature: sign(null, signedBytes(body as TokenBody), signer).toString("base64") };
++            const keyId = keyIdOf(keys.pub);   // D-1: the pinned key id (also for a "bad-sig" token of the other key)
++            const tok = { body, keyId, signature: sign(null, signedBytes(body as TokenBody, keyId), signer).toString("base64") };
+             text = kind === "noncanon" ? JSON.stringify(tok, null, 1) : canon(tok);
+           }
+           sent.push(text);
+diff --git a/tests/refund-finality/spec-conformance/selftest.ts b/tests/refund-finality/spec-conformance/selftest.ts
+index c66fb348..ff0e0f5a 100644
+--- a/tests/refund-finality/spec-conformance/selftest.ts
++++ b/tests/refund-finality/spec-conformance/selftest.ts
+@@ -3,7 +3,7 @@
+ // Each history has one known defect; the oracle must flag that property. The clean history must pass.
+ // Exit 0 when every case gives the expected result, 1 otherwise.
+ import { generateKeyPairSync, sign } from "node:crypto";
+-import { ChargeState, DOMAIN, canon, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
++import { ChargeState, DOMAIN, canon, keyIdOf, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
+ import { Delivery, History, Oracle, Prop, Snapshot } from "./oracle";
+ 
+ const core = process.argv[2];
+@@ -19,7 +19,8 @@ type I = { chargeId: string; requestId: string; amount: string; reason: string }
+ const I = (requestId: string, amount: string, reason = "duplicate_charge", chargeId = "ch_1"): I => ({ chargeId, requestId, amount, reason });
+ function tok(pre: ChargeState, requestId: string, post: ChargeState, intent: I, key = privateKey): string {
+   const body = { domain: DOMAIN, specLockSha256: LOCK, checkerSha256: CHK, preStateSha256: sha256hex(canon(pre)), requestId, post, intent };
+-  return canon({ body, signature: sign(null, signedBytes(body as any), key).toString("base64") });
++  const keyId = keyIdOf(publicKey);   // D-1: the pinned key id (also for a token signed by the other key)
++  return canon({ body, keyId, signature: sign(null, signedBytes(body as any, keyId), key).toString("base64") });
+ }
+ const snap = (state: ChargeState, settled: string[], outbox: I[]): Snapshot =>
+   ({ state: canon(state), settled, outbox: outbox.map(i => ({ request_id: i.requestId, intent: canon(i) })) });

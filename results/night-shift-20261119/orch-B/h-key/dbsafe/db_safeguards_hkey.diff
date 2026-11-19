@@ -1,0 +1,37 @@
+--- db_safeguards.orig.ts	2026-11-19 12:23:46.875245649 -0500
++++ db_safeguards_hkey.ts	2026-11-19 12:23:46.899601833 -0500
+@@ -22,7 +22,7 @@
+ const { canon, signedBytes, stateSha256, sha256hex, DOMAIN } = E;
+ 
+ const { publicKey, privateKey } = generateKeyPairSync("ed25519"), attacker = generateKeyPairSync("ed25519");
+-const pem = publicKey.export({ type: "spki", format: "pem" }) as string;
++const pem = publicKey.export({ type: "spki", format: "pem" }) as string, keyId: string = E.keyIdOf(publicKey);
+ const st = (remaining: string, cid = "ch_1", original = "1000", refundEnabled = true) => ({ chargeId: cid, original, remaining, refundEnabled });
+ const S0 = st("1000");
+ const cfg: any = { publicKeyPem: pem, specLockSha256: "1".repeat(64), checkerSha256: "2".repeat(64), initialState: S0 };
+@@ -31,10 +31,14 @@
+   const post = o.post ?? { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() };
+   const body = { domain: DOMAIN, specLockSha256: cfg.specLockSha256, checkerSha256: cfg.checkerSha256, preStateSha256: stateSha256(pre),
+     requestId: rid, post, intent: { chargeId: o.intentCid ?? pre.chargeId, requestId: o.intentRid ?? rid, amount, reason: "duplicate_charge" } };
+-  return { body, signature: sign(null, signedBytes(body), o.key ?? privateKey).toString("base64") };
++  // h-key (D-1): the token names the pinned key id, inside the signed bytes (an attacker's token claims the same id).
++  return { body, keyId, signature: sign(null, signedBytes(body, keyId), o.key ?? privateKey).toString("base64") };
+ }
++// h-key: the v6 control sink (p-adopt2) still takes the OLD format {body, signature over the body alone}.
++const tok6 = (pre: any, rid: string, amount: string) => { const { body } = tokObj(pre, rid, amount); return canon({ body, signature: sign(null, Buffer.from(canon(body), "utf8"), privateKey).toString("base64") }); };
+ const tok = (pre: any, rid: string, amount: string, o: BodyOpt = {}) => canon(tokObj(pre, rid, amount, o));
+ const T = { r1: tok(st("1000"), "rq_1", "100"), z1: tok(st("900"), "rq_z1", "0"), z2: tok(st("900"), "rq_z2", "0"), r2: tok(st("900"), "rq_2", "50") };
++const T6 = { r1: tok6(st("1000"), "rq_1", "100"), z1: tok6(st("900"), "rq_z1", "0"), z2: tok6(st("900"), "rq_z2", "0"), r2: tok6(st("900"), "rq_2", "50") };
+ 
+ const rows: any[] = [];
+ let bad = 0;
+@@ -47,7 +51,8 @@
+ let n = 0;
+ function honest(S: any, label: string): string {
+   const p = `${OUT}/${++n}-${label}.sqlite`; const s = new S(p, cfg); s.init(S0);
+-  const out = [T.r1, T.z1, T.z2, T.r2].map(t => s.commit(t).status); s.close();
++  const TT = S === V6 ? T6 : T;
++  const out = [TT.r1, TT.z1, TT.z2, TT.r2].map(t => s.commit(t).status); s.close();
+   if (out.some(x => x !== "committed")) throw new Error("honest base " + label + ": " + out);
+   return p;
+ }

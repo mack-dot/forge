@@ -1,0 +1,3 @@
+{"sink":{"unknownKeyId":"rejected: signature does not verify","control":"committed","rows":["rq_a"]},"stored":{"setupCommits":["committed","committed","committed"],"sinkWithPinA":"REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is ","dispatcherPinA":{"emitted":[],"refused":["rq_1: store audit failed: row 3: the compiled AuditStep refuses it (signature, ids, bi","rq_x: store audit failed: row 3: the compiled AuditStep refuses it (signature, ids, bi","rq_c3: store audit failed: row 3: the compiled AuditStep refuses it (signature, ids, bi"]},"dispatcherPinAC_control":{"emitted":["rq_1","rq_x","rq_c3"],"refused":[]}}}
+PASS
+exit 0

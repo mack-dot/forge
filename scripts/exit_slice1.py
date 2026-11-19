@@ -76,6 +76,7 @@ SUBJECT = [CORE, BINDING, SUITE, 'tests/refund-finality/commit_cli.ts', 'tests/r
            'tests/refund-finality/issuer_exports_probe.ts', 'scripts/exit_slice1.py',
            'ts/refund-finality/encoding.ts', 'ts/refund-finality/minter.ts', 'ts/refund-finality/sink.ts',
            'ts/refund-finality/dispatcher.ts', 'ts/refund-finality/proposer.ts', 'ts/refund-finality/core/store.ts', SINK_MODULE,
+           'ts/refund-finality/keyfile.ts', 'tests/refund-finality/regress/kf_lib.ts',
            'proposals/forge2-pillar2-finality-protocol/FinalityProtocol.dfy'] + FINALITY_CORE + [
                FIXTURES + '/' + name + '.dfy' for name in sorted(CONTROLS)]
 APPROVED = ['impl/Refund.dfy', 'spec/refund/RefundSpec.dfy', 'spec/refund/protocol.md',

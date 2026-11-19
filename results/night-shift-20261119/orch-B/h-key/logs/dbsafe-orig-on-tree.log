@@ -1,0 +1,18 @@
+<REPO>/results/night-shift-20261119/orch-B/h-key/tree/ts/refund-finality/encoding.ts:99
+  if (!hex64(keyId)) throw new Error("signed bytes: keyId is not 64 lower-case hex digits");
+                           ^
+
+
+Error: signed bytes: keyId is not 64 lower-case hex digits
+    at signedBytes (<REPO>/results/night-shift-20261119/orch-B/h-key/tree/ts/refund-finality/encoding.ts:99:28)
+    at tokObj (<REPO>/results/night-shift-20261119/orch-B/h-key/dbsafe/db_safeguards.orig.ts:34:40)
+    at tok (<REPO>/results/night-shift-20261119/orch-B/h-key/dbsafe/db_safeguards.orig.ts:36:79)
+    at p (<REPO>/results/night-shift-20261119/orch-B/h-key/dbsafe/db_safeguards.orig.ts:37:17)
+    at Object.<anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-key/dbsafe/db_safeguards.orig.ts:268:36)
+    at Module._compile (node:internal/modules/cjs/loader:1692:14)
+    at Object.transformer (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1427:32)
+    at Module._load (node:internal/modules/cjs/loader:1250:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+
+Node.js v24.3.0

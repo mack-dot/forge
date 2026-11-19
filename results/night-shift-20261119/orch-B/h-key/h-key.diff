@@ -1,0 +1,1661 @@
+diff --git a/ts/refund-finality/keyfile.ts b/ts/refund-finality/keyfile.ts
+new file mode 100644
+index 00000000..ec8bd3e9
+--- /dev/null
++++ b/ts/refund-finality/keyfile.ts
+@@ -0,0 +1,75 @@
++// OWNER DECISION D-1 (night shift 2026-11-19, task h-key): the ONLY place that opens the issuer's signing key file.
++// TESTED-UNPROVED. The minter's key comes only from a key file: no environment variable, no test bypass flag, no key
++// made in memory. Design and attacker classes: orch-B/h-key/KEY_DESIGN.md.
++// The sequence (no stat, lstat, access or exists on the path before the open: that check-then-use race is what D-1 removes):
++//   1. open(path, O_RDONLY | O_NOFOLLOW | O_NONBLOCK). O_NOFOLLOW: a symbolic link as the LAST path component fails
++//      the open (ELOOP), so the descriptor never names the target of a link. O_NONBLOCK: an open of a FIFO returns at
++//      once (no wait for a writer); step 2 then refuses it. libuv adds O_CLOEXEC.
++//   2. fstat(fd) on the OPENED descriptor: a regular file; st_uid == geteuid(); (st_mode & 0o077) == 0; size bounded.
++//      The checked object IS the object that step 3 reads: a rename or a swap at the path after step 1 does not change
++//      what fd names.
++//   3. read the bytes from the SAME fd (sequential reads at the file offset, bounded), close fd, parse a PKCS#8 PEM
++//      Ed25519 private key, overwrite the byte buffer with zeros.
++// O_NONBLOCK is NOT cleared after step 2: Node has no fcntl. For a regular file (the only kind that passes step 2)
++// O_NONBLOCK has no effect on read(2) (POSIX: it changes the behaviour of pipes, FIFOs and devices only).
++// Error texts never hold key bytes.
++import { createPrivateKey, createPublicKey, KeyObject } from "node:crypto";
++import { closeSync, constants, fstatSync, openSync, readSync } from "node:fs";
++import { keyIdOf } from "./encoding";
++
++export const MAX_KEY_FILE_BYTES = 4096;
++export type KeyFileStat = { isFile(): boolean; uid: number; mode: number; size: number };
++export type SigningKey = { privateKey: KeyObject; publicKeyPem: string; keyId: string };
++
++// The check of step 2, on the stat of the OPENED descriptor. null = accepted; else the reason.
++export function keyFileProblem(st: KeyFileStat, euid: number): string | null {
++  if (!st.isFile()) return "the key file is not a regular file";
++  if (st.uid !== euid) return "the key file is not owned by the effective uid";
++  if ((st.mode & 0o077) !== 0) return "the key file gives access to group or other (mode " + (st.mode & 0o777).toString(8) + "; need 600 or 400)";
++  if (st.size > MAX_KEY_FILE_BYTES) return "the key file is larger than " + MAX_KEY_FILE_BYTES + " bytes";
++  return null;
++}
++
++// Production entry point (the minter calls only this).
++export function loadSigningKey(path: string): SigningKey {
++  return loadSigningKeyWith(path, fd => fstatSync(fd));
++}
++
++// TEST SEAM: `fstat` replaces the stat of the opened descriptor. Only a test that imports this module can pass it; no
++// command-line argument and no environment variable reaches it. It exists so that a test can show the refusal of a
++// file owned by another uid without privileges. It cannot widen what production accepts: production passes fstatSync.
++export function loadSigningKeyWith(path: string, fstat: (fd: number) => KeyFileStat): SigningKey {
++  if (typeof path !== "string" || path === "" || path.includes("\u0000")) throw new Error("key file: no usable path");
++  const euid = typeof process.geteuid === "function" ? process.geteuid() : undefined;
++  if (euid === undefined) throw new Error("key file: this platform has no effective uid");
++  let fd: number;
++  try {
++    fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
++  } catch (error) {
++    const code = String((error as NodeJS.ErrnoException)?.code ?? "error");
++    throw new Error("key file: open refused (" + code + (code === "ELOOP" ? ": the path is a symbolic link" : "") + ")");
++  }
++  let buf: Buffer | null = null;
++  try {
++    const problem = keyFileProblem(fstat(fd), euid);
++    if (problem !== null) throw new Error("key file: " + problem);
++    buf = Buffer.alloc(MAX_KEY_FILE_BYTES + 1);
++    let n = 0;
++    for (;;) {
++      const got = readSync(fd, buf, n, buf.length - n, null);
++      if (got === 0) break;
++      n += got;
++      if (n > MAX_KEY_FILE_BYTES) throw new Error("key file: larger than " + MAX_KEY_FILE_BYTES + " bytes");
++    }
++    let privateKey: KeyObject;
++    try { privateKey = createPrivateKey({ key: buf.subarray(0, n), format: "pem" }); } catch {
++      throw new Error("key file: not an unencrypted PKCS#8 PEM private key");
++    }
++    if (privateKey.asymmetricKeyType !== "ed25519") throw new Error("key file: not an Ed25519 key");
++    const publicKey = createPublicKey(privateKey);
++    return { privateKey, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }) as string, keyId: keyIdOf(publicKey) };
++  } finally {
++    if (buf !== null) buf.fill(0);
++    closeSync(fd);
++  }
++}
+diff --git a/ts/refund-finality/encoding.ts b/ts/refund-finality/encoding.ts
+index d0fd014f..8e056a1b 100644
+--- a/ts/refund-finality/encoding.ts
++++ b/ts/refund-finality/encoding.ts
+@@ -3,7 +3,7 @@
+ // refuse an input, they can never authorize one.
+ // Canonical JSON: objects with sorted keys; only strings, booleans, arrays and plain objects.
+ // No JSON numbers: money is a decimal string.
+-import { createHash } from "node:crypto";
++import { KeyObject, createHash, createPublicKey } from "node:crypto";
+ 
+ export type ChargeState = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
+ export type RefundRequest = { requestId: string; amount: string; reason: string };
+@@ -15,9 +15,13 @@ export type TokenBody = {
+   domain: string; specLockSha256: string; checkerSha256: string;
+   preStateSha256: string; requestId: string; post: ChargeState; intent: Intent;
+ };
+-export type Token = { body: TokenBody; signature: string };
++// OWNER DECISION D-1 (h-key): every token names the issuer key that signed it. keyId is OUTSIDE the proved body
++// bytes (the Dafny byte model is unchanged) and INSIDE the signed bytes (signedBytes below): glue step KEYID-GLUE.
++export type Token = { body: TokenBody; keyId: string; signature: string };
+ 
+ export const DOMAIN = "FORGE_REFUND_FINALITY_SLICE1_V1";
++// Domain of the signed envelope {body, keyId, sigDomain} (h-key, D-1). Old tokens signed the body alone.
++export const KEYID_DOMAIN = "FORGE_REFUND_FINALITY_KEYID_V1";
+ export const MAX_TEXT = 256;
+ const MONEY = /^(0|[1-9][0-9]{0,18})$/;
+ const HEX64 = /^[0-9a-f]{64}$/;
+@@ -73,12 +77,28 @@ export function signatureBytes(signature: unknown): Buffer | null {
+   return raw.length === 64 && raw.toString("base64") === signature ? raw : null;
+ }
+ export function isToken(x: unknown): x is Token {
+-  return exact(x, ["body", "signature"]) && isTokenBody(x.body) && signatureBytes(x.signature) !== null;
++  return exact(x, ["body", "keyId", "signature"]) && isTokenBody(x.body) && hex64(x.keyId) && signatureBytes(x.signature) !== null;
++}
++export const isKeyId = hex64;
++// key_id (D-1): the lower-case hex SHA-256 of the DER SubjectPublicKeyInfo bytes of the Ed25519 public key
++// (44 bytes: the 12-byte SPKI prefix 302a300506032b6570032100 and the 32-byte raw key). Throws for any other key type.
++export function keyIdOf(publicKey: KeyObject | string): string {
++  const key = typeof publicKey === "string" ? createPublicKey(publicKey) : publicKey;
++  if (key.type !== "public" || key.asymmetricKeyType !== "ed25519") throw new Error("key id: not an Ed25519 public key");
++  const der = key.export({ type: "spki", format: "der" });
++  if (der.length !== 44) throw new Error("key id: the SPKI encoding is not 44 bytes");
++  return sha256hex(der);
+ }
+ // The one text of a token that the sink accepts.
+ export const tokenText = (token: Token): string => canon(token);
+-// The signed bytes: the whole body, by value.
+-export const signedBytes = (body: TokenBody): Buffer => Buffer.from(canon(body), "utf8");
++// The signed bytes (D-1, KEYID-GLUE): the canonical text of {body, keyId, sigDomain}. It holds the canonical body
++// text VERBATIM: '{"body":' + canon(body) + ',"keyId":"<64 hex>","sigDomain":"FORGE_REFUND_FINALITY_KEYID_V1"}'.
++// So the key id is signed together with the proved body bytes; a signature of the old format (body alone) never
++// verifies here (its bytes start with '{"checkerSha256"'). Throws if keyId is not 64 lower-case hex digits.
++export const signedBytes = (body: TokenBody, keyId: string): Buffer => {
++  if (!hex64(keyId)) throw new Error("signed bytes: keyId is not 64 lower-case hex digits");
++  return Buffer.from(canon({ body, keyId, sigDomain: KEYID_DOMAIN }), "utf8");
++};
+ export const stateSha256 = (state: ChargeState): string => sha256hex(canon(state));
+ // Identity of the token issuer: the compiled core module and the two glue files of the minter process.
+ export function checkerSha256Of(coreModule: Buffer, encodingSource: Buffer, minterSource: Buffer): string {
+diff --git a/ts/refund-finality/minter.ts b/ts/refund-finality/minter.ts
+index 86ba60ee..0a23bd81 100644
+--- a/ts/refund-finality/minter.ts
++++ b/ts/refund-finality/minter.ts
+@@ -1,9 +1,8 @@
+ // Slice 1 (F2.1): the token issuer. Its own operating-system process. TESTED-UNPROVED as a whole.
+-// The Ed25519 private key exists only in the memory of this process. A new test key is made at every start
+-// (C-ATT-05: a restart changes the key; key persistence is an open owner decision: see KEY_OPTIONS in the
+-// night-shift evidence h-minter).
++// The Ed25519 private key comes ONLY from the key file argument (OWNER DECISION D-1; keyfile.ts: O_NOFOLLOW open, fstat
++// of the opened descriptor, read from it). A restart with the same key file keeps the key and its key id (C-ATT-05).
+ // The same interface as the earlier minter.ts (arguments, ready line, one JSON message per line in, one answer
+-// line out), plus an OPTIONAL fourth argument: the path of the sink's store (read only).
++// line out), plus a REQUIRED fourth argument (the key file, D-1) and an OPTIONAL fifth: the sink's store path (read only).
+ // The DECISION, the TOKEN BODY and the MEMORY RULE are not written here. They come from ONE call of the compiled
+ // proved method IssueAuth.Issue (impl/finality-core/IssueAuth.dfy; rule 2, night shift h-minter2). It calls
+ // IssueBytes2.IssueTokenBytes (RefundFinality.Check, the well-formed-body guard, the UTF-8 bytes of the canonical
+@@ -24,8 +23,8 @@
+ // values, ONE call of IssueAuth.Issue, refuse-only consistency checks, sign(bytes), and the answer text.
+ // NOT proved: this file, encoding.ts (canon, the shape checks, SHA-256 call), the Dafny JavaScript back end and
+ // runtime, bignumber.js, Node, SQLite and OpenSSL, process isolation, the store's contents (assumption STORE-READ).
+-// The memory of mode "on" is PROCESS MEMORY: it is lost at restart (and the key is lost with it).
+-// Arguments: <compiled IssueAuth module> <refund spec lock> <memory rule: on | off> [<sink store path>]
++// The memory of mode "on" is PROCESS MEMORY: it is lost at restart (the key is not: it is in the key file).
++// Arguments: <compiled IssueAuth module> <refund spec lock> <memory rule: on | off> <key file> [<sink store path>]
+ //   on : the IssueAuth memory rule for the life of the process.
+ //   off: no memory (IssueAuth.Issue with an empty memory every time). With a store, the authority check stays.
+ //   Either way an identical request gets a byte-identical token (Ed25519 signatures are deterministic).
+@@ -35,18 +34,19 @@
+ // Start refusals: NODE_OPTIONS set (C-ATT-14); a module without IssueAuth; in a CLOSED LAUNCH
+ // (minter-launch.sh sets FORGE_MINTER_CLOSED to the pinned manifest digest): any other environment variable, other
+ // node options, a manifest with another digest, a listed file with another digest, a loaded file that is not listed.
+-import { generateKeyPairSync, sign, createHash } from "node:crypto";
++import { sign, createHash } from "node:crypto";
+ import { readFileSync } from "node:fs";
+ import { createRequire } from "node:module";
+ import { resolve } from "node:path";
+ import BigNumber from "bignumber.js";
+ import {
+-  ChargeState, Transition, canon, checkerSha256Of, isState, isTokenBody, isTransition, sha256hex, stateSha256,
++  ChargeState, KEYID_DOMAIN, Transition, canon, checkerSha256Of, isState, isTokenBody, isTransition, sha256hex, signedBytes, stateSha256,
+ } from "./encoding";
++import { SigningKey, loadSigningKey } from "./keyfile";
+ 
+-const [corePath, specLockPath, memoryArg, storePath] = process.argv.slice(2);
+-if (!corePath || !specLockPath || (memoryArg !== "on" && memoryArg !== "off") || process.argv.length > 6 || storePath === "") {
+-  process.stderr.write("usage: minter.ts <compiled IssueAuth module> <refund spec lock> <on|off> [<sink store path>]\n");
++const [corePath, specLockPath, memoryArg, keyPath, storePath] = process.argv.slice(2);
++if (!corePath || !specLockPath || (memoryArg !== "on" && memoryArg !== "off") || !keyPath || process.argv.length > 7 || storePath === "") {
++  process.stderr.write("usage: minter.ts <compiled IssueAuth module> <refund spec lock> <on|off> <key file> [<sink store path>]\n");
+   process.exit(2);
+ }
+ // C-ATT-14: NODE_OPTIONS can make Node load other code (--require, --import, --loader) into this key-holding
+@@ -241,9 +241,14 @@ function issue(pre: ChargeState, t: Transition): { bytes: Buffer; bodyText: stri
+   return { bytes, bodyText, body };
+ }
+ 
+-const { publicKey, privateKey } = generateKeyPairSync("ed25519");
++let signingKey: SigningKey;
++try { signingKey = loadSigningKey(keyPath as string); } catch (error) {
++  process.stderr.write("minter.ts: refused to start: " + String((error as Error).message) + "\n");
++  process.exit(2);
++}
++const { privateKey, keyId } = signingKey;
+ process.stdout.write(JSON.stringify({
+-  ready: true, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }), specLockSha256, checkerSha256, singleUse: memoryOn }) + "\n");
++  ready: true, publicKeyPem: signingKey.publicKeyPem, keyId, specLockSha256, checkerSha256, singleUse: memoryOn }) + "\n");
+ function handle(line: string): void {
+   let id: number | null = null;
+   try {
+@@ -256,11 +261,15 @@ function handle(line: string): void {
+     if (!isState(pre) || !isTransition(transitionMsg)) throw new Error("shape");                            // [S4]
+     const issued = issue(pre, transitionMsg);
+     if (typeof issued === "string") throw new Error(issued);
+-    const signature = sign(null, issued.bytes, privateKey).toString("base64");
+-    // The token text embeds the returned body text verbatim. canon sorts "body" before "signature".
+-    const tokenText = "{\"body\":" + issued.bodyText + ",\"signature\":" + JSON.stringify(signature) + "}";
++    // D-1 (KEYID-GLUE): the signed message holds the returned body bytes VERBATIM and the key id (encoding.ts signedBytes).
++    const envelope = Buffer.concat([Buffer.from("{\"body\":", "utf8"), issued.bytes,
++      Buffer.from(",\"keyId\":" + JSON.stringify(keyId) + ",\"sigDomain\":" + JSON.stringify(KEYID_DOMAIN) + "}", "utf8")]);
++    if (!envelope.equals(signedBytes(issued.body, keyId))) throw new Error("conversion: signed bytes");
++    const signature = sign(null, envelope, privateKey).toString("base64");
++    // The token text embeds the returned body text verbatim. canon sorts "body", "keyId", "signature".
++    const tokenText = "{\"body\":" + issued.bodyText + ",\"keyId\":" + JSON.stringify(keyId) + ",\"signature\":" + JSON.stringify(signature) + "}";
+     // [C5] consistency check (refuse-only): this is the one canonical token text (encoding.ts tokenText).
+-    if (canon({ body: issued.body, signature }) !== tokenText) throw new Error("conversion: token text");
++    if (canon({ body: issued.body, keyId, signature }) !== tokenText) throw new Error("conversion: token text");
+     process.stdout.write("{\"id\":" + String(id) + ",\"ok\":true,\"token\":" + tokenText + "}\n");
+   } catch (error) {
+     process.stdout.write(JSON.stringify({ id, ok: false, reason: String((error as Error).message) }) + "\n");
+diff --git a/ts/refund-finality/sink.ts b/ts/refund-finality/sink.ts
+index e7736616..38ead00e 100644
+--- a/ts/refund-finality/sink.ts
++++ b/ts/refund-finality/sink.ts
+@@ -49,21 +49,22 @@
+ // NOT proved: this file, core/store.ts (DDL and triggers: TESTED-UNPROVED), the Dafny JS compiler and runtime,
+ // bignumber.js, SQLite (triggers, constraints, integrity_check, IMMEDIATE transactions, data_version, hot-journal
+ // rollback, fullfsync), the file system, Node, OpenSSL, SHA-256, Ed25519. Durability against power loss: NOT TESTED.
+-import { createPublicKey } from "node:crypto";
+ import { closeSync, copyFileSync, existsSync, fsyncSync, mkdtempSync, openSync, readFileSync, rmSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { DatabaseSync } from "node:sqlite";
+ import { ChargeState, isState, canon, sha256hex } from "./encoding";
+ import { AuditedRow, CoreMod, Pos, SinkHead, StoreAuditor, StoreFile, STORE_FORMAT, checkStoreFile, classifyJournal, conv, createSchema, decodeToken, isHead,
+-  linkOf, loadCore, must, presentCompanions, readStateBlob, realStorePath, sameStoreFile, sigOkOf, validInitial } from "./core/store";
++  linkOf, loadCore, must, presentCompanions, readStateBlob, realStorePath, sameStoreFile, sigOkOf, validInitial, IssuerKey, keyRingOf } from "./core/store";
+ export { STORE_FORMAT, SINK_DDL, genesisOf, linkOf } from "./core/store";
+ export type { SinkHead } from "./core/store";
+ 
+ // outsideHead: the host's persisted outside head (see the header): committed = the head of the last acknowledged commit;
+ // pending = the value that onHead received for a commit not yet acknowledged (absent when none).
+ export type OutsideHead = { committed: SinkHead; pending?: SinkHead };
+-export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialState: ChargeState; expectedHead?: SinkHead;
++// D-1 (h-key): the issuer key pin is cfg.issuerKeys (the allowlist: core/store.ts keyRingOf) or, as before, cfg.publicKeyPem
++// alone (= one ACTIVE key). A new commit needs an active key; stored rows may use a retired key up to its verifyUpToSeq.
++export type SinkConfig = { publicKeyPem?: string; issuerKeys?: IssuerKey[]; specLockSha256: string; checkerSha256: string; initialState: ChargeState; expectedHead?: SinkHead;
+   outsideHead?: OutsideHead; onHead?: (next: SinkHead) => void };
+ // head: the audited head after this call (absent when the sink is halted or the decoder refused the input).
+ export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string; head?: SinkHead };
+@@ -109,7 +110,9 @@ export class Sink {
+     if (!validInitial(this.M, this.cv, cfg.initialState)) {
+       throw new Error("h1 sink refuses to serve: cfg.initialState is not a valid context (charge id, refunds enabled, original <= MaxMoney, 0 <= remaining <= original)");
+     }
+-    this.au = new StoreAuditor(this.M, this.cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
++    let ring;
++    try { ring = keyRingOf(cfg); } catch (error) { throw new Error("h1 sink refuses to serve: " + String((error as Error).message)); }
++    this.au = new StoreAuditor(this.M, this.cv, ring, cfg, cfg.initialState);
+     this.pos = this.au.start();
+     // C-ATT-21/23: the files, BEFORE the first SQLite lock (no -journal, -wal, -shm; one link; rollback-journal header).
+     try { checkStoreFile(path); } catch (error) { throw new Error("h1 sink refuses to serve: " + String((error as Error).message)); }
+@@ -231,7 +234,7 @@ export class Sink {
+     if (this.halted !== null || this.fileCheck() !== null) return { status: "rejected", reason: "sink halted: " + this.halted };
+     const { M, cv } = this, b = token.body;
+     const tokenText = input as string, tokenSha256 = sha256hex(tokenText);
+-    const sigOk = sigOkOf(this.au.key, token);
++    const sigOk = sigOkOf(this.au.ring, token, { kind: "commit" });
+     const tok = M.Shell.ShellToken.create_ShellToken(
+       new M.BigNumber(b.specLockSha256 === this.cfg.specLockSha256 ? 1 : 0), new M.BigNumber(b.checkerSha256 === this.cfg.checkerSha256 ? 2 : 0),
+       cv.text(b.requestId), cv.charge(b.post), cv.intent(b.intent), cv.text(""));
+@@ -346,7 +349,7 @@ export class Sink {
+   static validPrefix(path: string, cfg: SinkConfig): { tokens: string[]; prefixHead: SinkHead; complete: boolean; problem: string } {
+     const M = loadCore(), cv = conv(M);
+     if (!isState(cfg.initialState) || !validInitial(M, cv, cfg.initialState)) throw new Error("cfg.initialState is not a valid context");
+-    const au = new StoreAuditor(M, cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
++    const au = new StoreAuditor(M, cv, keyRingOf(cfg), cfg, cfg.initialState);
+     checkStoreFile(path);
+     const db = new DatabaseSync(path, { readOnly: true }), tokens: string[] = [];
+     let head: SinkHead = { count: 0, chainHash: au.genesis }, problem = "";
+@@ -401,7 +404,7 @@ export class Sink {
+     report.journalClass = jc.kind; report.journalWhy = jc.why;
+     const M = loadCore(), cv = conv(M);
+     if (!isState(cfg.initialState) || !validInitial(M, cv, cfg.initialState)) return refuse("cfg.initialState is not a valid context");
+-    const au = new StoreAuditor(M, cv, createPublicKey(cfg.publicKeyPem), cfg, cfg.initialState);
++    const au = new StoreAuditor(M, cv, keyRingOf(cfg), cfg, cfg.initialState);
+     const auditAt = (p: string, anchor?: SinkHead): Pos => {
+       const db = new DatabaseSync(p);
+       try {
+diff --git a/ts/refund-finality/dispatcher.ts b/ts/refund-finality/dispatcher.ts
+index 3ce1fee0..8ecc100d 100644
+--- a/ts/refund-finality/dispatcher.ts
++++ b/ts/refund-finality/dispatcher.ts
+@@ -84,12 +84,12 @@
+ // and rows AFTER expectedHead.count are never sent ("beyond the outside head"): a row is sent only when the outside head
+ // covers it. WITHOUT cfg.expectedHead (stated limit): a swap, a deletion or a rollback of rows after the ledger's last
+ // claim is not detected; the dispatcher can send an uncommitted transition and never send the committed one.
+-import { createHash, createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
++import { createHash, randomBytes } from "node:crypto";
+ import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, statSync, unlinkSync, writeSync } from "node:fs";
+ import { hostname } from "node:os";
+ import { DatabaseSync } from "node:sqlite";
+-import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding";
+-import { AuditedRow, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, loadCore, readMeta, validInitial } from "./core/store";
++import { Intent, canon, isState, isToken, sha256hex } from "./encoding";
++import { AuditedRow, IssuerKey, KeyRing, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, keyRingOf, loadCore, readMeta, sigOkOf, validInitial } from "./core/store";
+ 
+ // newLedgerH0 (optional): the registered h_0 of the store (sink.ts genesisOf). A missing or empty ledger is an ERROR when
+ // the store holds committed rows, unless this field equals the store's h_0 (an explicit "new ledger").
+@@ -100,7 +100,9 @@ import { AuditedRow, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, loadC
+ // from the one that produced it. A floor without them is checked as before ({n, rowHead} only).
+ export type LedgerHead = { n: number; rowHead: string; lines?: number; lastHash?: string };
+ // expectedHead (optional; h-sink2): the sink's committed head from outside (see ROW ANCHOR above).
+-export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead;
++// D-1 (h-key): the issuer key pin is cfg.issuerKeys or cfg.publicKeyPem alone (core/store.ts keyRingOf). Every row (stored,
++// already committed) needs a pinned key id: active, or retired with the row's seq <= verifyUpToSeq; signature verified.
++export type DispatcherConfig = { publicKeyPem?: string; issuerKeys?: IssuerKey[]; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead;
+   expectedHead?: SinkHead };
+ export type Effect = { requestId: string; intent: string };
+ export type FlushResult = { emitted: Effect[]; refused: { seq: number; requestId: string; reason: string }[]; alreadyDispatched: number;
+@@ -149,7 +151,7 @@ const alive = (pid: number): boolean => {
+ };
+ 
+ export class Dispatcher {
+-  private readonly key: KeyObject;
++  private readonly key: KeyRing;
+   private readonly M = loadCore();
+   private readonly cv = conv(this.M);
+   private readonly run = randomBytes(16).toString("hex");   // this run's nonce: in the lock and in its claims
+@@ -157,7 +159,7 @@ export class Dispatcher {
+   private tookOver: { pid: number; run: string; host: string } | null = null;   // a dead owner's lock taken over (C-HOST-02)
+   constructor(private readonly dbPath: string, private readonly ledgerPath: string, private readonly cfg: DispatcherConfig,
+               private readonly emit: (effect: Effect, intent: Intent) => void) {
+-    this.key = createPublicKey(cfg.publicKeyPem);
++    this.key = keyRingOf(cfg);
+   }
+   // Reads the whole ledger and checks it. Fails closed: any line out of the rules above stops the run.
+   private ledger(): Ledger {
+@@ -333,9 +335,7 @@ export class Dispatcher {
+     const body = token.body;
+     if (body.specLockSha256 !== this.cfg.specLockSha256 || body.checkerSha256 !== this.cfg.checkerSha256) return { ok: false, reason: "ids are not the pinned ones" };
+     if (body.requestId !== row.request_id || body.intent.requestId !== row.request_id) return { ok: false, reason: "request id is not the signed one" };
+-    let good = false;
+-    try { const raw = signatureBytes(token.signature); good = raw !== null && verify(null, signedBytes(body), this.key, raw); } catch { good = false; }
+-    if (!good) return { ok: false, reason: "signature does not verify" };
++    if (!sigOkOf(this.key, token, { kind: "stored", seq: row.seq })) return { ok: false, reason: "signature does not verify" };
+     if (canon(body.intent) !== row.intent) return { ok: false, reason: "outbox intent is not the signed intent" };
+     if (body.preStateSha256 !== head) return { ok: false, reason: "token does not continue the dispatched chain" };
+     return { ok: true, intent: body.intent, line: { n: row.seq, requestId: body.requestId, tokenSha256: sha256hex(tokenText), preStateSha256: head,
+diff --git a/ts/refund-finality/core/store.ts b/ts/refund-finality/core/store.ts
+index 8d5278f3..b954ada4 100644
+--- a/ts/refund-finality/core/store.ts
++++ b/ts/refund-finality/core/store.ts
+@@ -6,11 +6,11 @@
+ // dispatcher uses it before every flush (C-ATT-06): an effect leaves only for a row that the compiled AuditStep accepted
+ // on the REPLAYED charge, in a store whose whole log passed AuditEnd.
+ // NOT proved: this file, the DDL and its triggers (TESTED-UNPROVED), SQLite, Node, the Dafny JS compiler and runtime.
+-import { KeyObject, verify } from "node:crypto";
++import { KeyObject, createPublicKey, verify } from "node:crypto";
+ import { closeSync, existsSync, lstatSync, openSync, readFileSync, readSync, realpathSync, statSync } from "node:fs";
+ import { basename, dirname, join } from "node:path";
+ import { DatabaseSync } from "node:sqlite";
+-import { ChargeState, Intent, Token, canon, isIntent, isState, isToken, sha256hex, signatureBytes, signedBytes } from "../encoding";
++import { ChargeState, Intent, Token, canon, isIntent, isKeyId, isState, isToken, keyIdOf, sha256hex, signatureBytes, signedBytes } from "../encoding";
+ 
+ export const MAX_TOKEN_TEXT = 8192;
+ // C-ATT-26 (h-sink2): the bound of a stored INTENT text. The intent is a sub-text of an accepted token (decodeToken refuses
+@@ -321,8 +321,65 @@ export function decodeToken(input: unknown): Token | string {
+ }
+ export const isHead = (h: unknown): h is SinkHead => h !== null && typeof h === "object" && Number.isSafeInteger((h as any).count) &&
+   (h as any).count >= 0 && typeof (h as any).chainHash === "string" && /^[0-9a-f]{64}$/.test((h as any).chainHash);
+-export function sigOkOf(key: KeyObject, token: Token): boolean {
+-  try { const raw = signatureBytes(token.signature); return raw !== null && verify(null, signedBytes(token.body), key, raw); } catch { return false; }
++// ---- THE PINNED ISSUER-KEY ALLOWLIST (OWNER DECISION D-1, h-key). TESTED-UNPROVED. orch-B/h-key/KEY_DESIGN.md.
++// cfg.issuerKeys: [{keyId, publicKeyPem, status: "active"} | {keyId, publicKeyPem, status: "retired", verifyUpToSeq}], 1..64
++// entries, keyId = keyIdOf(publicKeyPem) (checked), ids unique. cfg.publicKeyPem alone (the old single pin) = an
++// allowlist of ONE active key with the derived id. Both given: publicKeyPem must equal issuerKeys[0].publicKeyPem.
++// Entry 0 is the GENESIS key: the store's h_0 binds its PEM text (genesisOf, unchanged), so a one-key pin and the
++// same key as entry 0 of a list give the same h_0. Rotation appends entries and never removes or reorders entry 0.
++// RULE: a NEW commit (Sink.commit) needs an ACTIVE key. A STORED row at position seq (start-up audit, foreign-change
++// audit, repair prefix, dispatcher) needs an active key, or a retired key with seq <= verifyUpToSeq (rows committed
++// before the retirement still verify; a row appended later with a retired key is refused). Every case: the key is
++// selected BY the token's keyId (inside the signed bytes) and the Ed25519 signature must verify under it.
++export type IssuerKey = { keyId: string; publicKeyPem: string; status: "active" | "retired"; verifyUpToSeq?: number };
++export type KeyRing = { genesisPem: string; entries: ReadonlyMap<string, { key: KeyObject; status: "active" | "retired"; verifyUpToSeq: number }> };
++export type KeyUse = { kind: "commit" } | { kind: "stored"; seq: number };
++export const MAX_ISSUER_KEYS = 64;
++export function keyRingOf(cfg: { publicKeyPem?: unknown; issuerKeys?: unknown }): KeyRing {
++  const bad = (why: string): never => { throw new Error("issuer key allowlist: " + why); };
++  const one = (pem: unknown): KeyObject => {
++    if (typeof pem !== "string" || pem.length > 1024) return bad("a publicKeyPem is not a PEM text");
++    let k: KeyObject;
++    try { k = createPublicKey(pem); } catch { return bad("a publicKeyPem does not parse"); }
++    if (k.asymmetricKeyType !== "ed25519") bad("a key is not Ed25519");
++    return k;
++  };
++  const list = cfg.issuerKeys;
++  if (list === undefined) {
++    const key = one(cfg.publicKeyPem);
++    return { genesisPem: cfg.publicKeyPem as string, entries: new Map([[keyIdOf(key), { key, status: "active" as const, verifyUpToSeq: Number.MAX_SAFE_INTEGER }]]) };
++  }
++  if (!Array.isArray(list) || list.length < 1 || list.length > MAX_ISSUER_KEYS) return bad("issuerKeys is not a list of 1 to " + MAX_ISSUER_KEYS + " entries");
++  const entries = new Map<string, { key: KeyObject; status: "active" | "retired"; verifyUpToSeq: number }>();
++  for (const e of list as unknown[]) {
++    if (e === null || typeof e !== "object" || Array.isArray(e) || Object.getPrototypeOf(e) !== Object.prototype) bad("an entry is not an object");
++    const x = e as Record<string, unknown>, names = Object.keys(x).sort().join(",");
++    const key = one(x.publicKeyPem);
++    if (!isKeyId(x.keyId) || keyIdOf(key) !== x.keyId) bad("an entry's keyId is not the SHA-256 of its key's SPKI DER bytes");
++    if (entries.has(x.keyId as string)) bad("a keyId appears twice");
++    if (x.status === "active" && names === "keyId,publicKeyPem,status") entries.set(x.keyId as string, { key, status: "active", verifyUpToSeq: Number.MAX_SAFE_INTEGER });
++    else if (x.status === "retired" && names === "keyId,publicKeyPem,status,verifyUpToSeq" && Number.isSafeInteger(x.verifyUpToSeq) && (x.verifyUpToSeq as number) >= 0) {
++      entries.set(x.keyId as string, { key, status: "retired", verifyUpToSeq: x.verifyUpToSeq as number });
++    } else bad("an entry is not {keyId, publicKeyPem, status: \"active\"} or {keyId, publicKeyPem, status: \"retired\", verifyUpToSeq}");
++  }
++  const genesisPem = (list[0] as IssuerKey).publicKeyPem;
++  if (cfg.publicKeyPem !== undefined && cfg.publicKeyPem !== genesisPem) bad("publicKeyPem is given and is not the PEM of issuerKeys[0] (the genesis key)");
++  return { genesisPem, entries };
++}
++// Why a token's key is refused for this use, or null (then the signature still decides). Diagnostics and tests.
++export function keyRefusal(ring: KeyRing, token: Token, use: KeyUse): string | null {
++  const e = ring.entries.get(token.keyId);
++  if (e === undefined) return "key id is not in the pinned allowlist";
++  if (use.kind === "commit" && e.status !== "active") return "key id is retired: not accepted for a new commit";
++  if (use.kind === "stored" && !(Number.isSafeInteger(use.seq) && use.seq >= 1 && use.seq <= e.verifyUpToSeq)) return "key id is retired before this row";
++  return null;
++}
++export function sigOkOf(ring: KeyRing, token: Token, use: KeyUse): boolean {
++  if (keyRefusal(ring, token, use) !== null) return false;
++  try {
++    const raw = signatureBytes(token.signature);
++    return raw !== null && verify(null, signedBytes(token.body, token.keyId), ring.entries.get(token.keyId)!.key, raw);
++  } catch { return false; }
+ }
+ // S7: the compiled check of the core (Refund.ValidContext of RefundFinality.ContextOf(initial, "init")).
+ export function validInitial(M: CoreMod, cv: Conv, s: ChargeState): boolean {
+@@ -331,13 +388,13 @@ export function validInitial(M: CoreMod, cv: Conv, s: ChargeState): boolean {
+ 
+ // One audited commit as read from the store (exact bytes).
+ export type AuditedRow = { seq: number; requestId: string; token: string; tokenSha256: string; intent: string; self: string; body: Token["body"] };
+-export type Ids = { specLockSha256: string; checkerSha256: string; publicKeyPem: string };
++export type Ids = { specLockSha256: string; checkerSha256: string };
+ 
+-// The auditor: one supplied initial charge (THE ANCHOR), one key, one pair of pinned ids.
++// The auditor: one supplied initial charge (THE ANCHOR), one pinned key allowlist (D-1), one pair of pinned ids.
+ export class StoreAuditor {
+   readonly initText: string; readonly initCore: any; readonly genesis: string;
+-  constructor(readonly M: CoreMod, readonly cv: Conv, readonly key: KeyObject, readonly ids: Ids, readonly init: ChargeState) {
+-    this.initText = canon(init); this.initCore = cv.charge(init); this.genesis = genesisOf(this.initText, ids.specLockSha256, ids.checkerSha256, ids.publicKeyPem);
++  constructor(readonly M: CoreMod, readonly cv: Conv, readonly ring: KeyRing, readonly ids: Ids, readonly init: ChargeState) {
++    this.initText = canon(init); this.initCore = cv.charge(init); this.genesis = genesisOf(this.initText, ids.specLockSha256, ids.checkerSha256, ring.genesisPem);
+   }
+   start(): Pos { return { st: this.M.Shell5.__default.AInit(this.initCore), count: 0, chain: this.genesis }; }
+   // Schema TEXT, integrity, meta. true: a store with a meta row; false: a fresh one; throws to refuse.
+@@ -398,7 +455,7 @@ export class StoreAuditor {
+         const self = linkOf(chain, tokenText, intent);
+         if (sprev !== chain || oprev !== chain || sself !== self || oself !== self) throw new Error("row " + k + ": chain link");
+         const body = tk.body;
+-        const sigOk = sigOkOf(this.key, tk);
++        const sigOk = sigOkOf(this.ring, tk, { kind: "stored", seq: k });
+         const preOk = sha256hex(canon(cv.backCharge(st.dtor_cur))) === body.preStateSha256;   // A4' on the replay
+         const t = M.Shell.ShellToken.create_ShellToken(
+           new M.BigNumber(body.specLockSha256 === this.ids.specLockSha256 ? 1 : 0), new M.BigNumber(body.checkerSha256 === this.ids.checkerSha256 ? 2 : 0),
+diff --git a/ts/refund-finality/proposer.ts b/ts/refund-finality/proposer.ts
+index ccfd74ec..be8fea4b 100644
+--- a/ts/refund-finality/proposer.ts
++++ b/ts/refund-finality/proposer.ts
+@@ -34,7 +34,7 @@ export class LineSplitter {
+   }
+ }
+ 
+-export type Ready = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; singleUse: boolean };
++export type Ready = { publicKeyPem: string; keyId: string; specLockSha256: string; checkerSha256: string; singleUse: boolean };
+ export type Minted = { ok: boolean; token?: Token; reason?: string };
+ 
+ export class MinterClient {
+@@ -44,8 +44,9 @@ export class MinterClient {
+   // Answers that carry no known id (the issuer answers a message with a bad id with id null).
+   readonly unmatched: Minted[] = [];
+   private constructor(private readonly child: ChildProcessWithoutNullStreams) {}
+-  static start(root: string, corePath: string, specLockPath: string, singleUse: "on" | "off"): Promise<MinterClient> {
+-    const child = spawn(process.execPath, ["--import", "tsx", join(__dirname, "minter.ts"), corePath, specLockPath, singleUse],
++  // keyPath (D-1): the issuer's key file (a regular file of this uid, mode 0600 or 0400; minter.ts / keyfile.ts check it).
++  static start(root: string, corePath: string, specLockPath: string, singleUse: "on" | "off", keyPath: string): Promise<MinterClient> {
++    const child = spawn(process.execPath, ["--import", "tsx", join(__dirname, "minter.ts"), corePath, specLockPath, singleUse, keyPath],
+       { cwd: root, stdio: ["pipe", "pipe", "inherit"] }) as unknown as ChildProcessWithoutNullStreams;
+     const client = new MinterClient(child);
+     return new Promise((done, fail) => {
+diff --git a/ts/refund-finality/launch/minter-launch.sh b/ts/refund-finality/launch/minter-launch.sh
+index 3240f1f8..fb92825c 100755
+--- a/ts/refund-finality/launch/minter-launch.sh
++++ b/ts/refund-finality/launch/minter-launch.sh
+@@ -1,6 +1,9 @@
+ #!/bin/sh
+ # Night shift 2026-11-19, task h-minter2 (C-ATT-14, C-ATT-31). The CLOSED LAUNCH of the issuer. TESTED-UNPROVED.
+-# Usage: minter-launch.sh <built directory> <pinned manifest SHA-256> <refund spec lock> <on|off> [<sink store path>]
++# Usage: minter-launch.sh <built directory> <pinned manifest SHA-256> <refund spec lock> <on|off> <key file> [<sink store path>]
++# The key file (OWNER DECISION D-1) is NOT in the built directory and NOT in the manifest. This script does not stat,
++# test or read it: it only makes the path absolute (the directory part is resolved; the last component is kept as
++# given, so a symbolic link there still reaches minter.cjs and is refused by its O_NOFOLLOW open: keyfile.ts).
+ # Before Node starts: the manifest has the pinned digest; every listed file has its digest (/usr/bin/shasum); the
+ # directory holds no other file. Then: `env -i` with an allow-list (PATH, LANG, TZ, HOME, FORGE_MINTER_CLOSED), the
+ # fixed Node binary, fixed node options, the working directory = the built directory, and pre-compiled JavaScript
+@@ -11,8 +14,10 @@
+ set -eu
+ NODE=/opt/homebrew/bin/node
+ NODE_VERSION=v24.3.0
+-[ $# -ge 4 ] && [ $# -le 5 ] || { echo "usage: minter-launch.sh <built dir> <manifest sha256> <spec lock> <on|off> [<store>]" >&2; exit 2; }
++[ $# -ge 5 ] && [ $# -le 6 ] || { echo "usage: minter-launch.sh <built dir> <manifest sha256> <spec lock> <on|off> <key file> [<store>]" >&2; exit 2; }
+ DIR=$(cd "$1" && pwd -P); PIN=$2; LOCK=$3; MODE=$4
++case "$5" in "") echo "minter-launch.sh: refused: empty key file path" >&2; exit 2;; esac
++KEY=$(cd "$(dirname "$5")" && pwd -P)/$(basename "$5")
+ case "$PIN" in *[!0-9a-f]*|"") echo "minter-launch.sh: refused: the pin is not lowercase hex" >&2; exit 2;; esac
+ [ ${#PIN} -eq 64 ] || { echo "minter-launch.sh: refused: the pin is not 64 hex digits" >&2; exit 2; }
+ LOCK=$(cd "$(dirname "$LOCK")" && pwd -P)/$(basename "$LOCK")
+@@ -26,6 +31,6 @@ present=$(find . -type f ! -name MANIFEST.sha256 | LC_ALL=C sort)
+ [ -z "$(find . -type l)" ] || { echo "minter-launch.sh: refused: the directory holds a symbolic link" >&2; exit 2; }
+ v=$(/usr/bin/env -i "$NODE" --version)
+ [ "$v" = "$NODE_VERSION" ] || { echo "minter-launch.sh: refused: node is $v, not $NODE_VERSION" >&2; exit 2; }
+-if [ $# -eq 5 ]; then STORE=$(cd "$(dirname "$5")" && pwd -P)/$(basename "$5"); set -- "$STORE"; else set --; fi
++if [ $# -eq 6 ]; then STORE=$(cd "$(dirname "$6")" && pwd -P)/$(basename "$6"); set -- "$STORE"; else set --; fi
+ exec /usr/bin/env -i PATH=/usr/bin:/bin LANG=C TZ=UTC HOME=/var/empty FORGE_MINTER_CLOSED="$PIN" \
+-  "$NODE" --no-addons --disallow-code-generation-from-strings "$DIR/minter.cjs" "$DIR/core.cjs" "$LOCK" "$MODE" "$@"
++  "$NODE" --no-addons --disallow-code-generation-from-strings "$DIR/minter.cjs" "$DIR/core.cjs" "$LOCK" "$MODE" "$KEY" "$@"
+diff --git a/tests/refund-finality/suite.ts b/tests/refund-finality/suite.ts
+index 1261fcce..b221fe74 100644
+--- a/tests/refund-finality/suite.ts
++++ b/tests/refund-finality/suite.ts
+@@ -19,6 +19,7 @@ import {
+ } from "../../ts/refund-finality/encoding";
+ import { Dispatcher, DispatcherConfig, Effect, FlushResult } from "../../ts/refund-finality/dispatcher";
+ import { MinterClient, Minted, propose } from "../../ts/refund-finality/proposer";
++import { makeKeyFile } from "./regress/kf_lib";   // D-1: test key FILES (mode 0600, temp directory)
+ import { CommitResult, Sink, SinkConfig, genesisOf, linkOf } from "../../ts/refund-finality/sink";
+ 
+ // OWNER DECISION PENDING (owner item B-15, results/night-shift-20261119/OWNER_REQUIRED.md; U428; U575). The issuer's
+@@ -85,7 +86,7 @@ class UncheckedSink {
+ }
+ 
+ const verifies = (key: KeyObject, m: Minted): boolean => {
+-  try { return !!m.ok && !!m.token && verify(null, signedBytes(m.token.body), key, Buffer.from(m.token.signature, "base64")); } catch { return false; }
++  try { return !!m.ok && !!m.token && verify(null, signedBytes(m.token.body, m.token.keyId), key, Buffer.from(m.token.signature, "base64")); } catch { return false; }
+ };
+ // Waits until the condition holds, at most `ms` milliseconds. Returns false at the time limit.
+ async function until(condition: () => boolean, ms: number): Promise<boolean> {
+@@ -110,7 +111,8 @@ function run(args: string[]): Promise<{ code: number | null; stdout: string }> {
+ process.exitCode = 2;
+ 
+ async function main() {
+-  const minter = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "off");
++  const minterKey = makeKeyFile();
++  const minter = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "off", minterKey.path);
+   const pem = minter.ready.publicKeyPem, key = createPublicKey(pem);
+   const checkerSha256 = checkerSha256Of(readFileSync(CORE), readFileSync(join(GLUE, "encoding.ts")), readFileSync(join(GLUE, "minter.ts")));
+   const specLockSha256 = sha256hex(readFileSync(SPEC_LOCK));
+@@ -118,10 +120,10 @@ async function main() {
+   add("setup", "the issuer reports the ids that the operator computes from the files", "equal", String(idsEqual), idsEqual);
+   {
+     // Key isolation: code that loads the issuer module in its own process gets no key and no signing function.
+-    const probe = await run([join(__dirname, "issuer_exports_probe.ts"), CORE, SPEC_LOCK, "off"]);
++    const probe = await run([join(__dirname, "issuer_exports_probe.ts"), CORE, SPEC_LOCK, "off", makeKeyFile().path]);
+     const lines = probe.stdout.split("\n").filter(l => l.length > 0).map(l => { try { return JSON.parse(l); } catch { return {}; } });
+     const names = lines.find(l => l.probe === true)?.exportedNames, ready = lines.find(l => l.ready === true) ?? {};
+-    const publicOnly = canon(Object.keys(ready).sort()) === canon(["checkerSha256", "publicKeyPem", "ready", "singleUse", "specLockSha256"]) &&
++    const publicOnly = canon(Object.keys(ready).sort()) === canon(["checkerSha256", "keyId", "publicKeyPem", "ready", "singleUse", "specLockSha256"]) &&
+       String(ready.publicKeyPem).includes("BEGIN PUBLIC KEY") && !JSON.stringify(lines).includes("PRIVATE");
+     add("issuer", "code that loads the issuer module gets no key and no signing function", "0 exported names; the ready message holds a public key only",
+       `${Array.isArray(names) ? names.length : "NO ANSWER"} exported names; ${publicOnly ? "the ready message holds a public key only" : "THE READY MESSAGE HAS OTHER FIELDS"}`,
+@@ -297,7 +299,9 @@ async function main() {
+     add(control, name, "problems found: 0", `problems found: ${problems.length}${problems.length ? ": " + problems.join("; ") : ""}`, problems.length === 0);
+   };
+   const attacker = generateKeyPairSync("ed25519");
+-  const signWith = (privateKey: KeyObject, body: TokenBody): Token => ({ body, signature: sign(null, signedBytes(body), privateKey).toString("base64") });
++  // D-1: an attacker's token claims the PINNED key id (the strongest form); a foreign key id is refused before any signature check.
++  const keyId = minter.ready.keyId;
++  const signWith = (privateKey: KeyObject, body: TokenBody): Token => ({ body, keyId, signature: sign(null, signedBytes(body, keyId), privateKey).toString("base64") });
+   const SHAPE = "token shape", SIG = "signature does not verify", STALE = "stored state is not the token's pre-state",
+     USED = "request id is already settled with another token", NOTEXT = "token is not a text", NONCANON = "token text is not canonical";
+   // Processes of one race wait for a common start time. A process that is ready too late makes the row fail.
+@@ -313,7 +317,7 @@ async function main() {
+     const zeros = Buffer.alloc(64).toString("base64");
+     const spki = createPublicKey(pem).export({ type: "spki", format: "der" });
+     const fromPublic = createPrivateKey({ key: Buffer.concat([Buffer.from("302e020100300506032b657004220420", "hex"), spki.subarray(spki.length - 32)]), format: "der", type: "pkcs8" });
+-    const other = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "off");
++    const other = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "off", makeKeyFile().path);
+     const otherToken = await mustMint(other, pre, req("a_good", "200"));
+     other.stop();
+     // The last base64 character of 64 bytes carries 2 data bits. Another character with the same 2 bits decodes to the same bytes.
+@@ -329,34 +333,34 @@ async function main() {
+       ["missing token: a text that is not JSON", new AsIs("token"), SHAPE, false],
+       ["a valid token handed over as an object, not as its text", new AsIs(good), NOTEXT, true],
+       ["a valid token as JSON text with other spacing", new AsIs(JSON.stringify(good, null, 1)), NONCANON, true],
+-      ["a valid token as JSON text with the keys in another order", new AsIs(JSON.stringify({ signature: good.signature, body: good.body })), NONCANON, true],
+-      ["JSON text with the key `body` twice: an attacker's body first, the signed body last", new AsIs(`{"body":${canon(evil)},"body":${canon(body)},"signature":"${good.signature}"}`), NONCANON, true],
+-      ["JSON text with the key `body` twice: the signed body first, an attacker's body last", new AsIs(`{"body":${canon(body)},"body":${canon(evil)},"signature":"${good.signature}"}`), NONCANON, true],
++      ["a valid token as JSON text with the keys in another order", new AsIs(JSON.stringify({ signature: good.signature, keyId, body: good.body })), NONCANON, true],
++      ["JSON text with the key `body` twice: an attacker's body first, the signed body last", new AsIs(`{"body":${canon(evil)},"body":${canon(body)},"keyId":"${keyId}","signature":"${good.signature}"}`), NONCANON, true],
++      ["JSON text with the key `body` twice: the signed body first, an attacker's body last", new AsIs(`{"body":${canon(body)},"body":${canon(evil)},"keyId":"${keyId}","signature":"${good.signature}"}`), NONCANON, true],
+       ["direct call with an intent and a post-state, no signature field", { body }, SHAPE, true],
+       ["direct call with the intent only", { intent: body.intent }, SHAPE, false],
+-      ["empty signature", { body, signature: "" }, SHAPE, true],
+-      ["signature of 63 bytes", { body, signature: Buffer.alloc(63, 7).toString("base64") }, SHAPE, true],
+-      ["signature text that is not canonical base64 (same 64 bytes)", { body, signature: nonCanonical }, SHAPE, true],
+-      ["signature of 64 zero bytes", { body, signature: zeros }, SIG, true],
++      ["empty signature", { body, keyId, signature: "" }, SHAPE, true],
++      ["signature of 63 bytes", { body, keyId, signature: Buffer.alloc(63, 7).toString("base64") }, SHAPE, true],
++      ["signature text that is not canonical base64 (same 64 bytes)", { body, keyId, signature: nonCanonical }, SHAPE, true],
++      ["signature of 64 zero bytes", { body, keyId, signature: zeros }, SIG, true],
+       ["forged: the body of a valid token, signed with the attacker's key", signWith(attacker.privateKey, body), SIG, true],
+       ["forged: signed with a key made from the public key bytes", signWith(fromPublic, body), SIG, true],
+       ["forged: an attacker's body (remaining 0, amount 900), signed with the attacker's key", signWith(attacker.privateKey, evil), SIG, true],
+-      ["forged: an attacker's body with the signature of the valid token", { body: evil, signature: good.signature }, SIG, true],
+-      ["forged: the valid body with the signature of an earlier committed token", { body, signature: earlier.signature }, SIG, true],
++      ["forged: an attacker's body with the signature of the valid token", { body: evil, keyId, signature: good.signature }, SIG, true],
++      ["forged: the valid body with the signature of an earlier committed token", { body, keyId, signature: earlier.signature }, SIG, true],
+       ["a token of a second issuer process (same files, another key)", otherToken, SIG, true],
+-      ["tampered: post-state remaining 700 -> 0", { body: { ...body, post: { ...body.post, remaining: "0" } }, signature: good.signature }, SIG, true],
+-      ["tampered: intent amount 200 -> 900", { body: { ...body, intent: { ...body.intent, amount: "900" } }, signature: good.signature }, SIG, true],
+-      ["tampered: intent reason", { body: { ...body, intent: { ...body.intent, reason: "returned_item" } }, signature: good.signature }, SIG, true],
+-      ["tampered: intent charge id", { body: { ...body, intent: { ...body.intent, chargeId: "ch_other" } }, signature: good.signature }, SIG, true],
+-      ["tampered: request id", { body: { ...body, requestId: "rq_a_other" }, signature: good.signature }, SIG, true],
+-      ["tampered: pre-state hash", { body: { ...body, preStateSha256: "0".repeat(64) }, signature: good.signature }, SIG, true],
+-      ["tampered: domain text", { body: { ...body, domain: DOMAIN + "X" }, signature: good.signature }, SHAPE, true],
+-      ["tampered: another spec lock hash (the signature does not fit either)", { body: { ...body, specLockSha256: "1".repeat(64) }, signature: good.signature }, "spec lock is not the pinned one", true],
+-      ["tampered: another checker id (the signature does not fit either)", { body: { ...body, checkerSha256: "2".repeat(64) }, signature: good.signature }, "checker is not the pinned one", true],
+-      ["tampered: extra field in the body", { body: { ...body, note: "x" }, signature: good.signature }, SHAPE, true],
++      ["tampered: post-state remaining 700 -> 0", { body: { ...body, post: { ...body.post, remaining: "0" } }, keyId, signature: good.signature }, SIG, true],
++      ["tampered: intent amount 200 -> 900", { body: { ...body, intent: { ...body.intent, amount: "900" } }, keyId, signature: good.signature }, SIG, true],
++      ["tampered: intent reason", { body: { ...body, intent: { ...body.intent, reason: "returned_item" } }, keyId, signature: good.signature }, SIG, true],
++      ["tampered: intent charge id", { body: { ...body, intent: { ...body.intent, chargeId: "ch_other" } }, keyId, signature: good.signature }, SIG, true],
++      ["tampered: request id", { body: { ...body, requestId: "rq_a_other" }, keyId, signature: good.signature }, SIG, true],
++      ["tampered: pre-state hash", { body: { ...body, preStateSha256: "0".repeat(64) }, keyId, signature: good.signature }, SIG, true],
++      ["tampered: domain text", { body: { ...body, domain: DOMAIN + "X" }, keyId, signature: good.signature }, SHAPE, true],
++      ["tampered: another spec lock hash (the signature does not fit either)", { body: { ...body, specLockSha256: "1".repeat(64) }, keyId, signature: good.signature }, "spec lock is not the pinned one", true],
++      ["tampered: another checker id (the signature does not fit either)", { body: { ...body, checkerSha256: "2".repeat(64) }, keyId, signature: good.signature }, "checker is not the pinned one", true],
++      ["tampered: extra field in the body", { body: { ...body, note: "x" }, keyId, signature: good.signature }, SHAPE, true],
+       ["tampered: extra field beside the body", { ...good, admin: "true" }, SHAPE, true],
+-      ["tampered: intent amount as a JSON number", { body: { ...body, intent: { ...body.intent, amount: 200 } }, signature: good.signature }, SHAPE, true],
+-      ["tampered: post-state remaining beyond 19 digits", { body: { ...body, post: { ...body.post, remaining: "9".repeat(20) } }, signature: good.signature }, SHAPE, true],
++      ["tampered: intent amount as a JSON number", { body: { ...body, intent: { ...body.intent, amount: 200 } }, keyId, signature: good.signature }, SHAPE, true],
++      ["tampered: post-state remaining beyond 19 digits", { body: { ...body, post: { ...body.post, remaining: "9".repeat(20) } }, keyId, signature: good.signature }, SHAPE, true],
+       ["a body whose request id holds U+0000, signed with the attacker's key", signWith(attacker.privateKey, nul), SHAPE, true],
+     ];
+     for (const [name, token, reason, needUnchecked] of cases) {
+@@ -386,7 +390,7 @@ async function main() {
+     writeFileSync(otherCore, Buffer.concat([readFileSync(CORE), Buffer.from("\n// another build of the same core\n")]));
+     for (const [label, corePath, lockPath, reason] of [
+       ["another spec lock", CORE, otherLock, "spec lock is not the pinned one"], ["another checker id", otherCore, SPEC_LOCK, "checker is not the pinned one"]] as const) {
+-      const issuer = await MinterClient.start(ROOT, corePath, lockPath, "off");
++      const issuer = await MinterClient.start(ROOT, corePath, lockPath, "off", minterKey.path);
+       const wOther = await world("a_" + label.replace(/ /g, "_"), issuer, []);
+       const token = await mustMint(issuer, wOther.current(), req("a_ids", "100"));
+       const differs = label === "another spec lock" ? token.body.specLockSha256 !== specLockSha256 && token.body.checkerSha256 === checkerSha256
+@@ -716,7 +720,7 @@ async function main() {
+ 
+   // ---------------- Option: the issuer rule "one signed transition per pre-state". ----------------
+   {
+-    const strict = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "on");
++    const strict = await MinterClient.start(ROOT, CORE, SPEC_LOCK, "on", makeKeyFile().path);
+     const pre = state("opt"), a = await strict.mint(pre, propose(pre, req("opt_a", "100"))), again = await strict.mint(pre, propose(pre, req("opt_a", "100")));
+     const b = await strict.mint(pre, propose(pre, req("opt_b", "200")));
+     add("option", "single-use on: the same transition again for one pre-state", "the same token", a.ok && again.ok && canon(a.token) === canon(again.token) ? "the same token" : "DIFFERENT OR REFUSED",
+@@ -739,7 +743,7 @@ async function main() {
+   // rows start the issuer process here, with the same 0x0A framing.
+   {
+     const path = join(outDir, "option-store.sqlite");
+-    const child = spawn(process.execPath, ["--import", "tsx", join(GLUE, "minter.ts"), CORE, SPEC_LOCK, "on", path],
++    const child = spawn(process.execPath, ["--import", "tsx", join(GLUE, "minter.ts"), CORE, SPEC_LOCK, "on", makeKeyFile().path, path],
+       { cwd: ROOT, stdio: ["pipe", "pipe", "ignore"] });
+     const answers: any[] = []; let wake: (() => void) | null = null, buf = "";
+     child.stdout.on("data", (c: Buffer) => {
+diff --git a/tests/refund-finality/regress/kf_allowlist_config.ts b/tests/refund-finality/regress/kf_allowlist_config.ts
+new file mode 100644
+index 00000000..ac689f83
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_allowlist_config.ts
+@@ -0,0 +1,51 @@
++// Regression for OWNER DECISION D-1 (c), task h-key: the allowlist configuration rules (core/store.ts keyRingOf).
++// (1) the OLD single pin {publicKeyPem} = an allowlist of ONE active key: a store made with it opens with
++//     {issuerKeys: [A active]} and with {publicKeyPem: A, issuerKeys: [A active]} (the same h_0: entry 0 = genesis key),
++//     and a new token of A commits under the list form (CONTROL).
++// (2) refused configurations (sink AND dispatcher refuse to start): a wrong keyId for a key; the same key twice; a retired
++//     entry without verifyUpToSeq; an active entry WITH verifyUpToSeq; an unknown status; an empty list; publicKeyPem
++//     that is not entry 0; a non-Ed25519 key; neither field.
++// (3) the genesis is bound to entry 0: a list with ANOTHER key first does not open the store (h_0 differs).
++// SAFE = exit 0. On f67c5c16: no allowlist -> FAIL.
++import { generateKeyPairSync } from "node:crypto";
++import { join } from "node:path";
++import { active, argv, guard, memKey, retired, sinkKit, verdict } from "./kf_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = sinkKit(root), A = memKey(), B = memKey();
++  const db = join(K.dir(), "s.sqlite"), r: any = {};
++  const s = K.open(db, { publicKeyPem: A.publicKeyPem });
++  if (typeof s === "string") verdict(false, { setup: s });
++  s.init(K.S0); r.legacyCommit = s.commit(K.tok(K.S0, "rq_1", "100", A)).status; s.close();
++  const s2 = K.open(db, { issuerKeys: [active(A)] });
++  r.listForm = typeof s2 === "string" ? s2 : s2.commit(K.tok({ ...K.S0, remaining: "900" }, "rq_2", "0", A)).status;
++  if (typeof s2 !== "string") s2.close();
++  const s3 = K.open(db, { publicKeyPem: A.publicKeyPem, issuerKeys: [active(A), retired(B, 0)] });
++  r.bothFieldsConsistent = typeof s3 === "string" ? s3 : "STARTED"; if (typeof s3 !== "string") s3.close();
++  const s4 = K.open(db, { issuerKeys: [active(B), active(A)] });
++  r.otherGenesisKeyFirst = typeof s4 === "string" ? "refused" : "STARTED"; if (typeof s4 !== "string") s4.close();
++  const rsa = generateKeyPairSync("rsa", { modulusLength: 1024 }).publicKey.export({ type: "spki", format: "pem" }) as string;
++  const bad: Record<string, any> = {
++    wrongKeyId: { issuerKeys: [{ ...active(A), keyId: B.keyId }] },
++    duplicate: { issuerKeys: [active(A), active(A)] },
++    retiredWithoutBound: { issuerKeys: [active(A), { keyId: B.keyId, publicKeyPem: B.publicKeyPem, status: "retired" }] },
++    activeWithBound: { issuerKeys: [{ ...active(A), verifyUpToSeq: 3 }] },
++    unknownStatus: { issuerKeys: [{ ...active(A), status: "revoked" }] },
++    emptyList: { issuerKeys: [] },
++    pemNotEntry0: { publicKeyPem: B.publicKeyPem, issuerKeys: [active(A), active(B)] },
++    notEd25519: { publicKeyPem: rsa },
++    neither: {},
++  };
++  r.refused = {};
++  let allRefused = true;
++  for (const [name, pin] of Object.entries(bad)) {
++    const fresh = join(K.dir(), name + ".sqlite"), x = K.open(fresh, pin);
++    if (typeof x !== "string") x.close();
++    const d = K.flush(fresh, join(K.dir(), name + ".jsonl"), pin, A.publicKeyPem);
++    const ok = typeof x === "string" && d.alarm !== undefined;
++    r.refused[name] = ok ? "sink and dispatcher refused" : "NOT REFUSED (sink " + (typeof x === "string" ? "refused" : "started") + ", dispatcher " + (d.alarm ? "refused" : "ran") + ")";
++    allRefused &&= ok;
++  }
++  verdict(r.legacyCommit === "committed" && r.listForm === "committed" && r.bothFieldsConsistent === "STARTED" && r.otherGenesisKeyFirst === "refused" && allRefused, r);
++})());
+diff --git a/tests/refund-finality/regress/kf_fifo_dir_refused.ts b/tests/refund-finality/regress/kf_fifo_dir_refused.ts
+new file mode 100644
+index 00000000..63ab464c
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_fifo_dir_refused.ts
+@@ -0,0 +1,33 @@
++// Regression for OWNER DECISION D-1 (b), task h-key: a FIFO or a DIRECTORY at the key path is refused, and the open does
++// not block on the FIFO (no writer ever opens it). keyfile.ts opens with O_RDONLY | O_NOFOLLOW | O_NONBLOCK: open(2) of
++// a FIFO for reading with O_NONBLOCK returns at once; fstat says "not a regular file". O_NONBLOCK is not cleared (Node
++// has no fcntl); it has no effect on read(2) of a regular file, the only kind that passes.
++// Each minter start has a 15 s limit: a start that blocks is a FAIL. CONTROL: a 0600 regular key file starts.
++// SAFE = exit 0. On f67c5c16: the minter starts (the path is not read as a key) -> FAIL.
++import { spawnSync } from "node:child_process";
++import { mkdirSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, keyTempDir, load, makeKeyFile, startMinter, verdict } from "./kf_lib";
++
++guard((async () => {
++  const { root, core } = argv();
++  const { KF } = load(root);
++  const dir = keyTempDir(), fifo = join(dir, "fifo.pem"), sub = join(dir, "dir.pem");
++  const mk = spawnSync("/usr/bin/mkfifo", ["-m", "600", fifo]);
++  if (mk.status !== 0) verdict(false, { setup: "mkfifo failed" });
++  mkdirSync(sub, { mode: 0o700 });
++  const r: any = {};
++  for (const [name, path] of [["fifo", fifo], ["directory", sub]] as const) {
++    const t0 = Date.now(), m = await startMinter(root, core, [path], "on", 15000); m.stop();
++    r[name] = { ready: m.ready !== null, code: m.code, timedOut: m.timedOut, notRegular: /not a regular file/.test(m.stderr), ms: Date.now() - t0 > 14000 ? "LIMIT" : "under 14 s" };
++    if (KF !== null && typeof KF.loadSigningKey === "function") {
++      const t1 = Date.now(); let why = "";
++      try { KF.loadSigningKey(path); why = "ACCEPTED"; } catch (e) { why = String((e as Error).message); }
++      r[name].direct = { refused: /not a regular file/.test(why), quick: Date.now() - t1 < 2000 };
++    } else r[name].direct = "NOT AVAILABLE (no keyfile.ts)";
++  }
++  const k = makeKeyFile(), c = await startMinter(root, core, [k.path]); c.stop();
++  r.control = { ready: c.ready !== null && c.ready.keyId === k.keyId };
++  const ok = (x: any) => !x.ready && x.code === 2 && !x.timedOut && x.notRegular && typeof x.direct === "object" && x.direct.refused && x.direct.quick;
++  verdict(ok(r.fifo) && ok(r.directory) && r.control.ready, r);
++})());
+diff --git a/tests/refund-finality/regress/kf_keyid_mismatch_refused.ts b/tests/refund-finality/regress/kf_keyid_mismatch_refused.ts
+new file mode 100644
+index 00000000..9a0baf23
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_keyid_mismatch_refused.ts
+@@ -0,0 +1,33 @@
++// Regression for OWNER DECISION D-1 (c), task h-key: a token whose key_id names key A but whose signature is made by
++// key B is refused, also when BOTH keys are pinned and active, and a key id changed after signing is refused (the key
++// id is inside the signed bytes). Pin [A active, B active].
++// (1) keyId A, signed by B over the bytes with keyId A -> rejected.
++// (2) a valid token of B (keyId B), keyId field changed to A, signature kept -> rejected.
++// (3) a valid token of A (keyId A), keyId field changed to B, signature kept -> rejected.
++// (4) keyId A, signed by an UNPINNED key D -> rejected.
++// CONTROL: a valid token of A and one of B (amount 0) commit. SAFE = exit 0. On f67c5c16 -> FAIL.
++import { join } from "node:path";
++import { active, argv, guard, memKey, sinkKit, verdict } from "./kf_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = sinkKit(root), A = memKey(), B = memKey(), D = memKey();
++  const db = join(K.dir(), "s.sqlite");
++  const s = K.open(db, { issuerKeys: [active(A), active(B)] });
++  if (typeof s === "string") verdict(false, { setup: s });
++  s.init(K.S0);
++  const swapId = (text: string, keyId: string) => { const o = JSON.parse(text); o.keyId = keyId; return K.E.canon(o); };
++  const st = (x: any) => x.status + (x.reason ? ": " + x.reason : "");
++  const r: any = {
++    namesA_signedByB: st(s.commit(K.tok(K.S0, "rq_1", "100", B, A.keyId))),
++    tokenOfB_idChangedToA: st(s.commit(swapId(K.tok(K.S0, "rq_2", "100", B), A.keyId))),
++    tokenOfA_idChangedToB: st(s.commit(swapId(K.tok(K.S0, "rq_3", "100", A), B.keyId))),
++    namesA_signedByUnpinnedD: st(s.commit(K.tok(K.S0, "rq_4", "100", D, A.keyId))),
++  };
++  r.controlA = st(s.commit(K.tok(K.S0, "rq_a", "100", A)));
++  r.controlBzero = st(s.commit(K.tok({ ...K.S0, remaining: "900" }, "rq_b", "0", B)));
++  s.close();
++  r.rows = K.rows(db);
++  const neg = ["namesA_signedByB", "tokenOfB_idChangedToA", "tokenOfA_idChangedToB", "namesA_signedByUnpinnedD"].every(k => r[k].startsWith("rejected"));
++  verdict(neg && r.controlA === "committed" && r.controlBzero === "committed" && r.rows.join() === "rq_a,rq_b", r);
++})());
+diff --git a/tests/refund-finality/regress/kf_lib.ts b/tests/refund-finality/regress/kf_lib.ts
+new file mode 100644
+index 00000000..0109b0ba
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_lib.ts
+@@ -0,0 +1,132 @@
++// Shared helper of the key-file regressions kf_*.ts and of the test set-up of m_lib, d_lib, s_lib, suite (OWNER DECISION
++// D-1, night shift 2026-11-19, task h-key). A TEST helper, not a proof.
++// TEST KEYS ONLY: each key is made here with generateKeyPairSync and written to a NEW temporary directory (mode 0700) as
++// key.pem (mode 0600, PKCS#8 PEM). Nothing here reads any other key. The directories are removed at process exit.
++// No private key byte is ever printed.
++import { createHash, generateKeyPairSync, KeyObject, sign } from "node:crypto";
++import { chmodSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { spawn } from "node:child_process";
++import { join, resolve } from "node:path";
++
++const temps: string[] = [];
++process.on("exit", () => { for (const d of temps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* best effort */ } } });
++export function keyTempDir(): string { const d = mkdtempSync(join(tmpdir(), "forge-kf-")); chmodSync(d, 0o700); temps.push(d); return d; }
++
++export type TestKey = { path: string; dir: string; publicKeyPem: string; keyId: string; privateKey: KeyObject; publicKey: KeyObject };
++// key_id, computed here independently of encoding.ts: SHA-256 (lower-case hex) of the DER SubjectPublicKeyInfo bytes.
++export const testKeyIdOf = (publicKey: KeyObject): string =>
++  createHash("sha256").update(publicKey.export({ type: "spki", format: "der" })).digest("hex");
++// A new Ed25519 test key in a new temp directory, written with mode 0600 (or `mode`).
++export function makeKeyFile(mode = 0o600, name = "key.pem", dir = keyTempDir()): TestKey {
++  const { publicKey, privateKey } = generateKeyPairSync("ed25519");
++  const path = join(dir, name);
++  writeFileSync(path, privateKey.export({ type: "pkcs8", format: "pem" }) as string, { flag: "wx", mode: 0o600 });
++  chmodSync(path, mode);
++  return { path, dir, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }) as string, keyId: testKeyIdOf(publicKey), privateKey, publicKey };
++}
++// A test-signed token text in the D-1 format, with the trusted encoding E of the tree under test.
++export function signedTokenText(E: any, body: unknown, key: { privateKey: KeyObject; keyId: string }, keyId = key.keyId): string {
++  return E.canon({ body, keyId, signature: sign(null, E.signedBytes(body, keyId), key.privateKey).toString("base64") });
++}
++
++// ---- shared parts of the kf_*.ts regressions. Usage of every kf_*.ts file (pinned Node 24.3.0):
++//   node --import tsx tests/refund-finality/regress/kf_<name>.ts <treeRoot> <compiledIssuerModule> [<old tree>]
++// Exit 0: PASS (the safe outcome, AND the positive controls in the same file commit). Exit 1: FAIL (the defect, or a
++// positive control fails: a reject-all system fails). Exit 2: usage. Exit 3: the harness broke.
++export type State = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
++export function argv(): { root: string; core: string; old?: string } {
++  const [root, core, old] = process.argv.slice(2);
++  if (!root || !core) { console.error("usage: kf_<name>.ts <treeRoot> <compiledIssuerModule> [<old tree>]"); process.exit(2); }
++  return { root: resolve(root), core: resolve(core), ...(old ? { old: resolve(old) } : {}) };
++}
++/* eslint-disable @typescript-eslint/no-require-imports */
++export function load(root: string): any {
++  const r = (p: string): any => { try { return require(join(root, p)); } catch { return null; } };
++  return { E: r("ts/refund-finality/encoding.ts"), SK: r("ts/refund-finality/sink.ts"), D: r("ts/refund-finality/dispatcher.ts"),
++    ST: r("ts/refund-finality/core/store.ts"), KF: r("ts/refund-finality/keyfile.ts"), P: r("ts/refund-finality/proposer.ts") };
++}
++/* eslint-enable @typescript-eslint/no-require-imports */
++export function verdict(pass: boolean, detail: unknown): never {
++  console.log(JSON.stringify(detail));
++  console.log(pass ? "PASS" : "FAIL");
++  process.exit(pass ? 0 : 1);
++}
++export function guard(p: Promise<void> | void): void { Promise.resolve(p).catch(e => { console.error(e); process.exit(3); }); }
++export const IDS = { specLockSha256: "1".repeat(64), checkerSha256: "2".repeat(64) };
++export const st = (remaining: string, chargeId = "ch_kf", original = "1000"): State => ({ chargeId, original, remaining, refundEnabled: true });
++// A token body for `pre` (the honest transition: remaining - amount), ids = the pinned test ids.
++export function bodyFor(E: any, pre: State, rid: string, amount: string, ids = IDS): any {
++  return { domain: E.DOMAIN, ...ids, preStateSha256: E.stateSha256(pre), requestId: rid,
++    post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() }, intent: { chargeId: pre.chargeId, requestId: rid, amount, reason: "duplicate_charge" } };
++}
++// A test key pair WITHOUT a file (for sink-side tests that sign in this process).
++export function memKey(): { privateKey: KeyObject; publicKey: KeyObject; publicKeyPem: string; keyId: string } {
++  const { publicKey, privateKey } = generateKeyPairSync("ed25519");
++  return { privateKey, publicKey, publicKeyPem: publicKey.export({ type: "spki", format: "pem" }) as string, keyId: testKeyIdOf(publicKey) };
++}
++export const active = (k: { keyId: string; publicKeyPem: string }) => ({ keyId: k.keyId, publicKeyPem: k.publicKeyPem, status: "active" });
++export const retired = (k: { keyId: string; publicKeyPem: string }, verifyUpToSeq: number) => ({ keyId: k.keyId, publicKeyPem: k.publicKeyPem, status: "retired", verifyUpToSeq });
++export const shortErr = (e: unknown): string => String((e as Error)?.message ?? e).replace(/\s+/g, " ").slice(0, 200);
++
++// A minter process with the given arguments after <core> <lock> <mode>. Waits for the ready line, or the exit, or `ms`.
++export type MinterRun = { ready: any | null; code: number | null; timedOut: boolean; stderr: string;
++  mint: (pre: State, rid: string, amount: string) => Promise<any>; stop: () => void };
++export function startMinter(root: string, core: string, rest: string[], mode: "on" | "off" = "on", ms = 20000): Promise<MinterRun> {
++  const child = spawn(process.execPath, ["--no-warnings", "--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...rest],
++    { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
++  let buf = "", stderr = "", next = 1, ready: any = null, code: number | null = null, timedOut = false;
++  const waiting = new Map<number, (a: any) => void>();
++  return new Promise(done => {
++    let settled = false;
++    const finish = () => { if (!settled) { settled = true; clearTimeout(timer); done(run); } };
++    const run: MinterRun = {
++      get ready() { return ready; }, get code() { return code; }, get timedOut() { return timedOut; }, get stderr() { return stderr; },
++      mint: (pre, rid, amount) => new Promise(res => {
++        const id = next++, post = { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() };
++        waiting.set(id, res);
++        child.stdin.write(JSON.stringify({ id, pre, transition: { request: { requestId: rid, amount, reason: "duplicate_charge" }, post,
++          intent: { chargeId: pre.chargeId, requestId: rid, amount, reason: "duplicate_charge" } } }) + "\n");
++      }),
++      stop: () => { try { child.stdin.end(); child.kill(); } catch { /* gone */ } },
++    } as MinterRun;
++    const timer = setTimeout(() => { timedOut = true; try { child.kill("SIGKILL"); } catch { /* gone */ } finish(); }, ms);
++    child.stderr.on("data", d => { stderr += String(d); });
++    child.stdout.on("data", d => {
++      buf += String(d);
++      for (let i = buf.indexOf("\n"); i >= 0; i = buf.indexOf("\n")) {
++        const line = buf.slice(0, i); buf = buf.slice(i + 1);
++        let m: any; try { m = JSON.parse(line); } catch { continue; }
++        if (m.ready) { ready = m; finish(); } else { const w = waiting.get(m.id); if (w) { waiting.delete(m.id); w(m); } }
++      }
++    });
++    child.on("exit", c => { code = c; for (const w of waiting.values()) w({ ok: false, reason: "minter ended" }); waiting.clear(); finish(); });
++  });
++}
++
++// A sink-side kit: one initial charge, the pinned test ids, a token maker, sink and dispatcher openers for a given pin.
++// pin = { publicKeyPem } (the old single pin) or { issuerKeys } (the D-1 allowlist).
++export function sinkKit(root: string, S0: State = st("1000")) {
++  const L = load(root);
++  const dirs: string[] = [];
++  const tok = (pre: State, rid: string, amount: string, signer: { privateKey: KeyObject; keyId: string }, keyId = signer.keyId): string =>
++    signedTokenText(L.E, bodyFor(L.E, pre, rid, amount), signer, keyId);
++  const cfgOf = (pin: any): any => ({ ...pin, ...IDS, initialState: S0 });
++  const open = (db: string, pin: any): any => { try { return new L.SK.Sink(db, cfgOf(pin)); } catch (e) { return "REFUSED: " + shortErr(e); } };
++  const flush = (db: string, ledger: string, pin: any, genesisPem: string): { emitted: string[]; refused: string[]; alarm?: string } => {
++    const effects: any[] = [];
++    const dcfg = { ...pin, ...IDS, initialStateSha256: L.E.stateSha256(S0), newLedgerH0: L.SK.genesisOf(L.E.canon(S0), IDS.specLockSha256, IDS.checkerSha256, genesisPem) };
++    try {
++      const f = new L.D.Dispatcher(db, ledger, dcfg, (e: any) => effects.push(e)).flush();
++      return { emitted: f.emitted.map((e: any) => e.requestId), refused: f.refused.map((x: any) => x.requestId + ": " + String(x.reason).slice(0, 80)) };
++    } catch (e) { return { emitted: effects.map((x: any) => x.requestId), refused: [], alarm: shortErr(e) }; }
++  };
++  const dir = (): string => { const d = keyTempDir(); dirs.push(d); return d; };
++  const rows = (db: string): string[] => {
++    // eslint-disable-next-line @typescript-eslint/no-require-imports
++    const { DatabaseSync } = require("node:sqlite");
++    const d = new DatabaseSync(db, { readOnly: true });
++    try { return (d.prepare("SELECT request_id FROM settled ORDER BY seq").all() as any[]).map(x => x.request_id); } finally { d.close(); }
++  };
++  return { ...L, S0, tok, cfgOf, open, flush, dir, rows };
++}
+diff --git a/tests/refund-finality/regress/kf_mode_refused.ts b/tests/refund-finality/regress/kf_mode_refused.ts
+new file mode 100644
+index 00000000..340d1635
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_mode_refused.ts
+@@ -0,0 +1,24 @@
++// Regression for OWNER DECISION D-1 (b), task h-key: a key file that gives access to group or other is refused.
++// Modes 0640 (group-readable), 0644 (world-readable), 0604, 0620: the minter exits 2 with no ready line.
++// CONTROL: modes 0600 and 0400 start (a reject-all minter fails here). SAFE = exit 0.
++// On f67c5c16 (no key file): the minter does not read the key path as a key and starts -> FAIL.
++import { argv, guard, makeKeyFile, startMinter, verdict } from "./kf_lib";
++
++guard((async () => {
++  const { root, core } = argv();
++  const r: Record<string, any> = {};
++  let pass = true;
++  for (const mode of [0o640, 0o644, 0o604, 0o620]) {
++    const k = makeKeyFile(mode), m = await startMinter(root, core, [k.path]); m.stop();
++    const ok = m.ready === null && m.code === 2 && /group or other/.test(m.stderr);
++    r["0" + mode.toString(8)] = { ready: m.ready !== null, code: m.code, refused: ok };
++    pass &&= ok;
++  }
++  for (const mode of [0o600, 0o400]) {
++    const k = makeKeyFile(mode), m = await startMinter(root, core, [k.path]); m.stop();
++    const ok = m.ready !== null && m.ready.keyId === k.keyId;
++    r["0" + mode.toString(8) + " (control)"] = { ready: m.ready !== null, keyIdIsFile: ok };
++    pass &&= ok;
++  }
++  verdict(pass, r);
++})());
+diff --git a/tests/refund-finality/regress/kf_no_env_no_bypass.ts b/tests/refund-finality/regress/kf_no_env_no_bypass.ts
+new file mode 100644
+index 00000000..909fa712
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_no_env_no_bypass.ts
+@@ -0,0 +1,40 @@
++// Regression for OWNER DECISION D-1 (a), task h-key: the minter's key comes ONLY from the key file argument.
++// (1) no key file argument, with FORGE_MINTER_KEY (a valid PEM test key) and FORGE_MINTER_KEY_FILE in the environment:
++//     the minter exits 2 (usage), no ready line.
++// (2) with a valid key file AND FORGE_MINTER_KEY set to ANOTHER key: the ready line has the FILE's key id (env ignored).
++// (3) source text: minter.ts and keyfile.ts make no key (no generateKeyPair), read no key from process.env, and have no
++//     flag that skips the file checks (no "unsafe", "--test", "bypass" text; minter.ts never calls the test seam).
++// SAFE = exit 0. On f67c5c16: the minter makes a key in memory -> FAIL.
++import { spawn } from "node:child_process";
++import { existsSync, readFileSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, makeKeyFile, startMinter, verdict } from "./kf_lib";
++
++function bare(root: string, core: string, env: Record<string, string>): Promise<{ code: number | null; out: string }> {
++  return new Promise(res => {
++    const c = spawn(process.execPath, ["--no-warnings", "--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on"],
++      { cwd: root, env: { PATH: process.env.PATH ?? "/usr/bin:/bin", HOME: process.env.HOME ?? "/tmp", TMPDIR: process.env.TMPDIR ?? "/tmp", ...env }, stdio: ["pipe", "pipe", "ignore"] });
++    let out = ""; const t = setTimeout(() => c.kill(), 15000);
++    c.stdout.on("data", d => { out += String(d); if (out.includes("\n")) { c.kill(); } });
++    c.on("exit", code => { clearTimeout(t); res({ code, out }); });
++  });
++}
++guard((async () => {
++  const { root, core } = argv();
++  const envKey = makeKeyFile(), fileKey = makeKeyFile();
++  const pem = readFileSync(envKey.path, "utf8");   // a TEST key made by this file
++  const r: any = {};
++  const b = await bare(root, core, { FORGE_MINTER_KEY: pem, FORGE_MINTER_KEY_FILE: envKey.path });
++  r.noArgWithEnv = { code: b.code, ready: b.out.includes("\"ready\":true") };
++  const prev = process.env.FORGE_MINTER_KEY; process.env.FORGE_MINTER_KEY = pem;
++  const m = await startMinter(root, core, [fileKey.path]); m.stop();
++  if (prev === undefined) delete process.env.FORGE_MINTER_KEY; else process.env.FORGE_MINTER_KEY = prev;
++  r.fileWinsOverEnv = { ready: m.ready !== null, keyIdIsFile: m.ready?.keyId === fileKey.keyId };
++  const src = ["ts/refund-finality/minter.ts", "ts/refund-finality/keyfile.ts"].map(p => existsSync(join(root, p)) ? readFileSync(join(root, p), "utf8") : "");
++  const code = src.map(s => s.split("\n").filter(l => !l.trim().startsWith("//")).join("\n"));
++  r.source = { keyfileExists: src[1] !== "", noGenerateKeyPair: code.every(s => !/generateKeyPair/.test(s)),
++    noEnvKey: code.every(s => !/process\.env\.[A-Z_]*KEY/.test(s)) && !/process\.env/.test(code[1]), noBypassText: code.every(s => !/unsafe|bypass|--test/i.test(s)),
++    minterUsesSeam: code[0].includes("loadSigningKeyWith") };
++  verdict(b.code === 2 && !r.noArgWithEnv.ready && r.fileWinsOverEnv.ready && r.fileWinsOverEnv.keyIdIsFile && r.source.keyfileExists &&
++    r.source.noGenerateKeyPair && r.source.noEnvKey && r.source.noBypassText && !r.source.minterUsesSeam, r);
++})());
+diff --git a/tests/refund-finality/regress/kf_old_format_refused.ts b/tests/refund-finality/regress/kf_old_format_refused.ts
+new file mode 100644
+index 00000000..292f31af
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_old_format_refused.ts
+@@ -0,0 +1,48 @@
++// Regression for OWNER DECISION D-1 (c), task h-key: a token WITHOUT key_id (the format before D-1: {body, signature},
++// signature over the body bytes alone) is refused. NO MIGRATION tonight: a store that holds old-format rows is refused
++// at start (the start-up audit cannot decode its tokens) and the dispatcher sends nothing from it. That is the stated
++// effect of the format change, checked here, not a defect.
++// (1) pin {A}: an old-format token of A (a valid signature over the old signed bytes) -> rejected, 0 rows.
++// (2) the same old-format token with a keyId field added (signature over the body alone) -> rejected.
++// (3) with <old tree> (third argument): a store written by the OLD sink (rows of A, one of amount 0) -> the new sink
++//     refuses to start; the new dispatcher sends nothing.
++// CONTROL: a new-format token of A commits. SAFE = exit 0. On f67c5c16: the old format is accepted there -> FAIL.
++import { sign } from "node:crypto";
++import { join } from "node:path";
++import { argv, guard, load, memKey, sinkKit, verdict } from "./kf_lib";
++
++guard((() => {
++  const { root, old } = argv();
++  const K = sinkKit(root), A = memKey();
++  const body = (pre: any, rid: string, amount: string) => ({ domain: K.E.DOMAIN, specLockSha256: "1".repeat(64), checkerSha256: "2".repeat(64),
++    preStateSha256: K.E.stateSha256(pre), requestId: rid, post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
++    intent: { chargeId: pre.chargeId, requestId: rid, amount, reason: "duplicate_charge" } });
++  const oldTok = (b: any) => K.E.canon({ body: b, signature: sign(null, Buffer.from(K.E.canon(b), "utf8"), A.privateKey).toString("base64") });
++  const db = join(K.dir(), "s.sqlite");
++  const s = K.open(db, { publicKeyPem: A.publicKeyPem });
++  if (typeof s === "string") verdict(false, { setup: s });
++  s.init(K.S0);
++  const st = (x: any) => x.status + (x.reason ? ": " + x.reason : "");
++  const b1 = body(K.S0, "rq_old", "100");
++  const r: any = { oldFormat: st(s.commit(oldTok(b1))) };
++  const withId = JSON.parse(oldTok(b1)); withId.keyId = A.keyId;
++  r.oldSignatureWithKeyIdAdded = st(s.commit(K.E.canon(withId)));
++  r.control = st(s.commit(K.tok(K.S0, "rq_new", "100", A)));
++  s.close();
++  r.rows = K.rows(db);
++  let pass = r.oldFormat.startsWith("rejected") && r.oldSignatureWithKeyIdAdded.startsWith("rejected") && r.control === "committed" && r.rows.join() === "rq_new";
++  if (old !== undefined) {
++    const O = load(old);
++    const odb = join(K.dir(), "old.sqlite");
++    const os = new O.SK.Sink(odb, { publicKeyPem: A.publicKeyPem, specLockSha256: "1".repeat(64), checkerSha256: "2".repeat(64), initialState: K.S0 });
++    os.init(K.S0);
++    const w = [os.commit(oldTok(b1)).status, os.commit(oldTok(body({ ...K.S0, remaining: "900" }, "rq_old_zero", "0"))).status];
++    os.close();
++    const ns = K.open(odb, { publicKeyPem: A.publicKeyPem });
++    if (typeof ns !== "string") ns.close();
++    const d = K.flush(odb, join(K.dir(), "l.jsonl"), { publicKeyPem: A.publicKeyPem }, A.publicKeyPem);
++    r.oldStore = { writtenByOldSink: w, newSink: typeof ns === "string" ? ns.slice(0, 140) : "STARTED", newDispatcher: d };
++    pass &&= w.join() === "committed,committed" && typeof ns === "string" && d.emitted.length === 0;
++  } else r.oldStore = "NOT RUN (no <old tree> argument)";
++  verdict(pass, r);
++})());
+diff --git a/tests/refund-finality/regress/kf_other_uid_refused.ts b/tests/refund-finality/regress/kf_other_uid_refused.ts
+new file mode 100644
+index 00000000..a5f2adbe
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_other_uid_refused.ts
+@@ -0,0 +1,26 @@
++// Regression for OWNER DECISION D-1 (b), task h-key: a key file owned by ANOTHER uid is refused.
++// A test without privileges cannot create a file of another uid (chown needs root). So the fstat result is INJECTED
++// through the test seam keyfile.ts loadSigningKeyWith(path, fstat): a parameter of an exported function that only code
++// which imports the module can pass. No command-line argument and no environment variable reaches it; minter.ts calls
++// only loadSigningKey(path) (checked below on the source text). The seam replaces st_uid by euid + 1 on the REAL stat of
++// the opened descriptor. CONTROL: the same seam with the true stat accepts (the seam alone does not refuse).
++// SAFE = exit 0. On f67c5c16: no keyfile.ts -> FAIL.
++import { fstatSync, readFileSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, load, makeKeyFile, verdict } from "./kf_lib";
++
++guard((() => {
++  const { root } = argv();
++  const { KF } = load(root);
++  if (KF === null || typeof KF.loadSigningKeyWith !== "function") verdict(false, { otherUid: "NOT AVAILABLE (no keyfile.ts)" });
++  const k = makeKeyFile();
++  const as = (uidDelta: number) => (fd: number) => { const s = fstatSync(fd); return { isFile: () => s.isFile(), uid: s.uid + uidDelta, mode: s.mode, size: s.size }; };
++  let other = "", control = "";
++  try { KF.loadSigningKeyWith(k.path, as(1)); other = "ACCEPTED"; } catch (e) { other = String((e as Error).message); }
++  try { control = KF.loadSigningKeyWith(k.path, as(0)).keyId === k.keyId ? "accepted, same key id" : "OTHER KEY"; } catch (e) { control = "REFUSED: " + String((e as Error).message); }
++  const pure = KF.keyFileProblem({ isFile: () => true, uid: 0, mode: 0o100600, size: 100 }, 501);
++  const minterSrc = readFileSync(join(root, "ts/refund-finality/minter.ts"), "utf8");
++  const seamUnreachable = !minterSrc.includes("loadSigningKeyWith") && minterSrc.includes("loadSigningKey(keyPath");
++  const r = { otherUid: other, control, pureCheckUid0vs501: pure, seamUnreachableFromMinter: seamUnreachable };
++  verdict(/not owned by the effective uid/.test(other) && control === "accepted, same key id" && /effective uid/.test(String(pure)) && seamUnreachable, r);
++})());
+diff --git a/tests/refund-finality/regress/kf_positive_controls.ts b/tests/refund-finality/regress/kf_positive_controls.ts
+new file mode 100644
+index 00000000..12ba9e18
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_positive_controls.ts
+@@ -0,0 +1,41 @@
++// POSITIVE CONTROLS for OWNER DECISION D-1, task h-key: legitimate refunds still commit with the key-file minter and the
++// key-id allowlist. Real minter process (memory rule "on", key FILE mode 0600), real sink, real dispatcher.
++// Charge: original = remaining = 9223372036854775807 (MaxMoney). Sink pin: issuerKeys [the file's key, active], key id
++// computed by the test (kf_lib testKeyIdOf), and it must equal the ready line's keyId.
++// z1 amount 0 -> committed; z2 amount 0 -> committed (two zero-amount refunds); the z2 token again -> replayed;
++// the LARGEST refund (amount = remaining = MaxMoney) -> committed; the dispatcher sends z1, z2, max once each.
++// A second store pinned the OLD way ({publicKeyPem} only): a zero-amount token of the same minter commits there too.
++// PASS = exit 0. On f67c5c16: the minter does not take a key file -> FAIL.
++import { join } from "node:path";
++import { active, argv, guard, makeKeyFile, sinkKit, startMinter, verdict } from "./kf_lib";
++
++guard((async () => {
++  const { root, core } = argv();
++  const MAX = "9223372036854775807";
++  const S0 = { chargeId: "ch_kfp", original: MAX, remaining: MAX, refundEnabled: true };
++  const K = sinkKit(root, S0), key = makeKeyFile();
++  const m = await startMinter(root, core, [key.path]);
++  const r: any = { ready: m.ready !== null, keyIdMatches: m.ready?.keyId === key.keyId };
++  if (m.ready === null) { m.stop(); verdict(false, { ...r, stderr: m.stderr.slice(-200) }); }
++  const ids = { specLockSha256: m.ready.specLockSha256, checkerSha256: m.ready.checkerSha256 };
++  const pin = { issuerKeys: [active(key)] };
++  const mk = (db: string, p: any): any => new K.SK.Sink(db, { ...p, ...ids, initialState: S0 });
++  const db = join(K.dir(), "s.sqlite"), s = mk(db, pin); s.init(S0);
++  const text = (a: any) => a.ok ? K.E.tokenText(a.token) : "MINT REFUSED: " + a.reason;
++  const c = (t: string) => t.startsWith("MINT") ? t : s.commit(t).status;
++  const z1 = text(await m.mint(S0, "rq_z1", "0")); r.z1 = c(z1);
++  const z2 = text(await m.mint(S0, "rq_z2", "0")); r.z2 = c(z2);
++  r.z2Again = c(z2);
++  const big = text(await m.mint(S0, "rq_max", MAX)); r.largest = c(big);
++  r.state = JSON.parse(s.stateBlob()).remaining;
++  s.close();
++  const effects: string[] = [];
++  const dcfg = { ...pin, ...ids, initialStateSha256: K.E.stateSha256(S0), newLedgerH0: K.SK.genesisOf(K.E.canon(S0), ids.specLockSha256, ids.checkerSha256, key.publicKeyPem) };
++  const f = new K.D.Dispatcher(db, join(K.dir(), "l.jsonl"), dcfg, (e: any) => effects.push(e.requestId)).flush();
++  r.dispatched = effects; r.refused = f.refused.length;
++  const db2 = join(K.dir(), "legacy.sqlite"), s2 = mk(db2, { publicKeyPem: m.ready.publicKeyPem }); s2.init(S0);
++  r.legacyPinZero = s2.commit(text(await m.mint(S0, "rq_legacy_zero", "0"))).status; s2.close();
++  m.stop();
++  verdict(r.keyIdMatches && r.z1 === "committed" && r.z2 === "committed" && r.z2Again === "replayed" && r.largest === "committed" && r.state === "0" &&
++    effects.join() === "rq_z1,rq_z2,rq_max" && r.refused === 0 && r.legacyPinZero === "committed", r);
++})());
+diff --git a/tests/refund-finality/regress/kf_restart_same_key.ts b/tests/refund-finality/regress/kf_restart_same_key.ts
+new file mode 100644
+index 00000000..e58ce090
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_restart_same_key.ts
+@@ -0,0 +1,40 @@
++// Regression for red team C-ATT-05 under OWNER DECISION D-1 (d), task h-key: a minter RESTART with the same key file
++// yields tokens that the SAME sink accepts; the sink's pin never changes.
++// Minter #1 (key file K, mode 0600) -> the sink is pinned ONCE from its ready line (the config text is kept and hashed).
++// rq_1 (100) committed. Minter #1 stops (killed). Minter #2 starts with the same key file: the same publicKeyPem and
++// keyId. rq_2 (0, a zero-amount refund) from minter #2 -> committed by the SAME sink object. The sink is then closed and
++// reopened from the SAME config text: rq_3 (50) from minter #2 -> committed. The config text hash is unchanged.
++// SAFE = exit 0. FAILS on f67c5c16 (C-ATT-05: a new key per process; the sink pinned to the old key rejects rq_2).
++import { createHash } from "node:crypto";
++import { join } from "node:path";
++import { argv, guard, makeKeyFile, sinkKit, startMinter, verdict } from "./kf_lib";
++
++guard((async () => {
++  const { root, core } = argv();
++  const S0 = { chargeId: "ch_kfr", original: "1000", remaining: "1000", refundEnabled: true };
++  const K = sinkKit(root, S0), key = makeKeyFile();
++  const m1 = await startMinter(root, core, [key.path]);
++  if (m1.ready === null) { m1.stop(); verdict(false, { minter1: "did not start", stderr: m1.stderr.slice(-200) }); }
++  const cfgText = JSON.stringify({ publicKeyPem: m1.ready.publicKeyPem, specLockSha256: m1.ready.specLockSha256, checkerSha256: m1.ready.checkerSha256, initialState: S0 });
++  const cfgSha = createHash("sha256").update(cfgText).digest("hex");
++  const db = join(K.dir(), "s.sqlite");
++  let s = new K.SK.Sink(db, JSON.parse(cfgText)); s.init(S0);
++  const text = (a: any) => a.ok ? K.E.tokenText(a.token) : "MINT REFUSED: " + a.reason;
++  const c = (t: string) => t.startsWith("MINT") ? t : s.commit(t).status;
++  const r: any = {};
++  r.rq1 = c(text(await m1.mint(S0, "rq_1", "100")));
++  m1.stop();
++  await new Promise(res => setTimeout(res, 300));
++  const m2 = await startMinter(root, core, [key.path]);
++  r.minter2 = { ready: m2.ready !== null, samePublicKey: m2.ready?.publicKeyPem === m1.ready.publicKeyPem, sameKeyId: m2.ready?.keyId !== undefined && m2.ready?.keyId === m1.ready.keyId };
++  const s1 = JSON.parse(s.stateBlob());
++  r.rq2 = m2.ready === null ? "MINTER 2 DID NOT START" : c(text(await m2.mint(s1, "rq_2", "0")));
++  s.close();
++  s = new K.SK.Sink(db, JSON.parse(cfgText));
++  const s2 = JSON.parse(s.stateBlob());
++  r.rq3AfterSinkReopen = m2.ready === null ? "MINTER 2 DID NOT START" : c(text(await m2.mint(s2, "rq_3", "50")));
++  r.rows = K.rows(db); s.close(); m2.stop();
++  r.pinUnchanged = createHash("sha256").update(cfgText).digest("hex") === cfgSha;
++  verdict(r.rq1 === "committed" && r.minter2.ready && r.minter2.samePublicKey && r.minter2.sameKeyId && r.rq2 === "committed" &&
++    r.rq3AfterSinkReopen === "committed" && r.rows.join() === "rq_1,rq_2,rq_3" && r.pinUnchanged, r);
++})());
+diff --git a/tests/refund-finality/regress/kf_retired_keyid_refused.ts b/tests/refund-finality/regress/kf_retired_keyid_refused.ts
+new file mode 100644
+index 00000000..8ef42f58
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_retired_keyid_refused.ts
+@@ -0,0 +1,49 @@
++// Regression for OWNER DECISION D-1 (rotation), task h-key: the key id of a RETIRED key is refused for a NEW commit;
++// OLD rows signed by it (seq <= its verifyUpToSeq) still pass the start-up audit and the dispatcher; a row signed by it
++// and appended AFTER the retirement (seq > verifyUpToSeq) is refused by the audit and the dispatcher.
++// Phase 1, pin [A active]: rq_1 (A) committed (seq 1).
++// Phase 2, pin [A retired verifyUpToSeq 1, B active] (the operator's rotation): the sink starts (row 1 still verifies);
++//   a NEW token of A -> rejected; CONTROL: a token of B (amount 0) -> committed; the dispatcher sends rq_1 and rq_z.
++// Late row: a copy of the store gets rq_late signed by A at seq 3 (written under pin [A active, B active]: a holder of A
++//   or an operator error); under the phase-2 pin the sink refuses to start and the dispatcher sends nothing of rq_late.
++// SAFE = exit 0. On f67c5c16: no allowlist and no keyId -> FAIL.
++import { copyFileSync } from "node:fs";
++import { join } from "node:path";
++import { active, argv, guard, memKey, retired, sinkKit, verdict } from "./kf_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = sinkKit(root), A = memKey(), B = memKey();
++  const db = join(K.dir(), "s.sqlite"), r: any = {};
++  const p1 = { issuerKeys: [active(A)] }, p2 = { issuerKeys: [retired(A, 1), active(B)] }, pAB = { issuerKeys: [active(A), active(B)] };
++  const s1 = K.open(db, p1);
++  if (typeof s1 === "string") verdict(false, { setup: s1 });
++  s1.init(K.S0);
++  r.phase1 = s1.commit(K.tok(K.S0, "rq_1", "100", A)).status; s1.close();
++  const s2 = K.open(db, p2);
++  if (typeof s2 === "string") verdict(false, { phase2Start: s2, phase1: r.phase1 });
++  const pre = { ...K.S0, remaining: "900" };
++  const retiredNew = s2.commit(K.tok(pre, "rq_2", "100", A));
++  const control = s2.commit(K.tok(pre, "rq_z", "0", B));
++  s2.close();
++  r.phase2 = { started: true, retiredKeyNewCommit: retiredNew.status + (retiredNew.reason ? ": " + retiredNew.reason : ""), controlZeroByB: control.status, rows: K.rows(db) };
++  if (K.ST && typeof K.ST.keyRefusal === "function") {
++    const ring = K.ST.keyRingOf(p2), t = JSON.parse(K.tok(pre, "rq_2", "100", A));
++    r.phase2.reasonText = { commit: K.ST.keyRefusal(ring, t, { kind: "commit" }), storedSeq1: K.ST.keyRefusal(ring, t, { kind: "stored", seq: 1 }), storedSeq2: K.ST.keyRefusal(ring, t, { kind: "stored", seq: 2 }) };
++  }
++  r.dispatch = K.flush(db, join(K.dir(), "l.jsonl"), p2, A.publicKeyPem);
++  // Late row with the retired key.
++  const copy = join(K.dir(), "late.sqlite"); copyFileSync(db, copy);
++  const sAB = K.open(copy, pAB);
++  r.late = { written: typeof sAB === "string" ? sAB : sAB.commit(K.tok(pre, "rq_late", "50", A)).status };
++  if (typeof sAB !== "string") sAB.close();
++  const sLate = K.open(copy, p2);
++  if (typeof sLate !== "string") sLate.close();
++  r.late.sinkUnderPhase2Pin = typeof sLate === "string" ? sLate.slice(0, 140) : "STARTED";
++  r.late.dispatcher = K.flush(copy, join(K.dir(), "l2.jsonl"), p2, A.publicKeyPem);
++  const pass = r.phase1 === "committed" && retiredNew.status === "rejected" && control.status === "committed" && r.phase2.rows.join() === "rq_1,rq_z" &&
++    r.dispatch.alarm === undefined && r.dispatch.emitted.join() === "rq_1,rq_z" &&
++    r.late.written === "committed" && typeof sLate === "string" && !r.late.dispatcher.emitted.includes("rq_late") &&
++    (r.late.dispatcher.alarm !== undefined || r.late.dispatcher.refused.some((x: string) => x.startsWith("rq_late")));
++  verdict(pass, r);
++})());
+diff --git a/tests/refund-finality/regress/kf_symlink_refused.ts b/tests/refund-finality/regress/kf_symlink_refused.ts
+new file mode 100644
+index 00000000..c98165fd
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_symlink_refused.ts
+@@ -0,0 +1,39 @@
++// Regression for OWNER DECISION D-1 (b), task h-key: the key path is a SYMBOLIC LINK to a valid 0600 key -> the minter
++// refuses to start (O_NOFOLLOW: ELOOP), and a swap at the path AFTER the open cannot change the key that is read.
++// (a) minter.ts <...> <symlink -> valid 0600 key>: exit 2, no ready line.
++// (b) CONTROL: the same key by its real path: ready, keyId = the file's key id (a reject-all minter fails here).
++// (c) Swap after the open (by construction: one open, every check and the read on that descriptor). Shown through the test
++//     seam keyfile.ts loadSigningKeyWith: the fstat hook renames the opened file away and puts a symlink to ANOTHER valid
++//     0600 key at the path, then returns the real fstat of the descriptor. The key read must be the FIRST key.
++//     A swap BEFORE the open gives (a) (a link) or an ordinary other file that must itself pass every check.
++// SAFE = exit 0. On f67c5c16 (no key file): the minter ignores the key path as a key and starts -> FAIL.
++import { fstatSync, renameSync, symlinkSync } from "node:fs";
++import { join } from "node:path";
++import { argv, guard, keyTempDir, load, makeKeyFile, startMinter, verdict } from "./kf_lib";
++
++guard((async () => {
++  const { root, core } = argv();
++  const { KF } = load(root);
++  const dir = keyTempDir(), target = makeKeyFile(), link = join(dir, "link.pem");
++  symlinkSync(target.path, link);
++  const a = await startMinter(root, core, [link]); a.stop();
++  const b = await startMinter(root, core, [target.path]); b.stop();
++  const r: any = {
++    symlink: { ready: a.ready !== null, code: a.code, eloop: /ELOOP/.test(a.stderr) },
++    control: { ready: b.ready !== null, keyIdIsFile: b.ready?.keyId === target.keyId },
++  };
++  if (KF === null || typeof KF.loadSigningKeyWith !== "function") r.swapAfterOpen = "NOT AVAILABLE (no keyfile.ts)";
++  else {
++    const first = makeKeyFile(), second = makeKeyFile();
++    const got = KF.loadSigningKeyWith(first.path, (fd: number) => {
++      renameSync(first.path, first.path + ".moved"); symlinkSync(second.path, first.path);   // the swap, after the open
++      return fstatSync(fd);
++    });
++    r.swapAfterOpen = { readFirstKey: got.keyId === first.keyId, readSecondKey: got.keyId === second.keyId };
++    let after = "";
++    try { KF.loadSigningKey(first.path); after = "ACCEPTED"; } catch (e) { after = String((e as Error).message).includes("ELOOP") ? "refused (ELOOP)" : "refused"; }
++    r.swapAfterOpen.nextOpenOfTheLink = after;
++  }
++  verdict(!r.symlink.ready && r.symlink.code === 2 && r.symlink.eloop && r.control.ready && r.control.keyIdIsFile &&
++    typeof r.swapAfterOpen === "object" && r.swapAfterOpen.readFirstKey && r.swapAfterOpen.nextOpenOfTheLink === "refused (ELOOP)", r);
++})());
+diff --git a/tests/refund-finality/regress/kf_unknown_keyid_refused.ts b/tests/refund-finality/regress/kf_unknown_keyid_refused.ts
+new file mode 100644
+index 00000000..cf77488d
+--- /dev/null
++++ b/tests/refund-finality/regress/kf_unknown_keyid_refused.ts
+@@ -0,0 +1,45 @@
++// Regression for OWNER DECISION D-1 (c), task h-key: a token whose key_id is NOT in the pinned allowlist is refused,
++// by the sink (new commit), by the start-up audit (stored row) and by the dispatcher's own row check.
++// (1) pin {A}: a token of key C, keyId C (a valid signature of C) -> rejected, 0 rows. CONTROL: a token of A -> committed.
++// (2) a store written under pin [A, C] (entry 0 = A: the same h_0) holds a row of C; opened with pin {A} alone:
++//     the sink refuses to start; the dispatcher with pin {A} sends nothing of that row (alarm or refusal).
++//     CONTROL: the dispatcher with pin [A, C] sends both rows.
++// SAFE = exit 0. On f67c5c16: the token format has no keyId -> the controls fail -> FAIL.
++import { copyFileSync } from "node:fs";
++import { join } from "node:path";
++import { active, argv, guard, memKey, sinkKit, verdict } from "./kf_lib";
++
++guard((() => {
++  const { root } = argv();
++  const K = sinkKit(root), A = memKey(), C = memKey();
++  const r: any = {};
++  const db = join(K.dir(), "s.sqlite");
++  const s = K.open(db, { publicKeyPem: A.publicKeyPem });
++  if (typeof s === "string") verdict(false, { setup: s });
++  s.init(K.S0);
++  const unknown = s.commit(K.tok(K.S0, "rq_c", "100", C));
++  const good = s.commit(K.tok(K.S0, "rq_a", "100", A));
++  s.close();
++  r.sink = { unknownKeyId: unknown.status + (unknown.reason ? ": " + unknown.reason : ""), control: good.status, rows: K.rows(db) };
++  const both = [active(A), active(C)];
++  const db2 = join(K.dir(), "s2.sqlite");
++  const s2 = K.open(db2, { issuerKeys: both });
++  if (typeof s2 === "string") verdict(false, { setup2: s2 });
++  s2.init(K.S0);
++  const pre3 = { ...K.S0, remaining: "900" };
++  const c1 = s2.commit(K.tok(K.S0, "rq_1", "100", A)).status, c2 = s2.commit(K.tok(pre3, "rq_x", "0", A)).status;
++  const c3 = s2.commit(K.tok(pre3, "rq_c3", "50", C)).status;
++  s2.close();
++  const copy = join(K.dir(), "copy.sqlite"); copyFileSync(db2, copy);
++  const reopenA = K.open(db2, { publicKeyPem: A.publicKeyPem });
++  if (typeof reopenA !== "string") reopenA.close();
++  const dA = K.flush(db2, join(K.dir(), "ledgerA.jsonl"), { publicKeyPem: A.publicKeyPem }, A.publicKeyPem);
++  const dBoth = K.flush(copy, join(K.dir(), "ledgerBoth.jsonl"), { issuerKeys: both }, A.publicKeyPem);
++  r.stored = { setupCommits: [c1, c2, c3], sinkWithPinA: typeof reopenA === "string" ? reopenA.slice(0, 120) : "STARTED",
++    dispatcherPinA: dA, dispatcherPinAC_control: dBoth };
++  const pass = unknown.status === "rejected" && good.status === "committed" && r.sink.rows.join() === "rq_a" &&
++    c1 === "committed" && c2 === "committed" && c3 === "committed" && typeof reopenA === "string" &&
++    !dA.emitted.includes("rq_c3") && (dA.alarm !== undefined || dA.refused.some(x => x.startsWith("rq_c3"))) &&
++    dBoth.alarm === undefined && dBoth.emitted.join() === "rq_1,rq_x,rq_c3";
++  verdict(pass, r);
++})());
+diff --git a/tests/refund-finality/regress/m_lib.ts b/tests/refund-finality/regress/m_lib.ts
+index 839cb180..f664fc13 100644
+--- a/tests/refund-finality/regress/m_lib.ts
++++ b/tests/refund-finality/regress/m_lib.ts
+@@ -5,8 +5,10 @@
+ // <compiledIssuerModule>: the module that this tree's minter.ts expects (merged: the RefundFinality build; the v6
+ // draft: the IssueBytes2 build; this branch: the IssueOnce build). Every file starts the issuer with memory rule "on".
+ // Exit 0: PASS (the safe outcome). Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
+-// Test keys only: each issuer process makes its own throwaway key. Sink files go to a fresh temp directory.
++// Test keys only (D-1): each issuer process gets a NEW throwaway key FILE (kf_lib.ts, mode 0600, temp directory). Sink files
++// go to a fresh temp directory.
+ import { spawn } from "node:child_process";
++import { makeKeyFile } from "./kf_lib";
+ import { mkdtempSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join, resolve } from "node:path";
+@@ -33,7 +35,7 @@ export function load(root: string): { E: any; Sink: any; MinterClient: any; prop
+ // An issuer with memory rule "on", a sink pinned to its key, and mint/commit helpers.
+ export async function world(root: string, core: string, S0: State) {
+   const { E, Sink, MinterClient, propose } = load(root);
+-  const m = await MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on");
++  const m = await MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on", makeKeyFile().path);
+   const ids = { publicKeyPem: m.ready.publicKeyPem, specLockSha256: m.ready.specLockSha256, checkerSha256: m.ready.checkerSha256 };
+   const sink = new Sink(join(tempDir(), "s.sqlite"), { ...ids, initialState: S0 });
+   sink.init(S0);
+@@ -51,7 +53,7 @@ export async function world(root: string, core: string, S0: State) {
+ // A raw issuer process: bytes in, one parsed answer per 0x0A-ended line out.
+ export function rawIssuer(root: string, core: string) {
+   const child = spawn(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core,
+-    join(root, "spec/refund/spec.lock"), "on"], { cwd: root, stdio: ["pipe", "pipe", "ignore"] });
++    join(root, "spec/refund/spec.lock"), "on", makeKeyFile().path], { cwd: root, stdio: ["pipe", "pipe", "ignore"] });
+   let buf = Buffer.alloc(0); const lines: any[] = []; let wake: (() => void) | null = null;
+   child.stdout.on("data", (c: Buffer) => {
+     buf = Buffer.concat([buf, c]);
+diff --git a/tests/refund-finality/regress/d_lib.ts b/tests/refund-finality/regress/d_lib.ts
+index e3780d42..376400c5 100644
+--- a/tests/refund-finality/regress/d_lib.ts
++++ b/tests/refund-finality/regress/d_lib.ts
+@@ -5,9 +5,10 @@
+ // tests/refund-finality/{dispatch,commit}_cli.ts) are under test. <compiledIssuerModule>: the module that this tree's
+ // minter.ts expects (this branch: the IssueOnce build).
+ // Exit 0: PASS (the safe outcome). Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
+-// Test keys only: each issuer process makes its own throwaway key. Files go to a fresh temp directory (removed at exit).
++// Test keys only (D-1): each issuer process gets a NEW throwaway key FILE (kf_lib.ts). Files go to a fresh temp directory (removed at exit).
+ // The dispatcher config always carries newLedgerH0 (as suite.ts does), so a NEW ledger is allowed by configuration.
+ import { spawn } from "node:child_process";
++import { makeKeyFile } from "./kf_lib";
+ import { mkdtempSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join, resolve } from "node:path";
+@@ -38,7 +39,7 @@ export function load(root: string): any {
+ // One issuer (memory rule "on"), one sink store, one ledger path, one list of effects.
+ export async function world(root: string, core: string, S0: State) {
+   const L = load(root);
+-  const m = await L.MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on");
++  const m = await L.MinterClient.start(root, core, join(root, "spec/refund/spec.lock"), "on", makeKeyFile().path);
+   const ids = { publicKeyPem: m.ready.publicKeyPem, specLockSha256: m.ready.specLockSha256, checkerSha256: m.ready.checkerSha256 };
+   const dir = tempDir(), db = join(dir, "sink.sqlite"), ledger = join(dir, "ledger.jsonl");
+   const sinkCfg = { ...ids, initialState: S0 };
+diff --git a/tests/refund-finality/regress/s_lib.ts b/tests/refund-finality/regress/s_lib.ts
+index 94590437..7f820697 100644
+--- a/tests/refund-finality/regress/s_lib.ts
++++ b/tests/refund-finality/regress/s_lib.ts
+@@ -8,7 +8,8 @@
+ // Files go to a fresh temp directory (removed at exit). Attacker model of the hostile cases: a FILE writer without the
+ // key (drops the triggers, edits, may recompute the unkeyed chain, re-creates the identical trigger text), or a party
+ // that can only CREATE files next to the database (planted journal).
+-import { generateKeyPairSync, sign } from "node:crypto";
++import { generateKeyPairSync } from "node:crypto";
++import { signedTokenText, testKeyIdOf } from "./kf_lib";
+ import { mkdtempSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join, resolve } from "node:path";
+@@ -39,7 +40,7 @@ export const st = (remaining: string, chargeId = "ch_s", original = "1000"): Sta
+ // One test key, one sink config, a token maker, a dispatcher config.
+ export function kit(root: string, S0: State = st("1000")) {
+   const L = load(root);
+-  const { publicKey, privateKey } = generateKeyPairSync("ed25519");
++  const { publicKey, privateKey } = generateKeyPairSync("ed25519"), keyId = testKeyIdOf(publicKey);
+   const pem = publicKey.export({ type: "spki", format: "pem" }) as string;
+   const cfg: any = { publicKeyPem: pem, specLockSha256: "1".repeat(64), checkerSha256: "2".repeat(64), initialState: S0 };
+   const genesis = L.SK.genesisOf(L.E.canon(S0), cfg.specLockSha256, cfg.checkerSha256, pem);
+@@ -48,7 +49,7 @@ export function kit(root: string, S0: State = st("1000")) {
+     const body = { domain: L.E.DOMAIN, specLockSha256: cfg.specLockSha256, checkerSha256: cfg.checkerSha256, preStateSha256: L.E.stateSha256(pre),
+       requestId: rid, post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() },
+       intent: { chargeId: pre.chargeId, requestId: rid, amount, reason } };
+-    return L.E.canon({ body, signature: sign(null, L.E.signedBytes(body), privateKey).toString("base64") });
++    return signedTokenText(L.E, body, { privateKey, keyId });
+   };
+   const postOf = (t: string): State => JSON.parse(t).body.post;
+   const intentOf = (t: string): string => L.E.canon(JSON.parse(t).body.intent);
+diff --git a/tests/refund-finality/regress/p_lib.ts b/tests/refund-finality/regress/p_lib.ts
+index 00c21931..57f5a7a5 100644
+--- a/tests/refund-finality/regress/p_lib.ts
++++ b/tests/refund-finality/regress/p_lib.ts
+@@ -121,7 +121,8 @@ export function world(root: string, mode: ProviderMode, anchor: Anchor, S0: Stat
+     const post = { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() };
+     const body = { domain: E.DOMAIN, ...{ specLockSha256: ids.specLockSha256, checkerSha256: ids.checkerSha256 },
+       preStateSha256: E.stateSha256(pre), requestId, post, intent: { chargeId: pre.chargeId, requestId, amount, reason } };
+-    return E.canon({ body, signature: sign(null, E.signedBytes(body), keys.privateKey).toString("base64") });
++    const keyId = E.keyIdOf(keys.publicKey);
++    return E.canon({ body, keyId, signature: sign(null, E.signedBytes(body, keyId), keys.privateKey).toString("base64") });
+   };
+   const state = (): State | null => sink === null ? null : JSON.parse(sink.stateBlob());
+   const commitText = (text: string): string => {
+diff --git a/tests/refund-finality/regress/m2_closed_launch.ts b/tests/refund-finality/regress/m2_closed_launch.ts
+index e90719a5..734fbf98 100644
+--- a/tests/refund-finality/regress/m2_closed_launch.ts
++++ b/tests/refund-finality/regress/m2_closed_launch.ts
+@@ -15,6 +15,7 @@ import { spawn, spawnSync } from "node:child_process";
+ import { chmodSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+ import { join } from "node:path";
+ import { argv, guard, load, tempDir, verdict } from "./m_lib";
++import { makeKeyFile } from "./kf_lib";
+ 
+ const ZERO = (id: number) => JSON.stringify({ id, pre: { chargeId: "ch_cl", original: "100", remaining: "60", refundEnabled: true },
+   transition: { request: { requestId: "rq_cl", amount: "0", reason: "duplicate_charge" },
+@@ -49,13 +50,18 @@ guard((async () => {
+   writeFileSync(evil, `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "evil preload ran in pid " + process.pid);\n`);
+   writeFileSync(join(shim, "bignumber.js", "index.js"), `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "shim ran"); module.exports = require(${JSON.stringify(require.resolve("bignumber.js", { paths: [root] }))});\n`);
+   const PATH = "/opt/homebrew/bin:/usr/bin:/bin", r: any = {};
++  const key = makeKeyFile();   // D-1: one test key FILE (mode 0600) for every launch below; not in the closed directory
+   // (1) build
+   const b = spawnSync("/bin/sh", [build, root, core, join(work, "closed")], { cwd: root, env: { PATH, HOME: work, LANG: "C" }, encoding: "utf8" });
+   const pin = (b.stdout ?? "").trim();
+   r.build = b.status === 0 && /^[0-9a-f]{64}$/.test(pin) ? "pin " + pin : "BUILD FAILED: " + b.stderr;
++  // D-1 (h-key): the closed directory and its manifest hold no key (the key file is a launch argument only).
++  const manifestText = b.status === 0 ? readFileSync(join(work, "closed", "MANIFEST.sha256"), "utf8") : "";
++  r.noKeyInClosedDir = b.status === 0 && !/\.pem|key/i.test(manifestText.replace(/[0-9a-f]{64} {2}/g, "")) &&
++    !readdirSync(join(work, "closed")).some(n => readFileSync(join(work, "closed", n === "node_modules" ? "MANIFEST.sha256" : n)).includes("PRIVATE KEY-----\n"));
+   // (2) plant in the tsx cache (the earlier launch path)
+   const tsxEnv = { PATH, HOME: work, LANG: "C", TMPDIR: plant };
+-  const first = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on"], tsxEnv, root);
++  const first = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on", key.path], tsxEnv, root);
+   await new Promise(res => setTimeout(res, 1500));
+   const tdir = readdirSync(plant).find(n => n.startsWith("tsx-"));
+   const entry = tdir === undefined ? undefined : readdirSync(join(plant, tdir)).find(n => readFileSync(join(plant, tdir, n), "utf8").includes("refused to start: NODE_OPTIONS is set"));
+@@ -63,7 +69,7 @@ guard((async () => {
+     const v = JSON.parse(readFileSync(join(plant, tdir, entry), "utf8"));
+     v.code = `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "planted cache code ran in pid " + process.pid);` + v.code;
+     writeFileSync(join(plant, tdir, entry), JSON.stringify(v));
+-    const second = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on"], tsxEnv, root);
++    const second = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on", key.path], tsxEnv, root);
+     r.tsxLaunchRanPlantedCode = existsSync(marker) ? "YES (expected: the tsx launch is not closed)" : "no";
+     r.tsxLaunchStarted = first.lines.length > 0 && second.lines.length > 0;
+     if (existsSync(marker)) spawnSync("/bin/rm", ["-f", marker]);
+@@ -71,7 +77,7 @@ guard((async () => {
+   // (3) closed launch with a hostile caller environment
+   const pinned = E.checkerSha256Of(readFileSync(core), readFileSync(join(root, "ts/refund-finality/encoding.ts")), readFileSync(join(root, "ts/refund-finality/minter.ts")));
+   const hostile = { PATH, HOME: work, LANG: "C", TMPDIR: plant, NODE_OPTIONS: "--require " + evil, NODE_PATH: shim };
+-  const c = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on"], hostile, work);
++  const c = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on", key.path], hostile, work);
+   const ready = c.lines.find(l => l.ready), answer = c.lines.find(l => l.id === 1);
+   r.closed = { started: ready !== undefined, checkerIsPinned: ready?.checkerSha256 === pinned, zeroIssued: answer?.ok === true,
+     foreignCodeRan: existsSync(marker), closedInfo: /"closedLaunch":\{"manifestSha256":"[0-9a-f]{64}"/.test(c.err) };
+@@ -80,16 +86,16 @@ guard((async () => {
+   const pin2 = (b2.stdout ?? "").trim(), bn = join(work, "closed2", "node_modules", "bignumber.js", "bignumber.js");
+   unlock(join(work, "closed2"));
+   writeFileSync(bn, `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "changed bignumber ran");\n` + readFileSync(bn, "utf8"));
+-  const t = await run("/bin/sh", [launch, join(work, "closed2"), pin2, join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
++  const t = await run("/bin/sh", [launch, join(work, "closed2"), pin2, join(root, "spec/refund/spec.lock"), "on", key.path], { PATH, HOME: work, LANG: "C" }, work);
+   r.changedFile = { code: t.code, foreignCodeRan: existsSync(marker), err: t.err.trim().slice(0, 120) };
+   // (5) a wrong pin
+-  const w = await run("/bin/sh", [launch, join(work, "closed"), "0".repeat(64), join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
++  const w = await run("/bin/sh", [launch, join(work, "closed"), "0".repeat(64), join(root, "spec/refund/spec.lock"), "on", key.path], { PATH, HOME: work, LANG: "C" }, work);
+   r.wrongPin = { code: w.code, err: w.err.trim().slice(0, 120) };
+   // (6) minter.cjs started directly, with the pin and one extra variable
+   const d = await run("/opt/homebrew/bin/node", ["--no-addons", "--disallow-code-generation-from-strings", join(work, "closed", "minter.cjs"),
+-    join(work, "closed", "core.cjs"), join(root, "spec/refund/spec.lock"), "on"], { PATH, LANG: "C", TZ: "UTC", HOME: "/var/empty", FORGE_MINTER_CLOSED: pin, EXTRA: "1" }, work);
++    join(work, "closed", "core.cjs"), join(root, "spec/refund/spec.lock"), "on", key.path], { PATH, LANG: "C", TZ: "UTC", HOME: "/var/empty", FORGE_MINTER_CLOSED: pin, EXTRA: "1" }, work);
+   r.directExtraVariable = { code: d.code, err: d.err.trim().split("\n").pop()?.slice(0, 120) };
+   unlock(work);
+-  verdict(b.status === 0 && r.closed.started && r.closed.checkerIsPinned && r.closed.zeroIssued && !r.closed.foreignCodeRan && r.closed.closedInfo &&
++  verdict(b.status === 0 && r.noKeyInClosedDir && r.closed.started && r.closed.checkerIsPinned && r.closed.zeroIssued && !r.closed.foreignCodeRan && r.closed.closedInfo &&
+     r.changedFile.code === 2 && !r.changedFile.foreignCodeRan && r.wrongPin.code === 2 && r.directExtraVariable.code === 2, r);
+ })());
+diff --git a/tests/refund-finality/regress/m2_completed_and_retry_after_commit.ts b/tests/refund-finality/regress/m2_completed_and_retry_after_commit.ts
+index c69204e2..2b9a76bb 100644
+--- a/tests/refund-finality/regress/m2_completed_and_retry_after_commit.ts
++++ b/tests/refund-finality/regress/m2_completed_and_retry_after_commit.ts
+@@ -6,11 +6,12 @@
+ // FAILS on rule 1 (no store mode). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
+ import { spawn } from "node:child_process";
+ import { join } from "node:path";
++import { makeKeyFile } from "./kf_lib";
+ import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
+ // ---- issuer driver (own copy in each m2_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
+ // Returns null when the issuer does not start with these arguments (the earlier issuer has no store argument).
+ async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string): Promise<Issuer | null> {
+-  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : [])];
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, makeKeyFile().path, ...(store ? [store] : [])];
+   const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
+   child.stderr.on("data", () => { /* identity information: not used */ });
+   let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
+diff --git a/tests/refund-finality/regress/m2_refused_pair_stays_closed.ts b/tests/refund-finality/regress/m2_refused_pair_stays_closed.ts
+index 647082ca..98c03ce3 100644
+--- a/tests/refund-finality/regress/m2_refused_pair_stays_closed.ts
++++ b/tests/refund-finality/regress/m2_refused_pair_stays_closed.ts
+@@ -7,11 +7,12 @@
+ // FAILS on rule 1 (rq_c for 40 is signed after the refusal). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
+ import { spawn } from "node:child_process";
+ import { join } from "node:path";
++import { makeKeyFile } from "./kf_lib";
+ import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
+ // ---- issuer driver (own copy in each m2_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
+ // Returns null when the issuer does not start with these arguments (the earlier issuer has no store argument).
+ async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string): Promise<Issuer | null> {
+-  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : [])];
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, makeKeyFile().path, ...(store ? [store] : [])];
+   const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
+   child.stderr.on("data", () => { /* identity information: not used */ });
+   let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
+diff --git a/tests/refund-finality/regress/m2_squat_invented_prestate_does_not_block.ts b/tests/refund-finality/regress/m2_squat_invented_prestate_does_not_block.ts
+index e75559eb..97f9c662 100644
+--- a/tests/refund-finality/regress/m2_squat_invented_prestate_does_not_block.ts
++++ b/tests/refund-finality/regress/m2_squat_invented_prestate_does_not_block.ts
+@@ -10,11 +10,12 @@
+ // Exit 0: PASS. Exit 1: FAIL (the defect). Exit 2: usage. Exit 3: the harness broke.
+ import { spawn } from "node:child_process";
+ import { join } from "node:path";
++import { makeKeyFile } from "./kf_lib";
+ import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
+ // ---- issuer driver (own copy in each m2_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
+ // Returns null when the issuer does not start with these arguments (the earlier issuer has no store argument).
+ async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string): Promise<Issuer | null> {
+-  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : [])];
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, makeKeyFile().path, ...(store ? [store] : [])];
+   const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
+   child.stderr.on("data", () => { /* identity information: not used */ });
+   let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
+diff --git a/tests/refund-finality/regress/m2_stale_retry_store_mode.ts b/tests/refund-finality/regress/m2_stale_retry_store_mode.ts
+index 7e7c5012..16c70432 100644
+--- a/tests/refund-finality/regress/m2_stale_retry_store_mode.ts
++++ b/tests/refund-finality/regress/m2_stale_retry_store_mode.ts
+@@ -10,11 +10,12 @@
+ // FAILS on rule 1 (no store mode). Usage, exit codes: as m2_squat_invented_prestate_does_not_block.ts.
+ import { spawn } from "node:child_process";
+ import { join } from "node:path";
++import { makeKeyFile } from "./kf_lib";
+ import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
+ // ---- issuer driver (own copy in each m2_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
+ // Returns null when the issuer does not start with these arguments (the earlier issuer has no store argument).
+ async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string): Promise<Issuer | null> {
+-  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : [])];
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, makeKeyFile().path, ...(store ? [store] : [])];
+   const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
+   child.stderr.on("data", () => { /* identity information: not used */ });
+   let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
+diff --git a/tests/refund-finality/regress/m_same_request_different_candidate_refused.ts b/tests/refund-finality/regress/m_same_request_different_candidate_refused.ts
+index 6225668a..db4e0f2f 100644
+--- a/tests/refund-finality/regress/m_same_request_different_candidate_refused.ts
++++ b/tests/refund-finality/regress/m_same_request_different_candidate_refused.ts
+@@ -10,11 +10,12 @@
+ // Usage and exit codes: m_lib.ts.
+ import { spawn } from "node:child_process";
+ import { join } from "node:path";
++import { makeKeyFile } from "./kf_lib";
+ import { State, argv, guard, load, tempDir, verdict, world } from "./m_lib";
+ // ---- issuer driver (own copy in each m2_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
+ // Returns null when the issuer does not start with these arguments (the earlier issuer has no store argument).
+ async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string): Promise<Issuer | null> {
+-  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : [])];
++  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, makeKeyFile().path, ...(store ? [store] : [])];
+   const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
+   child.stderr.on("data", () => { /* identity information: not used */ });
+   let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;
+diff --git a/tests/refund-finality/regress/s3_kill_commits.ts b/tests/refund-finality/regress/s3_kill_commits.ts
+index 93aaf7ad..954fffa7 100644
+--- a/tests/refund-finality/regress/s3_kill_commits.ts
++++ b/tests/refund-finality/regress/s3_kill_commits.ts
+@@ -25,7 +25,7 @@ const S0 = { chargeId: "ch_kill", original: "1000000000000000", remaining: "1000
+ if (mode === "--child") {
+   guard((() => {
+     const { root } = argv();
+-    const { sign, createPrivateKey } = require("node:crypto");   // eslint-disable-line @typescript-eslint/no-require-imports
++    const { sign, createPrivateKey, createPublicKey } = require("node:crypto");   // eslint-disable-line @typescript-eslint/no-require-imports
+     const E = require(join(root, "ts/refund-finality/encoding.ts"));   // eslint-disable-line @typescript-eslint/no-require-imports
+     const { Sink } = require(join(root, "ts/refund-finality/sink.ts"));   // eslint-disable-line @typescript-eslint/no-require-imports
+     const cfg = JSON.parse(readFileSync(join(dirArg, "cfg.json"), "utf8")), pk = createPrivateKey(readFileSync(join(dirArg, "key.pem"), "utf8"));
+@@ -36,7 +36,8 @@ if (mode === "--child") {
+       const pre = JSON.parse(s.stateBlob()), rid = "k" + roundArg + "_" + i, amount = i % 2 === 0 ? "0" : "1";
+       const body = { domain: E.DOMAIN, specLockSha256: cfg.specLockSha256, checkerSha256: cfg.checkerSha256, preStateSha256: E.stateSha256(pre), requestId: rid,
+         post: { ...pre, remaining: (BigInt(pre.remaining) - BigInt(amount)).toString() }, intent: { chargeId: pre.chargeId, requestId: rid, amount, reason: "duplicate_charge" } };
+-      const r = s.commit(E.canon({ body, signature: sign(null, E.signedBytes(body), pk).toString("base64") }));
++      const keyId = E.keyIdOf(createPublicKey(pk));
++      const r = s.commit(E.canon({ body, keyId, signature: sign(null, E.signedBytes(body, keyId), pk).toString("base64") }));
+       if (r.status !== "committed") { process.stderr.write("child: " + JSON.stringify(r) + "\n"); process.exit(4); }
+       anchor.committed = r.head; delete anchor.pending;
+       durable(outside, JSON.stringify({ committed: r.head }));          // persist committed, THEN acknowledge
+diff --git a/tests/refund-finality/regress/s_repair_prefix.ts b/tests/refund-finality/regress/s_repair_prefix.ts
+index e13f2162..4dbc21a8 100644
+--- a/tests/refund-finality/regress/s_repair_prefix.ts
++++ b/tests/refund-finality/regress/s_repair_prefix.ts
+@@ -27,7 +27,7 @@ guard((() => {
+       s.init(K.S0);
+       r.commits = [K.tok(K.S0, "r1", "100"), K.tok(st("900"), "z", "0"), K.tok(st("900"), "r2", "100")].map(t => s.commit(t).status);
+       let bad = K.tok(st("800"), "r3", "50");
+-      if (kase === "unsigned") { const o = JSON.parse(bad); o.signature = sign(null, K.E.signedBytes(o.body), other.privateKey).toString("base64"); bad = K.E.canon(o); }
++      if (kase === "unsigned") { const o = JSON.parse(bad); o.signature = sign(null, K.E.signedBytes(o.body, o.keyId), other.privateKey).toString("base64"); bad = K.E.canon(o); }
+       const d = new DatabaseSync(db); d.exec("PRAGMA busy_timeout = 5000");
+       const last = d.prepare("SELECT self FROM outbox ORDER BY seq DESC LIMIT 1").get() as any;
+       const self = kase === "wrong-self" ? "e".repeat(64) : K.SK.linkOf(last.self, bad, K.intentOf(bad));

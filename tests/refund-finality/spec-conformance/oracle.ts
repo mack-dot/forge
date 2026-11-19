@@ -13,7 +13,7 @@
 import { createPublicKey, verify, KeyObject } from "node:crypto";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
-import { ChargeState, DOMAIN, canon, isToken, sha256hex, signatureBytes, signedBytes } from "../../../ts/refund-finality/encoding";
+import { ChargeState, DOMAIN, canon, isToken, keyIdOf, sha256hex, signatureBytes, signedBytes } from "../../../ts/refund-finality/encoding";
 
 export type OutRow = { request_id: string; intent: string };
 export type Snapshot = { state: string | null; settled: string[]; outbox: OutRow[] };
@@ -61,14 +61,15 @@ function parseIntent(v: unknown): LIntent | null {
   return { chargeId: v.chargeId, requestId: v.requestId, amount: v.amount as string, reason: v.reason };
 }
 // Lenient token decoder: the token structure WITHOUT the encoding.ts limits (256 units, U+0000, 8192 units).
-export function lenientToken(text: string): { body: LBody; signature: string; raw: unknown } | null {
+// D-1 (h-key): a token is {body, keyId, signature}; the oracle's pin is ONE key (h.publicKeyPem), its key id = keyIdOf.
+export function lenientToken(text: string): { body: LBody; keyId: string; signature: string; raw: unknown } | null {
   let v: unknown; try { v = JSON.parse(text); } catch { return null; }
-  if (!isObj(v) || !keysAre(v, ["body", "signature"]) || typeof v.signature !== "string") return null;
+  if (!isObj(v) || !keysAre(v, ["body", "keyId", "signature"]) || typeof v.signature !== "string" || typeof v.keyId !== "string") return null;
   const b = v.body;
   if (!isObj(b) || !keysAre(b, ["domain", "specLockSha256", "checkerSha256", "preStateSha256", "requestId", "post", "intent"])) return null;
   const intent = parseIntent(b.intent);
   if (typeof b.requestId !== "string" || intent === null) return null;
-  return { body: { ...(b as any), requestId: b.requestId, intent }, signature: v.signature, raw: v };
+  return { body: { ...(b as any), requestId: b.requestId, intent }, keyId: v.keyId, signature: v.signature, raw: v };
 }
 
 export class Oracle {
@@ -104,7 +105,7 @@ export class Oracle {
   check(h: History): Verdict {
     const vs: Violation[] = [];
     const flag = (property: Prop, index: number, detail: string) => vs.push({ property, index, detail });
-    const key: KeyObject = createPublicKey(h.publicKeyPem);
+    const key: KeyObject = createPublicKey(h.publicKeyPem), pinnedKeyId = keyIdOf(key);
     const c0Text = canon(h.initial), c0 = parseState(c0Text);
     if (c0 === null) throw new Error("initial charge is not a charge state");
     // A sink that refuses to start on an initial charge that is an approved ValidContext (RS 27-31: charge id
@@ -145,7 +146,7 @@ export class Oracle {
           const pinned = b.domain === DOMAIN && b.specLockSha256 === h.specLockSha256 && b.checkerSha256 === h.checkerSha256;
           let sigOk = false;
           try { const raw = Buffer.from(tok.signature, "base64");
-            sigOk = raw.length === 64 && verify(null, signedBytes(b as any), key, raw); } catch { sigOk = false; }
+            sigOk = raw.length === 64 && tok.keyId === pinnedKeyId && verify(null, signedBytes(b as any, tok.keyId), key, raw); } catch { sigOk = false; }
           const fresh = !prev.settled.includes(b.requestId);
           const current = prev.state !== null && b.preStateSha256 === sha256hex(prev.state);
           const auth = pinned && sigOk && fresh && current ? this.assess(pre, b.requestId, fresh, b.intent.amount, b.intent.reason) : null;
@@ -171,7 +172,7 @@ export class Oracle {
           if (canon(parsed) !== d.text) p8.push("token text is not canonical");
           if (b.domain !== DOMAIN || b.specLockSha256 !== h.specLockSha256 || b.checkerSha256 !== h.checkerSha256) p8.push("domain or ids are not the pinned ones");
           let sigOk = false;
-          try { const raw = signatureBytes(parsed.signature); sigOk = raw !== null && verify(null, signedBytes(b), key, raw); } catch { sigOk = false; }
+          try { const raw = signatureBytes(parsed.signature); sigOk = raw !== null && parsed.keyId === pinnedKeyId && verify(null, signedBytes(b, parsed.keyId), key, raw); } catch { sigOk = false; }
           if (!sigOk) p8.push("signature does not verify under the pinned key over the trusted signed bytes");
           if (prev.state === null || b.preStateSha256 !== sha256hex(prev.state)) p8.push("pre-state hash is not the hash of the persisted state");
           const newRows = after.outbox.slice(prev.outbox.length);

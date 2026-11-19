@@ -84,12 +84,12 @@
 // and rows AFTER expectedHead.count are never sent ("beyond the outside head"): a row is sent only when the outside head
 // covers it. WITHOUT cfg.expectedHead (stated limit): a swap, a deletion or a rollback of rows after the ledger's last
 // claim is not detected; the dispatcher can send an uncommitted transition and never send the committed one.
-import { createHash, createPublicKey, randomBytes, verify, KeyObject } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { closeSync, existsSync, fsyncSync, ftruncateSync, openSync, readFileSync, realpathSync, renameSync, statSync, unlinkSync, writeSync } from "node:fs";
 import { hostname } from "node:os";
 import { DatabaseSync } from "node:sqlite";
-import { Intent, canon, isState, isToken, sha256hex, signatureBytes, signedBytes } from "./encoding";
-import { AuditedRow, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, loadCore, readMeta, validInitial } from "./core/store";
+import { Intent, canon, isState, isToken, sha256hex } from "./encoding";
+import { AuditedRow, IssuerKey, KeyRing, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, keyRingOf, loadCore, readMeta, sigOkOf, validInitial } from "./core/store";
 
 // newLedgerH0 (optional): the registered h_0 of the store (sink.ts genesisOf). A missing or empty ledger is an ERROR when
 // the store holds committed rows, unless this field equals the store's h_0 (an explicit "new ledger").
@@ -100,7 +100,9 @@ import { AuditedRow, SinkHead, StoreAuditor, checkStoreFile, conv, isHead, loadC
 // from the one that produced it. A floor without them is checked as before ({n, rowHead} only).
 export type LedgerHead = { n: number; rowHead: string; lines?: number; lastHash?: string };
 // expectedHead (optional; h-sink2): the sink's committed head from outside (see ROW ANCHOR above).
-export type DispatcherConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead;
+// D-1 (h-key): the issuer key pin is cfg.issuerKeys or cfg.publicKeyPem alone (core/store.ts keyRingOf). Every row (stored,
+// already committed) needs a pinned key id: active, or retired with the row's seq <= verifyUpToSeq; signature verified.
+export type DispatcherConfig = { publicKeyPem?: string; issuerKeys?: IssuerKey[]; specLockSha256: string; checkerSha256: string; initialStateSha256: string; newLedgerH0?: string; ledgerFloor?: LedgerHead;
   expectedHead?: SinkHead };
 export type Effect = { requestId: string; intent: string };
 export type FlushResult = { emitted: Effect[]; refused: { seq: number; requestId: string; reason: string }[]; alreadyDispatched: number;
@@ -149,7 +151,7 @@ const alive = (pid: number): boolean => {
 };
 
 export class Dispatcher {
-  private readonly key: KeyObject;
+  private readonly key: KeyRing;
   private readonly M = loadCore();
   private readonly cv = conv(this.M);
   private readonly run = randomBytes(16).toString("hex");   // this run's nonce: in the lock and in its claims
@@ -157,7 +159,7 @@ export class Dispatcher {
   private tookOver: { pid: number; run: string; host: string } | null = null;   // a dead owner's lock taken over (C-HOST-02)
   constructor(private readonly dbPath: string, private readonly ledgerPath: string, private readonly cfg: DispatcherConfig,
               private readonly emit: (effect: Effect, intent: Intent) => void) {
-    this.key = createPublicKey(cfg.publicKeyPem);
+    this.key = keyRingOf(cfg);
   }
   // Reads the whole ledger and checks it. Fails closed: any line out of the rules above stops the run.
   private ledger(): Ledger {
@@ -333,9 +335,7 @@ export class Dispatcher {
     const body = token.body;
     if (body.specLockSha256 !== this.cfg.specLockSha256 || body.checkerSha256 !== this.cfg.checkerSha256) return { ok: false, reason: "ids are not the pinned ones" };
     if (body.requestId !== row.request_id || body.intent.requestId !== row.request_id) return { ok: false, reason: "request id is not the signed one" };
-    let good = false;
-    try { const raw = signatureBytes(token.signature); good = raw !== null && verify(null, signedBytes(body), this.key, raw); } catch { good = false; }
-    if (!good) return { ok: false, reason: "signature does not verify" };
+    if (!sigOkOf(this.key, token, { kind: "stored", seq: row.seq })) return { ok: false, reason: "signature does not verify" };
     if (canon(body.intent) !== row.intent) return { ok: false, reason: "outbox intent is not the signed intent" };
     if (body.preStateSha256 !== head) return { ok: false, reason: "token does not continue the dispatched chain" };
     return { ok: true, intent: body.intent, line: { n: row.seq, requestId: body.requestId, tokenSha256: sha256hex(tokenText), preStateSha256: head,

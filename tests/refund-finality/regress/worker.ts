@@ -121,7 +121,8 @@ function op(name: string, a: any): unknown {
     case "genesis": return typeof sinkMod?.genesisOf === "function" ? String(sinkMod.genesisOf(a.initText, a.lock, a.checker, a.pem)) : null;
     // CANDIDATE SIGNED-BYTES FUNCTIONS of the encoding module(s) that the code under test actually loaded: every
     // exported function that maps each given body to bytes (Buffer, Uint8Array or string, as UTF-8), as base64.
-    // A PROBE only: the parent signs these bytes with the trusted key and asserts by behaviour.
+    // A PROBE only: the parent signs these bytes with the trusted key and asserts by behaviour. D-1 (h-key): a.keyId (the
+    // trusted key id) is passed as a second argument (the trusted signedBytes(body, keyId) needs it; others ignore it).
     case "encodingCandidates": {
       const out: { name: string; bytes: string[] }[] = [];
       for (const p of encodingModules()) {
@@ -131,7 +132,7 @@ function op(name: string, a: any): unknown {
           const f = ex[k];
           if (typeof f !== "function" || /^class[\s{]/.test(Function.prototype.toString.call(f))) continue;
           try {
-            const bs = (a.bodies as unknown[]).map(b => { const r = f(JP(JS(b)));
+            const bs = (a.bodies as unknown[]).map(b => { const r = typeof a.keyId === "string" ? f(JP(JS(b)), a.keyId) : f(JP(JS(b)));
               if (typeof r === "string") return BF(r, "utf8").toString("base64");
               if (r instanceof Uint8Array) return BF(r).toString("base64");
               throw new Error("not bytes"); });

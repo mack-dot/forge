@@ -1,6 +1,6 @@
 # Orchestrator C (red team) — FINAL
 
-Night shift 2026-11-19. Branch `nightshift/C-redteam`. unsure entries U580 to U600 (see the branch `unsure.md`).
+Night shift 2026-11-19. Branch `nightshift/C-redteam`. unsure entries U580 to U601 (see the branch `unsure.md`).
 C wrote tests and attacks only. C wrote no fix, changed no protected file, opened no pull request, merged nothing.
 M1-B stays OPEN. `end_to_end=false`. No stage label changed.
 
@@ -20,7 +20,7 @@ Exit code rule for every attack script: exit 1 = the defect is present; exit 0 =
 | C-ATT-18 lost emit | B `88ae6cbf70c5` | same form, `d_att18_throwing_emit.ts` | 0 | CLOSED (the loss is reported as in doubt; `d17_lock.ts throw` 0; `a3_indoubt.ts kill` 0) |
 | C-LAUNCH-01 launcher authorizes an aborted child when the caller ignores SIGCHLD | A `launcher_v2.py` SHA-256 `eec38a10…c274` | `cd orch-C/c22-launch-conformance && C22_LAUNCHER=<file> /usr/bin/python3 -B -I test_process_lifecycle.py` | 0 in 5 of 5 runs (24 tests OK). On `launcher.py` `fbdbea0b…`: 1 in 2 of 2 runs (2 FAIL) | CLOSED on `launcher_v2.py` |
 | D-1 persistent minter key file | no commit received | — | — | NOT RUN (B: in progress, not landed) |
-| D-2 a refusal closes only the attempt (C-ATT-38) | no commit received | — | — | NOT RUN (B: in progress, not landed) |
+| D-2 a refusal closes only the attempt (C-ATT-38) | B `219bf0ca` (module `orch-B/h-minter3/build/issueauth.cjs`, `fa855506…`) | `C7_ROOT=<tree> C7_CORE=<module> node --import tsx c24-minter2/s11_nostore_spray.ts <work>`; `… s8_squat_search.ts <work> close`; `… d2_two_tokens.ts <work>` | 0; 0; 0 in 2 runs | CLOSED (victim issued after 1001 refusals; one token per id; burst 1 of 12; one effect per id). Stated limit left: an authorized zero-amount mint on the real state takes the id (`m3_zero_squat_limit.ts` exit 1) |
 | D-3 provider key bound to store, charge, request id, amount; answers checked (C-ATT-41, 42, 44) | B `e9c79928` | `RP_REPLAY=first [RP_SHARED=<file>] node --import tsx c25-provider/s1_scope.ts <tree> collide` / `squat`; `RP_REPLAY=first RP_CEIL=1 … s4_rebind.ts <tree> none`; `… k1_key_variants.ts <tree>` | 0, 0, 0, 0 (old adapter as control, `P_ADAPTER=v1`: 1, 1, 1) | CLOSED. Stated limit left (B-20): rollback without the local anchors + the same request id with another amount pays again (`p3_rollback_rebind.ts first none` exit 1; with anchors 0) |
 
 Issuer module used for the dispatcher re-test: `orch-B/h-minter/build/issueonce.cjs`, SHA-256 `4cf78df8cb0651afcf1ff4b28ac1c96d2f20b4c47b81e14154f5d7f2e2c57842`.
@@ -71,8 +71,8 @@ Issuer module used for the dispatcher re-test: `orch-B/h-minter/build/issueonce.
 | C-ATT-15 | lossy UTF-8 decode | CLOSED | `608b5165`: exit 0 |
 | C-ATT-29 | honest stale retry of the same id refused | CLOSED in NoStore mode; OPEN-KNOWN-LIMIT in Store mode | `370ff65c`: `f1_stale_retry.ts stale` 0 (NoStore). Store mode keeps the refusal as specified behaviour |
 | C-ATT-30 | squat with an invented pre-state | CLOSED | `370ff65c`: `f2_squat.ts fake` 0. Squat on the real state with amount 0: exit 1, stated limit |
-| C-ATT-38 | squat by spray or state oracle closes a victim's request id | OPEN; fix = D-2 | NOT RUN on a fix (no commit) |
-| C-ATT-39, 40 | Store-mode minter follows an old inode; "off" mode refuses an identical retry | OPEN | no fix received |
+| C-ATT-38 | squat by spray or state oracle closes a victim's request id | CLOSED | `219bf0ca`: `s11_nostore_spray.ts` 0, `s8_squat_search.ts close` 0 |
+| C-ATT-39, 40 | Store-mode minter follows an old inode; "off" mode refuses an identical retry | CLOSED | `219bf0ca`: `s4_paths.ts mv` 0; `s2_stale.ts off` 0 |
 | C-ATT-05 | a new key at every minter start | OPEN; fix = D-1 | NOT RUN on a fix (no commit) |
 | C-ATT-14, 31 | minter identity does not bind loaded code (dependencies; tsx cache) | OPEN-KNOWN-LIMIT on the tsx start path | `370ff65c`: `f9_tsx_cache.ts` exit 1. B's closed launch script: worker runs exit 0; NOT RUN by C (C-1) |
 | C-ATT-08 | request-id squat through a committed zero token | OPEN-KNOWN-LIMIT | owner question B-12(1), B-19 |
@@ -105,7 +105,7 @@ Issuer module used for the dispatcher re-test: `orch-B/h-minter/build/issueonce.
   6. my bounded run of the two gate modules of C-GATE-07, 08;
   7. two commit-and-push commands (repeated later in smaller steps: these were not attack content).
   Result: tests with the real refund program against code injected at load, and tests of the FFI C code, have NO run by C.
-- D-1, D-2: no commit from B when this file was written. (D-3 was re-tested: section 1.)
+- D-1: no commit from B when this file was written (B: delivered by its worker, needs a rebase). D-2 and D-3 were re-tested: section 1.
 - Gate candidates U04 to U11 and K17: the Dafny lock script made the runs wait while A held the HOL lock.
 - Worker c27 (variations on B's `f67c5c16`): stopped by the owner's order before its first run. Its reading notes are unverified leads.
 - B's real-kill regression and any power-loss test: not run by anyone.

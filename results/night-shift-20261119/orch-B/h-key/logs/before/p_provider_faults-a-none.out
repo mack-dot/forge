@@ -1,0 +1,2 @@
+{"test":"p_provider_faults","mode":"a","anchor":"none","f1":{"emitted":["r1"],"refused":[],"error":""},"f2":{"emitted":[],"refused":[],"error":"provider refused: declined by the provider"},"f3":{"emitted":["r3"],"refused":["r2: in doubt: claimed by run c666fb595ee36baf33af13d2c23f1526 (p"],"error":""},"journal":[["r1","paid"],["r2","refused:refused"],["r3","paid"]],"money":{"total":"600","charge":"1000","withinCharge":true,"twice":[],"noDouble":true,"movements":["r1:300","r3:300"]}}
+positive control: PASS

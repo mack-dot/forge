@@ -34,7 +34,7 @@ export const judges: Regression[] = [
     async run(h) {
       const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = await h.newStore("k2", S0);
       const t = h.honest(S0, "rq_1", "100"); const v = JSON.parse(t);
-      const texts: [string, string][] = [["indent", JSON.stringify(v, null, 1)], ["key-order", JSON.stringify({ signature: v.signature, body: v.body })],
+      const texts: [string, string][] = [["indent", JSON.stringify(v, null, 1)], ["key-order", JSON.stringify({ signature: v.signature, keyId: v.keyId, body: v.body })],
         ["escaped-letter", t.replace('"requestId":"rq_1"', '"requestId":"\\u0072q_1"')]];
       const why: Why = [];
       for (const [name, x] of texts) {
@@ -256,9 +256,9 @@ export const judges: Regression[] = [
       const B = h.body(S0, "rq_1", h.dec(S0, "100"), h.intent("ch_1", "rq_1", "100"));
       const Balt = { ...B, post: h.dec(S0, "900"), intent: h.intent("ch_1", "rq_1", "900") };
       const sig = JSON.parse(h.signBody(B)).signature;
-      const a = await h.commit(sink, h.E.canon({ body: Balt, signature: sig }));
+      const a = await h.commit(sink, h.E.canon({ body: Balt, keyId: h.keyId, signature: sig }));
       if (!unchanged(h, db, S0, 0)) return fail("ALTERED POST/INTENT COMMITTED (trusted bytes): a=" + a);
-      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, Balt] });
+      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, Balt], keyId: h.keyId });
       const probe: string[] = [];
       for (const c of cands) {
         if (c.bytes[0] !== c.bytes[1]) continue;
@@ -284,7 +284,7 @@ export const judges: Regression[] = [
       const S0 = h.st("ch_1", "1000", "1000"); const { db, sink } = await h.newStore("e2", S0);
       const B = h.body(S0, "rq_1", h.dec(S0, "100"), h.intent("ch_1", "rq_1", "100"));
       const alts = fieldFlips(h, S0, B);
-      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, ...alts.map(x => x.body)] });
+      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, ...alts.map(x => x.body)], keyId: h.keyId });
       let n = 0; const hits: string[] = [];
       for (let k = 0; k < alts.length; k++) {
         const x = alts[k];
@@ -315,8 +315,8 @@ export const judges: Regression[] = [
       const variants: [string, boolean, (amt: string) => string][] = [
         ["valid", true, amt => h.signBody(body2(amt))],
         ["foreign-key", false, amt => h.signBody(body2(amt), true)],
-        ["zero-signature", false, amt => h.E.canon({ body: body2(amt), signature: zeroSig })],
-        ["other-body-signature", false, amt => h.E.canon({ body: body2(amt), signature: JSON.parse(h.signBody(body2(amt === "0" ? "1" : "0"))).signature })],
+        ["zero-signature", false, amt => h.E.canon({ body: body2(amt), keyId: h.keyId, signature: zeroSig })],
+        ["other-body-signature", false, amt => h.E.canon({ body: body2(amt), keyId: h.keyId, signature: JSON.parse(h.signBody(body2(amt === "0" ? "1" : "0"))).signature })],
       ];
       const why: string[] = [], bad: string[] = [], cal: string[] = [];
       for (const amt of ["50", "0"]) for (const [name, good, tokOf] of variants) {
@@ -345,13 +345,13 @@ export const judges: Regression[] = [
         { field: "amount+post", keys: ["post", "intent"], body: { ...B, post: h.dec(S1, "300"), intent: { ...B.intent, amount: "300" } },
           nested: (b: any) => ({ ...b, post: omit(b.post, ["remaining"]), intent: omit(b.intent, ["amount"]) }) },
       ];
-      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, ...alts.map(x => x.body)] });
+      const cands = await h.remote.call<{ name: string; bytes: string[] }[]>("encodingCandidates", { bodies: [B, ...alts.map(x => x.body)], keyId: h.keyId });
       const c0 = await writerRow(h, "d5-calibration", S0, h.signBody(B));
       if (c0.rq1 !== 1 || c0.rq2 !== 1) return fail(`calibration: honest stored row emitted ${c0.rq2} times, rq_1 ${c0.rq1} times: ${c0.text}`);
       const why: string[] = [], bad: string[] = [];
       for (let k = 0; k < alts.length; k++) {
         const x = alts[k];
-        const gs: [string, Buffer][] = [["trusted", h.E.signedBytes(B)], ["top-minus-touched", canonBytes(h, omit(B, x.keys))],
+        const gs: [string, Buffer][] = [["trusted", h.E.signedBytes(B, h.keyId)], ["top-minus-touched", canonBytes(h, omit(B, x.keys))],
           ["top-minus-post-intent", canonBytes(h, omit(B, ["post", "intent"]))], ["nested", canonBytes(h, x.nested(B))]];
         for (const c of cands) if (c.bytes[0] === c.bytes[k + 1]) gs.push([c.name.split("/").pop()!, Buffer.from(c.bytes[0], "base64")]);
         for (const [name, bytes] of gs) {
@@ -386,7 +386,7 @@ function fieldFlips(h: Harness, S0: State, B: any): Flip[] {
 }
 // The candidate signed bytes g(B) for one flip, each with g(B) = g(B') checked here (a judge fault otherwise).
 function byteCandidates(h: Harness, B: any, x: Flip, loaded: { name: string; b: string; a: string }[]): [string, Buffer][] {
-  const out: [string, Buffer][] = [["trusted", h.E.signedBytes(B)]];
+  const out: [string, Buffer][] = [["trusted", h.E.signedBytes(B, h.keyId)]];
   const free = TOP.filter(k => !x.keys.includes(k));
   for (let m = 0; m < 1 << free.length; m++) {
     const P = free.filter((_, i) => (m >> i) & 1);

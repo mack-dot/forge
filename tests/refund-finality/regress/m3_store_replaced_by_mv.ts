@@ -9,10 +9,11 @@ import { copyFileSync, renameSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { join } from "node:path";
 import { State, argv, guard, load, tempDir, verdict } from "./m_lib";
+import { makeKeyFile, makeMemoryFile } from "./kf_lib";
 // ---- issuer driver (own copy in each m3_*.ts: standalone). Raw bytes in, one parsed answer per 0x0A-ended line.
 // Returns null when the issuer does not start with these arguments (an earlier issuer has no such option).
 async function startIssuer(root: string, core: string, mode: "on" | "off", store?: string, extra: string[] = []): Promise<Issuer | null> {
-  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, ...(store ? [store] : []), ...extra];
+  const args = [join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), mode, makeKeyFile().path, ...(store ? [store, ...(mode === "on" ? [makeMemoryFile()] : [])] : []), ...extra];
   const child = spawn(process.execPath, ["--import", "tsx", ...args], { cwd: root, stdio: ["pipe", "pipe", "pipe"] });
   child.stderr.on("data", () => { /* identity information and operator details: not used */ });
   let buf = Buffer.alloc(0), ready: any = null, exited = false, next = 1;

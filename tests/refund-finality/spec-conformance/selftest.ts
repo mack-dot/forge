@@ -3,7 +3,7 @@
 // Each history has one known defect; the oracle must flag that property. The clean history must pass.
 // Exit 0 when every case gives the expected result, 1 otherwise.
 import { generateKeyPairSync, sign } from "node:crypto";
-import { ChargeState, DOMAIN, canon, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
+import { ChargeState, DOMAIN, canon, keyIdOf, sha256hex, signedBytes } from "../../../ts/refund-finality/encoding";
 import { Delivery, History, Oracle, Prop, Snapshot } from "./oracle";
 
 const core = process.argv[2];
@@ -19,7 +19,8 @@ type I = { chargeId: string; requestId: string; amount: string; reason: string }
 const I = (requestId: string, amount: string, reason = "duplicate_charge", chargeId = "ch_1"): I => ({ chargeId, requestId, amount, reason });
 function tok(pre: ChargeState, requestId: string, post: ChargeState, intent: I, key = privateKey): string {
   const body = { domain: DOMAIN, specLockSha256: LOCK, checkerSha256: CHK, preStateSha256: sha256hex(canon(pre)), requestId, post, intent };
-  return canon({ body, signature: sign(null, signedBytes(body as any), key).toString("base64") });
+  const keyId = keyIdOf(publicKey);   // D-1: the pinned key id (also for a token signed by the other key)
+  return canon({ body, keyId, signature: sign(null, signedBytes(body as any, keyId), key).toString("base64") });
 }
 const snap = (state: ChargeState, settled: string[], outbox: I[]): Snapshot =>
   ({ state: canon(state), settled, outbox: outbox.map(i => ({ request_id: i.requestId, intent: canon(i) })) });

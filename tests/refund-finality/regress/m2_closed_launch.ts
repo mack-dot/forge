@@ -19,6 +19,7 @@ import { generateKeyPairSync } from "node:crypto";
 import { chmodSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { argv, guard, load, tempDir, verdict } from "./m_lib";
+import { makeKeyFile, makeMemoryFile } from "./kf_lib";
 
 const ZERO = (id: number) => JSON.stringify({ id, pre: { chargeId: "ch_cl", original: "100", remaining: "60", refundEnabled: true },
   transition: { request: { requestId: "rq_cl", amount: "0", reason: "duplicate_charge" },
@@ -53,10 +54,16 @@ guard((async () => {
   writeFileSync(evil, `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "evil preload ran in pid " + process.pid);\n`);
   writeFileSync(join(shim, "bignumber.js", "index.js"), `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "shim ran"); module.exports = require(${JSON.stringify(require.resolve("bignumber.js", { paths: [root] }))});\n`);
   const PATH = "/opt/homebrew/bin:/usr/bin:/bin", r: any = {};
+  const key = makeKeyFile();   // D-1: one test key FILE (mode 0600) for every launch below; not in the closed directory
+  const mem = makeMemoryFile();   // the durable mint memory (production needs it); empty, mode 0600
   // (1) build
   const b = spawnSync("/bin/sh", [build, root, core, join(work, "closed")], { cwd: root, env: { PATH, HOME: work, LANG: "C" }, encoding: "utf8" });
   const pin = (b.stdout ?? "").trim();
   r.build = b.status === 0 && /^[0-9a-f]{64}$/.test(pin) ? "pin " + pin : "BUILD FAILED: " + b.stderr;
+  // D-1 (h-key): the closed directory and its manifest hold no key (the key file is a launch argument only).
+  const manifestText = b.status === 0 ? readFileSync(join(work, "closed", "MANIFEST.sha256"), "utf8") : "";
+  r.noKeyInClosedDir = b.status === 0 && !/\.pem|key/i.test(manifestText.replace(/[0-9a-f]{64} {2}/g, "")) &&
+    !readdirSync(join(work, "closed")).some(n => readFileSync(join(work, "closed", n === "node_modules" ? "MANIFEST.sha256" : n)).includes("PRIVATE KEY-----\n"));
   // h-minter3: a sink store on the pre-state of ZERO, pinned to a throwaway key (the issuer reads only its state and
   // settled tables). The closed launch needs it (owner decision D-2).
   const store = join(work, "store.sqlite"), PRE = { chargeId: "ch_cl", original: "100", remaining: "60", refundEnabled: true };
@@ -68,7 +75,7 @@ guard((async () => {
   }
   // (2) plant in the tsx cache (the earlier launch path)
   const tsxEnv = { PATH, HOME: work, LANG: "C", TMPDIR: plant };
-  const first = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on"], tsxEnv, root);
+  const first = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on", key.path], tsxEnv, root);
   await new Promise(res => setTimeout(res, 1500));
   const tdir = readdirSync(plant).find(n => n.startsWith("tsx-"));
   const entry = tdir === undefined ? undefined : readdirSync(join(plant, tdir)).find(n => readFileSync(join(plant, tdir, n), "utf8").includes("refused to start: NODE_OPTIONS is set"));
@@ -76,7 +83,7 @@ guard((async () => {
     const v = JSON.parse(readFileSync(join(plant, tdir, entry), "utf8"));
     v.code = `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "planted cache code ran in pid " + process.pid);` + v.code;
     writeFileSync(join(plant, tdir, entry), JSON.stringify(v));
-    const second = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on"], tsxEnv, root);
+    const second = await run(process.execPath, ["--import", "tsx", join(root, "ts/refund-finality/minter.ts"), core, join(root, "spec/refund/spec.lock"), "on", key.path], tsxEnv, root);
     r.tsxLaunchRanPlantedCode = existsSync(marker) ? "YES (expected: the tsx launch is not closed)" : "no";
     r.tsxLaunchStarted = first.lines.length > 0 && second.lines.length > 0;
     if (existsSync(marker)) spawnSync("/bin/rm", ["-f", marker]);
@@ -84,7 +91,7 @@ guard((async () => {
   // (3) closed launch with a hostile caller environment
   const pinned = E.checkerSha256Of(readFileSync(core), readFileSync(join(root, "ts/refund-finality/encoding.ts")), readFileSync(join(root, "ts/refund-finality/minter.ts")));
   const hostile = { PATH, HOME: work, LANG: "C", TMPDIR: plant, NODE_OPTIONS: "--require " + evil, NODE_PATH: shim };
-  const c = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on", store], hostile, work);
+  const c = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on", key.path, store, mem], hostile, work);
   const ready = c.lines.find(l => l.ready), answer = c.lines.find(l => l.id === 1);
   r.closed = { started: ready !== undefined, checkerIsPinned: ready?.checkerSha256 === pinned, zeroIssued: answer?.ok === true,
     foreignCodeRan: existsSync(marker), closedInfo: /"closedLaunch":\{"manifestSha256":"[0-9a-f]{64}"/.test(c.err) };
@@ -93,19 +100,19 @@ guard((async () => {
   const pin2 = (b2.stdout ?? "").trim(), bn = join(work, "closed2", "node_modules", "bignumber.js", "bignumber.js");
   unlock(join(work, "closed2"));
   writeFileSync(bn, `require("node:fs").writeFileSync(${JSON.stringify(marker)}, "changed bignumber ran");\n` + readFileSync(bn, "utf8"));
-  const t = await run("/bin/sh", [launch, join(work, "closed2"), pin2, join(root, "spec/refund/spec.lock"), "on", store], { PATH, HOME: work, LANG: "C" }, work);
+  const t = await run("/bin/sh", [launch, join(work, "closed2"), pin2, join(root, "spec/refund/spec.lock"), "on", key.path, store, mem], { PATH, HOME: work, LANG: "C" }, work);
   r.changedFile = { code: t.code, foreignCodeRan: existsSync(marker), err: t.err.trim().slice(0, 120) };
   // (5) a wrong pin
-  const w = await run("/bin/sh", [launch, join(work, "closed"), "0".repeat(64), join(root, "spec/refund/spec.lock"), "on", store], { PATH, HOME: work, LANG: "C" }, work);
+  const w = await run("/bin/sh", [launch, join(work, "closed"), "0".repeat(64), join(root, "spec/refund/spec.lock"), "on", key.path, store, mem], { PATH, HOME: work, LANG: "C" }, work);
   r.wrongPin = { code: w.code, err: w.err.trim().slice(0, 120) };
   // (6) minter.cjs started directly, with the pin and one extra variable
   const d = await run("/opt/homebrew/bin/node", ["--no-addons", "--disallow-code-generation-from-strings", join(work, "closed", "minter.cjs"),
-    join(work, "closed", "core.cjs"), join(root, "spec/refund/spec.lock"), "on", store], { PATH, LANG: "C", TZ: "UTC", HOME: "/var/empty", FORGE_MINTER_CLOSED: pin, EXTRA: "1" }, work);
+    join(work, "closed", "core.cjs"), join(root, "spec/refund/spec.lock"), "on", key.path, store, mem], { PATH, LANG: "C", TZ: "UTC", HOME: "/var/empty", FORGE_MINTER_CLOSED: pin, EXTRA: "1" }, work);
   r.directExtraVariable = { code: d.code, err: d.err.trim().split("\n").pop()?.slice(0, 120) };
   // (7) h-minter3: the closed launch without a store (a test mode) is refused before Node starts.
-  const ns = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on"], { PATH, HOME: work, LANG: "C" }, work);
+  const ns = await run("/bin/sh", [launch, join(work, "closed"), pin, join(root, "spec/refund/spec.lock"), "on", key.path], { PATH, HOME: work, LANG: "C" }, work);
   r.closedWithoutStore = { code: ns.code, started: ns.lines.some(l => l.ready) };
   unlock(work);
-  verdict(r.closedWithoutStore.code === 2 && !r.closedWithoutStore.started && b.status === 0 && r.closed.started && r.closed.checkerIsPinned && r.closed.zeroIssued && !r.closed.foreignCodeRan && r.closed.closedInfo &&
+  verdict(r.noKeyInClosedDir && r.closedWithoutStore.code === 2 && !r.closedWithoutStore.started && b.status === 0 && r.closed.started && r.closed.checkerIsPinned && r.closed.zeroIssued && !r.closed.foreignCodeRan && r.closed.closedInfo &&
     r.changedFile.code === 2 && !r.changedFile.foreignCodeRan && r.wrongPin.code === 2 && r.directExtraVariable.code === 2, r);
 })());
