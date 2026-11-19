@@ -1,0 +1,63 @@
+# owner=b-v6bytes start=2026-11-19T12:39:37Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-v6bytes/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1673
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects ControlsBytesV6.dfy
+# memory free percent: 62
+ControlsBytesV6.dfy(181,51): Error: index out of range
+    |
+181 |       r.core.outbox == [CV3.IB] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0])
+    |                                                    ^
+
+ControlsBytesV6.dfy(181,62): Error: index out of range
+    |
+181 |       r.core.outbox == [CV3.IB] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0])
+    |                                                               ^
+
+ControlsBytesV6.dfy(226,8): Error: Verification out of resource (ControlsBytesV6.ContrastDropA2p)
+    |
+226 |   lemma ContrastDropA2p()
+    |         ^^^^^^^^^^^^^^^
+
+ControlsBytesV6.dfy(229,51): Error: index out of range
+    |
+229 |       r.core.outbox == [CV3.IB] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0])
+    |                                                    ^
+
+ControlsBytesV6.dfy(229,62): Error: index out of range
+    |
+229 |       r.core.outbox == [CV3.IB] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0])
+    |                                                               ^
+
+ControlsBytesV6.dfy(270,51): Error: index out of range
+    |
+270 |       r.core.outbox == [CV3.I1] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0])
+    |                                                    ^
+
+ControlsBytesV6.dfy(270,62): Error: index out of range
+    |
+270 |       r.core.outbox == [CV3.I1] && !Approved(r.pres[0], r.toks[0], r.core.outbox[0])
+    |                                                               ^
+
+
+Dafny program verifier finished with 23 verified, 6 errors, 1 out of resource
+       10.56 real         9.83 user         0.37 sys
+           311459840  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38690  page reclaims
+                 671  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 836  voluntary context switches
+                8544  involuntary context switches
+         90569959427  instructions retired
+         31484966360  cycles elapsed
+           278480216  peak memory footprint
+# end=2026-11-19T12:39:47Z
+exit 4

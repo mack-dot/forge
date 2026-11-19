@@ -1,0 +1,118 @@
+# owner=b-v6bytes start=2026-11-19T12:42:14Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-v6bytes/mutants/commit-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1681
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects HashCore6.dfy SliceSafetyBytesV6.dfy ControlsBytesV6.dfy
+# memory free percent: 58
+ControlsBytesV6.dfy(59,2): Error: a postcondition could not be proved on this return path
+   |
+59 |   {
+   |   ^
+
+ControlsBytesV6.dfy(52,82): Related location: this is the postcondition that could not be proved
+   |
+52 |     ensures Step6(CV3.HW, Core(CV3.W_PRE, {"rq_0"}, [CV3.I0]), CV3.TK0, true).out == Rejected6(Base(RequestSettled))
+   |                                                                                   ^^
+
+HashCore6.dfy(92,4): Error: a postcondition could not be proved on this return path
+   |
+92 |     if AuthorizesH(core.charge, tok) { AuthorizesImpliesBindings(core.charge, tok); }
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+HashCore6.dfy(78,55): Related location: this is the postcondition that could not be proved
+   |
+78 |     ensures Step6(H, core, tok, sigOk).out.Committed6? <==>
+   |                                                        ^^^^
+
+HashCore6.dfy(103,2): Error: a postcondition could not be proved on this return path
+    |
+103 |   {}
+    |   ^
+
+HashCore6.dfy(102,39): Related location: this is the postcondition that could not be proved
+    |
+102 |     ensures Step6(H, core, tok, sigOk) == StepResult6(core, Rejected6(Base(Step(H, core, tok, sigOk).out.why)))
+    |                                        ^^
+
+HashCore6.dfy(110,2): Error: a postcondition could not be proved on this return path
+    |
+110 |   {
+    |   ^
+
+HashCore6.dfy(108,42): Related location: this is the postcondition that could not be proved
+    |
+108 |     ensures Step(H, core, tok, sigOk).out.Committed? && Step6(H, core, tok, sigOk).core == Step(H, core, tok, sigOk).core
+    |                                           ^^^^^^^^^^
+
+HashCore6.dfy(110,2): Error: a postcondition could not be proved on this return path
+    |
+110 |   {
+    |   ^
+
+HashCore6.dfy(109,24): Related location: this is the postcondition that could not be proved
+    |
+109 |     ensures F.Authorizes(core.charge, TransH(tok))
+    |                         ^
+
+v3/inputs/transport/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
+   |
+31 |     R.Eligible(ContextOf(pre, t.request.requestId), R.Candidate(t.request.amount, t.request.reason)) &&
+   |               ^
+
+HashCore6.dfy(110,2): Error: a postcondition could not be proved on this return path
+    |
+110 |   {
+    |   ^
+
+HashCore6.dfy(109,24): Related location: this is the postcondition that could not be proved
+    |
+109 |     ensures F.Authorizes(core.charge, TransH(tok))
+    |                         ^
+
+v3/inputs/transport/impl/RefundFinality.dfy(32,11): Related location: this proposition could not be proved
+   |
+32 |     t.post == pre.(remaining := pre.remaining - t.request.amount) &&
+   |            ^^
+
+HashCore6.dfy(120,2): Error: a postcondition could not be proved on this return path
+    |
+120 |   {
+    |   ^
+
+HashCore6.dfy(116,102): Related location: this is the postcondition that could not be proved
+    |
+116 |     ensures (Step(H, core, tok, sigOk).out.Committed? && !Step6(H, core, tok, sigOk).out.Committed6?) <==>
+    |                                                                                                       ^^^^
+
+HashCore6.dfy(141,2): Error: a postcondition could not be proved on this return path
+    |
+141 |   {
+    |   ^
+
+HashCore6.dfy(140,12): Related location: this is the postcondition that could not be proved
+    |
+140 |     ensures !Step6(H, core, tok, sigOk).out.Committed6? && Step6(H, core, tok, sigOk).core == core
+    |             ^
+
+
+Dafny program verifier finished with 66 verified, 8 errors
+       15.95 real        14.56 user         0.57 sys
+           326893568  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48086  page reclaims
+                 333  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                1682  voluntary context switches
+               24424  involuntary context switches
+        132491619644  instructions retired
+         46791625270  cycles elapsed
+           314656040  peak memory footprint
+# end=2026-11-19T12:42:31Z
+exit 4

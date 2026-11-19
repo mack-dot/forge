@@ -1,0 +1,58 @@
+# owner=b-v6bytes start=2026-11-19T12:44:29Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-v6bytes/src
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1681
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects KeyedV6.dfy
+# memory free percent: 66
+KeyedV6.dfy(309,2): Error: a postcondition could not be proved on this return path
+    |
+309 |   {
+    |   ^
+
+KeyedV6.dfy(308,47): Related location: this is the postcondition that could not be proved
+    |
+308 |   lemma KW4() ensures KExec6(HK, KActs()[..4]) == S2()["ch_1" := C1()]
+    |                                                ^^
+
+KeyedV6.dfy(315,2): Error: a postcondition could not be proved on this return path
+    |
+315 |   {
+    |   ^
+
+KeyedV6.dfy(314,47): Related location: this is the postcondition that could not be proved
+    |
+314 |   lemma KW5() ensures KExec6(HK, KActs()[..5]) == S2()["ch_1" := C1b()]
+    |                                                ^^
+
+KeyedV6.dfy(320,2): Error: a postcondition could not be proved on this return path
+    |
+320 |   {
+    |   ^
+
+KeyedV6.dfy(319,47): Related location: this is the postcondition that could not be proved
+    |
+319 |   lemma KW6() ensures KExec6(HK, KActs()[..6]) == S2()["ch_1" := C1b()]["ch_2" := C2()]
+    |                                                ^^
+
+
+Dafny program verifier finished with 37 verified, 3 errors
+        9.91 real         9.48 user         0.38 sys
+           316309504  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38428  page reclaims
+                 672  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                 735  voluntary context switches
+                8325  involuntary context switches
+         85676151656  instructions retired
+         30492862858  cycles elapsed
+           284542272  peak memory footprint
+# end=2026-11-19T12:44:39Z
+exit 4

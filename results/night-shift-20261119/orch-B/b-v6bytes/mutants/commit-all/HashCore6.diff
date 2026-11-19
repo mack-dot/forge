@@ -1,0 +1,6 @@
+61,63c61
+<     if !s.out.Committed? then StepResult6(core, Rejected6(Base(s.out.why)))
+<     else if !AuthorizesH(core.charge, tok) then StepResult6(core, Rejected6(NotAuthorized))
+<     else StepResult6(s.core, Committed6)
+---
+>     StepResult6(Core(ChargeOfState(tok.post), core.settled + {tok.requestId}, core.outbox + [IntentOfSM(tok.intent)]), Committed6)   // MUTANT: commit all

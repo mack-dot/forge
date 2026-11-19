@@ -1,0 +1,8 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL CMD_FILE_MISMATCH: X16-TEST: results/night-shift-20261119/orch-B/recheck-xb/tests.log `# cmd:` names [], the run entry is Bridge.dfy
+FAIL CMD_ROOTS_MISMATCH: X16-TEST: results/night-shift-20261119/orch-B/recheck-xb/tests.log: # cmd: names [], the closure roots are ['Bridge.dfy']
+FAIL VERSION_MISMATCH: X16-TEST: results/night-shift-20261119/orch-B/recheck-xb/tests.log has dafny None
+FAIL CSV_MISSING: X16-TEST: the primary run has no CSV
+edges per class: MACHINE-CHECKED=77, ASSUMPTION=9, TESTED-UNPROVED=22, MISSING=20, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=135
+nodes=983 assumptions=74 mandatory=89
+REFUSED: 4 problems; codes CMD_FILE_MISMATCH,CMD_ROOTS_MISMATCH,CSV_MISSING,VERSION_MISMATCH; proofs NOT re-run

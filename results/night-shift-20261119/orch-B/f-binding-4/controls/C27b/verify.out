@@ -1,0 +1,6 @@
+IDENTITY AND RECORD CONSISTENCY ONLY — no proof was re-run
+FAIL DIGEST_MISMATCH: results/night-shift-20261119/orch-B/recheck-m/BytesV3.log: ledger c91a339348644fea, file d76e7c87e7918825
+FAIL CMD_ROOTS_MISMATCH: T-BYTES-V3: results/night-shift-20261119/orch-B/recheck-m/BytesV3.log: # cmd: names ['ControlsBytesV3.dfy'], the closure roots are ['ControlsBytesV3.dfy', 'RefineHashV3.dfy']
+edges per class: MACHINE-CHECKED=76, ASSUMPTION=9, TESTED-UNPROVED=23, MISSING=20, CLAIMED, log missing=1, UNKNOWN-TONIGHT=6; total=135
+nodes=983 assumptions=74 mandatory=89
+REFUSED: 2 problems; codes CMD_ROOTS_MISMATCH,DIGEST_MISMATCH; proofs NOT re-run

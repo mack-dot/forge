@@ -1,0 +1,68 @@
+# owner=b-v6bytes start=2026-11-19T12:41:51Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-v6bytes/mutants/reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1681
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects HashCore6.dfy SliceSafetyBytesV6.dfy ControlsBytesV6.dfy
+# memory free percent: 59
+ControlsBytesV6.dfy(59,2): Error: a postcondition could not be proved on this return path
+   |
+59 |   {
+   |   ^
+
+ControlsBytesV6.dfy(50,66): Related location: this is the postcondition that could not be proved
+   |
+50 |     ensures Step6(CV3.HW, Core(CV3.W_PRE, {}, []), CV3.TK0, true) ==
+   |                                                                   ^^
+
+HashCore6.dfy(92,37): Error: a postcondition could not be proved on this return path
+   |
+92 |     if AuthorizesH(core.charge, tok) { AuthorizesImpliesBindings(core.charge, tok); }
+   |                                      ^
+
+HashCore6.dfy(78,55): Related location: this is the postcondition that could not be proved
+   |
+78 |     ensures Step6(H, core, tok, sigOk).out.Committed6? <==>
+   |                                                        ^^^^
+
+HashCore6.dfy(103,2): Error: a postcondition could not be proved on this return path
+    |
+103 |   {}
+    |   ^
+
+HashCore6.dfy(102,39): Related location: this is the postcondition that could not be proved
+    |
+102 |     ensures Step6(H, core, tok, sigOk) == StepResult6(core, Rejected6(Base(Step(H, core, tok, sigOk).out.why)))
+    |                                        ^^
+
+HashCore6.dfy(120,2): Error: a postcondition could not be proved on this return path
+    |
+120 |   {
+    |   ^
+
+HashCore6.dfy(116,102): Related location: this is the postcondition that could not be proved
+    |
+116 |     ensures (Step(H, core, tok, sigOk).out.Committed? && !Step6(H, core, tok, sigOk).out.Committed6?) <==>
+    |                                                                                                       ^^^^
+
+
+Dafny program verifier finished with 68 verified, 4 errors
+       15.22 real        14.38 user         0.56 sys
+           328794112  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               46995  page reclaims
+                 333  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   5  signals received
+                1678  voluntary context switches
+               22441  involuntary context switches
+        131406360951  instructions retired
+         46279284134  cycles elapsed
+           305907008  peak memory footprint
+# end=2026-11-19T12:42:06Z
+exit 4

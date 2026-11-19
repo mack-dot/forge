@@ -1,0 +1,88 @@
+# owner=b-v6bytes start=2026-11-19T12:41:27Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-v6bytes/mutants/drop-auth
+# power: Now drawing from 'AC Power'
+# swap free MiB: 1681
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --track-print-effects HashCore6.dfy SliceSafetyBytesV6.dfy ControlsBytesV6.dfy
+# memory free percent: 58
+HashCore6.dfy(93,4): Error: a postcondition could not be proved on this return path
+   |
+93 |     if AuthorizesH(core.charge, tok) { AuthorizesImpliesBindings(core.charge, tok); }
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+HashCore6.dfy(79,55): Related location: this is the postcondition that could not be proved
+   |
+79 |     ensures Step6(H, core, tok, sigOk).out.Committed6? <==>
+   |                                                        ^^^^
+
+HashCore6.dfy(111,2): Error: a postcondition could not be proved on this return path
+    |
+111 |   {
+    |   ^
+
+HashCore6.dfy(110,24): Related location: this is the postcondition that could not be proved
+    |
+110 |     ensures F.Authorizes(core.charge, TransH(tok))
+    |                         ^
+
+v3/inputs/transport/impl/RefundFinality.dfy(31,14): Related location: this proposition could not be proved
+   |
+31 |     R.Eligible(ContextOf(pre, t.request.requestId), R.Candidate(t.request.amount, t.request.reason)) &&
+   |               ^
+
+HashCore6.dfy(111,2): Error: a postcondition could not be proved on this return path
+    |
+111 |   {
+    |   ^
+
+HashCore6.dfy(110,24): Related location: this is the postcondition that could not be proved
+    |
+110 |     ensures F.Authorizes(core.charge, TransH(tok))
+    |                         ^
+
+v3/inputs/transport/impl/RefundFinality.dfy(32,11): Related location: this proposition could not be proved
+   |
+32 |     t.post == pre.(remaining := pre.remaining - t.request.amount) &&
+   |            ^^
+
+HashCore6.dfy(121,2): Error: a postcondition could not be proved on this return path
+    |
+121 |   {
+    |   ^
+
+HashCore6.dfy(117,102): Related location: this is the postcondition that could not be proved
+    |
+117 |     ensures (Step(H, core, tok, sigOk).out.Committed? && !Step6(H, core, tok, sigOk).out.Committed6?) <==>
+    |                                                                                                       ^^^^
+
+HashCore6.dfy(142,2): Error: a postcondition could not be proved on this return path
+    |
+142 |   {
+    |   ^
+
+HashCore6.dfy(141,12): Related location: this is the postcondition that could not be proved
+    |
+141 |     ensures !Step6(H, core, tok, sigOk).out.Committed6? && Step6(H, core, tok, sigOk).core == core
+    |             ^
+
+
+Dafny program verifier finished with 69 verified, 5 errors
+       15.19 real        13.77 user         0.57 sys
+           320503808  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               47019  page reclaims
+                 690  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                1693  voluntary context switches
+               19580  involuntary context switches
+        126339366804  instructions retired
+         44366895788  cycles elapsed
+           301090112  peak memory footprint
+# end=2026-11-19T12:41:43Z
+exit 4

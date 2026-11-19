@@ -1,0 +1,5 @@
+62,63c62
+<     else if !AuthorizesH(core.charge, tok) then StepResult6(core, Rejected6(NotAuthorized))
+<     else StepResult6(s.core, Committed6)
+---
+>     else StepResult6(s.core, Committed6)   // MUTANT: the approved-relation check is dropped
