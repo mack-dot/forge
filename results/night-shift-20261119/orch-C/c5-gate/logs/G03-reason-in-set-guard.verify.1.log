@@ -1,0 +1,28 @@
+# owner=orchC-c5 start=2026-11-19T14:43:20Z cwd=<REPO>/results/night-shift-20261119/orch-C/c5-gate/work/G03-reason-in-set-guard
+# power: Now drawing from 'AC Power'
+# swap free MiB: 921
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify impl/Refund.dfy gate/refund/Bindings.dfy --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects
+# memory free percent: 43
+
+Dafny program verifier finished with 6 verified, 0 errors
+        1.87 real         1.34 user         0.23 sys
+           114065408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12897  page reclaims
+                  59  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                  52  voluntary context switches
+               23616  involuntary context switches
+         10029391590  instructions retired
+          4648169611  cycles elapsed
+            94733512  peak memory footprint
+# end=2026-11-19T14:43:22Z
+exit 0

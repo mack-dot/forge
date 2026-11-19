@@ -4,18 +4,20 @@
 //      C = commit the oldest held token (may be refused as stale: that is correct); D = dispatcher run.
 // Every history ends with D, a sink restart and a second D. Lengths 1..4 over 6 ops = 1554 histories.
 // Checks: emitted sequence == outbox in seq order; no duplicate; total <= 1000; nothing refused; every committed
-// refund emitted; the restart passes; no throw. Exit 1 = some history breaks a check. Usage: l4_chain_search.ts <work>
+// refund emitted; the restart passes; no throw. Exit 1 = some history breaks a check.
+// Usage: l4_chain_search.ts <work> <from> <to>  (histories [from, to) of the fixed enumeration; chunks keep each run under 120 s)
 import { join } from "node:path";
 import { rmSync } from "node:fs";
 import { startMinter, world, sum, Sink } from "./common";
-const [work] = process.argv.slice(2);
+const [work, fromS, toS] = process.argv.slice(2);
 const OPS = ["N", "Z", "S", "T", "C", "D"];
 (async () => {
   const { m, ids, mint } = await startMinter("off");
   const hist: string[][] = [];
   for (let L = 1; L <= 4; L++) { const rec = (p: string[]) => { if (p.length === L) { hist.push(p); return; } for (const o of OPS) rec([...p, o]); }; rec([]); }
   let bad = 0, n = 0, zeroCommits = 0, staleRefusals = 0;
-  for (const h of hist) {
+  const chosen = hist.slice(Number(fromS ?? 0), Number(toS ?? hist.length));
+  for (const h of chosen) {
     n++; const dir = join(work, "h"); const w = world(dir, ids); let k = 0; const held: string[] = []; const committed: string[] = []; const errs: string[] = [];
     try {
       for (const o of [...h, "D"]) {
@@ -34,6 +36,6 @@ const OPS = ["N", "Z", "S", "T", "C", "D"];
     if (errs.length) { bad++; if (bad <= 10) console.log("BAD", h.join(""), errs.join(" | ")); }
   }
   rmSync(join(work, "h"), { recursive: true, force: true }); m.stop();
-  console.log(JSON.stringify({ histories: n, bad, zeroCommits, staleRefusals }));
+  console.log(JSON.stringify({ total: hist.length, from: Number(fromS ?? 0), histories: n, bad, zeroCommits, staleRefusals }));
   process.exit(bad ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(3); });

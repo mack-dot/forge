@@ -1,0 +1,25 @@
+node:internal/modules/cjs/loader:1369
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module '<REPO>/results/night-shift-20261119/orch-B/d-v6sink/sink.ts'
+Require stack:
+- <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/db_safeguards.ts
+    at node:internal/modules/cjs/loader:1369:15
+    at m._resolveFilename (file://<REPO>/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at nextResolveSimple (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at <REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at <REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at Module._resolveFilename (<REPO>/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Module._load (node:internal/modules/cjs/loader:1179:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '<REPO>/results/night-shift-20261119/orch-B/h-sink/tests/db_safeguards.ts'
+  ]
+}
+
+Node.js v24.3.0
+exit 1

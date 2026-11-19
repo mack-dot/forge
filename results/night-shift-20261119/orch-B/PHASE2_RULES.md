@@ -31,3 +31,7 @@ Every fix needs: a regression that FAILS on the unfixed code and PASSES on the f
 (legitimate transactions, zero amount included, still succeed); the trust assumptions it rests on, by name.
 The red team (Orchestrator C) attacks what you build. Do not write attacks for C; do write the regressions for your own fix.
 The harness refuses REPORT.md: your final message is the report.
+
+POWER AMENDMENT (owner instruction relayed by the launcher; PROTOCOL.md): battery power no longer blocks Dafny runs or
+heavy windows. Still log `pmset -g batt | head -1` before a run. The memory, swap and disk gates stay. The sentence above
+that requires AC power before every run is replaced by this one.

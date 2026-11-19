@@ -11,7 +11,8 @@ if ((command !== "init" && command !== "report") || !dbPath || !cfgPath || (comm
   process.stderr.write("usage: sink_tool.ts init <database> <config> <state json> | report <database> <config>\n");
   process.exit(2);
 }
-const sink = new Sink(dbPath, JSON.parse(readFileSync(cfgPath, "utf8")));
+const cfg = JSON.parse(readFileSync(cfgPath, "utf8"));
+const sink = new Sink(dbPath, command === "init" && cfg.initialState === undefined ? { ...cfg, initialState: JSON.parse(stateJson) } : cfg);
 if (command === "init") sink.init(JSON.parse(stateJson));
 process.stdout.write(JSON.stringify({
   state: JSON.parse(sink.stateBlob()),

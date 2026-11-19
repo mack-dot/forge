@@ -1,0 +1,36 @@
+{
+ "ok": true,
+ "c1": {
+  "status": "committed"
+ },
+ "c1again": {
+  "status": "replayed"
+ },
+ "c0": {
+  "status": "committed"
+ },
+ "c0again": {
+  "status": "replayed"
+ },
+ "stateAfterZeroUnchanged": true,
+ "audit": [],
+ "restartOk": true,
+ "flush1": {
+  "emitted": 2,
+  "refused": []
+ },
+ "flush2": {
+  "emitted": 0,
+  "already": 2
+ },
+ "effects": [
+  {
+   "requestId": "rq_e2e_1",
+   "intent": "{\"amount\":\"100\",\"chargeId\":\"ch_e2e\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_e2e_1\"}"
+  },
+  {
+   "requestId": "rq_e2e_zero",
+   "intent": "{\"amount\":\"0\",\"chargeId\":\"ch_e2e\",\"reason\":\"duplicate_charge\",\"requestId\":\"rq_e2e_zero\"}"
+  }
+ ]
+}

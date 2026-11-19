@@ -38,8 +38,8 @@ function consistent(b: any): boolean {
   await probe("extra-key", `{"id":6,"pre":${J(S)},"transition":${J(t50)},"x":1}`, 1, a => !a[0].ok);
   // value conversion: amount "00","+1","1e3"," 1","0x10","1.0","-0" must all be refused (MONEY regex). Safe: refuse.
   for (const amt of ["00", "+1", "1e3", " 1", "0x10", "1.0", "-0", "01", "10000000000000000000"]) {
-    const t = tr(S, "rq_cv", amt as any);
-    await probe("amount=" + JSON.stringify(amt), `{"id":7,"pre":${J(S)},"transition":${J(t)}}`, 1, a => !a[0].ok);
+    const t = `{"request":{"requestId":"rq_cv","amount":${J(amt)},"reason":"duplicate_charge"},"post":${J({ ...S, remaining: "50" })},"intent":{"chargeId":"ch_1","requestId":"rq_cv","amount":${J(amt)},"reason":"duplicate_charge"}}`;
+    await probe("amount=" + JSON.stringify(amt), `{"id":7,"pre":${J(S)},"transition":${t}}`, 1, a => !a[0].ok);
   }
   // refundEnabled given as string "false" (truthy) or 1/null. Safe: refuse (typeof boolean required).
   for (const v of ['"false"', "1", "0", "null"]) {

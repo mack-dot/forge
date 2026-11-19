@@ -1,0 +1,13 @@
+SEVEN E06-stack-overflow-keyed | SUBSET3_RECURSION: call cycle DeepM -> DeepM
+SEVEN E07-oom-keyed | SUBSET3_CALL: call of `seq` in an expression is outside the allow-list
+SEVEN E08-time-keyed | SUBSET3_STATEMENT: statement `while` is outside the allow-list (in Ass
+SEVEN H01b-such-that-modulus-hang | SUBSET3_SYNTAX: in Assess expected `:=`, found `:|`
+SEVEN H04-seq-length-2pow32-throws | SUBSET3_CALL: call of `seq` in an expression is outside the allow-list
+SEVEN H02-exponential-recursion-hang | SUBSET3_RECURSION: call cycle Slow -> Slow
+SEVEN H03-seq-comprehension-alloc | SUBSET3_CALL: call of `seq` in an expression is outside the allow-list
+seven found 7/7 admitted 0
+halting n=24 admitted=0
+hostile rows n=177 admitted=20 (B recorded 20 admitted, all argued or run safe by B)
+correct rows n=67 admitted=46 refused=21
+drift 0
+exit 0

@@ -1,0 +1,15 @@
+# start=2026-11-19T14:43:16Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a1_double_refund.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/work/a1_double_refund-running running
+(node:99329) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Error: dispatcher alarm: the sink's rows 1..1 do not chain to the ledger's last rowHead (rollback or rewrite of the sink's store); nothing sent
+    at Dispatcher.flushLocked (<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts:134:15)
+    at Dispatcher.flush (<REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/dispatcher.ts:90:23)
+    at Object.flush (<REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/common.ts:30:108)
+    at <anonymous> (<REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a1_double_refund.ts:26:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+real 0.72
+user 0.26
+sys 0.06
+# end=2026-11-19T14:43:17Z
+exit 3

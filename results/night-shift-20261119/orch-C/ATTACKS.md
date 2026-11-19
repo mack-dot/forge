@@ -94,3 +94,93 @@ Entries below: C's own re-runs 14:50Z; logs c4-rollback/recheck/; command form: 
 - Overlay of de71cf4d (ts/, spec/refund, tests/refund-finality, impl) + v6 diff for ts/ and impl/: same command -> EXIT 0 ("answer":"ok", committed); control EXIT 0. Logs: orch-C/refix/c-att-01-de71cf4d*.log. B's permanent regression: tests/refund-finality/regress/c_att_01_line_separator.ts.
 ## B's regression runner on the v6 overlay (14:56Z, C's run): node --import tsx tests/refund-finality/regress/run.ts <sink.ts> <dispatcher.ts> -> EXIT 1: 13 PASS, 1 FAIL (X6-Z1 zero-amount row deleted and committed again; known U565). Log: orch-C/refix/regress-v6-de71cf4d.log.
 - Note for B: X6-P1 prints PASS when the prefix rollback SUCCEEDS ("documented limit holds"). A PASS line for an unsafe outcome can mislead a reader of the exit code.
+
+## CORRECTION of time stamps (written 14:40:39Z by `date -u`)
+The times typed in the headings above (14:32Z, 14:41Z, 14:42Z, 14:50Z, 14:51Z, 14:56Z) were NOT read from a clock; they were my estimates and they are too late. All entries above this line were written between 14:19Z and 14:40:39Z (bounds from `date -u` and file times). The exit codes and commands are unaffected. From here on every time in this file is inserted by the shell.
+
+Entries below: C's own re-runs at 14:40:39Z; logs c7-minter/recheck/. Command form: node --import tsx c7-minter/<S>.ts, cwd = target-v6, scrubbed env.
+
+## C-ATT-14 (14:40:39Z) the checker identity does not bind the modules the minter loads — CONFIRMED, NEW; needs control of the minter's environment (NODE_PATH): config-level power, so WEAK as an attack, real as a claims gap
+- encoding.ts:84-87 hashes the core module file, encoding.ts and minter.ts only; minter.ts:33 requires the core by path; bignumber.js and the resolution path are unbound. A benign shim bignumber.js first on NODE_PATH ran inside the minter process while the minter reported the pinned checkerSha256 61438653….
+- Repro: p4_module_identity.ts -> EXIT 1. SHA-256 232cf39070e40346803282e8217c21b53b15ec81ea061ebb8c6d0434e2ab1602 (+ c7-minter/shadow/, raw.ts).
+- Expected: the reported identity changes, or no foreign code runs. Reading: "checkerSha256 identifies the issuer" holds only under an unstated assumption: a closed, fixed launch environment and dependency tree.
+
+## C-ATT-15 (14:40:39Z) the minter decodes stdin as lossy UTF-8 — CONFIRMED, NEW, MEDIUM (identity rewrite; no break of the signed-bytes property)
+- minter.ts:126 Buffer.toString("utf8"): invalid bytes become U+FFFD and are signed. Request ids rq\xff and rq\xfe both give a token for "rq\uFFFD" (same body hash). Distinct wire requests collide to one signed id (impact class of C-ATT-08).
+- Repro: p2_invalid_utf8.ts -> EXIT 1. SHA-256 9fc3c32bbb7d4be2c10f7e01458fdba02ff3f7e037af8ab0eb52e2553befa5fb. Expected: refusal of non-UTF-8 input. Attacker: writes raw bytes to the minter's stdin; no key.
+
+## C-ATT-16 (14:40:39Z) MinterClient cross-delivery — CONFIRMED, NEW, WEAK (needs two callers on one client, one hostile)
+- proposer.ts:23,51-52: a body key `id` overrides the client's counter; answers are matched by id only. Caller A receives caller B's token; B never gets an answer. The token is correctly signed; only delivery is wrong.
+- Repro: p3_client_crossdelivery.ts -> EXIT 1. SHA-256 75bc1b5b399711f4ab3276640005ea3dc97a604692f8d39f01952b10d32524fe.
+
+## C-NEG-06 (14:40:39Z) minter decision — NO counterexample: fuzz_diff.ts 2000 7 -> EXIT 0 (428 issued, 224 zero-amount, 208 full; 0 divergences from an independent oracle; raw 0x0A framing); p5_negatives.ts -> EXIT 0 (19 probes: duplicate keys, __proto__, number formats, booleans as strings). The hashed pre-state could not be split from the decided pre-state. p1_singleuse_zero.ts -> EXIT 1 = C-ATT-03 again.
+- Worker note: it found a truncated p5_negatives.ts of unknown origin in its folder, discarded it and wrote its own. No other worker was assigned that folder; cause UNKNOWN (most likely the worker's own interrupted write).
+
+## C-ATT-16 RE-RUN (14:42:34Z) against B's fix 216dfbe2 (proposer.ts writes its own id last) — PASS (closed)
+- Overlay fix-216dfbe2 (git archive + v6 diff for ts/, impl/), C7_ROOT = overlay: p3_client_crossdelivery.ts -> EXIT 0 (A got its own token; B resolved). B's regression c_att_16_client_id_override.ts -> EXIT 0. C-ATT-01 on the same overlay -> EXIT 0 (still closed). Logs: orch-C/refix/c-att-16-216dfbe2.log, c-att-16-Bregress.log, c-att-01-216dfbe2.log.
+## Open list at 14:42:34Z — with B's h-sink: C-ATT-02, 04, 06, 10, 11, 12. With h-minter: C-ATT-03, 15. Owner: C-ATT-05; C-ATT-14 (B's U572: assumptions CLOSED-LAUNCH, FIXED-DEPS; changing the id is an owner decision). Known/owner: C-ATT-07, 08, 09, 13.
+
+## C-PREM-01 (14:44:14Z) A's X8/X11 draft argument (environment from one real run) — four STATIC findings (no run shows them); sent to A
+- Not circular: the theorem quantifies over the environment; the run fixes only freedoms that are quantified away. HOLDS by reading.
+- (4) NEW assumption A-F0-REAL: the model at EL0 also reads SCTLR_EL1.A (CheckAlignment) and PSTATE bits; the draft's fixed constant F0 must equal the real bits and they must stay constant over the run. X11 E14 names only E0E/EL/TBI/SA0.
+- (5) interference-oracle indexing: off by the 27 entry instructions plus earlier FFI events as written; fixable.
+- (11) "stdout = concat over reached write calls" is FALSE for killed runs: PIPE_BUF is 512 on this machine (getconf, C's run) and chunks go up to 2048; a SIGKILL inside a blocking write leaves bytes of a write that never returned. The TimeOut clause must say "prefix of fd1_written of an extension".
+- (12) overclaim: the accept rule "strict parse => correct" needs an unstated fail-closed lemma for runs that violate an environment premise; the consumer cannot observe those premises after the fact.
+- Proposed tests T4 and T2 cannot fail in the relevant direction (T4 compares memory, not pipe contents; T2's digest check is forced by r-x).
+## C-NEG-07 (14:44:14Z) real refund executable under signals and truncated stdin — NO counterexample (C's re-runs, EXIT 0 each): c9-x8/sig_stop_cont.py (9 runs, stop/continue and four other signals while blocked in read or write: exact frame, rc 0), truncated_stdin.py (5 cut points: rc 0, empty stdout, no strict frame), threads_probe.py (one thread). Logs c9-x8/recheck/.
+
+Entries below: target = B's judges at 1481d818 (tests/refund-finality/regress/, spec-conformance/). C's own re-runs at 14:49:11Z. Files: orch-C/c10-judges/ (mutants made by mutants/make_mutants.py; trees v6/ and enc/ are small extractions).
+
+## C-JUDGE-01 (14:49:11Z) both judges pass 12 really defective mutants — CONFIRMED, NEW (judge blind spots)
+- Repro: bash c10-judges/blindspots.sh -> EXIT 1 ("mutants passed by both judges: 12"). SHA-256 54afac42a735ad0a90a783bfab6887b143bf9ff9b31b5293d633a6c235eda2e2. Log c10-judges/recheck/blindspots.log.
+- The 12: sink accepts a token signed by a foreign key; accepts non-canonical token text; skips the pre-state check; answers "rejected" to an identical retry; answers "replayed" to a different token for a settled id; commits anything for ids longer than 32 or non-ASCII; commits anything after 20 honest commits; wipes the store at open; dispatcher ignores the signature; dispatcher ignores the chain; dispatcher emits before the ledger line; a shared encoding.ts whose signed bytes omit post and intent.
+- Defects shown real by C's runs of c10-judges/confirm.sh (mutant EXIT 1, plain v6 EXIT 0) for: bad_sig, wipe, d_ignore_sig, late20. The other 8 confirm cases: worker runs only.
+- Causes: no case reaches restart, a bad signature, non-canonical text, ids of 33-256 units or non-ASCII, more than 10 deliveries per store; the oracle's committed branch does not check signature, pins or canonical text; "replayed" and "rejected" are treated alike; the spec judge loads no dispatcher; the oracle shares encoding.ts with the sink under test.
+- m_wipe_on_open gets regress EXIT 0: an amnesia sink scores BETTER than v6 (EXIT 1).
+
+## C-JUDGE-02 (14:49:11Z) X6-P1 FAILS a SAFER sink — CONFIRMED, NEW (false rejection by the judge)
+- s_rollback_guard.ts (refuses to start when the settled count is below an outside high-water mark): regress EXIT 1, "FAIL X6-P1 ... differs from the documented limit (refused without an anchor)". A sink that resists the rollback is failed for it.
+
+## C-JUDGE-03 (14:49:11Z) judge integrity and exit codes — CONFIRMED, NEW
+- i_exit_early.ts (reject-all + process.exit(0)): regress prints 5 FAIL lines, 9 regressions never run, EXIT 0. No count check.
+- i_forge_output.ts (reject-all + patched output): regress 14 PASS, EXIT 0.
+- spec-conformance/run.ts exits 0 with violations (merged sink: worker run). The v6 baseline already fails X6-Z1, so regress exit 1 cannot show a NEW failure on v6.
+- Threat reading: the sink under test runs inside the judge process. For a trusted sink this is about exit-code hygiene (early exit, missing count check), not about a hostile sink.
+
+## C-NEG-08 (14:49:11Z) no false alarm and no v6 counterexample from B's oracle (worker runs: seeds 1-3, fault and interleave modes, 200 each: only P5-SILENT). 17 mutants are caught by at least one judge (reject-all, reject-zero, reject-full, reject-second, no outbox, outbox twice, and others).
+
+Entries below: C's own re-runs at 14:52:11Z. Dispatcher command form: c8-dispatcher/run.sh <script> <work dir> <mode> (cwd = target-v6, scrubbed env). Logs c8-dispatcher/recheck/.
+
+## C-ATT-17 (14:52:11Z) the dispatcher lock has no owner: one documented operator step gives two effects for one request id and a total above the original — CONFIRMED, NEW, HIGH
+- Class: concurrency / retry at the effect point. Attacker: NONE. An honest operator follows the header's recovery step ("a person removes the lock file") for a run that is slow, not dead; a second honest run follows. No key, no database write, no config.
+- dispatcher.ts:79 `finally { closeSync(lock); unlinkSync(lockPath); }` removes whatever lock file is at the path; the ledger (:82) and the outbox rows (:86) are read once per run.
+- Repro (deterministic: a blocking emit waits for a control file): l1_lock_theft.ts <W> two -> EXIT 1 (effects A:r1 B:r2 A:r2; 1200 of 1000). `three` -> EXIT 1: ONE operator step; run A's finally deletes run B's lock; run C starts with no operator step; effects A:r1 B:r2 C:r3 B:r3; 1200 of 1000. `control` -> EXIT 0. SHA-256 l1_lock_theft.ts a99305a8eb1a2d6dcffa7a937001ed13e4d7b20c545344d0e9e7d4aa1e8c3167, dchild.ts 1be296a2…1a79.
+- Expected: at most one effect per request id. Detection only afterwards: later runs stop with "ledger is not one chain".
+- Sent to B 14:52:11Z. Regression: PENDING. Re-run against fix: NOT RUN.
+
+## C-ATT-18 (14:52:11Z) a throwing emit loses the effect silently — CONFIRMED, NEW (claims gap, medium)
+- The ledger line is written, emit throws before sending, the finally removes the lock; the retry counts the request in alreadyDispatched with refused=[]. A ledger line for a lost effect is identical to one for a sent effect. The header covers only "a process that dies". l2_silent_loss.ts <W> throw -> EXIT 1; ok -> EXIT 0. SHA-256 ce92836b…3716.
+
+## C-ATT-19 (14:52:11Z) an OLDER ledger (restored backup) repeats emits: 1400 on 1000 — CONFIRMED; KNOWN class (C-ATT-13, B-8(a)); the header names only a MISSING ledger
+- l3_ledger_restore.ts <W> ledger -> EXIT 1; none -> EXIT 0. Attacker: none (an operator restores a backup). Worker run only: mode `dir` EXIT 1.
+
+## C-ATT-20 (14:52:11Z) a BLOB-typed outbox request_id hides a committed refund from the dispatcher — CONFIRMED, NEW, LOW (database writer without the key)
+- dispatcher.ts:87 filters the row out before any check: not emitted, not refused, counted in alreadyDispatched. l7_rowtype.ts <W> blob -> EXIT 1; nul -> EXIT 0. SHA-256 cd8d60a6…3806.
+
+## C-NEG-09 (14:52:11Z) dispatcher, honest histories — NO counterexample: 1554 histories of length 1-4 (zero and non-zero refunds, held tokens, dispatch at any point, restart): 0 bad (worker runs, 16 chunks EXIT 0); shared ledger for two charges: liveness cost only (l6: EXIT 0, C's run); U+0000 in outbox ids: deduplicated or refused (l7 nul: EXIT 0, C's run).
+
+Entries below: target = B's gate rule 3 (orch-B/e-subset3/subset_rule3.py, diff/refund-subset3-combined-scope.diff). Logs c5-gate/recheck/.
+
+## C-GATE-01 (14:52:11Z) rule 3: NO admitted submission that halts, throws or answers wrongly was found (worker: about 35 candidates; 13 refused; the admitted ones are blocked by Dafny or harmless, some by ARGUMENT only)
+- C's run: python3.10 -I c5-gate/tools/task3.py -> EXIT 0: all seven known unsafe refused; halting 24 of 24 refused; hostile rows 20 of 177 admitted = B's record; correct 46 admitted, 21 refused; drift 0.
+
+## C-GATE-02 (14:52:11Z) rule 3 recognizer is quadratic and unbounded in time inside the gate process — CONFIRMED, NEW (availability; attacker: the submitter)
+- subset_rule3.py body_open (lines 302-306) with subset3_close per `{`. Nested braces in a ghost clause: C's run of regress.sh check D1: 18.6 s, verdict "pass W=209 T=6" (ADMITTED). Worker: 20,000 levels 104.9 s. Expected: a fast bounded refusal.
+
+## C-GATE-03 (14:52:11Z) wiring: the rule checks bytes read BEFORE the input snapshot — CONFIRMED by static check only (regress.sh D2); the end-to-end swap is NOT RUN; WEAK (needs a second process that writes the submission file during the gate run)
+- Gate copy with the combined-scope diff: read at line 1055, rule at 1073, re-read by identity() at 1081, snapshot at 1193; only the end state is compared with the snapshot.
+
+## C-GATE-04 (14:52:11Z) rule 3 FALSE REJECTIONS of natural correct work: 5 of 10 new submissions refused — CONFIRMED (C's recognizer runs on G01, G02, G03, G08, G09; worker's Dafny verify exit 0 for all five: not re-run by C)
+- G01 SUBSET3_TYPE (helper with a seq parameter); G02 SUBSET3_NAME (let-expression in a helper); G03 SUBSET3_GUARD_BRACE (`reason in {..}` in a guard); G08 SUBSET3_NAME (a local declared once in each of two branches); G09 SUBSET3_PRODUCT (amount times a named constant). G08 and G09 are classes not in B's reviewer list.
+- With B's 21 of 67: the rule refuses about a third to a half of correct work. Not a reject-all gate; a high false-rejection rate.
+- Regression for C-GATE-02/03: bash c5-gate/regress.sh [RULE_PY] [GATE_PY] -> EXIT 1 now. 04be9739902cf93f9958e0e2e0433c121c4f844dfc91353f13117f4d2f0b49fe  regress.sh

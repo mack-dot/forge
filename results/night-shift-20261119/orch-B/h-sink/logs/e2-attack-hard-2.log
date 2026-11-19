@@ -1,0 +1,36 @@
+# start=2026-11-19T14:45:55Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/conf/attack_h.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/attack-hard <REPO>/results/night-shift-20261119/orch-B/h-sink/tree/ts/refund-finality/sink.ts
+{"k":"H0-honest-control","restart":"STARTED"}
+{"k":"A1-outbox-rows-swapped","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":null,"counts":{"s":2,"o":2,"z1":0},"restartAfter":null}
+{"k":"A2-settled-rows-swapped","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":null,"counts":{"s":2,"o":2,"z1":0},"restartAfter":null}
+{"k":"A3-settled-without-outbox-and-orphan-outbox","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":null,"counts":{"s":2,"o":2,"z1":1},"restartAfter":null}
+{"k":"A4-seq-gap-both-tables","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":["r3:committed"],"counts":{"s":3,"o":3,"z1":0},"restartAfter":"STARTED"}
+{"k":"A4b-seq-renumbered-offset","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":["r3:committed"],"counts":{"s":3,"o":3,"z1":0},"restartAfter":"STARTED"}
+{"k":"A5-outbox-intent-key-order","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":null,"counts":{"s":1,"o":1,"z1":0},"restartAfter":null}
+{"k":"A5b-outbox-intent-whitespace","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":null,"counts":{"s":1,"o":1,"z1":0},"restartAfter":null}
+{"k":"A5c-outbox-intent-reason","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":null,"counts":{"s":1,"o":1,"z1":0},"restartAfter":null}
+{"k":"A6-settled-request_id-column","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":null,"counts":{"s":1,"o":1,"z1":0},"restartAfter":null}
+{"k":"A7-token_sha256-column","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":null,"counts":{"s":1,"o":1,"z1":0},"restartAfter":null}
+{"k":"A8-outbox-request_id-column","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":null,"counts":{"s":1,"o":1,"z1":0},"restartAfter":null}
+{"k":"A8b-outbox-zero-intent-chargeId","sqlAbort":"SQL-ABORT: h-sink S5: outbox is append-only","restart":"STARTED","after":null,"counts":{"s":2,"o":2,"z1":1},"restartAfter":null}
+{"k":"Z1-middle-zero-row-deleted","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":["z1:replayed","r2:committed"],"counts":{"s":4,"o":4,"z1":1},"restartAfter":"STARTED"}
+{"k":"Z2-zero-rows-swapped","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":["r2:committed"],"counts":{"s":4,"o":4,"z1":1},"restartAfter":"STARTED"}
+{"k":"Z3-leading-zero-row-deleted","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":["z0:replayed","r2:committed"],"counts":{"s":3,"o":3,"z1":0},"restartAfter":"STARTED"}
+{"k":"Z4-control-nonzero-middle-deleted","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":null,"counts":{"s":3,"o":3,"z1":0},"restartAfter":null}
+{"k":"P1-prefix-rollback-last-row","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","restart":"STARTED","after":["r2:replayed"],"counts":{"s":2,"o":2,"z1":0},"restartAfter":"STARTED"}
+{"k":"R1-running-middle-zero-deleted","sqlAbort":"SQL-ABORT: h-sink S5: settled is append-only","recommitZ1":"replayed","replayAgain":"replayed","reaudits":0,"counts":{"s":3,"o":3,"z1":1}}
+{"k":"G1-noop-foreign-write","c":"committed","reaudits":0}
+{"k":"G2-wal-switch-then-rollback-by-foreign","sqlAbort":"SQL-ABORT: cannot change into wal mode from within a transaction","c":"replayed","reaudits":0,"counts":{"s":1,"o":1,"z1":0}}
+{"k":"C1-commit-then-rejected-deliveries","rj":["replayed","rejected","rejected","rejected"],"restart":"STARTED"}
+{"k":"C2-300-zero-commits","n":300,"restart":"STARTED"}
+{"k":"C3-max-amount","constructor":"REFUSED: h1 sink refuses to serve: cfg.initialState is not a valid context (cha"}
+{"k":"C4-fresh-and-init-only","fresh":"STARTED","initOnly":"STARTED"}
+{"k":"C5-two-writers-alternating","out":["committed","committed","committed","committed","committed","committed"],"reauditsA":2,"reauditsB":3,"restart":"STARTED"}
+{"k":"C6-non-BMP-and-escapes","a":"committed","b":"committed","restart":"STARTED"}
+(node:10992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+real 3.98
+user 1.14
+sys 0.58
+# end=2026-11-19T14:45:59Z
+exit 0

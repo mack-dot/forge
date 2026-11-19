@@ -1,0 +1,15 @@
+OK   P1-sem zero on remaining 0 committed: oracle=none expected=none
+OK   P1-sem zero on remaining 0 rejected: oracle=P5 expected=P5
+OK   P1-sem amount == remaining committed: oracle=none expected=none
+OK   P1-sem refundEnabled false, zero, rejected: oracle=none expected=none
+OK   P1-sem refundEnabled false, zero, committed: oracle=P1 expected=P1
+OK   P1-sem second id after 0, amount 1 rejected: oracle=none expected=none
+OK   P1-sem replay answered replayed: oracle=none expected=none
+BLIND P2-def committed token signed by ANOTHER key: oracle=none (a defect; want a violation)
+BLIND P2-def committed token with a WRONG spec lock: oracle=none (a defect; want a violation)
+BLIND P2-def committed STALE token (pre-state hash of another state): oracle=none (a defect; want a violation)
+BLIND P2-def committed NON-CANONICAL token text: oracle=none (a defect; want a violation)
+BLIND P2-def replay of a committed token answered rejected (PR 63-64: returns its recorded decision): oracle=none (a defect; want a violation)
+BLIND P2-def DIFFERENT token, settled id, answered replayed (PR 64: rejected): oracle=none (a defect; want a violation)
+# misses/blind: 6
+exit 1

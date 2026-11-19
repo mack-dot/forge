@@ -1,0 +1,103 @@
+# start=2026-11-19T14:45:16Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/conf/conformance_h.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/conf/conformance-h-1.json
+OK  #1 v6==hard | honest commit
+     v6   committed  [outbox=1; audit=[]; restart=ok]
+     hard committed  [outbox=1; audit=[]; restart=ok]
+OK  #2 v6==hard | replay of the same text
+     v6   committed ; replayed  [outbox=1; audit=[]; restart=ok]
+     hard committed ; replayed  [outbox=1; audit=[]; restart=ok]
+OK  #3 v6==hard | same request id, other token
+     v6   committed ; rej:request id is already settled with another token  [outbox=1; audit=[]; restart=ok]
+     hard committed ; rej:request id is already settled with another token  [outbox=1; audit=[]; restart=ok]
+OK  #4 v6==hard | stale pre-state
+     v6   committed ; rej:stored state is not the token's pre-state  [outbox=1; audit=[]; restart=ok]
+     hard committed ; rej:stored state is not the token's pre-state  [outbox=1; audit=[]; restart=ok]
+OK  #5 v6==hard | chain of two
+     v6   committed ; committed  [outbox=2; audit=[]; restart=ok]
+     hard committed ; committed  [outbox=2; audit=[]; restart=ok]
+OK  #6 v6==hard | bad signature (flipped byte)
+     v6   rej:signature does not verify  [outbox=0; audit=[]; restart=ok]
+     hard rej:signature does not verify  [outbox=0; audit=[]; restart=ok]
+OK  #7 v6==hard | attacker key
+     v6   rej:signature does not verify  [outbox=0; audit=[]; restart=ok]
+     hard rej:signature does not verify  [outbox=0; audit=[]; restart=ok]
+OK  #8 v6==hard | wrong spec lock id
+     v6   rej:spec lock is not the pinned one  [outbox=0; audit=[]; restart=ok]
+     hard rej:spec lock is not the pinned one  [outbox=0; audit=[]; restart=ok]
+OK  #9 v6==hard | wrong checker id
+     v6   rej:checker is not the pinned one  [outbox=0; audit=[]; restart=ok]
+     hard rej:checker is not the pinned one  [outbox=0; audit=[]; restart=ok]
+OK  #10 v6==hard | wrong spec and checker ids
+     v6   rej:spec lock is not the pinned one  [outbox=0; audit=[]; restart=ok]
+     hard rej:spec lock is not the pinned one  [outbox=0; audit=[]; restart=ok]
+OK  #11 v6==hard | request-id mismatch, then the victim id
+     v6   rej:request id is not the intent's request id ; rej:stored state is not the token's pre-state  [outbox=0; audit=[]; restart=ok]
+     hard rej:request id is not the intent's request id ; rej:stored state is not the token's pre-state  [outbox=0; audit=[]; restart=ok]
+OK  #12 v6==hard | NEW intent for a foreign charge
+     v6   rej:charge id is not the stored charge id  [outbox=0; audit=[]; restart=ok]
+     hard rej:charge id is not the stored charge id  [outbox=0; audit=[]; restart=ok]
+OK  #13 v6==hard | NEW post-state with a foreign charge id, then honest ch_1 token
+     v6   rej:charge id is not the stored charge id ; committed  [outbox=1; audit=[]; restart=ok]
+     hard rej:charge id is not the stored charge id ; committed  [outbox=1; audit=[]; restart=ok]
+OK  #14 v6==hard | NEW intent and post for a foreign charge
+     v6   rej:charge id is not the stored charge id  [outbox=0; audit=[]; restart=ok]
+     hard rej:charge id is not the stored charge id  [outbox=0; audit=[]; restart=ok]
+OK  #15 v6==hard | zero amount commits (right charge)
+     v6   committed  [outbox=1; audit=[]; restart=ok]
+     hard committed  [outbox=1; audit=[]; restart=ok]
+OK  #16 v6==hard | two zero amounts, distinct ids, same pre-state
+     v6   committed ; committed  [outbox=2; audit=[]; restart=ok]
+     hard committed ; committed  [outbox=2; audit=[]; restart=ok]
+OK  #17 v6==hard | NEW zero amount for a foreign charge, then zero for ch_1
+     v6   rej:charge id is not the stored charge id ; committed  [outbox=1; audit=[]; restart=ok]
+     hard rej:charge id is not the stored charge id ; committed  [outbox=1; audit=[]; restart=ok]
+OK  #18 v6==hard | fault between writes, then retry
+     v6   rej:transaction failed: injected fault between writes ; committed  [outbox=1; audit=[]; restart=ok]
+     hard rej:transaction failed: injected fault between writes ; committed  [outbox=1; audit=[]; restart=ok]
+OK  #19 v6==hard | fault between writes only (store must stay S0)
+     v6   rej:transaction failed: injected fault between writes  [outbox=0; audit=[]; restart=ok]
+     hard rej:transaction failed: injected fault between writes  [outbox=0; audit=[]; restart=ok]
+OK  #20 v6==hard | non-canonical text
+     v6   rej:token text is not canonical  [outbox=0; audit=[]; restart=ok]
+     hard rej:token text is not canonical  [outbox=0; audit=[]; restart=ok]
+OK  #21 v6==hard | not a text
+     v6   rej:token is not a text  [outbox=0; audit=[]; restart=ok]
+     hard rej:token is not a text  [outbox=0; audit=[]; restart=ok]
+OK  #22 v6==hard | no stored state
+     v6   rej:the sink has no stored state  [outbox=0; audit="<no state>"; restart=ok]
+     hard rej:the sink has no stored state  [outbox=0; audit="<no state>"; restart=ok]
+OK  #23 v6==hard | no stored state, bad signature
+     v6   rej:signature does not verify  [outbox=0; audit="<no state>"; restart=ok]
+     hard rej:signature does not verify  [outbox=0; audit="<no state>"; restart=ok]
+OK  #24 v6!=hard | amount 2^63 on a 19-digit charge
+     v6   rej:not authorized by the approved relation for the stored state  [outbox=0; audit=[]; restart=ok]
+     hard REFUSED-TO-START(id, refunds enabled, original <= MaxMoney, 0 <= remaining <= original))
+OK  #25 v6==hard | non-BMP request ids
+     v6   committed ; committed ; replayed  [outbox=2; audit=[]; restart=ok]
+     hard committed ; committed ; replayed  [outbox=2; audit=[]; restart=ok]
+OK  #26 v6==hard | lone surrogate request id (decoder refuses)
+     v6   rej:token shape  [outbox=0; audit=[]; restart=ok]
+     hard rej:token shape  [outbox=0; audit=[]; restart=ok]
+OK  #27 v6==hard | NEW audit-fail store: outbox row rq_victim not settled (old gap), then honest rq_victim
+     v6   REFUSED-TO-START(lay) is false: outbox request_id column is not its intent's request id)
+     hard REFUSED-TO-START(s false: schema text (tables, indexes, triggers) is not the sink's DDL)
+OK  #28 v6==hard | NEW audit-fail store: outbox row for foreign charge ch_other, then honest ch_1 token
+     v6   REFUSED-TO-START(FUSE: start-up audit (schema, initial charge, AuditV5 replay) is false)
+     hard REFUSED-TO-START(s false: schema text (tables, indexes, triggers) is not the sink's DDL)
+OK  #29 v6!=hard | NEW v4: legacy honest store (prep), initialState given, then the next honest token
+     v6   committed  [outbox=2; audit=[]; restart=ok]
+     hard REFUSED-TO-START(s false: schema text (tables, indexes, triggers) is not the sink's DDL)
+OK  #30 v6==hard | NEW v4: legacy honest store (prep), NO initialState: v4 refuses (no initial text)
+     v6   REFUSED-TO-START(itialState is required (the initial charge, from outside the database))
+     hard REFUSED-TO-START(itialState is required (the initial charge, from outside the database))
+OK  #31 v6==hard | NEW v4: D-b store: prep commits a foreign post AND intent (ch_2) on ch_1; then a ch_2 token
+     v6   REFUSED-TO-START(FUSE: start-up audit (schema, initial charge, AuditV5 replay) is false)
+     hard REFUSED-TO-START(s false: schema text (tables, indexes, triggers) is not the sink's DDL)
+cases 31; unexpected 0
+(node:7884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+real 1.50
+user 0.60
+sys 0.31
+# end=2026-11-19T14:45:18Z
+exit 0

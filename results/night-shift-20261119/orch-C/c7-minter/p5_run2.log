@@ -1,5 +1,198 @@
-SyntaxError: Cannot convert 1e3 to a BigInt
-    at BigInt (<anonymous>)
-    at tr (<REPO>/results/night-shift-20261119/orch-C/c7-minter/p5_negatives.ts:8:55)
-    at <anonymous> (<REPO>/results/night-shift-20261119/orch-C/c7-minter/p5_negatives.ts:41:15)
-    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+{
+ "unsafe": 0,
+ "res": [
+  {
+   "name": "dup-pre first=S last=S2",
+   "safe": true,
+   "ans": [
+    {
+     "id": 1,
+     "no": "core: Refuse"
+    }
+   ]
+  },
+  {
+   "name": "dup-pre first=S2 last=S",
+   "safe": true,
+   "ans": [
+    {
+     "id": 2,
+     "rid": "rq_50",
+     "pre8": "f6af74d6",
+     "amt": "50",
+     "consistent": true
+    }
+   ]
+  },
+  {
+   "name": "proto refundEnabled",
+   "safe": true,
+   "ans": [
+    {
+     "id": 3,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "two-objects-one-line",
+   "safe": true,
+   "ans": [
+    {
+     "id": null,
+     "no": "Unexpected non-whitespace character after JSON at position 352 (line 1 column 353)"
+    }
+   ]
+  },
+  {
+   "name": "extra-key",
+   "safe": true,
+   "ans": [
+    {
+     "id": 6,
+     "no": "message shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\"00\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\"+1\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\"1e3\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\" 1\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\"0x10\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\"1.0\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\"-0\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\"01\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "amount=\"10000000000000000000\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 7,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "refundEnabled=\"false\"",
+   "safe": true,
+   "ans": [
+    {
+     "id": 8,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "refundEnabled=1",
+   "safe": true,
+   "ans": [
+    {
+     "id": 8,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "refundEnabled=0",
+   "safe": true,
+   "ans": [
+    {
+     "id": 8,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "refundEnabled=null",
+   "safe": true,
+   "ans": [
+    {
+     "id": 8,
+     "no": "shape"
+    }
+   ]
+  },
+  {
+   "name": "original 20-digit",
+   "safe": true,
+   "ans": [
+    {
+     "id": 9,
+     "no": "shape"
+    }
+   ]
+  }
+ ]
+}

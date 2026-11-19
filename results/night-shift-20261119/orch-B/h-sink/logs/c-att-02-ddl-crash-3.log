@@ -1,0 +1,19 @@
+# start=2026-11-19T14:41:29Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/ddl 20 28
+PASS K=20 child: killed-at 20 CREATE TRIGGER h_outbox_bu BEFORE UPDATE (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=21 child: killed-at 21 CREATE TRIGGER h_outbox_bd BEFORE DELETE (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=22 child: killed-at 22 COMMIT (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=23 child: killed-at 23 BEGIN IMMEDIATE (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS K=24 child: killed-at 24 ROLLBACK (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS K=25 child: killed-at 25 BEGIN IMMEDIATE (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS K=26 child: killed-at 26 COMMIT (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+FAIL K=27 child: completed after 26 exec calls | hot journal after kill: false | next open: REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false: me
+FAIL K=28 child: completed after 26 exec calls | hot journal after kill: false | next open: REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is false: me
+failed 2
+(node:91866) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+real 5.80
+user 2.79
+sys 0.67
+# end=2026-11-19T14:41:35Z
+exit 1

@@ -1,0 +1,14 @@
+# start=2026-11-19T14:42:10Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/ddl 1 3
+PASS K=1 child: killed-at 1 CREATE TABLE meta(id INTEGER PRIMARY KEY (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS K=2 child: killed-at 2 PRAGMA busy_timeout = 30000 (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS K=3 child: killed-at 3 BEGIN IMMEDIATE (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS partial h1 schema (meta table only, committed outside the sink) | REFUSED: schema text (tables, indexes, triggers) is not the sink's DDL
+failed 0
+(node:94744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+real 2.64
+user 1.16
+sys 0.30
+# end=2026-11-19T14:42:13Z
+exit 0

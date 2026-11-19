@@ -1,0 +1,25 @@
+# start=2026-11-19T14:42:58Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a8_tamper_table.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/work/a8_tamper_table
+(node:98024) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"i":0,"name":"state-only rollback to genesis","applied":"no such column: v","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":1,"name":"settled tail truncated only","applied":"h-sink S5: settled is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":2,"name":"outbox tail truncated only","applied":"h-sink S5: outbox is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":3,"name":"settled+outbox tail truncated, state kept","applied":"h-sink S5: settled is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":4,"name":"sqlite_sequence zeroed","applied":"no such table: sqlite_sequence","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":5,"name":"all seq negated in reverse (order reversed)","applied":"h-sink S5: settled is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":6,"name":"seq shifted to negative, order kept","applied":"h-sink S5: settled is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":7,"name":"settled+outbox seq gaps","applied":"h-sink S5: settled is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":8,"name":"request_id of r1 as BLOB in settled","applied":"h-sink S5: settled is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":9,"name":"token of r1 as BLOB","applied":"h-sink S5: settled is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":10,"name":"user_version and application_id","applied":"ok","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":11,"name":"meta rows deleted (legacy path)","applied":"h-sink S3: meta is immutable","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":12,"name":"second state row (CHECK ignored)","applied":"no such column: v","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":13,"name":"outbox r1 and r2 seq swapped","applied":"h-sink S5: outbox is append-only","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":14,"name":"unknown meta key","applied":"table meta has 6 columns but 2 values were supplied","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+{"i":15,"name":"temp trigger (per connection)","applied":"qualified table names are not allowed on INSERT, UPDATE, and DELETE statements within triggers","start":"refuses: dispatcher alarm: the ledger is missing or empty but the store holds 4 committed rows; a n","offlineAudit":0,"state":"700","commit":"committed"}
+real 1.12
+user 0.75
+sys 0.18
+# end=2026-11-19T14:42:59Z
+exit 0

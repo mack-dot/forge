@@ -1,0 +1,10 @@
+# start=2026-11-19T14:43:46Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/c4/a1_double_refund.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/redteam/work/a1_double_refund-running running
+(node:1804) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"mode":"running","c1":{"status":"committed"},"f1":{"emitted":[{"requestId":"r1","intent":"{\"amount\":\"600\",\"chargeId\":\"ch_c4\",\"reason\":\"duplicate_charge\",\"requestId\":\"r1\"}"}],"refused":[],"alreadyDispatched":0},"stateSeenByHost":{"chargeId":"ch_c4","original":"1000","refundEnabled":true,"remaining":"1000"},"c2":{"status":"rejected","reason":"sink halted: another writer changed the store and the change is not an append of audit-passing rows"},"reaudits":1,"f2":{"emitted":[],"refused":[{"seq":0,"requestId":"*","reason":"ALARM: dispatcher alarm: the sink's rows 1..1 do not chain to the ledger's last rowHead (rollback or rewrite of the sink's stor"}],"alreadyDispatched":0},"offlineAudit":[],"paid":600,"effects":["r1"]}
+real 0.49
+user 0.25
+sys 0.05
+# end=2026-11-19T14:43:47Z
+exit 0

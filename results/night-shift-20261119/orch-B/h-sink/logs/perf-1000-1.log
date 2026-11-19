@@ -1,0 +1,32 @@
+# start=2026-11-19T14:47:56Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/perf20k.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/perf 1000
+{
+ "N": 1000,
+ "smallStore200": {
+  "median": 5.220791,
+  "p90": 14.739083,
+  "max": 244.370334
+ },
+ "loadMs": 582.215625,
+ "startAuditMs": 867.972709,
+ "head": 1000,
+ "bigStore200": {
+  "median": 3.214417,
+  "p90": 10.189084,
+  "max": 29.760209
+ },
+ "commitAfterForeignAppendMs": 41.282,
+ "afterForeign": "committed",
+ "reaudits": 1,
+ "dispatcherFirstFlushMs": 9387.635875,
+ "emitted": 1202,
+ "dispatcherIdleFlushMs": 334.74475,
+ "rssMB": 83
+}
+(node:19669) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+real 14.92
+user 2.26
+sys 0.83
+# end=2026-11-19T14:48:11Z
+exit 0

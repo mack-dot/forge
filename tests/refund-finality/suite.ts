@@ -19,7 +19,7 @@ import {
 } from "../../ts/refund-finality/encoding";
 import { Dispatcher, DispatcherConfig, Effect, FlushResult } from "../../ts/refund-finality/dispatcher";
 import { MinterClient, Minted, propose } from "../../ts/refund-finality/proposer";
-import { CommitResult, Sink, SinkConfig } from "../../ts/refund-finality/sink";
+import { CommitResult, Sink, SinkConfig, genesisOf } from "../../ts/refund-finality/sink";
 
 const ROOT = resolve(__dirname, "../..");
 const GLUE = join(ROOT, "ts/refund-finality");
@@ -237,8 +237,8 @@ async function main() {
   async function world(id: string, m: MinterClient = minter, amounts: string[] = ["100"], initial: ChargeState = state(id)): Promise<World> {
     const dir = join(outDir, id); mkdirSync(dir);
     const db = join(dir, "sink.sqlite");
-    const sinkCfg: SinkConfig = { publicKeyPem: m.ready.publicKeyPem, specLockSha256, checkerSha256 };
-    const dispCfg: DispatcherConfig = { ...sinkCfg, initialStateSha256: stateSha256(initial) };
+    const sinkCfg: SinkConfig = { publicKeyPem: m.ready.publicKeyPem, specLockSha256, checkerSha256, initialState: initial };
+    const dispCfg: DispatcherConfig = { ...sinkCfg, initialStateSha256: stateSha256(initial), newLedgerH0: genesisOf(canon(initial), specLockSha256, checkerSha256, m.ready.publicKeyPem) };
     writeFileSync(join(dir, "sink-config.json"), JSON.stringify(sinkCfg));
     const w: World = { id, dir, db, sinkCfg, dispCfg, initial, effects: [], committed: [],
       sink: () => new Sink(db, sinkCfg),
@@ -387,7 +387,7 @@ async function main() {
 
     const empty = join(outDir, "no_state"); mkdirSync(empty);
     const none = state("no_state"), token = await mustMint(minter, none, req("no_state", "100"));
-    const s = new Sink(join(empty, "sink.sqlite"), { publicKeyPem: pem, specLockSha256, checkerSha256 });
+    const s = new Sink(join(empty, "sink.sqlite"), { publicKeyPem: pem, specLockSha256, checkerSha256, initialState: none });
     const result = s.commit(tokenText(token)), rowsAfter = s.settled().length + s.outbox().length; s.close();
     add("a", "a valid token for a sink that has no stored state", "rejected; 0 rows written", `${result.status}${result.reason ? ": " + result.reason : ""}; ${rowsAfter} rows written`,
       result.status === "rejected" && rowsAfter === 0);

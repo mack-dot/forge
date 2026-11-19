@@ -1,0 +1,20 @@
+# sink=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/sink.ts
+# dispatcher=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/dispatcher.ts
+# encoding=<REPO>/results/night-shift-20261119/orch-C/c10-judges/v6/ts/refund-finality/encoding.ts
+# expectedHeadMode=none node=v24.3.0
+PASS C1-honest-refund: commit=committed; one outbox row; one effect over two flushes
+PASS C2-zero-amount-refund: commit=committed; one zero-valued intent emitted
+PASS C3-two-zero-refunds: commits=committed,committed; two zero-valued effects
+PASS C4-replay-rejected: first=committed replay=replayed; one effect
+PASS C5-largest-refund: commits=committed,committed; remaining 0; two effects
+PASS X1-reqid-mismatch: faulty=rejected honest=committed outbox(rq_victim)=1 effects(rq_victim)=1
+PASS X2-cross-charge: A=rejected B=committed effects(ch_2,rq_x)=1 emitted(ch_2)=50 A.outbox(foreign)=0
+PASS X2b-foreign-post-locks-store: foreign=rejected storedChargeId=ch_1 honest=committed effects(rq_h)=1
+PASS X3-upgrade-legacy-gap: honest=sink refused to start (v6 sink refuses to serve: start-up audit (schema, initial ch) effects(rq_victim) before=1 after=0 outbox(rq_victim)=1
+PASS X4-signed-unauthorized: a-amount-above-remaining:rejected/ok=committed/eff=0+1 b-post-disables-refunds:rejected/ok=committed/eff=0+1 c-post-remaining-wrong:rejected/ok=committed/eff=0+1 d-unapproved-reason:rejected/ok=committed/eff=0+1 e-post-unchanged:rejected/ok=committed/eff=0+1
+PASS X5a-hostile-balance-reset: rq_1=committed rq_2=rejected outboxTotal=1000 emittedTotal=1000 original=1000
+PASS X5b-hostile-outbox-rewrite: rq_1=committed rq_2=rejected unsignedEffects=0 rewrittenRowPresent=true rq_2SettledOnIt=false
+FAIL X6-Z1-zero-row-deleted-recommitted: RE-SETTLED AFTER DELETION: honest=committed,committed,committed redelivery=committed outbox(rq_z1)=1 effects(rq_z1)=1
+KNOWN-LIMIT X6-P1-prefix-rollback: documented limit holds: mode=no-anchor honest=committed,committed started=true redelivery=committed resettled=true effects(rq_2)=1
+# 13 not failed (PASS or KNOWN-LIMIT; a KNOWN-LIMIT line is an unsafe outcome that is a stated limit), 1 FAIL
+exit 1

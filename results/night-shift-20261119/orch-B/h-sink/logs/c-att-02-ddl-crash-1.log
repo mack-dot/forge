@@ -1,0 +1,22 @@
+# start=2026-11-19T14:38:31Z cwd=<REPO>/results/night-shift-20261119/orch-B/h-sink/tree node=v24.3.0
+# cmd: node --import tsx <REPO>/results/night-shift-20261119/orch-B/h-sink/tests/ddl_crash.ts <REPO>/results/night-shift-20261119/orch-B/h-sink/tree <REPO>/results/night-shift-20261119/orch-B/h-sink/runs/ddl 1 11
+PASS K=1 child: killed-at 1 CREATE TABLE meta(id INTEGER PRIMARY KEY (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS K=2 child: killed-at 2 PRAGMA busy_timeout = 30000 (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS K=3 child: killed-at 3 BEGIN IMMEDIATE (signal SIGKILL) | hot journal after kill: false | next open: started; z:committed r1:committed
+PASS K=4 child: killed-at 4 CREATE TABLE meta(id INTEGER PRIMARY KEY (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=5 child: killed-at 5 CREATE TABLE state(id INTEGER PRIMARY KE (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=6 child: killed-at 6 CREATE TABLE settled(seq INTEGER PRIMARY (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=7 child: killed-at 7 CREATE TABLE outbox(seq INTEGER PRIMARY (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=8 child: killed-at 8 CREATE TRIGGER h_meta_bi BEFORE INSERT O (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=9 child: killed-at 9 CREATE TRIGGER h_meta_ai AFTER INSERT ON (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=10 child: killed-at 10 CREATE TRIGGER h_meta_bu BEFORE UPDATE O (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+PASS K=11 child: killed-at 11 CREATE TRIGGER h_meta_bd BEFORE DELETE O (signal SIGKILL) | hot journal after kill: true | next open: started; z:committed r1:committed
+FAIL partial h1 schema (meta table only, committed outside the sink) | REFUSED: h1 sink refuses to serve: start-up audit (schema, integrity, initial charge, AuditV5 replay, chain, anchor) is
+failed 1
+(node:79110) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+real 19.79
+user 3.42
+sys 1.05
+# end=2026-11-19T14:38:51Z
+exit 1

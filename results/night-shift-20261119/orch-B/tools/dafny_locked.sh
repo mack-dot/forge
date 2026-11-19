@@ -33,7 +33,9 @@ echo "$OWNER" > $LOCK/owner; echo $$ > $LOCK/pid; echo "$*" > $LOCK/cmd; date -u
 batt=$(pmset -g batt | head -1)
 swapfree=$(sysctl -n vm.swapusage | sed -E 's/.*free = ([0-9]+)\..*/\1/')
 { echo "# owner=$OWNER start=$(date -u +%FT%TZ) cwd=$WORKDIR"; echo "# power: $batt"; echo "# swap free MiB: $swapfree"; echo "# dafny: $($DAFNY --version)"; echo "# cmd: dafny $*"; } > "$LOG"
-case "$batt" in *"AC Power"*) ;; *) echo "refused: not on AC power" >> "$LOG"; echo "exit 75" >> "$LOG"; exit 75;; esac
+# POWER AMENDMENT (PROTOCOL.md, owner instruction relayed by the launcher): battery power no longer blocks a run.
+# The power state stays in the log header (the "# power:" line). Memory, swap and disk gates stay.
+case "$batt" in *"AC Power"*) ;; *) echo "# note: on battery power; run allowed by the POWER AMENDMENT" >> "$LOG";; esac
 # A run with TIMEOUT_SECONDS <= 90 is a LIGHT check (PROTOCOL: not an expensive Dafny run): floor 400 MiB.
 # Every other run is a heavy step: floor 1024 MiB.
 # PROTOCOL amendment (launcher, 2026-11-19): a heavy step may start if swap free >= 1024 MiB, OR
