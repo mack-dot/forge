@@ -7,7 +7,7 @@ Usage: python3 -I diff_conformance.py <original-image> <patched-image> <out.json
 import ast, hashlib, json, os, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
 
-ROOT = '/Users/mackianni/forge'
+ROOT = '/Users/USER/forge'
 SRC = ROOT + '/scripts/exit_m1_conformance.py'
 NAMES = {'MAX_MONEY', 'APPROVED_REASONS', 'M1_ENVIRONMENT', 'RECORDED_SHA256', 'RECORDED', 'HOSTILE_TEXTS',
          'HOSTILE_REASONS', 'HUGE', 'atom', 'integer', 'boolean', 'request_atoms', 'request_bytes', 'vector', 'corpus'}

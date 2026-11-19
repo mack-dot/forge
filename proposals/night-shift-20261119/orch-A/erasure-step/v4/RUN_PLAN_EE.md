@@ -9,8 +9,8 @@
 
 ## Run (PLANNED; orchestrator only, single HOL slot)
 ```zsh
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v4/erasure_step_v5.sml EE-0001.sml
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step/v4/erasure_step_v5.sml EE-0001.sml
 shasum -a 256 EE-0001.sml   # must be 931c0d4c...daf05
 ./nightshift-run.sh EE-0001 1500 deps-EE.txt ; echo "go exit $?"
 grep -n "^EXACT_COMPLETE\|^REQUIRED_FAILED_LIST\|^UNEXPECTED\|^CLOSURE_AXIOM\|^STORED_\|^CONTROL_\|^CHECKED\|^LEMMA_FAILED\|^DIAG_OK_UNDER\|^TACTIC_ATTEMPT_FAILED\|^STATEMENT_RESULT\|^OLD_TEXT\|^NEW_TEXT" EE-0001/stdout.log | cut -c1-200

@@ -2,8 +2,8 @@
 
 All commands and exit codes below are PLANNED. Run only in the single HOL slot, by the orchestrator.
 
-V = `/Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v3`
-A = `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001`
+V = `/Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step/v3`
+A = `/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001`
 
 ## Inputs
 | File | SHA-256 |
@@ -15,7 +15,7 @@ A = `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001`
 
 ## Deps recipe (once)
 ```zsh
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
 cp deps-ES.txt deps-EE.txt
 print -r -- "$PWD/EF-0001/forge_m1bErasureFrameTheory.sig" >> deps-EE.txt
 print -r -- "$PWD/EF-0001/forge_m1bErasureFrameTheory.sml" >> deps-EE.txt
@@ -25,7 +25,7 @@ wc -l deps-EE.txt      # expected 129
 
 ## Run (CPU 1500 s; the script stops proofs at 1250 s script CPU and explorations at 1050 s)
 ```zsh
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v3/EEx-0001.sml EEx-0001.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step/v3/EEx-0001.sml EEx-0001.sml
 shasum -a 256 EEx-0001.sml   # must be e47689d8...5458
 ./nightshift-run.sh EEx-0001 1500 deps-EE.txt ; echo "go exit $?"
 ```

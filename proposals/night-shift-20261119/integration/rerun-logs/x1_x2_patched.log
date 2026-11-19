@@ -1,0 +1,17 @@
+# cmd: node --no-warnings --import tsx tests/refund-finality/regress/run.ts ts/refund-finality/sink.ts ts/refund-finality/dispatcher.ts --only X1-reqid-mismatch,X2-cross-charge
+# judge=/private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/tests/refund-finality/regress/run.ts
+# sink=/private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/ts/refund-finality/sink.ts sha256=6772879a38080e58c19c859b8bec16a604d7feaeb7b31d1435dca1fc150b4771
+# dispatcher=/private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/ts/refund-finality/dispatcher.ts sha256=be0e1344679b86a61db52101d3f112188b47f7e26226404d2946ea1e7ab3b869
+# trusted encoding=/private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/ts/refund-finality/encoding.ts sha256=8b32f673fac6c194839985589b59cf4a0dba31dcc6aaeeaba771f3422f955107
+# loaded /private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/tests/refund-finality/regress/worker.ts sha256=73c0d457a8ae1364d754befdbdf66db9b66fc8313779be4ec7779bbec7892f7a
+# loaded /private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/ts/refund-finality/core/store.ts sha256=89f731ac13ec19f8cb3791cf2ee757576d79db27fe8a05e00bb0199cd6943e7b
+# loaded /private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/ts/refund-finality/dispatcher.ts sha256=be0e1344679b86a61db52101d3f112188b47f7e26226404d2946ea1e7ab3b869
+# loaded ENCODING /private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/ts/refund-finality/encoding.ts sha256=8b32f673fac6c194839985589b59cf4a0dba31dcc6aaeeaba771f3422f955107
+# loaded /private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/ts/refund-finality/sink.ts sha256=6772879a38080e58c19c859b8bec16a604d7feaeb7b31d1435dca1fc150b4771
+# expectedHeadMode=none node=v24.3.0 expected ids=2 expect-fail=-
+PASS X1-reqid-mismatch: faulty=rejected honest=committed outbox(rq_victim)=1 effects(rq_victim)=1
+PASS X2-cross-charge: A=rejected B=committed effects(ch_2,rq_x)=1 emitted(ch_2)=50 A.outbox(foreign)=0
+# verdicts=2/2 PASS=2 KNOWN-LIMIT=0 FAIL=0 []
+# unexpected FAIL=[] unexpected non-FAIL (listed in --expect-fail)=[] missing verdicts=[]
+# JUDGE RESULT OK (exit 0)
+exit 0

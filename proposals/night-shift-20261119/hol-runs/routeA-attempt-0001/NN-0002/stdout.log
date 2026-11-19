@@ -1,0 +1,242 @@
+<<HOL message: Created theory "forge_refundNonNeg">>
+USED refund_fields_def
+⊢ ∀charge request original remaining enabled opened candidate amount reason.
+    refund_fields charge request original remaining enabled opened candidate
+      amount reason =
+    (let
+       ok =
+         eligible charge request original remaining enabled opened candidate
+           amount reason
+     in
+       (ok,if ok then amount else 0,if ok then reason else «»,
+        if ok then charge else «»,if ok then request else «»,
+        if ok then 1 else 0))
+USED eligible_def
+⊢ ∀charge request original remaining enabled opened candidate amount reason.
+    eligible charge request original remaining enabled opened candidate
+      amount reason ⇔
+    charge ≠ «» ∧ request ≠ «» ∧ enabled ∧ opened ∧ 0 ≤ original ∧
+    original ≤ 9223372036854775807 ∧ 0 ≤ remaining ∧ remaining ≤ original ∧
+    candidate ∧ 0 ≤ amount ∧ amount ≤ remaining ∧
+    (reason = «duplicate_charge» ∨ reason = «service_not_delivered» ∨
+     reason = «returned_item»)
+USED refund_run_wire_def
+⊢ ∀wire.
+    refund_run_wire wire =
+    case refund_decode_wire wire of
+      INL err => INL err
+    | INR
+      (charge,request,original,remaining,enabled,opened,candidate,amount,
+       reason) =>
+      INR
+        (refund_render_fields
+           (refund_fields charge request original remaining enabled opened
+              candidate amount reason))
+USED refund_strict_parse_complete
+⊢ ∀f. refund_strict_parse (explode (refund_render_fields f)) = SOME f
+USED refund_frame_decision
+⊢ ∀f out g.
+    out ≼ explode (refund_render_fields f) ∧ refund_strict_parse out = SOME g ⇒
+    out = explode (refund_render_fields f) ∧ g = f
+IMPORTED_OK refund_strict_parse_complete
+IMPORTED_OK refund_frame_decision
+CONST_OK refund_fields forge_refundCertifiedProg
+CONST_OK refund_render_fields forge_refundWireProg
+CONST_OK eligible forge_refund
+BEGIN refund_fields_ints_bounded
+Saved theorem _______ "refund_fields_ints_bounded"
+CHECKED refund_fields_ints_bounded
+⊢ ∀charge request original remaining enabled opened candidate amount reason
+      ok a r c q n.
+    refund_fields charge request original remaining enabled opened candidate
+      amount reason = (ok,a,r,c,q,n) ⇒
+    0 ≤ a ∧ 0 ≤ n ∧ n ≤ 1
+BEGIN refund_fields_ints_bounded_proj
+Saved theorem _______ "refund_fields_ints_bounded_proj"
+CHECKED refund_fields_ints_bounded_proj
+⊢ ∀charge request original remaining enabled opened candidate amount reason.
+    0 ≤
+    FST
+      (SND
+         (refund_fields charge request original remaining enabled opened
+            candidate amount reason)) ∧
+    0 ≤
+    SND
+      (SND
+         (SND
+            (SND
+               (SND
+                  (refund_fields charge request original remaining enabled
+                     opened candidate amount reason))))) ∧
+    SND
+      (SND
+         (SND
+            (SND
+               (SND
+                  (refund_fields charge request original remaining enabled
+                     opened candidate amount reason))))) ≤ 1
+BEGIN refund_run_wire_output_nonneg
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundNonNeg)>>
+Saved theorem _______ "refund_run_wire_output_nonneg"
+CHECKED refund_run_wire_output_nonneg
+⊢ ∀wire out.
+    refund_run_wire wire = INR out ⇒
+    ∃f. out = refund_render_fields f ∧ 0 ≤ FST (SND f) ∧
+        0 ≤ SND (SND (SND (SND (SND f)))) ∧ SND (SND (SND (SND (SND f)))) ≤ 1
+BEGIN refund_frame_decision_nonneg
+Saved theorem _______ "refund_frame_decision_nonneg"
+CHECKED refund_frame_decision_nonneg
+⊢ ∀charge request original remaining enabled opened candidate amount reason
+      out ok a r c q n.
+    out ≼
+    explode
+      (refund_render_fields
+         (refund_fields charge request original remaining enabled opened
+            candidate amount reason)) ∧
+    refund_strict_parse out = SOME (ok,a,r,c,q,n) ⇒
+    0 ≤ a ∧ 0 ≤ n ∧ n ≤ 1
+BEGIN refund_strict_parse_accepts_negative_frame
+Saved theorem _______ "refund_strict_parse_accepts_negative_frame"
+CHECKED refund_strict_parse_accepts_negative_frame
+⊢ ¬∀s ok a r c q n. refund_strict_parse s = SOME (ok,a,r,c,q,n) ⇒ 0 ≤ a
+BEGIN refund_fields_negative_amount_rejected
+Saved theorem _______ "refund_fields_negative_amount_rejected"
+CHECKED refund_fields_negative_amount_rejected
+⊢ refund_fields «c» «r» 100 60 T T T (-5) «returned_item» = (F,0,«»,«»,«»,0)
+BEGIN refund_fields_positive_witness
+Saved theorem _______ "refund_fields_positive_witness"
+CHECKED refund_fields_positive_witness
+⊢ refund_fields «c» «r» 100 60 T T T 40 «returned_item» =
+  (T,40,«returned_item»,«c»,«r»,1)
+USED refund_model_frame_decision
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason))
+BEGIN_OPTIONAL refund_model_frame_decision_nonneg
+Saved theorem _______ "refund_model_frame_decision_nonneg"
+CHECKED refund_model_frame_decision_nonneg
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              0 ≤ FST (SND g) ∧ 0 ≤ SND (SND (SND (SND (SND g)))) ∧
+              SND (SND (SND (SND (SND g)))) ≤ 1
+OPTIONAL_OK refund_model_frame_decision_nonneg
+USED refund_model_frame_decision_reach
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ∧
+  (∀ms k.
+     arm8_run 27 s = SOME ms ⇒
+     ffi_calls_ok Vok
+       (refund_mc (sl + 0x1000040D0w)
+          (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+       (basis_ffi no_ext cl fs) k ms) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason))
+BEGIN_OPTIONAL refund_model_frame_decision_reach_nonneg
+Saved theorem _______ "refund_model_frame_decision_reach_nonneg"
+CHECKED refund_model_frame_decision_reach_nonneg
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ∧
+  (∀ms k.
+     arm8_run 27 s = SOME ms ⇒
+     ffi_calls_ok Vok
+       (refund_mc (sl + 0x1000040D0w)
+          (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+       (basis_ffi no_ext cl fs) k ms) ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              0 ≤ FST (SND g) ∧ 0 ≤ SND (SND (SND (SND (SND g)))) ∧
+              SND (SND (SND (SND (SND g)))) ≤ 1
+OPTIONAL_OK refund_model_frame_decision_reach_nonneg
+MARK CHECKS
+FAILED_LIST 
+DIAG_OK_UNDER_LIST 
+OPTIONAL_OK_LIST refund_model_frame_decision_nonneg refund_model_frame_decision_reach_nonneg
+CONTROL_OK refund_fields_ints_bounded statement is the literal planned statement
+CONTROL_OK refund_frame_decision_nonneg statement is the literal planned statement
+CONTROL_OK C1 is a proved negation
+CONTROL_OK C2 negative amount gives the rejection tuple
+CONTROL_OK C3 authorized witness
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+STORED_THEOREMS 9
+STORED_DEFINITIONS 0
+Exporting theory "forge_refundNonNeg" ... done.
+Theory "forge_refundNonNeg" took 11.0s to build
+EXACT_COMPLETE

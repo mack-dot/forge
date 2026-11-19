@@ -53,8 +53,16 @@ actual_exit 0 markers ['EXACT_COMPLETE'] cpu 175.757 wall 211.513
 2026-11-19T15:12:48Z queue exit 0; go exit 0 (try 1)
 actual_exit 0 markers ['EXACT_COMPLETE'] cpu 124.69 wall 146.053
 2026-11-19T15:12:48Z BEGIN R6ffi-0002 cpu=3600 deps=deps-R6ffi.txt
-2026-11-19T15:24:27Z HUNG /Users/mackianni/forge/results/night-shift-20261119/orch-A/repro/run/R6ffi-0002/stdout.log age=698 pid=58489
+2026-11-19T15:24:27Z HUNG /Users/USER/forge/results/night-shift-20261119/orch-A/repro/run/R6ffi-0002/stdout.log age=698 pid=58489
 2026-11-19T15:24:31Z queue exit 0; go exit 1 (try 1)
 actual_exit -15 markers [] cpu 103.552 wall 149.349
 2026-11-19T15:33:57Z STOP after R6ffi-0002
 2026-11-19T15:38:32Z NOTE R6ffi-0002 HUNG kill was a watchdog false positive: pmset log shows system sleep on battery 15:16:31Z-15:24:22Z (471 s); the stdout mtime age (698 s) counted the sleep; run_case wall (monotonic) 149 s, cpu 103.6 s; committed run wall 170.7 s
+2026-11-19T17:02:44Z MOVED R6ffi-0002 first run (actual_exit -15: killed by the watchdog after a system sleep; not a proof result) to R6ffi-0002.fail-1* (orchestrator decision)
+2026-11-19T17:02:51Z RESUME 2: caffeinate -i ./repro.sh R6ffi-0002; watchdog CPU rule (watchdog.sh.cpu-change.diff)
+2026-11-19T17:02:51Z BEGIN R6ffi-0002 cpu=3600 deps=deps-R6ffi.txt
+2026-11-19T17:11:10Z queue exit 0; go exit 0 (try 1)
+actual_exit 0 markers ['EXACT_COMPLETE'] cpu 229.051 wall 497.273
+2026-11-19T17:11:10Z BEGIN R6w-0004 cpu=3600 deps=deps-R6w.txt
+2026-11-19T17:11:25Z WIND-DOWN (owner via orchestrator): R6w-0004 had already started at 17:11:10Z; driver process 78165 killed (SIGKILL) so that no further case or retry starts; queue.sh 19957 and the HOL child of R6w-0004 continue to the end. Sleep guard: caffeinate -i -s -t 172800 (pid 9718) still holds.
+2026-11-19T17:19:38Z R6w-0004 ended: go exit 0; STOP (wind-down; no further case)

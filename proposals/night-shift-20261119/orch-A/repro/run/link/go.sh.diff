@@ -4,8 +4,8 @@
  #                            U294 cwd forge_refund_call_experiment (default: recorded)
  #               ALLOW_SWAP=1 start although swap use is above 85 % (RUN_PLAN.md section 0 says: wait)
  set -u
--RUN=/Users/mackianni/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001
-+RUN=/Users/mackianni/forge/results/night-shift-20261119/orch-A/repro/run/link
- F=/Users/mackianni/forge
+-RUN=/Users/USER/forge/results/night-shift-20261119/orch-A/link/run/attempt-0001
++RUN=/Users/USER/forge/results/night-shift-20261119/orch-A/repro/run/link
+ F=/Users/USER/forge
  D=$F/.toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/dafny
  EXPORT=$RUN/inputs/FlatCore.sexp

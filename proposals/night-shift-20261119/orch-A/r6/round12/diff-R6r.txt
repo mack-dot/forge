@@ -11,8 +11,8 @@
  
  (* ================= shared files (the same bytes as in R6rx-0001) ================= *)
  val R6R_PROOF_MODE = true;
--val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round10/";
-+val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/";
+-val R6RDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round10/";
++val R6RDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round12/";
  val _ = (pr "MARK USE r6r_common.sml"; use (R6RDIR ^ "r6r_common.sml"); pr "PART_DONE r6r_common.sml");
  val _ = (pr "MARK USE r6r_steps.sml"; use (R6RDIR ^ "r6r_steps.sml"); pr "PART_DONE r6r_steps.sml");
  val _ = (pr "MARK USE r6r_prove.sml"; use (R6RDIR ^ "r6r_prove.sml"); pr "PART_DONE r6r_prove.sml");

@@ -17,9 +17,9 @@ d304390a3f90eea76a5e9a052a544883f019f0b0e29b6329245ae426067dd08c  CHANGES.txt
 
 ## Commands (orchestrator only, single HOL slot; one at a time; wait until R6rx-0001 has ended)
 ```
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/R6rx-0002.sml R6rx-0002.sml
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/R6r-0002.sml R6r-0002.sml
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round12/R6rx-0002.sml R6rx-0002.sml
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round12/R6r-0002.sml R6r-0002.sml
 shasum -a 256 R6rx-0002.sml R6r-0002.sml deps-R6r.txt   # deps-R6r.txt unchanged: 37017fc8...cf279
 ./nightshift-run.sh R6rx-0002 3600 deps-R6r.txt        # 1. exploration
 ./nightshift-run.sh R6r-0002 3600 deps-R6r.txt         # 2. proof, ONLY if 1. shows TRY_HELPER_CLOSED for every required lemma

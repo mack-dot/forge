@@ -1,0 +1,19 @@
+AC2-a DYLD_INSERT fixed frame (CE-3) naive[naive_parse]=AUTHORIZED(999) attack_ok=True(exp True) | launcher=AUTHORIZED(40) / L0:L0 expected=True
+AC2-b DYLD_INSERT adaptive, echo check naive[naive_echo]=AUTHORIZED(400) attack_ok=True(exp True) | launcher=NOT_AUTHORIZED expected=True
+AC2-c DYLD_LIBRARY_PATH fake libSystem naive[naive_echo]=NOT_AUTHORIZED attack_ok=False(exp None) | launcher=NOT_AUTHORIZED expected=True
+AC2-d DYLD_FALLBACK_LIBRARY_PATH   naive[naive_echo]=NOT_AUTHORIZED attack_ok=False(exp None) | launcher=NOT_AUTHORIZED expected=True
+AC2-e DYLD_PRINT_LIBRARIES (stderr noise) naive[naive_parse]=AUTHORIZED(40) stderr=7232 bytes attack_ok=True(exp None) | launcher=AUTHORIZED(40) expected=True
+AC2-f CML_HEAP_SIZE=1 in caller env naive[naive_exit]=COMPLETE rc=0 out=4044 err=b'' attack_ok=None(exp None) | launcher=AUTHORIZED(40) expected=True
+AC2-g hardened-runtime copy + DYLD_INSERT naive[naive_echo]=NOT_AUTHORIZED attack_ok=False(exp False) | launcher=REFUSED L2 expected=True
+AC2-h replaced binary at the path  naive[naive_echo]=AUTHORIZED(400) attack_ok=True(exp True) | launcher=REFUSED L2 expected=True
+AC2-i symlink at path -> fake      naive[naive_echo]=AUTHORIZED(400) attack_ok=True(exp True) | launcher=REFUSED L1 expected=True
+AC2-j symlink -> genuine (policy)  naive[none]=- attack_ok=None(exp None) | launcher=REFUSED L1 expected=True
+AC2-k PATH points to a fake        naive[naive_echo]=AUTHORIZED(400) attack_ok=True(exp True) | launcher=REFUSED L1 expected=True
+AC2-l attacker cwd + relative path naive[naive_echo]=AUTHORIZED(400) attack_ok=True(exp True) | launcher=REFUSED L1 / cli-from-cwd:AUTHORIZED(40) expected=True
+AC2-m swapped image at exec (TOCTOU) naive[none]=- attack_ok=None(exp None) | launcher=REFUSED L7 expected=True
+AC2-n1 shim + DYLD_INSERT          naive[launcher-invocation]=stdout=b'M1-LAUNCHER-DECISION {"decision": "NOT_AUTHORIZED", "request' rc=3 attack_ok=False(exp False) | launcher=NOT_AUTHORIZED expected=True
+AC2-n2 python3.9 direct + DYLD_INSERT naive[launcher-invocation]=stdout=b'(refund-result-v1 True 999 returned_item forged forged 1)' rc=0 attack_ok=True(exp True) | launcher=REFUSED expected=True
+AC2-n3 shim + DEVELOPER_DIR        naive[launcher-invocation]=stdout=b'M1-LAUNCHER-DECISION {"amount": 400, "decision": "AUTHORIZED' rc=0 attack_ok=True(exp True) | launcher=AUTHORIZED(400) expected=True
+AC2-n4 env -i shim + DEVELOPER_DIR naive[launcher-invocation]=stdout=b'M1-LAUNCHER-DECISION {"decision": "NOT_AUTHORIZED", "request' rc=3 attack_ok=False(exp False) | launcher=NOT_AUTHORIZED expected=True
+AC2-n5 env -i python3.9 + DYLD_INSERT naive[launcher-invocation]=stdout=b'M1-LAUNCHER-DECISION {"decision": "NOT_AUTHORIZED", "request' rc=3 attack_ok=False(exp False) | launcher=NOT_AUTHORIZED expected=True
+test_ac2: 18 rows, 0 not as expected

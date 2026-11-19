@@ -1,0 +1,20 @@
+{"tool":"spec-conformance/run.ts","sink":"<SCRATCH>/B-trust/ts/refund-finality/sink.ts","sinkSha256":"bd3f6de8b6b1c15e624531742b133071bc820dcee60cd25126a970376f8caecd","dispatcher":null,"dispatcherSha256":null,"trustedEncodingSha256":"f96086b1838163e371b08fb3fd522e23b4def6b7d9c50fefce57c030b70526e7","core":"<REPO>/results/night-shift-20261119/orch-B/p-adopt/build/pristine-core/model.cjs","coreSha256":"e6d5f5e54405f2767de59e054c329b86fc5d769c873c055c08780e89fbd906ce","mode":"fault","count":5000,"seed":20261119,"sequencesDone":5000,"childGone":null,"deliveries":29873,"restarts":1871,"emitted":0,"outcomes":{"rejected":18105,"committed":10718,"replayed":1050},"faultsInjected":1213,"sinkErrors":751,"ms":93820,"sequencesWithViolation":{"P5-SILENT":1820},"violated":[],"expectedViolations":null,"verdict":"OK","kindOutcome":{"probe-nul-id":{"rejected":622},"f-over-unchanged":{"rejected":1279},"f-foreign-intent":{"rejected":1243},"zero":{"committed":2261,"rejected":275},"f-foreign-post":{"rejected":876},"honest":{"committed":6712,"rejected":748},"probe-long-id":{"rejected":929},"noncanon":{"rejected":1294},"f-reqid":{"rejected":1211},"f-over-bound":{"rejected":914},"full":{"committed":1672,"rejected":183},"bad-sig":{"rejected":1289},"f-reason":{"rejected":1271},"replay":{"replayed":909,"rejected":1249,"committed":73},"f-over-zero-post":{"rejected":898},"stale":{"rejected":1841},"bad-pin":{"rejected":1233},"reuse-id":{"replayed":141,"rejected":750}},"violationsByKind":{"probe-nul-id":{"P5-SILENT":622},"probe-long-id":{"P5-SILENT":929},"noncanon":{"P5-SILENT":1294},"replay":{"P5-SILENT":177}},"smallest":{"P5-SILENT":{"length":1,"sequence":0,"initial":{"chargeId":"ch_20261119_0","original":"1000","remaining":"824","refundEnabled":true},"at":0,"detail":"authorized, validly signed, fresh, current token was rejected: token shape (token outside the encoding.ts domain: length, U+0000 or non-canonical text)","trace":[{"kind":"probe-nul-id","outcome":"rejected","reason":"token shape"}]}}}
+       95.28 real        59.93 user        22.90 sys
+           100319232  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               52816  page reclaims
+                2238  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+               94229  messages sent
+               94229  messages received
+                   1  signals received
+               62492  voluntary context switches
+              460046  involuntary context switches
+            28108116  instructions retired
+            19844932  cycles elapsed
+             1262000  peak memory footprint
+exit 0

@@ -1,0 +1,60 @@
+--- a/sink.ts
++++ b/sink.ts
+@@ -23,7 +23,10 @@
+ 
+ const MAX_TOKEN_TEXT = 8192;
+ 
+-export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string };
++// chargeKey (b-restart, G2): the charge id this database file is bound to. The dispatcher must derive the
++// database path from the charge id by an injective map (one file per charge id), so that two files never hold
++// the same charge id (Dafny model: KeyedStore.CreateOk, key == init.chargeId and key not present).
++export type SinkConfig = { publicKeyPem: string; specLockSha256: string; checkerSha256: string; chargeKey?: string };
+ export type CommitResult = { status: "committed" | "replayed" | "rejected"; reason?: string };
+ export type OutboxRow = { seq: number; request_id: string; intent: string };
+ 
+@@ -43,12 +46,16 @@
+   // Sets the initial state once. A second call changes nothing.
+   init(state: ChargeState): void {
+     if (!isState(state)) throw new Error("initial state shape");
++    if (this.cfg.chargeKey !== undefined && state.chargeId !== this.cfg.chargeKey) throw new Error("initial state is not for this database's charge");
++    if (BigInt(state.remaining) > BigInt(state.original)) throw new Error("initial state: remaining exceeds original");
+     const blob = canon(state);
+     this.db.exec("BEGIN IMMEDIATE");
+     try {
+       if (this.db.prepare("SELECT 1 AS x FROM state WHERE id = 1").get() === undefined) {
+         this.db.prepare("INSERT INTO state(id, blob) VALUES (1, ?)").run(blob);
+         this.db.prepare("INSERT INTO meta(k, v) VALUES ('initial_state_sha256', ?)").run(sha256hex(blob));
++      } else if ((JSON.parse(this.storedBlob() as string) as ChargeState).chargeId !== state.chargeId) {
++        throw new Error("the database already holds another charge");
+       }
+       this.db.exec("COMMIT");
+     } catch (error) { this.db.exec("ROLLBACK"); throw error; }
+@@ -104,7 +111,9 @@
+         this.db.exec("ROLLBACK");
+         return { status: "rejected", reason: "stored state is not the token's pre-state" };
+       }
+-      if ((JSON.parse(stored) as ChargeState).chargeId !== token.body.intent.chargeId || token.body.post.chargeId !== token.body.intent.chargeId) {
++      const storedChargeId = (JSON.parse(stored) as ChargeState).chargeId;
++      if ((this.cfg.chargeKey !== undefined && storedChargeId !== this.cfg.chargeKey) ||
++          storedChargeId !== token.body.intent.chargeId || token.body.post.chargeId !== token.body.intent.chargeId) {
+         this.db.exec("ROLLBACK");
+         return { status: "rejected", reason: "charge id is not the stored charge id" };
+       }
+@@ -126,6 +135,9 @@
+     const rows = this.settled();
+     let expected = (this.db.prepare("SELECT v FROM meta WHERE k = 'initial_state_sha256'").get() as { v: string } | undefined)?.v;
+     const tokens: (Token | null)[] = [];
++    const blobNow = this.storedBlob();
++    const chargeId = blobNow === undefined ? undefined : (JSON.parse(blobNow) as ChargeState).chargeId;
++    if (this.cfg.chargeKey !== undefined && chargeId !== this.cfg.chargeKey) problems.push("stored charge id is not this database's charge");
+     for (const row of rows) {
+       let token: unknown;
+       try { token = JSON.parse(row.token); } catch { problems.push(`row ${row.seq}: token is not JSON`); tokens.push(null); continue; }
+@@ -134,6 +146,7 @@
+       }
+       tokens.push(token);
+       if (token.body.requestId !== row.request_id || token.body.intent.requestId !== row.request_id) problems.push(`row ${row.seq}: request id`);
++      if (token.body.intent.chargeId !== chargeId || token.body.post.chargeId !== chargeId) problems.push(`row ${row.seq}: charge id`);
+       if (token.body.specLockSha256 !== this.cfg.specLockSha256 || token.body.checkerSha256 !== this.cfg.checkerSha256) problems.push(`row ${row.seq}: ids`);
+       if (!this.verified(token)) problems.push(`row ${row.seq}: signature`);
+       if (token.body.preStateSha256 !== expected) problems.push(`row ${row.seq}: chain`);

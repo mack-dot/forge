@@ -1,0 +1,74 @@
+--- a/gate/refund.py
++++ b/gate/refund.py
+@@ -6,10 +6,13 @@
+ """
+ 
+ import argparse
++import os
+ from pathlib import Path
+ import platform
+ import re
++import resource
+ import shlex
++import signal
+ import subprocess
+ import sys
+ import tempfile
+@@ -62,18 +65,49 @@
+ FOOTER = b'\nmodule.exports = { Refund, runtime: _dafny };\n'
+ 
+ 
++# Bounds on every child process. The gate never waits without a bound for a submission-dependent step.
++# A step that reaches its wall-clock bound, ends by a signal, or writes more than OUTPUT_BYTES to stdout
++# or stderr gives a refusal with the distinct reason RESOURCE_LIMIT. Its whole process group is killed.
++STEP_SECONDS = {'dafny-version': 60, 'z3-version': 60, 'audit-before': 900, 'verify': 3600,
++                'compile-js': 1800, 'hostile': 1800, 'audit-after': 900}
++OUTPUT_BYTES = 64 * 1024 * 1024
++
++
++def child_limits():
++    # The kernel stops each file write of the child and its descendants after OUTPUT_BYTES + 1 bytes.
++    resource.setrlimit(resource.RLIMIT_FSIZE, (OUTPUT_BYTES + 1, OUTPUT_BYTES + 1))
++
++
+ def run(command, work, name, records):
+-    child = subprocess.run(command, cwd=ROOT, capture_output=True)
+     stdout, stderr = work / (name + '.stdout'), work / (name + '.stderr')
+-    stdout.write_bytes(child.stdout)
+-    stderr.write_bytes(child.stderr)
+-    records.append({'argv': command, 'cwd': '.', 'exit_code': child.returncode,
+-                    'stdout': relative(stdout), 'stdout_sha256': digest(child.stdout),
+-                    'stderr': relative(stderr), 'stderr_sha256': digest(child.stderr)})
++    with stdout.open('wb') as out, stderr.open('wb') as err:
++        child = subprocess.Popen(command, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=out, stderr=err,
++                                 start_new_session=True, preexec_fn=child_limits)
++        try:
++            code = child.wait(timeout=STEP_SECONDS[name])
++        except subprocess.TimeoutExpired:
++            code = None
++        finally:
++            try:
++                os.killpg(child.pid, signal.SIGKILL)
++            except (ProcessLookupError, PermissionError):
++                pass
++            child.wait()
++    output, errors = stdout.read_bytes(), stderr.read_bytes()
++    records.append({'argv': command, 'cwd': '.', 'exit_code': code,
++                    'stdout': relative(stdout), 'stdout_sha256': digest(output),
++                    'stderr': relative(stderr), 'stderr_sha256': digest(errors)})
+     (work / 'operations.json').write_bytes(canonical({'commands': records,
+                                                     'stage_exit': False}))
+-    print(name + ': exit ' + str(child.returncode), flush=True)
+-    return child
++    print(name + ': exit ' + str(code), flush=True)
++    if code is None:
++        raise Rejected('RESOURCE_LIMIT: ' + name + ' reached the wall-clock bound of '
++                       + str(STEP_SECONDS[name]) + ' s; process group killed; no verdict')
++    if code < 0:
++        raise Rejected('RESOURCE_LIMIT: ' + name + ' ended by signal ' + str(-code) + '; no verdict')
++    if max(len(output), len(errors)) > OUTPUT_BYTES:
++        raise Rejected('RESOURCE_LIMIT: ' + name + ' wrote more than ' + str(OUTPUT_BYTES) + ' bytes; no verdict')
++    return subprocess.CompletedProcess(command, code, output, errors)
+ 
+ 
+ def prepare():

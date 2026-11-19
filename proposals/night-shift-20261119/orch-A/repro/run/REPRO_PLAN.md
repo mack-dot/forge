@@ -8,7 +8,7 @@ Status: PREPARED. NOT RUN. No HOL process was started while preparing.
 - The same toolchain is used (HOL binary, heaps, image under `.toolchain/...` and `results/refund-native-audit-...`).
   The runner checks their digests (`input_sha256`). Before the run, all of them equal the committed `input_sha256` values.
 - Older parents are NOT reproduced: 62 older theories (plus `refund-loader-memory-local-20261115/attempt-0001/preload.sml`)
-  are read from the stored folders under `/Users/mackianni/forge/results/**`. Their current digests equal the committed
+  are read from the stored folders under `/Users/USER/forge/results/**`. Their current digests equal the committed
   `input_sha256` values for all 17 Route A cases (checked 2026-11-19, 0 mismatches). This covers tonight's theories
   on top of the stored parents.
 - The original run folder `results/m1b-routeA-20261119/attempt-0001/` is not read and not written by the runs.

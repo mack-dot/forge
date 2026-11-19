@@ -1,0 +1,40 @@
+stage 1 reproducibility: exit 0
+stage 1 planted-bugs: exit 0
+stage 1 spec-lock: exit 0
+stage 1 contract-binding: exit 0
+stage 1 audit-controls: exit 0
+stage 2 schema: exit 0
+stage 2 artifact-mismatch: exit 0
+stage 2 method-policy: exit 0
+stage 2 round-trip: exit 0
+stage 2 policy-controls: exit 0
+stage 3 correct-typescript: exit 0
+stage 3 self-transfer: exit 0
+stage 3 evidence-labels: exit 0
+stage 3 reproducibility: exit 0
+stage 3 loader-demo: exit 0
+stage 3 cli-demo: exit 0
+stage 5 vacuity: exit 0
+stage 5 mutations: exit 0
+stage 6 report: exit 0
+stage 8 wrapper-proof: exit 0
+stage 8 hostile-outputs: exit 0
+stage 8 evidence-separation: exit 0
+stage 4 affected-claims: exit 0
+stage 4 unapproved-spec: exit 0
+stage 4 approved-spec: exit 0
+stage 11 legitimate-change: exit 0
+stage 11 stale-dependency: exit 0
+stage 11 report: exit 0
+frozen PR-gate modules: exit 0
+links FORGE_MASTER_IDEA.md: exit 0
+links ROADMAP.md: exit 0
+links unsure.md: exit 0
+links proposals/forge2-m1-conformance/REPORT.md: exit 0
+links, all 318 Markdown files outside results/: exit 1
+slice 1 evidence: exit 0
+slice 2 evidence: exit 0
+slice 3 evidence: exit 0
+M1 conformance evidence: exit 0
+{"stage_exit_cases": 28, "stage_exit_cases_exit_0": 28, "slice1_bundle_sha256": "c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1", "slice2_bundle_sha256": "2721a293023baf230ecb944ea3ad2a3c02d7be6d82f128f10d07cc2b0f91854e", "slice3_bundle_sha256": "3cdfebfc0ae96adafccc7f417bcd9113aaa63df9c9cd31583983c3b2e11bddb4", "m1_conformance_bundle_sha256": "f55391dad17a0a4ea707806c59dbac2419df51c692161704af71f0cfe0a11da9"}
+runner exit 0

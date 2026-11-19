@@ -5,14 +5,14 @@ Inputs (this directory; the case files read the shared files by ABSOLUTE path, d
   deps-TR.txt = line 1 of deps-MG.txt (preload.sml only). deps-MG.txt also works (superset; not needed: the drivers
   load miscTheory ffiTheory asmPropsTheory targetSemTheory targetPropsTheory lprefix_lubTheory themselves).
 Step 1 (exploration):
-  cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-  cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/TRx-0001.sml TRx-0001.sml
-  cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/deps-TR.txt deps-TR.txt
+  cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+  cp /Users/USER/forge/results/night-shift-20261119/orch-A/trace/TRx-0001.sml TRx-0001.sml
+  cp /Users/USER/forge/results/night-shift-20261119/orch-A/trace/deps-TR.txt deps-TR.txt
   ./nightshift-run.sh TRx-0001 1200 deps-TR.txt
   Success of the RUN = actual_exit 0 + EXPLORE_COMPLETE. Read: GUARD_DEFINED, LOAD_OK/LOAD_FAILED, DATATYPE_OK,
   DEFINITION_FAILED, STATEMENT_PARSE_FAILED, TRY_HELPER_CLOSED/FAILED, STEP_FAILED/ALT_WORKS, CLOSED_COUNT.
 Step 2 (proof), only if TRx-0001 shows TRY_HELPER_CLOSED for all 33 required lemmas:
-  cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/trace/TR-0001.sml TR-0001.sml
+  cp /Users/USER/forge/results/night-shift-20261119/orch-A/trace/TR-0001.sml TR-0001.sml
   ./nightshift-run.sh TR-0001 1200 deps-TR.txt
   Success = actual_exit 0 + EXACT_COMPLETE + CONTROL_OK generic + CONTROL_OK all 33 required lemmas stored.
   Then check OPTIONAL_FAILED (Diverge corollary and the six controls).

@@ -1,0 +1,405 @@
+diff --git a/scripts/demo_gauntlet.py b/scripts/demo_gauntlet.py
+index 58461686..0ba2a36f 100644
+--- a/scripts/demo_gauntlet.py
++++ b/scripts/demo_gauntlet.py
+@@ -62,6 +62,12 @@ ACT1 = [
+ ]
+ REFUND_CORE = 'impl/RefundFinality.dfy'
+ REFUND_FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
++# The issuer (ts/refund-finality/minter.ts on nightshift/B-trust) needs a module that contains IssueOnce (the (charge id,
++# request id) memory rule around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as
++# scripts/exit_slice1.py builds it. The Slice 1 evidence record pins only the RefundFinality module above; this module
++# is compiled from the same RefundFinality source and is NOT in that record (its SHA-256 is reported).
++ISSUER_CORE = 'impl/finality-core/IssueOnce.dfy'
++ISSUER_FOOTER = b'\nmodule.exports = { IssueOnce, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+ SLICE1_RECORD = 'proposals/forge2-slice1-refund-finality/records/evidence.json'
+ ISSUER = 'ts/refund-finality/minter.ts'
+ SPEC_LOCK = 'spec/refund/spec.lock'
+@@ -134,6 +140,18 @@ def compile_core(run, source, footer, name, record_path):
+     return module, recorded
+ 
+ 
++def compile_issuer_core(run):
++    """Compiles the issuer's module (IssueOnce) with the pinned Dafny. No record pins it: the result carries its SHA-256."""
++    out = run.work / 'issuer-core'
++    out.mkdir()
++    built = run.execute([dafny.DAFNY, 'build', ISSUER_CORE, '--target', 'js', '--output', rel(out / 'model'), *dafny.OPTIONS],
++                        'compile-issuer-core')
++    require(built.returncode == 0, 'issuer-core: the pinned Dafny did not verify and compile IssueOnce (exit %d)' % built.returncode)
++    module = out / 'model.cjs'
++    module.write_bytes((out / 'model.js').read_bytes() + ISSUER_FOOTER)
++    return module, digest(module.read_bytes())
++
++
+ # ---------------------------------------------------------------------------------------------------------
+ # Act 1
+ 
+@@ -243,18 +261,23 @@ def act2(run, flood_mib):
+     say('ACT 2  Proof-Carrying Finality: attacks on the real Slice 1 issuer process and SQLite sink')
+     module, module_sha = compile_core(run, REFUND_CORE, REFUND_FOOTER, 'refund-core', SLICE1_RECORD)
+     say('  checker core compiled by the pinned Dafny; module %s... equal to the Slice 1 record' % module_sha[:12])
++    issuer_module, issuer_sha = compile_issuer_core(run)
++    say('  issuer module (IssueOnce, same RefundFinality source) compiled by the pinned Dafny; module %s... (not in the Slice 1 record)' % issuer_sha[:12])
+     work = run.work / 'act2'
+     work.mkdir()
+-    issuer = Issuer(run, module)
++    issuer = Issuer(run, issuer_module)
+     try:
+-        return act2_attacks(run, work, issuer, module_sha, flood_mib)
++        return dict(act2_attacks(run, work, issuer, module_sha, flood_mib), issuer_module_sha256=issuer_sha)
+     finally:
+         issuer.kill()
+ 
+ 
+ def act2_attacks(run, work, issuer, module_sha, flood_mib):
+     config, database = work / 'sink-config.json', work / 'charge.sqlite'
+-    config.write_text(json.dumps({key: issuer.ready[key] for key in ('publicKeyPem', 'specLockSha256', 'checkerSha256')}))
++    pre = {'chargeId': 'ch_demo', 'original': '1000', 'remaining': '600', 'refundEnabled': True}
++    # The hardened sink (h1) needs the initial charge (THE ANCHOR) in its config; sink_tool.ts never takes it from the
++    # command line (C-HOST-06). commit_cli.ts reads the same config.
++    config.write_text(json.dumps(dict({key: issuer.ready[key] for key in ('publicKeyPem', 'specLockSha256', 'checkerSha256')}, initialState=pre)))
+     counter = [0]
+ 
+     def node(script, *arguments):
+@@ -279,7 +302,6 @@ def act2_attacks(run, work, issuer, module_sha, flood_mib):
+         require(all(answer['onTime'] for answer in answers), 'act 2: a process of the %s group was late for the common start' % label)
+         return answers
+ 
+-    pre = {'chargeId': 'ch_demo', 'original': '1000', 'remaining': '600', 'refundEnabled': True}
+     first = node(SINK_TOOL, 'init', rel(database), rel(config), json.dumps(pre))
+     require(first['state'] == pre and first['outbox'] == [] and first['audit'] == [], 'act 2: the sink did not store the first state')
+     say('  stored charge: original 1000, remaining 600, refunds enabled')
+diff --git a/scripts/exit_m1_conformance.py b/scripts/exit_m1_conformance.py
+index 01a2fcc2..c17b9c19 100644
+--- a/scripts/exit_m1_conformance.py
++++ b/scripts/exit_m1_conformance.py
+@@ -58,6 +58,11 @@ CORE = 'impl/RefundFinality.dfy'
+ ISSUER = 'ts/refund-finality/minter.ts'
+ SPEC_LOCK = 'spec/refund/spec.lock'
+ FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
++# The issuer (ts/refund-finality/minter.ts on nightshift/B-trust) refuses a module without IssueOnce. Its module is built
++# from IssueOnce.dfy (which includes the same impl/RefundFinality.dfy) as scripts/exit_slice1.py builds it. The driver
++# keeps the RefundFinality module above (pinned by the Slice 1 record); the issuer module is NOT in that record.
++ISSUER_CORE = 'impl/finality-core/IssueOnce.dfy'
++ISSUER_FOOTER = b'\nmodule.exports = { IssueOnce, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+ M1_ENVIRONMENT = {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'LC_ALL': 'C', 'CML_HEAP_SIZE': '256', 'CML_STACK_SIZE': '256'}
+ MAX_MONEY = 9223372036854775807
+ APPROVED_REASONS = ['duplicate_charge', 'service_not_delivered', 'returned_item']
+@@ -89,7 +94,8 @@ WRONG_CORES = {
+ REVIEW_CORES = ['CoreIntentAmountAtMost', 'CoreIntentIdPrefix', 'CorePostOriginalAtMost']
+ SUBJECT = ['scripts/exit_m1_conformance.py', DRIVER, RECORDED, EXECUTABLE] + [
+     FIXTURES + '/' + name + '.dfy' for name in WRONG_DECISIONS + REVIEW_CORES]
+-SLICE1 = [CORE, 'impl/Refund.dfy', ISSUER, 'ts/refund-finality/encoding.ts', SLICE1_RECORD] + [
++SLICE1 = [CORE, 'impl/Refund.dfy', ISSUER, 'ts/refund-finality/encoding.ts', SLICE1_RECORD, ISSUER_CORE,
++          'impl/finality-core/IssueBytes2.dfy', 'impl/finality-core/SerModel.dfy'] + [
+     SLICE1_FIXTURES + '/' + name + '.dfy' for name in sorted(WRONG_CORES)]
+ APPROVED = ['spec/refund/RefundSpec.dfy', 'spec/refund/protocol.md', SPEC_LOCK, 'policy/refund.yaml']
+ M1_RECORDS = [REPLAY_PLAN, REPLAY_BUDGET]
+@@ -499,7 +505,7 @@ def run_m1(executable, inputs):
+     return records
+ 
+ 
+-def compile_core(run, source, name, verify):
++def compile_core(run, source, name, verify, footer=FOOTER):
+     out = run.work / name
+     out.mkdir()
+     options = dafny.OPTIONS if verify else ['--no-verify']
+@@ -508,10 +514,21 @@ def compile_core(run, source, name, verify):
+     require(built.returncode == 0, 'compile ' + name + ': expected exit 0, observed ' + str(built.returncode))
+     generated = (out / 'model.js').read_bytes()
+     module = out / 'model.cjs'
+-    module.write_bytes(generated + FOOTER)
++    module.write_bytes(generated + footer)
+     return module, generated
+ 
+ 
++def issuer_core(run):
++    """The issuer's module (IssueOnce), compiled once per run with verification. Not pinned by the Slice 1 record."""
++    if getattr(run, 'issuer_module', None) is None:
++        module, generated = compile_core(run, ISSUER_CORE, 'issuer-core', verify=True, footer=ISSUER_FOOTER)
++        run.issuer_module = module
++        run.issuer_core = {'build_command_without_the_output_path': ['.toolchain/dafny-4.11.0/dafny/dafny', 'build', ISSUER_CORE, '--target', 'js', *dafny.OPTIONS],
++                           'generated_js_sha256': digest(generated), 'module_sha256': digest(module.read_bytes()),
++                           'equal_to_the_slice1_record': False, 'source_to_module_proved': False}
++    return run.issuer_module
++
++
+ def check_core_module(module):
+     """The compiled core must be the module of the Slice 1 evidence record, byte for byte."""
+     recorded = read_json(ROOT / SLICE1_RECORD)['compiled_core']['module_sha256']
+@@ -736,7 +753,7 @@ def observe(run, module, with_issuer, executable_source=None):
+     return {'typed': typed, 'wire': wire, 'recorded': recorded, 'm1': m1, 'corpus_sha256': corpus_sha256,
+             'reference': {v['id']: reference_eligible(v) for v in typed},
+             'dafny': run_driver(run, module, typed, 'core'),
+-            'issuer': run_issuer(run, module, typed) if with_issuer else None}
++            'issuer': run_issuer(run, issuer_core(run), typed) if with_issuer else None}
+ 
+ 
+ def true_core(run):
+@@ -760,7 +777,7 @@ def conformance(run):
+     counts = summary(state)
+     coverage(tally, with_issuer=True)
+     require(findings == [], 'CONFORMANCE: %d findings; first: %s' % (len(findings), json.dumps(findings[:3])))
+-    return {'toolchain': tools, 'compiled_core': core,
++    return {'toolchain': tools, 'compiled_core': core, 'issuer_core': run.issuer_core,
+             'ids': {'m1_executable_sha256': EXECUTABLE_SHA256, 'corpus_sha256': state['corpus_sha256'],
+                     'recorded_cases_sha256': digest((ROOT / RECORDED).read_bytes()),
+                     'spec_lock_sha256': digest((ROOT / SPEC_LOCK).read_bytes())},
+diff --git a/tests/demo-gauntlet/sink_tool.ts b/tests/demo-gauntlet/sink_tool.ts
+index 5e38b99e..cb2abf63 100644
+--- a/tests/demo-gauntlet/sink_tool.ts
++++ b/tests/demo-gauntlet/sink_tool.ts
+@@ -12,7 +12,13 @@ if ((command !== "init" && command !== "report") || !dbPath || !cfgPath || (comm
+   process.exit(2);
+ }
+ const cfg = JSON.parse(readFileSync(cfgPath, "utf8"));
+-const sink = new Sink(dbPath, command === "init" && cfg.initialState === undefined ? { ...cfg, initialState: JSON.parse(stateJson) } : cfg);
++// h-dispatch (C-HOST-06): the initial charge (THE ANCHOR) comes from the config only, never from the command line. A
++// config without initialState is refused; on init, the argument must equal it (the sink's init checks that too).
++if (cfg === null || typeof cfg !== "object" || cfg.initialState === undefined) {
++  process.stderr.write("sink_tool: the config has no initialState; the anchor is never taken from the command line\n");
++  process.exit(2);
++}
++const sink = new Sink(dbPath, cfg);
+ if (command === "init") sink.init(JSON.parse(stateJson));
+ process.stdout.write(JSON.stringify({
+   state: JSON.parse(sink.stateBlob()),
+diff --git a/tests/refund-finality/suite.ts b/tests/refund-finality/suite.ts
+index 51c35f4d..90c2c5b0 100644
+--- a/tests/refund-finality/suite.ts
++++ b/tests/refund-finality/suite.ts
+@@ -19,7 +19,18 @@ import {
+ } from "../../ts/refund-finality/encoding";
+ import { Dispatcher, DispatcherConfig, Effect, FlushResult } from "../../ts/refund-finality/dispatcher";
+ import { MinterClient, Minted, propose } from "../../ts/refund-finality/proposer";
+-import { CommitResult, Sink, SinkConfig, genesisOf } from "../../ts/refund-finality/sink";
++import { CommitResult, Sink, SinkConfig, genesisOf, linkOf } from "../../ts/refund-finality/sink";
++
++// OWNER DECISION PENDING (owner item B-15, results/night-shift-20261119/OWNER_REQUIRED.md; U428; U575). The issuer's
++// single-use rule (minter argument "on") has two readings:
++//   "per-pre-state": the MERGED rule. One signed transition per PRE-STATE. Another request id on a pre-state that already
++//                    has a signed token gets NO token. Cost (red team C-ATT-03): a zero-amount or abandoned token freezes
++//                    the charge for the life of the issuer process.
++//   "per-request":   the BRANCH PROPOSAL (nightshift/B-trust, IssueOnce.Issue). One signed candidate per (charge id,
++//                    request id). Another request id on the same pre-state GETS a token; the sink commits at most one.
++// The row "single-use on: another transition for a pre-state that has a signed token" expects what this constant says.
++// It is set to the branch proposal. Until the owner decides, that row is NOT evidence for either rule.
++const SINGLE_USE_RULE: "per-pre-state" | "per-request" = "per-request";
+ 
+ const ROOT = resolve(__dirname, "../..");
+ const GLUE = join(ROOT, "ts/refund-finality");
+@@ -502,37 +513,161 @@ async function main() {
+       db.prepare("INSERT INTO settled(request_id, token, token_sha256) VALUES (?, ?, ?)").run(requestId, tokenText(token), sha256hex(tokenText(token)));
+       db.prepare("INSERT INTO outbox(request_id, intent) VALUES (?, ?)").run(requestId, canon(token.body.intent));
+     };
+-    { const w = await world("x1"); const db = w.raw();
+-      db.prepare("INSERT INTO outbox(request_id, intent) VALUES (?, ?)").run("rq_x1_ghost", canon({ chargeId: "ch_x1", requestId: "rq_x1_ghost", amount: "700", reason: REASON })); db.close();
+-      judge(w, "raw INSERT: an outbox row without a settled row", [], "refused: no settled row"); }
++    // ---- h-suite (night shift 2026-11-19): the hardened store h1 (core/store.ts) REFUSES the raw SQL of rows x1 to x7
++    // (triggers S1-S6, NOT NULL and CHECK constraints). Each such row now has two variants (rule of the change: CHANGES.md):
++    //   variant 1: the ORIGINAL raw SQL. Expected: the database refuses the write (an exception); the store is unchanged;
++    //              the dispatcher sends only the effects that were signed and committed before; nothing is refused.
++    //   variant 2: the FILE-WRITER model (HARDENING_NOTES.md section 2, S5 "does NOT stop"): the writer turns CHECK
++    //              constraints off, drops every trigger, writes, and restores every trigger with its exact text (the schema
++    //              text is then the same). Rows it appends carry a RECOMPUTED row-log chain (prev, self). Expected (the
++    //              documented h1 design): a sink that was open before the write HALTS ("sink halted"); a new sink refuses to
++    //              start ("h1 sink refuses to serve"); the dispatcher refuses every pending row ("store audit failed");
++    //              no new outbound effect. If a variant 2 change passes all of that (a stated limit: a recomputed chain
++    //              without an outside head), the observed text starts with KNOWN-LIMIT and the row FAILS.
++    // Only documented prefixes are compared, never the full error texts of other modules. No path enters the report.
++    const scrub = (text: string): string => text.split(outDir).join("<out>").split(ROOT).join("<root>");
++    const trySnap = (w: World): Snap | null => { try { return snap(w); } catch { return null; } };
++    const sameStore = (a: Snap | null, b: Snap | null): boolean =>
++      a !== null && b !== null && a.state === b.state && canon(a.settled) === canon(b.settled) && canon(a.outbox) === canon(b.outbox);
++    const dispatchOutcome = (w: World): { ids: string[]; note: string } => {
++      const n0 = w.effects.length;
++      let note: string;
++      try {
++        const r = w.flush();
++        note = r.refused.length === 0 ? "nothing refused" : r.refused.every(x => x.reason.includes("store audit failed")) ? "refused: store audit failed"
++          : "refused: " + r.refused.map(x => scrub(x.reason)).join("; ");
++      } catch (error) {
++        const m = String((error as Error).message);
++        note = m.startsWith("dispatcher alarm") ? "stopped: dispatcher alarm" : "stopped: " + scrub(m);
++      }
++      return { ids: w.effects.slice(n0).map(e => e.requestId), note };
++    };
++    const refusedWrite = (w: World, name: string, write: (db: DatabaseSync) => void, expectIds: string[] = []) => {
++      const before = trySnap(w), db = w.raw();
++      let refused = false;
++      try { write(db); } catch { refused = true; } finally { db.close(); }
++      const same = sameStore(before, trySnap(w)), { ids, note } = dispatchOutcome(w);
++      add("dispatcher", name, `variant 1: the database refuses the write; store unchanged; new outbound effects [${expectIds.join(", ")}]; nothing refused`,
++        `${refused ? "the database refuses the write" : "THE DATABASE TOOK THE WRITE"}; ${same ? "store unchanged" : "STORE CHANGED"}; new outbound effects [${ids.join(", ")}]; ${note}`,
++        refused && same && canon(ids) === canon(expectIds) && note === "nothing refused", ids.length);
++    };
++    const fileWriter = (path: string, write: (db: DatabaseSync) => void): void => {
++      const db = new DatabaseSync(path);
++      try {
++        const triggers = db.prepare("SELECT name, sql FROM sqlite_schema WHERE type = 'trigger' ORDER BY name").all() as { name: string; sql: string }[];
++        db.exec("PRAGMA ignore_check_constraints = ON");
++        db.exec("BEGIN IMMEDIATE");
++        try {
++          for (const t of triggers) db.exec(`DROP TRIGGER "${t.name}"`);
++          write(db);
++          for (const t of triggers) db.exec(t.sql);
++          db.exec("COMMIT");
++        } catch (error) { db.exec("ROLLBACK"); throw error; }
++      } finally { db.close(); }
++    };
++    // The last row-log link of the store (h_0 = meta.genesis when there is no row).
++    const lastLink = (db: DatabaseSync): { seq: number; prev: string } => {
++      const r = db.prepare("SELECT seq, self FROM outbox ORDER BY seq DESC LIMIT 1").get() as { seq: number; self: string } | undefined;
++      if (r !== undefined) return { seq: Number(r.seq), prev: r.self };
++      return { seq: 0, prev: (db.prepare("SELECT genesis FROM meta WHERE id = 1").get() as { genesis: string }).genesis };
++    };
++    // A file writer's append of one commit (settled + outbox) with a recomputed chain; the state row only if asked.
++    const appendRaw = (db: DatabaseSync, requestId: string, token: Token, withState = false) => {
++      const text = tokenText(token), intent = canon(token.body.intent), { seq, prev } = lastLink(db), self = linkOf(prev, text, intent);
++      db.prepare("INSERT INTO settled(seq, request_id, token, token_sha256, prev, self) VALUES (?, ?, ?, ?, ?, ?)").run(seq + 1, requestId, text, sha256hex(text), prev, self);
++      db.prepare("INSERT INTO outbox(seq, request_id, intent, prev, self) VALUES (?, ?, ?, ?, ?)").run(seq + 1, requestId, intent, prev, self);
++      if (withState) db.prepare("UPDATE state SET blob = ?, seq = ?, refunded = refunded + ? WHERE id = 1").run(canon(token.body.post), seq + 1, Number(token.body.intent.amount));
++    };
++    const V2 = "; variant 2: a file writer (CHECKs off, triggers dropped and restored, recomputed chain)";
++    // accepted = true: the writer's result is byte-for-byte the old store (x4); then the expectation is the merged one.
++    const fileWrite = async (w: World, name: string, write: (db: DatabaseSync) => void, accepted = false) => {
++      const fresh = accepted ? null : await mustMint(minter, w.current(), req(`${w.id}_fresh`, "1"));
++      const running = accepted ? null : w.sink();
++      let wrote = "";
++      try { fileWriter(w.db, write); } catch (error) { wrote = "THE FILE WRITER FAILED: " + scrub(String((error as Error).message)) + "; "; }
++      let halt = "";
++      if (running !== null && fresh !== null) {
++        const c = running.commit(tokenText(fresh)); running.close();
++        halt = (c.status === "rejected" && (c.reason ?? "").startsWith("sink halted") ? "running sink halted" : "running sink: " + c.status) + "; ";
++      }
++      let restart: string;
++      try { w.sink().close(); restart = "sink starts"; } catch (error) {
++        const m = String((error as Error).message);
++        restart = m.startsWith("h1 sink refuses to serve") ? "sink restart refused" : "sink restart failed: " + scrub(m);
++      }
++      const { ids, note } = dispatchOutcome(w);
++      const expected = accepted ? "sink starts; new outbound effects []; nothing refused"
++        : "running sink halted; sink restart refused; new outbound effects []; refused: store audit failed";
++      let observed = `${wrote}${halt}${restart}; new outbound effects [${ids.join(", ")}]; ${note}`;
++      if (!accepted && restart === "sink starts" && note === "nothing refused") observed = "KNOWN-LIMIT (recomputed chain, no outside head): " + observed;
++      add("dispatcher", name + V2, expected, observed, wrote === "" && observed === expected, ids.length);
++    };
++    { const w = await world("x1");
++      refusedWrite(w, "raw INSERT: an outbox row without a settled row", db =>
++        db.prepare("INSERT INTO outbox(request_id, intent) VALUES (?, ?)").run("rq_x1_ghost", canon({ chargeId: "ch_x1", requestId: "rq_x1_ghost", amount: "700", reason: REASON })));
++      const w2 = await world("x1_v2");
++      await fileWrite(w2, "raw INSERT: an outbox row without a settled row", db => {
++        const { seq, prev } = lastLink(db), intent = canon({ chargeId: w2.initial.chargeId, requestId: "rq_x1_ghost", amount: "700", reason: REASON });
++        db.prepare("INSERT INTO outbox(seq, request_id, intent, prev, self) VALUES (?, ?, ?, ?, ?)").run(seq + 1, "rq_x1_ghost", intent, prev, linkOf(prev, "", intent));
++      }); }
+     { const w = await world("x2", minter, []); const token = await mustMint(minter, w.current(), req("x2_1", "100"));
+-      const s = w.sink(); s.commit(tokenText(token)); s.close(); const db = w.raw();
+-      db.prepare(`UPDATE outbox SET intent = replace(intent, '"amount":"100"', '"amount":"900"') WHERE request_id = ?`).run("rq_x2_1"); db.close();
+-      judge(w, "raw UPDATE before dispatch: outbox amount 100 changed to 900 (availability is lost, no wrong effect)", [], "refused: outbox intent is not the signed intent"); }
+-    { const w = await world("x3"); const pre = w.current(), db = w.raw();
++      const s = w.sink(); s.commit(tokenText(token)); s.close();
++      // The original UPDATE is refused; the committed, signed row (amount 100) is then dispatched as usual.
++      refusedWrite(w, "raw UPDATE before dispatch: outbox amount 100 changed to 900 (availability is lost, no wrong effect)", db =>
++        db.prepare(`UPDATE outbox SET intent = replace(intent, '"amount":"100"', '"amount":"900"') WHERE request_id = ?`).run("rq_x2_1"), ["rq_x2_1"]);
++      const w2 = await world("x2_v2", minter, []); const token2 = await mustMint(minter, w2.current(), req("x2_v2_1", "100"));
++      const s2 = w2.sink(); s2.commit(tokenText(token2)); s2.close();
++      await fileWrite(w2, "raw UPDATE before dispatch: outbox amount 100 changed to 900 (availability is lost, no wrong effect)", db =>
++        db.prepare(`UPDATE outbox SET intent = replace(intent, '"amount":"100"', '"amount":"900"') WHERE request_id = ?`).run("rq_x2_v2_1")); }
++    { const w = await world("x3"); const pre = w.current();
+       const evil = signWith(attacker.privateKey, expectedBody(pre, propose(pre, req("x3_evil", "900"))));
+-      insert(db, evil.body.requestId, evil);
+-      db.prepare("UPDATE state SET blob = ? WHERE id = 1").run(canon(evil.body.post)); db.close();
+-      judge(w, "raw INSERT and UPDATE: a consistent token for the current state, signed with the attacker's key", [], "refused: signature does not verify");
+-      const s = w.sink(); const problems = s.audit(); s.close();
+-      add("dispatcher", "the public-key audit of that changed database", "problems found: more than 0", `problems found: ${problems.length}`, problems.length > 0); }
+-    { const w = await world("x4"); const db = w.raw();
+-      const out = db.prepare("SELECT request_id, intent FROM outbox ORDER BY seq").all() as { request_id: string; intent: string }[];
+-      db.exec("DELETE FROM outbox"); out.forEach(o => db.prepare("INSERT INTO outbox(request_id, intent) VALUES (?, ?)").run(o.request_id, o.intent)); db.close();
+-      judge(w, "replay after dispatch: outbox rows deleted and inserted again as new rows (nothing is sent twice)", [], "nothing refused"); }
++      refusedWrite(w, "raw INSERT and UPDATE: a consistent token for the current state, signed with the attacker's key", db => {
++        insert(db, evil.body.requestId, evil);
++        db.prepare("UPDATE state SET blob = ? WHERE id = 1").run(canon(evil.body.post)); });
++      const w2 = await world("x3_v2"); const pre2 = w2.current();
++      const evil2 = signWith(attacker.privateKey, expectedBody(pre2, propose(pre2, req("x3_v2_evil", "900"))));
++      await fileWrite(w2, "raw INSERT and UPDATE: a consistent token for the current state, signed with the attacker's key", db => appendRaw(db, evil2.body.requestId, evil2, true));
++      // The audit row of the merged suite, on the CHANGED database (variant 2). A sink that refuses to start found a problem.
++      let problems: string[];
++      try { const s = w2.sink(); problems = s.audit(); s.close(); } catch { problems = ["the sink refuses to start: its start-up audit is false"]; }
++      add("dispatcher", "the public-key audit of that changed database", "problems found: more than 0",
++        `problems found: ${problems.length}${problems[0]?.startsWith("the sink refuses to start") ? " (the sink refuses to start)" : ""}`, problems.length > 0); }
++    { const w = await world("x4");
++      refusedWrite(w, "replay after dispatch: outbox rows deleted and inserted again as new rows (nothing is sent twice)", db => {
++        const out = db.prepare("SELECT request_id, intent FROM outbox ORDER BY seq").all() as { request_id: string; intent: string }[];
++        db.exec("DELETE FROM outbox"); out.forEach(o => db.prepare("INSERT INTO outbox(request_id, intent) VALUES (?, ?)").run(o.request_id, o.intent)); });
++      const w2 = await world("x4_v2");
++      await fileWrite(w2, "replay after dispatch: outbox rows deleted and inserted again as new rows (nothing is sent twice)", db => {
++        const out = db.prepare("SELECT seq, request_id, intent, prev, self FROM outbox ORDER BY seq").all() as { seq: number; request_id: string; intent: string; prev: string; self: string }[];
++        db.exec("DELETE FROM outbox");
++        out.forEach(o => db.prepare("INSERT INTO outbox(seq, request_id, intent, prev, self) VALUES (?, ?, ?, ?, ?)").run(o.seq, o.request_id, o.intent, o.prev, o.self));
++      }, true); }
+     { const w = await world("x5", minter, []);
+       for (const n of ["1", "2"]) { const token = await mustMint(minter, w.current(), req(`x5_${n}`, "100")); const s = w.sink(); s.commit(tokenText(token)); s.close(); }
+       let first = true, crashed = "";
+       try { w.flush(e => { if (first) { first = false; throw new Error("simulated crash before the effect left"); } w.effects.push(e); }); } catch (error) { crashed = String((error as Error).message); }
+-      judge(w, `crash between the ledger line and the effect (${crashed}), then a new run: the first effect is lost and never sent twice`, ["rq_x5_2"], "nothing refused"); }
++      // h-dispatch (C-ATT-18; unapplied/suite-C-ATT-18.diff, adopted with a guard and the row name kept): the lost effect
++      // is now IN DOUBT: reported under its id in every later run, never counted as dispatched, never sent again.
++      const before = w.effects.length;
++      let again: FlushResult | null = null, stopped = "";
++      try { again = w.flush(); } catch (error) { stopped = scrub(String((error as Error).message)); }
++      const ids = w.effects.slice(before).map(e => e.requestId);
++      const doubt = again === null ? 0 : again.refused.filter(r => r.requestId === "rq_x5_1" && r.reason.startsWith("in doubt")).length;
++      add("dispatcher", `crash between the ledger line and the effect (${crashed}), then a new run: the first effect is lost and never sent twice`,
++        "new outbound effects [rq_x5_2]; rq_x5_1 refused: in doubt (1 row); 0 already dispatched",
++        again === null ? `new outbound effects [${ids.join(", ")}]; STOPPED: ${stopped}`
++          : `new outbound effects [${ids.join(", ")}]; rq_x5_1 refused: in doubt (${doubt} row); ${again.alreadyDispatched} already dispatched`,
++        again !== null && canon(ids) === canon(["rq_x5_2"]) && doubt === 1 && again.alreadyDispatched === 0, ids.length); }
+     { // Check 4 (chain): a token with a valid signature for the OLD state, written into the database beside the sink.
+-      const w = await world("x6"); const stale = await mustMint(minter, w.initial, req("x6_stale", "900")), db = w.raw();
+-      insert(db, stale.body.requestId, stale); db.close();
+-      judge(w, "raw INSERT: a validly signed token for an earlier state", [], "refused: token does not continue the dispatched chain"); }
++      const w = await world("x6"); const stale = await mustMint(minter, w.initial, req("x6_stale", "900"));
++      refusedWrite(w, "raw INSERT: a validly signed token for an earlier state", db => insert(db, stale.body.requestId, stale));
++      const w2 = await world("x6_v2"); const stale2 = await mustMint(minter, w2.initial, req("x6_v2_stale", "900"));
++      await fileWrite(w2, "raw INSERT: a validly signed token for an earlier state", db => appendRaw(db, stale2.body.requestId, stale2)); }
+     { // Check 3 (request id): a committed, validly signed token copied under a new request id.
+-      const w = await world("x7"); const db = w.raw();
+-      insert(db, "rq_x7_copy", w.committed[0]); db.close();
+-      judge(w, "raw INSERT: a copy of a committed token under a new request id", [], "refused: request id is not the signed one"); }
++      const w = await world("x7");
++      refusedWrite(w, "raw INSERT: a copy of a committed token under a new request id", db => insert(db, "rq_x7_copy", w.committed[0]));
++      const w2 = await world("x7_v2");
++      await fileWrite(w2, "raw INSERT: a copy of a committed token under a new request id", db => appendRaw(db, "rq_x7_copy", w2.committed[0])); }
+     { const w = await world("x8", minter, []); const token = await mustMint(minter, w.current(), req("x8_1", "100"));
+       const s = w.sink(); s.commit(tokenText(token)); s.close();
+       appendFileSync(join(w.dir, "dispatch-ledger.jsonl"), JSON.stringify({ requestId: "x", tokenSha256: "0", preStateSha256: "not-the-head", postStateSha256: "0", intentSha256: "0" }) + "\n");
+@@ -586,7 +721,16 @@ async function main() {
+     const b = await strict.mint(pre, propose(pre, req("opt_b", "200")));
+     add("option", "single-use on: the same transition again for one pre-state", "the same token", a.ok && again.ok && canon(a.token) === canon(again.token) ? "the same token" : "DIFFERENT OR REFUSED",
+       !!a.ok && !!again.ok && canon(a.token) === canon(again.token));
+-    add("option", "single-use on: another transition for a pre-state that has a signed token", "no token", b.ok ? "SIGNED" : "refused: " + b.reason, strict.ready.singleUse === true && !b.ok);
++    // h-suite: the expectation depends on SINGLE_USE_RULE (OWNER DECISION PENDING, B-15). Merged expectation: "no token".
++    const perRequest = SINGLE_USE_RULE === "per-request";
++    add("option", "single-use on: another transition for a pre-state that has a signed token",
++      perRequest ? "a token that verifies (SINGLE_USE_RULE = per-request: owner decision B-15 pending; the merged expectation is: no token)" : "no token (SINGLE_USE_RULE = per-pre-state)",
++      b.ok ? (verifies(createPublicKey(strict.ready.publicKeyPem), b) ? "SIGNED, a token that verifies" : "SIGNED, THE TOKEN DOES NOT VERIFY") : "refused: " + b.reason,
++      strict.ready.singleUse === true && (perRequest ? verifies(createPublicKey(strict.ready.publicKeyPem), b) : !b.ok));
++    // h-suite (added row): the same request id with ANOTHER candidate. Both readings refuse it (P-idem).
++    const other = await strict.mint(pre, propose(pre, req("opt_a", "300")));
++    add("option", "single-use on: another transition for a request id that has a signed token (same pre-state)", "no token",
++      other.ok ? "SIGNED" : "refused: " + other.reason, strict.ready.singleUse === true && !other.ok);
+     strict.stop();
+   }
+ 
+@@ -602,7 +746,11 @@ async function main() {
+       issuer_rows: of("issuer").length, dispatcher_rows: of("dispatcher").length,
+       rejection_attempts: rejections.length, effects_of_rejection_attempts: rejections.reduce((n, r) => n + r.effects, 0),
+       rejection_attempts_that_ask_for_an_effect: rejections.filter(r => (r.uncheckedSinkEffects ?? 0) > 0).length,
++      // h-suite: a row whose observed text starts with KNOWN-LIMIT landed inside a stated limit of the design. Such a row
++      // has pass = false: it is never counted as a pass of a safety claim.
++      known_limit_rows: rows.filter(r => r.observed.startsWith("KNOWN-LIMIT")).length,
+     },
++    owner_decisions_pending: [`B-15 issuer single-use rule: the suite expects SINGLE_USE_RULE = ${SINGLE_USE_RULE}`],
+     ids: { core_module_sha256: sha256hex(readFileSync(CORE)), spec_lock_sha256: specLockSha256, checker_sha256: checkerSha256 },
+     rows,
+   };

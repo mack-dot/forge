@@ -1,5 +1,5 @@
 import json,hashlib,os,sys
-B='/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/'
+B='/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/'
 def h(p):
     return hashlib.sha256(open(p,'rb').read()).hexdigest()
 for c in sys.argv[1:]:

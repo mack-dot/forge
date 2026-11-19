@@ -1,8 +1,8 @@
 # Rules for every Orchestrator A worker (binding)
 
-Repository: `/Users/mackianni/forge` (main checkout, branch `docs/m1b-wave4`, commit `985f5eaf`).
-Toolchain (read-only): `/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/{HOL,cakeml}`.
-M1-B drafts and reports: `/Users/mackianni/forge/proposals/m1b-mission-20261119/{drafts,reports}`, `TRACKER.md`,
+Repository: `/Users/USER/forge` (main checkout, branch `docs/m1b-wave4`, commit `985f5eaf`).
+Toolchain (read-only): `/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/{HOL,cakeml}`.
+M1-B drafts and reports: `/Users/USER/forge/proposals/m1b-mission-20261119/{drafts,reports}`, `TRACKER.md`,
 `TOP_LEVEL_GRAPH.md`, `NEXT_OBLIGATIONS.md`.
 
 ## Forbidden

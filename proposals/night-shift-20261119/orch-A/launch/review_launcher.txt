@@ -1,0 +1,248 @@
+review_launcher.txt -- adversarial READING review of launch/ (worker W-launchrev, 2026-11-19)
+
+Object : results/night-shift-20261119/orch-A/launch/ (launcher.py sha256 fbdbea0b...963b per SHA256SUMS line 23,
+         CONTROL_MATRIX.md, tests/*.py, logs, results JSON, commands.txt, static/).
+Method : BY READING ONLY. No test, no executable, no HOL, no Dafny, no git, no network was run.
+         Commands used: cat, sed, grep, wc, ls, stat, diff, shasum (incl. shasum -c SHA256SUMS), man.
+         Also read: CPython 3.9 subprocess.py of the interpreter that /usr/bin/python3 resolves to
+         (/Applications/Xcode.app/.../Python3.framework/Versions/3.9/lib/python3.9/subprocess.py),
+         proposals/m1b-mission-20261119/drafts/fail-closed/frame.py and m1_fail_closed.py,
+         x8-x11/X8_statement_v2.txt (N09..N22), MORNING.md (CE-1..CE-3).
+Class  : every finding below is BY READING. None was run. UNSURE marks say which run would decide.
+
+==================================================================================================================
+SUMMARY OF ANSWERS TO THE SIX QUESTIONS
+==================================================================================================================
+Q1 TOCTOU / CDHash. The in-scope TOCTOU (file at the caller path changes) is removed by L2+L3 (bytes read once,
+   private copy written from the same memory bytes). That part is sound by reading. L7 (csops CDHash) only defends
+   the private copy between L3 and exec, and only a same-uid or root writer can touch that copy (mkdtemp 0700).
+   The matrix puts that adversary OUT of scope. The AC2-m test does not race anything. See F-04.
+   CDHash coverage (codesign_orig.log: CodeDirectory flags adhoc,linker-signed, hashes=58+0, page 4096): the code
+   directory holds one SHA-256 per 4 KiB page over [0, codeLimit), so it binds every file byte before the
+   signature (all segments, header, __DATA file contents, __LINKEDIT up to the signature); 0 special slots.
+   It does NOT bind memory after exec: pages are validated lazily at page-in, and L7 reads CS_VALID once.
+   Timing: Popen returns only after the CLOEXEC errpipe closes, i.e. after execve, so csops sees the new image
+   (BY READING of subprocess.py 1720-1783). L7 runs before any request byte (launcher.py 356-359 before 369).
+Q2 Environment. Child env is exactly empty (env={} -> execve envp empty; launcher.py 351). -I removes PYTHON*,
+   user site and script dir, but NOT system site .pth files (F-11). DYLD_* against the shim is pruned by the OS
+   (AC2-n1), so L0 never fires in a real run (F-10). DEVELOPER_DIR: the `env -i` rule is not enforced by anything
+   (F-05). TMPDIR: ignored (mkdtemp dir= is explicit, 445). Locale: no locale-dependent code path found.
+Q3 Descriptors/signals/limits. Child: fds 0..2 only, SIG_DFL, empty mask, setsid, RLIMIT_CORE 0. Launcher
+   ITSELF inherits caller signal dispositions (F-01: SIGCHLD), caller rlimits (T-1, OPEN), caller Mach
+   exception/special ports (F-03, not in matrix), caller controlling terminal (safe direction). umask: no effect
+   (fchmod/chmod are explicit). ptrace/task port by same uid: out of scope and the matrix says so (N19, T-2).
+Q4 Accept rule. strict_parse/_strict_atom/make_str_safe/render_* in launcher.py 69-176 are the same logic as
+   frame.py 25-63, 199-260 (line-by-line compare; only comments and statement layout differ). decide_from_result
+   (launcher.py 209-247) equals m1_fail_closed.py 59-100 except the D11 message text. No accepting path on
+   exception, time-out, partial read or decode error was found by reading -- EXCEPT the exit-status input (F-01).
+   The echo check does NOT compare the full request: only charge, request, amount, reason (F-12).
+Q5 Tests. Rows marked CLOSED whose test cannot fail, or tests less than the row says: AC2-c/d, AC2-e, AC2-m,
+   AC2-n4/n5, AC3-b, AC3-c, AC3-e, AC3-g (F-04, F-05, F-06); weaker-than-stated parts of AC1-a, AC2-a, AC3-a (F-09,
+   F-10).
+Q6 Not listed in the matrix: exit-status loss under SIGCHLD SIG_IGN (F-01), unbounded blocking request write and
+   FIFO at the path (F-02), inherited exception ports (F-03), EPIPE on the request write (F-07), orphan child and
+   left-over copy after the launcher is killed (F-13).
+
+==================================================================================================================
+FINDINGS
+==================================================================================================================
+
+F-01  HIGH  launcher.py:404-421 (+ CPython subprocess.py:1872-1883 _try_wait, 1847-1866 _internal_poll)
+  What  : The launcher never resets its OWN SIGCHLD disposition. execve keeps SIG_IGN (man 2 execve: "Signals set
+          to be ignored in the calling process are set to be ignored in the new process"); CPython does not
+          reset SIGCHLD at start. If the caller starts the launcher with SIGCHLD = SIG_IGN (or SA_NOCLDWAIT),
+          the kernel may auto-reap the child, waitpid fails with ECHILD, and CPython's _try_wait then sets
+          sts = 0 ("This child is dead, we can't get the status"). p.returncode becomes 0 for ANY child end:
+          exit 3, exit 1, SIGABRT, SIGKILL, SIGSEGV. spawn_and_collect then reports exit_code=0, signal=None.
+  Why   : D2 ("ended by signal") and D3 ("exit code is not 0") are silently disabled. The docstring L12 "accept
+          ONLY exit 0" and the matrix L10 "exit code or signal is recorded" are false in that caller state.
+          "Ignored or blocked signals" is IN the matrix's adversary scope (section 3). `env -i` does not reset
+          signal dispositions, so the invocation rule does not help.
+  Impact: A wrong AUTHORIZED still needs stdout == expected_accept (D11) and empty stderr. So the impact is: any
+          run that wrote the exact accept frame and then ended abnormally (crash after the last write, CPU-limit
+          kill, abort in an exit path, X8 C4 killed-run clause) is accepted as a normal halt. Whether the pinned
+          program has such a run is UNSURE. The control claim is broken regardless.
+  UNSURE: XNU auto-reap for SIGCHLD = SIG_IGN (SA_NOCLDWAIT is documented in man 2 sigaction lines 102-109; plain
+          SIG_IGN is not stated there). Also UNSURE whether the /usr/bin/python3 shim resets dispositions.
+  Run that decides: from a caller that sets signal(SIGCHLD, SIG_IGN) (and, separately, SA_NOCLDWAIT) then
+          execs `/usr/bin/env -i /usr/bin/python3 -B -I launcher.py`, launch a pinned TEST executable that
+          writes the exact accept frame and then exits 7 (and one that then raises SIGABRT). Expected if the
+          finding holds: decision AUTHORIZED, exit 0. Fix: in the launcher, before Popen, set SIGCHLD to SIG_DFL
+          with no SA_NOCLDWAIT (signal.signal(SIGCHLD, SIG_DFL)), and treat ECHILD as REFUSED (call os.waitpid
+          directly instead of Popen.wait).
+  Matrix: add a row (caller SIGCHLD SIG_IGN / SA_NOCLDWAIT) = OPEN. Narrow L12/D2/D3 claims. AC3-i ("REFUSED D2")
+          holds only when SIGCHLD is not ignored in the launcher. N14 row: the launcher enforces SIG_DFL in the
+          CHILD only, not in itself.
+
+F-02  MED   launcher.py:374-380 (blocking os.write, no deadline), 183-194 (no size bound), 288 (open blocks)
+  What  : (a) The request is written with ONE blocking os.write of the whole wire (feed_chunk=0). Comment 377
+          says "a small request fits the pipe buffer", but check_request bounds no length (charge/request ids
+          are unbounded bytes). If the request exceeds the pipe capacity (16 KiB default, up to 64 KiB) and the
+          child does not drain stdin, the launcher blocks inside os.write; the deadline (369-373) is not checked
+          while blocked. If the child writes more than the stdout or stderr pipe capacity before it has read all
+          of stdin, both sides block: deadlock. No time-out, no kill, no decision line.
+          (b) L1 os.open(path, O_RDONLY|O_NOFOLLOW) on a FIFO placed at the caller path blocks forever before
+          the S_ISREG check (293). "A replaced file at the path" is in scope.
+  Why   : L9 "Time limit: kill the session" is not true for the write phase or for L1/L2. Fail-safe for
+          authorization (no line = REFUSED by the consumer rule), but a hang, and the consumer in tests/common.py
+          has a time-out only because the test adds one.
+  UNSURE: whether the pinned CakeML program reads all of stdin before its first write. Run that decides: launcher
+          with a 1 MiB charge id; launcher with a FIFO at --exe.
+  Fix   : non-blocking stdin pipe + select-driven write (as _write_all_to already does), a size bound on the
+          request, O_NONBLOCK on the L1 open (then fstat before read).
+  Matrix: add a row (large request / FIFO at the path: hang, no decision) = OPEN. AC3-h and N20 are unaffected
+          for small requests only; say "requests below the pipe capacity".
+
+F-03  MED   launcher.py:312-322 (_child_setup), 350-352; CONTROL_MATRIX.md section 3
+  What  : Task-level Mach exception ports (and other task special ports, e.g. the bootstrap port) are inherited
+          across fork and, for a non-setuid image, kept across exec. A caller can install an exception port on
+          its own task, then exec the launcher; the launcher and the child inherit it. On any Mach exception in
+          the child (EXC_BAD_ACCESS, EXC_BREAKPOINT, EXC_CRASH), an EXCEPTION_DEFAULT message carries the child's
+          thread and task ports to the caller's handler, which can then change registers and memory and resume
+          the child (forged frame, exit 0). The caller can provoke an exception with a caller-set rlimit
+          (RLIMIT_STACK small; T-1 is OPEN and the launcher resets only RLIMIT_CORE).
+  Why   : This is a pre-exec state set by the CALLER (in scope by section 3 wording), not a debugger attaching
+          later (out of scope). The matrix and N19 discuss debuggers and task ports "during or after exec"
+          only; this path is not listed anywhere.
+  UNSURE: whether macOS 27 still delivers task control ports in exception messages to an unprivileged handler
+          for a non-hardened ad-hoc process, and whether the shim/framework python reset exception ports.
+  Run that decides: a test caller that sets task_set_exception_ports(EXC_MASK_ALL, EXCEPTION_DEFAULT) on itself,
+          execs the launcher with RLIMIT_STACK small, and logs whether its handler receives a task port for the
+          refund child. Fix: in _child_setup reset task exception ports to MACH_PORT_NULL (ctypes
+          task_set_exception_ports) and set fixed rlimits (STACK, DATA, CPU, NOFILE, FSIZE).
+  Matrix: add a row (inherited exception/special ports) = OPEN. N19 "not enforced" must also name this path.
+
+F-04  MED   tests/test_ac2.py:134-149; tests/test_positive_and_mutants.py:89-105; launcher.py:356-359
+  What  : AC2-m and MUT-4 spawn a DIFFERENT binary (fake_refund) through spawn_and_collect directly, with the
+          real CDHash pinned. They only show "csops returns a different CDHash for a different file". No race
+          is created, decide() is bypassed (no L2/L3), and no copy is changed between L3 and exec. MUT-4 "attack
+          succeeds" is a scenario decide() cannot reach without an out-of-scope same-uid writer. Also:
+          (a) CS_VALID is read once at start; for a process without CS_KILL/CS_HARD, an invalid page later can
+              clear CS_VALID and the process continues (UNSURE on arm64 macOS 27 for non-executable pages);
+              the launcher never re-checks CS_VALID and does not require CS_KILL|CS_HARD.
+          (b) The pinned image is linker-signed ad hoc (flags 0x20002): no kill/hard flags in the signature.
+  Why   : AC2-m "CLOSED-BY-ENFORCED-CONTROL (tested)" is too strong. The in-scope TOCTOU is closed by L2+L3 by
+          construction; L7 is defence-in-depth against an out-of-scope writer and covers only exec time.
+  Run that decides (a): print csops status flags of the running child (CS_KILL 0x200, CS_HARD 0x100); a real
+          swap test: replace the private copy after L3 and before exec with a hook in the launcher; a page
+          change after exec on a data page.
+  Matrix: AC2-m -> "CLOSED for the caller-path swap by L2+L3 (by construction); L7 = defence-in-depth, SIMULATED
+          (different binary, no race); post-exec page change and same-uid race OPEN (= T-2)". N17 row:
+          "CDHash at exec only; CS_VALID not re-checked".
+
+F-05  MED   CONTROL_MATRIX.md:41 (AC2-n4/n5); launcher.py:10; tests/common.py:104-122
+  What  : AC2-n4/n5 are labelled CLOSED-BY-ENFORCED-CONTROL "only if the consumer follows the rule". No code
+          enforces `env -i`; the launcher cannot detect how it was started (AC2-n3 shows the forged line never
+          reaches launcher.py at all). `env -i` also leaves signal dispositions (F-01), rlimits (T-1), exception
+          ports (F-03), cwd and inherited fds of the launcher unchanged.
+  Matrix: AC2-n4/n5 -> OPEN (consumer obligation; not an enforced control). State the full obligation list for the
+          consumer: env -i, SIGCHLD default, fixed rlimits, no exception ports, its own time-out.
+
+F-06  MED   CONTROL_MATRIX.md:8-9 vs rows 27, 28, 43, 44, 46, 48; tests/test_ac2.py:53-69; test_ac3.py:63-125
+  What  : The matrix's own definition of CLOSED-BY-ENFORCED-CONTROL needs "the attack succeeds on a naive consumer
+          (or on a mutant launcher) and fails through the launcher". These rows have no failing side:
+          AC2-c/d  : attack failed on naive too (expect_attack=None); "by construction".
+          AC2-e    : naive_parse gave AUTHORIZED(40) = the honest decision; stderr noise is not an attack that
+                     succeeded; expect_attack=None.
+          AC3-b/c  : the launcher side is a plain positive run (L.decide on the honest request); the hostile state
+                     cannot be given to the launcher, and no launcher mutant passes the caller's fds. The launcher
+                     side cannot fail for the reason the row names.
+          AC3-e    : no launcher run at all; the launcher check is `lambda o: True` (test_ac3.py:108).
+          AC3-g    : one run, expect_attack=None, no naive side, no mutant (MUT-5 does not install handlers).
+  Matrix: AC2-c/d, AC2-e -> "recorded; no failing side". AC3-b, AC3-c, AC3-e -> "excluded by construction (L4);
+          positive control only". AC3-g -> "tested once (positive); no failing side".
+
+F-07  LOW   launcher.py:377-380
+  What  : (a) The return value of os.write is ignored; pending is advanced by n, not by the bytes written. A short
+          write (possible for n > PIPE_BUF when a signal with a handler interrupts after a partial transfer)
+          would silently drop request bytes. (b) On BrokenPipeError the launcher sets pending to empty and goes
+          on to decide, instead of REFUSED. N20 ("the bytes on fd 0 are exactly req", ENFORCED) is then false for
+          that run, and the run can still reach decide_from_result.
+  Impact: by reading, a wrong AUTHORIZED needs the program to print the full echo frame from a partial request,
+          which the honest parser should not do; so safe in practice, but the ENFORCED claim is not enforced.
+  Matrix: N20 -> "ENFORCED except on EPIPE/short write (not refused)"; fix: use n = os.write(...) and REFUSE on
+          EPIPE.
+
+F-08  LOW   launcher.py:346-359, 436-438
+  What  : Production API foot-guns: decide(pinned_cdhash=None) and spawn_and_collect(..., None) silently skip
+          L7; decide(check_self=False) skips L0; test hooks (feed_chunk, on_blocked) reach the production path.
+          The CLI uses safe defaults, but a library consumer can disable L7 without any record in the decision.
+  Matrix: T-3 should name it; or refuse when pinned_cdhash is None outside a test flag.
+
+F-09  LOW   tests/test_ac1.py:22-41; tests/test_ac3.py:35-61; bin/probe.c:18
+  What  : AC1-a: the launcher CLI's stdout pipe had 1000 bytes free; the decision line is under 100 bytes, so the
+          launcher's own EAGAIN path (_write_all_to) was not exercised. AC3-a: probe lists fds 0..255 only; it
+          does not check session id, process group, controlling terminal, umask, or rlimits other than CORE,
+          so "new session (no controlling terminal)" in L4 is not tested. No launcher mutant for close_fds
+          (MUT-5 setup had no extra fds open).
+  Matrix: AC1-a wording "child side tested; launcher's own non-blocking write not exercised"; AC3-a wording list
+          only what the probe shows.
+
+F-10  LOW   launcher.py:274-280 (L0); tests/test_ac2.py:31-40; static/dyld_python_shim.log
+  What  : L0 checks os.environ for DYLD_*. Through /usr/bin/python3 the shim prunes DYLD_* (log: "DYLD in environ:
+          []"); through python3.9 direct the injected library has already run (AC2-n2). AC2-a exercised L0 only by
+          writing os.environ inside the test process after start. L0 is not an effective control in any tested
+          real invocation.
+  Matrix: AC2-a: drop "L0 refuses visible DYLD_*" as a control; keep "L4 empty env" (MUT-1 is the failing side).
+
+F-11  LOW   launcher.py:10 (invocation); CONTROL_MATRIX.md:55 (T-3)
+  What  : `-I` implies -E and -s but still imports `site`, which processes .pth files of the system site-packages
+          of the framework Python (and /Library/Python/3.9/site-packages if on the path). Code in a .pth file runs
+          before launcher.py. Also the shim resolves via xcode-select / xcrun state (UNSURE whether the per-user
+          xcrun cache is consulted under `env -i`).
+  Matrix: T-3 trust base should list system site-packages .pth files and xcode-select/xcrun state; use `-I -S`.
+  Run that decides: `/usr/bin/env -i /usr/bin/python3 -B -I -c 'import sys; print(sys.path)'` and list *.pth.
+
+F-12  LOW   launcher.py:235-245 (D9, D11); tests/common.py:125-144
+  What  : The echo check compares charge, request, amount, reason only. original, remaining, enabled, opened,
+          candidate are not in the output frame, so no consumer can check them; binding of those five fields
+          rests only on N20 (the launcher wrote them). The decision line (main, 516-520) echoes no charge or
+          request id, so a consumer with several launches cannot bind a line to its request (part of T-4).
+  Matrix: L12 wording is accurate; any text that says "echo of the request" must say "4 of 9 fields".
+
+F-13  LOW   launcher.py:350-352 (start_new_session), 401-403, 460-466
+  What  : If the launcher is killed (SIGTERM, SIGKILL, SIGXCPU from a caller RLIMIT_CPU), the child is in its own
+          session, so a process-group kill by the caller does not reach it; it becomes an orphan until EOF/EPIPE
+          ends it; the private copy directory /private/tmp/m1launch-* is not removed. KeyboardInterrupt is not
+          caught by `except Exception` (decide 462, main 514): no line is written (safe), traceback on stderr.
+          Fail-safe for authorization; a cleanup gap.
+  Matrix: add a LOW row "launcher killed: orphan child, left-over copy" = OPEN (availability/cleanup).
+
+F-14  LOW   launcher.py:351 vs proposals/.../m1_fail_closed.py:23,123; X8_statement_v2.txt N15, N16
+  What  : The launcher passes env={} (CakeML default heap and stack). The reference caller passes
+          CML_HEAP_SIZE=256, CML_STACK_SIZE=256, PATH, LANG, LC_ALL. N16 premises (h, e, 8192 <= e - h, untagged
+          bounds) were measured under some environment; which one is not stated here.
+  UNSURE: whether the T2 measurements of h, e used the empty environment. Run that decides: T2 probe of h, e under
+          env={} exactly as the launcher spawns.
+  Matrix: N16 row should name the environment under which its values hold.
+
+F-15  LOW   CONTROL_MATRIX.md:74-75 (N21, N22)
+  What  : N22 includes "libSystem exit flush writes nothing to fd 1": a program property, not a launcher control.
+          N22 is ENFORCED only for "the launcher reads to EOF and keeps bound+1".
+  Matrix: N22 -> "ENFORCED (read to EOF) + ASSUMPTION (no exit flush to fd 1)".
+
+F-16  LOW   evidence hygiene: SHA256SUMS; commands.txt:10-11; recheck-A/
+  What  : (a) `shasum -a 256 -c SHA256SUMS` (run by this reviewer): 2 FAILED: tests/test_ac3_results.json,
+          tests/test_positive_and_mutants_results.json. SHA256SUMS was made at 15:42:55Z; the recheck-A re-run
+          (files 10:43 local) rewrote these JSON files afterwards (STATE.md:306 says so). (b) The recheck-A runs
+          have no line in commands.txt. (c) commands.txt lines 10 and 11 write static/otool_l_orig.log and
+          static/otool_L_orig.log; on a case-insensitive volume these are one file. Only one exists, and it holds
+          the `otool -L` output; the `otool -l` evidence (LC_RPATH/LC_LOAD/LC_MAIN/LC_CODE_SIGNATURE/__RESTRICT)
+          is lost.
+  Matrix: header "Test exit codes (actual, commands.txt)" should cite the recheck; regenerate SHA256SUMS; re-run
+          the `otool -l` grep to a distinct name.
+
+==================================================================================================================
+ROWS TO CHANGE (BY READING)
+==================================================================================================================
+CLOSED -> OPEN            : AC2-n4/n5 (F-05).
+CLOSED -> narrower wording: AC2-m (F-04), AC2-c/d and AC2-e (F-06; no failing side), AC3-b, AC3-c, AC3-e,
+                            AC3-g (F-06), AC3-i (F-01: only when SIGCHLD is not ignored), AC2-a (F-10: drop L0),
+                            AC1-a and AC3-a/AC2-o (F-09: list only what was tested).
+N-table narrowing         : N14 (child only; F-01), N17 (exec-time CDHash only; F-04), N19 (+exception ports;
+                            F-03), N20 (EPIPE/short write not refused; F-07), N22 (exit flush = assumption; F-15).
+New OPEN rows             : caller SIGCHLD SIG_IGN/SA_NOCLDWAIT (F-01), large request or FIFO hang (F-02),
+                            inherited exception/special ports (F-03), launcher killed: orphan + left-over (F-13).
+Rows I found sound as worded (by reading): AC1-b, AC1-c, AC1-d, AC1-e, AC1-f (finite), AC2-b, AC2-h, AC2-i, AC2-k,
+                            AC2-l, AC3-d; strict parser and D0..D12 equal to the drafts.
+END

@@ -26,7 +26,7 @@ fun tlim secs (tac : tactic) (g : goal) (ctxt : Context.t) =
 
 (* ================= LOAD (as R6x-0004 lines 9-17, but a load failure is fatal) ================= *)
 val _ = pr "MARK LOAD";
-val CK = "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
+val CK = "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
 val _ = loadPath := !loadPath @ map (fn d => CK ^ "/" ^ d)
           ["characteristic", "basis", "basis/pure", "translator", "semantics", "semantics/proofs",
            "semantics/ffi", "compiler/backend/semantics", "misc"];
@@ -43,7 +43,7 @@ fun chk name th = (tags name th; pr ("CHECKED " ^ name ^ "\n" ^ thm_to_string th
 
 (* ================= shared files (the same bytes as in R6tx-0001) ================= *)
 val R6T_PROOF_MODE = true;
-val R6TDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round11/";
+val R6TDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round11/";
 val _ = (pr "MARK USE r6t_common.sml"; use (R6TDIR ^ "r6t_common.sml"); pr "PART_DONE r6t_common.sml");
 val _ = (pr "MARK USE r6t_steps.sml"; use (R6TDIR ^ "r6t_steps.sml"); pr "PART_DONE r6t_steps.sml");
 val _ = (pr "MARK USE r6t_prove.sml"; use (R6TDIR ^ "r6t_prove.sml"); pr "PART_DONE r6t_prove.sml");

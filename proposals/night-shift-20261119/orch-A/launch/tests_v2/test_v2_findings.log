@@ -1,0 +1,18 @@
+F-01   inproc-ign fake_accept_exit7                 v1=AUTHORIZED(40)                           v2=REFUSED D3 exit code 7 is not 0          OK
+F-01   inproc-ign fake_accept_abort                 v1=AUTHORIZED(40)                           v2=REFUSED D2 process ended by signal 6     OK
+F-01   inproc-nocldwait fake_accept_exit7           v1=AUTHORIZED(40)                           v2=REFUSED D3 exit code 7 is not 0          OK
+F-01   inproc-nocldwait fake_accept_abort           v1=AUTHORIZED(40)                           v2=REFUSED D2 process ended by signal 6     OK
+F-01   caller SIG_IGN then exec (exit 7)            v1=REFUSED D3 exit code 7 is not 0          v2=REFUSED D3 exit code 7 is not 0          OK
+F-02   FIFO at the --exe path                       v1=HANG(outer time-out 6.01s)               v2=REFUSED L2 not a regular file of at most 16 MiB OK
+F-02   non-reading child, 1 MB request              v1=HANG(outer time-out 9.01s)               v2=REFUSED D1 time limit reached            OK
+F-02   request 2 MB > MAX_REQUEST_BYTES             v1=(not run on v1)                          v2=REFUSED V4 request longer than 1048576 bytes OK
+F-07   EPIPE on request write                       v1=AUTHORIZED(40)                           v2=REFUSED V4 EPIPE after 0 of 44 request bytes OK
+F-08   pinned_cdhash=None (fake binary, its own SHA pin) v1=AUTHORIZED(40)                           v2=REFUSED V5 no pinned CDHash              OK
+F-03   caller exception port inherited by the child v1=excports: 0xc00,0x2000, excports_set=2 exc_mask_all=0x1bfe v2=excports:  excports_set=0 exc_mask_all=0x1bfe OK
+T-1    caller soft rlimits (nofile 32, stack 1 MiB, cpu 3) v1=stack=1048576/67092480 fsize=-1/-1 cpu=3/-1 nofile=32/-1 v2=stack=8388608/8388608 fsize=0/0 cpu=10/10 nofile=64/64 OK
+T-1    caller HARD nofile 32 (< 64)                 v1=AUTHORIZED(40)                           v2=REFUSED D12 launcher exception: SubprocessError: OK
+F-13   SIGTERM to the launcher                      v1=rc=-15 child_alive=False leftover_dirs=1 v2=rc=1 child_alive=False leftover_dirs=0   OK
+F-13   SIGKILL to the launcher (cannot be caught)   v1=rc=-9 child_alive=False leftover_dirs=1  v2=rc=-9 child_alive=False leftover_dirs=1  OK
+F-09   launcher own stdout full + O_NONBLOCK        v1=rc=0 line_complete=True M1-LAUNCHER-DECISION {"amount": 40, "decision": "AUTHORIZED" v2=rc=0 line_complete=True M1-LAUNCHER-DECISION {"amount": 40, "decision": "AUTHORIZED" OK
+removed 4 left-over /private/tmp/m1launch-* dirs made by this test
+test_v2_findings: 16 rows, 0 not as expected

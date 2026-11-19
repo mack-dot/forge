@@ -1,0 +1,4 @@
+{"f1":{"emitted":[],"refused":[],"error":"provider invalid_request: the idempotency key is longer than 255"},"f2":{"emitted":["r_next"],"refused":["xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: in doubt: claimed by run 8509c52885ec7b82c1d2a64d09669508 (p"],"error":""},"journal":["refused:invalid_request","paid"],"movements":["r_next:100"]}
+p3_keytext long adapter=v1 env={"P_ADAPTER":"v1"}
+NOT STOPPED: T6 FALSE REJECTION: committed refund "xxxxxxxxxxxx" (len 256) not paid
+exit 1

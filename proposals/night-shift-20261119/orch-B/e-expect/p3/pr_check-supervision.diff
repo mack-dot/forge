@@ -1,0 +1,56 @@
+--- a/gate/pr_check.py
++++ b/gate/pr_check.py
+@@ -7,11 +7,34 @@
+ from pathlib import Path
+ import re
+ import shlex
++import signal
+ import subprocess
+ import sys
+ 
+ from common import ROOT, canonical, digest, read_json
+ 
++# Wall-clock bound of one checker or replay process. Expiry kills its process group and gives no verdict (exit 2).
++CHECKER_SECONDS = 7200
++
++
++def bounded(command, **options):
++    child = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
++                             start_new_session=True, **options)
++    try:
++        stdout, stderr = child.communicate(timeout=CHECKER_SECONDS)
++    except subprocess.TimeoutExpired:
++        stdout = stderr = None
++    finally:
++        try:
++            os.killpg(child.pid, signal.SIGKILL)
++        except (ProcessLookupError, PermissionError):
++            pass
++        child.wait()
++    if stdout is None:
++        raise RuntimeError('CHECKER_TIMEOUT: ' + ' '.join(str(c) for c in command[:3]) + ' reached the wall-clock '
++                           'bound of ' + str(CHECKER_SECONDS) + ' s; process group killed; no verdict')
++    return subprocess.CompletedProcess(command, child.returncode, stdout, stderr)
++
+ 
+ def git_head(directory):
+     child = subprocess.run(['git', '-C', str(directory), 'rev-parse', '--verify', 'HEAD'],
+@@ -61,7 +84,7 @@
+     environment = {name: os.environ[name] for name in allowed if name in os.environ}
+     environment['PATH'] = str(Path(sys.executable).parent) + os.pathsep + environment.get('PATH', os.defpath)
+     environment['PYTHONNOUSERSITE'] = '1'
+-    child = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, env=environment)
++    child = bounded(command, cwd=ROOT, text=True, env=environment)
+     (folder / 'gate.log').write_text(child.stdout + child.stderr)
+     print(child.stdout + child.stderr, end='', flush=True)
+     if child.returncode not in (0, 1, 2, 3):
+@@ -81,8 +104,7 @@
+     if bundle:
+         # Execute the exact saved command under the same trusted environment.
+         replay_cmd = bundle['evidence'][0]['reproduce_cmd']
+-        replay_run = subprocess.run(shlex.split(replay_cmd), cwd=ROOT, capture_output=True,
+-                                    text=True, env=environment)
++        replay_run = bounded(shlex.split(replay_cmd), cwd=ROOT, text=True, env=environment)
+         (folder / 'replay.log').write_text(replay_run.stdout + replay_run.stderr)
+         replay = {'command': replay_cmd, 'exit_code': replay_run.returncode,
+                   'byte_identical': replay_run.returncode == 0 and

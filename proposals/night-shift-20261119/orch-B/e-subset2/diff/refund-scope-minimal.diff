@@ -1,0 +1,19 @@
+--- a/gate/refund.py
++++ b/gate/refund.py
+@@ -98,10 +98,14 @@
+         raise RuntimeError('TOOLCHAIN_ERROR: executable digest differs')
+     code = (ROOT / 'impl/Refund.dfy').read_bytes()
+     prefix = b'include "../spec/refund/RefundSpec.dfy"\n\nmodule Refund refines RefundSpec {\n'
+-    if not code.startswith(prefix) or code.count(b'include') != 1:
++    # CRLF line ends are allowed. A second include can only be a line that starts with `include`; Dafny
++    # also refuses an include after the first module (controls L07, L08). `include` in a comment is text.
++    text = code.replace(b'\r\n', b'\n')
++    if not text.startswith(prefix) or re.search(rb'(?m)^[ \t]*include\b', text[len(prefix):]):
+         raise Rejected('SOURCE_SCOPE: exact approved refinement and sole include required')
+     # Input restrictions only. Dafny parses, verifies and audits the source.
+-    if b'{:' in code.replace(b'{:isolate_assertions}', b'') or b'@' in code:
++    if (b'{:' in code.replace(b'{:isolate_assertions}', b'').replace(b'{:induction false}', b'') or
++            b'@' in code):
+         raise Rejected('SOURCE_SCOPE: only assertion-isolation attributes allowed')
+     if b'include' in (ROOT / BINDING).read_bytes().replace(b'include paths', b''):
+         raise Rejected('SOURCE_SCOPE: the trusted binding must add no include')

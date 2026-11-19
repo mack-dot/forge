@@ -191,11 +191,11 @@ PART_DONE r6w_common.sml
 MARK USE r6w_steps.sml
 R6W_STEPS opened
 DELSIMPS_OK
-/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round8/r6w_steps.sml:321: error: Value or constructor (\) has not been declared
+/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round8/r6w_steps.sml:321: error: Value or constructor (\) has not been declared
 Found near
   if List.exists isi vs then (... ... \ rpt (qexists_tac (Q "Inv"))) g else
   ALL_TAC g
-/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round8/r6w_steps.sml:321: error: Type error in function application.
+/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round8/r6w_steps.sml:321: error: Type error in function application.
    Function: CONV_TAC (RESORT_EXISTS_CONV (fn l => ... @ ...)) \ :
       Context.t -> goal list * validation
    Argument: rpt : tactic -> tactic
@@ -203,7 +203,7 @@ Found near
 Found near
   if List.exists isi vs then (... ... \ rpt (qexists_tac (Q "Inv"))) g else
   ALL_TAC g
-/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round8/r6w_steps.sml:321: error: Type error in function application.
+/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round8/r6w_steps.sml:321: error: Type error in function application.
    Function: CONV_TAC (RESORT_EXISTS_CONV (fn ... => ...)) \ rpt :
       goal list * validation
    Argument: (qexists_tac (Q "Inv")) : tactic

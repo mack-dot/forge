@@ -1,6 +1,6 @@
 # RUN PLAN EEx-0002 (worker A29). NOTHING HERE HAS RUN. All tactics UNCHECKED.
 
-A = `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001`, V = this folder.
+A = `/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001`, V = this folder.
 
 | File | SHA-256 |
 |---|---|
@@ -11,8 +11,8 @@ A = `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001`, V = this 
 
 ## Run (PLANNED; orchestrator only, single HOL slot)
 ```zsh
-cd /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-cp /Users/mackianni/forge/results/night-shift-20261119/orch-A/erasure-step/v4/EEx-0002.sml EEx-0002.sml
+cd /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+cp /Users/USER/forge/results/night-shift-20261119/orch-A/erasure-step/v4/EEx-0002.sml EEx-0002.sml
 shasum -a 256 EEx-0002.sml   # must be 732103e1...90a5
 ./nightshift-run.sh EEx-0002 1500 deps-EE.txt ; echo "go exit $?"
 grep -n "^EXPLORE_\|^VALIDATION\|^P6_\|^PRIM_RULE\|RESIDUAL_HEADS\|^LSS_LEMMA_HYPS\|^TACTIC_USED erase_\(LoadStore\|dfn_LoadStore\)\|^TACTIC_USED Run\|^TACTIC_USED Next\|^PROVED_NOT_STORED\|^DIAG_OK_UNDER\|^LEMMA_FAILED\|^STATEMENT_RESULT\|^WOULD_FAIL_LIST" EEx-0002/stdout.log | cut -c1-300

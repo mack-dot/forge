@@ -17,11 +17,11 @@ import subprocess
 import sys
 import time
 
-LAUNCH = '/Users/mackianni/forge/results/night-shift-20261119/orch-A/launch'
+LAUNCH = '/Users/USER/forge/results/night-shift-20261119/orch-A/launch'
 sys.path.insert(0, LAUNCH)
 import launcher as L  # noqa: E402
 
-EXE = '/Users/mackianni/forge/results/night-shift-20261119/orch-A/ffi-c-audit/refund'
+EXE = '/Users/USER/forge/results/night-shift-20261119/orch-A/ffi-c-audit/refund'
 BIN = os.path.join(LAUNCH, 'bin')
 PY_SHIM = '/usr/bin/python3'
 PY_DIRECT = '/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9'

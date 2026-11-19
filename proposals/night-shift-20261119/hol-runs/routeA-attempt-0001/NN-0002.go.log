@@ -1,0 +1,33 @@
+2026-11-19T16:57:06Z
+Now drawing from 'AC Power'
+total = 10240.00M  used = 9208.75M  free = 1031.25M  (encrypted)
+System-wide memory free percentage: 41%
+DISK_FREE_GIB 82
+START_STATE swap_free_mib=1031 memory_free_percent=41
+USED_FILES_PRE 0 e3b0c44298fc1c14
+exit 0
+actual_exit 0 wall 288.783 cpu 158.43 rss_mib 1672 ['EXACT_COMPLETE'] inputs_unchanged_after True
+41:IMPORTED_OK refund_strict_parse_complete
+42:IMPORTED_OK refund_frame_decision
+48:CHECKED refund_fields_ints_bounded
+56:CHECKED refund_fields_ints_bounded_proj
+81:CHECKED refund_run_wire_output_nonneg
+88:CHECKED refund_frame_decision_nonneg
+100:CHECKED refund_strict_parse_accepts_negative_frame
+104:CHECKED refund_fields_negative_amount_rejected
+108:CHECKED refund_fields_positive_witness
+139:CHECKED refund_model_frame_decision_nonneg
+196:CHECKED refund_model_frame_decision_reach_nonneg
+229:CONTROL_OK refund_fields_ints_bounded statement is the literal planned statement
+230:CONTROL_OK refund_frame_decision_nonneg statement is the literal planned statement
+231:CONTROL_OK C1 is a proved negation
+232:CONTROL_OK C2 negative amount gives the rejection tuple
+233:CONTROL_OK C3 authorized witness
+234:CLOSURE_AXIOM bool.SELECT_AX
+235:CLOSURE_AXIOM bool.INFINITY_AX
+236:CLOSURE_AXIOM bool.ETA_AX
+237:CLOSURE_AXIOM bool.BOOL_CASES_AX
+242:EXACT_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

@@ -1,0 +1,833 @@
+{
+ "base_commit": "75f70919a37c6f1cc2f60d9fc80d0a3faa38e451",
+ "copied_files_sha256": {},
+ "end_to_end": false,
+ "files_changed_by_the_stage_runs": [
+  "results/stage5/mutations.json",
+  "results/stage5/vacuity.json",
+  "results/stage8/evidence-separation/attempt-0003/",
+  "results/stage8/hostile-outputs/attempt-0004/",
+  "results/stage8/wrapper-proof/attempt-0005/"
+ ],
+ "links_without_target": {
+  "docs/stage9-history-audit.md": [
+   "../results/stage9/receipt-repair-published/README.md"
+  ],
+  "proposals/provenance-receipt-repair.md": [
+   "../results/stage9/receipt-repair-published/README.md"
+  ]
+ },
+ "m1_conformance_bundle_sha256": "f55391dad17a0a4ea707806c59dbac2419df51c692161704af71f0cfe0a11da9",
+ "markdown_files_checked": 318,
+ "not_run": [
+  "Stage 7 (Docker, about 3.3 hours)",
+  "Stage 9 (deferred; hosted signing)",
+  "Stage 10 (its EXIT script is not on main)"
+ ],
+ "rows": [
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "reproducibility"
+   ],
+   "check": "stage 1 reproducibility",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "reproducibility: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "planted-bugs"
+   ],
+   "check": "stage 1 planted-bugs",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "planted-bugs: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "spec-lock"
+   ],
+   "check": "stage 1 spec-lock",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "spec-lock: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "contract-binding"
+   ],
+   "check": "stage 1 contract-binding",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "contract-binding: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_1.py",
+    "--case",
+    "audit-controls"
+   ],
+   "check": "stage 1 audit-controls",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "audit-controls: passed (expected raw failures retained in report)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "schema"
+   ],
+   "check": "stage 2 schema",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "schema: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "artifact-mismatch"
+   ],
+   "check": "stage 2 artifact-mismatch",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "artifact-mismatch: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "method-policy"
+   ],
+   "check": "stage 2 method-policy",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "method-policy: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "round-trip"
+   ],
+   "check": "stage 2 round-trip",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "round-trip: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_2.py",
+    "--case",
+    "policy-controls"
+   ],
+   "check": "stage 2 policy-controls",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "policy-controls: passed (actual commands and negative exits retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "correct-typescript"
+   ],
+   "check": "stage 3 correct-typescript",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "correct-typescript: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "self-transfer"
+   ],
+   "check": "stage 3 self-transfer",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "self-transfer: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "evidence-labels"
+   ],
+   "check": "stage 3 evidence-labels",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "evidence-labels: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "reproducibility"
+   ],
+   "check": "stage 3 reproducibility",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "reproducibility: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "loader-demo"
+   ],
+   "check": "stage 3 loader-demo",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "loader-demo: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_3.py",
+    "--case",
+    "cli-demo"
+   ],
+   "check": "stage 3 cli-demo",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "cli-demo: passed (actual checker and gate codes retained)"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_5.py",
+    "--case",
+    "vacuity"
+   ],
+   "check": "stage 5 vacuity",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE_5_RESULT {\"case\": \"vacuity\", \"result\": \"passed\", \"exit_code\": 0}"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_5.py",
+    "--case",
+    "mutations"
+   ],
+   "check": "stage 5 mutations",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE_5_RESULT {\"case\": \"mutations\", \"result\": \"passed\", \"exit_code\": 0}"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_6.py",
+    "--case",
+    "report"
+   ],
+   "check": "stage 6 report",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "{\"exit_code\": 0, \"pairs_recomputed\": 75, \"usage_records\": 76, \"report\": \"results/stage6/report.json\", \"extrapolation\": false}"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_8.py",
+    "--case",
+    "wrapper-proof"
+   ],
+   "check": "stage 8 wrapper-proof",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "wrapper-proof: passed; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_8.py",
+    "--case",
+    "hostile-outputs"
+   ],
+   "check": "stage 8 hostile-outputs",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "hostile-outputs: passed; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_8.py",
+    "--case",
+    "evidence-separation"
+   ],
+   "check": "stage 8 evidence-separation",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "evidence-separation: passed; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_4.py",
+    "--case",
+    "affected-claims"
+   ],
+   "check": "stage 4 affected-claims",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 12000, \"text\": \"1fdb02f8d2efe791611b121429954ed4d\\\",\\\"spec.lock\\\":\\\"3ef8fca194a6220601fe68c1eae7eb6b0b9e0447b05802dfaa311ddca2fe23ae\\\",\\\"toolchain/linux-pins.json\\\":\\\"11128aa46f89391c39e6927f71dd1ba5ff8af1495ea0ad42253f7263294be819\\\",\\\"toolchain/requirements-linux.txt\\\":\\"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_4.py",
+    "--case",
+    "unapproved-spec"
+   ],
+   "check": "stage 4 unapproved-spec",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 0, \"text\": \"{\\\"case\\\":\\\"unapproved-spec\\\",\\\"end_to_end\\\":false,\\\"exit_code\\\":0,\\\"result\\\":\\\"passed\\\",\\\"runs\\\":[{\\\"artifact_id\\\":12688689112,\\\"comment_url\\\":\\\"https://github.com/mack-dot/forge/pull/2#issuecomment-6427532824\\\",\\\"gate_exit_code\\\":1,\\\"pr_number\\\":2,\\\"receipt\\"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_4.py",
+    "--case",
+    "approved-spec"
+   ],
+   "check": "stage 4 approved-spec",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "FORGE_EXIT_CHUNK {\"offset\": 12000, \"text\": \"fe9b9132a90b39f5144ed749e6a866098f422837f8fda\\\",\\\"gate/backends/dafny.py\\\":\\\"ef81d8d190c3aca4d644d0dfde326278830fbc78a8cd7188d2bed1941775cdfe\\\",\\\"gate/common.py\\\":\\\"06b1e37f7df2ce00fac7a51039d3172214d2cc2a81a5f27bfe164725ddc2e988\\\",\\\"gate/core.py\\\":\\\"bf8f0"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_11.py",
+    "--case",
+    "legitimate-change",
+    "--eval",
+    "results/stage11/eval-0007",
+    "--baseline",
+    "results/stage11/eval-pr27-0003"
+   ],
+   "check": "stage 11 legitimate-change",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE11_LEGITIMATE_CHANGE_PASSED: e02 VERIFIED with booking, ledger-evidence, ledger-model, ledger-witness re-established fresh; e04, e05 VERIFIED; e03 (bound TypeScript subject) UNSUPPORTED by contract"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_11.py",
+    "--case",
+    "stale-dependency",
+    "--eval",
+    "results/stage11/eval-0007",
+    "--baseline",
+    "results/stage11/eval-pr27-0003"
+   ],
+   "check": "stage 11 stale-dependency",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE11_STALE_DEPENDENCY_PASSED: 12 cases rejected, unsupported or not established as required"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_stage_11.py",
+    "--case",
+    "report",
+    "--eval",
+    "results/stage11/eval-0007",
+    "--baseline",
+    "results/stage11/eval-pr27-0003"
+   ],
+   "check": "stage 11 report",
+   "exit_code": 0,
+   "group": "stage-exit",
+   "last_line": "STAGE11_REPORT_ESTABLISHED: cases 18; match 12; false_accept 0; false_reject 0; false_unsupported 0; other 0; superseded_by_design_change 5"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_frozen_pr_gate.py",
+    "HEAD"
+   ],
+   "check": "frozen PR-gate modules",
+   "exit_code": 0,
+   "group": "frozen-gate",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "FORGE_MASTER_IDEA.md"
+   ],
+   "check": "links FORGE_MASTER_IDEA.md",
+   "exit_code": 0,
+   "group": "links",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "ROADMAP.md"
+   ],
+   "check": "links ROADMAP.md",
+   "exit_code": 0,
+   "group": "links",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "unsure.md"
+   ],
+   "check": "links unsure.md",
+   "exit_code": 0,
+   "group": "links",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "proposals/forge2-m1-conformance/REPORT.md"
+   ],
+   "check": "links proposals/forge2-m1-conformance/REPORT.md",
+   "exit_code": 0,
+   "group": "links",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "-I",
+    "-B",
+    "proposals/round4-20261117/check_links.py",
+    "HEAD",
+    "AGENTS.md",
+    "FORGE_MASTER_IDEA.md",
+    "FORGE_ROUND2_PLAN.md",
+    "FORGE_ROUND3_PLAN.md",
+    "README.md",
+    "ROADMAP.md",
+    "VISION.md",
+    "docs/booking.md",
+    "docs/claims.md",
+    "docs/demo-gauntlet.md",
+    "docs/reuse-benchmark-epoch1.md",
+    "docs/reuse-benchmark-epoch2.md",
+    "docs/reuse-benchmark.md",
+    "docs/spec-quality.md",
+    "docs/stage4-change-loop.md",
+    "docs/stage7-binary.md",
+    "docs/stage8-refund.md",
+    "docs/stage9-history-audit.md",
+    "docs/stage9-signing-preparation-audit.md",
+    "examples/binary/README.md",
+    "gate/README.md",
+    "gate/expected-audit.md",
+    "proposals/approval-integrity/PROPOSAL.md",
+    "proposals/booking-decision.md",
+    "proposals/booking.md",
+    "proposals/fees-decision.md",
+    "proposals/fees.md",
+    "proposals/forge2-demo-gauntlet/REPORT.md",
+    "proposals/forge2-demo-gauntlet/REVIEW.md",
+    "proposals/forge2-m1-conformance/OWNER_TEXTS.md",
+    "proposals/forge2-m1-conformance/REPORT.md",
+    "proposals/forge2-m1-conformance/REVIEW.md",
+    "proposals/forge2-pillar1-anchor-diff/ANALYSIS.md",
+    "proposals/forge2-pillar1-print-effects/PROPOSAL.md",
+    "proposals/forge2-pillar1-print-effects/REGRESSION.md",
+    "proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md",
+    "proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md",
+    "proposals/forge2-pillar1-print-effects/v3/PROPOSAL-V3.md",
+    "proposals/forge2-pillar1-print-effects/v3/REPORT-V3.md",
+    "proposals/forge2-pillar1-print-effects/v3/REVIEW-3.md",
+    "proposals/forge2-pillar1-spec-determinism/REPORT.md",
+    "proposals/forge2-pillar2-finality-protocol/DESIGN.md",
+    "proposals/forge2-pillar2-refund-finality/CAKEML_LINK.md",
+    "proposals/forge2-pillar2-refund-finality/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md",
+    "proposals/forge2-pillar3-dual-certificate/finality/REPORT.md",
+    "proposals/forge2-slice1-refund-finality/OWNER_TEXTS.md",
+    "proposals/forge2-slice1-refund-finality/REPORT.md",
+    "proposals/forge2-slice1-refund-finality/REVIEW.md",
+    "proposals/forge2-slice2-spec-clearing/OWNER_TEXTS.md",
+    "proposals/forge2-slice2-spec-clearing/REPORT.md",
+    "proposals/forge2-slice2-spec-clearing/REVIEW.md",
+    "proposals/forge2-slice2-spec-clearing/records/CLEARING_REPORT.md",
+    "proposals/forge2-slice3-runtime-certificates/OWNER_TEXTS.md",
+    "proposals/forge2-slice3-runtime-certificates/REPORT.md",
+    "proposals/forge2-slice3-runtime-certificates/REVIEW.md",
+    "proposals/forge2-slice3-runtime-certificates/records/SWAP_REPORT.md",
+    "proposals/future-directions-20261117/FUTURE_PLANS.md",
+    "proposals/future-directions-20261117/SOURCE_ANALYSIS.md",
+    "proposals/future-directions-20261117/SOURCE_MISSION_PROMPT.md",
+    "proposals/github-ruleset/README.md",
+    "proposals/initial-ledger.md",
+    "proposals/m1-owner-review-20261119/OWNER_DECISIONS.md",
+    "proposals/m1-owner-review-20261119/REVIEW_PACKET.md",
+    "proposals/m1b-mission-20261119/MISSION.md",
+    "proposals/m1b-mission-20261119/NEXT_OBLIGATIONS.md",
+    "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md",
+    "proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119.md",
+    "proposals/m1b-mission-20261119/TRACKER.md",
+    "proposals/m1b-mission-20261119/drafts/ADMISSION_BOUNDARY.md",
+    "proposals/m1b-mission-20261119/drafts/CLEAN_REPLAY_PLAN.md",
+    "proposals/m1b-mission-20261119/drafts/F27_ARCHITECTURE.md",
+    "proposals/m1b-mission-20261119/drafts/FFI_CLOSURE_OPTIONS.md",
+    "proposals/m1b-mission-20261119/drafts/INDEPENDENT_REPLAY_PLAN.md",
+    "proposals/m1b-mission-20261119/drafts/M1_EXACT_CLAIM.md",
+    "proposals/m1b-mission-20261119/drafts/RUNTIME_DECISION.md",
+    "proposals/m1b-mission-20261119/drafts/STAGE9_BINDING_PROPOSAL_DRAFT.md",
+    "proposals/m1b-mission-20261119/drafts/binding-manifest/BINDING_DESIGN.md",
+    "proposals/m1b-mission-20261119/drafts/enforcement/LIVE_SETTINGS.md",
+    "proposals/m1b-mission-20261119/drafts/enforcement/OWNER_RUNBOOK.md",
+    "proposals/m1b-mission-20261119/drafts/expect-rule/rule_table.md",
+    "proposals/m1b-mission-20261119/drafts/fail-closed/FAIL_CLOSED_CONTRACT.md",
+    "proposals/m1b-mission-20261119/drafts/fail-closed/OUTPUT_FRAME_SPEC.md",
+    "proposals/m1b-mission-20261119/drafts/link-contract/PREFLIGHT_ELIGIBLE.md",
+    "proposals/m1b-mission-20261119/drafts/link-contract/RUN_PLAN.md",
+    "proposals/m1b-mission-20261119/drafts/link-contract/STATEMENTS.md",
+    "proposals/m1b-mission-20261119/drafts/link-eligible/RUN_PLAN.md",
+    "proposals/m1b-mission-20261119/drafts/link-eligible/STATEMENTS.md",
+    "proposals/m1b-mission-20261119/drafts/manifest/MANIFEST_DESIGN.md",
+    "proposals/m1b-mission-20261119/drafts/proof-identity/CLOSURE_SPEC.md",
+    "proposals/m1b-mission-20261119/drafts/proof-identity/PROOF_IDENTITY_ANALYSIS.md",
+    "proposals/m1b-mission-20261119/drafts/route-a/RUN_PLAN.md",
+    "proposals/m1b-mission-20261119/drafts/route-a/STATEMENTS.md",
+    "proposals/m1b-mission-20261119/drafts/route-a/Y3-L3-analysis.md",
+    "proposals/m1b-mission-20261119/drafts/route-a/routeA-L2.md",
+    "proposals/m1b-mission-20261119/drafts/route-a/routeA-L3.md",
+    "proposals/m1b-mission-20261119/drafts/route-a/v2/RUN_PLAN.md",
+    "proposals/m1b-mission-20261119/proofs/linked-refund/RESULTS.md",
+    "proposals/m1b-mission-20261119/proofs/linked-refund/STATEMENTS.md",
+    "proposals/m1b-mission-20261119/proofs/linked-refund/records/S3a-orchestrator-audit.md",
+    "proposals/m1b-mission-20261119/reports/B1-exact-claim.md",
+    "proposals/m1b-mission-20261119/reports/B2-ffi-closure-options.md",
+    "proposals/m1b-mission-20261119/reports/B3-output-frame-fail-closed.md",
+    "proposals/m1b-mission-20261119/reports/B4-proof-identity.md",
+    "proposals/m1b-mission-20261119/reports/B5-admission-boundary.md",
+    "proposals/m1b-mission-20261119/reports/C1a-route-a-lemma-drafts.md",
+    "proposals/m1b-mission-20261119/reports/C2-runtime-decision.md",
+    "proposals/m1b-mission-20261119/reports/D1-route-a-L1-preflight.md",
+    "proposals/m1b-mission-20261119/reports/D10-adversarial-review-linked-refund.md",
+    "proposals/m1b-mission-20261119/reports/D11-processor-state-bits.md",
+    "proposals/m1b-mission-20261119/reports/D12-export-and-operator-semantics.md",
+    "proposals/m1b-mission-20261119/reports/D2-hol-contract-link-drafts.md",
+    "proposals/m1b-mission-20261119/reports/D3-reachable-ffi-calls.md",
+    "proposals/m1b-mission-20261119/reports/D4-output-exit-prefix-lemmas.md",
+    "proposals/m1b-mission-20261119/reports/D5-zero-code-review-experiment.md",
+    "proposals/m1b-mission-20261119/reports/D6-sink-crash-and-race-test.md",
+    "proposals/m1b-mission-20261119/reports/D7-dafny-sink-core.md",
+    "proposals/m1b-mission-20261119/reports/D8-enforcement-live-settings.md",
+    "proposals/m1b-mission-20261119/reports/D9-second-macho-extraction.md",
+    "proposals/m1b-mission-20261119/reports/G1-expect-family-and-gate-rule.md",
+    "proposals/m1b-mission-20261119/reports/G10-adversarial-review-sink-core.md",
+    "proposals/m1b-mission-20261119/reports/G11-reconciliation-audit.md",
+    "proposals/m1b-mission-20261119/reports/G2-processor-erasure-lemma.md",
+    "proposals/m1b-mission-20261119/reports/G3-zero-amount-decision-packet.md",
+    "proposals/m1b-mission-20261119/reports/G4-sink-ts-against-sink-core.md",
+    "proposals/m1b-mission-20261119/reports/G5-consumer-integration-tests.md",
+    "proposals/m1b-mission-20261119/reports/G6-hol-lemma-drafts-v2.md",
+    "proposals/m1b-mission-20261119/reports/G7-progress-obligations.md",
+    "proposals/m1b-mission-20261119/reports/G8-binding-manifest.md",
+    "proposals/m1b-mission-20261119/reports/G9-composed-slice-theorem.md",
+    "proposals/m1b-mission-20261119/reports/I1a-link-feasibility.md",
+    "proposals/m1b-mission-20261119/reports/I1b-link-theorem-draft.md",
+    "proposals/m1b-mission-20261119/reports/I1d-dafny-refinement-proof.md",
+    "proposals/m1b-mission-20261119/reports/I2-review-18-rows.md",
+    "proposals/m1b-mission-20261119/reports/I3-I4b-premise-ledger.md",
+    "proposals/m1b-mission-20261119/reports/I4c-replay-plans.md",
+    "proposals/m1b-mission-20261119/reports/II-proof-to-binary-manifest.md",
+    "proposals/m1b-mission-20261119/reports/III-stage9-preparation.md",
+    "proposals/m1b-mission-20261119/reports/IV-f27-architecture.md",
+    "proposals/m1b-mission-20261119/reports/P0-state-audit.md",
+    "proposals/m1b-mission-20261119/reports/V-adversarial-validation.md",
+    "proposals/night-shift-20261119/DIRECTIVE-2.md",
+    "proposals/night-shift-20261119/DIRECTIVE.md",
+    "proposals/night-shift-20261119/LAUNCHER_CHECKS.md",
+    "proposals/night-shift-20261119/MORNING_REPORT.md",
+    "proposals/night-shift-20261119/OWNER_REQUIRED.md",
+    "proposals/night-shift-20261119/PROTOCOL.md",
+    "proposals/night-shift-20261119/integration/B-code-notes.md",
+    "proposals/night-shift-20261119/integration/C-scan.md",
+    "proposals/night-shift-20261119/orch-A/END_TO_END_GAPS.md",
+    "proposals/night-shift-20261119/orch-A/END_TO_END_GAPS_v2.md",
+    "proposals/night-shift-20261119/orch-A/FIELDS_FOR_B.md",
+    "proposals/night-shift-20261119/orch-A/FINAL.md",
+    "proposals/night-shift-20261119/orch-A/MORNING.md",
+    "proposals/night-shift-20261119/orch-A/STATE.md",
+    "proposals/night-shift-20261119/orch-A/WORKER_RULES.md",
+    "proposals/night-shift-20261119/orch-A/compose/RUN_PLAN_compose.md",
+    "proposals/night-shift-20261119/orch-A/erasure-step/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/erasure-step/RUN_PLAN_erasure_step.md",
+    "proposals/night-shift-20261119/orch-A/erasure-step/v2/RUN_PLAN_EF.md",
+    "proposals/night-shift-20261119/orch-A/erasure-step/v3/RUN_PLAN_EE.md",
+    "proposals/night-shift-20261119/orch-A/erasure-step/v4/RUN_PLAN_EE.md",
+    "proposals/night-shift-20261119/orch-A/erasure-step/v4/RUN_PLAN_EEx2.md",
+    "proposals/night-shift-20261119/orch-A/exit/RUN_PLAN_exit.md",
+    "proposals/night-shift-20261119/orch-A/ffi-c-audit/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/ffi-calls-ok/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/ffi-calls-ok/RUN_PLAN_L2b.md",
+    "proposals/night-shift-20261119/orch-A/ffi-calls-ok/RUN_PLAN_L2b_v2.md",
+    "proposals/night-shift-20261119/orch-A/ffi-erasure/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/ffi-erasure/RUN_PLAN_ffi_erasure.md",
+    "proposals/night-shift-20261119/orch-A/ffi-hardening/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/l2c/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/l2c/RUN_PLAN_L2c.md",
+    "proposals/night-shift-20261119/orch-A/l2d/RUN_PLAN_L2d.md",
+    "proposals/night-shift-20261119/orch-A/launch/CONTROL_MATRIX.md",
+    "proposals/night-shift-20261119/orch-A/launch/CONTROL_MATRIX_v2.md",
+    "proposals/night-shift-20261119/orch-A/launch/FINDINGS_FROM_C.md",
+    "proposals/night-shift-20261119/orch-A/link/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/link/run/attempt-0001/PASS_CRITERIA.md",
+    "proposals/night-shift-20261119/orch-A/lout-explore/RUN_PLAN_LOx.md",
+    "proposals/night-shift-20261119/orch-A/out-exit/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/out-exit/RUN_PLAN_out_exit.md",
+    "proposals/night-shift-20261119/orch-A/out-exit/orig/RUN_PLAN.md",
+    "proposals/night-shift-20261119/orch-A/prefix-exact/RUN_PLAN_prefix_exact.md",
+    "proposals/night-shift-20261119/orch-A/prefix/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/prefix/RUN_PLAN_prefix.md",
+    "proposals/night-shift-20261119/orch-A/r6/RUN_PLAN_R6x.md",
+    "proposals/night-shift-20261119/orch-A/r6/round10/RUN_PLAN_R6r.md",
+    "proposals/night-shift-20261119/orch-A/r6/round11/RUN_PLAN_R6t.md",
+    "proposals/night-shift-20261119/orch-A/r6/round12/RUN_PLAN_R6r.md",
+    "proposals/night-shift-20261119/orch-A/r6/round6/RUN_PLAN_R6w.md",
+    "proposals/night-shift-20261119/orch-A/r6/round7/RUN_PLAN_R6w2.md",
+    "proposals/night-shift-20261119/orch-A/replay-debt/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/repro/run/REPRO_PLAN.md",
+    "proposals/night-shift-20261119/orch-A/resource-native/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-E1/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-EE/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-L1/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-L2/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-L2b-PX/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-L2d/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-LO/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-MF/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-MT/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-NN/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-NV/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-PF/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-R6ffi/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-R6r/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-R6w/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-TR/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/review-link/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/trace/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/x8-x11/ANSWER_C-PREM-01.md",
+    "proposals/night-shift-20261119/orch-A/x8-x11/CORRECTIONS.md",
+    "proposals/night-shift-20261119/orch-A/x8-x11/CORRECTIONS_v2.md",
+    "proposals/night-shift-20261119/orch-A/x8-x11/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/x8-x11/review/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/x8-x11/static-tests/REPORT.md",
+    "proposals/night-shift-20261119/orch-A/x8v2/REPORT.md",
+    "proposals/night-shift-20261119/orch-B/FINAL.md",
+    "proposals/night-shift-20261119/orch-B/MORNING.md",
+    "proposals/night-shift-20261119/orch-B/PHASE2_RULES.md",
+    "proposals/night-shift-20261119/orch-B/STATE.md",
+    "proposals/night-shift-20261119/orch-B/WORKER_RULES.md",
+    "proposals/night-shift-20261119/orch-B/b-export-bridge/BRIDGE_STATEMENT.md",
+    "proposals/night-shift-20261119/orch-B/b-export-bridge/REPORT.md",
+    "proposals/night-shift-20261119/orch-B/d-v6sink/SPEC_NOTE.md",
+    "proposals/night-shift-20261119/orch-B/e-subset3/DESIGN3.md",
+    "proposals/night-shift-20261119/orch-B/e-totality/SUBSET.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-2/ASSURANCE_LEDGER.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-2/COMPOSED_GUARANTEE.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-2/CONTROLS.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-2/DIFF_SUMMARY.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-3/ASSURANCE_LEDGER.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-3/COMPOSED_GUARANTEE.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-3/CONTROLS.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-3/DIFF_SUMMARY.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-4/ASSURANCE_LEDGER.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-4/COMPOSED_GUARANTEE.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-4/CONTROLS.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-4/DIFF_SUMMARY.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-5/ASSURANCE_LEDGER.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-5/COMPOSED_GUARANTEE.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-5/CONTROLS.md",
+    "proposals/night-shift-20261119/orch-B/f-binding-5/DIFF_SUMMARY.md",
+    "proposals/night-shift-20261119/orch-B/f-binding/ASSURANCE_LEDGER.md",
+    "proposals/night-shift-20261119/orch-B/f-binding/COMPOSED_GUARANTEE.md",
+    "proposals/night-shift-20261119/orch-B/f-binding/CONTROLS.md",
+    "proposals/night-shift-20261119/orch-B/f-binding/FIELDS_FOR_A.md",
+    "proposals/night-shift-20261119/orch-B/g-admission/AUTHORITY_DESIGN.md",
+    "proposals/night-shift-20261119/orch-B/g-admission/OWNER_ACTIONS.md",
+    "proposals/night-shift-20261119/orch-B/g-admission/THREAT_TABLE.md",
+    "proposals/night-shift-20261119/orch-B/h-anchor/ANCHOR_DESIGN.md",
+    "proposals/night-shift-20261119/orch-B/h-anchor/anchor_interface.md",
+    "proposals/night-shift-20261119/orch-B/h-dispatch/DISPATCH_NOTES.md",
+    "proposals/night-shift-20261119/orch-B/h-gate/ACCEPTANCE.md",
+    "proposals/night-shift-20261119/orch-B/h-gate/FALSE_REJECTIONS.md",
+    "proposals/night-shift-20261119/orch-B/h-gate/JS_CHECK_DESIGN.md",
+    "proposals/night-shift-20261119/orch-B/h-gate/PER_CHANGE.md",
+    "proposals/night-shift-20261119/orch-B/h-gate/TERMINATION_TIER.md",
+    "proposals/night-shift-20261119/orch-B/h-gate/VERDICTS.md",
+    "proposals/night-shift-20261119/orch-B/h-key/KEY_DESIGN.md",
+    "proposals/night-shift-20261119/orch-B/h-minter/KEY_OPTIONS.md",
+    "proposals/night-shift-20261119/orch-B/h-minter/SINGLE_USE.md",
+    "proposals/night-shift-20261119/orch-B/h-minter2/SINGLE_USE_2.md",
+    "proposals/night-shift-20261119/orch-B/h-minter3/SINGLE_USE_3.md",
+    "proposals/night-shift-20261119/orch-B/h-provider/PROVIDER_ANCHOR.md",
+    "proposals/night-shift-20261119/orch-B/h-provider2/PROVIDER_ANCHOR_2.md",
+    "proposals/night-shift-20261119/orch-B/h-provider3/PROVIDER_ANCHOR_3.md",
+    "proposals/night-shift-20261119/orch-B/h-regress/REGRESSIONS.md",
+    "proposals/night-shift-20261119/orch-B/h-sink/HARDENING_NOTES.md",
+    "proposals/night-shift-20261119/orch-B/h-sink2/HARDENING_NOTES_2.md",
+    "proposals/night-shift-20261119/orch-B/h-sink3/HARDENING_NOTES_3.md",
+    "proposals/night-shift-20261119/orch-B/h-suite/CHANGES.md",
+    "proposals/night-shift-20261119/orch-B/p-adopt/ADOPTION_PACKET.md",
+    "proposals/night-shift-20261119/orch-B/p-adopt2/ADOPTION_PACKET_V6.md",
+    "proposals/night-shift-20261119/orch-B/x-bridge2/BRIDGE2_DESIGN.md",
+    "proposals/night-shift-20261119/orch-B/x-issuer-bridge/BRIDGE_DESIGN.md",
+    "proposals/night-shift-20261119/orch-B/x-issuer-bridge/OWNER_APPROVAL.md",
+    "proposals/night-shift-20261119/orch-C/ATTACKS.md",
+    "proposals/night-shift-20261119/orch-C/FINAL.md",
+    "proposals/night-shift-20261119/orch-C/STATE.md",
+    "proposals/night-shift-20261119/orch-C/WORKER_RULES.md",
+    "proposals/night-shift-20261119/unapplied/README.md",
+    "proposals/provenance-decision.md",
+    "proposals/provenance-hosted-v33/INSTALL.md",
+    "proposals/provenance-hosted/candidate/spec/provenance/protocol.md",
+    "proposals/provenance-implementation-decision.md",
+    "proposals/provenance-implementation.md",
+    "proposals/provenance-integrity-repair.md",
+    "proposals/provenance-receipt-repair.md",
+    "proposals/provenance-v33/README.md",
+    "proposals/provenance.md",
+    "proposals/provenance/protocol.md",
+    "proposals/refund-decision.md",
+    "proposals/refund-executable-feasibility/m1-chain-replay-20261118/REPORT.md",
+    "proposals/refund-gate-decision.md",
+    "proposals/refund-gate.md",
+    "proposals/refund-hostile-snapshot-decision.md",
+    "proposals/refund-hostile-snapshot.md",
+    "proposals/refund.md",
+    "proposals/refund/protocol.md",
+    "proposals/round2-20261117/OWNER_ROUND2_TEXT.md",
+    "proposals/round2-20261117/m1-rebuild/REPORT.md",
+    "proposals/round3-20261117/OWNER_ROUND3_TEXT.md",
+    "proposals/round4-20261117/OWNER_CLOSEOUT_TEXTS.md",
+    "proposals/round4-20261117/OWNER_ROUND4_TEXT.md",
+    "proposals/stage9-hosted-runner.md",
+    "proposals/stage9-lock-rebind-20261119/PROPOSAL.md",
+    "proposals/stage9-runner-admission.md",
+    "proposals/stage9-runner-provisioning.md",
+    "spec/provenance/protocol.md",
+    "spec/refund/protocol.md",
+    "toolchain/README.md",
+    "ts/README.md",
+    "unsure.md"
+   ],
+   "check": "links, all 318 Markdown files outside results/",
+   "exit_code": 1,
+   "group": "links-all",
+   "last_line": "}"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_slice1.py",
+    "--case",
+    "evidence"
+   ],
+   "check": "slice 1 evidence",
+   "exit_code": 0,
+   "group": "slice1",
+   "last_line": "SLICE1 evidence: PASSED; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_slice2.py",
+    "--case",
+    "evidence"
+   ],
+   "check": "slice 2 evidence",
+   "exit_code": 0,
+   "group": "slice2",
+   "last_line": "SLICE2 evidence: PASSED; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_slice3.py",
+    "--case",
+    "evidence"
+   ],
+   "check": "slice 3 evidence",
+   "exit_code": 0,
+   "group": "slice3",
+   "last_line": "SLICE3 evidence: PASSED; end_to_end=false"
+  },
+  {
+   "argv": [
+    "python3",
+    "scripts/exit_m1_conformance.py",
+    "--case",
+    "evidence"
+   ],
+   "check": "M1 conformance evidence",
+   "exit_code": 0,
+   "group": "m1-conformance",
+   "last_line": "M1-CONFORMANCE evidence: PASSED; end_to_end=false; M1 open"
+  }
+ ],
+ "scratch_clone_commit": "8d32b388a4c1d50b5e50b023d95645d2c38e207e",
+ "scratch_clone_commit_note": "exists only in the throwaway clone; not in the owner's repository; not pushed",
+ "slice1_bundle_sha256": "c7f2f41c872b5c133d422ef881d36e6c09390f081d555d74761d4890283833f1",
+ "slice2_bundle_sha256": "2721a293023baf230ecb944ea3ad2a3c02d7be6d82f128f10d07cc2b0f91854e",
+ "slice3_bundle_sha256": "3cdfebfc0ae96adafccc7f417bcd9113aaa63df9c9cd31583983c3b2e11bddb4",
+ "stage_exit_cases": 28,
+ "stage_exit_cases_exit_0": 28,
+ "what": "Wave Gate 1 regression: scratch clone of the present commit plus the uncommitted Wave Gate 1 files"
+}

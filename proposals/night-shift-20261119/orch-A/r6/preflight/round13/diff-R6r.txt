@@ -1,4 +1,4 @@
---- /Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/R6r-0002.sml	2026-11-19 08:02:51.518582719 -0500
+--- /Users/USER/forge/results/night-shift-20261119/orch-A/r6/round12/R6r-0002.sml	2026-11-19 08:02:51.518582719 -0500
 +++ R6r-0003.sml	2026-11-19 09:26:36.841666288 -0500
 @@ -1,3 +1,6 @@
 +(* R6r-0003.sml (worker W-pre, preflight round13). PROOF, NOT RUN. = round12/R6r-0002.sml with only: this comment, the
@@ -66,8 +66,8 @@
  
  (* ================= shared files (the same bytes as in R6rx-0001) ================= *)
  val R6R_PROOF_MODE = true;
--val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round12/";
-+val R6RDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/preflight/round13/";
+-val R6RDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round12/";
++val R6RDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/preflight/round13/";
  val _ = (pr "MARK USE r6r_common.sml"; use (R6RDIR ^ "r6r_common.sml"); pr "PART_DONE r6r_common.sml");
  val _ = (pr "MARK USE r6r_steps.sml"; use (R6RDIR ^ "r6r_steps.sml"); pr "PART_DONE r6r_steps.sml");
  val _ = (pr "MARK USE r6r_prove.sml"; use (R6RDIR ^ "r6r_prove.sml"); pr "PART_DONE r6r_prove.sml");

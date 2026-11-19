@@ -14,15 +14,15 @@ A15 started no HOL process. Every tactic in the script is UNCHECKED.
 | `A/PF-0004/.hol/objs/forge_refundPrefixFreeTheory.dat` | `bddae16a86019059a5f550508a28de770ba49ec7d41bde3493539694595cdce7` |
 
 (The three theory digests are from `A/PF-0004.run.json`, `objects`.)
-`A` = `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001`.
-`P` = `/Users/mackianni/forge/results/night-shift-20261119/orch-A/prefix-exact`.
+`A` = `/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001`.
+`P` = `/Users/USER/forge/results/night-shift-20261119/orch-A/prefix-exact`.
 
 ## Deps
 
 Two lines after the 125 lines of `deps-L1.txt` (the orchestrator appends them):
 ```
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PF-0004/forge_refundPrefixFreeTheory.sig
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/PF-0004/forge_refundPrefixFreeTheory.sml
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/PF-0004/forge_refundPrefixFreeTheory.sig
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/PF-0004/forge_refundPrefixFreeTheory.sml
 ```
 `run_case.py` line 50-51 resolves `<dir>/<name>` to `<dir>/.hol/objs/<name>`. The theory `.sml` reads the `.dat`
 next to itself (`OS.Path.base (#(FILE)) ^ ".dat"`). The order matters: the 125 lines first (they load the parents of
@@ -39,8 +39,8 @@ Before the run: `memory_pressure | tail -1` (need >= 25 % free), `sysctl vm.swap
 ## Command
 
 ```zsh
-A=/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-P=/Users/mackianni/forge/results/night-shift-20261119/orch-A/prefix-exact
+A=/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+P=/Users/USER/forge/results/night-shift-20261119/orch-A/prefix-exact
 cd $A
 cp $P/prefix_exact_v1.sml PX-0001.sml
 shasum -a 256 PX-0001.sml            # must be c4cfd82c…2122

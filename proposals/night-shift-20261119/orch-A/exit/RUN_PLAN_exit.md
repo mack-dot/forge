@@ -24,15 +24,15 @@ The script chooses the mode at run time: `DB.fetch "forge_refundLOut" "refund_pr
   `LO-0005/stdout.log:262-265`). No `forge_refundLOut` theory exists. Deps = `deps-LO.txt` unchanged.
   New theory `forge_refundLExitGen`.
 - `imported`: only after a PASSING L-OUT case `LO-xxxx`. Deps = `deps-LO.txt` + these two lines (in this order):
-  `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-xxxx/forge_refundLOutTheory.sig`
-  `/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LO-xxxx/forge_refundLOutTheory.sml`
+  `/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LO-xxxx/forge_refundLOutTheory.sig`
+  `/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LO-xxxx/forge_refundLOutTheory.sml`
   New theory `forge_refundLExit`.
 
 ## 2. Commands (NOT RUN)
 
 ```zsh
-A=/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001
-W=/Users/mackianni/forge/results/night-shift-20261119/orch-A/exit
+A=/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001
+W=/Users/USER/forge/results/night-shift-20261119/orch-A/exit
 cp $W/L_EXIT_v5.sml $A/LE-0001.sml
 shasum -a 256 $W/L_EXIT_v5.sml $A/LE-0001.sml $A/deps-LO.txt
 # absent mode:

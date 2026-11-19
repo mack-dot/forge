@@ -1,0 +1,67 @@
+2026-11-19T16:11:59Z
+Now drawing from 'AC Power'
+total = 9216.00M  used = 8356.06M  free = 859.94M  (encrypted)
+System-wide memory free percentage: 50%
+DISK_FREE_GIB 83
+START_STATE swap_free_mib=859 memory_free_percent=50
+USED_FILES_PRE 11 4cacb6bbfc17e31b
+exit 0
+actual_exit 0 wall 74.69 cpu 87.647 rss_mib 1703 ['EXPLORE_COMPLETE'] inputs_unchanged_after True
+297:STATEMENT fst_error
+298:∀x. FST x = Error ⇒ ∃a b. x = (Error,a,b)
+534:TRY_HELPER_BEGIN fst_error
+535:STEP_USED fst_error 1 close candidate 0 goals_out 0
+536:Saved theorem _______ "fst_error"
+537:TRY_HELPER_CLOSED fst_error hyps 0
+557:SHOW STEP_ALL_FAILED trace_terminate 1 close
+558:  GOAL ∀P G g tr mc st ms t io.
+574:SHOW STEP_ALL_FAILED trace_fail 1 close
+575:  GOAL ∀P G g tr mc st ms.
+597:SHOW STEP_ALL_FAILED trace_diverge 1 close
+598:  GOAL ∀P G g tr mc st ms l.
+636:SHOW STEP_ALL_FAILED toy_bad_not_followed 6 states differ (5w versus 2w)
+683:  GOAL evaluate
+700:  GOAL_COUNT 1
+701:  GOAL_BEGIN trace_terminate #1 assumptions 0 (ASM 0 = newest)
+723:  GOAL_END trace_terminate #1
+727:  GOAL_COUNT 1
+728:  GOAL_BEGIN trace_terminate #1 assumptions 0 (ASM 0 = newest)
+750:  GOAL_END trace_terminate #1
+756:  GOAL_COUNT 1
+757:  GOAL_BEGIN trace_fail #1 assumptions 0 (ASM 0 = newest)
+778:  GOAL_END trace_fail #1
+782:  GOAL_COUNT 1
+783:  GOAL_BEGIN trace_fail #1 assumptions 0 (ASM 0 = newest)
+804:  GOAL_END trace_fail #1
+810:  GOAL_COUNT 1
+811:  GOAL_BEGIN trace_diverge #1 assumptions 0 (ASM 0 = newest)
+828:  GOAL_END trace_diverge #1
+832:  GOAL_COUNT 1
+833:  GOAL_BEGIN trace_diverge #1 assumptions 0 (ASM 0 = newest)
+850:  GOAL_END trace_diverge #1
+856:  GOAL_COUNT 1
+857:  GOAL_BEGIN toy_bad_not_followed #1 assumptions 0 (ASM 0 = newest)
+881:  GOAL_END toy_bad_not_followed #1
+884:  GOAL_COUNT 1
+885:  GOAL_BEGIN toy_bad_not_followed #1 assumptions 0 (ASM 0 = newest)
+908:  GOAL_END toy_bad_not_followed #1
+911:  GOAL_COUNT 1
+912:  GOAL_BEGIN toy_bad_not_followed #1 assumptions 2 (ASM 0 = newest)
+963:  GOAL_END toy_bad_not_followed #1
+966:  GOAL_COUNT 1
+967:  GOAL_BEGIN toy_bad_not_followed #1 assumptions 2 (ASM 0 = newest)
+1018:  GOAL_END toy_bad_not_followed #1
+1021:  GOAL_COUNT 1
+1022:  GOAL_BEGIN toy_bad_not_followed #1 assumptions 4 (ASM 0 = newest)
+1111:  GOAL_END toy_bad_not_followed #1
+1114:  GOAL_COUNT 1
+1115:  GOAL_BEGIN toy_bad_not_followed #1 assumptions 4 (ASM 0 = newest)
+1204:  GOAL_END toy_bad_not_followed #1
+1208:  GOAL_COUNT 1
+1209:  GOAL_BEGIN toy_bad_not_followed #1 assumptions 4 (ASM 0 = newest)
+1298:  GOAL_END toy_bad_not_followed #1
+1302:CLOSED_NAMES shift_seq_shift_seq shift_seq_0 shift_seq_1_pred trace_next_interfer_ffi trace_next_interfer_shift trace_ffi_interfer_nil trace_ffi_interfer_step trace_ffi_interfer_shift trace_next_interfer_proj trace_next_interfer_ok trace_ffi_interfer_guar
+1305:EXPLORE_COMPLETE
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 0

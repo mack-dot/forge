@@ -71,7 +71,7 @@ fun fth thy nm = DB.fetch thy nm
 fun chk name th = (tags name th; pr ("CHECKED " ^ name ^ "\n" ^ thm_to_string th));
 
 val NV_PROOF_MODE = false;
-val NVDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/nonvacuity/";
+val NVDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/nonvacuity/";
 val _ = (pr "MARK USE nv_common.sml"; use (NVDIR ^ "nv_common.sml"); pr "PART_DONE nv_common.sml");
 val _ = (pr "MARK USE nv_steps.sml"; use (NVDIR ^ "nv_steps.sml"); pr "PART_DONE nv_steps.sml");
 val _ = (pr "MARK USE nv_explore_calls.sml"; use (NVDIR ^ "nv_explore_calls.sml"); pr "PART_DONE nv_explore_calls.sml");

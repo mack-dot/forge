@@ -1,0 +1,31 @@
+--- TR-0003.sml	2026-11-19 10:59:59.976826374 -0500
++++ TR1-0001.sml	2026-11-19 11:20:22.271443097 -0500
+@@ -1,3 +1,9 @@
++(* TR1-0001.sml (worker W-trace, round 3): PART 1 proof, theory forge_machineTrace. NOT RUN. = TR-0003.sml with only:
++   this comment; the shared files tr_part1.sml + tr_select_part1.sml read between tr_steps2.sml and tr_prove.sml (the list
++   proved = the 37 lemmas that closed in TRx-0003, all REQUIRED; toy ones only if TOY_DEFS_OK); one more check (stored
++   list = that list exactly). No check names trace_terminate, trace_fail, trace_diverge, toy_bad_not_followed.
++   Step lists and statements: the unchanged entries of tr_steps2.sml. Same harness (tags, hypotheses, axioms, generic
++   constants, EXACT_COMPLETE after export_theory). *)
+ (* TR-0003.sml (worker W-trace, round 2): = trace_v1.sml with Thread.Thread. -> Thread., Thread.Mutex. -> Mutex.
+    (pinned HOL, ConcIsaLib.sml lines 1, 6), shared files tr_common2.sml / tr_steps2.sml.
+    NOT RUN. See CHANGES_TR.txt. *)
+@@ -89,6 +95,8 @@
+ val TRDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/trace/";
+ val _ = (pr "MARK USE tr_common2.sml"; use (TRDIR ^ "tr_common2.sml"); pr "PART_DONE tr_common2.sml");
+ val _ = (pr "MARK USE tr_steps2.sml"; use (TRDIR ^ "tr_steps2.sml"); pr "PART_DONE tr_steps2.sml");
++val _ = (pr "MARK USE tr_part1.sml"; use (TRDIR ^ "tr_part1.sml"); pr "PART_DONE tr_part1.sml");
++val _ = (pr "MARK USE tr_select_part1.sml"; use (TRDIR ^ "tr_select_part1.sml"); pr "PART_DONE tr_select_part1.sml");
+ val _ = (pr "MARK USE tr_prove.sml"; use (TRDIR ^ "tr_prove.sml"); pr "PART_DONE tr_prove.sml");
+ 
+ (* ================= checks ================= *)
+@@ -122,6 +130,9 @@
+ val _ = if List.all (fn n => Lib.mem n (!stored_names)) REQUIRED
+         then pr ("CONTROL_OK all " ^ Int.toString (length REQUIRED) ^ " required lemmas stored")
+         else raise Fail "a required lemma is missing";
++val _ = if rev (!stored_names) = map #1 TR_LEMMAS
++        then pr ("CONTROL_OK stored list = part 1 exactly (" ^ Int.toString (length TR_LEMMAS) ^ " lemmas)")
++        else raise Fail "stored list differs from part 1";
+ val _ = pr ("STORED_NAMES " ^ String.concatWith " " (rev (!stored_names)));
+ val _ = pr ("STORED_THEOREMS " ^ Int.toString (length (DB.theorems THY)));
+ val _ = pr ("STORED_DEFINITIONS " ^ Int.toString (length (DB.definitions THY)));

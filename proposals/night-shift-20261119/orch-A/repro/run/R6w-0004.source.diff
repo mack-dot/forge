@@ -4,8 +4,8 @@
  
  (* ================= shared files (the same bytes as in R6wx-0001) ================= *)
  val R6W_PROOF_MODE = true;
--val R6WDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round9/";
-+val R6WDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/repro/run/r6/round9/";
+-val R6WDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round9/";
++val R6WDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/repro/run/r6/round9/";
  val _ = (pr "MARK USE r6w_common.sml"; use (R6WDIR ^ "r6w_common.sml"); pr "PART_DONE r6w_common.sml");
  val _ = (pr "MARK USE r6w_steps.sml"; use (R6WDIR ^ "r6w_steps.sml"); pr "PART_DONE r6w_steps.sml");
  val _ = (pr "MARK USE r6w_prove.sml"; use (R6WDIR ^ "r6w_prove.sml"); pr "PART_DONE r6w_prove.sml");

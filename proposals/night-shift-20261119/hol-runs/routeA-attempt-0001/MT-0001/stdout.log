@@ -1,0 +1,290 @@
+<<HOL message: Created theory "forge_refundModelFrameTot">>
+USED refund_model_frame_meets_exported_contract
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                evaluate_exps
+                  (exported_contract_state dafny_heap charge request original
+                     remaining enabled opened candidate amount reason ok a r
+                     c q n) dafny_env exported_ensures =
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n,Rval [BoolV T; BoolV T; BoolV T])
+USED refund_model_success_gives_frame
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  refund_env_ok_sl sl envmc ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀io.
+      machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+        (basis_ffi no_ext cl fs) ms (Terminate Success io) ⇒
+      refund_strict_parse (fd1_written io) =
+      SOME
+        (refund_fields charge request original remaining enabled opened
+           candidate amount reason)
+USED refund_env_ok_sl_of_contract_on
+⊢ interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ⇒
+  refund_env_ok_sl sl
+    (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+USED refund_env_with_ffi_interfer_fields
+⊢ (envmc with ffi_interfer := g).next_interfer = envmc.next_interfer ∧
+  (envmc with ffi_interfer := g).prog_addresses = envmc.prog_addresses ∧
+  (envmc with ffi_interfer := g).ffi_interfer = g
+USED refund_ffi_tot_def
+⊢ ∀Vok f k x.
+    refund_ffi_tot Vok f k x =
+    if Vok (FST x) (FST (SND x)) (SND (SND x)) then f k x
+    else refund_abs_ffi k x
+USED refund_ffi_contract_on_def
+⊢ ∀b dm Vok ffi_i.
+    refund_ffi_contract_on b dm Vok ffi_i ⇔
+    ∀k index new_bytes ms2 t1 bytes bytes2.
+      index < 4 ∧ t1.mem_domain = dm ∧
+      read_bytearray (ms2.REG 0w) (w2n (ms2.REG 1w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes ∧
+      read_bytearray (ms2.REG 2w) (w2n (ms2.REG 3w))
+        (λa. if a ∈ dm then SOME (ms2.MEM a) else NONE) = SOME bytes2 ∧
+      LENGTH new_bytes = LENGTH bytes2 ∧
+      target_state_rel arm8_target (t1 with pc := b − n2w ((3 + index) * 16))
+        ms2 ∧ aligned 2 (t1.regs 30) ∧ Vok index new_bytes ms2 ⇒
+      arm8_ok (ffi_i k (index,new_bytes,ms2)) ∧
+      (ffi_i k (index,new_bytes,ms2)).PC = t1.regs 30 ∧
+      (∀a. a ∈ dm ⇒
+           (ffi_i k (index,new_bytes,ms2)).MEM a =
+           asm_write_bytearray (t1.regs 2) new_bytes t1.mem a) ∧
+      ∀r. MEM r [19; 20; 21; 22; 23; 24; 25; 27; 28] ⇒
+          (ffi_i k (index,new_bytes,ms2)).REG (n2w r) = t1.regs r
+USED refund_ffi_tot_valid
+⊢ ∀Vok f k index new_bytes ms2.
+    Vok index new_bytes ms2 ⇒
+    refund_ffi_tot Vok f k (index,new_bytes,ms2) = f k (index,new_bytes,ms2)
+USED refund_ffi_tot_invalid
+⊢ ∀Vok f k index new_bytes ms2.
+    ¬Vok index new_bytes ms2 ⇒
+    refund_ffi_tot Vok f k (index,new_bytes,ms2) =
+    refund_abs_ffi k (index,new_bytes,ms2)
+CONTROL_OK MT1 antecedent is a right-nested conjunction of 11 conjuncts
+TYPE_SUBST_SIZE MT1 0
+CONTROL_OK MT2 antecedent is a right-nested conjunction of 11 conjuncts
+TYPE_SUBST_SIZE MT2 0
+BEGIN refund_model_frame_totalised
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundModelFrameTot)>>
+REWRITTEN_CONJUNCT MT1 (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer).
+prog_addresses = refund_mem_dm_sl sl h e ⇔
+envmc.prog_addresses = refund_mem_dm_sl sl h e
+Saved theorem _______ "refund_model_frame_totalised"
+CHECKED refund_model_frame_totalised
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem
+          (refund_mc (sl + 0x1000040D0w)
+             (envmc with
+              ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                evaluate_exps
+                  (exported_contract_state dafny_heap charge request original
+                     remaining enabled opened candidate amount reason ok a r
+                     c q n) dafny_env exported_ensures =
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n,Rval [BoolV T; BoolV T; BoolV T])
+BEGIN refund_model_success_totalised
+REWRITTEN_CONJUNCT MT2 (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer).
+prog_addresses = refund_mem_dm_sl sl h e ⇔
+envmc.prog_addresses = refund_mem_dm_sl sl h e
+Saved theorem _______ "refund_model_success_totalised"
+CHECKED refund_model_success_totalised
+⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀io.
+      machine_sem
+        (refund_mc (sl + 0x1000040D0w)
+           (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+        (basis_ffi no_ext cl fs) ms (Terminate Success io) ⇒
+      refund_strict_parse (fd1_written io) =
+      SOME
+        (refund_fields charge request original remaining enabled opened
+           candidate amount reason)
+BEGIN refund_ffi_tot_observed_set
+Saved theorem _______ "refund_ffi_tot_observed_set"
+CHECKED refund_ffi_tot_observed_set
+⊢ ∀Obs f k index new_bytes ms2.
+    refund_ffi_tot (λi nb ms. (i,nb,ms) ∈ Obs) f k (index,new_bytes,ms2) =
+    if (index,new_bytes,ms2) ∈ Obs then f k (index,new_bytes,ms2)
+    else refund_abs_ffi k (index,new_bytes,ms2)
+BEGIN refund_ffi_tot_classification_ignores_counter
+Saved theorem _______ "refund_ffi_tot_classification_ignores_counter"
+CHECKED refund_ffi_tot_classification_ignores_counter
+⊢ ∀Vok f k1 k2 x.
+    refund_ffi_tot Vok f k1 x = f k1 x ∧ refund_ffi_tot Vok f k2 x = f k2 x ∨
+    refund_ffi_tot Vok f k1 x = refund_abs_ffi k1 x ∧
+    refund_ffi_tot Vok f k2 x = refund_abs_ffi k2 x
+BEGIN refund_ffi_contract_on_empty_predicate
+Saved theorem _______ "refund_ffi_contract_on_empty_predicate"
+CHECKED refund_ffi_contract_on_empty_predicate
+⊢ ∀b dm f. refund_ffi_contract_on b dm (λi nb ms. F) f
+BEGIN refund_ffi_tot_empty_predicate_is_abstract
+Saved theorem _______ "refund_ffi_tot_empty_predicate_is_abstract"
+CHECKED refund_ffi_tot_empty_predicate_is_abstract
+⊢ ∀f. refund_ffi_tot (λi nb ms. F) f = refund_abs_ffi
+MARK CHECKS
+FAILED_LIST 
+CONTROL_OK MT1 stored statement is the built statement
+CONTROL_OK MT1 conclusion = parent conclusion under envmc := envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer
+CONTROL_OK MT1 antecedent = parent antecedent with refund_env_ok_sl replaced by the two L1C premises
+CONTROL_OK MT1 antecedent contains no refund_env_ok_sl, no ffi_calls_ok, no refund_valid_event
+CONTROL_OK MT1 conclusion speaks only about refund_mc _ (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+CONTROL_OK MT1 Vok is free (the theorem holds for every predicate)
+CONTROL_OK MT2 stored statement is the built statement
+CONTROL_OK MT2 conclusion = parent conclusion under envmc := envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer
+CONTROL_OK MT2 antecedent = parent antecedent with refund_env_ok_sl replaced by the two L1C premises
+CONTROL_OK MT2 antecedent contains no refund_env_ok_sl, no ffi_calls_ok, no refund_valid_event
+CONTROL_OK MT2 conclusion speaks only about refund_mc _ (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer)
+CONTROL_OK MT2 Vok is free (the theorem holds for every predicate)
+STATEMENT_MT1 refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+refund_heap_clear_sl sl h e ∧
+envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+  envmc.ffi_interfer ∧
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+∃ms.
+  (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+  ∀b. machine_sem
+        (refund_mc (sl + 0x1000040D0w)
+           (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+        (basis_ffi no_ext cl fs) ms b ⇒
+      ∃t io.
+        b = Terminate t io ∧
+        ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+            g =
+            refund_fields charge request original remaining enabled opened
+              candidate amount reason ∧
+            fd1_written io =
+            explode
+              (refund_render_fields
+                 (refund_fields charge request original remaining enabled
+                    opened candidate amount reason)) ∧
+            ∀ok a r c q n.
+              g = (ok,a,r,c,q,n) ⇒
+              evaluate_exps
+                (exported_contract_state dafny_heap charge request original
+                   remaining enabled opened candidate amount reason ok a r c
+                   q n) dafny_env exported_ensures =
+              (exported_contract_state dafny_heap charge request original
+                 remaining enabled opened candidate amount reason ok a r c q
+                 n,Rval [BoolV T; BoolV T; BoolV T])
+STATEMENT_MT2 refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+refund_heap_clear_sl sl h e ∧
+envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+  envmc.ffi_interfer ∧
+stdin_content fs =
+SOME
+  (explode
+     (sexp_to_string
+        (refund_request charge request original remaining enabled opened
+           candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+∃ms.
+  (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+  ∀io.
+    machine_sem
+      (refund_mc (sl + 0x1000040D0w)
+         (envmc with ffi_interfer := refund_ffi_tot Vok envmc.ffi_interfer))
+      (basis_ffi no_ext cl fs) ms (Terminate Success io) ⇒
+    refund_strict_parse (fd1_written io) =
+    SOME
+      (refund_fields charge request original remaining enabled opened
+         candidate amount reason)
+REMAINING_NATIVE_PREMISE refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses Vok
+  envmc.ffi_interfer
+REMAINING_ENV_PREMISE interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses)
+NOTE With Vok := (\i nb ms. F) the native premise is trivially true (refund_ffi_contract_on_empty_predicate) and refund_ffi_tot (\i nb ms. F) f = refund_abs_ffi (refund_ffi_tot_empty_predicate_is_abstract): MT1/MT2 then speak about the machine with the abstract FFI effect only. The content for a real run lies entirely in the refinement statement X8: the real run must be a run of the totalised machine (with a Vok whose contract_on premise holds for the real FFI).
+NOTE refund_ffi_tot guards on the triple (index, new_bytes, ms2) only, not on the call counter k (refund_ffi_tot_classification_ignores_counter): an observed set is a set of triples; a triple that occurs twice is classified the same way both times (both times f k, or both times refund_abs_ffi k).
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CONTROL_OK closure contains forge_refundRouteA1 and forge_refundModelFrame
+PARENTS forge_refundModelFrame forge_refundRouteA2c
+STORED_THEOREMS 6
+Exporting theory "forge_refundModelFrameTot" ... done.
+Theory "forge_refundModelFrameTot" took 8.9s to build
+EXACT_COMPLETE

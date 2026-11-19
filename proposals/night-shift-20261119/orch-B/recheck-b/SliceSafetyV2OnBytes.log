@@ -1,0 +1,28 @@
+# owner=orchB-recheck start=2026-11-19T08:25:12Z cwd=<REPO>/results/night-shift-20261119/orch-B/b-signing
+# power: Now drawing from 'AC Power'
+# swap free MiB: 528
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects --log-format csv;LogFileName=<REPO>/results/night-shift-20261119/orch-B/recheck-b/SliceSafetyV2OnBytes.csv SliceSafetyV2OnBytes.dfy
+
+Dafny program verifier finished with 1632 verified, 0 errors
+Results File: <REPO>/results/night-shift-20261119/orch-B/recheck-b/SliceSafetyV2OnBytes.csv
+       59.20 real        39.68 user         4.08 sys
+           286654464  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              140484  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   6  signals received
+                3868  voluntary context switches
+              445934  involuntary context switches
+        335816059576  instructions retired
+        133818478525  cycles elapsed
+           320636344  peak memory footprint
+# end=2026-11-19T08:26:12Z
+exit 0

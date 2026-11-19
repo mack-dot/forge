@@ -5,11 +5,11 @@ System-wide memory free percentage: 71%
 START_STATE swap_free_mib=1719 memory_free_percent=71
 exit 1
 actual_exit 1 wall 76.331 cpu 107.611 rss_mib 3792 [] inputs_unchanged_after True
-Uncaught exception at /Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LE-0002/proof.sml:273: Fail "malformed"
+Uncaught exception at /Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LE-0002/proof.sml:273: Fail "malformed"
 39:CHECKED evaluate_Halt_reg
 47:STATEMENT_EVALUATE targetSem evaluate_Halt_reg
 50:CHECKED machine_sem_of_evaluate_Halt
 57:CHECKED refund_halt_address
-62:/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/LE-0002/proof.sml:273:36: parse error: bad declaration
+62:/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/LE-0002/proof.sml:273:36: parse error: bad declaration
 hash_parents exit 0
 go exit 1

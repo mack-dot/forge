@@ -16,7 +16,7 @@ fun trunc n s = if size s <= n then s else String.substring (s, 0, n) ^ " ...";
 
 (* ================= LOAD ================= *)
 val _ = pr "MARK LOAD";
-val CK = "/Users/mackianni/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
+val CK = "/Users/USER/forge/.toolchain/experiments/refund-cakeml-20261104/cakeml";
 val _ = loadPath := !loadPath @ map (fn d => CK ^ "/" ^ d)
           ["characteristic", "basis", "basis/pure", "translator", "semantics", "semantics/proofs",
            "semantics/ffi", "compiler/backend/semantics", "misc"];
@@ -209,7 +209,7 @@ fun tlim secs (tac : tactic) (g : goal) (ctxt : Context.t) =
 
 (* ================= shared files ================= *)
 val R6W_PROOF_MODE = false;
-val R6WDIR = "/Users/mackianni/forge/results/night-shift-20261119/orch-A/r6/round8/";
+val R6WDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round8/";
 fun use_part (f : string) : bool =
   (pr ("MARK USE " ^ f); use (R6WDIR ^ f); pr ("PART_DONE " ^ f); true)
   handle e => (pr ("PART_FAILED " ^ f ^ " " ^ trunc 800 (General.exnMessage e)); false);

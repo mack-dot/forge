@@ -1,0 +1,12 @@
+0a1,3
+> (* R6tx-0004.sml (worker W-top2, round15). EXPLORATION, NOT RUN. = attempt-0001/R6tx-0003.sml (ran: exit 0,
+>    EXPLORE_COMPLETE) with only: this comment, R6TDIR = round15/, scratch theory name forge_refundR6TExplore3
+>    (R6tx-0003 used forge_refundR6TExplore2). Shared-file change: round15/CHANGES.txt (IOFS_V_init steps only). *)
+75c78
+< val _ = new_theory "forge_refundR6TExplore2";
+---
+> val _ = new_theory "forge_refundR6TExplore3";
+254c257
+< val R6TDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round14/";
+---
+> val R6TDIR = "/Users/USER/forge/results/night-shift-20261119/orch-A/r6/round15/";

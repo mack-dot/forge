@@ -1,0 +1,23 @@
+CHANGES / STATE (worker W-x8glue, 2026-11-19). DRAFT. NOT RUN. Stopped early on the owner's wind-down order.
+Written: STATEMENTS.txt (priority; complete), xg_common.sml (statements + 2 definitions + controls; lines 161-190 of
+ trace/tr_common2.sml copied byte for byte and checked with diff), xg_steps.sml (step lists with alternatives, lemma
+ table XG_LEMMAS), deps-XG.txt (= attempt-0001/deps-MG.txt + MT-0001 and TR1-0001 theory lines), deps-XG2.txt
+ (+ TR2-0001 lines = SWITCH_TR2 on). Every deps path resolves on disk (directly or via <dir>/.hol/objs). ASCII checked.
+INCOMPLETE:
+ 1. Drivers XGx-0001.sml (exploration) and XG-0001.sml (proof) are NOT written. Plan: XGx = TRx-0004 harness byte for
+    byte (no load block; NAMED_CONSTS changed; scratch theory forge_refundX8GlueExplore), then use xg_common.sml,
+    xg_steps.sml, "val TR_LEMMAS = XG_LEMMAS;", use trace/tr_explore_calls.sml. XG = TR2-0001 harness, parent checks
+    (forge_machineTrace, forge_refundModelFrameTot), new_theory "forge_refundX8Glue", XG_PROOF_MODE = true, same uses,
+    then trace/tr_prove.sml, then the TR2-0001 closure checks (4 bool axioms; required lemmas stored).
+ 2. No static syntax check (check_sml.py) was run on xg_common.sml / xg_steps.sml.
+ 3. Run commands not issued (drivers missing). Intended: cp drivers to attempt-0001; ./nightshift-run.sh XGx-0001 1200
+    deps-XG.txt; then XG-0001 only if all required lemmas show TRY_HELPER_CLOSED.
+DOUBTS (by reading only):
+ D1 XG_mc_eq needs simp to normalise record update chains (fupdcanon); alternatives use component equality.
+ D2 XG_compose step "the M3 state is ms0" assumes strip_tac names the M3 witness "ms".
+ D3 REWRITE_TAC with implication assumptions (case default of XG_contract_at) relies on (P ==> Q) = T rewrites;
+    metis/fs alternatives given.
+ D4 mk_parts relies on the quantifier orders of evaluate_follows_trace (P G g tr mc st ms k), trace_io
+    (P G tr mc st ms), term_after (mc st ms mc2 st2 ms2 n t io), trace_ffi_interfer_guard (G tr g ms0 k x), read
+    from trace/tr_common2.sml, not from the stored .dat.
+ D5 hol_type equality tests in controls (armty = :arm8_state) are assumed to be available.

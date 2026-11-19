@@ -1,0 +1,312 @@
+TIMEOUT_HELPER Timeout.apply loaded
+MARK LOAD
+LOAD_OK cfHeapsBaseTheory
+LOAD_OK cfStoreTheory
+LOAD_OK cfMainTheory
+LOAD_OK cfAppTheory
+LOAD_OK TextIOProofTheory
+LOAD_OK basis_ffiTheory
+LOAD_OK ml_progTheory
+LOAD_OK semanticsPropsTheory
+LOAD_OK targetSemTheory
+LOAD_OK targetPropsTheory
+LOAD_OK rich_listTheory
+LOAD_OK forge_refundStdioProgTheory
+LOAD_OK forge_refundWholeProgTheory
+LOAD_OK cfLib
+LOAD_OK basis_ffiLib
+LOAD_OK basisFunctionsLib
+<<HOL message: Created theory "forge_refundR6Ffi">>
+MARK USE r6_common.sml
+MARK GRAMMAR
+GRAMMAR_BEFORE type_v_from flatSem ; xlet_auto_dummy_spec FAILED HOL_ERR (HOL_ERROR {message = "\nType error in function application.\n  Function: $POSTv :(semanticPrimitives$v -> (heap_part -> bool) -> bool) ->\nres -> (heap_part -> bool) -> bool\n  Argument: \206\187v. &T :v -> (\206\177 -> bool) -> bool\n  Reason: Attempt to unify different type operators: semanticPrimitives$v and flatSem$v\n", origins = [{origin_function = "type-analysis", origin_structure  ...
+TYPE_REPRIVILEGED ffi_result was cfHeapsBase now ffi
+TYPE_REPRIVILEGED shift was wordLang now ast
+TYPE_REPRIVILEGED pat was pattern_semantics now ast
+TYPE_REPRIVILEGED op was flatLang now ast
+TYPE_REPRIVILEGED locs was location now ast
+TYPE_REPRIVILEGED lit was dafny_ast now ast
+TYPE_REPRIVILEGED exp was dafny_ast now ast
+TYPE_REPRIVILEGED arith was asm now ast
+TYPE_REPRIVILEGED v was flatSem now semanticPrimitives
+TYPE_REPRIVILEGED state was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED sem_env was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED result was word_to_stackProof now semanticPrimitives
+TYPE_REPRIVILEGED error_result was dafny_semanticPrimitives now semanticPrimitives
+TYPE_REPRIVILEGED dest_thunk_ret was flatSem now semanticPrimitives
+GRAMMAR_AFTER_B type_v_from semanticPrimitives ; xlet_auto_dummy_spec OK
+GRAMMAR_FIX B
+MARK DEFS
+DEFINITION ⊢ ∀Inv fs.
+    IOxV Inv fs =
+    SEP_EXISTS events.
+      one
+        (FFI_part (encode fs) (mk_ffi_next fs_ffi_part)
+           (MAP FST (SND (SND fs_ffi_part))) events) * &EVERY Inv events *
+      &¬MEM «» (MAP FST (SND (SND fs_ffi_part)))
+DEFINITION ⊢ ∀Inv fs.
+    IOFS_V Inv fs =
+    IOxV Inv fs * (SEP_EXISTS v. W8ARRAY iobuff_loc v * &(LENGTH v = 2052)) *
+    &wfFS fs
+DEFINITION ⊢ ∀Inv fs.
+    STDIO_V Inv fs =
+    (SEP_EXISTS ll. IOFS_V Inv (fs with numchars := ll)) * &STD_streams fs
+MARK INV_HELPERS
+MARK STATEMENTS
+STATEMENT X9
+∀Inv fs. FFI_part_hprop (IOFS_V Inv fs)
+STATEMENT X8
+∀Inv fs. IOxV Inv fs ==>> IOx fs_ffi_part fs
+STATEMENT writei_spec_V
+wfFS fs ⇒
+0 < n ⇒
+MAX (i + n) 2048 ≤ LENGTH rest ⇒
+i + n < 256² ⇒
+get_fd_content fs fd = SOME (content,pos) ⇒
+get_mode fs fd = SOME WriteMode ⇒
+FD fd fdv ⇒
+NUM n nv ⇒
+NUM i iv ⇒
+bc = h1::h2::h3::... ::... ⇒
+(∀nb. ... = ... ∧ ... = 0w ⇒ Inv (... ... )) ⇒
+... ... [... ; ... ] (... ... * ... ... )
+  (POSTve (λ... . ... ) (λe. ... * ... ))
+STATEMENT read_into_spec_V
+∀fs fd fdv n nv buf.
+  wfFS fs ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  n < 256² ⇒
+  MAX n 1024 ≤ LENGTH rest ⇒
+  get_fd_content fs fd ≠ NONE ⇒
+  get_mode fs fd = SOME ReadMode ⇒
+  (∀nb.
+     LENGTH nb = 4 + ... ... ∧ HD nb = 0w ⇒
+     Inv (... ... (... ... ) (ZIP (... ,... )))) ⇒
+  app p TextIO_read_into_v [fdv; buf; ... ]
+    (W8ARRAY buf (h1::... ::... ) * IOxV Inv fs)
+    (POSTve (λnrv. SEP_EXISTS nr. ... * ... )
+       (λe. &... * &... * IOFS_WO_iobuff fs))
+PART_DONE r6_common.sml
+MARK USE r6_steps.sml
+R6_STEPS opened
+DELSIMPS_OK
+R6_STEPS loaded
+PART_DONE r6_steps.sml
+MARK USE r6_prove.sml
+BEGIN IOFS_V_FFI_part_hprop
+STEP_USED IOFS_V_FFI_part_hprop 1 intro candidate 0 goals_out 1
+STEP_USED IOFS_V_FFI_part_hprop 2 unfold candidate 0 goals_out 1
+STEP_USED IOFS_V_FFI_part_hprop 3 split candidate 0 goals_out 1
+STEP_USED IOFS_V_FFI_part_hprop 4 close candidate 0 goals_out 0
+Saved theorem _______ "IOFS_V_FFI_part_hprop"
+CHECKED IOFS_V_FFI_part_hprop
+⊢ ∀Inv fs. FFI_part_hprop (IOFS_V Inv fs)
+BEGIN IOxV_IMP_IOx
+STEP_USED IOxV_IMP_IOx 1 intro candidate 0 goals_out 1
+STEP_USED IOxV_IMP_IOx 2 unfold candidate 0 goals_out 1
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundR6Ffi)>>
+STEP_USED IOxV_IMP_IOx 3 xsimpl candidate 0 goals_out 1
+STEP_USED IOxV_IMP_IOx 4 close candidate 0 goals_out 0
+Saved theorem _______ "IOxV_IMP_IOx"
+CHECKED IOxV_IMP_IOx
+⊢ ∀Inv fs. IOxV Inv fs ==>> IOx fs_ffi_part fs
+BEGIN writei_spec_V
+STEP_USED writei_spec_V 1 prelude candidate 0 goals_out 2
+STEP_USED writei_spec_V 2 B1 lnext0 candidate 0 goals_out 1
+Adding nsLookup representation thms for [TextIOProg_env_13, TextIOProg_env_12, TextIOProg_env_11]
+Adding nsLookup representation thms for [TextIOProg_env_10, TextIOProg_env_9]
+Adding nsLookup representation thms for [TextIOProg_env_8]
+Adding nsLookup representation thms for 4 consts [TextIOProg_env_7, TextIOProg_env_6, ..., TextIOProg_env_4]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_3, TextIOProg_env_2, ..., TextIOProg_env]
+Adding nsLookup representation thms for 528 consts [MarshallingProg_env_1, MarshallingProg_env_0, ..., CommandLineProg_env_2]
+Using CF specification n2w2_spec from theory MarshallingProg
+Post condition: POSTv uv.
+  W8ARRAY iobuff_loc (insert_atI (n2w2 n) 0 (h1::h2::h3::h4::rest)) *
+  IOxV Inv fs * &UNIT_TYPE () uv
+Using CF specification n2w2_spec from theory MarshallingProg
+Post condition: POSTv uv1.
+  W8ARRAY iobuff_loc
+    (insert_atI (n2w2 i) 2 (n2w (n DIV 256)::n2w n::h3::h4::rest)) *
+  IOxV Inv fs * &UNIT_TYPE () uv1
+STEP_USED writei_spec_V 3 B1 n2w2_into_iobuff candidate 0 goals_out 1
+STEP_USED writei_spec_V 4 B1 xlet_ffi candidate 0 goals_out 2
+STEP_USED writei_spec_V 5 B1 unfold_pre (IOxV_def NEW) candidate 0 goals_out 1
+STEP_USED writei_spec_V 6 B1 xffi candidate 0 goals_out 1
+STEP_USED writei_spec_V 7 B1 open_post (IOxV_def NEW) candidate 0 goals_out 1
+STEP_USED writei_spec_V 8 B1 post_ffi + invariant (NEW) candidate 0 goals_out 0
+STEP_USED writei_spec_V 9 B1 invariant (NEW, leftover copy 1) candidate 0 goals_out 1
+STEP_USED writei_spec_V 10 B1 invariant (NEW, leftover copy 2) candidate 0 goals_out 1
+STEP_USED writei_spec_V 11 B1 cont abbrev candidate 0 goals_out 1
+Using translator specification word8_fromint_v_thm from theory Word8Prog
+Post condition: POSTv v.
+  W8ARRAY iobuff_loc (0w::m1::m0::n2w i::rest) * IOxV Inv fs' * &WORD8 1w v
+Using CF specification w8array_sub_spec from theory Word8ArrayProof
+Post condition: POSTv v'.
+  W8ARRAY iobuff_loc
+    (0w::n2w ((if n < k then n else k) DIV 256)::
+       n2w (if n < k then n else k)::n2w i::rest) * IOxV Inv fs' *
+  &WORD8 0w v'
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv.
+  W8ARRAY iobuff_loc
+    (0w::n2w ((if n < k then n else k) DIV 256)::
+       n2w (if n < k then n else k)::n2w i::rest) * IOxV Inv fs' *
+  &BOOL (0w = 1w) bv
+Using CF specification w22n_spec from theory MarshallingProg
+Post condition: POSTv nv1.
+  W8ARRAY iobuff_loc
+    (0w::n2w ((if n < k then n else k) DIV 256)::
+       n2w (if n < k then n else k)::n2w i::rest) * IOxV Inv fs' *
+  &NUM
+    (w22n
+       [n2w ((if n < k then n else k) DIV 256); n2w (if n < k then n else k)])
+    nv1
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv1.
+  W8ARRAY iobuff_loc
+    (0w::n2w ((if n < k then n else k) DIV 256)::
+       n2w (if n < k then n else k)::n2w i::rest) * IOxV Inv fs' *
+  &BOOL
+    (w22n
+       [n2w ((if n < k then n else k) DIV 256); n2w (if n < k then n else k)] =
+     0) bv1
+STEP_USED writei_spec_V 12 B1 cont reads candidate 0 goals_out 1
+STEP_USED writei_spec_V 13 B1 cont w22n candidate 0 goals_out 1
+STEP_USED writei_spec_V 14 B1 cont close candidate 0 goals_out 0
+STEP_USED writei_spec_V 15 B2 cases_ll candidate 0 goals_out 1
+Using CF specification n2w2_spec from theory MarshallingProg
+Post condition: POSTv uv.
+  W8ARRAY iobuff_loc (insert_atI (n2w2 n) 0 (h1::h2::h3::h4::rest)) *
+  IOxV Inv fs * &UNIT_TYPE () uv
+Using CF specification n2w2_spec from theory MarshallingProg
+Post condition: POSTv uv1.
+  W8ARRAY iobuff_loc
+    (insert_atI (n2w2 i) 2 (insert_atI (n2w2 n) 0 (h1::h2::h3::h4::rest))) *
+  IOxV Inv fs * &UNIT_TYPE () uv1
+STEP_USED writei_spec_V 16 B2 n2w2_into_iobuff candidate 0 goals_out 1
+STEP_USED writei_spec_V 17 B2 xlet_ffi candidate 0 goals_out 2
+STEP_USED writei_spec_V 18 B2 unfold_pre (IOxV_def NEW) candidate 0 goals_out 1
+STEP_USED writei_spec_V 19 B2 xffi candidate 0 goals_out 1
+STEP_USED writei_spec_V 20 B2 open_post (IOxV_def NEW) candidate 0 goals_out 1
+STEP_USED writei_spec_V 21 B2 post_ffi + invariant (NEW) candidate 0 goals_out 0
+STEP_USED writei_spec_V 22 B2 invariant (NEW, leftover copy 1) candidate 0 goals_out 1
+STEP_USED writei_spec_V 23 B2 invariant (NEW, leftover copy 2) candidate 0 goals_out 1
+Using translator specification word8_fromint_v_thm from theory Word8Prog
+Post condition: POSTv v.
+  W8ARRAY iobuff_loc (0w::0w::0w::n2w i::rest) *
+  IOxV Inv (fsupdate fs fd 1 pos content) * &WORD8 1w v
+Using CF specification w8array_sub_spec from theory Word8ArrayProof
+Post condition: POSTv v'.
+  W8ARRAY iobuff_loc (0w::0w::0w::n2w i::rest) *
+  IOxV Inv (fsupdate fs fd 1 pos content) * &WORD8 0w v'
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv.
+  W8ARRAY iobuff_loc (0w::0w::0w::n2w i::rest) *
+  IOxV Inv (fsupdate fs fd 1 pos content) * &BOOL (0w = 1w) bv
+Using CF specification w22n_spec from theory MarshallingProg
+Post condition: POSTv nv1.
+  W8ARRAY iobuff_loc (0w::0w::0w::n2w i::rest) *
+  IOxV Inv (fsupdate fs fd 1 pos content) * &NUM (w22n [0w; 0w]) nv1
+Using translator specification eq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv1.
+  W8ARRAY iobuff_loc (0w::0w::0w::n2w i::rest) *
+  IOxV Inv (fsupdate fs fd 1 pos content) * &BOOL (w22n [0w; 0w] = 0) bv1
+STEP_USED writei_spec_V 24 B2 cont reads candidate 0 goals_out 1
+Using a CF specification from the assumptions
+STEP_USED writei_spec_V 25 B2 xapp IH candidate 0 goals_out 1
+STEP_USED writei_spec_V 26 B2 numchars candidate 0 goals_out 1
+STEP_USED writei_spec_V 27 B2 fs_eq candidate 0 goals_out 1
+STEP_USED writei_spec_V 28 B2 side candidate 0 goals_out 1
+STEP_USED writei_spec_V 29 B2 close (IH antecedent H_inv: see alt 1) candidate 0 goals_out 0
+Saved theorem _______ "writei_spec_V"
+CHECKED writei_spec_V
+⊢ wfFS fs ⇒
+  0 < n ⇒
+  MAX (i + n) 2048 ≤ LENGTH rest ⇒
+  i + n < 256² ⇒
+  get_fd_content fs fd = SOME (content,pos) ⇒
+  get_mode fs fd = SOME WriteMode ⇒
+  FD fd fdv ⇒
+  NUM n nv ⇒
+  NUM i iv ⇒
+  bc = h1::h2::h3::... ::... ⇒
+  (∀nb. ... = ... ∧ ... = 0w ⇒ Inv (... ... )) ⇒
+  ... ... [... ; ... ] (... ... * ... ... )
+    (POSTve (λ... . ... ) (λe. ... * ... ))
+BEGIN read_into_spec_V
+STEP_USED read_into_spec_V 1 intro candidate 0 goals_out 1
+STEP_USED read_into_spec_V 2 xcf candidate 0 goals_out 1
+Adding nsLookup representation thms for [TextIOProg_env_34]
+Adding nsLookup representation thms for [TextIOProg_env_33]
+Adding nsLookup representation thms for 5 consts [TextIOProg_env_32, TextIOProg_env_31, ..., TextIOProg_env_28]
+Adding nsLookup representation thms for [TextIOProg_env_27, TextIOProg_env_26, TextIOProg_env_25]
+Adding nsLookup representation thms for 8 consts [TextIOProg_env_24, TextIOProg_env_23, ..., TextIOProg_env_17]
+Adding nsLookup representation thms for [TextIOProg_env_16, TextIOProg_env_15, TextIOProg_env_14]
+Using CF specification n2w2_spec from theory MarshallingProg
+Post condition: POSTv uv.
+  W8ARRAY buf (insert_atI (n2w2 n) 0 (h1::h2::h3::h4::rest)) * IOxV Inv fs *
+  &UNIT_TYPE () uv
+STEP_USED read_into_spec_V 3 n2w2_into_buf candidate 0 goals_out 1
+STEP_USED read_into_spec_V 4 simp candidate 0 goals_out 1
+STEP_USED read_into_spec_V 5 cases (NEW: both error paths closed by the new hypotheses) candidate 0 goals_out 1
+STEP_USED read_into_spec_V 6 xlet_succ candidate 0 goals_out 2
+STEP_USED read_into_spec_V 7 unfold_pre (IOxV_def NEW) candidate 0 goals_out 1
+STEP_USED read_into_spec_V 8 xffi candidate 0 goals_out 1
+STEP_USED read_into_spec_V 9 open_post (IOxV_def NEW) candidate 0 goals_out 1
+STEP_USED read_into_spec_V 10 post_ffi + invariant (NEW) candidate 0 goals_out 0
+STEP_USED read_into_spec_V 11 invariant (NEW, leftover copy 1) candidate 0 goals_out 1
+STEP_USED read_into_spec_V 12 invariant (NEW, leftover copy 2) candidate 0 goals_out 1
+Using CF specification w8array_sub_spec from theory Word8ArrayProof
+Post condition: POSTv v.
+  W8ARRAY buf
+    (0w::n2w (nr DIV 256)::n2w nr::h4::
+       (MAP (n2w ∘ ORD) (TAKE nr (DROP pos content)) ++ DROP nr rest)) *
+  IOxV Inv (bumpFD fd fs nr) * &WORD8 0w v
+Using translator specification word8_toint_v_thm from theory Word8Prog
+Post condition: POSTv nv1.
+  W8ARRAY buf
+    (0w::n2w (nr DIV 256)::n2w nr::h4::
+       (MAP (n2w ∘ ORD) (TAKE nr (DROP pos content)) ++ DROP nr rest)) *
+  IOxV Inv (bumpFD fd fs nr) * &NUM (w2n 0w) nv1
+Using translator specification neq_v_thm from theory mlbasicsProg
+Post condition: POSTv bv.
+  W8ARRAY buf
+    (0w::n2w (nr DIV 256)::n2w nr::h4::
+       (MAP (n2w ∘ ORD) (TAKE nr (DROP pos content)) ++ DROP nr rest)) *
+  IOxV Inv (bumpFD fd fs nr) * &BOOL T bv
+Using CF specification w22n_spec from theory MarshallingProg
+STEP_USED read_into_spec_V 13 continuation candidate 0 goals_out 0
+Saved theorem _______ "read_into_spec_V"
+CHECKED read_into_spec_V
+⊢ ∀fs fd fdv n nv buf.
+    wfFS fs ⇒
+    FD fd fdv ⇒
+    NUM n nv ⇒
+    n < 256² ⇒
+    MAX n 1024 ≤ LENGTH rest ⇒
+    get_fd_content fs fd ≠ NONE ⇒
+    get_mode fs fd = SOME ReadMode ⇒
+    (∀nb.
+       LENGTH nb = 4 + ... ... ∧ HD nb = 0w ⇒
+       Inv (... ... (... ... ) (ZIP (... ,... )))) ⇒
+    app p TextIO_read_into_v [fdv; buf; ... ]
+      (W8ARRAY buf (h1::... ::... ) * IOxV Inv fs)
+      (POSTve (λnrv. SEP_EXISTS nr. ... * ... )
+         (λe. &... * &... * IOFS_WO_iobuff fs))
+PART_DONE r6_prove.sml
+MARK CHECKS
+FAILED_LIST 
+CLOSURE_AXIOM bool.SELECT_AX
+CLOSURE_AXIOM bool.INFINITY_AX
+CLOSURE_AXIOM bool.ETA_AX
+CLOSURE_AXIOM bool.BOOL_CASES_AX
+CONTROL_OK closure contains forge_refundR6Base
+CONTROL_OK closure contains TextIOProof
+STORED_THEOREMS 4
+STORED_DEFINITIONS 3
+CONTROL_OK 4 theorems, 3 definitions
+CLOSURE_NODES 548
+Exporting theory "forge_refundR6Ffi" ... done.
+Theory "forge_refundR6Ffi" took 1m23s to build
+EXACT_COMPLETE

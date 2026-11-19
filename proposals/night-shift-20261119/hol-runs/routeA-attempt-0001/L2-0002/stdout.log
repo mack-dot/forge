@@ -83,7 +83,7 @@ CHECKED ffi_calls_ok_false_at_a_returning_call
     <|oracle := (λs st c b. Oracle_return st b); ffi_state := ();
       io_events := []|> (SUC 0) <|PC := 0w; REG := (λr. 0w)|>
 MARK L2
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:196: error: Type error in function application.
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:196: error: Type error in function application.
    Function: staged "L2-t1" L2_goal stages1 :
       ((thm -> (goal, thm) gentactic) ->
         term list * term -> (term list * term) list * 'a) ->
@@ -95,7 +95,7 @@ MARK L2
 Found near
   thmA "refund_ffi_tot_evaluate_agree" L2_goal
   [fn g => ... ... g, fn g => ... ...]
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:197: error: Type error in function application.
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:197: error: Type error in function application.
    Function: staged "L2-t2" L2_goal stages2 :
       ((thm -> (goal, thm) gentactic) ->
         term list * term -> (term list * term) list * 'a) ->
@@ -107,7 +107,7 @@ Found near
 Found near
   thmA "refund_ffi_tot_evaluate_agree" L2_goal
   [fn g => ... ... g, fn g => ... ...]
-/Users/mackianni/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:195: error: Type error in function application.
+/Users/USER/forge/results/m1b-routeA-20261119/attempt-0001/L2-0002/proof.sml:195: error: Type error in function application.
    Function: thmA "refund_ffi_tot_evaluate_agree" L2_goal :
       tactic list -> thm
    Argument: [fn g => ... ... mkInd g, fn g => ... ... g] :

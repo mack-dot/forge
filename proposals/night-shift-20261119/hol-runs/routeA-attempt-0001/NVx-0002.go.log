@@ -1,0 +1,21 @@
+2026-11-19T15:55:00Z
+Now drawing from 'AC Power'
+total = 9216.00M  used = 7934.50M  free = 1281.50M  (encrypted)
+System-wide memory free percentage: 47%
+DISK_FREE_GIB 84
+START_STATE swap_free_mib=1281 memory_free_percent=47
+USED_FILES_PRE 7 0e5b8fad06f1e323
+exit 1
+actual_exit 1 wall 113.561 cpu 85.387 rss_mib 2488 [] inputs_unchanged_after True
+Uncaught exception at /Users/USER/forge/results/night-shift-20261119/orch-A/nonvacuity/nv_common.sml:14: HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "find_term", origin_structure = "HolKernel", source_location = Loc_Unknown}]})
+85:CONTROL_OK the antecedent has exactly 17 free variables (8 premise + 9 request)
+86:CONTROL_OK antecedent of refund_profile_a_sl_shape = antecedent of refund_model_frame_decision_shape
+87:CONTROL_OK no free ext in the antecedent (ext := no_ext changes nothing in it)
+92:CONTROL_OK the bound variables of the old witness = s h stk e envmc fs cl of the antecedent (names and types)
+93:CONTROL_OK the free variables of the old witness are request fields of the antecedent
+94:CONTROL_OK the entry witness is at the same slide
+103:STATEMENT_FAILED ACC_FFI HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "find_term", origin_structure = "HolKernel", source_location = Loc_Unknown}]})
+104:Exception- HOL_ERR (HOL_ERROR {message = "", origins = [{origin_function = "find_term", origin_structure = "HolKernel", source_location = Loc_Unknown}]}) raised
+hash_parents exit 0
+USED_FILES_UNCHANGED true
+go exit 1

@@ -1,0 +1,11 @@
+--- a/ts/refund-finality/dispatcher.ts
++++ b/ts/refund-finality/dispatcher.ts
+@@ -62,7 +62,7 @@
+     if (!isToken(token) || canon(token) !== tokenText) return { ok: false, reason: "token is not canonical" };
+     const body = token.body;
+     if (body.specLockSha256 !== this.cfg.specLockSha256 || body.checkerSha256 !== this.cfg.checkerSha256) return { ok: false, reason: "ids are not the pinned ones" };
+-    if (body.requestId !== row.request_id) return { ok: false, reason: "request id is not the signed one" };
++    if (body.requestId !== row.request_id || body.intent.requestId !== row.request_id) return { ok: false, reason: "request id is not the signed one" };
+     let good = false;
+     try { const raw = signatureBytes(token.signature); good = raw !== null && verify(null, signedBytes(body), this.key, raw); } catch { good = false; }
+     if (!good) return { ok: false, reason: "signature does not verify" };

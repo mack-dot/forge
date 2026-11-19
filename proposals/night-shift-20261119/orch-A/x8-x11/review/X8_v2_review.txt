@@ -6,7 +6,7 @@ Object: orch-A/x8-x11/X8_statement_v2.txt, sha256 77822531d7eab0075901449ae9505a
         (473 lines). Line numbers "v2:NNN" refer to that file.
 Verdict words: HOLDS / FALSE / UNSURE / GAP (a needed premise or dependency with no discharger; not a false claim).
 "FALSE (as stated)" = the text, read literally, is false or unsatisfiable; a repair is named.
-Sources read (paths under /Users/mackianni/forge/):
+Sources read (paths under /Users/USER/forge/):
  L3   = .toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/model/arm8Script.sml
  STEP = .toolchain/experiments/refund-cakeml-20261104/HOL/examples/l3-machine-code/arm8/step/arm8_stepScript.sml
  TGT  = .toolchain/experiments/refund-cakeml-20261104/cakeml/compiler/encoders/arm8/arm8_targetScript.sml
@@ -191,8 +191,8 @@ R3.4 MG-0001 = refund_model_frame_decision_events (RA/MG-0001/stdout.log:249-297
 R3.5 NEW FALSE -- (E4) numchars indexing (v2:141-150).
      (E4) defines one numchars entry c_k for EVERY k < #F, including J_k = 2 (close) and J_k = 3 (open_in), with
      c_k := nw_k for J_k <> 0. In FS only read (bumpFD, LTL; FS:181-197) and write (fsupdate ... 1, LDROP 1;
-     FS:201-230) consume numchars. ffi_close / closeFD (FS:235-243, 371-382) and ffi_open_in / openFile
-     (FS:258-273) do NOT touch numchars. Also the error branches of ffi_read / ffi_write (`++ return (FFIreturn
+     FS:201-230) consume numchars. ffi_close / closeFD (FS:234-241, 351-362) and ffi_open_in / openFile
+     (FS:265-279, openFile FS:126-136) do NOT touch numchars. Also the error branches of ffi_read / ffi_write (`++ return (FFIreturn
      (LUPDATE 1w 0 bytes) fs)`) consume nothing.
      => After the first reached close or open_in, every later read/write consumes the wrong entry. "nw_k" for a close
         is not even defined (fficlose writes only a[0], CFFI:191-197). v2:148 itself says "One numchars entry per
@@ -204,8 +204,8 @@ R3.5 NEW FALSE -- (E4) numchars indexing (v2:141-150).
 R3.6 NEW GAP -- no native assumption for close (J=2) and open_in (J=3).
      ML-11 hypotheses (v2:294) are N01-N08, N10, N12, plus model lemmas. For an F event with J_k in {2,3} nothing
      says that NB_k equals the model answer under fs_R, so VALID fails, refund_ffi_tot takes refund_abs_ffi, and the
-     simulation loses the real run. Worse, by reading FS:235-243 closeFD asserts isFile fnm, so a model close of a
-     standard stream (UStream) returns error code 1 (FS:378-380), while real close(1) returns 0 (CFFI:195): the model
+     simulation loses the real run. Worse, by reading FS:234-241 closeFD asserts isFile fnm, so a model close of a
+     standard stream (UStream) returns error code 1 (FS:351-362), while real close(1) returns 0 (CFFI:195): the model
      answer and the real answer DIFFER. Model open_in on fs_R (no files) fails; a real open_in may succeed.
      Repair: add a native row "no F event with J_k IN {2,3} occurs in X" (falsifier: a call trace), or state exact
      semantics rows for them. Without one, ML-11 cannot be proved for such runs and they must be outside PREM
@@ -321,7 +321,7 @@ R8. LIST OF FALSE ITEMS (for the hand-back)
  F2 N01 A-CPU-ISA as worded (v2:156-160): exception of s^ unconstrained; NextStateARM8 = NONE when exception <>
     NoException (STEP:19-22) -> N01 unsatisfiable -> X8 vacuous. Repair: add s^.exception = NoException.
  F3 (E4) numchars indexing (v2:141-150): one entry per FFI call incl. close/open_in, but only read/write consume
-    numchars (FS:181-230 vs FS:235-243, 258-273, 371-382). Repair: index by reached reads/writes only.
+    numchars (FS:181-230 vs FS:126-136, 234-241, 265-279, 351-362). Repair: index by reached reads/writes only.
  GAPS (not false, no discharger): G1 no native row for close/open_in F events (model close of a std stream returns
     1, real returns 0); G2 ML-10 lacks the erase bridge for the 27 entry steps; G3 MG-0001's VokY3 contract and R6
     premises have no v2 discharger (v2 does not use MG-0001).
