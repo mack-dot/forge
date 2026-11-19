@@ -11,7 +11,7 @@ A SIGKILL is not a power loss.
 
 Directive and owner decisions: [OWNER_TEXTS.md](OWNER_TEXTS.md).
 Review and its disposition: [REVIEW.md](REVIEW.md).
-Entries: `unsure.md` U700 to U705.
+Entries: `unsure.md` U700 to U706.
 
 ## 1. What was built
 
@@ -321,8 +321,10 @@ The repairs were NOT reviewed again.
 The first commit of this work is `a51984bb`. The regression ran on a
 fresh scratch clone of exactly that commit
 (`run_regression.py`; record `records/regression.json`). The second
-commit holds this section, the regression record, entry U705 and one
-changed row of `ROADMAP.md`: documents only.
+commit (`c3889be2`) holds this section, the regression record, entry
+U705 and one changed row of `ROADMAP.md`: documents only. A third
+commit records the push, the pull request and the hosted result of the
+second commit (entry U706): documents only again.
 
 | EXIT command/check | Actual exit/result | Result |
 | --- | --- | --- |
@@ -334,7 +336,10 @@ changed row of `ROADMAP.md`: documents only.
 | `scripts/exit_silicon_sink.py --case evidence` in the clone |0|bundle `1f569fcf…`: byte-identical to the tracked record (third and fourth full run of the suite and of the 49 changed copies) |
 | protected paths among the 13 files changed against the merge base |0|`spec/`, `spec.lock`, `policy/`, `governance/gate-ratifications/`, `package.json`, `package-lock.json`, `tsconfig.json`, `gate/`: none |
 | Stage 7; Stage 9; Stage 10; any HOL or Holmake process |NOT RUN|Docker time; deferred; no EXIT script on `main`; not part of this work |
-| the push; the pull request; the hosted `gate/pr_check.py` |NOT RUN at this commit|they follow this commit. Their results are in the pull request and in the final message of the session; a record follows with the next change |
+| `git push -u origin feat/native-silicon-sink`; `gh pr create` (pull request 62) |0; 0|no administrator rights used; the agent did not merge |
+| `check_links.py` for `ROADMAP.md`, `unsure.md`, this report, the review, the owner's texts; `check_frozen_pr_gate.py HEAD`, on the second commit |0 each (5); 0|run in the working repository, not in a clone |
+| hosted `gate/pr_check.py`, pull request 62, head `c3889be2`, run 44591773836 (Linux profile) |3|UNSUPPORTED, as expected: every obligation that ran holds; 14 coverage findings (changed paths that no obligation lists) |
+| hosted `gate/pr_check.py` for the third commit (this record) |NOT RECORDED here|it runs after the push of this record; expected 3 |
 
 The Stage runs wrote result files under `results/` in the clone only.
 The clone is a throwaway folder; nothing of it is in the repository.

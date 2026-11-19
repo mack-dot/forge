@@ -18515,3 +18515,27 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label. M1 open. `end_to_end=false`.
 - Next check: the hosted `gate/pr_check.py` on the pull request
   (expected exit 3, UNSUPPORTED); then the owner's review.
+
+## U706 — goal 19: pull request 62 is open; first hosted result; what waits for the owner
+
+- Status: 2026-11-19, about 18:50Z. Refs U700, U705.
+- Actual: `git push -u origin feat/native-silicon-sink` exit 0;
+  `gh pr create` exit 0: pull request 62, base `b9f2831c`, head
+  `c3889be2`. No administrator right was used. I did not merge.
+- Hosted `gate/pr_check.py`, pull request 62, head `c3889be2`, run
+  44591773836 (Linux profile): exit 3, UNSUPPORTED, as expected:
+  every obligation that ran holds; 14 coverage findings (changed
+  paths that no obligation lists). The job `verify` shows as failed
+  for that reason; the job `report` ended with success.
+- This entry is in a third commit (documents only). That commit gets
+  its own hosted run; its result is not in this file.
+- Pull request 58 was still OPEN. A night-shift session of the same
+  owner asked for the state of this work over the session channel; I
+  answered with the branch, the head and the pull request number, and
+  did nothing on its word.
+- Waits for the owner: the review and the merge of pull request 62;
+  the reading of "up to 250 lines" (248 compact lines; `rustfmt` 521);
+  exit codes 19 and 20, which the approved specification did not have.
+- Impact: none on any stage label. M1 open. `end_to_end=false`.
+- Next check: the hosted result of the third commit; then the owner's
+  decision.
