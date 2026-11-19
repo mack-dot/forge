@@ -1,0 +1,241 @@
+[
+ {
+  "mutant": "drop-post-compare",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL H/miscompiled-ignore-post/wrong-post-remaining SIGN",
+   "FAIL H/miscompiled-ignore-post/wrong-post-original SIGN",
+   "FAIL H/miscompiled-ignore-post/wrong-post-chargeId SIGN",
+   "FAIL H/miscompiled-ignore-post/wrong-post-enabled SIGN",
+   "FAIL M/E1-remaining-50/accept-all-check SIGN",
+   "FAIL M/E2-original-1000/accept-all-check SIGN"
+  ],
+  "n_fail": 7,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "drop-intent-compare",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL H/miscompiled-ignore-intent/wrong-intent-chargeId SIGN",
+   "FAIL H/miscompiled-ignore-intent/wrong-intent-requestId SIGN",
+   "FAIL H/miscompiled-ignore-intent/wrong-intent-amount SIGN",
+   "FAIL H/miscompiled-ignore-intent/wrong-intent-reason SIGN"
+  ],
+  "n_fail": 4,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "ignore-check-ALL",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL real/reject-disabled ('FRAME_NOT_AUTHORIZED_TUPLE', False)",
+   "FAIL real/post-wrong-real-check POST_MISMATCH",
+   "FAIL M/E1-remaining-50/real-check POST_MISMATCH",
+   "FAIL M/E2-original-1000/real-check POST_MISMATCH",
+   "FAIL M/E3-remaining-40/real-check POST_MISMATCH",
+   "FAIL native-wrong/authorize-all/real-check-refuses ('SIGN', False)"
+  ],
+  "n_fail": 7,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "ignore-native-frame",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL H/accept-all-check/amount-over-remaining POST_MISMATCH",
+   "FAIL standin/field-authorized POST_MISMATCH",
+   "FAIL standin/field-amount POST_MISMATCH",
+   "FAIL standin/field-reason INTENT_MISMATCH",
+   "FAIL standin/field-charge SIGN",
+   "FAIL standin/field-request INTENT_MISMATCH"
+  ],
+  "n_fail": 8,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "frame-compare-fields-only",
+  "exit": 0,
+  "status": "SURVIVED",
+  "failing_tests": [],
+  "n_fail": 0,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "frame-compare-plain-eq",
+  "exit": 0,
+  "status": "SURVIVED",
+  "failing_tests": [],
+  "n_fail": 0,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "post-from-candidate-amount",
+  "exit": 0,
+  "status": "SURVIVED",
+  "failing_tests": [],
+  "n_fail": 0,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "intent-request-from-candidate",
+  "exit": 0,
+  "status": "SURVIVED",
+  "failing_tests": [],
+  "n_fail": 0,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "intent-decode-latin1",
+  "exit": 0,
+  "status": "SURVIVED",
+  "failing_tests": [],
+  "n_fail": 0,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "encode-latin1",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL real/unicode-stdout-is-utf8-literal ('SIGN', b'(refund-result-v1 True 60 service_not_delivered \"\\xe9?? \\\\\"q\\\\\"\\\\\\\\\\\\t\" \"r 7\\\\t)(\" 1)')"
+  ],
+  "n_fail": 1,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "hash-of-post",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL real/auth-token-recomputed-and-hash-equals-JS-canon {'preStateSha256': 'd98a4e27629e68c2b31d984613e8136906502c9da5c275de2fcdb0025f0eb9c4', 'requestId': 're",
+   "FAIL real/unicode-token-recomputed-and-hash-equals-JS-canon {'preStateSha256': '41a236660a004934f03eeaf9090ec70f51031cbee586c94425461176190eba53', 'requestId': ",
+   "FAIL real/max-token-recomputed-and-hash-equals-JS-canon {'preStateSha256': 'fd6f081b9e911edd6d3b94cef6ebf4a44284f778b9e6c03ea3bc58f49b1ecd96', 'requestId': 'r',"
+  ],
+  "n_fail": 3,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "token-from-candidate",
+  "exit": 0,
+  "status": "SURVIVED",
+  "failing_tests": [],
+  "n_fail": 0,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "range-drop-bool-type",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL E5/post-enabled-int ('CHECK_REFUSE', True)",
+   "FAIL range/enabled-int ('CHECK_ERROR', True)",
+   "FAIL planted/E6-out-of-range-honest-run (False, 'POST_MISMATCH')"
+  ],
+  "n_fail": 3,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "range-drop-text-length",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL range/id-257 ('CHECK_REFUSE', True)",
+   "FAIL range/id-129-astral ('CHECK_REFUSE', True)"
+  ],
+  "n_fail": 2,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "decide2-drop-range",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL planted/E6-out-of-range-honest-run (False, 'POST_MISMATCH')"
+  ],
+  "n_fail": 1,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "drop-stderr-check",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL standin/stderr-noise SIGN",
+   "FAIL planted/stderr-with-frame (True, 'SIGN')"
+  ],
+  "n_fail": 2,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "drop-exit-check",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL standin/exit3 SIGN",
+   "FAIL planted/exit1-with-frame (True, 'SIGN')"
+  ],
+  "n_fail": 2,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "drop-stdin-complete",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL planted/stdin-incomplete (True, 'SIGN')"
+  ],
+  "n_fail": 1,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "drop-copy-unchanged",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL planted/binary-changed (True, 'SIGN')"
+  ],
+  "n_fail": 1,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "drop-timeout-check",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL planted/timeout-with-frame (True, 'SIGN')"
+  ],
+  "n_fail": 1,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "drop-signal-check",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL standin/sigterm EXIT_NONZERO",
+   "FAIL planted/signal-with-frame (False, 'EXIT_NONZERO')"
+  ],
+  "n_fail": 2,
+  "stderr_tail": ""
+ },
+ {
+  "mutant": "count-not-checked",
+  "exit": 1,
+  "status": "KILLED",
+  "failing_tests": [
+   "FAIL real/auth FRAME_NOT_AUTHORIZED_TUPLE",
+   "FAIL real/zero FRAME_NOT_AUTHORIZED_TUPLE",
+   "FAIL real/unicode FRAME_NOT_AUTHORIZED_TUPLE",
+   "FAIL real/max FRAME_NOT_AUTHORIZED_TUPLE",
+   "FAIL real/unicode-stdout-is-utf8-literal ('FRAME_NOT_AUTHORIZED_TUPLE', b'(refund-result-v1 True 60 service_not_delivered \"\\xc3\\xa9\\xe2\\x82\\xac\\xf0\\x9f\\x98\\x80 ",
+   "FAIL H/miscompiled-ignore-post/wrong-post-remaining FRAME_NOT_AUTHORIZED_TUPLE"
+  ],
+  "n_fail": 22,
+  "stderr_tail": ""
+ }
+]

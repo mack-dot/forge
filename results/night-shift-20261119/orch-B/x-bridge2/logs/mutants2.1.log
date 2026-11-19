@@ -1,0 +1,23 @@
+KILLED drop-post-compare 7 FAIL H/miscompiled-ignore-post/wrong-post-remaining SIGN
+KILLED drop-intent-compare 4 FAIL H/miscompiled-ignore-intent/wrong-intent-chargeId SIGN
+KILLED ignore-check-ALL 7 FAIL real/reject-disabled ('FRAME_NOT_AUTHORIZED_TUPLE', False)
+KILLED ignore-native-frame 8 FAIL H/accept-all-check/amount-over-remaining POST_MISMATCH
+SURVIVED frame-compare-fields-only 0 
+SURVIVED frame-compare-plain-eq 0 
+SURVIVED post-from-candidate-amount 0 
+SURVIVED intent-request-from-candidate 0 
+SURVIVED intent-decode-latin1 0 
+KILLED encode-latin1 1 FAIL real/unicode-stdout-is-utf8-literal ('SIGN', b'(refund-result-v1 True 60 service_not_delivered "\xe9?? \\"q\\"\\\\\
+KILLED hash-of-post 3 FAIL real/auth-token-recomputed-and-hash-equals-JS-canon {'preStateSha256': 'd98a4e27629e68c2b31d984613e8136906502c9da5c
+SURVIVED token-from-candidate 0 
+KILLED range-drop-bool-type 3 FAIL E5/post-enabled-int ('CHECK_REFUSE', True)
+KILLED range-drop-text-length 2 FAIL range/id-257 ('CHECK_REFUSE', True)
+KILLED decide2-drop-range 1 FAIL planted/E6-out-of-range-honest-run (False, 'POST_MISMATCH')
+KILLED drop-stderr-check 2 FAIL standin/stderr-noise SIGN
+KILLED drop-exit-check 2 FAIL standin/exit3 SIGN
+KILLED drop-stdin-complete 1 FAIL planted/stdin-incomplete (True, 'SIGN')
+KILLED drop-copy-unchanged 1 FAIL planted/binary-changed (True, 'SIGN')
+KILLED drop-timeout-check 1 FAIL planted/timeout-with-frame (True, 'SIGN')
+KILLED drop-signal-check 2 FAIL standin/sigterm EXIT_NONZERO
+KILLED count-not-checked 22 FAIL real/auth FRAME_NOT_AUTHORIZED_TUPLE
+mutants 22 killed 16 survived 6 not_applied 0

@@ -1,0 +1,48 @@
+# owner=x-bridge2 start=2026-11-19T11:04:14Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/controls/C5-reject-all
+# power: Now drawing from 'AC Power'
+# swap free MiB: 985
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/controls/C5-reject-all/Bridge2.dfy
+# memory free percent: 70
+Bridge2.dfy(144,2): Error: a postcondition could not be proved on this return path
+    |
+144 |   {
+    |   ^
+
+Bridge2.dfy(143,48): Related location: this is the postcondition that could not be proved
+    |
+143 |     ensures Bridge2(env, pre, t, check, native) == Sign(F.Token(env.h(pre), t.request.requestId, t.post, t.intent))
+    |                                                 ^^
+
+Bridge2.dfy(197,2): Error: a postcondition could not be proved on this return path
+    |
+197 |   {}
+    |   ^
+
+Bridge2.dfy(190,98): Related location: this is the postcondition that could not be proved
+    |
+190 |             Bridge2(IdEnv, pre, Tr(pre, "req_1", 40, "returned_item", 20), TrueCheck, SpecNative).Sign?
+    |                                                                                                   ^^^^^
+
+
+Dafny program verifier finished with 20 verified, 2 errors
+        3.26 real         2.84 user         0.16 sys
+           155713536  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15203  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                 267  voluntary context switches
+                7282  involuntary context switches
+         24707407608  instructions retired
+          9221899041  cycles elapsed
+           122700952  peak memory footprint
+# end=2026-11-19T11:04:18Z
+exit 4

@@ -1,0 +1,43 @@
+# owner=x-bridge2 start=2026-11-19T10:58:33Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/controls/C2-drop-intent
+# power: Now drawing from 'AC Power'
+# swap free MiB: 977
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/controls/C2-drop-intent/Bridge2.dfy
+# memory free percent: 69
+Bridge2.dfy(114,2): Error: a postcondition could not be proved on this return path
+    |
+114 |   {
+    |   ^
+
+Bridge2.dfy(111,24): Related location: this is the postcondition that could not be proved
+    |
+111 |     ensures F.Authorizes(pre, t)
+    |                         ^
+
+impl/RefundFinality.dfy(33,13): Related location: this proposition could not be proved
+   |
+33 |     t.intent == R.Intent(pre.chargeId, t.request.requestId, t.request.amount, t.request.reason)
+   |              ^^
+
+
+Dafny program verifier finished with 21 verified, 1 error
+        3.13 real         2.71 user         0.15 sys
+           161972224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15388  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   4  signals received
+                 256  voluntary context switches
+                4442  involuntary context switches
+         24529671172  instructions retired
+          8900024802  cycles elapsed
+           128976048  peak memory footprint
+# end=2026-11-19T10:58:37Z
+exit 4

@@ -81,3 +81,6 @@ Review r-top: the top-level lemmas hold; new no-hypothesis lemma: the same signe
 
 ## ADDENDUM 6 (2026-11-19T11:06:11Z) — differential for the repaired draft sink (U551)
 B's run in a fourth heavy window (11:03:39Z–11:05:53Z; heavy/v4-1): 0 divergences in all four modes for the repaired draft (v4) against the compiled V3 core, 3,500 sequences; controls diverge. §8's candidate for adoption is now d-v3sink2/sink_core_backed_v4.ts (with ShellCoreV4.dfy), not the v3 draft; open for it: the TypeScript loop against the proved fold, three database assumptions, rollback, authentic initial charge.
+
+## ADDENDUM 7 (2026-11-19T11:08:48Z) — the issuer bridge repaired (U552)
+x-bridge2 (B's runs: Bridge2.dfy exit 0, 22 verified; tests2.py 90 of 90 with the real native program): one input; post-state and intent recomputed from the native frame; model lemmas with the checker and the native program as parameters: a wrong checker alone, or a wrong native program alone, cannot cause a signature for an unauthorized transition (model level; the Python code is tested, not proved). This replaces the draft that addendum 3 found weak. Not applied.

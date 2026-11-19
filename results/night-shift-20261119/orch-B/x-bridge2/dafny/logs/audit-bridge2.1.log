@@ -1,0 +1,29 @@
+# owner=x-bridge2 start=2026-11-19T11:05:53Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny
+# power: Now drawing from 'AC Power'
+# swap free MiB: 985
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny audit <REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/Bridge2.dfy
+# memory free percent: 69
+Dafny auditor completed with 0 findings
+
+Dafny program verifier did not attempt verification
+        1.02 real         0.96 user         0.05 sys
+           130318336  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                9417  page reclaims
+                 561  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  35  voluntary context switches
+                 581  involuntary context switches
+          9133667903  instructions retired
+          3204416866  cycles elapsed
+            97567920  peak memory footprint
+# end=2026-11-19T11:05:54Z
+exit 0

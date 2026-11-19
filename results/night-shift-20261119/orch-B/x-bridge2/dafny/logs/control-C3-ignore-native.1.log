@@ -1,0 +1,43 @@
+# owner=x-bridge2 start=2026-11-19T11:00:12Z cwd=<REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/controls/C3-ignore-native
+# power: Now drawing from 'AC Power'
+# swap free MiB: 977
+# dafny: 4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2
+# cmd: dafny verify --solver-path <REPO>/.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1 --resource-limit 1000000 --verification-time-limit 0 --cores 1 --verify-included-files --track-print-effects <REPO>/results/night-shift-20261119/orch-B/x-bridge2/dafny/controls/C3-ignore-native/Bridge2.dfy
+# memory free percent: 70
+Bridge2.dfy(117,4): Error: assertion might not hold
+    |
+117 |     assert native(x) == Some(AuthTuple(x));
+    |     ^^^^^^
+
+Bridge2.dfy(235,2): Error: a postcondition could not be proved on this return path
+    |
+235 |   {}
+    |   ^
+
+Bridge2.dfy(230,12): Related location: this is the postcondition that could not be proved
+    |
+230 |             var other := F.Charge("ch_1", 100, 50, true);
+    |             ^^^
+
+
+Dafny program verifier finished with 20 verified, 2 errors
+        3.31 real         2.84 user         0.15 sys
+           158892032  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15380  page reclaims
+                   2  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 253  voluntary context switches
+                6287  involuntary context switches
+         24727693432  instructions retired
+          9239217533  cycles elapsed
+           125945080  peak memory footprint
+# end=2026-11-19T11:00:15Z
+exit 4
