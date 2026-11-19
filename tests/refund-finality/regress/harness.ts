@@ -138,7 +138,12 @@ export function runAll(h: Harness, list: Regression[]): number {
     try { o = r.run(h); } catch (e) { o = fail("regression threw: " + String((e as Error)?.message ?? e).slice(0, 160)); }
     h.end();
     if (!o.ok) fails++;
-    console.log(`${o.ok ? "PASS" : "FAIL"} ${r.id}: ${o.reason}`);
+    // A regression of kind "limit" records an UNSAFE outcome that is a stated, unfixed limit (for example a rollback
+    // without an outside anchor). When the limit still holds, the line says KNOWN-LIMIT, never PASS: a reader of the
+    // lines must not take an unsafe outcome for a pass (red team note on X6-P1). The exit code does not count it as
+    // a failure, because nothing regressed.
+    const word = !o.ok ? "FAIL" : (r.kind === "limit" && o.reason.startsWith("documented limit holds") ? "KNOWN-LIMIT" : "PASS");
+    console.log(`${word} ${r.id}: ${o.reason}`);
   }
   return fails;
 }

@@ -35,7 +35,7 @@ function main(argv: string[]): number {
   console.log(`# sink=${sink}\n# dispatcher=${disp}\n# encoding=${enc}\n# expectedHeadMode=${mode} node=${process.version}`);
   const h = new Harness(sink, disp, enc, mode === "none" ? null : resolve(mode));
   const fails = runAll(h, ALL);
-  console.log(`# ${ALL.length - fails} PASS, ${fails} FAIL`);
+  console.log(`# ${ALL.length - fails} not failed (PASS or KNOWN-LIMIT; a KNOWN-LIMIT line is an unsafe outcome that is a stated limit), ${fails} FAIL`);
   return fails === 0 ? 0 : 1;
 }
 if (require.main === module) process.exitCode = main(process.argv);
