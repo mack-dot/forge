@@ -19497,3 +19497,58 @@ curl: (6) Could not resolve host: github.com
 - Not counted as defects: a symbolic link in a parent directory is followed; a hard link starts (stated by B); a permission change after the start is not seen until the next start.
 - Uncertainty: key-id substitution was not attacked by a script of my own; an attacker with the same user id and a lost mint record are stated limits; "one effect per request id" with two valid tokens is tested, not proved.
 - Impact: none on stage labels. M1-B OPEN. end_to_end=false. The red-team discovery was stopped by the owner's order; orch-C/FINAL.md lists every finding with its status.
+
+## U660 — night shift, integration: one consolidated pull request from the three night-shift branches; content by path, no history merged; the hardening stays UNAPPLIED
+- Status: 2026-11-19T18:39Z (inserted by the shell from `date -u`). Refs U501, U631, U602, owner decisions D-1 to D-6. Evidence: proposals/night-shift-20261119/integration/README.md.
+- Done: branch `nightshift/consolidated-20261119` from `main` at `b9f2831c`. By path: A's records after pull request 59 (from `1a53594d`); nine Dafny model files under `impl/finality-core` and 1,125 of B's 11,869 evidence files (from `12d634f6`); 210 of C's 1,909 files (from `94a1ebe1`). Entries U500, U501, U530 to U579, U620 to U631, U580 to U602 were appended to this file verbatim, in that order. No existing entry was changed.
+- Paths: those entries and the records say `results/night-shift-20261119/...`. In the repository the files are under `proposals/night-shift-20261119/...`, where they are carried. The full evidence trees are only on the three branches (and in the closed pull requests 60 and 61).
+- NOT applied: the hardened sink, minter, dispatcher, provider adapter, their regression tests and the changed suite. They are two diffs under proposals/night-shift-20261119/unapplied. Reasons: the changed files are inputs of the recorded Slice 1, Slice 3 and M1 bundles; the merged 115-row suite stops with exit 2 on the hardened tree (row x1: its raw SQL write is now refused by the database); the owner has not accepted the changed expectations (B-15, B-16; the owner's plan is one later pull request).
+- Impact: on `main` the merged `sink.ts` keeps the two shown duplicate-effect defects (graph row U3) until that later pull request. M1-B OPEN. end_to_end=false. No stage CURRENT. Stage 12 unauthorized.
+- Uncertainty: the choice of the 1,335 carried evidence files was made by two workers by reading (minimal set: sources, commands, logs of the cited rows). A cited detail can point at a file that is not carried.
+- Next check: the owner's review of this pull request.
+
+## U661 — night shift, integration: what the inventories found against the final records (read only; nothing re-run for this entry)
+- Status: 2026-11-19T18:39Z (inserted by the shell from `date -u`). Refs U660. Evidence: proposals/night-shift-20261119/integration/{dafny-proofs.tsv,fixes.tsv,redteam-retests.tsv,B-code-notes.md}. Workers' readings; the integrator checked samples only.
+- Dafny: all 47 recorded verify runs have a stored log with the claimed count and exit 0. One source (`b-ser/SerModel.dfy`) was committed after its log.
+- Red team, 70 findings: 52 consistent; 13 are worker runs only; C-ATT-04, 10, 11, 12 are "closed" in one summary sentence of the attack log with no exit line per item (UNVERIFIED); C-ATT-20 is UNVERIFIED and its two stored worker logs disagree (exit 1 and exit 0). The integrator's pull request text does not count these five as closed by the red team. B's own regressions for the same class have stored logs with exit 0.
+- B's final record against its evidence: `c_att_16` has no stored log of B (the red team's log exists); the regression runner on the hardened tree had 26 ids, not 29 (29 is the later runner); the log header of the 24-round kill run names `7667574c`; the spec-conformance verdict "no violation" leaves out a class P5-SILENT by design (1,850, 1,820 and 1,900 of 5,000 sequences per mode; "a question for the owner" in the oracle) and the final record does not say so; the B-5(a) diff with digest 70910e2e… is not a file on the branch.
+- The red team's branch rewrote 13 existing lines of this file (it replaced the local home path in entries U019, U170, U188, U198, U200, U203, U255, U256, U324, U325, U326; in U203 the recorded fact changed). That breaks the append-only rule. The rewrite is NOT taken: those entries are as on `main`.
+- Impact: wording of the pull request only. Uncertainty: the inventories are readings by workers of the same model family.
+- Next check: none planned (owner decision D-6: no new long work on these items).
+
+## U662 — night shift, integration: the local user name in the night-shift records; fixed forward in one folder; what stays
+- Status: 2026-11-19T18:39Z (inserted by the shell from `date -u`). Refs U660, U203. Evidence: proposals/night-shift-20261119/integration/SANITIZE_MAP.tsv.
+- Found: pull request 59 put 761 files with the local user name (in absolute paths) under proposals/night-shift-20261119 on `main`; A's later records had 209 more; B's branch has 1,941 such files in one earlier commit (fixed forward there).
+- Done: no branch history is merged. In every file of that folder the byte string of the name is replaced by `USER` (959 files). The map gives SHA-256 before and after per file.
+- Cost: the SHA-256 values that A's records give for 132 `.sml` sources, and for JSON and log records, are the values BEFORE the change. The theory objects (`.sig`, `.dat`) are unchanged. A check of A's digests needs the map, or the branch `nightshift/A-proof`.
+- NOT fixed, and cannot be by a later commit: the history of `main` (pull request 59). NOT changed: about 610 files in other folders of `main` and 13 existing lines of this file.
+- The diff of the pull request was scanned before each push: 0 added lines with the name; 0 private keys, tokens or `.env` files; public keys and three SSH signatures of test material only.
+- Impact: none on any stage label. Next check: the owner may rewrite history or leave it; not an agent action.
+
+## U663 — night shift, integration: the integrator's own runs (three Dafny files; regressions on a scratch clone with the diffs applied); one control that is NOT valid
+- Status: 2026-11-19T18:39Z (inserted by the shell from `date -u`). Refs U660, U624, U628, U630. Evidence: proposals/night-shift-20261119/integration/{dafny-rerun,rerun-logs}.
+- MACHINE-CHECKED (model, source level; my run): `impl/finality-core/IssueAuth.dfy` 194 verified, `IssueOnce.dfy` 160, `ShellCoreV6.dfy` 192; exit 0 each; pinned Dafny 4.11.0, gate options, in the place where this pull request adds them.
+- TESTED (a worker's runs): both diffs apply to commit `77f8ec2d` (`git apply --check` exit 0); the patched `ts`, `tests`, `scripts` equal the tree of `12d634f6` except the one line with the replaced name. The issuer module built from `IssueAuth.dfy` has SHA-256 `fa855506…44e6`, the digest in the red team's D-2 record. 15 regression runs exit 0 (X1 and X2 through the runner; three dispatcher tests; two of the third sink change; two of D-2; four of D-1; three of D-3). `m3_zero_squat_limit` and `p3_rollback_rebind first none` exit 1: the two stated limits are present, as recorded.
+- NOT a result: the control with the MERGED sink and dispatcher exits 1, but the merged sink refused the honest token too (0 effects). It does not show the duplicate effect. Likely cause, not checked: the judge signs with the patched `encoding.ts`. The duplicate effect on the merged sink rests on the red team's and B's runs.
+- Two setup errors of the worker are recorded in the README (not results).
+- NOT RUN by the integrator: the changed 126-row suite, spec-conformance, kill loops, any HOL case.
+- Uncertainty: finite tests of unproved TypeScript; same machine; same model family.
+
+## U664 — night shift, integration: checks of the consolidated branch
+- Status: 2026-11-19T18:39Z (inserted by the shell from `date -u`). Refs U660. Evidence: proposals/night-shift-20261119/integration/checks/.
+- Scratch-clone check (fresh `git clone` of the pushed branch at `75f70919` into an empty folder; pinned tool folders linked; the repository's runner `proposals/forge2-m1-conformance/run_regression.py`): runner exit 0; 28 of 28 Stage EXIT cases exit 0; the EXIT scripts of Slices 1, 2, 3 and of M1 conformance exit 0 with bundle digests `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, equal to the recorded ones.
+- Frozen-gate check: `check_frozen_pr_gate.py HEAD` exit 0; 0 changed paths in the protected lists of `gate/incremental.py`, and 0 under `clearing/`, `ts/`, `tests/`, `scripts/`.
+- Link check: `check_links.py HEAD` exit 0 for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md` and the M1 report; exit 1 over all 318 Markdown files outside `results/`, from the same two older Stage 9 dead links that `main` has (0 new).
+- These rows are for commit `75f70919`. The commits after it add records only. The checks on the final head are in the pull request text, not in the repository.
+- Hosted gate (`proof-gate.yml`): expected exit 3 (UNSUPPORTED: changes outside every established claim), as for pull requests 56, 57 and 59. The actual result is in the pull request, not here.
+- NOT RUN: Stage 7, 9, 10 EXIT scripts (the runner leaves them out); `npm ci` (the repository links the pinned `node_modules` and checks its content digests; no script installs it).
+- Impact: the pull request does not change a recorded bundle digest and does not change a frozen module. Uncertainty: the scratch clone used this machine's tool folders by link.
+
+## U665 — night shift, integration: the 45-link graph refreshed in a NEW file; owner decisions D-4, D-5, D-6 recorded
+- Status: 2026-11-19T18:39Z (inserted by the shell from `date -u`). Refs U473, U479, U501, U631, U602. Evidence: proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119.md; proposals/night-shift-20261119/OWNER_REQUIRED.md.
+- `TOP_LEVEL_GRAPH.md` is NOT edited (its bytes are named in the binding manifest draft). The refresh is a join of the three final records by reading. It proves nothing.
+- Class changes: S6 MISSING to MACHINE-CHECKED (model; same machine; run plus repeat); S5 replayed. No other row changed class. Worse than recorded: U3 (the merged sink has two shown duplicate-effect defects) and X6 (false as an all-states contract for the present C).
+- The smallest missing refinement boundary is X8 / T13. The file lists 26 unproven transitions to end_to_end=true (T2b to T24).
+- Decisions recorded by the launcher: D-4 the JavaScript bound checker is advisory only; D-5 rollback resistance needs BOTH the local floor and the outside head, provider keys are a second layer inside their window; D-6 C-1 stays permanently NOT RUN and the open items B-12 to B-20, A-3, A-5 are known limits. The launcher wrote D-4 to D-6 as a close paraphrase of the owner's text, not verbatim.
+- Impact: none on stage labels. M1-B OPEN. end_to_end=false. No stage CURRENT. Stage 12 unauthorized.
+- Uncertainty: the integrator did not re-derive any row; a row is only as good as the record it names.

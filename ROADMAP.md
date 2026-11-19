@@ -57,7 +57,54 @@ The sink has no source proof and no signed token. A restore of both
 ledger files is not detected. A SIGKILL is not a power loss.
 M1 and integration EXIT NOT_ESTABLISHED.
 
-<!-- INTEGRATOR-SECTION -->
+## Night shift 2026-11-19, integration: one consolidated pull request from the proof, trust and red-team branches; the hardening stays UNAPPLIED; the 45-link graph refreshed — U660 to U665
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No frozen
+module changed. Nothing under `clearing/`, `ts/`, `tests/`, `scripts/`
+changed. Branch `nightshift/consolidated-20261119` from `main` at
+`b9f2831c`; content by path, no branch history merged; NOT merged by
+the agent. Pull requests 60 and 61 were closed without a merge on the
+owner's word; this section's pull request carries their verified
+content.
+
+What is in it: A's records after pull request 59 (final record; HOL
+cases with exit codes; reproduction 18 of 18 on the same machine); nine
+Dafny model files under `impl/finality-core`; a curated part of B's and
+C's evidence; owner decisions D-1 to D-6; the hardened sink, minter,
+dispatcher and provider adapter with their regressions and the changed
+suite as two UNAPPLIED diffs (owner items B-15, B-16: one later pull
+request); a refresh of the 45-link graph in a new file. The merged
+`sink.ts` on `main` keeps two shown duplicate-effect defects until the
+owner applies the hardening.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `dafny verify` (pinned 4.11.0, gate options) of `impl/finality-core/IssueAuth.dfy`; `IssueOnce.dfy`; `ShellCoreV6.dfy` (integrator's run) |0; 0; 0|194; 160; 192 verified; model level |
+| `git apply --check` of the two unapplied diffs on a scratch clone of `77f8ec2d`; `git apply` |0; 0|the patched `ts`, `tests`, `scripts` equal `nightshift/B-trust@12d634f6` except one line (the replaced user name) |
+| `dafny build impl/finality-core/IssueAuth.dfy --target js` on that clone |0|194 verified; module SHA-256 `fa855506…44e6`, equal to the red team's recorded module |
+| 15 regression runs on the patched clone: X1, X2 (runner); `d_att17_lock_theft`, `d_att17_claim_race`, `d_att18_throwing_emit`; `d3_att36_retry_restore`, `s3_att33_crash_journal`; `m3_refusal_does_not_close`, `m3_one_effect_per_request_id`; four `kf_*`; `p3_scope_collide`, `p3_key_squat`, `p3_rollback_rebind first full` |0 each|TESTED-UNPROVED; a worker's runs |
+| `m3_zero_squat_limit`; `p3_rollback_rebind first none` |1; 1|the two stated known limits are present (a zero-amount squat on the real state; B-20) |
+| control: X1, X2 against the merged sink and dispatcher |1|NOT a valid control for the duplicate effect: the merged sink refused the honest token too (U663) |
+| scratch clone (fresh `git clone` of the pushed branch at `75f70919`; `run_regression.py`): 28 Stage EXIT cases |0 each|28 of 28 |
+| the same: `exit_slice1.py`, `exit_slice2.py`, `exit_slice3.py`, `exit_m1_conformance.py --case evidence` |0; 0; 0; 0|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`: equal to the recorded ones |
+| `check_frozen_pr_gate.py HEAD` |0|8 frozen modules unchanged; 0 protected paths in the diff |
+| `check_links.py HEAD` on `FORGE_MASTER_IDEA.md`, `ROADMAP.md`, `unsure.md`, the M1 report |0 each| |
+| `check_links.py HEAD` on all 318 Markdown files outside `results/` |1|expected: the two older Stage 9 dead links of `main`; 0 new |
+| hosted `gate/pr_check.py` on the pull request |see the pull request|expected 3 (UNSUPPORTED), as for pull requests 56, 57, 59 |
+| the changed 126-row suite; spec-conformance; kill loops; any HOL case (by the integrator) |NOT RUN|B's and A's runs stand as their own |
+| red team: tests with the real refund program against code injected at load; tests of the FFI C code (C-1) |NOT RUN|stopped by a safety classifier seven times; never retried; permanently NOT RUN by owner decision D-6 |
+| Stage 7, 9, 10 EXIT scripts |NOT RUN|left out by the runner's convention |
+
+Reading: every HOL result is a machine-model result on the same machine
+with stored parent theories. Every Dafny result is a source-level
+result about a model. Every fix is TESTED-UNPROVED and UNAPPLIED. The
+smallest missing refinement boundary is X8 / T13.
+[Consolidated record](proposals/night-shift-20261119/integration/README.md).
+[Graph refresh](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119.md).
+[Unapplied diffs](proposals/night-shift-20261119/unapplied/README.md).
+[Owner items](proposals/night-shift-20261119/OWNER_REQUIRED.md).
+M1 and integration EXIT NOT_ESTABLISHED.
 
 the present gate bytes.
 

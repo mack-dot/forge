@@ -1,0 +1,4 @@
+# cmd: node --no-warnings --import tsx tests/refund-finality/regress/kf_restart_one_token.ts /private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree /private/tmp/claude-501/-Users-USER-forge/90d187ef-57dc-4fa3-a5b8-7a6708d00cf2/scratchpad/rerun/tree/build/issueauth.cjs
+{"a":{"first":"token","identicalAfterRestart":true,"otherCandidate":"REFUSED: other candidate: use a new request id"},"b":{"secondValidTokenSigned":true,"commitSecond":"committed","commitFirst":"rejected: request id is already settled with another token","settledRowsRqA":1,"effectsRqA":1,"layer":"sink: settled row of rq_A (request id already settled) + pre-state check"},"c":{"recordWritten":true,"retryIsRecordedBody":true,"otherCandidate":"REFUSED: other candidate: use a new request id","appendInIssueBeforeAnswer":true},"files":{"tornCutAndStarted":true,"damagedRefused":true,"mode0644Refused":true,"noMemoryFileRefused":true}}
+PASS
+exit 0
