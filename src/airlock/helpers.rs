@@ -20,6 +20,10 @@
 //! check and the exec is possible for whoever may write the file or a folder on its path. With the checks above that
 //! is root or the engine's own uid. In the one-user flow the engine's uid IS the caller's uid, so these checks close
 //! nothing against that caller; they matter when `serve` runs as another user (PROTOCOL.md section 11).
+//! The checks cover the helper FILE only. NOT covered: the libraries that the file loads. The refund binary loads only
+//! /usr/lib/libSystem.B.dylib. The Homebrew Node loads 9 libraries by absolute path under /opt/homebrew/opt (mode 775,
+//! group admin; `otool -L`): any admin-group user can still run code in the booking checker. OPEN (owner decision).
+//! Not covered either: macOS ACLs (std has no ACL reader; an allow-write ACL passes the mode check).
 //! Test seams exist ONLY in the `--cfg kill_points` build: AIRLOCK_TEST_HELPERS=<dir> runs `<dir>/booking_check.cjs`
 //! instead of the embedded source, AIRLOCK_TEST_UNPINNED_BINARY=1 skips the refund binary pin, and the two seams of
 //! cosign.rs (AIRLOCK_TEST_SSH_KEYGEN, AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN).
@@ -106,16 +110,17 @@ fn failed<T>(why: String) -> Result<T, Refusal> {
     no(Code::HelperFailed, why)
 }
 /// The engine's effective uid: the owner of a private folder that the engine creates in the store folder (under the
-/// store lock; cosign::private_folder), read once per process. std has no geteuid and `unsafe` is forbidden. uid 99
-/// (`_unknown`: a volume that ignores ownership shows every file as 99) is never trusted: then only root counts.
-static OWN_UID: OnceLock<Option<u32>> = OnceLock::new();
+/// store lock; cosign::private_folder). Only a success is kept for the process; a failed probe is tried again at the next
+/// run (a failure is never cached). std has no geteuid and `unsafe` is forbidden. uid 99 (`_unknown`: a volume that
+/// ignores ownership shows every file as 99) is never trusted: then only root counts.
+static OWN_UID: OnceLock<u32> = OnceLock::new();
 fn own_uid(store: &str) -> Option<u32> {
-    *OWN_UID.get_or_init(|| {
-        let dir = private_folder(store).ok()?;
-        let uid = fs::symlink_metadata(&dir).ok().map(|m| m.uid());
-        let _ = fs::remove_dir_all(&dir);
-        uid.filter(|u| *u != 99)
-    })
+    if let Some(u) = OWN_UID.get() { return Some(*u) }
+    let dir = private_folder(store).ok()?;
+    let uid = fs::symlink_metadata(&dir).ok().map(|m| m.uid());
+    let _ = fs::remove_dir_all(&dir);
+    let uid = uid.filter(|u| *u != 99)?;
+    Some(*OWN_UID.get_or_init(|| uid))
 }
 /// The identity of a file: device, inode, size, mtime and ctime (with nanoseconds). ctime cannot be set by a caller.
 type Identity = (u64, u64, u64, i64, i64, i64, i64);

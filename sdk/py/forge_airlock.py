@@ -140,6 +140,7 @@ class Result:
         self.rows = kw.get('rows', [])
         self.dropped = kw.get('dropped', [])
         self.pending = kw.get('pending', [])
+        self.rejected_after_pending = kw.get('rejected_after_pending', [])  # leases closed by a rejection after a cosign verdict
 
     @property
     def committed(self):
@@ -592,10 +593,13 @@ class Store:
         if (code == 24) != bool(dropped):
             raise ProtocolError('BAD_ANSWER', 'sweep exit code and lines disagree', out)
         pend = [ln.split(' ') for ln in lines[1:] if ln.startswith('PENDING_COSIGN ')]
-        if any(len(x) != 6 for x in pend) or len(pend) + len(dropped) != len(lines) - 1:
-            raise ProtocolError('BAD_ANSWER', 'bad PENDING_COSIGN line or an unknown sweep line', out)
+        rej = [ln.split(' ') for ln in lines[1:] if ln.startswith('REJECTED_AFTER_PENDING ')]
+        if any(len(x) != 6 for x in pend) or any(len(x) != 7 or not DIGITS_RE.match(x[5]) for x in rej) or len(pend) + len(rej) + len(dropped) != len(lines) - 1:
+            raise ProtocolError('BAD_ANSWER', 'bad PENDING_COSIGN or REJECTED_AFTER_PENDING line, or an unknown sweep line', out)
         pending = [(x[1], int(x[2]), x[3], x[4], x[5]) for x in pend]
-        return Result('DROPPED_OBLIGATION' if dropped else 'OK', lines[0], out, dropped=dropped, pending=pending)
+        rejected = [(x[1], int(x[2]), x[3], x[4], int(x[5]), x[6]) for x in rej]
+        return Result('DROPPED_OBLIGATION' if dropped else 'OK', lines[0], out, dropped=dropped, pending=pending,
+                      rejected_after_pending=rejected)
 
 
 def _printable_action(a):

@@ -116,9 +116,9 @@ def files(store):
 
 def private_copy(work, node):
     """A private copy of the Node binary (0700 folder, 0500 file) in the work folder. Review D2: the engine runs a pinned
-    helper file only on a path that no other non-root user can change; the Homebrew Node is under /opt/homebrew/Cellar,
+    helper file only from a path that no other non-root user can change; the Homebrew Node is under /opt/homebrew/Cellar,
     which the group admin may write, so the engine refuses it there. The copy has the same bytes, so the same SHA-256
-    pin. A missing Node is passed on unchanged (the cases that need it then fail with NOT RUN)."""
+    pin. It covers the Node file only, not the libraries that Node loads from /opt/homebrew/opt (PROTOCOL.md section 2). A missing Node is passed on unchanged (the cases that need it then fail with NOT RUN)."""
     if not node or not Path(node).is_file():
         return node
     d = Path(work) / 'node-private'
@@ -951,6 +951,27 @@ def case_lease_cosign_pending(s):
     code, out, _ = s.run(['state', p])
     require(code == 0 and out.endswith(' leases=1\n'), 'state: %r' % out)
     return 'cosign verdict -> PENDING_COSIGN (1 record, retries write none); sweep: PENDING_COSIGN before, DROPPED_OBLIGATION after the deadline; signed commit and REJECTED_POLICY close it'
+
+
+def case_lease_pending_rejected(s):
+    """Fresh review of PR-3, finding 3: a caller can close a PENDING_COSIGN lease on purpose with any REJECTED_POLICY on
+    the same tenant, key and request id (for example an unknown reason). The close stays allowed (a rejection is a
+    terminal verdict), but the sweep now reports such a lease on its own line, REJECTED_AFTER_PENDING, before and after
+    its deadline; the exit code is not changed (the lease is closed, not dropped)."""
+    p = s.store('lease-pend-rej')
+    s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
+    s.one(p, 'OPEN_LEASE g1 500 t1 o1', 'LEASE_OPENED')
+    s.one(p, 'OPEN_LEASE g2 500 t1 o1', 'LEASE_OPENED')
+    h = s.h(p, 't1', 'o1')
+    s.one(p, 'REFUND t1 o1 g1 %s GOODWILL 7500' % h, 'REQUIRE_HUMAN_COSIGN')
+    tok = s.one(p, 'REFUND t1 o1 g1 %s BOGUS 1' % h, 'REJECTED_POLICY')
+    require(tok[1:3] == ['NO_RULE', 'LEASE_CLOSED'], 'a rejection closes the pending lease: %r' % tok)
+    s.one(p, 'REFUND t1 o1 g2 %s BOGUS 1' % h, 'REJECTED_POLICY')  # a rejection of a lease that was never pending
+    for now in (400, 501):
+        code, out, _ = s.run(['leases', p, '--sweep', '--now', str(now)])
+        want = 'SWEEP 0 0 now=%d\nREJECTED_AFTER_PENDING g1 500 t1 o1 %s NO_RULE\n' % (now, tok[3])
+        require(code == 0 and out == want, 'a pending lease closed by a rejection must stay visible in the sweep: %d %r' % (code, out))
+    return 'a rejection after a cosign verdict closes the lease; the sweep reports it as REJECTED_AFTER_PENDING; a plain rejection does not'
 
 
 def normalize(answer):
@@ -1818,7 +1839,7 @@ CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
          ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
          ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env),
-         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('lease_cosign_pending', case_lease_cosign_pending), ('ratchet_entry', case_ratchet_entry), ('pin_window', case_pin_window), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
+         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('lease_cosign_pending', case_lease_cosign_pending), ('lease_pending_rejected', case_lease_pending_rejected), ('ratchet_entry', case_ratchet_entry), ('pin_window', case_pin_window), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
 
 
 def main():

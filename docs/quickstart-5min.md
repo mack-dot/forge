@@ -235,7 +235,9 @@ SHA-256 of the Node binary at `init` (inventory only). At every run, the engine 
 path of the refund binary and of Node (owner root or the engine's own user, no group or
 other write bit up to `/`), hashes the refund binary again, and hashes Node again when its
 file identity changed. The Homebrew Node is under a folder that the `admin` group may
-write, so `bin/forge-airlock` passes a private copy of it. The engine checks
+write, so `bin/forge-airlock` passes a private copy of the Node file. That copy still loads 9
+libraries from `/opt/homebrew/opt`, which the `admin` group may write: those libraries are
+NOT checked (open; PROTOCOL.md section 2). The engine checks
 `/usr/bin/ssh-keygen` before every cosign (owned by root, not writable by group or other,
 no symbolic link on its path) but does not pin it: an OS update must not lock every store.
 `bin/forge-airlock cosign-info` prints its SHA-256 and version so that you can record them.

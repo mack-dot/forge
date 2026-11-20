@@ -71,7 +71,7 @@ the kill-points build; case `seams` checks that the production build ignores the
 | `replay <dir>` | `REPLAY <n>`, then n lines `EFFECT <epoch> <payload>` | 0 |
 | `leases <dir>` | `LEASES <open>`, then one line `LEASE <request_id> <deadline_ms> <tenant> <key>` per OPEN lease (WAL order); a lease in the state PENDING_COSIGN (section 5.1) has ` PENDING_COSIGN <epoch> <detail>` at the end | 0 |
 | `leases <dir> --all` | `LEASES <open> all=<n>`, then one line per lease ever opened: `LEASE <request_id> <deadline_ms> <tenant> <key> OPEN`, `LEASE <request_id> <deadline_ms> <tenant> <key> PENDING_COSIGN <epoch> <detail>` (open) or `LEASE <request_id> <deadline_ms> <tenant> <key> CLOSED <epoch> <COMMITTED -\|REJECTED_POLICY <detail>>` | 0 |
-| `leases <dir> --sweep [--now MS]` | `SWEEP <open> <dropped> now=<MS>`, then in WAL order one line `DROPPED_OBLIGATION <request_id> <deadline_ms> <tenant> <key>` per open lease (also a PENDING_COSIGN one) with `now > deadline_ms`, and one line `PENDING_COSIGN <request_id> <deadline_ms> <tenant> <key> <detail>` per PENDING_COSIGN lease whose deadline has not passed | 0 none dropped; 24 at least one |
+| `leases <dir> --sweep [--now MS]` | `SWEEP <open> <dropped> now=<MS>`, then in WAL order one line `DROPPED_OBLIGATION <request_id> <deadline_ms> <tenant> <key>` per open lease (also a PENDING_COSIGN one) with `now > deadline_ms`, one line `PENDING_COSIGN <request_id> <deadline_ms> <tenant> <key> <detail>` per PENDING_COSIGN lease whose deadline has not passed, and one line `REJECTED_AFTER_PENDING <request_id> <deadline_ms> <tenant> <key> <close_epoch> <detail>` per lease that a `REJECTED_POLICY` closed after a cosign verdict (closed, not dropped: no effect on the exit code) | 0 none dropped; 24 at least one |
 | `eval <policy.json>` | one answer per stdin line (section 6) | 0; 25 bad policy |
 | `cosign-message <dir> <action>` | the exact message bytes (6 lines, LF-terminated; section 7) | 0, or a code |
 | `cosign-info` | `COSIGN_INFO path=/usr/bin/ssh-keygen sha256=<64 hex> uid=<n> mode=<octal> checks=<OK or the failed check> walked=<the checked parts, : separated, from /> version=<text of ssh -V>` | 0, 22 |
@@ -125,7 +125,22 @@ the kill-points build; case `seams` checks that the production build ignores the
   child process of the caller, under the caller's uid) these checks close nothing against
   the caller; they stop another user, for example when `serve` runs as a service user. The
   Homebrew Node is under `/opt/homebrew/Cellar` (group `admin` may write it): the engine
-  refuses it there; `bin/forge-airlock` passes a private copy (its docstring).
+  refuses it there; `bin/forge-airlock` passes a private copy of the FILE (its docstring;
+  one 89 MB copy per distinct Node file stays in `build/airlock/node-private/`; nothing
+  removes them).
+  What the checks do NOT cover (fresh review of this change, findings 1 and 4):
+  - the libraries that a helper loads. The refund binary loads only
+    `/usr/lib/libSystem.B.dylib`. The Homebrew Node 24.3.0 loads 9 libraries by absolute
+    path under `/opt/homebrew/opt` (libuv, brotlidec, brotlienc, cares, nghttp2, libcrypto,
+    libssl, icui18n, icuuc; `otool -L`), through symbolic links and folders of mode 775,
+    group `admin`; the private copy loads the same paths. So any user of the `admin` group
+    can still run code inside the booking checker. OPEN, owner decision: a Node build that
+    links only system libraries, or no inventory store where the pin must hold (the same
+    question as Q-6 of the isolation design, pull request 69). A std-only reading of the
+    Mach-O load commands with the same path check on each library is a possible next step;
+    it is NOT built, because on this machine it would refuse every inventory store.
+  - macOS ACLs: std has no ACL reader, so an allow-write ACL on a file or folder passes the
+    mode check.
   `--checker` is the compiled model (normally `build/airlock/checker/model.cjs`);
   `booking_check.cjs` pins its SHA-256 and the SHA-256 of its one dependency
   `bignumber.js` (section 8) itself: a caller-chosen checker folder can only supply those
@@ -289,9 +304,17 @@ What the namespaces do NOT do:
 - Store-wide values stay store-wide: the epoch in `COMMITTED` and `LEASE_OPENED`, the
   state hash (it chains every record of the store), the `STATE` verb (`epoch`, tail hash,
   `keys=`, `effects=`, `leases=` of the whole store), and the time a request waits for the
-  store lock. A caller sees from them that other records were written (how many), not which
-  keys, ids or leases they name. The subcommands `state`, `replay`, `leases` and
-  `cosign-message` are operator views of the whole store.
+  store lock. A caller sees from them that other records were written and how many.
+- A guess-confirmation oracle exists (fresh review of this change, finding 2). FNV-1a-128
+  has no key, and each record hash chains over the previous record. A tenant that knows
+  the hash of a record before a foreign record and of a record after it can check a guess
+  of the foreign record offline. The `STATE` tail gives such a hash, and so does the
+  `COMMITTED` answer of the caller's OWN next record (measured: with only two own
+  `COMMITTED` answers around a record of another tenant, a wrong guess gave no match and
+  the right guess matched; `proposals/review-20261120-engine/logs/f2-oracle.log`). So
+  removing the tail from `STATE` would not close it, and `STATE` is not changed. A keyed
+  chain is part of the isolation design (phase 2). The subcommands `state`, `replay`,
+  `leases` and `cosign-message` are operator views of the whole store.
 - Saga idempotency keys are not unique across keys or tenants (they never were): two keys
   can hold the same processor and idempotency key. A real processor that de-duplicates on
   that key across one merchant account can then merge the two. The engine does not see it.
@@ -371,7 +394,10 @@ Examples (hashes shortened here; on the wire they are 32 digits):
   (also `COSIGN_INVALID`) writes no record and names the same epoch. A PENDING_COSIGN lease
   is open: `leases` lists it with its state, the sweep lists it as `PENDING_COSIGN` before
   its deadline and as `DROPPED_OBLIGATION` after it, and the signed commit or a
-  `REJECTED_POLICY` closes it.
+  `REJECTED_POLICY` closes it. Any `REJECTED_POLICY` on the lease's tenant, key and request
+  id closes it, also one that a caller causes on purpose (for example an unknown reason).
+  So the sweep keeps such a lease visible: `REJECTED_AFTER_PENDING` (fresh review of this
+  change, finding 3). The close itself is not refused.
 - A `CLOSE <request_id> REQUIRE_HUMAN_COSIGN <detail>` record without a tenant (written by
   the engine before review D6, which closed the lease there) is read as `COSIGN_PENDING`:
   the action of such a lease was still pending. So the sweep now reports that old work
@@ -451,7 +477,7 @@ caps are only as good as the opener's values: an opener that writes `original=10
 `COMMIT`, `REQUIRE_HUMAN_COSIGN`, `REJECTED_POLICY <CODE>`, or
 `MALFORMED_REQUEST EVAL ...`. Only parametric money policies (else exit 25).
 
-### 6.1 Profile `canonical-refund` (PROVED CORE for the decision)
+### 6.1 Profile `canonical-refund` (the decision: the CakeML binary; verified compiler, model-level HOL4 theorem, native link M1-B OPEN)
 
 Policy: `{"airlock": "money", "version": 1, "name": "<name>", "profile": "canonical-refund"}`
 (no other key). Scope, exactly:

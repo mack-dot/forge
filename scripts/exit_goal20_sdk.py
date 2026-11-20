@@ -83,7 +83,7 @@ CC_VERSION = 'Apple clang version 17.0.0 (clang-1700.0.13.5)'
 CC_FLAGS = ['-dynamiclib', '-O1', '-Wall', '-Wextra', '-Werror']
 ENGINE_CASES = ['init', 'recovery', 'cas', 'tenant', 'money', 'canonical', 'cosign', 'cosign_faults', 'saga', 'inventory', 'leases', 'read', 'lines',
                 'replay', 'race', 'kill', 'trace', 'dispatch', 'lock', 'pin', 'crafted', 'native_bound', 'helper_env',
-                'lease_binding', 'tenant_namespace', 'legacy_wal', 'lease_cosign_pending', 'ratchet_entry', 'pin_window', 'nonce', 'weakkey', 'seams']
+                'lease_binding', 'tenant_namespace', 'legacy_wal', 'lease_cosign_pending', 'lease_pending_rejected', 'ratchet_entry', 'pin_window', 'nonce', 'weakkey', 'seams']
 NODE_CASE_COUNT = 68  # booking_check.cjs only (the 69 cosign.cjs cases moved to test_cosign.py and test_engine.py)
 COSIGN_CASE_COUNT = 56
 DIFF_CASES = ['loader', 'malformed', 'no-engine', 'engine', 'mismatch', 'demo', 'choice', 'fault', 'refused', 'saga', 'identical']
@@ -450,6 +450,9 @@ MUTANTS = [
     ('V6d_legacy_cosign_close_closes', 'ledger.rs', 'an old cosign close is read as pending',
      'if cosign { l.pending = Some((index, code.to_string())) } else {', 'if false { l.pending = Some((index, code.to_string())) } else {', 'engine', 'legacy_wal',
      'the reading of an old cosign CLOSE as COSIGN_PENDING (D6)'),
+    ('V6e_sweep_hides_rejected_after_pending', 'main.rs', 'a pending lease closed by a rejection must stay visible in the sweep',
+     ' || (sweep && after_pending(l))', '', 'engine', 'lease_pending_rejected',
+     'the REJECTED_AFTER_PENDING line of a sweep (fresh review of PR-3, finding 3)'),
     ('V7a_bad_entry_skipped', 'store.rs', 'a bad last entry and a one-record rollback must be CORRUPT_WAL', '    if !bad.is_empty() && !crash_shape {', '    if false {',
      'engine', 'ratchet_entry', 'the refusal of a full-length ratchet entry with a bad CRC (D7)'),
     ('V7b_duplicate_push', 'store.rs', 'a torn record with the ratchet at the WAL epoch must not push again', '        if floor < l.epoch {\n            push(&mut ratchet, l.epoch)?;',
@@ -556,7 +559,9 @@ CLAIMS = {
         'refund binary and Node pass an ownership walk (owner root or the engine uid, no group or other write bit up to /) and are checked '
         '(the refund binary hashed, Node re-hashed when its identity changed); they are still run by path (no fexecve on macOS; exec of '
         '/dev/fd/N gave EACCES), so root or the engine uid can change a file between the check and the exec; in the one-user flow that '
-        'closes nothing against the caller. The test seams '
+        'closes nothing against the caller. The checks cover the helper FILE only, not the libraries it loads: the Homebrew Node loads 9 '
+        'libraries from /opt/homebrew/opt (group admin may write them), so any admin-group user can still run code in the booking '
+        'checker (open, owner decision). macOS ACLs are not read. The test seams '
         'AIRLOCK_TEST_HELPERS, AIRLOCK_TEST_UNPINNED_BINARY, AIRLOCK_TEST_SSH_KEYGEN and AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN exist only in '
         'the kill_points build.',
         'Cosign: an agent that runs as the same OS user as the key owner can read a 0600 key file; "the agent cannot self-cosign" holds only '

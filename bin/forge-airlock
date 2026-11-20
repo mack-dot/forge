@@ -40,12 +40,15 @@ An explicit --node must be Node 24.x (the repository pins 24.3.0; it is started 
 version is refused with exit 2 and a message. `serve` without --node passes a Node that it finds without starting
 it (the engine checks the store's SHA-256 pin before the first booking), or no --node at all. Exit 2 is also used
 for a usage error of the dispatcher.
-Review D2: the engine runs a pinned helper file only on a path that no other non-root user can change (owner root or
+Review D2: the engine runs a pinned helper FILE only from a path that no other non-root user can change (owner root or
 the engine's uid, no group or other write bit on the file and on every folder up to /). The Homebrew Node lies under
 /opt/homebrew/Cellar, which the group admin may write, so the engine refuses it there. So the dispatcher passes a
 PRIVATE COPY of the Node it found or was given: build/airlock/node-private/node-<first 16 hex digits of its SHA-256>
 (folder 0700, file 0500, made once, never overwritten). The bytes are the same, so the store's SHA-256 pin is the
-same. The copy belongs to the user who runs the dispatcher: it stops another user, not that user.
+same. The copy belongs to the user who runs the dispatcher: it stops another user, not that user. The copy covers the
+Node FILE only. NOT covered: the libraries that the Node binary loads. The Homebrew Node 24.3.0 loads 9 libraries by absolute path under /opt/homebrew/opt (libuv, brotlidec, brotlienc, cares, nghttp2, libcrypto, libssl, icui18n, icuuc; otool -L), through symbolic links and folders of mode 775 group admin; the private copy loads the same paths. They are outside the pin and outside the path check, so any user of the admin group can still run code inside the booking checker. OPEN, owner decision: a Node build that links only system libraries, or no inventory store where the pin must hold.
+One 89 MB copy stays for each distinct Node file that the dispatcher finds or is given (also one that no store pins);
+nothing removes them: delete build/airlock/node-private/ by hand when no serve runs.
 """
 
 import hashlib

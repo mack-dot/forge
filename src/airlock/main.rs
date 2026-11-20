@@ -203,7 +203,10 @@ fn eval_line(m: &policy::Money, raw: &[u8]) -> Result<String, Refusal> {
 fn leases(dir: &str, sweep: bool, all: bool, now: Option<u64>) -> i32 {
     let s = match store::open(dir) { Ok(s) => s, Err(e) => return answer(Err(e)) };
     let now = now.unwrap_or_else(|| std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis() as u64).unwrap_or(u64::MAX));
-    let mut list: Vec<(&String, &ledger::Lease)> = s.l.leases.iter().filter(|(_, l)| all || l.is_open()).map(|((_, req), l)| (req, l)).collect();
+    // a sweep also sees a lease that a REJECTED_POLICY closed after a cosign verdict (review of PR-3, finding 3)
+    let after_pending = |l: &ledger::Lease| l.pending.is_some() && l.closed.as_ref().map_or(false, |(_, v, _)| v == "REJECTED_POLICY");
+    let mut list: Vec<(&String, &ledger::Lease)> =
+        s.l.leases.iter().filter(|(_, l)| all || l.is_open() || (sweep && after_pending(l))).map(|((_, req), l)| (req, l)).collect();
     list.sort_by_key(|(_, l)| l.epoch);
     let open = s.l.open_leases();
     let mut text = String::new();
@@ -218,6 +221,10 @@ fn leases(dir: &str, sweep: bool, all: bool, now: Option<u64>) -> i32 {
                 (None, None) => if all { " OPEN".to_string() } else { String::new() },
             };
             text.push_str(&format!("\nLEASE {req} {deadline} {tenant} {key}{status}"));
+        } else if let Some((epoch, _, detail)) = l.closed.as_ref().filter(|_| after_pending(l)) {
+            // closed, not dropped: no effect on the exit code; but the work that waited for a human was ended by a
+            // rejection that any caller of the tenant can cause, so it stays visible
+            text.push_str(&format!("\nREJECTED_AFTER_PENDING {req} {deadline} {tenant} {key} {epoch} {detail}"));
         } else if now > *deadline {
             dropped += 1;
             text.push_str(&format!("\nDROPPED_OBLIGATION {req} {deadline} {tenant} {key}"));

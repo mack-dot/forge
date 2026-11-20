@@ -127,6 +127,7 @@ class Result {
   rows: unknown[] = [];
   dropped: Array<[string, string, string, string]> = [];
   pending: Array<[string, string, string, string, string]> = [];  // review D6: PENDING_COSIGN lines of a sweep
+  rejectedAfterPending: Array<[string, string, string, string, string, string]> = [];  // REJECTED_AFTER_PENDING lines
   constructor(code: Code, detail: string, line: string) {
     this.code = code;
     this.detail = detail;
@@ -553,12 +554,15 @@ class Store {
     const dropped: Array<[string, string, string, string]> = dropLines.map((x) => [x[1], x[2], x[3], x[4]]);
     if ((r.code === 24) !== (dropped.length > 0)) throw new ProtocolError('sweep exit code and lines disagree', r.out);
     const pendLines = lines.slice(1).filter((x) => x.startsWith('PENDING_COSIGN ')).map((x) => x.split(' '));
-    if (pendLines.some((x) => x.length !== 6) || pendLines.length + dropLines.length !== lines.length - 1) {
-      throw new ProtocolError('bad PENDING_COSIGN line or an unknown sweep line', r.out);
+    const rejLines = lines.slice(1).filter((x) => x.startsWith('REJECTED_AFTER_PENDING ')).map((x) => x.split(' '));
+    if (pendLines.some((x) => x.length !== 6) || rejLines.some((x) => x.length !== 7 || !DIGITS_RE.test(x[5]))
+        || pendLines.length + rejLines.length + dropLines.length !== lines.length - 1) {
+      throw new ProtocolError('bad PENDING_COSIGN or REJECTED_AFTER_PENDING line, or an unknown sweep line', r.out);
     }
     const res = new Result(dropped.length ? 'DROPPED_OBLIGATION' : 'OK', lines[0], r.out);
     res.dropped = dropped;
     res.pending = pendLines.map((x) => [x[1], x[2], x[3], x[4], x[5]]);
+    res.rejectedAfterPending = rejLines.map((x) => [x[1], x[2], x[3], x[4], x[5], x[6]]);
     return res;
   }
 
