@@ -20860,3 +20860,18 @@ curl: (6) Could not resolve host: github.com
   `test_cosign.py` step must come in the same change. A finite test only. `end_to_end=false`. M1-B OPEN.
 - Impact: none on any stage label or gate result.
 - Next check: the hosted run of the repaired bytes (in the pull request); the owner's exact-bytes approval.
+
+## U897 — Review fix PR-2: the workflow updated after pull requests 72 and 73 merged; new bytes for approval
+
+- Refers to: U884, U885, U886.
+- Evidence: `main` = `7e5842d0` is merged into the branch (records only). The workflow now uses
+  `build/silicon/test/airlock-engine-kill`, runs `tests/airlock/test_cosign.py`, and skips `pin_window` too.
+  New SHA-256 of `.github/workflows/airlock-ci.yml`: `b10831fe97ca4c546ca74aafc1b0d5ef84ff3aaa24d9e3453cd74a0227aeade8`. The bytes `b190ba53…e946` of U886 are replaced.
+  One local run of each suite file, with no checker model: engine 33 cases (29 PASS, 3 NOT RUN for the model,
+  `race` not run locally), cosign 56 of 56 PASS, node helpers 68 cases (5 PASS, 63 NOT RUN for the model), SDK 21
+  cases (19 PASS, 2 NOT RUN for the model), diff-policy 6 of the 6 selected PASS.
+- Uncertainty: the hosted result of these bytes is not in the tree (see the pull request). The run minimums are
+  30, 56, 5, 19, 6, not the full counts, because the hosted image has no Dafny-built model. `race` and the
+  hosted behaviour of `cosign_faults` (its path probe depends on the runner's folders) have no local result.
+- Impact: none on any stage label or gate result. A finite test only. `end_to_end=false`. M1-B OPEN.
+- Next check: the hosted run; the owner's exact-bytes approval of the new SHA-256.

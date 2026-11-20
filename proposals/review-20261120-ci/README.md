@@ -157,3 +157,39 @@ That branch (local only, head `e3322303`; read with `git show`, not checked out)
 - The selector imports each test file to read `CASES`, so the top-level code of a test file runs once more.
 - The job is not a required check. Only the owner's branch rules can make it one.
 - `actions/checkout` v4.2.2 gives a warning: it targets Node 20 and runs on Node 24.
+
+## Update after pull requests 72 and 73 merged (`main` = `7e5842d0`)
+
+The owner asked for this update. The branch merges `main` `7e5842d0` (records only), then changes the workflow.
+The bytes `b190ba53…e946` are replaced: do not approve them.
+
+```text
+b10831fe97ca4c546ca74aafc1b0d5ef84ff3aaa24d9e3453cd74a0227aeade8  .github/workflows/airlock-ci.yml
+```
+
+What changed in the workflow:
+
+- The engine suite gets the kill-points build at `build/silicon/test/airlock-engine-kill` (its new place).
+- A new step runs `tests/airlock/test_cosign.py` with the built engine and the `/usr/bin/ssh-keygen` of the image.
+- `pin_window` joins the engine skips: it needs `build/airlock/checker/model.cjs` (no Dafny on the image).
+- New `TOTAL_*` values: the selector fails if a suite file has fewer cases than at this commit.
+- New `MIN_RUN_*` values. Nothing in the workflow named the deleted `cosign.cjs`.
+
+Case counts of the suite files on this head, each from one local run of the file (macOS arm64, Node 24.3.0, a
+worktree with a fresh engine build and NO checker model; one suite at a time; no heavy lock):
+
+| Suite | Cases in the file | Run without the model | Local result of that run |
+| --- | --- | --- | --- |
+| `test_engine.py` | 33 | 30 (skips: `inventory`, `pin`, `pin_window`) | 29 PASS; the 3 skips answered NOT RUN (model missing); `race` (50 processes) was NOT RUN locally |
+| `test_cosign.py` | 56 | 56 | 56 PASS, exit 0 |
+| `test_node_helpers.py` | 68 | 5 | 5 PASS; 63 NOT RUN (model missing); the 63 names equal `SKIP_NODE_HELPERS` |
+| `test_sdk.py` | 21 | 19 (skips: `py_saga_inventory`, `ts_typed`) | 19 PASS; the 2 skips answered NOT RUN (model missing) |
+| `test_diff_policy.py` | 11 | 6 | 6 PASS, exit 0 (file unchanged since `33055a59`) |
+
+So `TOTAL_*` = 33, 56, 68, 21, 11 and `MIN_RUN_*` = 30, 56, 5, 19, 6. The full counts (33, 56, 68, 21) cannot be
+the run minimums on the hosted image: 68 cases need the Dafny-built model. The node helper step now runs 5
+error-path cases only; it checks little. The count checks ran locally on the saved outputs (exit 0 each), with
+three negative controls (a higher total, a higher minimum, an unknown skip name: exit 1 each).
+
+The hosted run of these bytes is in the pull request; it is not recorded in this file (one push, one run).
+`cosign_faults` and `race` have no local result under the workflow's exact conditions; the hosted run decides.

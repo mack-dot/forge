@@ -47,6 +47,8 @@ Dafny are skipped. The image versions float and are not monotonic.
 | one fresh-context review of `b98a06cf` |0 HIGH; 3 MEDIUM; 8 LOW|11 accepted (1 in part); 10 repaired, 1 recorded only; NOT reviewed again |
 | `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` (5 `.md` files) |0; 0|outputs in `checks.txt` of the record |
 | hosted run of the repaired bytes |NOT RUN when this row was written|in the pull request |
+| update after pull requests 72 and 73 merged (`main` `7e5842d0`): one local run of each suite file, no checker model |engine 1 (29 PASS, 3 NOT RUN for the model); cosign 0 (56 PASS); node helpers 1 (5 PASS, 63 NOT RUN for the model); SDK 1 (19 PASS, 2 NOT RUN for the model); diff-policy 0 (6 PASS)|new workflow bytes `b10831fe…`; totals 33, 56, 68, 21, 11; run minimums 30, 56, 5, 19, 6 (U897) |
+| hosted run of the updated bytes |NOT RUN when this row was written|in the pull request |
 | Dafny cases; Linux job; `src/silicon_sink`; full local suites under the heavy lock |NOT RUN|deferred (U885) |
 
 [Record](proposals/review-20261120-ci/README.md).

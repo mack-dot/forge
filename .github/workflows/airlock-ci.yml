@@ -3,11 +3,14 @@
 # It is not part of the proof gate and it gives no gate evidence.
 #
 # What it runs (selected by case name on the command line; no test file is changed):
-#   build          python3 bin/forge-airlock build: two rustc builds (production and kill_points) with the
-#                  rustc of the runner image, plus the 0700 copy of the TRACKED CakeML refund binary
+#   build          python3 bin/forge-airlock build: two rustc builds with the rustc of the runner image (the
+#                  production engine build/airlock/airlock-engine and the TEST-ONLY kill_points build
+#                  build/silicon/test/airlock-engine-kill), plus the 0700 copy of the TRACKED CakeML refund binary
 #                  (proposals/forge2-m1-conformance/artifacts/refund-arm64-macho, Mach-O arm64, SHA-256 pinned).
 #                  No CakeML toolchain is needed: the binary is tracked, not built.
 #   engine suite   tests/airlock/test_engine.py, every case except SKIP_ENGINE
+#   cosign suite   tests/airlock/test_cosign.py (the human's cosign tools and the engine's base64 decoder, with
+#                  the /usr/bin/ssh-keygen of the image; no Node), every case (SKIP_COSIGN is empty)
 #   node helpers   tests/airlock/test_node_helpers.py, every case except SKIP_NODE_HELPERS
 #   SDK suite      tests/airlock/test_sdk.py (Python and TypeScript SDK; TypeScript runs through the built-in
 #                  type stripping of Node 24, no npm, no node_modules), every case except SKIP_SDK
@@ -18,16 +21,18 @@
 #     made by `forge-airlock build --checker` (pinned Dafny 4.11 + node_modules); neither is on the runner.
 #   - the diff-policy cases that start the pinned Dafny (demo, choice, fault, refused), and `identical`, which
 #     without Dafny compares two equal failure outputs (0 bytes, exit 1) and so passes without checking anything.
-# Skip counts at this commit: engine 2 (inventory, pin), node helpers 63 (every booking case that loads the
-# default model), SDK 2 (py_saga_inventory, ts_typed), diff-policy 5. Names: the SKIP_* values below.
+# Skip counts at this commit: engine 3 of 33 (inventory, pin, pin_window), cosign 0 of 56, node helpers 63 of 68
+# (every booking case that loads the default model), SDK 2 of 21 (py_saga_inventory, ts_typed), diff-policy 5 of
+# 11. Names: the SKIP_* values below. The 5 node helper cases that run are error paths (exit 2) only.
 #
-# Count check: the selector fails if a skip name is not a case of its suite or if no case is left. It prints every
+# Count check: the selector fails if a skip name is not a case of its suite, if no case is left, or if the suite
+# has fewer cases than TOTAL_* (the case counts of the suite files at this commit). It prints every
 # case as RUN or SKIP and writes the RUN names to a file. After each suite, the check fails unless the PASS lines
 # name exactly the RUN set and the RUN count is at least MIN_RUN_* (the counts of this commit). So a suite that
 # passes on fewer cases (for example after cases move to another file) fails the job. A new case RUNS by default.
 #
 # Toolchains come only from the runner image: rustc (no version pin is enforced by the build; the repository
-# records 1.92), python3, /usr/bin/cc (test interposer), and the highest Node 24.x of the image tool cache (the
+# records 1.92), python3, /usr/bin/cc (test interposer), /usr/bin/ssh-keygen (cosign), and the highest Node 24.x of the image tool cache (the
 # repository pins 24.3.0; the dispatcher accepts any 24.x and prints a note). No Node 24 -> the job fails.
 # The image is not monotonic: two runs on one day used image versions 20261118.0550.1 and 20261104.0514.1.
 #
@@ -72,7 +77,8 @@ jobs:
     timeout-minutes: 10
     env:
       PYTHONDONTWRITEBYTECODE: '1'
-      SKIP_ENGINE: 'inventory pin'
+      SKIP_ENGINE: 'inventory pin pin_window'
+      SKIP_COSIGN: ''
       SKIP_NODE_HELPERS: >-
         booking_optimum_accept booking_overbooking_reject booking_overbooking_reject_alpha_10000
         booking_fractional_x_reject booking_invalid_dual_reject booking_negative_dual_reject
@@ -95,9 +101,15 @@ jobs:
         booking_model_one_byte_more booking_model_symlink_refused booking_eval_mode
       SKIP_SDK: 'py_saga_inventory ts_typed'
       SKIP_DIFF_POLICY: 'demo choice fault refused identical'
-      MIN_RUN_ENGINE: '24'
-      MIN_RUN_NODE_HELPERS: '74'
-      MIN_RUN_SDK: '17'
+      TOTAL_ENGINE: '33'
+      TOTAL_COSIGN: '56'
+      TOTAL_NODE_HELPERS: '68'
+      TOTAL_SDK: '21'
+      TOTAL_DIFF_POLICY: '11'
+      MIN_RUN_ENGINE: '30'
+      MIN_RUN_COSIGN: '56'
+      MIN_RUN_NODE_HELPERS: '5'
+      MIN_RUN_SDK: '19'
       MIN_RUN_DIFF_POLICY: '6'
     steps:
       - name: Check out
@@ -113,6 +125,8 @@ jobs:
           rustc --version
           python3 --version
           /usr/bin/cc --version | head -1
+          ls -l /usr/bin/ssh-keygen
+          ssh -V 2>&1 | head -1 || true
           node_bin=""
           best="$(ls "$RUNNER_TOOL_CACHE/node" 2>/dev/null | grep '^24\.' | sort -V | tail -1 || true)"
           if [ -n "$best" ] && [ -x "$RUNNER_TOOL_CACHE/node/$best/arm64/bin/node" ]; then
@@ -133,13 +147,14 @@ jobs:
         run: |
           set -euo pipefail
           cat > "$RUNNER_TEMP/cases.py" <<'EOF'
-          # select SUITE SKIP RUNFILE: print `--case NAME` for every case except the skips; write the RUN names.
+          # select SUITE SKIP RUNFILE TOTAL: print `--case NAME` for every case except the skips; write the RUN
+          # names; fail if the suite has fewer than TOTAL cases.
           # check FORMAT RUNFILE OUTFILE MIN: the PASS names in OUTFILE must be exactly the RUN names; RUN >= MIN.
           import importlib.util, re, sys
           FORMATS = {'engine': r'PASS +(\S+) +[0-9.]+s', 'sdk': r'PASS +(\S+) +[0-9.]+s',
-                     'node': r'PASS +(\S+?): ', 'diff': r'(\S+) +PASS +exits='}
+                     'node': r'PASS +(\S+?): ', 'cosign': r'PASS +(\S+?): ', 'diff': r'(\S+) +PASS +exits='}
           if sys.argv[1] == 'select':
-              path, skip, runfile = sys.argv[2], sys.argv[3].split(), sys.argv[4]
+              path, skip, runfile, total = sys.argv[2], sys.argv[3].split(), sys.argv[4], int(sys.argv[5])
               spec = importlib.util.spec_from_file_location('suite_under_selection', path)
               mod = importlib.util.module_from_spec(spec)
               spec.loader.exec_module(mod)
@@ -147,6 +162,8 @@ jobs:
               unknown = [n for n in skip if n not in names]
               if unknown:
                   sys.exit('skip names that are not cases of %s: %s' % (path, ' '.join(unknown)))
+              if len(names) < total:
+                  sys.exit('%s has %d cases; this workflow expects at least %d' % (path, len(names), total))
               for n in names:
                   sys.stderr.write('%s %s\n' % ('SKIP' if n in skip else 'RUN ', n))
               run = [n for n in names if n not in skip]
@@ -179,28 +196,35 @@ jobs:
       - name: Engine suite (tests/airlock/test_engine.py)
         run: |
           set -euo pipefail
-          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_engine.py "$SKIP_ENGINE" "$RUNNER_TEMP/engine.run")"
-          python3 -I -B tests/airlock/test_engine.py build/airlock/airlock-engine build/airlock/airlock-engine-kill \
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_engine.py "$SKIP_ENGINE" "$RUNNER_TEMP/engine.run" "$TOTAL_ENGINE")"
+          python3 -I -B tests/airlock/test_engine.py build/airlock/airlock-engine build/silicon/test/airlock-engine-kill \
             --node "$FORGE_AIRLOCK_NODE" $sel | tee "$RUNNER_TEMP/engine.out"
           python3 -I -B "$RUNNER_TEMP/cases.py" check engine "$RUNNER_TEMP/engine.run" "$RUNNER_TEMP/engine.out" "$MIN_RUN_ENGINE"
+
+      - name: Cosign suite (tests/airlock/test_cosign.py)
+        run: |
+          set -euo pipefail
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_cosign.py "$SKIP_COSIGN" "$RUNNER_TEMP/cosign.run" "$TOTAL_COSIGN")"
+          python3 -I -B tests/airlock/test_cosign.py build/airlock/airlock-engine $sel | tee "$RUNNER_TEMP/cosign.out"
+          python3 -I -B "$RUNNER_TEMP/cases.py" check cosign "$RUNNER_TEMP/cosign.run" "$RUNNER_TEMP/cosign.out" "$MIN_RUN_COSIGN"
 
       - name: Node helper suite (tests/airlock/test_node_helpers.py)
         run: |
           set -euo pipefail
-          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_node_helpers.py "$SKIP_NODE_HELPERS" "$RUNNER_TEMP/node.run")"
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_node_helpers.py "$SKIP_NODE_HELPERS" "$RUNNER_TEMP/node.run" "$TOTAL_NODE_HELPERS")"
           python3 -I -B tests/airlock/test_node_helpers.py "$FORGE_AIRLOCK_NODE" $sel | tee "$RUNNER_TEMP/node.out"
           python3 -I -B "$RUNNER_TEMP/cases.py" check node "$RUNNER_TEMP/node.run" "$RUNNER_TEMP/node.out" "$MIN_RUN_NODE_HELPERS"
 
       - name: SDK suite, Python and TypeScript (tests/airlock/test_sdk.py)
         run: |
           set -euo pipefail
-          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_sdk.py "$SKIP_SDK" "$RUNNER_TEMP/sdk.run")"
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_sdk.py "$SKIP_SDK" "$RUNNER_TEMP/sdk.run" "$TOTAL_SDK")"
           python3 -I -B tests/airlock/test_sdk.py --engine-dir build/airlock --node "$FORGE_AIRLOCK_NODE" $sel | tee "$RUNNER_TEMP/sdk.out"
           python3 -I -B "$RUNNER_TEMP/cases.py" check sdk "$RUNNER_TEMP/sdk.run" "$RUNNER_TEMP/sdk.out" "$MIN_RUN_SDK"
 
       - name: diff-policy suite (tests/airlock/test_diff_policy.py)
         run: |
           set -euo pipefail
-          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_diff_policy.py "$SKIP_DIFF_POLICY" "$RUNNER_TEMP/diff.run")"
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_diff_policy.py "$SKIP_DIFF_POLICY" "$RUNNER_TEMP/diff.run" "$TOTAL_DIFF_POLICY")"
           python3 -I -B tests/airlock/test_diff_policy.py --engine build/airlock/airlock-engine $sel | tee "$RUNNER_TEMP/diff.out"
           python3 -I -B "$RUNNER_TEMP/cases.py" check diff "$RUNNER_TEMP/diff.run" "$RUNNER_TEMP/diff.out" "$MIN_RUN_DIFF_POLICY"
