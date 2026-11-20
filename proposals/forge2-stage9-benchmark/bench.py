@@ -9,9 +9,10 @@ The oracle reads only the log of the LOCAL FAKE provider (provider.py). It judge
 model of the task rules (function `allowed`). That model is test code. It is not a verifier and not a proof.
 
   bench.py matrix   [--batch 36|54|72]                 print the cells and their commands; starts nothing
+  bench.py texts                                       SHA-256 of every task text (blind and hazard-named variant)
   bench.py controls [--tasks T1,T2] --out DIR          the oracle on the five reference handlers (no model call)
   bench.py oracle   --task T1 --arm A --work DIR       the oracle on a handler folder (no model call)
-  bench.py run      --out DIR (--cell ID ... | --batch N) [--resume] [--jobs 1..3] [--model NAME]
+  bench.py run      --out DIR (--cell ID ... | --batch N) [--resume] [--jobs 1..3] [--model NAME] [--variant blind|named]
                                                        agent calls; one checkpoint line per finished cell
 Exit codes: 0 done; 1 a control did not behave as recorded; 2 usage or a refused start; 3 a cell had no result.
 The engine is build/airlock/airlock-engine of this checkout (rustc command in bin/forge-airlock). --out must be
@@ -65,7 +66,33 @@ def engine_policy(task):
                         'rules': rules}, indent=1) + '\n').encode()
 
 
-def task_text(name, arm):
+def blind_text(name):
+    """The blind variant: one text for the three arms. It names no race, no repeated delivery and no single limit."""
+    t = TASKS[name]
+    return '\n'.join([
+        '# Ticket: payment request handler for ' + t['domain'], '',
+        'Write `handler.py` in this folder. Python 3, standard library only.', '',
+        '- It runs as `python3 handler.py STATE_DIR` for each request.',
+        '- It reads one JSON object from standard input: `{"tenant": "acme", "order": "o1", "request_id": "r-1", '
+        '"reason": "...", "amount": 1234}`. `request_id` is the caller\'s id of the request. `amount` is an integer '
+        'number of cents.',
+        '- To pay, it runs the provider: `python3 provider.py STATE_DIR ORDER REQUEST_ID REASON AMOUNT` '
+        '(`provider.py` is beside `handler.py`; do not change it). The provider pays whatever it is asked to pay.',
+        '- It prints one JSON object, `{"status": "PAID"}` or `{"status": "REJECTED"}`, and exits 0.',
+        '- `STATE_DIR/task.json` holds the orders and their payment limits: `orders.<order>.original` (the cents '
+        'charged for the order), `orders.<order>.facts` (named amounts of the order) and `rules` (one entry per '
+        'allowed reason; `min` and `max` limit one amount; `fact` names the order fact that limits the total paid for '
+        'that reason on the order).',
+        '- You can keep your own files in `STATE_DIR`. `sample_state/` is one such folder for your own tests.',
+        '- If this folder has a `kit/` folder, read `kit/README.md` first and build on the kit.', '',
+        'This handler goes to production. Money that the provider pays and that the limits do not allow is lost. '
+        'Pay every request that the limits allow.', '',
+        'Test your handler as you see fit. Stop when you think it is correct. Write no other documentation.', ''])
+
+
+def task_text(name, arm, variant='blind'):
+    if variant == 'blind':
+        return blind_text(name)
     t = TASKS[name]
     lines = ['# Task: a payment request handler for ' + t['domain'], '',
              'Write `handler.py` in this folder. Python 3, standard library only.', '',
@@ -330,10 +357,12 @@ def run_cell(args, cell, out):
     work = base / 'work'
     work.mkdir(parents=True)
     shutil.copy(HERE / 'provider.py', work / 'provider.py')
-    (work / 'TASK.md').write_text(task_text(name, arm))
+    (work / 'TASK.md').write_text(task_text(name, arm, args.variant))
     if arm == 'C':
         (work / 'kit').mkdir()
         shutil.copy(HERE / 'kit' / 'airlock_kit.py', work / 'kit' / 'airlock_kit.py')
+        if args.variant == 'blind':
+            shutil.copy(HERE / 'kit' / 'README.md', work / 'kit' / 'README.md')
         shutil.copy(SDK, work / 'kit' / 'forge_airlock.py')
         shutil.copy(ENGINE, work / 'kit' / 'airlock-engine')
     setup_state(work / 'sample_state', name, arm)
@@ -347,11 +376,11 @@ def run_cell(args, cell, out):
                            'for every finding that is right. Test it as you see fit.', work, base / 'agent-3.json'))
     agent_seconds = round(time.monotonic() - started, 1)
     result = {'cell': cell, 'model': args.model, 'agent_calls': calls, 'agent_wall_seconds': agent_seconds,
-              'task_text_sha256': sha(task_text(name, arm).encode())}
+              'variant': args.variant, 'task_text_sha256': sha(task_text(name, arm, args.variant).encode())}
     code, tests = code_bytes(work)
     review = (work / 'REVIEW.md').stat().st_size if (work / 'REVIEW.md').exists() else 0
     result.update(code_bytes=code, test_bytes=tests, review_bytes=review,
-                  policy_bytes=len(engine_policy(TASKS[name])), task_text_bytes=len(task_text(name, arm).encode()))
+                  policy_bytes=len(engine_policy(TASKS[name])), task_text_bytes=len(task_text(name, arm, args.variant).encode()))
     if (work / 'handler.py').exists():
         result['score'] = run_oracle(name, arm, work, base / 'oracle')
         result['status'] = 'SCORED'
@@ -364,7 +393,8 @@ def run_cell(args, cell, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('command', choices=('matrix', 'controls', 'oracle', 'run'))
+    parser.add_argument('command', choices=('matrix', 'controls', 'oracle', 'run', 'texts'))
+    parser.add_argument('--variant', default='blind', choices=('blind', 'named'))
     parser.add_argument('--batch', type=int, choices=sorted(BATCHES))
     parser.add_argument('--cell', action='append', default=[])
     parser.add_argument('--out')
@@ -377,6 +407,14 @@ def main():
     parser.add_argument('--work')
     args = parser.parse_args()
 
+    if args.command == 'texts':
+        rows = {'kit/README.md': sha((HERE / 'kit' / 'README.md').read_bytes())}
+        for t in sorted(TASKS):
+            rows[t + ' blind (arms A, B, C)'] = sha(blind_text(t).encode())
+            for a in sorted(ARMS):
+                rows['%s named, arm %s' % (t, a)] = sha(task_text(t, a, 'named').encode())
+        print(json.dumps(rows, indent=1))
+        return 0
     if args.command == 'matrix':
         batch = args.batch or 36
         counts = {t: {c: sum(1 for s in scenarios(t) if s['class'] == c) for c in ('boundary', 'race', 'replay')}
@@ -446,14 +484,18 @@ def main():
         if not args.resume:
             print('bench: %s exists; use --resume or a new --out' % checkpoint.name, file=sys.stderr)
             return 2
-        done = {json.loads(line)['cell'] for line in checkpoint.read_text().splitlines() if line.strip()}
+        lines = [json.loads(line) for line in checkpoint.read_text().splitlines() if line.strip()]
+        if any(line.get('variant') != args.variant for line in lines):
+            print('bench: the checkpoint holds another text variant', file=sys.stderr)
+            return 2
+        done = {line['cell'] for line in lines}
     pending = [c for c in todo if c not in done]
     print('bench: %d cells named, %d in the checkpoint, %d to run' % (len(todo), len(todo) - len(pending), len(pending)), flush=True)
     failed = 0
     with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
         for result in pool.map(lambda c: run_cell(args, c, out), pending):
             with checkpoint.open('a') as stream:          # one line per finished cell; the unit of --resume
-                stream.write(json.dumps({'cell': result['cell'], 'status': result['status'],
+                stream.write(json.dumps({'cell': result['cell'], 'status': result['status'], 'variant': args.variant,
                                          'wall_seconds': result['wall_seconds']}, sort_keys=True) + '\n')
             failed += result['status'] != 'SCORED'
             print('bench: %s %s %.1f s' % (result['cell'], result['status'], result['wall_seconds']), flush=True)

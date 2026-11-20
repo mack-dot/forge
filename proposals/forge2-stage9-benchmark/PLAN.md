@@ -162,3 +162,46 @@ the result needs the owner's word and must be recorded as such. Options:
   loss and a real provider are not tested.
 - The harness is under `proposals/` on purpose: a code file under
   `scripts/` would make the Stage 9 lock stale (pull request 76).
+
+## Blind task texts (owner's word of 2026-11-20; written and committed BEFORE any blind cell ran)
+
+The owner's words, as the coordinator session passed them on:
+"Approved. Update the task suite with blind prompts containing hidden
+hazards (TOCTOU races, replays, unannounced sub-caps) so the baseline
+arms are tested fairly, and queue Batch 36 (6 tasks x 3 arms) for the
+initial empirical pilot."
+
+`bench.py run` now has `--variant blind` (default) and `--variant
+named` (the texts above this section; NOT run in this batch). The
+blind text (`blind_text` in `bench.py`):
+
+- is ONE text per task for the three arms (byte-equal; one SHA-256);
+- does not say that processes run at the same time, does not say that
+  a request can come again, and no longer offers the `DUPLICATE` status;
+- states no limit in prose. The limits are in `STATE_DIR/task.json`,
+  and the text explains the fields of that file in one sentence. The
+  cap of all payments by `original`, the refusal of amounts of 0 or
+  less, and "one payment per `request_id`" are NOT stated;
+- has one line for all arms: "If this folder has a `kit/` folder, read
+  `kit/README.md` first and build on the kit." Only arm C has `kit/`.
+  `kit/README.md` names the result codes `STALE_STATE_HASH` and
+  `DUPLICATE_REQUEST_ID`: arm C sees those two words, arms A and B do
+  not. That difference is the treatment, not the text.
+
+The oracle and the scoring are unchanged. So the oracle now counts a
+payment as escaped also for rules that the blind text does not state.
+
+| Text | SHA-256 (`bench.py texts`) |
+| --- | --- |
+| T1 blind | `511bf9c9e46d781dc46b8c5dd551cb1c0e0b229f5f9ff052c59a4f66213860ba` |
+| T2 blind | `24824bce7dba82f2382dac8ff2bb96398c8b42974ba160a9a5c6bb89026c2859` |
+| T3 blind | `df2e42b16f5cfc5fa25499af3389c021e185a7ef18f4db56eaa361c8c6fa4340` |
+| T4 blind | `2dee3ec3416148f1587d0b18514a3368ce38a5a633489327daaf22a74e993eac` |
+| T5 blind | `563d8a13a3493bdc4d5823970606b6329c11590abcd375fcf3860c85c4b99c31` |
+| T6 blind | `5bc6526154d005849cddf5e54db1b5c716745cfc9f85fbf3d82ff9b7fc552105` |
+| `kit/README.md` | `17537adf087363e8e5fb29961d9d492ac1074d81f3a3ec3dba06f2c355dc0488` |
+
+Batch 36 in this harness is 36 cells: 6 tasks x 3 arms x 2
+repetitions (12 cells per arm, 60 agent calls). The owner's words name
+"6 tasks x 3 arms"; the results are also given for repetition s1 alone
+(6 cells per arm).
