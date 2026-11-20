@@ -21052,3 +21052,30 @@ curl: (6) Could not resolve host: github.com
   `main`); Stage 7, Stage 9, Stage 10; any HOL process; the Goal 21 intent bundle. The video take was NOT RUN again
   after the last label correction.
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's review of the pull request.
+
+## U927 — Test hygiene: the changed copy `S2_shared_lock` left one hung `serve` process per run; the repair and the new teardown check
+
+- Refs U910, U912, U920. Branch `fix/s2-shared-lock-teardown` from `b1c98822`; NOT pushed; NOT merged.
+- Cause (reproduced): case `lock` of `tests/primitives_v2/test_engine.py` starts a holder with
+  `PRIMITIVES_TEST_PAUSE_AT=locked`; `pause()` in `src/primitives_v2/store.rs` then waits for SIGKILL. Under the shared
+  lock the second process answers, `require` raises, and `holder.kill()` never runs. The other `serve` children end at
+  EOF when the suite exits; the paused holder does not. `mutants.py` ran the suite with `subprocess.run`, which kills
+  only the suite on a timeout. Before the repair: 1 process left per run (the nine old ones match this).
+- Repair: `test_engine.py` and `test_ledger_graph.py` start every child through `spawn()`; after each case `main()`
+  kills and reaps each child still alive (line `REAPED`). `mutants.py`, `mutants_p7.py`, `mutants_p8.py`,
+  `mutants_p9.py` and `mutants_sdk.py` run each suite with `run_group()`: own process group, SIGKILL to the group on
+  every exit path; a timeout still raises as before. Same pattern found: `test_ledger_graph.py` (Session, the 50-process
+  claim race; no leak seen, the children end at EOF) and the four other drivers. `test_policy_to_dfy.py` already closes
+  its sessions in `finally`; the other suites use `subprocess.run` only. Not changed: `run()` of
+  `scripts/exit_universal_primitives.py` kills only the suite on its 6-hour timeout (the same shape; out of scope).
+- Regression check: at the end of every run `test_engine.py` lists the processes whose command line names its work
+  folder (line `TEARDOWN`); one found is a failure (exit 1) and is killed. Shown to fire: with reaping disabled in a
+  scratch copy it reported 2 processes.
+- Results (actual): see the ROADMAP section. All 30 copies of `mutants.py` are still KILLED for their named reasons,
+  the control passes, `test_engine.py` passes 23 of 23; 0 processes left after each run.
+- Uncertainty: the ps check matches a substring of the command line; an engine started with a path outside the work
+  folder would not be seen (none is today). `killpg` after the leader is reaped could in principle reach a reused group
+  id; no member alive means the group id is free, so the risk is small. Impact: the bundle digest of
+  `scripts/exit_universal_primitives.py` changes (it hashes the test files); no tracked record holds it.
+- NOT RUN: `mutants_p9.py`, `mutants_sdk.py` (compile check only), `test_policy_to_dfy.py`, Dafny, HOL, the EXIT
+  script. Next check: one `exit_universal_primitives.py --case mutations` run, then `pgrep -fl primitives-engine`.
