@@ -309,8 +309,8 @@ What is real, beat by beat:
   skip, the runner prints it as a gap, and the take is PARTIAL (exit 3).
 - Beat 8: the second key `inv-205` has an invoice fact far above the
   sub-cap. There only the total cap (the sub-cap) refuses the payment.
-  The guard-sabotage check of scene 4 deletes that guard, and this shot
-  then fails.
+  The guard-sabotage check of scene 4 deletes that guard. This shot then
+  fails, because the answer is no longer `REJECTED_POLICY TOTAL_CAP`.
 - Beat 9: (a) a handler raises a real `TypeError` and leaves its lease
   open; the engine's sweep reports it (`DROPPED_OBLIGATION` is a report
   code, not a refusal). (b) `--flood-mb` MiB of bytes with no line end go
@@ -356,8 +356,11 @@ What is real:
   normal engine and against the sabotaged copy. The repository file is
   not changed. If the check does not exit 1 against the sabotaged copy,
   or does not exit 0 against the normal engine, the take fails (exit 1).
-  On the sabotaged copy, the treasury shot `Payment above the sub-cap`
-  is the one that only the deleted guard refuses.
+  On the sabotaged copy, two treasury shots no longer answer
+  `REJECTED_POLICY TOTAL_CAP`, so the check fails. The screen prints what
+  the sabotaged copy answered. The check does not require a commit on
+  the sabotaged copy: another check of the engine can still refuse the
+  payment with another code.
 - (c) The runner prints the limits. The uid comes from `os.getuid()`.
 
 The frame at 0:51.0-0:55.0 must show `end_to_end=false` at full size. The

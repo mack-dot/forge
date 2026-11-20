@@ -9,7 +9,8 @@ and the amount is the payment in cents.
   * The 1000-cent payment commits.
   * A second key, inv-205, has the same sub-cap and an invoice fact of 10000000 cents. A payment of 60000
     cents is inside the invoice fact and above the sub-cap: only the total cap refuses it (TOTAL_CAP). The
-    guard-sabotage check of the runner deletes that guard; this shot then fails.
+    guard-sabotage check of the runner deletes that guard; this shot then fails (the answer is no longer
+    TOTAL_CAP; another check of the engine can still refuse the payment with another code).
 
 Labels. Every shot is NATIVE CHECK + FINITE TEST (Rust engine, not proved). end_to_end=false.
 
