@@ -21008,6 +21008,29 @@ curl: (6) Could not resolve host: github.com
   but the clone check has not run; (5) whether rate_window should bind keys to an authenticated caller (M2).
 - Impact: none on any stage label; M1-B OPEN. Next check: the scratch-clone regression, then the pull request.
 
+## U921 — Assurance-chain investigation 2026-11-20: results, the review that overturned the first recommendation, and what stays unverified
+
+- Refs U298, U393, U409, U225, U744, U840, U894, U912. Evidence: `proposals/assurance-chain-20261120/` (README, Reports A
+  to F, Annexes 1 to 3), base `058eabcb`. Read-only. No HOL, Holmake, Dafny, build or test ran. A MACHINE_CHECKED
+  status in the reports rests on a committed run record; no run was repeated.
+- Findings that change earlier wording: (1) the tree has 1,223 tracked `.dfy` files with 376 distinct contents; about
+  60 hand-written sources carry a claimed result. (2) The "45-link graph" has 47 row ids. (3) No HOL theorem has a
+  clean or independent replay record; the M1 sources and tool pins are not on `main`. (4) No Rust engine is connected
+  to a proof except by tests. (5) Both refund engines recheck every conjunct of `Eligible` natively except the two flag
+  bits, so the M1 machine-code theorem supports completeness, not safety, of the durable transition. (6) Every runtime
+  receipt is an assertion of the engine that wrote it. (7) The silicon sink does not hash the binary, sends
+  caller-chosen flags, and has the ratchet shape that pull request 73 repaired only in the airlock (read from the
+  code; NOT RUN). (8) The tracked Goal 20 record does not reproduce on `main` (20 of 64 subject files changed).
+- The first version of the reports recommended "make M1 rebuildable and replay it" as the single next task. A
+  fresh-context review showed that this was not the shortest path to the owner's question, and that the first
+  "minimal theorem" did not need the machine-code theorem for its conclusions. The revision recommends V1 (a proved
+  recheck verifier over the durable log) first. Uncertainty: the revision was not reviewed a second time.
+- Not established: whether a non-root second user can read a running process's code identity on macOS; run-time
+  values of TBI0 and SA0 (kernel source defaults were read, not observed); several external project statuses (marked
+  unconfirmed in Annex 3); every size estimate.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on V1 and on the
+  stateful specification text that V1 needs (its approval is a missing edge today).
+
 ## U920 — Release audit 2026-11-20: results, repairs, and what stays open
 
 - Refs U744, U745, U881, U912. Evidence: `proposals/release-audit-20261120/` (README with the release-readiness table,
