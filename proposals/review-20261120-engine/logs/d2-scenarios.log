@@ -1,0 +1,18 @@
+# D2 scenario of the review: a store pinned to the Homebrew Node; BOOK through serve --node /opt/homebrew/bin/node, engine of e3322303 then this branch
+== ../pr3-base/engine
+COMMITTED b1 2 13503d6db0a731c328a216662d706188 BOOK t1 inv b1 11 1
+exit 0
+== build/airlock/airlock-engine
+HELPER_FAILED PIN_PATH_UNTRUSTED Node binary WRITABLE /opt/homebrew/Cellar mode 775
+exit 22
+
+# D2 "Related": booking_check.cjs with a changed bignumber.js beside a caller-chosen model
+== booking_check.cjs of e3322303, model copy with a changed node_modules/bignumber.js beside it
+ACCEPT
+exit 0
+== booking_check.cjs of this branch, same files
+booking_check: model: bignumber.js SHA-256 ada4979a80080845439958ba8edcc0d67fd75ce8d60e73655664de1c922c1cd7 is not the pinned 08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce
+exit 2
+== this branch, the built model (pinned bignumber.js from the repository node_modules)
+ACCEPT
+exit 0

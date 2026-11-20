@@ -23,7 +23,7 @@ pub struct Ctx {
 impl Ctx {
     fn node(&self) -> Node<'_> {
         let pin = self.node_pin.get().and_then(|p| p.as_deref());
-        Node { node: self.node.as_deref(), pin, checker: self.checker.as_deref() }
+        Node { node: self.node.as_deref(), pin, checker: self.checker.as_deref(), store: &self.dir }
     }
 }
 fn toks(line: &str, min: usize, max: usize) -> Result<Vec<&str>, Refusal> {
@@ -172,7 +172,7 @@ fn refund(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
         if amount == 0 { return verdict(s, req, Code::RejectedPolicy, "ZERO_AMOUNT") }
         let wire = format!("({key} {req} {original} {remaining} True True True {amount} {reason})");
         let expect = format!("(refund-result-v1 True {amount} {reason} {key} {req} 1)");
-        if !helpers::refund_binary(ctx.binary.as_deref(), &wire, &expect)? { return verdict(s, req, Code::RejectedPolicy, "CAKEML_REJECTED") }
+        if !helpers::refund_binary(ctx.binary.as_deref(), &ctx.dir, &wire, &expect)? { return verdict(s, req, Code::RejectedPolicy, "CAKEML_REJECTED") }
         if amount > remaining || !REASONS.contains(&reason) { return no(Code::BadFrame, "BAD_FRAME the binary accepted what the native check refuses") }
     } else {
         let fact = |n: &str| facts.get(n).copied();

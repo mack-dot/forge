@@ -114,10 +114,25 @@ def files(store):
     return {p.name: p.read_bytes() for p in sorted(Path(store).iterdir())}
 
 
+def private_copy(work, node):
+    """A private copy of the Node binary (0700 folder, 0500 file) in the work folder. Review D2: the engine runs a pinned
+    helper file only on a path that no other non-root user can change; the Homebrew Node is under /opt/homebrew/Cellar,
+    which the group admin may write, so the engine refuses it there. The copy has the same bytes, so the same SHA-256
+    pin. A missing Node is passed on unchanged (the cases that need it then fail with NOT RUN)."""
+    if not node or not Path(node).is_file():
+        return node
+    d = Path(work) / 'node-private'
+    d.mkdir(mode=0o700)
+    shutil.copyfile(node, d / 'node')
+    os.chmod(d / 'node', 0o500)
+    return str(d / 'node')
+
+
 class Suite:
     def __init__(self, a):
         self.engine, self.kill_engine, self.node = str(Path(a.engine).resolve()), str(Path(a.kill_engine).resolve()), a.node
         self.work = Path(tempfile.mkdtemp(prefix='airlock-', dir=a.work))
+        self.node = private_copy(self.work, a.node)
         self.n = 0
         self.refund = None
         self.interposer = str(Path(a.interposer).resolve()) if a.interposer else None
@@ -1648,6 +1663,106 @@ def case_ratchet_entry(s):
     return 'bad last entry + one-record rollback -> CORRUPT_WAL; bad middle entries -> CORRUPT_WAL; 3 crash-shaped last entries repaired; torn entries cut; no duplicate push'
 
 
+class Server:
+    """One long `serve` process: the requests go one at a time, so a file can be changed BETWEEN two requests."""
+
+    def __init__(self, s, store, extra):
+        self.proc = subprocess.Popen([s.engine, 'serve', store] + [str(x) for x in extra], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE, env=ENV)
+
+    def ask(self, line):
+        self.proc.stdin.write((line + '\n').encode())
+        self.proc.stdin.flush()
+        return self.proc.stdout.readline().decode().rstrip('\n')
+
+    def close(self):
+        self.proc.stdin.close()
+        self.proc.wait(timeout=60)
+        self.proc.stdout.close()
+        self.proc.stderr.close()
+
+
+def case_pin_window(s):
+    """Review D2: the pinned helper files are checked at EVERY exec, not once per process, and only on a path that no
+    other non-root user can change. (a) the refund binary is changed in place after its first use in one `serve`
+    process: HELPER_FAILED PIN_MISMATCH (it is hashed at every exec); (b) the Node binary is replaced (rename) after its
+    first use: HELPER_FAILED (an identity re-check at every exec, a new hash when it changed); (c) a pinned file in a
+    folder that another user can write (0777, 0775) is refused (PIN_PATH_UNTRUSTED); (d) a bignumber.js next to a
+    caller-chosen checker model that is not the pinned one is refused; (e) a symbolic link to a good Node copy works (the
+    engine checks and runs the resolved file)."""
+    ex = s.node_ok()
+    require(MODEL.exists(), 'NOT RUN: the checker model %s is missing' % MODEL)
+    reject_frame = "#!/bin/sh\ncat > /dev/null\nprintf '%s' '(refund-result-v1 False 0 \"\" \"\" \"\" 0)'\n"
+    # (a) refund binary, changed in place (same inode) between two requests of one process
+    p = s.store('pinwin-c', policies=('money-canonical',))
+    s.one(p, 'OPEN_MONEY t1 charge-1 r0 canonical 100', 'COMMITTED')
+    b = s.folder('pinwin-bin') / 'refund'
+    shutil.copyfile(BINARY, b)
+    os.chmod(b, 0o700)
+    srv = Server(s, p, ['--refund-binary', b])
+    try:
+        a1 = srv.ask('REFUND t1 charge-1 rq1 %s returned_item 5' % s.h(p, 't1', 'charge-1'))
+        require(a1.startswith('COMMITTED rq1 '), 'first refund with the pinned binary: %r' % a1)
+        with open(b, 'r+b') as f:  # the same file, new bytes: a script that always rejects
+            f.write(reject_frame.encode())
+            f.truncate()
+        a2 = srv.ask('REFUND t1 charge-1 rq2 %s returned_item 5' % a1.split(' ')[3])
+    finally:
+        srv.close()
+    require(a2.startswith('HELPER_FAILED PIN_MISMATCH'), 'a refund binary changed after its first use must be refused: %r' % a2)
+    # (b) Node, replaced (rename) between two requests of one process
+    q = s.store('pinwin-n')
+    s.one(q, 'OPEN_INVENTORY t1 inv r0 seats 3', 'COMMITTED')
+    s.one(q, 'OPEN_INVENTORY t1 inv2 r0b seats 3', 'COMMITTED')
+    nd = s.folder('pinwin-node')
+    node = nd / 'node'
+    shutil.copyfile(s.node, node)
+    os.chmod(node, 0o700)
+    fake = nd / 'fake'
+    fake.write_text('#!/bin/sh\ncat > /dev/null\nprintf \'REJECT\\n\'\nexit 1\n')
+    os.chmod(fake, 0o700)
+    srv = Server(s, q, ['--node', node, '--checker', MODEL])
+    try:
+        a1 = srv.ask(cert_line(s, q, 'b1', VALID_CERT))
+        require(a1.startswith('COMMITTED b1 '), 'first booking with the pinned Node: %r' % a1)
+        os.replace(fake, node)
+        a2 = srv.ask(cert_line(s, q, 'b2', VALID_CERT, 'inv2'))
+    finally:
+        srv.close()
+    require(a2.startswith('HELPER_FAILED PIN_MISMATCH'), 'a Node binary replaced after its first use must be refused: %r' % a2)
+    # (c) a pinned file in a folder that another user can write
+    for mode in (0o777, 0o775):
+        d = s.folder('pinwin-open-%o' % mode)
+        shutil.copyfile(BINARY, d / 'refund')
+        os.chmod(d / 'refund', 0o700)
+        os.chmod(d, mode)
+        tok = s.one(p, 'REFUND t1 charge-1 rq3 %s returned_item 5' % s.h(p, 't1', 'charge-1'), 'HELPER_FAILED', ['--refund-binary', d / 'refund'])
+        require(tok[1] == 'PIN_PATH_UNTRUSTED' and 'WRITABLE' in tok, 'a refund binary in a %o folder: %r' % (mode, tok))
+        shutil.copyfile(s.node, d / 'node')
+        os.chmod(d / 'node', 0o700)
+        tok = s.one(q, cert_line(s, q, 'b3', VALID_CERT, 'inv2'), 'HELPER_FAILED', ['--node', d / 'node', '--checker', MODEL])
+        require(tok[1] == 'PIN_PATH_UNTRUSTED' and 'WRITABLE' in tok, 'a Node binary in a %o folder: %r' % (mode, tok))
+        os.chmod(d, 0o700)
+    # (d) a bignumber.js next to a caller-chosen checker model that is not the pinned one
+    cd = s.folder('pinwin-checker')
+    shutil.copyfile(MODEL, cd / 'model.cjs')
+    real = ROOT / 'node_modules' / 'bignumber.js'
+    require(real.is_dir(), 'NOT RUN: %s is missing' % real)
+    (cd / 'node_modules' / 'bignumber.js').mkdir(parents=True)
+    shutil.copyfile(real / 'package.json', cd / 'node_modules' / 'bignumber.js' / 'package.json')
+    (cd / 'node_modules' / 'bignumber.js' / 'bignumber.js').write_bytes((real / 'bignumber.js').read_bytes() + b'\n// changed\n')
+    tok = s.one(q, cert_line(s, q, 'b3', VALID_CERT, 'inv2'), 'HELPER_FAILED', ex + ['--checker', cd / 'model.cjs'])
+    # (e) a symbolic link to a good private Node copy: the engine resolves it, checks the target and runs the target
+    good = s.folder('pinwin-good') / 'node'
+    shutil.copyfile(s.node, good)
+    os.chmod(good, 0o700)
+    link = s.folder('pinwin-link') / 'node'
+    link.symlink_to(good)
+    s.one(q, cert_line(s, q, 'b3', VALID_CERT, 'inv2'), 'COMMITTED', ['--node', link, '--checker', MODEL])
+    return ('refund binary changed in place and Node replaced after first use -> PIN_MISMATCH; pinned files in 0777 and 0775 folders -> '
+            'PIN_PATH_UNTRUSTED; a changed bignumber.js beside the model -> HELPER_FAILED; a link to a good Node copy commits')
+
+
 def case_native_bound(s):
     """STAND-IN refund binaries (test doubles of the helper process) that accept what the native check must refuse:
     an amount above the remaining amount, and a reason outside the three approved reasons."""
@@ -1696,7 +1811,7 @@ CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
          ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
          ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env),
-         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('lease_cosign_pending', case_lease_cosign_pending), ('ratchet_entry', case_ratchet_entry), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
+         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('lease_cosign_pending', case_lease_cosign_pending), ('ratchet_entry', case_ratchet_entry), ('pin_window', case_pin_window), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
 
 
 def main():

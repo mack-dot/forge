@@ -39,6 +39,12 @@ An explicit --node must be Node 24.x (the repository pins 24.3.0; it is started 
 version is refused with exit 2 and a message. `serve` without --node passes a Node that it finds without starting
 it (the engine checks the store's SHA-256 pin before the first booking), or no --node at all. Exit 2 is also used
 for a usage error of the dispatcher.
+Review D2: the engine runs a pinned helper file only on a path that no other non-root user can change (owner root or
+the engine's uid, no group or other write bit on the file and on every folder up to /). The Homebrew Node lies under
+/opt/homebrew/Cellar, which the group admin may write, so the engine refuses it there. So the dispatcher passes a
+PRIVATE COPY of the Node it found or was given: build/airlock/node-private/node-<first 16 hex digits of its SHA-256>
+(folder 0700, file 0500, made once, never overwritten). The bytes are the same, so the store's SHA-256 pin is the
+same. The copy belongs to the user who runs the dispatcher: it stops another user, not that user.
 """
 
 import hashlib
@@ -111,17 +117,42 @@ def find_node(explicit):
         return None
     if out != 'v24.3.0':
         say('note: node %s is %s; the repository pins v24.3.0' % (path, out))
-    return str(path)
+    return private_node(path)
 
 
 def found_node():
     """A Node path for `serve`, found WITHOUT starting it: $FORGE_AIRLOCK_NODE or `node` on PATH, made absolute; or None.
-    The engine checks it against the store's SHA-256 pin before the first booking; no other verb starts it."""
+    The engine checks it against the store's SHA-256 pin before the first booking; no other verb starts it. Returned as
+    its private copy (private_node)."""
     cand = os.environ.get('FORGE_AIRLOCK_NODE') or shutil.which('node')
     if not cand:
         return None
     path = Path(cand) if Path(cand).is_absolute() else Path(shutil.which(cand) or cand).resolve()
-    return str(path) if path.is_file() else None
+    return private_node(path) if path.is_file() else None
+
+
+def private_node(path):
+    """Review D2: the private copy of a Node binary, build/airlock/node-private/node-<16 hex of its SHA-256> (folder 0700,
+    file 0500). Made once (a temporary file, then a rename); an existing copy is not changed and not hashed again here:
+    the engine hashes it against the store's pin. None if the file cannot be read or copied (a message is printed)."""
+    folder = BUILD / 'node-private'
+    try:
+        h = hashlib.sha256()
+        with open(path, 'rb') as f:
+            for block in iter(lambda: f.read(1 << 20), b''):
+                h.update(block)
+        dest = folder / ('node-' + h.hexdigest()[:16])
+        folder.mkdir(mode=0o700, parents=True, exist_ok=True)
+        os.chmod(folder, 0o700)
+        if not dest.is_file():
+            tmp = folder / ('%s.tmp-%d' % (dest.name, os.getpid()))
+            shutil.copyfile(path, tmp)
+            os.chmod(tmp, 0o500)
+            os.replace(tmp, dest)
+        return str(dest)
+    except OSError as e:
+        say('node %s: no private copy: %s' % (path, e))
+        return None
 
 
 def engine_in(engine_dir):

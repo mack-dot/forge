@@ -97,18 +97,40 @@ the kill-points build; case `seams` checks that the production build ignores the
   (section 4). They need write access to the store.
 - `serve` takes the lock per request, not for its lifetime. Many `serve` processes can
   work on one store at once.
-- `serve --node P`: an absolute path to the Node binary (only a `BOOK` uses it). Before the
-  first booking helper call of the process, the engine computes the SHA-256 of P and compares it with the store's pin
-  (once per process; the result is kept for the process). A difference:
-  `HELPER_FAILED PIN_MISMATCH ...`; an unreadable file: `HELPER_FAILED PIN_UNREADABLE ...`;
-  a store with no pin: `HELPER_FAILED NO_NODE_PIN ...`. `--refund-binary P`: before its
-  first use in the process, P must have SHA-256
-  `b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8` (the same codes).
-  Limit: a file swapped AFTER that check (between the hash and a later exec) is not
-  detected. `--checker` is the compiled model (normally `build/airlock/checker/model.cjs`);
-  `booking_check.cjs` pins its SHA-256 itself. There is no `--helpers` flag: it is a usage
-  error (exit 2). A missing flag makes the verb that needs it answer `HELPER_FAILED`; it
-  never commits.
+- `serve --node P`: an absolute path to the Node binary (only a `BOOK` uses it), pinned by
+  the store (SHA-256 in the genesis record). `--refund-binary P`: pinned by the engine (SHA-256
+  `b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8`). Pin checks (review D2),
+  at EVERY run of the helper, not once per process:
+  1. P is resolved once (`canonicalize`: symbolic links followed here); the RESOLVED path is
+     checked and run.
+  2. Path checks (the generalised ownership walk of `cosign.rs`): every part from `/` to the
+     file exists, is not a symbolic link, is owned by uid 0 or by the engine's own uid, and
+     has no group or other write bit; a root-owned folder with the sticky bit (such as
+     `/private/tmp`) may be writable by others (no other user can rename or remove an entry
+     that it does not own there). The file is a regular file. Else
+     `HELPER_FAILED PIN_PATH_UNTRUSTED <what> <check>`. The engine's uid is the owner of a
+     private folder that the engine creates in the store folder (std has no `geteuid`); uid
+     99 (`_unknown`) is never trusted.
+  3. The refund binary (238,776 bytes) is hashed at every run. The Node binary (about 89 MB)
+     is hashed at its first run in the process and again whenever its identity (device,
+     inode, size, mtime and ctime with nanoseconds) differs from the hashed one; the identity
+     is read at every run. One SHA-256 of that Node took about 0.5 s of CPU on this machine
+     (engine `sha256`, load average above 30), so a hash per booking was not chosen.
+  A difference: `HELPER_FAILED PIN_MISMATCH ...`; an unreadable file:
+  `HELPER_FAILED PIN_UNREADABLE ...`; a store with no Node pin: `HELPER_FAILED NO_NODE_PIN ...`.
+  Limit: macOS has no `fexecve`, and exec of `/dev/fd/N` gave `EACCES` here (Mach-O and a
+  script; `proposals/review-20261120-engine/logs/d2-fdexec.log`), so the file is still run
+  by path. Whoever may write the file or a folder on its path (root, or the engine's own uid)
+  can still change it between the check and the exec. In the one-user flow (the engine is a
+  child process of the caller, under the caller's uid) these checks close nothing against
+  the caller; they stop another user, for example when `serve` runs as a service user. The
+  Homebrew Node is under `/opt/homebrew/Cellar` (group `admin` may write it): the engine
+  refuses it there; `bin/forge-airlock` passes a private copy (its docstring).
+  `--checker` is the compiled model (normally `build/airlock/checker/model.cjs`);
+  `booking_check.cjs` pins its SHA-256 and the SHA-256 of its one dependency
+  `bignumber.js` (section 8) itself: a caller-chosen checker folder can only supply those
+  exact bytes. There is no `--helpers` flag: it is a usage error (exit 2). A missing flag
+  makes the verb that needs it answer `HELPER_FAILED`; it never commits.
 
 ## 3. Lines and tokens
 
@@ -455,9 +477,9 @@ Policy: `{"airlock": "money", "version": 1, "name": "<name>", "profile": "canoni
   Anything else: `BAD_FRAME`. A binary that cannot start or times out: `HELPER_FAILED`.
 - After an accept, the engine checks natively that `amount <= remaining` and the reason
   is one of the three; else `BAD_FRAME`.
-- The engine pins the binary: before its first use in a process, the file given with
-  `--refund-binary` must have SHA-256 `b8ed5ec2…7bb8` (`HELPER_FAILED PIN_MISMATCH`
-  otherwise). Limit: a swap after that check is not detected.
+- The engine pins the binary: at every run, the file given with `--refund-binary` must
+  pass the path checks of section 2 and have SHA-256 `b8ed5ec2…7bb8`
+  (`HELPER_FAILED PIN_PATH_UNTRUSTED` or `PIN_MISMATCH` otherwise). Limit: section 2.
 
 ## 7. Cosign
 
@@ -523,13 +545,14 @@ Then, under the store lock, for a `REQUIRE_HUMAN_COSIGN` verdict: no pinned key:
 `NO_COSIGN_KEY`; the key inside the signature is not the pinned key: `COSIGN_INVALID` (no
 ssh-keygen runs); else the engine runs ssh-keygen:
 
-- program: `/usr/bin/ssh-keygen`, fixed. Before its first use in a process, the engine
-  checks with std only (`symlink_metadata`): no part of the path is a symbolic link, every
-  folder on it (from the root folder `/`, which is checked too) and the file are owned by uid 0 with no group or other write bit, the file
-  is a regular file (`HELPER_FAILED SSH_KEYGEN_UNTRUSTED <check>` otherwise). Its SHA-256
-  is NOT pinned (an OS update would refuse every store); `cosign-info` prints it and the
-  `ssh -V` text so that an operator can record them. Limit: a file swapped after the check
-  is not detected.
+- program: `/usr/bin/ssh-keygen`, fixed. Before EVERY run (review D2; before, once per
+  process), the engine checks with std only (`symlink_metadata`): no part of the path is a
+  symbolic link, every folder on it (from the root folder `/`, which is checked too) and the
+  file are owned by uid 0 with no group or other write bit, the file is a regular file
+  (`HELPER_FAILED SSH_KEYGEN_UNTRUSTED <check>` otherwise). No sticky-folder exception and
+  no other owner here. Its SHA-256 is NOT pinned (an OS update would refuse every store);
+  `cosign-info` prints it and the `ssh -V` text so that an operator can record them. Limit:
+  the program is run by path; only root can change it between the check and the exec.
 - files: the engine creates `<store>/cosign.tmp` with mode 0700 (exclusive `mkdir`; a
   leftover of a crash, also a symbolic link, is removed first, under the store lock),
   checks it is a folder without group or other bits, writes `allowed_signers`
@@ -634,8 +657,11 @@ wins:
    `alpha_bps <= 10000`; `x` is 0/1 (`NOT_BINARY`); `A x <= c` (`OVERBOOKED`);
    `A^T y + z >= w` (`DUAL_INFEASIBLE`);
    `(10000 - alpha_bps) * (y.c + sum z) <= 10000 * w.x` (`GAP_TOO_LARGE`).
-4. `<node> -e <embedded booking_check.cjs> -- <checker>` (the Node binary pinned,
-   section 2; the helper pins the model's SHA-256), stdin = the canonical JSON of the
+4. `<node> -e <embedded booking_check.cjs> -- <checker>` (the Node binary pinned and its
+   path checked at every run, section 2; the helper pins the model's SHA-256 and the
+   SHA-256 of `bignumber.js` 9.3.1, the model's one dependency: it is found from the model's
+   folder as usual, read once with `O_NOFOLLOW`, checked, and the same bytes are compiled;
+   the model's `require` returns only that module), stdin = the canonical JSON of the
    checked values (keys in the order above, no spaces), time limit 30 s. `ACCEPT\n` +
    exit 0 + empty stderr: go on. `REJECT\n` + exit 1 + empty stderr:
    `REJECTED_POLICY CHECKER_REJECTED`. Else `HELPER_FAILED`.
@@ -689,7 +715,7 @@ Every other refusal has a detail. A parser must accept both forms for every code
 | 19 | `OUTCOME_UNKNOWN` | fault | a record may stay in the WAL; it was not answered as committed |
 | 20 | `DISPATCH_FAILED` | fault | the answer line could not be written; a commit of that line stays committed |
 | 21 | `UNKNOWN_KEY` | refusal | the key was never opened |
-| 22 | `HELPER_FAILED` | refusal | binary, node, model or flag missing; `PIN_MISMATCH`, `PIN_UNREADABLE`, `NO_NODE_PIN`; `SSH_KEYGEN_UNTRUSTED <check>`, `TMP_NOT_PRIVATE`, `SPAWN_FAILED`; timeout; any other helper result (`HELPER_RESULT ...`), also every ssh-keygen result that is not one of the two exact answers of section 7 |
+| 22 | `HELPER_FAILED` | refusal | binary, node, model or flag missing; `PIN_MISMATCH`, `PIN_UNREADABLE`, `PIN_PATH_UNTRUSTED <what> <check>`, `NO_NODE_PIN`; `SSH_KEYGEN_UNTRUSTED <check>`, `TMP_NOT_PRIVATE`, `SPAWN_FAILED`; timeout; any other helper result (`HELPER_RESULT ...`), also every ssh-keygen result that is not one of the two exact answers of section 7 |
 | 23 | `BAD_FRAME` | refusal | the refund binary gave no exact frame |
 | 24 | `DROPPED_OBLIGATION` | report | `leases --sweep` found at least one |
 | 25 | `MALFORMED_POLICY` | refusal | `init` or `eval`: a policy file is not valid |
@@ -728,15 +754,18 @@ changed):
 
 What is pinned by what:
 
-- the refund binary: by the engine (compiled-in SHA-256, checked once per process);
-- the Node binary: by the store (SHA-256 bound in the genesis record at `init`, checked
-  by `serve` once per process before the first booking helper call); inventory only;
+- the refund binary: by the engine (compiled-in SHA-256, hashed and its path checked at
+  every run; section 2, review D2);
+- the Node binary: by the store (SHA-256 bound in the genesis record at `init`); its path is
+  checked and its identity read at every run, and it is hashed again when the identity
+  changed (section 2, review D2); inventory only;
 - the booking helper: by the engine build (its source is compiled in; no helper file is
   read at run time);
-- `/usr/bin/ssh-keygen`: NOT pinned. The engine checks its path once per process
+- `/usr/bin/ssh-keygen`: NOT pinned. The engine checks its path at every run
   (section 7: root-owned, no group or other write bit, no symbolic link); `cosign-info`
   prints its SHA-256 for the operator's record;
-- the checker model: by `booking_check.cjs` (its own SHA-256 pin, `O_NOFOLLOW`);
+- the checker model and `bignumber.js`: by `booking_check.cjs` (their own SHA-256 pins,
+  `O_NOFOLLOW`, one read; section 8);
 - the policies: by the genesis record (FNV-1a-128 of each file; not cryptographic);
 - the engine binary itself: by nothing in this repository; whoever starts it chooses it.
 
@@ -747,10 +776,11 @@ LibreSSL 3.3.6 on the measured machine) verifies every cosign signature, and an 
 the operating system can change it without a change of any store (its native checks of
 section 7 come first; an unknown answer is `HELPER_FAILED`); OpenSSH with LibreSSL is now
 in the trusted base for cosign in place of Node/V8: smaller and widely reviewed, but not
-zero; Node 24.3.0 (and `bignumber.js` from `node_modules`) for the booking checker only;
-the Dafny compiler for `model.cjs`. The opener of a key is trusted for its
-tenant, `original` and facts (section 6). A file swapped between its pin check and a
-later exec is not detected.
+zero; Node 24.3.0 (and `bignumber.js` 9.3.1, pinned by content) for the booking checker
+only; the Dafny compiler for `model.cjs`. The opener of a key is trusted for its
+tenant, `original` and facts (section 6). A helper file is run by path after its checks:
+root or the engine's own uid can still change it between the check and the exec
+(section 2).
 
 Not claimed: no proof of the engine, the fold, the parser, the policy functions, the
 SDKs, the helpers' wiring or the dispatcher. A SIGKILL is not a power loss. FNV-1a-128
@@ -817,6 +847,9 @@ bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `repla
 23. Review D7: a full-length ratchet entry with a bad CRC is `CORRUPT_WAL RATCHET_ENTRY_BAD`,
     except the one crash shape of section 4 (repaired). A recovery no longer pushes a
     ratchet entry of the value that the ratchet holds already.
+24. Review D2: the pinned helper files are checked at every run (path checks; the refund
+    binary hashed every time; Node hashed when its identity changed), not once per process;
+    `/usr/bin/ssh-keygen` is checked at every run; `booking_check.cjs` pins `bignumber.js`.
 
 ## 13. Mutation seams
 
