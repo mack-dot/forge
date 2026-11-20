@@ -1,0 +1,168 @@
+# airlock-ci: builds the forge-airlock engine and runs the airlock and SDK suites on one hosted macOS arm64
+# runner. FINITE TEST only. It proves nothing about the engine or the SDKs. end_to_end=false. M1-B stays OPEN.
+# It is not part of the proof gate and it gives no gate evidence.
+#
+# What it runs (selected by case name on the command line; no test file is changed):
+#   build          python3 bin/forge-airlock build: two rustc builds (production and kill_points) with the
+#                  rustc of the runner image, plus the 0700 copy of the TRACKED CakeML refund binary
+#                  (proposals/forge2-m1-conformance/artifacts/refund-arm64-macho, Mach-O arm64, SHA-256 pinned).
+#                  No CakeML toolchain is needed: the binary is tracked, not built.
+#   engine suite   tests/airlock/test_engine.py, every case except SKIP_ENGINE
+#   node helpers   tests/airlock/test_node_helpers.py, every case except SKIP_NODE_HELPERS
+#   SDK suite      tests/airlock/test_sdk.py (Python and TypeScript SDK; TypeScript runs through the built-in
+#                  type stripping of Node 24, no npm, no node_modules), every case except SKIP_SDK
+#   diff-policy    tests/airlock/test_diff_policy.py with the built engine, every case except SKIP_DIFF_POLICY
+#
+# What it skips, and why (the hosted image has no Dafny; this workflow installs nothing from the network):
+#   - every case that needs build/airlock/checker/model.cjs. That file is the Dafny-compiled booking checker,
+#     made by `forge-airlock build --checker` (pinned Dafny 4.11 + node_modules); neither is on the runner.
+#   - the diff-policy cases that start the pinned Dafny (demo, choice, fault, refused), and `identical`, which
+#     without Dafny compares two equal failure outputs (0 bytes, exit 1) and so passes without checking anything.
+# Skip counts at this commit: engine 2 (inventory, pin), node helpers 63 (every booking case that loads the
+# default model), SDK 2 (py_saga_inventory, ts_typed), diff-policy 5. Names: the SKIP_* values below.
+# The selection step fails if a skip name is not a case of its suite, and it prints every case as RUN or SKIP.
+# A new case that a later change adds RUNS by default.
+#
+# Toolchains come only from the runner image: rustc (no version pin is enforced by the build; the repository
+# records 1.92), python3, /usr/bin/cc (test interposer), /usr/bin/ssh-keygen, and Node 24.x from the image tool
+# cache (the repository pins 24.3.0; the dispatcher accepts any 24.x and prints a note). No Node 24 -> the job fails.
+#
+# Cost: hosted macOS minutes. Triggers only on a push to main and on a pull_request that touch the paths below
+# (push is limited to main, so a pull request branch runs once per push, not twice). No schedule, no matrix,
+# one job. Permissions: contents read. No secrets. No cache.
+
+name: airlock-ci
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/airlock/**'
+      - 'sdk/**'
+      - 'bin/forge-airlock'
+      - 'tests/airlock/**'
+      - '.github/workflows/airlock-ci.yml'
+  pull_request:
+    paths:
+      - 'src/airlock/**'
+      - 'sdk/**'
+      - 'bin/forge-airlock'
+      - 'tests/airlock/**'
+      - '.github/workflows/airlock-ci.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: airlock-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  airlock:
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      SKIP_ENGINE: 'inventory pin'
+      SKIP_NODE_HELPERS: >-
+        booking_optimum_accept booking_overbooking_reject booking_overbooking_reject_alpha_10000
+        booking_fractional_x_reject booking_invalid_dual_reject booking_negative_dual_reject
+        booking_alpha_overclaim_reject booking_alpha_exact_claim_accept booking_suboptimal_zero_gap_reject
+        booking_alpha_above_10000_reject booking_rows_mismatch_reject booking_ragged_row_reject
+        booking_x_length_reject booking_design_md_example_rejects booking_design_md_example_corrected_accept
+        booking_exact_2p53_plus1_reject booking_exact_2p53_plus1_accept booking_exact_63_digits_reject
+        booking_exact_63_digits_accept booking_int_64_chars_negative_ok booking_int_65_chars_refused
+        booking_float_string_refused booking_exponent_string_refused booking_json_number_refused
+        booking_json_float_refused booking_leading_zero_refused booking_minus_zero_refused booking_plus_sign_refused
+        booking_negative_alpha_refused booking_alpha_leading_zero_refused booking_empty_string_refused
+        booking_duplicate_key_refused booking_duplicate_key_first_refused booking_missing_key_refused
+        booking_unknown_key_refused booking_A_flat_refused booking_A_depth3_refused booking_vector_as_string_refused
+        booking_alpha_as_array_refused booking_null_refused booking_bool_refused booking_top_array_refused
+        booking_escape_refused booking_non_ascii_refused booking_trailing_bytes_refused booking_two_objects_refused
+        booking_trailing_comma_refused booking_empty_input_refused booking_bom_refused booking_whitespace_ok
+        booking_exactly_1MiB_accept booking_1MiB_plus_1_refused booking_8MiB_refused booking_max_row_4096_accept
+        booking_max_cells_16x4096_accept booking_row_4097_refused booking_cells_65537_refused
+        booking_empty_vectors_go_to_dafny booking_model_substituted_near_runtime booking_model_symlink_near_runtime
+        booking_model_one_byte_more booking_model_symlink_refused booking_eval_mode
+      SKIP_SDK: 'py_saga_inventory ts_typed'
+      SKIP_DIFF_POLICY: 'demo choice fault refused identical'
+    steps:
+      - name: Check out
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Toolchains of the image (no install)
+        run: |
+          set -euo pipefail
+          test "$(uname -s) $(uname -m)" = "Darwin arm64" || { echo "not macOS arm64: $(uname -sm)"; exit 1; }
+          sw_vers
+          rustc --version
+          python3 --version
+          /usr/bin/cc --version | head -1
+          node_bin=""
+          for d in "$RUNNER_TOOL_CACHE"/node/24.*/arm64/bin; do
+            if [ -x "$d/node" ]; then node_bin="$d/node"; fi
+          done
+          if [ -z "$node_bin" ] && command -v node >/dev/null && node --version | grep -q '^v24\.'; then
+            node_bin="$(command -v node)"
+          fi
+          echo "tool cache Node versions: $(ls "$RUNNER_TOOL_CACHE/node" 2>/dev/null | tr '\n' ' ')"
+          echo "default node: $(command -v node || echo none) $(node --version 2>/dev/null || true)"
+          if [ -z "$node_bin" ]; then echo "no Node 24.x on the image: the suites cannot run"; exit 1; fi
+          echo "selected Node: $node_bin $("$node_bin" --version) (the repository pins v24.3.0)"
+          echo "FORGE_AIRLOCK_NODE=$node_bin" >> "$GITHUB_ENV"
+          dirname "$node_bin" >> "$GITHUB_PATH"
+          if [ -e build ]; then echo "build/ exists in a fresh checkout"; exit 1; fi
+
+      - name: Write the case selector
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/select_cases.py" <<'EOF'
+          """Print `--case NAME` for every case of a suite except the named skips. Fail on an unknown skip name."""
+          import importlib.util, sys
+          path, skip = sys.argv[1], sys.argv[2].split()
+          spec = importlib.util.spec_from_file_location('suite_under_selection', path)
+          mod = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          names = list(mod.CASES) if isinstance(mod.CASES, dict) else [n for n, _ in mod.CASES]
+          unknown = [n for n in skip if n not in names]
+          if unknown:
+              sys.exit('skip names that are not cases of %s: %s' % (path, ' '.join(unknown)))
+          for n in names:
+              sys.stderr.write('%s %s\n' % ('SKIP' if n in skip else 'RUN ', n))
+          run = [n for n in names if n not in skip]
+          if not run:
+              sys.exit('no case left to run in %s (an empty --case list would run every case)' % path)
+          sys.stderr.write('%s: %d cases, %d run, %d skipped\n' % (path, len(names), len(run), len(skip)))
+          print(' '.join('--case ' + n for n in run))
+          EOF
+
+      - name: Build the engine (forge-airlock build)
+        run: python3 -I -B bin/forge-airlock build
+
+      - name: Engine suite (tests/airlock/test_engine.py)
+        run: |
+          set -euo pipefail
+          sel="$(python3 -I -B "$RUNNER_TEMP/select_cases.py" tests/airlock/test_engine.py "$SKIP_ENGINE")"
+          python3 -I -B tests/airlock/test_engine.py build/airlock/airlock-engine build/airlock/airlock-engine-kill \
+            --node "$FORGE_AIRLOCK_NODE" $sel
+
+      - name: Node helper suite (tests/airlock/test_node_helpers.py)
+        run: |
+          set -euo pipefail
+          sel="$(python3 -I -B "$RUNNER_TEMP/select_cases.py" tests/airlock/test_node_helpers.py "$SKIP_NODE_HELPERS")"
+          python3 -I -B tests/airlock/test_node_helpers.py "$FORGE_AIRLOCK_NODE" $sel
+
+      - name: SDK suite, Python and TypeScript (tests/airlock/test_sdk.py)
+        run: |
+          set -euo pipefail
+          sel="$(python3 -I -B "$RUNNER_TEMP/select_cases.py" tests/airlock/test_sdk.py "$SKIP_SDK")"
+          python3 -I -B tests/airlock/test_sdk.py --engine-dir build/airlock --node "$FORGE_AIRLOCK_NODE" $sel
+
+      - name: diff-policy suite (tests/airlock/test_diff_policy.py)
+        run: |
+          set -euo pipefail
+          sel="$(python3 -I -B "$RUNNER_TEMP/select_cases.py" tests/airlock/test_diff_policy.py "$SKIP_DIFF_POLICY")"
+          python3 -I -B tests/airlock/test_diff_policy.py --engine build/airlock/airlock-engine $sel
