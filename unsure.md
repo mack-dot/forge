@@ -21007,3 +21007,25 @@ curl: (6) Could not resolve host: github.com
   explicitly on 2026-11-20; (4) "all prior bundles byte-identical" holds for this branch because it is additive,
   but the clone check has not run; (5) whether rate_window should bind keys to an authenticated caller (M2).
 - Impact: none on any stage label; M1-B OPEN. Next check: the scratch-clone regression, then the pull request.
+
+## U920 — Release audit 2026-11-20: results, repairs, and what stays open
+
+- Refs U744, U745, U881, U912. Evidence: `proposals/release-audit-20261120/` (README with the release-readiness table,
+  AUDIT1_HYGIENE.md, AUDIT2_DEMOS.md, AUDIT3_DOCUMENTS.md). Base `058eabcb`; working commit `e847e5ee`; scratch-clone
+  regression on `e847e5ee`: 28 of 28 Stage EXIT cases exit 0, frozen PR-gate check exit 0, the Slice 1, 2, 3, M1
+  conformance and native silicon sink bundles byte-identical to the tracked records. FINITE TEST on one machine.
+- Found and repaired: the video cut exited 2 on `main` (pull request 72 removed an option its harness passed; pull
+  request 73 moved a test build); each pull request had passed alone. Nine V1.1 files held paths of one machine. Two
+  EXIT scripts held pre-merge checks that fail after their merge. Two numbers and six statements in living documents
+  were false on `main`.
+- Consequence of the script repairs: `scripts/exit_archia_mcp.py` and `scripts/exit_universal_primitives.py` hash
+  themselves into their bundles. The digests `13608d7e…` (U744) and `100476fe…` (U912) are not reproduced by the
+  changed scripts. NOT RUN after the repairs: the `proofs`, `mutations` and `evidence` cases of both scripts.
+- Open, not changed: the tracked Goal 20 record does not reproduce on `main` (20 of 64 subject files; U881 foresaw
+  two of them); two missing link targets older than this audit (`results/stage9/receipt-repair-published/README.md`);
+  no LICENSE on `main`; 2,039 record files hold local paths and cannot be scrubbed without changing digests; the
+  names `INFEASIBILITY_PROVED` and `unbreakable_store` claim more than a finite test supports (bundle subjects).
+- Not checked: the HAL demo and the web showcase (not on `main`); OS user separation (NOT TESTED; no artifact on
+  `main`); Stage 7, Stage 9, Stage 10; any HOL process; the Goal 21 intent bundle. The video take was NOT RUN again
+  after the last label correction.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's review of the pull request.
