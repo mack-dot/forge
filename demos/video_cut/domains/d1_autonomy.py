@@ -11,7 +11,7 @@ with the facts. It shows crew_in_bay=1 and it derives vents_allowed=0 from it (c
 - CYCLE_AIR_FILTER: amount <= 1 commits (the routine command).
 
 Labels. Every shot: NATIVE CHECK + FINITE TEST (Rust engine, not proved). The signature check is Ed25519
-through Node (trusted). Nothing in this module is PROVED. end_to_end=false.
+through `/usr/bin/ssh-keygen -Y verify` (trusted; no Node since pull request 72). Nothing in this module is PROVED. end_to_end=false.
 
 Gaps (also printed by ctx.gap).
 - The engine cannot test "crew_in_bay == 0". It tests a sum against a fact. The trusted opener derives
@@ -28,7 +28,7 @@ from constants import AI_NAME, SHIP_NAME, HUMAN_NAME, BAY_NAME
 NUMBER, NAME, TITLE = 1, 'autonomy', 'Spacecraft autonomy'
 D = 'autonomy'
 T, K = 'ship-1', 'bay-3'  # engine ids; the display names are used in headlines only
-LBL_COSIGN = 'NATIVE CHECK + FINITE TEST; Ed25519 verify through Node (trusted)'
+LBL_COSIGN = 'NATIVE CHECK + FINITE TEST; Ed25519 verify through ssh-keygen -Y (trusted)'
 RULE_OPEN = 'trusted opener sets the facts: crew_in_bay=1 (shown); it derives vents_allowed=0 from it'
 RULE_VENT = 'VENT_BAY: committed vents + amount <= fact vents_allowed (trusted, 0; the opener derives it from crew_in_bay=1)'
 RULE_OVERRIDE = 'OVERRIDE_BAY_LOCK: REQUIRE_HUMAN_COSIGN (commit only with a valid signature of the pinned human key)'

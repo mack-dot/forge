@@ -135,7 +135,9 @@ def run_b(gen, case, policy, work):
             '--airlock-engine', ARGS.airlock_engine, '--seams-engine', ARGS.seams_engine]
     if policy:
         argv += ['--policy', str(POL / policy)]
-    p = subprocess.run(argv, capture_output=True, text=True, timeout=14400)
+    # a changed copy sits under a temporary folder, so its own ROOT holds no .toolchain: point it at this checkout's
+    env = dict(os.environ, FORGE_TOOLCHAIN_ROOT=os.environ.get('FORGE_TOOLCHAIN_ROOT') or str(ROOT))
+    p = subprocess.run(argv, capture_output=True, text=True, timeout=14400, env=env)
     return p.returncode, line_of(p, case)
 
 
@@ -149,11 +151,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--only', action='append')
     ap.add_argument('--work')
-    ap.add_argument('--rustc', default='/Users/mackianni/.cargo/bin/rustc')
+    ap.add_argument('--rustc', default=os.environ.get('FORGE_RUSTC') or shutil.which('rustc'))   # --rustc, FORGE_RUSTC, PATH
     ap.add_argument('--dafny-py', required=True)
     ap.add_argument('--airlock-engine', required=True)
     ap.add_argument('--seams-engine', required=True)
     ARGS = ap.parse_args()
+    if not ARGS.rustc:
+        print('NOT RUN: no rustc: pass --rustc PATH or set FORGE_RUSTC (rustc is not on PATH)')
+        return 2
     names = [m[0] for m in MUTANTS]
     if len(set(names)) != len(names):
         print('ERROR: a name is used twice')

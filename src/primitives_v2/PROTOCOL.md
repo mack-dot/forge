@@ -774,6 +774,12 @@ built: a TypeScript wrapper.
 - Per primitive: `test_ledger_graph.py` with `mutants_p7.py` (7), `test_taint.py` with `mutants_p8.py` (8),
   `test_farkas.py`, `test_policy_to_dfy.py` with `mutants_p9.py` (9). SDK: `test_sdk_primitives.py <engine>` with
   `mutants_sdk.py` (changed copies of the SDK; the suite runs from a mirror tree that holds the copy).
+- Tool paths (no machine path is written in the scripts). rustc: `--rustc PATH` where the script has it, else
+  `FORGE_RUSTC`, else `rustc` on `PATH`. Dafny: `FORGE_DAFNY` (the binary), else
+  `<toolchain root>/.toolchain/dafny-4.11.0/dafny/dafny`; the toolchain root is `FORGE_TOOLCHAIN_ROOT` (the checkout
+  that holds `.toolchain/`; the cwd of every Dafny run), else this repository. A worktree without `.toolchain/` sets
+  `FORGE_TOOLCHAIN_ROOT` to the main checkout. A missing tool gives NOT RUN, a message that names the variable, and a
+  non-zero exit; no script falls back silently. `scripts/exit_universal_primitives.py` lists the same variables.
 
 ## 18. Departures from the directive and open points
 

@@ -34,8 +34,10 @@ import time
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[2]
-DAFNY = '/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny'
-DAFNY_CWD = '/Users/mackianni/forge'
+# Pinned Dafny: FORGE_DAFNY, else <FORGE_TOOLCHAIN_ROOT or this repository>/.toolchain/dafny-4.11.0/dafny/dafny
+# (src/primitives_v2/PROTOCOL.md, Tests). The toolchain root is the cwd of the Dafny build.
+DAFNY_CWD = os.environ.get('FORGE_TOOLCHAIN_ROOT') or str(ROOT)
+DAFNY = os.environ.get('FORGE_DAFNY') or str(Path(DAFNY_CWD) / '.toolchain/dafny-4.11.0/dafny/dafny')
 SOURCE = ROOT / 'src/primitives_v2/dafny/FarkasCert.dfy'
 ENV = {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'LC_ALL': 'C'}
 ANSWER = re.compile(r'^([A-Z][A-Z0-9_]{1,47})((?: [A-Za-z0-9_.:@+-]+=[A-Za-z0-9._~:/@$\[\]+,%-]*)*)(?: -- ([ -~]*))?$')
@@ -310,7 +312,11 @@ def dafny_py(s):
     if s.args.dafny_py:
         return Path(s.args.dafny_py)
     out = s.work / 'dafny-py'
-    if not Path(DAFNY).is_file() or not wait_slot():
+    if not Path(DAFNY).is_file():
+        print('  NOT RUN: the pinned Dafny is missing at %s: set FORGE_TOOLCHAIN_ROOT to the checkout that holds '
+              '.toolchain/dafny-4.11.0, or FORGE_DAFNY to the dafny binary (or pass --dafny-py)' % DAFNY, flush=True)
+        return None
+    if not wait_slot():
         return None
     argv = [DAFNY, 'build', '--target', 'py', str(SOURCE), '--no-verify', '--output', str(out / 'farkas')]
     p = subprocess.run(argv, cwd=DAFNY_CWD, capture_output=True)

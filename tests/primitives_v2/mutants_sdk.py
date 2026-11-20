@@ -13,6 +13,7 @@ every copy was killed for its named reason. 1: otherwise.
 """
 
 import argparse
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -58,8 +59,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--only', action='append')
     ap.add_argument('--work', default=None)
-    ap.add_argument('--rustc', default='/Users/mackianni/.cargo/bin/rustc')
+    ap.add_argument('--rustc', default=os.environ.get('FORGE_RUSTC') or shutil.which('rustc'))   # --rustc, FORGE_RUSTC, PATH
     args = ap.parse_args()
+    if not args.rustc:
+        print('NOT RUN: no rustc: pass --rustc PATH or set FORGE_RUSTC (rustc is not on PATH)')
+        return 2
     table = [m for m in MUTANTS if not args.only or m[0] in args.only]
     names = [m[0] for m in MUTANTS]
     if len(set(names)) != len(names):
