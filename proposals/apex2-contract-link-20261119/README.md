@@ -191,8 +191,13 @@ Not changed: T4i (input encoding), T8 to T22, S1, every X row's class.
 - The tool tree was only read: no file in it is newer than the first job.
   Holmake ran a `.hol_preexec` hook of the HOL tree (`asl-equiv`); it did
   nothing because its folder exists.
-- Scratch-clone regression: NOT RUN at this commit; its record is added by
-  the records commit (`records/regression.json`, `unsure.md` U806).
+- Scratch-clone regression of commit `6606720f` (`records/regression.json`,
+  `unsure.md` U807): 28 of 28 Stage EXIT cases exit 0;
+  `check_frozen_pr_gate.py` exit 0; link checks of 8 files exit 0 (0
+  dangling links); six EXIT scripts with `--case evidence` exit 0, bundles
+  byte-identical to the tracked records; 0 protected paths changed.
+- Hosted `gate/pr_check.py` on pull request 66 at `6606720f`: exit 3
+  (UNSUPPORTED), run 44661325260. That is the expected result.
 
 ## 9. NOT RUN, and limits
 
