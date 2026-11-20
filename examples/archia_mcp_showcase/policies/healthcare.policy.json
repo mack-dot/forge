@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "tools": {
+    "update_dosage": {"kind": "mutating",
+                      "bind": [{"fact": "clinic/{patient_id}", "session": "clinic_id"}],
+                      "args": "closed",
+                      "subcaps": [{"arg": "mg", "max_fact": "max_mg/{patient_id}/{medication}"}],
+                      "scope": ["clinic_id"], "labels": "optional"},
+    "get_patient_chart": {"kind": "sensitive_read", "scope": ["clinic_id"]}
+  }
+}
