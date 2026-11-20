@@ -1,0 +1,17 @@
+# Untracked build products and dependency folders of web/ (frontend and backend).
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+test-results/
+
+# screenshots written by test/browser-check.mjs
+frontend/test/.shots/
