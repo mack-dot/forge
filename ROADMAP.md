@@ -28,6 +28,33 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Assurance-chain investigation 2026-11-20: where the chain from authorization to receipt holds, where it breaks, and the shortest path to an independent verifier (read-only; nothing proved here) — U921
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Documents only: `proposals/assurance-chain-20261120/`
+(a final answer, Reports A to F, three investigator annexes). Base
+`origin/main` `058eabcb`. No code changed. No HOL, Holmake, Dafny,
+build or test ran: every MACHINE_CHECKED status cites a committed run
+record, and none of those runs was repeated. The statements in Report
+D are targets; none is proved.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| three read-only investigations (specification, proof, compiler; runtime, durability, receipt; hardware) |done|three annexes |
+| fresh-context review of the first version of the reports |done|34 claims checked: 25 held, 9 wrong or too strong; 20 defects; the first-task recommendation was inverted |
+| revision with each defect re-checked in the repository |done|17 defects confirmed, 4 partly rejected with evidence (dispositions in the README) |
+| link check of the ten documents (`proposals/round4-20261117/check_links.py`) |0|0 missing targets |
+| any proof replay, clean replay or independent replay |NOT RUN|read-only investigation |
+
+Result in short: two lines exist and meet in no proof. The proved
+refund binary line is machine-checked at model level and stops at
+output bytes. The Rust engines make the durable transition and have no
+proof. Every runtime receipt is an assertion of the engine that wrote
+it. The recommended next task is V1, a small verifier proved against a
+new stateful specification (not approved today), which folds the durable
+log and rechecks every transition; it needs no M1 and no Rust proof.
+Details: [README](proposals/assurance-chain-20261120/README.md).
+
 ## V1.1 universal primitives pack: a new additive engine `src/primitives_v2` with rate windows, double-entry ledgers and graph uniqueness, recursive taint egress, Farkas certificate checks and a policy-to-Dafny model generator; a finite test of unproved Rust and Python around Dafny models; one review with repairs — U910 to U912
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
