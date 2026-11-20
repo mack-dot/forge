@@ -1,6 +1,7 @@
 //! The request verbs of `serve`. NATIVE CHECK, not proved. Grammar and answers: src/airlock/PROTOCOL.md.
 //! Every write: parse (no file opened) -> store::open (flock, fold, ratchet, recovery) -> tenant -> request id ->
 //! compare-and-swap -> policy -> append (sync, ratchet, sync) -> lock released -> one answer line.
+use crate::cosign;
 use crate::helpers::{self, Node};
 use crate::json::{self, J};
 use crate::ledger::{parse_csv, Body, Key, MAX_FACTS, MAX_ROWS};
@@ -17,7 +18,7 @@ pub struct Ctx {
     pub binary: Option<String>,
     pub node: Option<String>,
     pub checker: Option<String>,
-    pub node_pin: std::cell::OnceCell<Option<String>>, // the store's Node pin, read from its genesis record
+    pub node_pin: std::cell::OnceCell<Option<String>>, // the store's Node pin (inventory only), read from its genesis record
 }
 impl Ctx {
     fn node(&self) -> Node<'_> {
@@ -38,9 +39,6 @@ fn amount(s: &str, what: &str) -> Result<u64, Refusal> {
 }
 fn hash(s: &str) -> Result<u128, Refusal> {
     parse_hash(s).map_or_else(|| no(Code::Malformed, "BAD_HASH pre_state_hash"), Ok)
-}
-fn sig_hex(s: &str) -> bool {
-    s.len() == 128 && s.bytes().all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
 }
 
 pub fn handle(ctx: &Ctx, raw: &[u8]) -> Result<String, Refusal> {
@@ -122,12 +120,13 @@ fn open_money(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
     commit(s, req, format!("OPEN_MONEY {tenant} {key} {req} {pol} {original}{facts}"))
 }
 
-/// The canonical cosign message (DESIGN.md). No field can hold a line end.
+/// The canonical cosign message (PROTOCOL.md section 7). No field can hold a line end.
 pub fn cosign_message(store_id: &str, genesis: u128, req: &str, pre: &str, action: &str) -> String {
-    format!("forge-airlock-cosign-v2\n{store_id}\n{}\n{req}\n{pre}\n{action}\n", hx(genesis))
+    format!("{}\n{store_id}\n{}\n{req}\n{pre}\n{action}\n", cosign::MESSAGE_VERSION, hx(genesis))
 }
-/// Parses `REFUND <tenant> <key> <request_id> <pre_state_hash> <reason> <amount> [<signature>]`.
-fn parse_refund(line: &str) -> Result<(Vec<&str>, Option<&str>), Refusal> {
+/// Parses `REFUND <tenant> <key> <request_id> <pre_state_hash> <reason> <amount> [<signature>]`. The signature is
+/// one token: the base64 body of an SSHSIG armor without its line breaks (cosign::parse_sig_token; no file opened).
+fn parse_refund(line: &str) -> Result<(Vec<&str>, Option<(&str, [u8; 32])>), Refusal> {
     let t = toks(line, 7, 8)?;
     if t[0] != "REFUND" { return no(Code::Malformed, "UNKNOWN_VERB") }
     for (i, what) in [(1, "tenant"), (2, "key"), (3, "request_id"), (5, "reason")] {
@@ -135,8 +134,13 @@ fn parse_refund(line: &str) -> Result<(Vec<&str>, Option<&str>), Refusal> {
     }
     hash(t[4])?;
     amount(t[6], "amount")?;
-    let sig = t.get(7).copied();
-    if sig.map_or(false, |x| !sig_hex(x)) { return no(Code::Malformed, "BAD_SIGNATURE a signature is 128 lowercase hex digits") }
+    let sig = match t.get(7).copied() {
+        None => None,
+        Some(x) => match cosign::parse_sig_token(x) {
+            Ok(key) => Some((x, key)),
+            Err(why) => return no(Code::Malformed, format!("BAD_SIGNATURE {why} (the base64 body of one SSHSIG armor, 256 characters, no line break)")),
+        },
+    };
     Ok((t, sig))
 }
 /// `cosign-message <dir> <action>`: the bytes the human signs. The action is a REFUND line without a signature.
@@ -152,7 +156,6 @@ fn refund(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
     let amount = money(t[6]).expect("checked");
     let action = t[..7].join(" ");
     let s = store::open(&ctx.dir)?.aimed(tenant, key);
-    ctx.node_pin.get_or_init(|| s.l.node_pin.clone());
     let k = check_key(&s, tenant, key, req, pre)?;
     let Body::Money { policy: pol, original, remaining, facts, totals } = &k.body else { return no(Code::Malformed, "KEY_KIND not a money key") };
     let (original, remaining, total) = (*original, *remaining, totals.get(reason).copied().unwrap_or(0));
@@ -173,10 +176,12 @@ fn refund(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
             Verdict::Commit => {}
             Verdict::Reject(code) => return verdict(s, req, Code::RejectedPolicy, code),
             Verdict::Cosign => {
-                let Some(sig) = sig else { return verdict(s, req, Code::RequireHumanCosign, "COSIGN_REQUIRED") };
+                let Some((sig, embedded)) = sig else { return verdict(s, req, Code::RequireHumanCosign, "COSIGN_REQUIRED") };
                 let Some(pk) = s.l.pubkey.clone() else { return verdict(s, req, Code::RequireHumanCosign, "NO_COSIGN_KEY") };
+                // A signature made with another key is invalid here; only a signature that names the pinned key goes on.
+                if Some(embedded) != cosign::pinned_key(&pk) { return verdict(s, req, Code::RequireHumanCosign, "COSIGN_INVALID") }
                 let msg = cosign_message(&s.l.store_id, s.l.genesis_hash, req, t[4], &action);
-                if !helpers::cosign_verify(&ctx.node(), &pk, sig, &msg)? { return verdict(s, req, Code::RequireHumanCosign, "COSIGN_INVALID") }
+                if !cosign::verify(&ctx.dir, &pk, sig, &msg)? { return verdict(s, req, Code::RequireHumanCosign, "COSIGN_INVALID") }
                 cosigned = 1;
             }
         }
@@ -198,7 +203,6 @@ fn saga(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
     let (tenant, key, req, pre, to) = (id(t[1], "tenant")?, id(t[2], "key")?, id(t[3], "request_id")?, hash(t[4])?, id(t[5], "state")?);
     let pair = if t.len() == 8 { Some((id(t[6], "processor")?.to_string(), id(t[7], "idempotency_key")?.to_string())) } else { None };
     let s = store::open(&ctx.dir)?.aimed(tenant, key);
-    ctx.node_pin.get_or_init(|| s.l.node_pin.clone());
     let k = check_key(&s, tenant, key, req, pre)?;
     let Body::Saga { policy: pol, state: cur, pair: held } = &k.body else { return no(Code::Malformed, "KEY_KIND not a saga key") };
     let Some(policy::Body::Saga(sp)) = s.policies.get(pol).map(|p| &p.body) else { return no(Code::CorruptWal, "CORRUPT_WAL POLICY_MISSING") };

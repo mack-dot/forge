@@ -35,6 +35,10 @@ can start its own engine on the folder can ignore every check. The opener of a k
 `original` and facts; the tenant field is not authenticated. "The agent cannot self-cosign" needs BOTH the
 private key outside the agent's reach AND an agent that cannot write the store folder or run another engine on
 it (for example `serve` runs under another OS user and the agent holds only its pipe).
+
+Cosign: Store.cosign_message(action) returns the six-line message (`forge-airlock-cosign-v3`); the human signs it
+with `bin/forge-airlock cosign-sign <key-file>` (OpenSSH ssh-keygen; no Node) and passes the printed token as the
+`signature` of refund(). The engine verifies it with /usr/bin/ssh-keygen (a trusted assumption).
 """
 
 import json
@@ -54,7 +58,9 @@ MAX_MONEY = 9223372036854775807
 MAX_ANSWER = 1 << 17
 ID_RE = re.compile(r'[A-Za-z0-9_-]{1,24}\Z')
 HASH_RE = re.compile(r'[0-9a-f]{32}\Z')
-SIG_RE = re.compile(r'[0-9a-f]{128}\Z')
+# A cosign signature token: the base64 body of one SSHSIG armor without line breaks (PROTOCOL.md section 7): 256
+# characters, canonical (the last data character carries no unused bit), ending with "==". The engine checks the rest.
+SIG_RE = re.compile(r'[A-Za-z0-9+/]{253}[AQgw]==\Z')
 DIGITS_RE = re.compile(r'(0|[1-9][0-9]*)\Z')
 MAX_READ_ROWS = 100000
 
@@ -221,7 +227,7 @@ def build_line(op, f):
         if f.get('signature') is not None:
             sig = f['signature']
             if not isinstance(sig, str) or not SIG_RE.match(sig):
-                raise LocalRefusal('LOCAL_REFUSED', 'signature: not 128 lowercase hex digits')
+                raise LocalRefusal('LOCAL_REFUSED', 'signature: not one SSHSIG token (256 characters of canonical base64; see cosign-sign)')
             t.append(sig)
     elif op == 'open_saga':
         t.append(_id('policy', f.get('policy')))

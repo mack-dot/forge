@@ -90,10 +90,10 @@ class Suite:
         p.mkdir()
         return p
 
-    def cli(self, args, stdin=b''):
+    def cli(self, args, stdin=b'', env=None):
         if args[0] in ('init', 'replay', 'leases', 'state', 'get', 'cosign-message'):
             args = list(args) + ['--engine-dir', self.engine_dir]
-        p = subprocess.run([sys.executable, str(DISPATCHER)] + [str(x) for x in args], input=stdin, capture_output=True, timeout=300)
+        p = subprocess.run([sys.executable, str(DISPATCHER)] + [str(x) for x in args], input=stdin, capture_output=True, timeout=300, env=env)
         return p.returncode, p.stdout.decode('ascii', 'replace'), p.stderr.decode('utf-8', 'replace')
 
     def store(self, name, pubkey=None, store_id=None):
@@ -112,12 +112,12 @@ class Suite:
 
     def keygen(self, name):
         d = Path(tempfile.mkdtemp(prefix='airlock-key-'))
-        code, out, err = self.cli(['cosign-keygen', d / 'key', '--node', self.node])
+        code, out, err = self.cli(['cosign-keygen', d / 'key'])
         require(code == 0, 'NOT RUN: keygen: %r' % err)
         return d, d / 'key', out.strip()
 
     def sign(self, key, msg):
-        code, out, err = self.cli(['cosign-sign', key, '--node', self.node], stdin=msg)
+        code, out, err = self.cli(['cosign-sign', key], stdin=msg)
         require(code == 0, 'sign: %r' % err)
         return out.strip()
 
@@ -645,12 +645,64 @@ def case_ts_garbage(s):
     return 'TS SDK vs STAND-IN engine (protocol robustness only): %d garbage answers -> %s; never COMMITTED' % (len(seen), ','.join(sorted(set(seen))))
 
 
+def case_py_no_node(s):
+    """Apex addendum: a store with money, saga and cosign policies (no inventory policy) initialises, serves and commits
+    a cosigned refund with no Node at all: no --node anywhere, and the only `node` on PATH is a SENTINEL script that
+    records any start. The sentinel must never start, and the genesis record must pin no Node binary."""
+    d = s.folder('no-node')
+    sentinel_dir, marker = d / 'sentinel', d / 'node-started'
+    sentinel_dir.mkdir()
+    (sentinel_dir / 'node').write_text('#!/bin/sh\necho "$@" >> %s\nexit 1\n' % marker)
+    os.chmod(sentinel_dir / 'node', 0o700)
+    env = {'PATH': '%s:/usr/bin:/bin' % sentinel_dir, 'LC_ALL': 'C'}
+    keys = d / 'keys'
+    keys.mkdir(mode=0o700)
+    code, pub, err = s.cli(['cosign-keygen', keys / 'key'], env=env)
+    require(code == 0, 'cosign-keygen without Node: exit %d %r' % (code, err))
+    code, pub2, err = s.cli(['cosign-keygen', keys / 'other'], env=env)
+    require(code == 0, 'cosign-keygen without Node: exit %d %r' % (code, err))
+    store = d / 'store'
+    args = ['init', store, '--store-id', 'no-node', '--cosign-pubkey', pub.strip()]
+    for pol in ('money-parametric', 'money-canonical', 'saga-payout'):
+        args += ['--policy', FIX / (pol + '.json')]
+    code, out, err = s.cli(args, env=env)
+    require(code == 0 and out.startswith('INITIALIZED '), 'init with a cosign key and no --node: exit %d %r %r' % (code, out, err))
+    genesis = (store / 'airlock.wal').read_bytes()
+    fields = genesis[32:32 + int.from_bytes(genesis[28:32], 'little')].decode().split(' ')
+    require(fields[:2] == ['GENESIS', '3'] and fields[4] == '-' and fields[5] == pub.strip(), 'genesis: %r' % fields[:6])
+    with fa.Store(store, node=None, env=env, engine_dir=s.engine_dir) as st:
+        st.open_money('t1', 'o1', 'r0', 'store-refunds', 10000)
+        st.open_saga('t1', 'p1', 'r1', 'payout')
+        h = st.get('t1', 'o1').state_hash
+        expect(st.refund('t1', 'o1', 'g1', h, 'GOODWILL', 7500), 'REQUIRE_HUMAN_COSIGN', 'no signature, no Node')
+        msg = st.cosign_message(fa.refund_action('t1', 'o1', 'g1', h, 'GOODWILL', 7500))
+        code, other, err = s.cli(['cosign-sign', keys / 'other'], stdin=msg, env=env)
+        require(code == 0, 'cosign-sign without Node: %r' % err)
+        r = expect(st.refund('t1', 'o1', 'g1', h, 'GOODWILL', 7500, other.strip()), 'REQUIRE_HUMAN_COSIGN', 'other key, no Node')
+        require(r.detail == 'COSIGN_INVALID', 'other key detail %r' % r.detail)
+        code, sig, err = s.cli(['cosign-sign', keys / 'key'], stdin=msg, env=env)
+        require(code == 0, 'cosign-sign without Node: %r' % err)
+        try:
+            st.refund('t1', 'o1', 'g2', h, 'GOODWILL', 7500, 'ab' * 64)
+            require(False, 'the SDK sent an old hex signature')
+        except fa.LocalRefusal:
+            pass
+        r = expect(st.refund('t1', 'o1', 'g1', h, 'GOODWILL', 7500, sig.strip()), 'COMMITTED', 'pinned key, no Node')
+        require(r.payload.endswith(' 1'), 'cosign flag: %r' % r.payload)
+        h = st.get('t1', 'p1').state_hash
+        expect(st.commit('saga', tenant='t1', key='p1', request_id='s1', pre_state_hash=h, to_state='IN_FLIGHT', processor='stripe', idempotency_key='i1'),
+               'COMMITTED', 'saga, no Node')
+    require(not marker.exists(), 'a node process was started: %r' % (marker.read_text() if marker.exists() else ''))
+    require(s.effects(store)[-2:] == ['REFUND t1 o1 g1 GOODWILL 7500 1', 'SAGA t1 p1 s1 IN_FLIGHT stripe i1'], 'WAL: %r' % s.effects(store))
+    return 'money + saga + cosign store: keygen, init (Node pin "-"), serve, cosigned commit, saga commit; sentinel node never started; old hex signature refused locally'
+
+
 CASES = [('py_typed', case_py_typed), ('py_cosign', case_py_cosign), ('py_canonical', case_py_canonical),
          ('py_saga_inventory', case_py_saga_inventory), ('py_read', case_py_read), ('py_lease', case_py_lease),
          ('py_kill', case_py_kill), ('py_garbage', case_py_garbage), ('py_protocol', case_py_protocol), ('py_lease_durable', case_py_lease_durable),
          ('ts_typed', case_ts_typed), ('ts_read', case_ts_read), ('ts_lease', case_ts_lease), ('ts_kill', case_ts_kill), ('ts_garbage', case_ts_garbage),
          ('ts_protocol', case_ts_protocol), ('py_read_tricks', case_py_read_tricks), ('py_lease_bound', case_py_lease_bound),
-         ('ts_read_tricks', case_ts_read_tricks)]
+         ('ts_read_tricks', case_ts_read_tricks), ('py_no_node', case_py_no_node)]
 
 
 def main():

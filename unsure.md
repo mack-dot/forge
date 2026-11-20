@@ -19935,3 +19935,36 @@ curl: (6) Could not resolve host: github.com
 - The regression did NOT run on the two records commits (documents only). Their hosted results are in the pull request.
 - NOT RUN: Stage 7, Stage 9, Stage 10; a clean or independent HOL replay.
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on pull request 66.
+## U750 — Goal 21, phase 1 (Apex fix 1): the cosign check without Node; `/usr/bin/ssh-keygen -Y verify` in place of `cosign.cjs`; where the directive names the wrong file
+
+- Refs U720 to U723 (Goal 20), U709 (the owner approved `ssh-keygen -Y` for Ed25519), U747 (the review of the HAL
+  demo: a caller-chosen `--node` let a forged signature verify). Evidence: the owner's texts stored at
+  `/tmp/forge_goal21.md` and in the session; the owner's two answers of 2026-11-19 (this session builds it on a
+  stacked branch; the owner runs every sudo step). Branch `apex1/native-cosign` from the Goal 20 head `4d5e8863`
+  (pull request 65, open, not merged).
+- The Goal 21 text says "modify `src/silicon_sink/sink.rs`". That file has no signature code (0 matches) and is
+  pinned by the merged Goal 19 bundle `1f569fcf`. `cosign.cjs` is part of the Goal 20 engine (`src/airlock`).
+  The change is therefore in the engine; `sink.rs` is NOT changed. My reading of the owner's intent.
+- What changed (one worker; details in `src/airlock/PROTOCOL.md` sections 7 and 11): `cosign.cjs` is deleted; the
+  engine checks the SSHSIG blob natively (key equal to the pinned key, namespace, hash name, weak R, S below L)
+  and then runs `/usr/bin/ssh-keygen -Y verify`; only two exact results are accepted (valid; invalid), every
+  other result is `HELPER_FAILED`. Breaking change: genesis record version 3, message version 3, the public key
+  and the signature are base64 tokens; an old store is refused. Node stays ONLY for the inventory checker.
+- My own runs (2026-11-19; load average above 115, so no time is a valid measurement): `bin/forge-airlock build`
+  exit 0; `test_cosign.py` exit 0, 47 of 47; `test_engine.py` exit 0; `test_node_helpers.py` exit 0, 68 of 68;
+  `test_sdk.py` exit 0. A store with money, saga and cosign policies needs no Node (case `py_no_node`, a sentinel
+  `node` on PATH never starts).
+- Worker runs that I did NOT repeat: the changed-copy run through a scratch harness, 122 of 122 killed, NOT
+  KILLED: X01, R8 (as before) and the new N15 (a file swap between two opens of the key: a race, no test); the
+  cases `disasters` and `fuzz`; the measurements (one cosigned commit 575 ms before, 36 ms after; helper resident
+  memory 46.9 MB before, 6.7 MB after; Node 84.9 MiB on disk, `ssh-keygen` 843 KiB).
+- NOT RUN: `scripts/exit_goal20_sdk.py --case evidence` and the diff-policy cases that start Dafny; so NO new
+  Goal 20 bundle exists. The record `1e75ab47` describes the tree before this change.
+- Limits: OpenSSH with LibreSSL is now in the trusted base for cosign in place of Node and V8: smaller, not
+  zero. `ssh-keygen` is not pinned by hash (an owner-0, not group- or other-writable regular file is required);
+  a later OpenSSH with other message text gives `HELPER_FAILED` (fail closed). OpenSSH 10.3 accepts S+L; the
+  engine refuses it first. Nothing is proved.
+- Open owner questions: old stores break with no migration; wrong namespace or hash is `MALFORMED_REQUEST`, not
+  `COSIGN_INVALID`; whether to record the `ssh-keygen` SHA-256 in the genesis record as a warning-only value.
+- Impact: none on any stage label. Next check: the Dafny cases and the `evidence` case in a quiet HOL/Dafny slot;
+  a review of `cosign.rs`; rebase of the HAL demo onto this branch.

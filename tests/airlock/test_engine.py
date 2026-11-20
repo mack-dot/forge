@@ -11,18 +11,21 @@ booking_check.cjs with files next to the built model. These four cases exist for
 The engine binaries come in as arguments, so the same cases can run on changed copies (mutation runs).
 The suite reads the WAL with its OWN transcription of the record format (zlib CRC-32, FNV-1a-128 in Python);
 that transcription and the engine can be wrong in the same way. A SIGKILL is not a power loss.
-Helper processes: the real CakeML refund binary (a private 0700 copy named `refund`), the real Node helpers
-src/airlock/node/cosign.cjs and booking_check.cjs with the built model build/airlock/checker/model.cjs. Some cases
-also use STAND-IN helper processes written to a temp folder: they are test doubles of the HELPER PROCESS, used only
-to drive the engine's wiring (bad frames, wrong output, a helper that refuses a valid input). They are labelled.
-Since review R1 the production engine runs only its embedded helpers and only the pinned refund binary: every
-stand-in runs through the KILL-POINTS build with the test seams AIRLOCK_TEST_HELPERS / AIRLOCK_TEST_UNPINNED_BINARY
-(cfg kill_points only); case `pins` checks that the production build ignores both seams.
+Helper processes: the real CakeML refund binary (a private 0700 copy named `refund`), the real Node helper
+booking_check.cjs with the built model build/airlock/checker/model.cjs (inventory only), and the real system
+/usr/bin/ssh-keygen for a cosign (keys and signatures from src/airlock/py/cosign_tool.py, or from ssh-keygen directly
+for forms that the tool never writes). Some cases also use STAND-IN helper processes written to a temp folder: they
+are test doubles of the HELPER PROCESS, used only to drive the engine's wiring (bad frames, wrong output, a helper
+that refuses a valid input). They are labelled. The production engine runs only its embedded booking helper, only
+the pinned refund binary and only /usr/bin/ssh-keygen: every stand-in runs through the KILL-POINTS build with the
+test seams AIRLOCK_TEST_HELPERS / AIRLOCK_TEST_UNPINNED_BINARY / AIRLOCK_TEST_SSH_KEYGEN /
+AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN (cfg kill_points only); case `seams` checks that the production build ignores them.
 A case that cannot run FAILS with NOT RUN in its message; it never passes.
 Exit 0: every selected case passed. 1: at least one failed. 2: the suite could not start.
 """
 
 import argparse
+import base64
 import hashlib
 import json
 import os
@@ -43,6 +46,9 @@ BINARY = ROOT / 'proposals/forge2-m1-conformance/artifacts/refund-arm64-macho'
 BINARY_SHA256 = 'b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8'
 RECORDED = ROOT / 'tests/m1-conformance/recorded-m1-cases.json'
 HELPERS = ROOT / 'src/airlock/node'
+COSIGN_TOOL = ROOT / 'src/airlock/py/cosign_tool.py'
+SSH_KEYGEN = '/usr/bin/ssh-keygen'
+L_ORDER = 2 ** 252 + 27742317777372353535851937790883648493  # Ed25519 group order
 MODEL = ROOT / 'build/airlock/checker/model.cjs'
 MAX_MONEY = 9223372036854775807
 MAX_LINE = 65536
@@ -88,7 +94,7 @@ def read_wal(store):
         tail = fnv128(rec)
         records.append((epoch, payload, tail))
         pos += len(rec)
-    require(records and records[0][1].startswith('GENESIS 2 '), 'WAL: no genesis record')
+    require(records and records[0][1].startswith('GENESIS 3 '), 'WAL: no genesis record')
     return records
 
 
@@ -133,7 +139,7 @@ class Suite:
             args += ['--policy', FIX / (p + '.json')]
         if pubkey:
             args += ['--cosign-pubkey', pubkey]
-        if pubkey or 'inventory-seats' in policies:
+        if 'inventory-seats' in policies:  # only the inventory airlock runs Node; a cosign key needs none
             args += ['--node', self.node]
         code, out, err = self.run(args)
         require(code == 0 and out.startswith('INITIALIZED '), 'init %s: %d %r %r' % (name, code, out, err))
@@ -175,17 +181,21 @@ class Suite:
 
     def node_ok(self):
         require(Path(self.node).exists(), 'NOT RUN: node %s is missing' % self.node)
-        for f in ('cosign.cjs', 'booking_check.cjs'):
-            require((HELPERS / f).exists(), 'NOT RUN: helper %s is missing' % f)
+        require((HELPERS / 'booking_check.cjs').exists(), 'NOT RUN: helper booking_check.cjs is missing')
         return ['--node', self.node]
 
-    def seam(self, helpers=None, unpinned=False):
-        """The kill-points build and the environment of its test seams (stand-in helpers / an unpinned binary)."""
+    def seam(self, helpers=None, unpinned=False, ssh_keygen=None, untrusted=False):
+        """The kill-points build and the environment of its test seams (stand-in helpers / an unpinned binary / a
+        stand-in ssh-keygen / no ownership check of the ssh-keygen program)."""
         env = dict(ENV)
         if helpers is not None:
             env['AIRLOCK_TEST_HELPERS'] = str(helpers)
         if unpinned:
             env['AIRLOCK_TEST_UNPINNED_BINARY'] = '1'
+        if ssh_keygen is not None:
+            env['AIRLOCK_TEST_SSH_KEYGEN'] = str(ssh_keygen)
+        if untrusted:
+            env['AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN'] = '1'
         return {'engine': self.kill_engine, 'env': env}
 
     def standin(self, name, files_):
@@ -207,7 +217,7 @@ def case_init(s):
     recs = read_wal(p)
     g = recs[0][1].split(' ')
     node_pin = hashlib.sha256(Path(s.node).read_bytes()).hexdigest()
-    require(len(recs) == 1 and g[:3] == ['GENESIS', '2', 'st-init'] and len(g[3]) == 32 and g[4] == node_pin and g[5:9] == ['-', '4', 'store-refunds', 'money'],
+    require(len(recs) == 1 and g[:3] == ['GENESIS', '3', 'st-init'] and len(g[3]) == 32 and g[4] == node_pin and g[5:9] == ['-', '4', 'store-refunds', 'money'],
             'genesis: %r' % recs[0][1])
     code, out, _ = s.run(['init', s.folder('init-nonode') / 'store', '--store-id', 'x', '--policy', FIX / 'inventory-seats.json'])
     require(code == 12 and 'NODE_REQUIRED' in out, 'an inventory policy needs --node: %d %r' % (code, out))
@@ -228,7 +238,7 @@ def case_init(s):
         require(code == 25 and out.startswith('MALFORMED_POLICY'), 'policy %s must be refused: %d %r' % (name, code, out))
     require(sorted(x.name for x in d.iterdir()) == sorted(bad), 'a refused init left a folder: %r' % sorted(x.name for x in d.iterdir()))
     code, out, _ = s.run(['init', d / 'st-key', '--store-id', 's', '--cosign-pubkey', 'AB' * 32])
-    require(code == 12, 'an uppercase public key must be refused: %r' % out)
+    require(code == 12 and 'BAD_PUBKEY' in out, 'a hex public key (the old form) must be refused: %r' % out)
     # a SIGKILL inside init (after every file is synced, before the rename) leaves no store; init then works
     target = d / 'st-killed'
     proc = subprocess.Popen([s.kill_engine, 'init', target, '--store-id', 'k'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=dict(ENV, AIRLOCK_KILL_AT='i'))
@@ -453,78 +463,250 @@ def case_canonical(s):
 
 
 def keygen(s, name):
+    """A new Ed25519 key with the human's tool (src/airlock/py/cosign_tool.py; ssh-keygen; no Node)."""
     d = s.folder('key-' + name)
-    p = subprocess.run([s.node, HELPERS / 'cosign.cjs', 'keygen', d / 'key'], capture_output=True, env=ENV)
+    p = subprocess.run([sys.executable, '-I', COSIGN_TOOL, 'keygen', d / 'key'], capture_output=True, env=ENV)
     require(p.returncode == 0, 'keygen: %r' % p.stderr)
     return d / 'key', p.stdout.decode().strip()
 
 
 def sign(s, key, message):
-    p = subprocess.run([s.node, HELPERS / 'cosign.cjs', 'sign', key], input=message, capture_output=True, env=ENV)
+    """The token of the human's tool for `message` (the six-line form; the tool refuses any other form)."""
+    p = subprocess.run([sys.executable, '-I', COSIGN_TOOL, 'sign', key], input=message, capture_output=True, env=ENV)
     require(p.returncode == 0, 'sign: %r' % p.stderr)
     return p.stdout.decode().strip()
 
 
+def raw_sign(s, key, message, namespace='forge-airlock-cosign', extra=()):
+    """ssh-keygen -Y sign directly (any bytes, any namespace, other options): forms the human's tool never writes."""
+    p = subprocess.run([SSH_KEYGEN, '-Y', 'sign', '-n', namespace, '-P', '', '-f', key] + list(extra), input=message, capture_output=True, env={},
+                       start_new_session=True, timeout=60)
+    lines = p.stdout.decode().split('\n')
+    require(p.returncode == 0 and lines[0] == '-----BEGIN SSH SIGNATURE-----', 'ssh-keygen -Y sign: %r' % p.stderr)
+    return ''.join(lines[1:lines.index('-----END SSH SIGNATURE-----')])
+
+
+def blob_of(token):
+    return bytearray(base64.b64decode(token, validate=True))
+
+
+def token_of(blob):
+    return base64.b64encode(bytes(blob)).decode()
+
+
+def key_token(raw32):
+    """The init token of 32 raw key bytes: base64 of the ssh-ed25519 wire encoding."""
+    return token_of(b'\0\0\0\x0bssh-ed25519\0\0\0\x20' + bytes(raw32))
+
+
+def fingerprint(pub):
+    return 'SHA256:' + base64.b64encode(hashlib.sha256(base64.b64decode(pub)).digest()).decode().rstrip('=')
+
+
+def crafted_sig(pub, r=None, s_=None, namespace=b'forge-airlock-cosign', hashalg=b'sha512'):
+    """An SSHSIG token with the given key and signature bytes (no real signature): for stand-in ssh-keygen runs and
+    for the native refusals that come before ssh-keygen."""
+    st = lambda b: len(b).to_bytes(4, 'big') + b
+    rs = (r or bytes(range(1, 33))) + (s_ or bytes(31) + b'\x01')
+    return token_of(b'SSHSIG\0\0\0\1' + st(base64.b64decode(pub)) + st(namespace) + st(b'') + st(hashalg) + st(st(b'ssh-ed25519') + st(rs)))
+
+
+def cosign_answer(s, store, line, extra=(), **kw):
+    code, out, err = s.serve(store, [line], list(extra), **kw)
+    return code, (out[0] if out else '<no answer> ' + err[-200:])
+
+
 def case_cosign(s):
-    ex = s.node_ok()
+    """Real /usr/bin/ssh-keygen through the production engine, no Node anywhere (no --node at init or serve)."""
     key, pub = keygen(s, 'human')
     key2, pub2 = keygen(s, 'other')
-    p = s.store('cosign', pubkey=pub, store_id='store-a')
-    q = s.store('cosign-b', pubkey=pub, store_id='store-b')
+    no_inventory = ('money-parametric', 'money-ambiguous', 'saga-payout')  # no inventory policy: no --node at init, no Node pin
+    p = s.store('cosign', policies=no_inventory, pubkey=pub, store_id='store-a')
+    q = s.store('cosign-b', policies=no_inventory, pubkey=pub, store_id='store-b')
+    require(read_wal(p)[0][1].split(' ')[4:6] == ['-', pub], 'a cosign store pins no Node binary and holds the key token: %r' % read_wal(p)[0][1][:160])
     for st in (p, q):
         s.one(st, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
     h = s.h(p, 't1', 'o1')
     action = 'REFUND t1 o1 r1 %s GOODWILL 7500' % h
     code, msg, _ = s.run(['cosign-message', p, action])
     genesis = '%032x' % read_wal(p)[0][2]
-    require(code == 0 and msg == 'forge-airlock-cosign-v2\nstore-a\n%s\nr1\n%s\n%s\n' % (genesis, h, action), 'cosign message: %r' % msg)
-    code, out, _ = s.run(['cosign-message', p, action + ' ' + 'a' * 128])
-    require(code == 12, 'a signed action is not a cosign action')
+    require(code == 0 and msg == 'forge-airlock-cosign-v3\nstore-a\n%s\nr1\n%s\n%s\n' % (genesis, h, action), 'cosign message: %r' % msg)
     sig = sign(s, key, msg.encode())
-    tok = s.one(p, action, 'REQUIRE_HUMAN_COSIGN', ex)
+    code, out, _ = s.run(['cosign-message', p, action + ' ' + sig])
+    require(code == 12, 'a signed action is not a cosign action')
+    tok = s.one(p, action, 'REQUIRE_HUMAN_COSIGN')
     require(tok[1] == 'COSIGN_REQUIRED', 'no signature')
-    wrong = {
+    lines = msg.split('\n')
+
+    def line_changed(i, value):
+        changed = list(lines)
+        changed[i] = value
+        return '\n'.join(changed).encode()
+    flipped = blob_of(sig)
+    flipped[-20] ^= 1  # a bit inside S (S stays below L)
+    invalid = {
         'wrong key': sign(s, key2, msg.encode()),
-        'other request id': sign(s, key, msg.replace('\nr1\n', '\nr9\n').replace(' r1 ', ' r9 ').encode()),
-        'other pre_state_hash': sign(s, key, msg.replace(h, '1' * 32).encode()),
-        'altered action': sign(s, key, msg.replace('7500', '7501').encode()),
-        'flipped signature': ('0' if sig[0] != '0' else '1') + sig[1:],
+        'version line': raw_sign(s, key, line_changed(0, 'forge-airlock-cosign-v2')),
+        'store id line': raw_sign(s, key, line_changed(1, 'store-x')),
+        'genesis line': raw_sign(s, key, line_changed(2, 'f' * 32)),
+        'request id line': raw_sign(s, key, line_changed(3, 'r9').replace(b' r1 ', b' r9 ')),
+        'pre_state_hash line': raw_sign(s, key, line_changed(4, '1' * 32)),
+        'action line': raw_sign(s, key, line_changed(5, action.replace('7500', '7501'))),
+        'field shift': raw_sign(s, key, line_changed(3, 'r1x').replace(action.encode(), action[1:].encode())),
+        'flipped signature': token_of(flipped),
     }
-    for why, bad in wrong.items():
-        tok = s.one(p, action + ' ' + bad, 'REQUIRE_HUMAN_COSIGN', ex)
-        require(tok[1] == 'COSIGN_INVALID', '%s: %r' % (why, tok))
-    # replay on another store: same request id and hash text do not exist there, and the store id differs
+    for why, bad in invalid.items():
+        code, out = cosign_answer(s, p, action + ' ' + bad)
+        require(out == 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID' and code == 11, '%s: expected REQUIRE_HUMAN_COSIGN COSIGN_INVALID, got exit %d %r' % (why, code, out[:120]))
+    # forms that the engine refuses natively before ssh-keygen runs (the grammar: no store file is opened)
+    good = blob_of(sig)
+    weak = blob_of(sig)
+    weak[-64:-32] = bytes.fromhex(WEAK_KEYS[2])
+    s_plus_l = blob_of(sig)
+    s_plus_l[-32:] = (int.from_bytes(bytes(s_plus_l[-32:]), 'little') + L_ORDER).to_bytes(32, 'little')
+    magic = blob_of(sig)
+    magic[0:6] = b'SSHSIX'
+    noncanon = sig[:-3] + {'A': 'B', 'Q': 'R', 'g': 'h', 'w': 'x'}[sig[-3]] + '=='
+    malformed = {
+        'old hex signature': ('ab' * 64, 'LENGTH'),
+        'token of 255 characters': (sig[:-1], 'LENGTH'),
+        'token of 257 characters': (sig + 'A', 'LENGTH'),
+        'non-canonical base64': (noncanon, 'BASE64'),
+        'character outside base64': ('-' + sig[1:], 'BASE64'),
+        'magic': (token_of(magic), 'MAGIC'),
+        'namespace': (raw_sign(s, key, msg.encode(), namespace='forge-airlock-cosigX'), 'NAMESPACE'),
+        'hash algorithm sha256': (raw_sign(s, key, msg.encode(), extra=['-O', 'hashalg=sha256']), 'HASH_ALGORITHM'),
+        'weak R': (token_of(weak), 'WEAK_R'),
+        'S + L': (token_of(s_plus_l), 'S_NOT_CANONICAL'),
+    }
+    require(len(token_of(good)) == 256, 'the token is not 256 characters')
+    for why, (bad, part) in malformed.items():
+        code, out = cosign_answer(s, p, action + ' ' + bad)
+        require(out.startswith('MALFORMED_REQUEST BAD_SIGNATURE %s ' % part) and code == 12, '%s: expected MALFORMED_REQUEST BAD_SIGNATURE %s, got exit %d %r' % (why, part, code, out[:120]))
+    n_weak = 0
+    for r in WEAK_KEYS:  # every weak R value (the review's R4 list)
+        w = blob_of(sig)
+        w[-64:-32] = bytes.fromhex(r)
+        code, out = cosign_answer(s, p, action + ' ' + token_of(w))
+        require(out.startswith('MALFORMED_REQUEST BAD_SIGNATURE WEAK_R ') and code == 12, 'weak R %s: exit %d %r' % (r, code, out[:120]))
+        n_weak += 1
+    # replay on another store with the same store key: the genesis line (random nonce) and the store id differ
     hq = s.h(q, 't1', 'o1')
-    sig_q = sign(s, key, msg.replace(h, hq).encode())  # signed for store-a's message with store-b's hash
-    for replayed in (sig_q, sig):  # store-a's signature (with either hash) never commits on store-b
-        tok = s.one(q, 'REFUND t1 o1 r1 %s GOODWILL 7500 %s' % (hq, replayed), 'REQUIRE_HUMAN_COSIGN', ex)
-        require(tok[1] == 'COSIGN_INVALID', 'replay on another store: %r' % tok)
+    sig_q = sign(s, key, msg.replace(h, hq).encode())  # store-a's message with store-b's hash
+    for replayed in (sig_q, sig):
+        code, out = cosign_answer(s, q, 'REFUND t1 o1 r1 %s GOODWILL 7500 %s' % (hq, replayed))
+        require(out == 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID', 'replay on another store: exit %d %r' % (code, out))
     require(len(effects(q)) == 1, 'replay committed on store-b')
     # a valid cosign on store-b with store-b's own message commits (the message binds this store's id and genesis)
     code, msg_q, _ = s.run(['cosign-message', q, 'REFUND t1 o1 r2 %s GOODWILL 7500' % hq])
-    s.one(q, 'REFUND t1 o1 r2 %s GOODWILL 7500 %s' % (hq, sign(s, key, msg_q.encode())), 'COMMITTED', ex)
-    # helper failures are refusals, never commits
-    s.one(p, action + ' ' + sig, 'HELPER_FAILED')  # no node
-    s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', '/nonexistent/node'])
-    tok = s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', '/bin/sh'])  # not the pinned Node binary
-    require(tok[1] == 'PIN_MISMATCH', 'a Node binary other than the pinned one: %r' % tok)
-    code, out, _ = s.serve(p, [action + ' ' + sig], ['--node', s.node, '--helpers', s.folder('empty')])
+    s.one(q, 'REFUND t1 o1 r2 %s GOODWILL 7500 %s' % (hq, sign(s, key, msg_q.encode())), 'COMMITTED')
+    code, out, _ = s.serve(p, [action + ' ' + sig], ['--helpers', s.folder('empty')])
     require(code == 2 and out == [], 'the --helpers flag is gone (USAGE): %d %r' % (code, out))
-    # STAND-IN cosign helpers through the kill-points seam: only VALID + exit 0 + empty stderr counts
-    for name, text in (('cosign', 'process.stdout.write("VALID\\n"); process.stderr.write("x");'), ('cosign2', 'process.stdout.write("VALID");'),
-                       ('cosign3', 'process.stdout.write("VALID\\n"); process.exitCode = 3;')):
-        d = s.standin(name, {'cosign.cjs': text})
-        s.one(p, action + ' ' + sig, 'HELPER_FAILED', ['--node', s.node], **s.seam(helpers=d))
     require(len(effects(p)) == 1, 'a refusal committed')
-    tok = s.one(p, action + ' ' + sig, 'COMMITTED', ex)
+    tok = s.one(p, action + ' ' + sig, 'COMMITTED')  # no --node: no Node at all for a cosign
     require(tok[-1] == '1', 'the record marks the cosign')
-    s.one(p, action + ' ' + sig, 'DUPLICATE_REQUEST_ID', ex)
+    s.one(p, action + ' ' + sig, 'DUPLICATE_REQUEST_ID')
+    require(not (p / 'cosign.tmp').exists() and not (q / 'cosign.tmp').exists(), 'the private cosign folder stayed after use')
     # a store with no pinned key
     r = s.store('cosign-nokey')
     s.one(r, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
-    tok = s.one(r, 'REFUND t1 o1 r1 %s GOODWILL 7500 %s' % (s.h(r, 't1', 'o1'), sig), 'REQUIRE_HUMAN_COSIGN', ex)
+    tok = s.one(r, 'REFUND t1 o1 r1 %s GOODWILL 7500 %s' % (s.h(r, 't1', 'o1'), sig), 'REQUIRE_HUMAN_COSIGN')
     require(tok[1] == 'NO_COSIGN_KEY', 'no key: %r' % tok)
-    return 'real cosign.cjs: valid commits; wrong key, other id, other hash, altered action, flipped sig, other store refused; 6 helper failures refused'
+    return ('real ssh-keygen, no Node: valid commits (flag 1); wrong key, 6 changed lines, field shift, flipped S -> COSIGN_INVALID; '
+            '%d malformed tokens and %d weak R -> MALFORMED_REQUEST; replay on a second store with the same id key refused; folder removed' % (len(malformed), n_weak))
+
+
+STANDIN_SSH = '''#!/bin/sh
+# STAND-IN ssh-keygen (a test double of the helper process; wiring only). Mode: the name of this file.
+mode=$(basename "$0")
+cat > /dev/null
+good='Good "forge-airlock-cosign" signature for forge-airlock-cosigner with ED25519 key %s'
+case "$mode" in
+  valid) printf '%%s\\n' "$good"; exit 0 ;;
+  stderr-text) printf '%%s\\n' "$good"; printf 'x' >&2; exit 0 ;;
+  exit-1) printf '%%s\\n' "$good"; exit 1 ;;
+  extra-byte) printf '%%s\\nx' "$good"; exit 0 ;;
+  no-line-end) printf '%%s' "$good"; exit 0 ;;
+  other-key) printf '%%s\\n' "$(echo "$good" | sed 's/SHA256:./SHA256:_/')"; exit 0 ;;
+  invalid-answer) printf 'Could not verify signature.\\n'; printf 'Signature verification failed: incorrect signature\\r\\n' >&2; exit 255 ;;
+  invalid-exit-1) printf 'Could not verify signature.\\n'; printf 'Signature verification failed: incorrect signature\\r\\n' >&2; exit 1 ;;
+  other-fault) printf 'Could not verify signature.\\n'; printf 'Couldn'"'"'t read signature file: No such file or directory\\r\\n' >&2; exit 255 ;;
+  signal) kill -9 $$ ;;
+  checks)
+    # the wiring that the engine promises: fixed argv, a private 0700 folder as the working folder, 0600 files
+    [ "$*" = "-Y verify -f allowed_signers -I forge-airlock-cosigner -n forge-airlock-cosign -s signature" ] || { echo "BAD argv $*"; exit 0; }
+    [ "$(stat -f %%Lp .)" = 700 ] || { echo "BAD folder mode $(stat -f %%Lp .)"; exit 0; }
+    [ "$(basename "$(pwd)")" = cosign.tmp ] || { echo "BAD folder $(pwd)"; exit 0; }
+    [ "$(stat -f %%Lp allowed_signers)" = 600 ] && [ "$(stat -f %%Lp signature)" = 600 ] || { echo "BAD file mode"; exit 0; }
+    [ "$(cat allowed_signers)" = 'forge-airlock-cosigner namespaces="forge-airlock-cosign" ssh-ed25519 %s' ] || { echo "BAD allowed_signers"; exit 0; }
+    [ "$(head -1 signature)" = '-----BEGIN SSH SIGNATURE-----' ] && [ "$(tail -1 signature)" = '-----END SSH SIGNATURE-----' ] || { echo "BAD armor"; exit 0; }
+    printf '%%s\\n' "$good"; exit 0 ;;
+esac
+echo "unknown mode"; exit 3
+'''
+
+
+def case_cosign_faults(s):
+    """The wiring around ssh-keygen with STAND-IN programs through the kill-points seams (AIRLOCK_TEST_SSH_KEYGEN; with
+    AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN=1 for programs owned by the test user): only the exact Good line + exit 0 + empty
+    stderr commits; only the exact invalid answer + exit 255 is COSIGN_INVALID; everything else is HELPER_FAILED. Then
+    the ownership and link checks of the program path, and the private folder."""
+    _, pub = keygen(s, 'faults')
+    p = s.store('cosign-faults', pubkey=pub)
+    s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 1000000', 'COMMITTED')
+    d = s.folder('standin-ssh')
+    modes = ('valid', 'stderr-text', 'exit-1', 'extra-byte', 'no-line-end', 'other-key', 'invalid-answer', 'invalid-exit-1', 'other-fault', 'signal', 'checks')
+    for m in modes:
+        (d / m).write_text(STANDIN_SSH % (fingerprint(pub), pub))
+        os.chmod(d / m, 0o700)
+    n = [0]
+
+    def attempt(mode, path=None, untrusted=True):
+        n[0] += 1
+        line = 'REFUND t1 o1 f%d %s GOODWILL 7500 %s' % (n[0], s.h(p, 't1', 'o1'), crafted_sig(pub))
+        return cosign_answer(s, p, line, **s.seam(ssh_keygen=path or d / mode, untrusted=untrusted))
+    want = {'stderr-text': 'HELPER_FAILED', 'exit-1': 'HELPER_FAILED', 'extra-byte': 'HELPER_FAILED', 'no-line-end': 'HELPER_FAILED',
+            'other-key': 'HELPER_FAILED', 'invalid-exit-1': 'HELPER_FAILED', 'other-fault': 'HELPER_FAILED', 'signal': 'HELPER_FAILED',
+            'invalid-answer': 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID'}
+    for mode, answer in want.items():
+        code, out = attempt(mode)
+        require(out.startswith(answer) and code == CODES[answer.split(' ')[0]], 'stand-in %s: expected %s, got exit %d %r' % (mode, answer, code, out[:120]))
+    code, out = attempt('missing', path=d / 'missing')
+    require(out.startswith('HELPER_FAILED SPAWN_FAILED'), 'stand-in missing program: expected HELPER_FAILED, got exit %d %r' % (code, out))
+    require(len(effects(p)) == 1, 'a fault committed: %r' % effects(p))
+    code, out = attempt('checks')
+    require(out.startswith('COMMITTED ') and code == 0, 'stand-in checks: expected COMMITTED, got exit %d %r' % (code, out[:160]))
+    # a leftover private folder (a crash) and a symbolic link in its place are removed at the next verification
+    (p / 'cosign.tmp').mkdir()
+    (p / 'cosign.tmp' / 'signature').write_text('left over')
+    code, out = attempt('valid')
+    require(out.startswith('COMMITTED ') and code == 0, 'leftover folder: expected COMMITTED, got exit %d %r' % (code, out[:160]))
+    elsewhere = s.folder('elsewhere')
+    (elsewhere / 'keep').write_text('keep')
+    (p / 'cosign.tmp').symlink_to(elsewhere)
+    code, out = attempt('valid')
+    require(out.startswith('COMMITTED ') and (elsewhere / 'keep').read_text() == 'keep' and not (p / 'cosign.tmp').exists(),
+            'a symbolic link named cosign.tmp: expected COMMITTED with the link removed and its target kept, got exit %d %r' % (code, out[:120]))
+    require(not (p / 'cosign.tmp').exists(), 'the private cosign folder stayed after use')
+    # the checks of the program path (no AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN): owner uid 0, no symbolic link
+    owned = os.path.realpath(s.node)
+    parts = [Path(*Path(owned).parts[:i]) for i in range(2, len(Path(owned).parts) + 1)]
+    first_user = next((x for x in parts if os.lstat(x).st_uid != 0), None)
+    require(first_user is not None and all(os.lstat(x).st_mode & 0o022 == 0 and not os.path.islink(x) for x in parts[:parts.index(first_user)]),
+            'NOT RUN: no file whose first non-root path part comes before any writable or linked part: %s' % owned)
+    code, out = attempt('valid', path=owned, untrusted=False)
+    require(out.startswith('HELPER_FAILED SSH_KEYGEN_UNTRUSTED NOT_ROOT_OWNED %s ' % first_user),
+            'untrusted program: expected HELPER_FAILED SSH_KEYGEN_UNTRUSTED NOT_ROOT_OWNED %s, got exit %d %r' % (first_user, code, out[:160]))
+    code, out = attempt('valid', path='/var/../usr/bin/ssh-keygen', untrusted=False)
+    require(out.startswith('HELPER_FAILED SSH_KEYGEN_UNTRUSTED SYMLINK /var'), 'symbolic link on the path: expected HELPER_FAILED SSH_KEYGEN_UNTRUSTED SYMLINK /var, got exit %d %r' % (code, out[:160]))
+    code, out = attempt('valid', path=SSH_KEYGEN, untrusted=False)  # the real program, trusted: the crafted signature is invalid
+    require(out == 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID', 'control: the real ssh-keygen through the seam: exit %d %r' % (code, out))
+    require(len(effects(p)) == 4, 'effects: %r' % effects(p))
+    code, out, _ = s.run(['cosign-info'])
+    require(code == 0 and out.startswith('COSIGN_INFO path=/usr/bin/ssh-keygen sha256=%s uid=0 ' % hashlib.sha256(Path(SSH_KEYGEN).read_bytes()).hexdigest())
+            and ' checks=OK version=OpenSSH_' in out, 'cosign-info: %r' % out)
+    return ('%d stand-in answers -> 8 HELPER_FAILED, 1 COSIGN_INVALID; missing program; leftover folder and link cleaned; argv, 0700 folder, '
+            '0600 files checked; untrusted owner and linked path refused; cosign-info' % len(want))
 
 
 def case_saga(s):
@@ -546,7 +728,9 @@ def case_saga(s):
     require(mv('SETTLED paypal idem-1', 'REJECTED_POLICY')[1] == 'PROCESSOR_IN_FLIGHT', 'settle by another processor')
     require(mv('SETTLED', 'REJECTED_POLICY')[1] == 'PROCESSOR_IN_FLIGHT', 'settle with no pair')
     require(mv('IN_FLIGHT stripe idem-1', 'REJECTED_POLICY')[1] == 'NO_TRANSITION', 'retry of the same move')
-    s.one(p, 'SAGA t1 pay1 s-old %s IN_FLIGHT stripe idem-1' % s.h(p, 't1', 'pay1').replace('0', '1', 1).replace('a', 'b', 1), 'STALE_STATE_HASH')
+    hp = s.h(p, 't1', 'pay1')
+    stale = hp[:-1] + ('1' if hp[-1] == '0' else '0')  # always another hash (the old form kept a hash without '0' and 'a': 1.4% of runs)
+    s.one(p, 'SAGA t1 pay1 s-old %s IN_FLIGHT stripe idem-1' % stale, 'STALE_STATE_HASH')
     mv('CONFIRMED_REJECTED stripe idem-1', 'COMMITTED')
     require(s.get(p, 't1', 'pay1')['processor'] == '-', 'pair cleared after leaving flight')
     mv('IN_FLIGHT paypal idem-2', 'COMMITTED')  # failover after a confirmed rejection is allowed
@@ -601,10 +785,12 @@ def case_inventory(s):
     d = s.standin('book2', {'booking_check.cjs': 'process.stdout.write("ACCEPT\\n"); process.stderr.write("w");'})
     s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'HELPER_FAILED', ['--node', s.node, '--checker', MODEL], **s.seam(helpers=d))
     s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'HELPER_FAILED', ['--node', s.node])  # no model
+    tok = s.one(p, cert_line(s, p, 'b4', good, 'inv2'), 'HELPER_FAILED', ['--node', '/bin/sh', '--checker', MODEL])  # not the pinned Node binary
+    require(tok[1] == 'PIN_MISMATCH', 'a Node binary other than the pinned one: %r' % tok)
     tok = s.one(p, cert_line(s, p, 'b4', dict(base, x=['1', '0', '0'], alpha_bps='2500'), 'inv2'), 'COMMITTED', ex)  # quarter gap accepted
     require(s.get(p, 't1', 'inv2')['remaining'] == '0,0', 'remaining: %r' % s.get(p, 't1', 'inv2'))
     require(len([e for e in effects(p) if e.startswith('BOOK')]) == 2, 'BOOK effects')
-    return 'real booking_check.cjs + model: 2 commits; 7 native rejections; 5 malformed; stand-in REJECT obeyed; 2 helper failures'
+    return 'real booking_check.cjs + model: 2 commits; 7 native rejections; 5 malformed; stand-in REJECT obeyed; 3 helper failures (one a Node pin mismatch)'
 
 
 def case_leases(s):
@@ -691,7 +877,6 @@ def case_lease_binding(s):
 
 def case_nonce(s):
     """Review R2: two stores with the same store id, policy and key differ (genesis nonce); a signature for one is refused on the other."""
-    s.node_ok()
     key, pub = keygen(s, 'nonce')
     a, b = s.store('nonce-a', pubkey=pub, store_id='same'), s.store('nonce-b', pubkey=pub, store_id='same')
     for st in (a, b):
@@ -703,11 +888,11 @@ def case_nonce(s):
     action = 'REFUND t1 o1 r1 %s GOODWILL 7500' % ha
     code, msg, _ = s.run(['cosign-message', a, action])
     sig = sign(s, key, msg.encode())
-    s.one(b, action + ' ' + sig, 'STALE_STATE_HASH', s.node_ok())  # a's hash is not b's state
+    s.one(b, action + ' ' + sig, 'STALE_STATE_HASH')  # a's hash is not b's state
     sig_b = sign(s, key, msg.replace(ha, hb).encode())  # a's message, b's hash: the genesis line still differs
-    tok = s.one(b, 'REFUND t1 o1 r1 %s GOODWILL 7500 %s' % (hb, sig_b), 'REQUIRE_HUMAN_COSIGN', s.node_ok())
+    tok = s.one(b, 'REFUND t1 o1 r1 %s GOODWILL 7500 %s' % (hb, sig_b), 'REQUIRE_HUMAN_COSIGN')
     require(tok[1] == 'COSIGN_INVALID', 'a signature for store a committed on store b: %r' % tok)
-    s.one(a, action + ' ' + sig, 'COMMITTED', s.node_ok())
+    s.one(a, action + ' ' + sig, 'COMMITTED')
     require(len(effects(b)) == 1, 'store b committed')
     return 'same id, policy, key: nonces, genesis hashes and state hashes differ; a signature for one store is refused on the other'
 
@@ -720,33 +905,42 @@ WEAK_KEYS = ['00' * 32, '00' * 31 + '80', '01' + '00' * 31, '01' + '00' * 30 + '
 
 
 def case_weakkey(s):
-    """Review R4: init refuses the 14 small-order / non-canonical encodings and other y >= p keys."""
+    """Review R4: init refuses the 14 small-order / non-canonical encodings and other y >= p keys (as ssh-ed25519 key
+    tokens), and every key token that is not strict."""
     d = s.folder('weak')
     for i, k in enumerate(WEAK_KEYS):
-        code, out, _ = s.run(['init', d / ('st-%d' % i), '--store-id', 's', '--cosign-pubkey', k, '--node', s.node])
+        code, out, _ = s.run(['init', d / ('st-%d' % i), '--store-id', 's', '--cosign-pubkey', key_token(bytes.fromhex(k))])
         require(code == 12 and 'WEAK_PUBKEY' in out, 'weak key %s accepted: %d %r' % (k, code, out))
-    require(list(d.iterdir()) == [], 'a refused init left a folder')
     _, pub = keygen(s, 'strong')
+    blob = base64.b64decode(pub)
+    bad = {'old hex form': blob[-32:].hex(), 'uppercase hex': blob[-32:].hex().upper(), 'truncated token': pub[:-4],
+           'another key type': token_of(b'\0\0\0\x0bssh-ed25518' + blob[15:]), 'a 31-byte key': token_of(blob[:15] + b'\0\0\0\x1f' + blob[19:-1]),
+           'a whole .pub line': 'ssh-ed25519 ' + pub}
+    for why, k in bad.items():
+        code, out, _ = s.run(['init', d / ('st-bad-%d' % len(why)), '--store-id', 's', '--cosign-pubkey', k])
+        require(code == 12 and 'BAD_PUBKEY' in out, 'key token (%s) accepted: %d %r' % (why, code, out))
+    require(list(d.iterdir()) == [], 'a refused init left a folder')
     s.store('strong', pubkey=pub)
-    return '%d weak encodings refused at init; a generated key accepted' % len(WEAK_KEYS)
+    return '%d weak encodings refused at init (WEAK_PUBKEY); %d malformed key tokens refused (BAD_PUBKEY); a generated key accepted' % (len(WEAK_KEYS), len(bad))
 
 
 def case_seams(s):
-    """Review R1: no caller-chosen helper; the test seams exist only in the kill-points build; the SHA-256 of the engine."""
-    s.node_ok()
-    key, pub = keygen(s, 'seams')
-    fake = s.standin('fake-valid', {'cosign.cjs': 'process.stdout.write("VALID\\n");'})
-    junk = 'c' * 128
+    """Review R1: no caller-chosen helper or program; the test seams exist only in the kill-points build; the SHA-256 of the engine."""
+    _, pub = keygen(s, 'seams')
+    fake = s.folder('fake-valid') / 'ssh-keygen'
+    fake.write_text('#!/bin/sh\ncat > /dev/null\nprintf \'Good "forge-airlock-cosign" signature for forge-airlock-cosigner with ED25519 key %s\\n\'\n' % fingerprint(pub))
+    os.chmod(fake, 0o700)
+    junk = crafted_sig(pub)
     results = []
-    for engine, env, want in ((s.engine, dict(ENV, AIRLOCK_TEST_HELPERS=str(fake)), 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID'),
-                              (s.kill_engine, dict(ENV, AIRLOCK_TEST_HELPERS=str(fake)), 'COMMITTED')):
+    for engine, want in ((s.engine, 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID'), (s.kill_engine, 'COMMITTED')):
         p = s.store('seams-%d' % len(results), pubkey=pub)
         s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
         line = 'REFUND t1 o1 g1 %s GOODWILL 9000 %s' % (s.h(p, 't1', 'o1'), junk)
-        code, out, _ = s.serve(p, [line], ['--node', s.node, '--helpers', fake])  # the reviewer's attack
+        code, out, _ = s.serve(p, [line], ['--helpers', fake.parent])  # the reviewer's attack
         require(code == 2 and out == [], 'serve --helpers must be USAGE: %d %r' % (code, out))
-        code, out, _ = s.serve(p, [line], ['--node', s.node], engine, env)
-        require(out[:1] and out[0].startswith(want), '%s with AIRLOCK_TEST_HELPERS: expected %s, got %r' % (Path(engine).name, want, out))
+        env = dict(ENV, AIRLOCK_TEST_SSH_KEYGEN=str(fake), AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN='1')
+        code, out, _ = s.serve(p, [line], [], engine, env)
+        require(out[:1] and out[0].startswith(want), '%s with AIRLOCK_TEST_SSH_KEYGEN: expected %s, got %r' % (Path(engine).name, want, out))
         results.append(out[0].split(' ')[0])
     # the production engine ignores the unpinned-binary seam
     q = s.store('seams-bin', policies=('money-canonical',))
@@ -764,7 +958,7 @@ def case_seams(s):
         require(code == 0 and out == 'SHA256 %s\n' % hashlib.sha256(v).hexdigest(), 'sha256 of %d bytes: %r' % (len(v), out))
     code, out, _ = s.run(['sha256', BINARY])
     require(out == 'SHA256 %s\n' % BINARY_SHA256, 'sha256 of the refund binary: %r' % out)
-    return 'serve --helpers is USAGE; AIRLOCK_TEST_HELPERS ignored by production (%s) and live in kill build (%s); unpinned binary refused; SHA-256 %d vectors' % (
+    return 'serve --helpers is USAGE; AIRLOCK_TEST_SSH_KEYGEN ignored by production (%s) and live in kill build (%s); unpinned binary ignored by production; SHA-256 %d vectors' % (
         results[0], results[1], len(vecs) + 1)
 
 
@@ -1196,12 +1390,20 @@ def case_crafted(s):
         (p / 'airlock.wal').write_bytes(good['airlock.wal'] + wal_record(epoch, tail, payload))
         code, out, _ = s.run(['state', p])
         require(code == 17 and out.startswith('CORRUPT_WAL'), 'crafted record (%s) must be CORRUPT_WAL: %d %r' % (why, code, out))
+    # a store of the Node cosign engine (genesis version 2) is refused with a clear code, never read as version 3
+    v2 = s.folder('crafted-v2') / 'store'
+    v2.mkdir()
+    (v2 / 'airlock.wal').write_bytes(wal_record(0, 0, ('GENESIS 2 old %s - %s 0' % ('0' * 32, 'ab' * 32)).encode()))
+    (v2 / 'airlock.epoch').write_bytes(ratchet_entry(0))
+    for cmd in (['state', v2], ['serve', v2]):
+        code, out, _ = s.run(cmd, b'STATE\n')
+        require(code == 17 and out.startswith('CORRUPT_WAL STORE_VERSION_2 '), 'a version-2 store (%s): expected CORRUPT_WAL STORE_VERSION_2, got %d %r' % (cmd[0], code, out))
     restore()
     (p / 'airlock.epoch').write_bytes(good['airlock.epoch'] + ratchet_entry(epoch + 7) + ratchet_entry(1))
     code, out, _ = s.run(['state', p])
     require(code == 15 and out.startswith('EPOCH_REGRESSION'), 'a ratchet whose last entry is lower than its highest: %d %r' % (code, out))
     restore()
-    return '1 crafted record adopted; %d crafted records refused by the fold; ratchet maximum, not last entry' % len(bad)
+    return '1 crafted record adopted; %d crafted records refused by the fold; version-2 store refused (STORE_VERSION_2); ratchet maximum, not last entry' % len(bad)
 
 
 def case_native_bound(s):
@@ -1223,18 +1425,20 @@ def case_native_bound(s):
 
 def case_helper_env(s):
     """A variable of the engine environment must not reach a helper process (cleared environment). STAND-IN helpers
-    say VALID / accept only when the probe variable reaches them."""
-    ex = s.node_ok()
+    (a stand-in ssh-keygen and a stand-in refund binary) say valid / accept only when the probe variable reaches them."""
+    _, pub = keygen(s, 'env')
     env = dict(ENV, AIRLOCK_LEAK_PROBE='1')
+    good = 'Good "forge-airlock-cosign" signature for forge-airlock-cosigner with ED25519 key %s' % fingerprint(pub)
     d = s.standin('env', {
-        'cosign.cjs': 'const v = process.env.AIRLOCK_LEAK_PROBE; process.stdout.write(v ? "VALID\\n" : "INVALID\\n"); process.exitCode = v ? 0 : 1;',
+        'ssh-keygen': "#!/bin/sh\ncat > /dev/null\nif [ -n \"$AIRLOCK_LEAK_PROBE\" ]; then printf '%%s\\n' '%s'; exit 0; fi\n"
+                      "printf 'Could not verify signature.\\n'; printf 'Signature verification failed: incorrect signature\\r\\n' >&2; exit 255\n" % good,
         'refund': "#!/bin/sh\ncat > /dev/null\nif [ -n \"$AIRLOCK_LEAK_PROBE\" ]; then printf '%s' '(refund-result-v1 True 5 returned_item charge-1 rq-e 1)'; "
                   "else printf '%s' '(refund-result-v1 False 0 \"\" \"\" \"\" 0)'; fi\n"})
-    p = s.store('helper-env', pubkey='ab' * 32)
+    p = s.store('helper-env', pubkey=pub)
     s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
-    line = 'REFUND t1 o1 g1 %s GOODWILL 7500 %s' % (s.h(p, 't1', 'o1'), 'c' * 128)
-    env['AIRLOCK_TEST_HELPERS'] = str(d)  # the kill-points seam (stand-in helpers); the probe variable is beside it
-    code, out, _ = s.serve(p, [line], ['--node', s.node], engine=s.kill_engine, env=env)
+    line = 'REFUND t1 o1 g1 %s GOODWILL 7500 %s' % (s.h(p, 't1', 'o1'), crafted_sig(pub))
+    env.update(AIRLOCK_TEST_SSH_KEYGEN=str(d / 'ssh-keygen'), AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN='1')  # kill-points seams; the probe is beside them
+    code, out, _ = s.serve(p, [line], [], engine=s.kill_engine, env=env)
     require(out[:1] and out[0] == 'REQUIRE_HUMAN_COSIGN COSIGN_INVALID', 'the cosign helper saw a variable of the engine environment: exit %d %r' % (code, out))
     q = s.store('helper-env-c', policies=('money-canonical',))
     s.one(q, 'OPEN_MONEY t1 charge-1 r0 canonical 100', 'COMMITTED')
@@ -1242,11 +1446,11 @@ def case_helper_env(s):
     code, out, _ = s.serve(q, ['REFUND t1 charge-1 rq-e %s returned_item 5' % s.h(q, 't1', 'charge-1')], ['--refund-binary', d / 'refund'], engine=s.kill_engine, env=env)
     require(out[:1] and out[0] == 'REJECTED_POLICY CAKEML_REJECTED', 'the refund binary saw a variable of the engine environment: exit %d %r' % (code, out))
     require(len(effects(p)) == 1 and len(effects(q)) == 1, 'a helper with a leaked variable committed')
-    return 'probe variable in the engine environment reached neither the cosign helper nor the refund binary'
+    return 'probe variable in the engine environment reached neither the stand-in ssh-keygen nor the refund binary'
 
 
 CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('tenant', case_tenant), ('money', case_money),
-         ('canonical', case_canonical), ('cosign', case_cosign), ('saga', case_saga), ('inventory', case_inventory), ('leases', case_leases),
+         ('canonical', case_canonical), ('cosign', case_cosign), ('cosign_faults', case_cosign_faults), ('saga', case_saga), ('inventory', case_inventory), ('leases', case_leases),
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
          ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
          ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env),
