@@ -1,0 +1,5 @@
+# Direct dependencies of web/backend, exact pins. requirements.lock holds every transitive pin with its SHA-256
+# (pip install --require-hashes -r requirements.lock). Python 3.10+.
+fastapi==0.162.5
+uvicorn==0.54.0
+anthropic==2.11.0

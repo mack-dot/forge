@@ -21080,3 +21080,31 @@ curl: (6) Could not resolve host: github.com
   before, still the owner's); the cost of a live model per turn. Labels: NATIVE CHECK (engine), FINITE TEST (demo).
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. NOT pushed; NOT merged. Next check: the
   orchestrator's regression and the owner's review of the pull request.
+
+## U926 — Discovery One web showcase restored on `main` from commit `3731ab8e` (owner's word of 2026-11-20): the header defect, actual results, and what stays NOT RUN
+
+- Refs U749 (the showcase's record on its old branch, not on `main`), U925 (the HAL demo it stacks on), U920 (release
+  audit: web NOT PRESENT). Branch `demo/discovery-one-web` on `demo/hal-9000`.
+- Brought: `web/**` only (44 files). No backend code change was needed: the backend already drove `init` without
+  `--node`, `cosign-keygen` without options, and one `serve` per store through `sdk/py/forge_airlock.py`.
+- Defect found and repaired: the `<h1>` of `Experience.tsx` had the text `DISCOVERY ONE` and then a `<span>` with
+  no space between them (JSX drops the line break). The rendered text was `DISCOVERY ONEFORGE AIRLOCK SHOWCASE`; the
+  `ml-3` margin hid it on wide screens only (the owner saw `COVERY ONEFORGE`). Shown by a server-side render of the
+  component with React's own renderer, before (exit 1) and after (exit 0). The compiled chunk now holds
+  `"DISCOVERY ONE"," "`. Not seen in a browser.
+- Actual results (2026-11-20, no model key in the environment): backend 51 tests exit 0 (twice); typecheck, lint
+  and build exit 0 (twice); live HTTP on 127.0.0.1 against the real backend: every route answered 200, the vent and
+  the 5 presets got the expected refusals, free text got `no_model`, telemetry `ALIVE`; no HTTP 500 in the logs.
+- Positive control: a second process opened a key on the live store through its own engine; telemetry turned to
+  `LOST`, `reconciled` false, 1 unauthorised effect listed; the page component rendered with that real answer shows
+  `data-breach="true"` and the BREACH banner, and with the clean answer none. The red colour is read from the CSS.
+  The seeding of the page state for this render is a scratch method (the state normally comes from a fetch in an
+  effect), so it is not a browser test.
+- NOT RUN: the headless-Chrome scripts (`browser-check.mjs`, 79 checks against a test double; `real-backend-run.mjs`)
+  because of the process limit on the shared machine; a real model; a Linux build; Safari, Firefox, a phone, a screen
+  reader; any deployment.
+- Open for the owner before any public launch: film characters that another party owns (rights; raised before);
+  each model turn spends the owner's API key (the daily budget counter is in memory only); hosting, TLS and a
+  separate OS user for `serve` (none built).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. NOT pushed; NOT merged. Next check: the browser
+  scripts on a quiet machine; the orchestrator's regression; the owner's review.
