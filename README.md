@@ -11,8 +11,8 @@ exist"). Sources:
 [the graph refresh](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119.md)
 (E2, E4).
 
-Forge is a research prototype (the repository is private; no licence is
-selected; nobody outside has a right to use it yet).
+Forge is a research prototype, licensed under Apache-2.0 (see `LICENSE`;
+the repository is private at the time of this text).
 **`end_to_end=false`**: no result here is a proof of a deployed system.
 
 ## What Forge is
@@ -285,7 +285,9 @@ commands and exit codes. Planned work is not a passing result.
 
 ## License
 
-No licence is selected. The repository is private. Nobody outside has a
-right to use, copy or change this code yet. The options are listed for
-the owner in
+Apache License 2.0: [LICENSE](LICENSE) and [NOTICE](NOTICE). The owner
+chose it on 2026-10-28 and confirmed it on 2026-11-20 (`unsure.md` U922).
+The options that were considered are in
 [the decision note](proposals/review-20261120/DECISION_NOTE_LICENCE_PACKAGING.md).
+Third-party notices are not yet on `main`: a list from 2026-10-28 exists
+in pull request 14 and was not re-checked against the present tree.
