@@ -194,13 +194,20 @@ all eight disasters and the valid traffic behaved as stated. The fuzz pass alone
 
 Three labels. Each result has one or more of them.
 
-- **PROVED CORE**: only two decisions.
+- **PROVED CORE** (the label that the demo, the tests and the evidence bundle print): three
+  results have a machine-checked part. None of them is a proof of native execution.
   - A refund on a key whose policy has `"profile": "canonical-refund"`: the CakeML ARM64
-    refund binary (SHA-256 `b8ed5ec2…7bb8`) decides. The engine sets the binary's three
-    flags itself, so the flag logic of the binary is not exercised through the engine.
-  - An inventory booking: the Dafny-compiled `BookingDualCert` checker must accept. This
-    is a proved SOURCE. The Dafny compiler and Node are trusted.
-  - The NO_CHOICE verdict of `diff-policy` holds for the GENERATED Dafny model only.
+    refund binary (SHA-256 `b8ed5ec2…7bb8`) decides. That binary is compiled by a verified
+    compiler; the HOL4 theorem about it is model-level; the native link (M1-B) is OPEN, and
+    two premises of the theorem are false for real machines as written. After the binary
+    accepts, the engine re-checks the amount and the reason natively. The engine sets the
+    binary's three flags itself, so the flag logic of the binary is not exercised through
+    the engine.
+  - An inventory booking: the Dafny-compiled `BookingDualCert` checker must accept. It is
+    compiled from a Dafny source proof; the compiled JavaScript is not proved. The Dafny
+    compiler and Node are trusted.
+  - The NO_CHOICE verdict of `diff-policy`: a Dafny source proof for the GENERATED Dafny
+    model only.
 - **NATIVE CHECK**: the Rust engine (WAL, compare-and-swap, tenant checks, parametric money
   rules, saga table, read airlock, leases). It is not proved.
 - **FINITE TEST**: the test suites, the fuzz pass and the demo. They try a finite set of
