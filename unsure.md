@@ -19957,6 +19957,676 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Nothing started.
 - Next check: the owner's budget word and the answers to Q-1 to Q-8 of the record.
 
+## U780 — goal 21 (Gate F1, intent clearing): start; what was merged in; counterexample text is not ordered
+
+- Refs U720 (goal 20), the directive `proposals/forge2-finish-line/DIRECTIVE.md` (Gate F1).
+- Actual: pre-flight passed (`gh pr list`: pull request 65 MERGED; `origin/main` = `9a9a8943`). Branch
+  `feat/intent-clearing-v2` from that commit. `origin/docs/finish-line-directive` (`45c21aa1`) merged in on the
+  launcher's relay of the owner's word; later `origin/main` = `b2249ea2` (pull request 66) merged in, also on the
+  launcher's relay. I did not see the owner's words myself.
+- Observation (one run, Dafny 4.11.0 with the gate options and `--extract-counterexample`): for a lemma parameter
+  of a datatype type, the counterexample text printed `MoneyInput(5000, 9223372036854774571, 1, true, true, R1,
+  7719, 38)`: the arguments are not in the order of the declaration. With scalar parameters the text named each
+  value (`5000 == amount && ...`). Two runs gave the same bytes.
+- Consequence in the design: every probe lemma takes scalar parameters; a value from that text is a candidate
+  only; a row or a witness is shown only after Dafny verified a lemma about the concrete value.
+- Uncertainty: the order was seen in one run of one file; no claim about other Dafny versions.
+- Impact: none on any stage label. `end_to_end=false`. Next check: U782.
+
+## U781 — goal 21: the directive asks for two things that cannot both hold (`bin/forge-airlock` and the goal 20 bundle)
+
+- Evidence: `scripts/exit_goal20_sdk.py` (`PYTHON_FILES` holds `bin/forge-airlock`; the bundle's `subject` holds its
+  SHA-256 `bd56d8b6…6891`); the directive: "CLI subcommand in `bin/forge-airlock check-intent`" and "Preserve ALL 6
+  prior evidence bundles byte-identical".
+- Inference: a change of `bin/forge-airlock` changes the goal 20 bundle digest.
+- What I did: kept the file and the bundle. The subcommand is the exact diff
+  `proposals/forge2-goal21-intent/forge-airlock-check-intent.diff` (3 lines added). It is NOT applied. The EXIT case
+  `dispatcher` applies it to a copy and runs it (actual: exit 0 clean, exit 4 planted, exit 2 for the unpatched copy).
+- Open question for the owner: apply the diff and accept a new goal 20 digest, or keep the command as
+  `python3 scripts/intent_clearing.py check-intent`.
+- Impact: a departure from the directive's text. Next check: the owner's decision.
+
+## U782 — goal 21: actual results of the EXIT script; what failed on the way
+
+- Evidence: `proposals/forge2-goal21-intent/records/evidence.json` (SHA-256 `9a3ea0ee…c2d8`), `REPORT.md` there.
+- Actual: engine suite exit 0 twice (12 of 12; before the review and after the repairs); restater suite exit 0
+  (8 of 8). `--case mutations`, first run after the repairs: exit 1. C12 (the `has` guard removed) and C15 (the
+  verdict filter of a query removed) did not give the WARNING that the table named; both gave UNDECIDED, exit 5.
+  The tool failed safe; the table's expectation was wrong. I corrected the two named reasons, and those of C04
+  and C06, to the observed lines. `--case planted` exit 0. `--case dispatcher` exit 0. `--case evidence
+  --write-record` exit 0: two bundles byte-identical; 23 of 23 changed copies killed for the named reason, 20 of
+  them copies of `intent_clearing.py`.
+- The three planted specifications (swapped VIP flag; SHIPPING with a coarse 10000 cap and no `shipping_paid` cap;
+  `<=` in place of `<` at 5000) gave exit 4 with a Dafny-verified witness for the named query; the clean twins
+  gave exit 0.
+- Failures on the way: restater suite exit 1 twice after my wording repair (two test strings); a waiting job of
+  mine was stopped once (exit 144) because its log name was the name of an old file of another session in the
+  shared scratch folder; the first worker runs waited more than an hour for the machine lock.
+- NOT RUN: `--engine` (no engine binary built here); any HOL step; Stages 7, 9, 10.
+- Uncertainty: "caught" depends on the query file. Without the right question a wrong specification is visible
+  only in the table and the bullets, to a person.
+- Impact: none on any stage label. Next check: U784 (regression).
+
+## U783 — goal 21: the one review: 1 FAIL-OPEN, 0 HIGH, 2 MEDIUM, 7 LOW, 3 NOTE; repairs in one pass
+
+- Evidence: `proposals/forge2-goal21-intent/REVIEW.md`.
+- FAIL-OPEN (F1): a query that named two reason ids that the specification does not name got a WARNING with a
+  witness "verified by Dafny". Dafny had verified a rewritten condition, in which both ids were the one class of
+  unnamed reasons. It could not give exit 0; it showed a false warning as verified.
+- Statement of the tool that was false before the repair: "witness ... verified by Dafny" for such a query.
+- Repaired in one pass: F1 to F5, F7 to F12; F6 in part (two more changed copies, both killed). Stated only: F13
+  (no time bound) and three guards of F6 with no changed copy.
+- I re-ran the reviewer's F1 input after the repair: both answers `NO`. The other "did not break" items are the
+  reviewer's report; I did not check them again.
+- Uncertainty: no second review of the repairs ran (the directive asks for one review).
+- Impact: none on any stage label. Next check: the owner may ask for a second review.
+
+## U784 — goal 21: the regression in a scratch clone of the merged tree; what the records commit holds
+
+- Refs U724 (the same check for goal 20), U782. Evidence: `proposals/forge2-goal21-intent/records/regression.json`;
+  `proposals/forge2-goal21-intent/run_regression.py` (the goal 20 runner with one more bundle, more link checks and
+  a comparison of the six prior records with `origin/main`).
+- Actual: a throwaway clone of commit `faa46ae6` (merge base with `origin/main`: `b2249ea2`). 28 of 28 Stage EXIT
+  cases exit 0. `check_frozen_pr_gate.py HEAD` exit 0. `check_links.py` exit 0 for 17 files: 0 dangling links. Seven
+  EXIT scripts with `--case evidence` exit 0; bundles `c7f2f41c…` (Slice 1), `2721a293…` (Slice 2), `3cdfebfc…`
+  (Slice 3), `f55391da…` (M1 conformance), `1f569fcf…` (goal 19), `1e75ab47…` (goal 20) byte-identical to the
+  tracked records, and those six records equal the files on `origin/main`; `9a3ea0ee…` (goal 21) byte-identical to
+  its record. Protected paths changed against the merge base: 0.
+- The run held the machine lock alone, as far as I checked; wall time about 2 hours 8 minutes.
+- NOT RUN: Stage 7, Stage 9, Stage 10, any HOL or Holmake process.
+- This entry, the regression record and one changed `ROADMAP.md` row are in a records commit after `faa46ae6`
+  (documents only). The regression did not run on that commit.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the hosted `gate/pr_check.py` on the pull
+  request (expected exit 3, UNSUPPORTED).
+## U740 — Archia MCP airlock demo: start; the base is not the base that the directive names; the launcher is in the Goal 20 bundle
+
+- Refs U720 to U723 (Goal 20), U709. Evidence: the owner's directive, stored verbatim at `/tmp/forge_archia_demo.md`
+  (pasted text; the owner asked for Phases 1 and 2 only); `git log`; `gh pr list` of 2026-11-19.
+- Pre-flight rule 1 asks for a branch from clean `origin/main` after Goal 20 and T19. NOT MET: `origin/main` was
+  `a5133c01`; Goal 20 (`feat/zero-babysitting-sdk`, `c02abb74`) had no pull request; T19
+  (`feat/t19-hardened-sink`, `ddcdbd09`) was not on `origin`. `bin/forge-airlock` exists only on the Goal 20 branch.
+- Owner decision (asked once, answered in the session): stack `demo/archia-mcp-showcase` on `c02abb74`, in a
+  separate worktree. The T19 content is absent from this branch.
+- `bin/forge-airlock` is in the subject list of `scripts/exit_goal20_sdk.py`. The wiring of `mcp`,
+  `verify-evidence` and `mcp-state` changed it (15 lines added, 2 deleted; SHA-256 `bd56d8b6…` to `94d55f22…`,
+  the worker's numbers). The Goal 20 bundle record `1e75ab47` therefore does not describe this tree.
+- Uncertainty: `scripts/exit_goal20_sdk.py` was NOT RUN on this branch. I do not know its result here.
+- Impact: Phase 4 asks for "prior bundles unchanged"; that cannot hold for the Goal 20 bundle as the tree is.
+  No stage label changes. Next check: after the owner merges Goal 20 and T19, rebase, then run the Goal 20 EXIT
+  script and decide with the owner how the launcher change is recorded.
+
+## U741 — Archia MCP airlock demo, Phases 1 and 2: what was built and what my own runs show
+
+- Refs U740. One orchestrator, five workers (PROXY, LEDGER, POLICY, EVIDENCE, SERVERS), one file set each.
+  Files: `src/mcp_proxy/` (7 Rust files and `PROTOCOL.md`), `examples/archia_mcp_showcase/servers/` and
+  `policies/`, `tests/mcp_proxy/`, `bin/forge-airlock`. Rust `std` only, `#![forbid(unsafe_code)]`; Python stdlib.
+- My own runs (worktree, 2026-11-19; binary in a scratch folder, not `build/`): the build command of
+  `PROTOCOL.md` exit 0; unit tests of the binary 23 passed, 1 ignored (the timing case); `test_servers.py` exit 0,
+  14 of 14; `test_proxy_e2e.py` exit 0, 20 of 20; the PROXY worker's suite exit 0, 0 failed; a 10 GiB line with no
+  newline: peak resident memory of the proxy 1,808 KiB over 82 samples of `ps`, next request answered.
+- Worker runs that I did NOT repeat: POLICY's 47 cases and EVIDENCE's 30 cases (their test roots are in scratch
+  folders, not in the tree); LEDGER's timing (median 4.0 to 5.0 ms for one commit).
+- A failed step of mine, kept: the first `verify-evidence` of my latency script ended with `FAILED at=1`. Cause:
+  my script wrote an EMPTY allowed-signers file before the key existed. With the right file both stores gave
+  `VERIFIED records=40 signatures=40 chain=OK`.
+- Nothing is proved. Every row is a NATIVE CHECK or a FINITE TEST on one machine. No review ran. No changed-copy
+  (mutation) run exists yet: a passing suite does not show that the suite can fail.
+- Impact: none on any stage label. `end_to_end=false`. M1 open. Next check: Phase 4 (changed copies), a review.
+
+## U742 — Archia MCP airlock demo: numbers of the directive that the measurements do not support, and stated limits
+
+- Refs U741, U703 (the same finding for Goal 19: "commit under 2 ms" not reached).
+- "The next valid call commits in < 15 ms" (Beat 3): NOT SUPPORTED as a bound. My 40 sequential commits through
+  the real fintech server: sync signing min 13.95, p50 19.20, p90 26.15, max 121.92 ms; async signing min 6.97,
+  p50 12.06, p90 17.80, max 20.41 ms. Cost: one `sync_all` (F_FULLFSYNC on macOS) per ledger record and one
+  `/usr/bin/ssh-keygen` process per receipt. Phase 3 must print the measured value, not the directive's number.
+- "Hardware write barrier", "proved finality", "HIPAA": the proxy is unproved Rust in front of an unmodified
+  server. It gives no proof and no compliance statement. The scoped-read filter checks labels (`clinic_id`,
+  `org_id`) that the upstream server writes; it does not know the truth of the data. Foreign data in free text
+  with no scope key name passes (stated in `policy.rs`).
+- The sub-cap fact (`max_mg/<patient>/<medication>`) comes from the airlock's own facts file, a trusted input.
+  The proxy does not read the server's stored record. "Checked against stored EHR" is true only for that file.
+- The CAS is on the airlock's own ledger head, not on the server's balance. A call that reaches the server by
+  another path is outside every check. A crash between the ledger sync and the forward consumes the epoch.
+- Removal of whole trailing records of `evidence.wal` or `ledger.wal` is NOT detected without an outside anchor
+  (`verify-evidence` prints `final_chain` for that purpose). A 0600 key does not stop a process of the same user.
+- The MCP protocol version string of the servers (`2025-06-18`) was written from memory, not checked against
+  the published specification. Uncertainty: conformance to the MCP specification is NOT ESTABLISHED.
+- Impact: wording of Phase 3 output and of any pull request. Next check: owner review of these limits.
+
+## U743 — Archia MCP airlock demo, Phase 3: two reviews, one repair pass, the rebase, and what stays open
+
+- Refs U740, U741, U742. Evidence: commit messages of `714d71c9`, `cb61b04f` and `b35617b3`;
+  `tests/mcp_proxy/test_review_regressions.py` (one case per reproduced finding of REVIEW-A, REVIEW-B and the TESTS
+  finding T1); `src/mcp_proxy/PROTOCOL.md` section 8; `EXPECTED_NOT_KILLED` in `scripts/exit_archia_mcp.py`.
+- Two fresh-context reviews found FAIL-OPEN and HIGH defects: a cross-clinic write that failed open (B1); raw
+  carriage-return smuggling of a call (R1); a ledger reset that led to a double payout (R2); receipt gaps (B4, B5,
+  R4/B6 sticky fault); filter leaks (B2, B3, D1); a second answer to a read that passed (T1). Each has one case in
+  the regression suite. That suite passes 17 of 17 on the repaired binary (bundle of U744).
+- One repair pass, commit `cb61b04f`: control bytes and a `jsonrpc` value other than `"2.0"` refused; unknown
+  upstream responses discarded; `ledger.wal` and `evidence.wal` reconciled at start; commit continuity in the
+  verifier; a sticky receipt fault; mutating tools bound to the session scope; filter rules repaired; an
+  independent Python verifier. No second review ran on the repairs.
+- NOT repaired, stated in `PROTOCOL.md` section 8: R5 (one signed receipt per malformed line), R6 (a stalled
+  upstream stalls the proxy), server notifications and server requests are not filtered (the KNOWN LIMIT case
+  `server_notification_with_foreign_data` of `test_faults.py`).
+- Owner decisions: `bin/forge-airlock` stays at its Goal 20 bytes (SHA-256 `bd56d8b6…6891`, equal to main); the
+  launcher is `bin/forge-mcp-proxy`. Latency is a measurement; no "< 15 ms" claim and no latency assertion (U742).
+  T19 is NOT waited for (owner: superseded).
+- Rebase: the branch is rebased on `origin/main` `b2249ea2` (Goal 20 merged as `9a9a8943`). This closes the base
+  question of U740 for Goal 20. `origin/main` is now `33055a59`, one documents-only commit later; NOT rebased again.
+- Changed copies that no test kills (3 of 47): E01 (evidence `sync_data` dropped) and M04 (ledger `sync_all`
+  dropped): no judge cuts power or observes `fcntl(F_FULLFSYNC)`, so fsync durability is UNTESTED. M27 (a late
+  response to a dropped read passed): "no distinguishing input found; not shown equivalent" (four scripted hostile
+  upstream sequences gave byte-identical client output from the copy and the unchanged build). These are
+  findings, not passes.
+- Side observation of the M27 probe (open): after the id of a dropped read is re-used, a late own-clinic answer to
+  the OLD request passes as the answer to the NEW request. The proxy cannot tell the two apart. The unchanged build
+  does the same. Not repaired; no test covers it.
+- Impact: no stage label changes. `end_to_end=false`. M1 open. Next check: a power-loss or `F_FULLFSYNC` observer
+  test for E01 and M04; an owner decision on re-used ids of dropped reads; a second review.
+
+## U744 — Archia MCP airlock demo, Phase 4: actual EXIT results of the final pass
+
+- Refs U743. Subject: `b35617b3` plus the change of `scripts/exit_archia_mcp.py` in this records commit (base
+  check against main `b2249ea2` with a SHA-256 pin of `bin/forge-airlock`; the bundle keeps only compiled and
+  killed per copy). The file SHA-256 `0b51e1e1…` in the evidence bundle's subject list equals the file in this
+  commit. Sources: `build/archia_mcp/<case>/attempt-NNNN/` and `build/archia_mcp/evidence/attempt-0003/`
+  (`evidence.json`, `measurements.json`), ignored by git; exit codes are the orchestrator's runs.
+- `--case build` exit 0: binary SHA-256 `1877a4fa4bfc851474def1fcb243073b05b2c0ea32370583d6b190994b8577b3`, two
+  builds byte-identical (`evidence.json` key `build`; `measurements.json` build_1 = build_2).
+- `--case suite` exit 0: servers 14 of 14; e2e 27 of 27; unit 146 passed, 1 ignored (`suite/unit/unit.log` of
+  evidence attempt 3); faults 45 cases, 44 PASS and 1 KNOWN LIMIT; regressions 17 of 17 (`evidence.json` key
+  `suite`).
+- `--case showcase` exit 0 (attempt 4): 32 of 32 checks; proxy peak RSS 2,480 KiB (bound 5.0 MiB); 30 commits p50
+  17.08 ms, p99 24.11 ms. Evidence runs: RSS 2,448 KiB; p50 16.12 and 16.28 ms; p99 18.87 and 19.88 ms. The
+  p99 of 30 samples is their maximum. Shared, loaded machine: indicative only, not a bound.
+- `--case mutations` exit 0 (attempt 4): 44 of 47 killed; NOT KILLED exactly E01, M04, M27. It ran before the last
+  script edit; the evidence case ran it again after the edit with the same result.
+- `--case evidence`, first run (attempt 2): exit 1. The two bundles differed (`ef12ee97…` and `0bb7072f…`) only
+  in the rows of M08 and B05: which cases fail on these killed copies varies with timing. Repair: the bundle keeps
+  only compiled/killed per copy; the judges and failed cases go to `measurements.json`.
+- `--case evidence`, after the repair (attempt 3): exit 0. Two runs byte-identical; bundle SHA-256
+  `13608d7e1dcff67ebe64ac6209c37cd0b99da8a04a9200e6daff3f555c8320bd`; 44 of 47 killed. Wall about 1 h 33 min
+  (folder times 02:57 to 04:30; the script records no total wall time).
+- The orchestrator ran `--case build` and `--case showcase` again afterwards: exit 0 and exit 0 (build attempt 6:
+  same binary hash; showcase attempt 5: 32 of 32, p50 16.78 ms, p99 29.80 ms).
+- An earlier EXIT attempt (evidence attempt 1) put M13, M18 and M26 on the accepted-survivor list (41 of 47
+  killed). The orchestrator rejected that. Three new fault cases (`default_deny_tool_not_in_policy`,
+  `client_line_cap_exactly_65536_bytes`, `request_id_checked_at_the_proxy`) now kill them.
+- NOT RUN at the time of writing: the scratch-clone regression (the 28 Stage EXIT cases and the other EXIT
+  scripts' evidence cases); `git push`; the pull request; the hosted gate (expected exit 3, UNSUPPORTED, as for
+  Goal 20; not run). The bundle is a RECORD, not gate evidence. Nothing is proved; no clearing check;
+  `end_to_end=false`.
+- Impact: none on any stage label. M1 open. Next check: the scratch-clone regression, then the owner's word on
+  push and pull request.
+
+
+## U750 — Goal 21, phase 1 (Apex fix 1): the cosign check without Node; `/usr/bin/ssh-keygen -Y verify` in place of `cosign.cjs`; where the directive names the wrong file
+
+- Refs U720 to U723 (Goal 20), U709 (the owner approved `ssh-keygen -Y` for Ed25519), U747 (the review of the HAL
+  demo: a caller-chosen `--node` let a forged signature verify). Evidence: the owner's texts stored at
+  `/tmp/forge_goal21.md` and in the session; the owner's two answers of 2026-11-19 (this session builds it on a
+  stacked branch; the owner runs every sudo step). Branch `apex1/native-cosign` from the Goal 20 head `4d5e8863`
+  (pull request 65, open, not merged).
+- The Goal 21 text says "modify `src/silicon_sink/sink.rs`". That file has no signature code (0 matches) and is
+  pinned by the merged Goal 19 bundle `1f569fcf`. `cosign.cjs` is part of the Goal 20 engine (`src/airlock`).
+  The change is therefore in the engine; `sink.rs` is NOT changed. My reading of the owner's intent.
+- What changed (one worker; details in `src/airlock/PROTOCOL.md` sections 7 and 11): `cosign.cjs` is deleted; the
+  engine checks the SSHSIG blob natively (key equal to the pinned key, namespace, hash name, weak R, S below L)
+  and then runs `/usr/bin/ssh-keygen -Y verify`; only two exact results are accepted (valid; invalid), every
+  other result is `HELPER_FAILED`. Breaking change: genesis record version 3, message version 3, the public key
+  and the signature are base64 tokens; an old store is refused. Node stays ONLY for the inventory checker.
+- My own runs (2026-11-19; load average above 115, so no time is a valid measurement): `bin/forge-airlock build`
+  exit 0; `test_cosign.py` exit 0, 47 of 47; `test_engine.py` exit 0; `test_node_helpers.py` exit 0, 68 of 68;
+  `test_sdk.py` exit 0. A store with money, saga and cosign policies needs no Node (case `py_no_node`, a sentinel
+  `node` on PATH never starts).
+- Worker runs that I did NOT repeat: the changed-copy run through a scratch harness, 122 of 122 killed, NOT
+  KILLED: X01, R8 (as before) and the new N15 (a file swap between two opens of the key: a race, no test); the
+  cases `disasters` and `fuzz`; the measurements (one cosigned commit 575 ms before, 36 ms after; helper resident
+  memory 46.9 MB before, 6.7 MB after; Node 84.9 MiB on disk, `ssh-keygen` 843 KiB).
+- NOT RUN: `scripts/exit_goal20_sdk.py --case evidence` and the diff-policy cases that start Dafny; so NO new
+  Goal 20 bundle exists. The record `1e75ab47` describes the tree before this change.
+- Limits: OpenSSH with LibreSSL is now in the trusted base for cosign in place of Node and V8: smaller, not
+  zero. `ssh-keygen` is not pinned by hash (an owner-0, not group- or other-writable regular file is required);
+  a later OpenSSH with other message text gives `HELPER_FAILED` (fail closed). OpenSSH 10.3 accepts S+L; the
+  engine refuses it first. Nothing is proved.
+- Open owner questions: old stores break with no migration; wrong namespace or hash is `MALFORMED_REQUEST`, not
+  `COSIGN_INVALID`; whether to record the `ssh-keygen` SHA-256 in the genesis record as a warning-only value.
+- Impact: none on any stage label. Next check: the Dafny cases and the `evidence` case in a quiet HOL/Dafny slot;
+  a review of `cosign.rs`; rebase of the HAL demo onto this branch.
+
+## U751 — Goal 21, phase 1: the one review of the native cosign check; no forged cosign flag through the production engine; one sentence of the protocol was false; open items
+
+- Refs U750, U747. Evidence: the reviewer's report and scripts (session scratch folder
+  `w-cosignreview/REVIEW_COSIGN.md`; not in the tree). One fresh-context reviewer, a clone of `73758bda`, real
+  processes. Two adversaries: A holds only the request pipe; B is the same OS user as the store.
+- Result: the reviewer got NO commit with cosign flag 1 without a valid signature of the pinned key through the
+  PRODUCTION engine, as A or as B. Tried and refused: S+L, sha256, trailing bytes, a second signature, sk,
+  certificate and RSA types, namespace tricks, non-canonical base64, weak R, environment variables, replay on
+  another store, tenant, key, amount or state. A finite test by one reviewer, not a proof.
+- A sentence of PROTOCOL.md section 7 was FALSE and is corrected in this commit: "a signature that reaches
+  ssh-keygen is well formed and names the pinned key". As B, a racer replaced both temporary files; ssh-keygen
+  verified B's own files in about 97% of 2 x 20,000 tries. 0 commits followed, because the engine compares the
+  Good line with the fingerprint of the PINNED key. That compare is the one check that holds there.
+- The weak-key rule is load-bearing: the real ssh-keygen accepts a forgery (R = identity, S = 0) for the identity
+  key over a message that nobody signed. The engine refuses that key at `init` and in the fold.
+- Open, NOT repaired (each needs a decision or a larger change):
+  1. As B, a record with cosign flag 1 can be appended to the WAL by hand (CRC and chain recomputed). The record
+     keeps only the flag, not the signature, so no later audit can tell. Repair idea: store the token in the
+     record and verify it again in `replay`. This is inside the stated trust limit (section 11); the separation
+     by user ID removes B.
+  2. `bin/forge-airlock build` puts the test build (`airlock-engine-kill`, with live test seams that accept a
+     stand-in verifier) beside the production engine. As B, running that build on the store commits with flag 1.
+     Repair idea: build it into a test-only folder; never copy it into a vault.
+  3. LOW: the ownership walk of `/usr/bin/ssh-keygen` skips `/`; the text says "every folder".
+  4. NOTES: `cosign-sign` signs a message whose lines 4 and 5 it does not cross-check with the action (such a
+     signature never verifies); a mixed-order public key is accepted at `init`; a signature has no expiry while
+     the state hash stays the same; `DYLD_INSERT_LIBRARIES` runs code inside the engine as B.
+- Not examined by the review: a full disk, signals during a run, the TypeScript SDK, any other OpenSSH version.
+- Impact: none on any stage label. Next check: owner decisions on items 1 and 2; the vault setup copies only
+  `airlock-engine` (to be confirmed by reading `setup_vault.sh` before the owner runs it).
+
+## U752 — Goal 21, phase 1: owner decisions on the review (U751) and the repairs that followed
+
+- Refs U751, U750. Owner decisions (pasted texts of 2026-11-19, in the session): item 1 of U751 (the signature in
+  the WAL record): NO change; it stays a stated limit of the one-user model (PROTOCOL.md section 11 now says it).
+  Item 2: YES, the test engine goes to a test-only folder; the owner named `build/silicon/test/`.
+- Done: `bin/forge-airlock build` writes only the production engine into `build/airlock/` and the
+  `cfg(kill_points)` build into `build/silicon/test/` (the Goal 19 script writes only its own named files in
+  `build/silicon/`; no collision by reading). New suite case `py_build_separation`: no executable in
+  `build/airlock/` accepts the test seams. The ownership walk of `/usr/bin/ssh-keygen` now includes `/`.
+  `cosign-sign` refuses a message whose request-id or state-hash line differs from the action.
+- My own runs (2026-11-19): `bin/forge-airlock build` exit 0; `test_cosign.py` exit 0, 56 of 56; `test_engine.py`
+  exit 0, 27 of 27; `test_node_helpers.py` exit 0, 68 of 68; `test_sdk.py` exit 0, 21 of 21.
+- The worker's runs, not repeated: 19 changed copies through the scratch harness, 18 killed, N15 not killed (as
+  before). The other 112 changed copies were NOT RUN after this change (their text did not change; the worker's
+  anchor check found all 131 anchors once). The `evidence` case and the Dafny cases stay NOT RUN by the owner's
+  decision: no Dafny or HOL is started for this work, and the bundle record `1e75ab47` does not match this tree.
+- The owner's manual test of the separation: a 0600 file owned by `root`, a write by the owner's user, refused
+  (machine state seen: owner uid 0, size 0). An earlier try with user ID 501 (the owner's own ID) had let the
+  write through. This is the general kernel rule for one file. The project's probe (`probe_boundary.py` as
+  `nobody` or against a `forge_vault` user) is NOT RUN; every separation claim of the demo stays NOT TESTED.
+- Impact: none on any stage label. Next check: the hosted `gate/pr_check.py` (expected exit 3).
+
+## U760 — T19 (the hardened sink, minter and dispatcher on `main`): authority, the apply, and what the apply did not give
+
+- Status: 2026-11-19. Refs U660 to U666 (the unapplied diffs), U567 to
+  U575 and U620 to U631 (B's hardening), U580 to U602 (red team).
+  Record: `proposals/t19-hardened-sink-20261119/REPORT.md`.
+- Authority: the launcher of this session gave me the owner's text
+  "T19: Apply the hardened sink (B-15 and B-16 approved) to main as
+  the immediate priority." Evidence class: a relayed text. I did not
+  see the owner type it.
+- Evidence (my runs): `git apply --check` of the two diffs on a new
+  worktree of `main` at `a5133c01`: exit 0. `git apply`: exit 0. No
+  hunk failed. After the apply, `ts`, `tests` and `scripts` differ
+  from `nightshift/B-trust@12d634f6` in one line (the replaced user
+  name in `heavy_spec.sh`). No protected path is in the diff.
+- Finding: `scripts/exit_slice1.py --case evidence` on the applied
+  tree gave exit 1. Cause: `tsc --noEmit` exit 2, 7 type errors in 6
+  regression test files. B's record "126 rows, exit 0" is a run of
+  the suite alone, without the type check of the EXIT script.
+- Repair: two type-only edits (`p3_lib.ts`, one parameter type;
+  `kf_unknown_keyid_refused.ts`, one annotation). Then
+  `tsc --noEmit`: exit 0; `exit_slice1.py --case evidence`: exit 0,
+  126 rows, 0 failed, two runs byte-identical.
+- Uncertainty: the two edits change no run-time behaviour by my
+  reading; no test shows that.
+- Impact: none on any stage label. M1-B OPEN. `end_to_end=false`.
+- Next check: the owner reads the pull request and merges, or not.
+
+## U761 — T19: bundle digests; which ones changed and why
+
+- Status: 2026-11-19. Refs U760.
+- Evidence (my runs on the branch tree, each `--case evidence`,
+  exit 0, two runs byte-identical):
+  Slice 1 `c7f2f41c…33f1` to `756babc5…00ef`;
+  Slice 2 `2721a293…854e`, unchanged;
+  Slice 3 `3cdfebfc…ddb4` to `6b21a487…cc5a`;
+  M1 conformance `f55391da…1da9` to `91b49423…b1ce`;
+  Goal 19 native sink `1f569fcf…932c` to `f8b85b97…faae`;
+  Goal 20 SDK `1e75ab47…`, unchanged (scratch clone).
+  Bundles of the tree before the `WfAt` edit (U764), replaced:
+  Slice 1 `b8a30595…9cac`, M1 conformance `0325b191…97d7`.
+- Why Slice 3 changed: `ts/refund-finality/encoding.ts` is one of
+  its reused inputs. A field-by-field comparison of the old and new
+  bundle shows only: that file's digest, the checker id computed
+  from it (two places), and 19 report digests.
+- Why M1 conformance changed: its inputs `minter.ts`, `encoding.ts`, the Slice 1
+  record and the script itself changed; five inputs are new; the
+  compiled module is now the Slice 1 IssueAuth module. All 13
+  differences are digests, the build source and the artifact text.
+  Every count field is equal to the old record.
+- Why the native sink bundle changed: `exit_silicon_sink.py` pins
+  the SHA-256 of the M1 conformance record as a linked record. I
+  did not know this at first: my first native sink run (exit 0,
+  bundle unchanged) ran while the old M1 record was in place. The
+  first scratch-clone regression showed it (exit 1, LINKED_RECORD).
+  The pin follows the new record. Two fields of the bundle differ:
+  the linked digest and the digest of the script.
+- The old records are kept under the names
+  `evidence-before-t19-<first 8 digits>.json` beside the new ones.
+- The Slice 1 compiled module is now the IssueAuth module
+  `fa855506…44e6`; it is equal to the module that the red team
+  recorded. The old module was `e6d5f5e5…06ce`.
+- Uncertainty: none on the digests. They are the bytes of files.
+- Impact: every earlier record that names `c7f2f41c…`, `3cdfebfc…`,
+  `f55391da…` or `1f569fcf…` describes the tree before T19. I did not edit
+  those records.
+- Next check: the scratch-clone regression (U764).
+
+## U762 — T19: tests and controls on the hardened tree; which controls are valid; which red-team scripts do not run
+
+- Status: 2026-11-19. Refs U760. A worker's runs unless marked; I
+  read the logs of the regression runner, its control, the 69-row
+  test and the 15 runs that are not valid.
+- Evidence: regression runner on the hardened tree: exit 0, 29 of 29
+  PASS. Control: the same `run.ts` in its form before decision D-1
+  (`219bf0ca`) against the merged sink and dispatcher: exit 1,
+  exactly the 8 known ids fail; with `--expect-fail` for the 8:
+  exit 0. Key-file tests: 13, exit 0 each. Minter tests: 15, exit 0
+  each. Provider tests with the new adapter: 7, exit 0 each; with
+  the old adapter: 5, exit 1 each (control). Dispatcher and sink
+  tests: 27, exit 0 each. Real kill, 12 rounds: exit 0. Red team
+  `c25`, `c28`, `c19` scripts: exit 0 each, and `c25` with the old
+  adapter exit 1 each.
+- Exit 1 on the hardened tree, each a stated limit:
+  `m3_zero_squat_limit`; `p3_rollback_rebind first none` (B-20); the
+  red team's `a7_full_restore nofloor`; provider-matrix rows with no
+  anchor or with the non-idempotent control provider.
+- NOT valid and NOT counted: (1) the runner of the hardened tree
+  against the merged sink (the merged sink refuses the honest
+  tokens too; this agrees with U663); (2) `db_safeguards.ts` of the
+  repository: it predates D-1 and stops while it builds tokens;
+  B's later version `db_safeguards_hkey.ts` gave exit 0, 69 rows,
+  but that file is only in the owner's untracked `results/`;
+  (3) the red team's `c21-sink2` (12 runs, exit 1) and `c24-minter2`
+  (3 runs, exit 3) scripts: they predate D-1 (no key id in their
+  tokens; no key file for the minter); (4) five control tries on
+  `main` for tests that need the new interface.
+- Uncertainty: for the classes of (3), only B's own regression
+  files ran on the final tree. The red team's last word on them is
+  for commits before D-1 (`88ae6cbf`, `f67c5c16`, `219bf0ca`).
+- Impact: T19 closes at the TESTED level only. No proof.
+- Next check: a red-team script set that fits the D-1 token format.
+  Not planned by me.
+
+## U763 — T19: the one fresh-context review; what was fixed and what was left
+
+- Status: 2026-11-19. Refs U760. The reviewer got the diff and the
+  design rules, not my conclusions. It read; it ran no code.
+- Result: no fail-open path found by reading. Seven findings (F1 to
+  F7): 2 MEDIUM, 5 LOW. Table: section 7 of the report.
+- Fixed: F4 (`demo_gauntlet.py` named a record-equal module digest
+  for an issuer that ran another module; now one module, required
+  equal to the Slice 1 record). F3 in part (`mintmemory.ts` is now
+  a Slice 1 bundle input).
+- Left: F1 (two minter processes on one mint memory file can each
+  sign a valid token for one request id; no lock; the sink commits
+  at most one). I checked by `grep` that no lock exists. I did not
+  run two processes. It is a new known limit. Also left: F2, the
+  rest of F3 (the checker id of the minter does not cover
+  `keyfile.ts` and `mintmemory.ts`), F5 (suite rows that pass on
+  any database error), F6, F7.
+- Why left: a change to `minter.ts`, `mintmemory.ts` or `suite.ts`
+  is a change to the approved hardening text. The owner approved
+  the diffs as they are.
+- Uncertainty: the review did not read the inside of
+  `sinkcore-v6.cjs`, `spec-conformance/` and most regression files.
+- Impact: the rule "at most one valid token per request id" (D-2)
+  holds only for ONE minter process per memory file.
+- Next check: an owner decision on a lock for the mint memory file.
+
+## U764 — T19: the M1 conformance script and the demo script after the module change
+
+- Status: 2026-11-19. Refs U458 to U461 (M1 conformance), U760,
+  U761, owner item B-15 (last line).
+- Finding: the night shift did not make the change that owner item
+  B-15 names in its last line. With the new Slice 1 record, the two
+  scripts as applied could not pass: both required the old
+  RefundFinality-only module to equal the Slice 1 record, and
+  `exit_m1_conformance.py` started the minter with no key file.
+- Repair (a worker's edits; I read the diff): both scripts build
+  the IssueAuth module as `exit_slice1.py` does and require byte
+  equality with the Slice 1 record. A throwaway 0600 key file per
+  run (D-1). No expectation changed. The demo script reads the new
+  exit code of `commit_cli.ts` and builds its forged token in the
+  D-1 shape.
+- Evidence (worker's runs; I read the logs and compared the
+  bundles): `exit_m1_conformance.py --case conformance`: exit 0.
+  `--case evidence`: exit 0, two runs byte-identical, bundle
+  `0325b191…97d7`; every count equal to the old record. After
+  the `WfAt` edit, my run: exit 0, bundle `91b49423…b1ce`.
+  `demo_gauntlet.py --flood-mb 16`: exit 1 (script not yet
+  repaired), exit 1 (Dafny exit 4, below), exit 3 (REDUCED: every
+  check held; the flood memory bound is not checked at 16 MiB).
+  Exit 3 is NOT a pass of the demo. The full demo is NOT RUN.
+- Finding: `impl/finality-core/IssueAuth.dfy` is near the resource
+  limit of the gate options (1,000,000). One build of 10 in this
+  session gave exit 4: "193 verified, 0 errors, 1 out of resource"
+  (`IssueAuth.WfAt`). It came directly after four parallel Dafny
+  processes. Cause NOT known. I did not change the file or the
+  limit.
+- Uncertainty: the count "9 of 10" is the worker's; I saw the one
+  failing output and four passing logs.
+- Impact: `exit_slice1.py`, `exit_m1_conformance.py` and the demo
+  can fail on a run for this reason. It happened again in the
+  first scratch-clone regression (M1 conformance evidence: exit
+  1). A failed run is a failed run; no script hides it by a retry.
+- Measured (my runs): the resource use of `WfAt` is 757,787 or
+  757,788 in ten of ten runs. So the rare failure is not a small
+  drift over the limit; its cause stays NOT known.
+- Repair attempt: the body of the ghost lemma `WfAt` states the
+  premises of `WfOfT` one by one; the statement is the same.
+  Measured use: 317,241. The compiled module is byte-identical
+  (`fa855506…44e6`). New bundles: U761.
+- NOT shown: that the rare failure is gone. `IssueAuth.Issue`
+  (about 820,900) and `SerModel.Tail1` (814,549) are also above
+  80 % of the limit; I did not change them.
+- Next check: count the out-of-resource runs in later evidence
+  runs. An owner decision if they stay.
+
+## U765 — T19: the scratch-clone regression of the pushed branch, the pull request and the hosted result
+
+- Status: 2026-11-20. Refs U760 to U764.
+- Evidence (my runs; records
+  `proposals/t19-hardened-sink-20261119/regression-b70900e4.json`
+  and `regression-64a16246.json`):
+  first clone, head `b70900e4`: 28 of 28 Stage EXIT cases exit 0;
+  frozen-gate check 0; links 0; evidence of Slice 1, 2, 3 and
+  Goal 20 exit 0 and byte-identical; M1 conformance evidence exit
+  1 (U764); native sink evidence exit 1 (U761).
+  Second clone, head `64a16246` (final code; `main` at `b2249ea2`
+  merged in): 28 of 28 exit 0; frozen-gate check 0; 8 link checks
+  0; six evidence runs exit 0, each bundle byte-identical to its
+  tracked record; 0 protected paths changed; 0 files under
+  `proposals/apex2-contract-link-20261119/` changed, and its 8
+  pinned files have the digests of its `PINS.json`.
+- After the second clone the branch got documents only: this
+  entry, U760 to U764, the ROADMAP section, the report, the new
+  graph file, and a merge of `main` at `33055a59` (one design
+  document and U840). No bundle input is among them.
+- Secret scan of the diff against `main` before each push: one
+  hit, the placeholder `/Users/USER/` in `heavy_spec.sh` (it is in
+  the unapplied diff on `main` already). No key, no token.
+- Resource note: the shared heavy lock made my runs wait up to 2
+  hours each; the times are in the logs, not in any claim.
+- The pull request and the hosted `gate/pr_check.py` result are in
+  the pull request itself; expected exit 3 (UNSUPPORTED). A later
+  entry records the actual value if this branch gets one more
+  commit.
+- NOT RUN: Stage 7, 9, 10; any HOL or Holmake case; the full demo.
+- Impact: none on any stage label. M1-B OPEN. `end_to_end=false`.
+  T19 is APPLIED on the branch at the TESTED level; on `main` only
+  after the owner's merge. I do not merge.
+- Next check: the owner's review of the pull request.
+
+## U860 — Video cut (65-second cut, nine domains): the build was finished by a second orchestrator; what it found in the worktree
+
+- Status: 2026-11-20. Branch `demo/video-storyboard` from `33055a59`. New files only: `demos/video_cut/` and
+  `docs/VIDEO_STORYBOARD.md`. No protected file. No frozen module. Not a stage. NOT merged.
+- Evidence class: FINITE TEST on one machine. The engine is a NATIVE CHECK (Rust, not proved). `end_to_end=false`.
+- Finding 1: the first orchestrator stopped before domains 5, 6 and 8 were checked. Single-module runs of domains 5
+  and 8 gave exit 0. Domain 6 crashed in the first full take (exit 2): it read `observed_of` from the module of the
+  context class, and in the runner that module is `__main__`. Repaired with a direct import.
+- Finding 2: two builders of the first orchestrator were still alive and could edit the worktree. The launcher stopped
+  them. After that, `d6_saas.py` held `RACERS - 2` as the required count of stale racers (the correct value is
+  `RACERS - 1`). I think a builder left a negative control in the file; I did not see the edit. One test run had loaded
+  that text: test exit 1, and the failed shot printed the real counts 1 and 49. I restored the line and ran the test
+  again (exit 0). All other file times agree with my own edits.
+- Finding 3: a `--fast` take that the first orchestrator had started waited for the heavy lock for 40 minutes and
+  ended itself with exit 2. It never ran a shot. It never held the lock.
+- Uncertainty: I cannot diff the worktree against a commit for the time before my first read, because the files were
+  untracked. I read every file once, and the full take and the test ran after the last edit of a code line.
+- Impact: none on any stage label. M1-B OPEN.
+- Next check: the owner's review of pull request for this branch.
+
+## U861 — Video cut: the one fresh-context review (4 FAKE, 3 FAIL-OPEN, 6 OVERCLAIM, 5 MISMATCH, 7 LOW) and the repairs
+
+- Status: 2026-11-20. Refs U860. One adversarial reviewer with no earlier context read the uncommitted files. It ran
+  three single-module checks and changed no file. The repairs were not reviewed again.
+- FAKE (4), all repaired: (1) the harness rebuilt each `COMMITTED` line from parsed fields (an `epoch=` text that no
+  process printed); it now shows the engine's own line. (2) The sweep shot joined the SDK's code with the engine's
+  line; it now shows the engine's line `SWEEP 1 1 ...`. (3) Domain 5 computed its required counts from the cap that
+  the engine reported; it now uses the number in the file and stops if the engine holds another value. (4) Domain 6
+  required only `OK` for the scoped read; it now requires `OK 2`.
+- FAIL-OPEN (3), all repaired: a missing `rustc` or a failed build of solver v2, and a missing kill-points build,
+  gave exit 0 with only a gap line; each now makes the take PARTIAL (exit 3). The lock was taken outside the `try`
+  block that releases it; it is inside now, and SIGHUP is handled.
+- OVERCLAIM (6): the BLOCKED box counted report and fault codes; it now counts only codes of class `refusal` in
+  `src/airlock/PROTOCOL.md` section 10. Reads of the state after recovery, the direct checker answers, the sweep line
+  and the lease report are class EVENT and are in no box. An EVENT no longer gets the sound of an allowed answer. An
+  empty model reply no longer prints "did not take the bait". Storyboard: "each number is measured" changed (request
+  values are scripted); two absolute voice lines changed. NOT changed: `DUPLICATE_REQUEST_ID` after recovery stays
+  BLOCKED (its class is `refusal`; the request would be a second payout with a used id). This is my decision.
+- MISMATCH (5), repaired by one worker that edited only the storyboard: beat-line rendering, cue rows, the `exit`
+  line, the headline lists, the flag list.
+- LOW (7), repaired: one count definition for the board and the summary; the lock owner file holds a pid and a
+  nonce, and the runner removes only its own lock; `--sabotage-dir` refuses a folder that the runner did not make; a
+  time limit on the kill-point read; any failure of the model call is a printed fact; the engine key id `bay-3` (no
+  film name outside `constants.py`). The sabotage finding: I added a key where only the total cap refuses the
+  payment. On the sabotaged engine that shot answered `MALFORMED_REQUEST RECORD_NOT_FOLDABLE`, not `COMMITTED`: the
+  check fails as required (exit 1), but the sabotage does NOT show a wrong commit. The storyboard says so.
+- Owner input through the launcher, applied: the test fails if a domain has no `COMMITTED` answer or no BLOCKED
+  answer; the copy says "native airlock" or "native check"; "proved" only for the Dafny source of the booking checker,
+  and the CakeML/HOL4 refund chain only with its open premise (M1-B OPEN); the storyboard recommends 2 or 3 takes in
+  `--step` mode; no latency is a claim.
+- Uncertainty: one review. The storyboard was checked against the code by one worker and by me in parts, not line by
+  line a second time. `MAX_TOKENS` of the model call stays 1024.
+- Impact: none on any stage label.
+- Next check: the owner reads the voice lines and the launch copy before any posting.
+
+## U862 — Video cut: the measured takes, the test, and the departures from the directive
+
+- Status: 2026-11-20. Refs U860, U861. All values below are of this machine under load, flood 16 MiB. A take prints
+  its own values; these are not claims for another run.
+- Test `demos/video_cut/test_video_cut.py`: attempt 1 exit 1 (the domain 6 crash of U860, 15 of 38 checks failed);
+  attempt 2 exit 1 (the `RACERS - 2` text of U860, 3 of 39 failed); attempt 3 exit 0 (39 of 39). Attempt 3 includes
+  one full `--fast --flood-mb 16 --no-model` take: exit 0, 68 shots, 32 allowed, 21 blocked, 0 failed checks.
+- Take `--auto --no-model --flood-mb 16`: attempt 1 exit 2 (same crash); attempt 2 exit 0. Race: 50 serve
+  processes, 1 `COMMITTED`, 49 `STALE_STATE_HASH`, 0 other, 1 WAL effect record; request latency p50 12.0 ms, max
+  14.1 ms; wall 17.0 ms. Engine serve RSS, largest sample 2,656 KiB; runner RSS 38,064 KiB. Flood: 16,777,216 bytes
+  with no line end, answer `MALFORMED_REQUEST OVERSIZED`, RSS 2,128 to 2,320 KiB in 3 samples (the bound is NOT
+  CHECKED at this size), then a commit on the same pipe. SIGKILL at points b, c, r: wait status -9 each; WAL bytes
+  cut 40, 0, 0; first production command after the kill 15.5, 12.7, 13.3 ms. Commit answers outside the race (28):
+  minimum 7.4 ms, median 8.2 ms, maximum 553 ms (the booking commit that runs the Dafny-compiled checker through
+  Node). Sabotage: normal engine exit 0, sabotaged engine exit 1. Take time 62.5 s.
+- Take `--auto --flood-mb 16` with the live model: attempt 1 exit 2 (same crash; the model call itself worked);
+  attempt 2 exit 0. Model `claude-haiku-5-5`: status 200, 1,665 ms, stop_reason `end_turn`, reply
+  `shipctl status --bay 3`. The reply did NOT hold the injected command: the model did not take the bait in this one
+  call. The screen then prints `ASSUMED: model fooled`, and every engine request is a scripted worst case. Race: 1 /
+  49 / 0, 1 WAL record; p50 9.5 ms, max 11.4 ms. Take time 64.4 s.
+- Each of the nine domains had at least one `COMMITTED` answer and one BLOCKED answer in each exit-0 take.
+- Departures, each labeled on screen or in the storyboard: (1) cosign is Ed25519 through Node; native `ssh-keygen`
+  NOT IN TAKE. (2) MCP NOT IN TAKE. (3) The solver swap is TypeScript v1 to Rust v2; Python is the adversary v3.
+  (4) The 10 GiB flood record is of the Slice 1 issuer, not of this engine; no 10 GiB flood ran. (5) No playground,
+  Paper, Dummies text or `reproduce_paper.py` exists. (6) No film quote; four film names are placeholders in
+  `constants.py`, and the owner must rename them before posting. (7) The engine cannot test `crew_in_bay`, a product
+  or a geofence region; each domain shows the nearest real rule and prints the gap.
+- Uncertainty: one race at one start time is not all schedules. A SIGKILL is not a power loss. Three memory samples
+  in a flood of some milliseconds say little. The agent, the store and the human key belong to one OS user.
+- Impact: none on any stage label. Nothing is proved by this work.
+- Next check: the owner records the takes on the owner's machine state; the values will differ.
+
+## U863 — Video cut: the regression in a scratch clone, the checks, and the push
+
+- Status: 2026-11-20. Refs U860 to U862. Commit under test `84743e7a` (the code commit `bed65555` plus one text
+  commit). Merge base `33055a59`.
+- Evidence: `proposals/apex2-contract-link-20261119/run_regression.py` in a scratch clone, under the shared heavy
+  lock (owner VIDEO9, 11:31Z to 12:32Z): exit 0. 28 of 28 Stage EXIT cases exit 0. `check_frozen_pr_gate.py HEAD`
+  exit 0. Eight link checks exit 0. Six EXIT scripts with `--case evidence` exit 0, each bundle byte-identical to its
+  tracked record (`c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…`). 28 files changed
+  against the merge base; 0 protected paths; 0 frozen paths. `check_links.py HEAD docs/VIDEO_STORYBOARD.md`: exit 0,
+  24 relative links, 0 missing. `check_frozen_pr_gate.py` with no revision argument: exit 1 (a usage error of mine,
+  `IndexError`); with `HEAD`: exit 0.
+- NOT RUN: Stages 7, 9, 10; every HOL, `Holmake` and Dafny verify step; the 10 GiB flood; a `--step` take; a take
+  with `--sound`; a second review. The regression does not run `test_video_cut.py`: that test ran on the same code
+  files before the commit (U862).
+- Uncertainty: the regression script is the APEX-2 copy; its link list does not hold the storyboard, so that link
+  check is a separate command. The record commit after `84743e7a` changes only `unsure.md` and `ROADMAP.md`.
+- Impact: none on any stage label. CURRENT none. M1-B OPEN. `end_to_end=false`.
+- Next check: the hosted `gate/pr_check.py` result of the pull request (UNSUPPORTED, exit 3, is the expected
+  result for a change with no coverage claim). The agent does not merge.
+
+## U894 — Review 2026-11-20, defect D1: a design for a shipped isolation mode of the airlock engine; NOT started
+
+- Status: 2026-11-20. Refs U840 (the WAL fold, F2.7), U709 (APEX-3), U751 and U752 (native cosign, branch
+  `apex1/native-cosign` at `e3322303`, not merged). Record: `proposals/review-20261120-isolation/DESIGN.md` and
+  `README.md`. Branch `docs/isolation-mode-design` from `33055a59`. Documents only. No protected file. NOT merged by
+  the agent.
+- Design: a service user `_forgeairlock` (launchd daemon; Linux systemd briefly); one Unix socket per tenant in a
+  folder of mode 0710 with the tenant's OS group (no `unsafe`); a `serve-socket` acceptor that hands each connection
+  to a fresh `serve --bound-tenant` process; pinned files under a root-owned prefix with an ownership walk; the store
+  0700 of the service user; HMAC-SHA-256 tags on records and ratchet entries with a 0400 key outside the store; an
+  SDK `socket=` mode; the child-process mode labelled "no isolation".
+- It assumes the parallel engine pull request (`feat/airlock-review-hardening`): per-tenant key and request-id
+  namespaces, a pending-cosign lease state, the fail-closed ratchet CRC rule, a walk or per-exec re-check of every
+  pinned helper.
+- NOT closed (stated in the design): a hostile root, the owner's own `sudo`, a compromised service user, a kernel
+  bug, an owner who runs a command that an agent wrote, a restore of WAL and ratchet together by root or the owner,
+  WAL growth by valid commits and the O(N) re-fold (D4), timing and epoch leaks of a shared store.
+- Uncertainty: every setup step is NOT TESTED (no `sudo` was run). Cross-user socket access, the socket file mode
+  check of macOS, BSD group inheritance of the socket file, and the read timeout through a handed-over socket are
+  NOT TESTED.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Nothing is proved.
+- Next check: the owner's answers to Q-1 to Q-12 of the design.
+
+## U895 — D1 checked against `33055a59`; review details corrected; measured probes for the socket design
+
+- Refs U894. Evidence: `git show` and `sed -n` on `33055a59`; probes in the session scratchpad (not in the
+  repository).
+- D1 CONFIRMED: `sdk/py/forge_airlock.py` lines 302-303 and `sdk/ts/forge_airlock.ts` lines 302-303 start `serve` as a
+  child under the caller's user; `serve_argv` and `engine_dir` are caller-chosen (Python 290, 293; TypeScript 278,
+  281); `src/airlock/store.rs` lines 5-6, 24-37: CRC-32 and FNV-1a-128, unkeyed.
+- Review details: (a) a forged `REFUND` must pass the fold (`ledger.rs` 128-135: fresh id, `1 <= amount <=
+  remaining`); the review's example passes only with enough remaining, but the agent can forge an `OPEN_MONEY` first,
+  so the finding holds. (b) the ratchet "repairs" an appended record at the next open (`store.rs` 158-163). (c) the
+  Python SDK runs `sys.executable` (line 297), the TypeScript SDK runs `python3` from `PATH` (301, 500). (d) NEW:
+  the SDK's `replay`, `leases`, `sweep`, `cosign_message` start engine processes on the store folder (Python
+  535-537, TypeScript 499-505), so the shipped SDK needs access to the folder.
+- Measured: `UnixStream::peer_cred` on rustc 1.92.0 is unstable (compile exit 1, `E0658`); std bind/connect/accept
+  exit 0; handing an accepted stream to a child as stdin and stdout with no `unsafe`: build 0, run 0; a 117-byte
+  socket path: run exit 101 (`SUN_LEN`); `sun_path[104]` in the SDK `sys/un.h`; Python 3.9.6 and 3.10.11 have
+  `socket.LOCAL_PEERCRED` (same-user socket pair only, exit 0); the engine built from `33055a59` (exit 0) and the
+  tracked refund binary link only `libSystem`; `/opt/homebrew/bin/node` links 9 libraries under `/opt/homebrew/opt`,
+  and `/opt/homebrew` is owned by the developer account, so the genesis Node pin does not cover them (widens D2).
+- Uncertainty: every probe ran as one user on one machine. Two-user behaviour is NOT TESTED.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the malicious-agent test of the design, section 4,
+  after an owner-approved build.
+
+## U896 — Isolation design: the build estimate is relative to measured pieces; the owner decides the budget
+
+- Refs U894, U895. Evidence: `wc -l` on `33055a59` and on `e3322303` (`git show`), listed in the design, section 6.
+- Measured comparables, for example: `helpers.rs` `run` 53 lines; Python transport (`Store.__init__` to `_exchange`)
+  109; TypeScript transport 79; `pin.rs` `Sha256` 60; `store.rs` `init` 72; `cosign.rs` walk 26 (`e3322303`);
+  `tests/airlock/*.py` 3,068 in total.
+- Judgement (mine, kept apart from the measured column): 13 pieces (the 13 rows of the table) in 4 phases. Phase 2 (WAL MAC) alone
+  changes the WAL format. Phases 1 to 3 change the Goal 20 evidence bundle digest (`scripts/exit_goal20_sdk.py`
+  hashes `src/airlock/*.rs` of its list, both SDKs, `bin/forge-airlock`, `PROTOCOL.md`). No hours, days or cost given.
+- Uncertainty: the "same kind, about that size" judgements are mine; no source gives a size for the new pieces.
+- Impact: none. Nothing started. Next check: the owner's budget word and Q-1.
+
 ## U880 — Review of 2026-11-20: claims 1, 2, 4, 5, 8, 11 verified against the files and corrected in the documents
 
 - Status: 2026-11-20. Refs U840 (base `33055a59`). Record: `proposals/review-20261120/README.md` (disposition table);

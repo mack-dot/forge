@@ -1,0 +1,5 @@
+{"airlock": "money", "version": 1, "name": "crash-ledger", "profile": "parametric",
+ "rules": [
+  {"reason": "PAYOUT", "max_amount": "5000", "verdict": "COMMIT"},
+  {"reason": "PAYOUT", "min_amount": "5001", "verdict": "REJECTED_POLICY"}
+ ]}

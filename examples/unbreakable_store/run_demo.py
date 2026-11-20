@@ -73,7 +73,9 @@ LIMITS = [
     'the read airlock checks only the top-level tenant_id of the rows passed to it and returns parsed copies of the checked bytes',
     'a lease is bound to (request id, tenant, key); only handlers that opened a lease are covered',
     'pins: the engine pins the refund binary and (through its compiled-in helper) the checker model; the store pins the SHA-256 '
-    'of the Node binary at init; a file swapped after its check is not detected',
+    'of the Node binary at init (inventory only); a cosign is verified by /usr/bin/ssh-keygen, which the engine checks (root-owned, '
+    'not writable by group or other, no symbolic link on its path) but does not pin: the system OpenSSH is a trusted assumption; '
+    'a file swapped after its check is not detected',
     'Stripe and PayPal are LOCAL FAKE in-process stand-ins; SIGKILL is not a power loss; end_to_end=false',
 ]
 
@@ -183,8 +185,8 @@ class Demo:
         keys = self.tmp / 'keys'
         keys.mkdir(mode=0o700)
         self.human_key, self.other_key = keys / 'human.key', keys / 'other.key'
-        code, pub, err = self.cli(['cosign-keygen', self.human_key, '--node', self.node])
-        code2, _, err2 = self.cli(['cosign-keygen', self.other_key, '--node', self.node])
+        code, pub, err = self.cli(['cosign-keygen', self.human_key])  # OpenSSH ssh-keygen; no Node
+        code2, _, err2 = self.cli(['cosign-keygen', self.other_key])
         if code or code2:
             raise SystemExit('FAIL: temporary cosign keygen: %r %r' % (err, err2))
         args = ['init', self.store, '--store-id', STORE_ID, '--cosign-pubkey', pub.strip(), '--node', self.node]
@@ -286,8 +288,8 @@ class Demo:
         h = st.get('acme', 'order-4').state_hash
         r1 = self.timed(lambda: st.refund('acme', 'order-4', 'gw-75', h, 'GOODWILL', 7500))
         msg = st.cosign_message(fa.refund_action('acme', 'order-4', 'gw-75', h, 'GOODWILL', 7500))
-        code, other_sig, _ = self.cli(['cosign-sign', self.other_key, '--node', self.node], stdin=msg)
-        code2, human_sig, _ = self.cli(['cosign-sign', self.human_key, '--node', self.node], stdin=msg)
+        code, other_sig, _ = self.cli(['cosign-sign', self.other_key], stdin=msg)
+        code2, human_sig, _ = self.cli(['cosign-sign', self.human_key], stdin=msg)
         if code or code2:
             raise SystemExit('FAIL: cosign-sign with the temporary keys')
         r2 = self.timed(lambda: st.refund('acme', 'order-4', 'gw-75', h, 'GOODWILL', 7500, other_sig.strip()))
@@ -300,7 +302,7 @@ class Demo:
         self.row(4, '$75 unstructured goodwill refund', 'REQUIRE_HUMAN_COSIGN; another key: refused; the pinned human key: COMMITTED',
                  'no signature: %s %s; other key: %s %s; pinned human key (temporary): %s, WAL cosign flag %s' % (
                      r1.code, r1.detail, r2.code, r2.detail, r3.code, '1' if rec and rec[0][4] else '0'),
-                 ok, LBL_PARAM + '; Ed25519 verify through node:crypto (trusted)', uncosigned, 2)
+                 ok, LBL_PARAM + '; Ed25519 verify through /usr/bin/ssh-keygen -Y verify (system OpenSSH with LibreSSL, trusted; no Node)', uncosigned, 2)
 
     def d5_failover(self):
         st = self.st

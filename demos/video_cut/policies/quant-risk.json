@@ -1,0 +1,5 @@
+{"airlock": "money", "version": 1, "name": "quant-risk", "profile": "parametric",
+ "rules": [
+  {"reason": "SELL_NOTIONAL", "max_reason_total_fact": "max_notional", "verdict": "COMMIT"},
+  {"reason": "FADE_NOTIONAL", "max_reason_total_fact": "anchor_notional", "verdict": "COMMIT"}
+ ]}
