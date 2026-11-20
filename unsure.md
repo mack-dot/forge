@@ -20674,3 +20674,20 @@ curl: (6) Could not resolve host: github.com
 - Platform: no record shows a run of the engine or the SDKs on Linux or Windows; the README says "not tested". The
   licence summaries in the decision note are general summaries, not legal advice.
 - Impact: none on any stage label. `end_to_end=false`. Next check: the owner's licence and packaging decisions.
+
+## U745 — Merge queue 2026-11-20: two ROADMAP sections were lost in the merges of pull requests 68 and 69, and restored
+
+- Refs U880 to U882 (pull request 68), U894 to U896 (pull request 69). Evidence: the squash commits `be9c1cc2`
+  (pull request 68) and `0a84902a` (pull request 69) left `ROADMAP.md` equal to its content before each merge. The
+  section "Review of 2026-11-20: README top and claims …" (23 lines, branch head `2337b2eb`) and the section "Review
+  2026-11-20, defect D1: design of a shipped isolation mode …" (19 lines, branch head `8c0db698`) were NOT on `main`.
+- Cause: the agent that reconciled the two branches with `main` (on the owner's word "merge everything", 2026-11-20)
+  resolved a both-added conflict in `ROADMAP.md` with a helper script. The helper wrote the two sides to files whose
+  names differ only in letter case. The file system of the machine does not distinguish case, so one side replaced
+  the other, and the helper's own check compared a file with itself. The helper is corrected.
+- Repair: this commit puts both sections back, byte-equal to the sections on the two branch heads, above the Gate F1
+  section. No other line of `ROADMAP.md` changes. `unsure.md`: the entries of both pull requests are on `main`
+  (checked: U880 to U882 and U894 to U896 present); only this entry is added.
+- Not affected (checked): pull request 77 (`a2ef7c0a`); git merged its `ROADMAP.md` without the helper's union step.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the pre-release audit compares every ROADMAP
+  section heading of each merged branch head with `main`.
