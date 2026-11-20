@@ -61,15 +61,16 @@ kernel: an ASSUMPTION (BETA-PLAIN) with a tested check. T2b, T3 and T4
 are NOT closed. Route A premises (the FFI contract at shape-valid calls,
 the processor bits, the entry state) are assumptions about the real
 machine. M1 and integration EXIT NOT_ESTABLISHED.
-## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750
-## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750, U751
+
 ## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750 to U752
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed.
 `src/silicon_sink/sink.rs` is NOT changed (the directive names it; it
 has no signature code; U750). Branch `apex1/native-cosign` from the
-Goal 20 head `4d5e8863` (pull request 65, not merged). Not pushed.
+Goal 20 head `4d5e8863`; rebased onto `main` at `b2249ea2` after the
+owner merged Goal 20 as `9a9a8943` (the runs below were on the tree
+before the rebase unless a row says otherwise).
 Nothing is proved. The machine was under load: no time is recorded here.
 
 | EXIT command/check | Actual exit/result | Result |
