@@ -1,9 +1,9 @@
 # Forge Round 2 plan and status (tracked)
 
-Owner's text, verbatim: [proposals/round2-20261117/OWNER_ROUND2_TEXT.md](proposals/round2-20261117/OWNER_ROUND2_TEXT.md)
+Owner's text, verbatim: [proposals/round2-20261117/OWNER_ROUND2_TEXT.md](../../proposals/round2-20261117/OWNER_ROUND2_TEXT.md)
 (sent 2026-11-17; then: "make this an md we track and then /goal track
 the md and do it"). This file is the working plan. It is updated after
-every step with real exits. Master idea: [FORGE_MASTER_IDEA.md](FORGE_MASTER_IDEA.md).
+every step with real exits. Master idea: [FORGE_MASTER_IDEA.md](../../FORGE_MASTER_IDEA.md).
 
 Goal condition (short form for `/goal`): "Every row in the status table
 of FORGE_ROUND2_PLAN.md is DONE with a recorded exit, or BLOCKED with
@@ -52,14 +52,14 @@ recorded), PARTIAL.
 | # | Step | Status | Exits / record |
 | --- | --- | --- | --- |
 | 1A | Commit the U413–U416 round (paths in new files scrubbed) | DONE | commit `93712d2c`; one path scrubbed; U417 |
-| 1B | Apply `candidate.diff`; regenerate evidence; Stage 0–8 EXITs; print control | BLOCKED (owner decision) | Approved diff applied, measured, reverted (U419). Complete version 2 built and measured in a scratch worktree: Stages 1, 2, 3, 5, 8 exit 0; Stage 6 `report` exit 1 after ANY gate change (record pins the old gate bytes); Stage 4 and 7 fail in the baseline too (GitHub 403, Docker). Not applied. [PROPOSAL-V2](proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md); U423 |
+| 1B | Apply `candidate.diff`; regenerate evidence; Stage 0–8 EXITs; print control | BLOCKED (owner decision) | Approved diff applied, measured, reverted (U419). Complete version 2 built and measured in a scratch worktree: Stages 1, 2, 3, 5, 8 exit 0; Stage 6 `report` exit 1 after ANY gate change (record pins the old gate bytes); Stage 4 and 7 fail in the baseline too (GitHub 403, Docker). Not applied. [PROPOSAL-V2](../../proposals/forge2-pillar1-print-effects/v2/PROPOSAL-V2.md); U423 |
 | 1C | Companion candidate diff for Booking and Refund gates (not applied) | DONE | no extra diff needed: existing gate inputs already call the methods; `check_booking_refund.py` scenario exit 0 (8 rows); U423 |
 | T1a | W2 proved without a higher resource limit | DONE | attempt-0013 exit 0; 61 batches, largest 707,136; U418 |
 | T1b | Spec-pair diff harness on two pairs (Ledger fee; Refund variant) | PARTIAL | both pairs proved (attempt-0014 exit 0, 13 cases); witnesses generated from tables; general lemmas hand-written; U418 |
 | T2 | Split-edit control against the existing PR gate | DONE | `run_control.py` attempt-0001 scenario exit 0; 16 cases; 0 evasions; no new gate module; U422 |
-| T3 | Refund minter (Ed25519) + SQLite sink + ≥ 30 attacks | DONE (finite test) | suite exit 0 twice; 38 of 38 attacks as expected; 0 unauthorized settlements; U420; [report](proposals/forge2-pillar2-refund-finality/REPORT.md) |
-| T4 | Pillar III: checker (done as F3.1) + 25-version solver benchmark | DONE (finite benchmark) | bench exit 0; 2,300 checks; 0 accepted overbookings; 0 Dafny runs per version; U421; [report](proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md) |
-| T5a | Toolchain rebuild and M1 replay within 90 minutes | BLOCKED by budget | tools rebuilt as far as CakeML `basis` (exit 0); compiler proofs killed at 5,400 s; replay NOT RUN; U424; [report](proposals/round2-20261117/m1-rebuild/REPORT.md) |
+| T3 | Refund minter (Ed25519) + SQLite sink + ≥ 30 attacks | DONE (finite test) | suite exit 0 twice; 38 of 38 attacks as expected; 0 unauthorized settlements; U420; [report](../../proposals/forge2-pillar2-refund-finality/REPORT.md) |
+| T4 | Pillar III: checker (done as F3.1) + 25-version solver benchmark | DONE (finite benchmark) | bench exit 0; 2,300 checks; 0 accepted overbookings; 0 Dafny runs per version; U421; [report](../../proposals/forge2-pillar3-dual-certificate/benchmark/REPORT.md) |
+| T5a | Toolchain rebuild and M1 replay within 90 minutes | BLOCKED by budget | tools rebuilt as far as CakeML `basis` (exit 0); compiler proofs killed at 5,400 s; replay NOT RUN; U424; [report](../../proposals/round2-20261117/m1-rebuild/REPORT.md) |
 | T5b | `fs-0001`/`fs-0002` witness | BLOCKED | gated on the replay by decision 2; NOT RUN; U424 |
 | F | Final report table; `FORGE_MASTER_IDEA.md` and `unsure.md` updated | DONE | table below; U417–U424 |
 
@@ -108,7 +108,7 @@ the runner or suite that judges the case.
 | **6. M1** | | | | |
 | tracked executable SHA-256 | — | — | 0 | file identity `b8ed5ec2…7bb8` (checked after the cleanup). Not a rebuild of the executable |
 | `m1-rebuild/rebuild.py 5400` | — | — | stopped by the budget (script crashed in its kill path at the deadline; addendum written) | TOOL BUILD only: pins match; Poly/ML exit 0; HOL build exit 0 (685 s); CakeML `basis` exit 0 (3,685 s); `compiler/backend/proofs` killed at the deadline. 147 CakeML theories built |
-| replay of the M1 chain; `fs-0001`/`fs-0002` | NOT RUN | — | NOT RUN | BLOCKED by the budget: the CakeML compiler proofs alone need hours. The `fs` step is gated on the replay by the decision. [report](proposals/round2-20261117/m1-rebuild/REPORT.md) |
+| replay of the M1 chain; `fs-0001`/`fs-0002` | NOT RUN | — | NOT RUN | BLOCKED by the budget: the CakeML compiler proofs alone need hours. The `fs` step is gated on the replay by the decision. [report](../../proposals/round2-20261117/m1-rebuild/REPORT.md) |
 
 Not met against the round's conditions: "100% green Stage 0–8" (Stage
 6 structural; Stages 4 and 7 environment); a generator for arbitrary

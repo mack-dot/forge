@@ -28,6 +28,33 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Front door 2026-11-20 (owner's "go"): README order flipped to plain terms first; two planning notes moved to `docs/roadmap/`; documents and file moves only — U930
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Branch `docs/front-door` from `origin/main` `236198b2`.
+Documents and moves only: no code, no protected or frozen path, no
+evidence record, no hash subject changed. `README.md` now opens with one
+plain sentence, a quickstart with real output lines, a "what this is
+not" box, the four labels in plain terms, the proof work, the demos and
+the records; the internal names moved to a "for contributors and
+reviewers" section with a glossary (nothing deleted). Moved with
+`git mv`: `FORGE_ROUND2_PLAN.md`, `FORGE_ROUND3_PLAN.md` to
+`docs/roadmap/` (relative link targets inside them repaired; line
+numbers equal). Stay at the root: `FORGE_MASTER_IDEA.md` (read by path
+by 8 `proposals/*/run_regression.py` runners), `VISION.md` (linked by
+two ROADMAP record sections; SHA-256 listed in a Stage 9 record), and
+the 39 other items (code, records or rules name them). Root items: 43
+before, 41 after. NOT pushed; NOT merged.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| clean `git archive` of `236198b2`: the README quickstart block (`bin/forge-airlock build`; `mkdir … && bin/forge-airlock init …`; the Python heredoc) under `bash -e` |0|output `COMMITTED`, `REJECTED_POLICY REASON_CAP`, `COMMITTED`, `STALE_STATE_HASH`, `DUPLICATE_REQUEST_ID` |
+| same tree: `bin/forge-airlock replay build/qs/store` |0|`REPLAY 2`: the `OPEN_MONEY` and the one committed `REFUND` |
+| `check_links.py HEAD` over all 467 tracked Markdown files (before) |1|2 missing targets (the older `results/stage9/receipt-repair-published/README.md`, from two files) |
+| index variant of that checker (same link rule; folders that hold a tracked file count) over all 468 files of the staged tree, before this section was written |1|the same 2 missing targets; 0 new |
+| `check_frozen_pr_gate.py HEAD` |0| |
+| `scripts/check_stage_4_local.py` (the only script that reads `README.md`; it starts Dafny and rewrites a results file); every Stage EXIT case; Dafny; HOL; hosted gate; push |NOT RUN|expected for the hosted gate: exit 3 (UNSUPPORTED) |
+
 ## Ratification proposal applied: stateful refund-log specification under `spec/refund/` (owner decisions D1 to D3 of 2026-11-20; the owner's merge is the ratification) — U928
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

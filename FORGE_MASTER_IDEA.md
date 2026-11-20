@@ -235,14 +235,14 @@ only. The update note in each row gives the record.
 
 ## Round 2 (owner decisions of 2026-11-17)
 
-Plan and live status: [FORGE_ROUND2_PLAN.md](FORGE_ROUND2_PLAN.md).
+Plan and live status: [FORGE_ROUND2_PLAN.md](docs/roadmap/FORGE_ROUND2_PLAN.md).
 Decisions: print-effects diff approved; HOL rebuild within 90 minutes;
 Ed25519 and Refund first for Pillar II; commit at checkpoints, no push
 before the final table.
 
 ## Round 3 (owner texts of 2026-11-17)
 
-Plan and live status: [FORGE_ROUND3_PLAN.md](FORGE_ROUND3_PLAN.md).
+Plan and live status: [FORGE_ROUND3_PLAN.md](docs/roadmap/FORGE_ROUND3_PLAN.md).
 Order set by the owner: gate change (version 3) first, then Pillar II
 and III, then M1. Version 3 is built and measured, not applied.
 
