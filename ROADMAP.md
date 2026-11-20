@@ -28,6 +28,36 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Goal 20 record refreshed on 2026-11-20: a fresh `--case evidence` run on `main` `e4901ffc` (after pull requests 68, 72 and 73) replaces the tracked Goal 20 bundle; a finite test and native check record, not a proof — U923
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Owner approval of 2026-11-20: "Goal 20 record:
+Approved--regenerate and record the fresh Goal 20 bundle matching
+main's current post-#72/#73 files." Branch
+`records/goal20-bundle-refresh` from `origin/main` `e4901ffc`. One file
+of evidence changed: `proposals/forge2-goal20-sdk/records/evidence.json`.
+No script, engine, test or subject file changed. No protected file
+changed. OLD bundle `1e75ab47…70fa`; NEW bundle `4a66ddc8…2f65`.
+NOT pushed; NOT merged by the agent.
+
+Expected before the run: exit 0, two byte-identical bundles, a digest
+other than `1e75ab47…` (20 of its 64 subject rows changed or deleted).
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| proof-slot wait (no `dafny/dafny`, `Holmake`, `z3-4.12.1`, `run_regression_copy`, `spec_clearing` for 3 checks one minute apart) |free at 12:32:53|then the case started |
+| `python3 scripts/exit_goal20_sdk.py --case evidence` (pinned Python 3.10.11, Node 24.3.0 first in PATH) |0|two runs; bundle `4a66ddc86d4e954e6e2ce215f4fb0d5d49abc1d5cb80ba1c1b5c7fd891d62f65` both times, byte-identical; wall 2437 s |
+| each run: build; suite; mutations; disasters; fuzz |0; 33 + 68 + 56 + 11 + 21 passed; 145 of 145 killed, 3 not killed; 8 of 8; 8 of 8 held|not killed: X01, R8, N15 (reasons in U923) |
+| `cp` of the bundle to the tracked record; the SHA-256 comparison of `proposals/forge2-goal20-sdk/run_regression.py` |True|byte-identical |
+| full scratch-clone regression (`run_regression.py`: 28 Stage EXIT cases, frozen gate, links, six bundles) |NOT RUN|not part of this work |
+| hosted `gate/pr_check.py`; push; pull request |NOT RUN|expected exit 3 (UNSUPPORTED) for a records-only pull request |
+| any HOL or Holmake step; Stages 7, 9, 10; a power-loss test |NOT RUN|not part of this work |
+
+`README.md` and `docs/STATUS.md` do not state the Goal 20 bundle digest;
+they are not changed. Older records that name `1e75ab47…` stay as they
+are (they describe their own commits). M1 and integration EXIT
+NOT_ESTABLISHED.
+
 ## Assurance-chain investigation 2026-11-20: where the chain from authorization to receipt holds, where it breaks, and the shortest path to an independent verifier (read-only; nothing proved here) — U921
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
