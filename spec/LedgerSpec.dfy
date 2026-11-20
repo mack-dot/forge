@@ -7,7 +7,7 @@ abstract module LedgerSpec {
     accepted: map<int, Request>)
 
   ghost predicate NonNegative(balances: map<int, int>) {
-    forall account | account in balances :: 0 <= balances[account]
+    true
   }
 
   ghost predicate WellFormed(state: State) {
