@@ -20461,3 +20461,110 @@ curl: (6) Could not resolve host: github.com
   T19 is APPLIED on the branch at the TESTED level; on `main` only
   after the owner's merge. I do not merge.
 - Next check: the owner's review of the pull request.
+
+## U860 — Video cut (65-second cut, nine domains): the build was finished by a second orchestrator; what it found in the worktree
+
+- Status: 2026-11-20. Branch `demo/video-storyboard` from `33055a59`. New files only: `demos/video_cut/` and
+  `docs/VIDEO_STORYBOARD.md`. No protected file. No frozen module. Not a stage. NOT merged.
+- Evidence class: FINITE TEST on one machine. The engine is a NATIVE CHECK (Rust, not proved). `end_to_end=false`.
+- Finding 1: the first orchestrator stopped before domains 5, 6 and 8 were checked. Single-module runs of domains 5
+  and 8 gave exit 0. Domain 6 crashed in the first full take (exit 2): it read `observed_of` from the module of the
+  context class, and in the runner that module is `__main__`. Repaired with a direct import.
+- Finding 2: two builders of the first orchestrator were still alive and could edit the worktree. The launcher stopped
+  them. After that, `d6_saas.py` held `RACERS - 2` as the required count of stale racers (the correct value is
+  `RACERS - 1`). I think a builder left a negative control in the file; I did not see the edit. One test run had loaded
+  that text: test exit 1, and the failed shot printed the real counts 1 and 49. I restored the line and ran the test
+  again (exit 0). All other file times agree with my own edits.
+- Finding 3: a `--fast` take that the first orchestrator had started waited for the heavy lock for 40 minutes and
+  ended itself with exit 2. It never ran a shot. It never held the lock.
+- Uncertainty: I cannot diff the worktree against a commit for the time before my first read, because the files were
+  untracked. I read every file once, and the full take and the test ran after the last edit of a code line.
+- Impact: none on any stage label. M1-B OPEN.
+- Next check: the owner's review of pull request for this branch.
+
+## U861 — Video cut: the one fresh-context review (4 FAKE, 3 FAIL-OPEN, 6 OVERCLAIM, 5 MISMATCH, 7 LOW) and the repairs
+
+- Status: 2026-11-20. Refs U860. One adversarial reviewer with no earlier context read the uncommitted files. It ran
+  three single-module checks and changed no file. The repairs were not reviewed again.
+- FAKE (4), all repaired: (1) the harness rebuilt each `COMMITTED` line from parsed fields (an `epoch=` text that no
+  process printed); it now shows the engine's own line. (2) The sweep shot joined the SDK's code with the engine's
+  line; it now shows the engine's line `SWEEP 1 1 ...`. (3) Domain 5 computed its required counts from the cap that
+  the engine reported; it now uses the number in the file and stops if the engine holds another value. (4) Domain 6
+  required only `OK` for the scoped read; it now requires `OK 2`.
+- FAIL-OPEN (3), all repaired: a missing `rustc` or a failed build of solver v2, and a missing kill-points build,
+  gave exit 0 with only a gap line; each now makes the take PARTIAL (exit 3). The lock was taken outside the `try`
+  block that releases it; it is inside now, and SIGHUP is handled.
+- OVERCLAIM (6): the BLOCKED box counted report and fault codes; it now counts only codes of class `refusal` in
+  `src/airlock/PROTOCOL.md` section 10. Reads of the state after recovery, the direct checker answers, the sweep line
+  and the lease report are class EVENT and are in no box. An EVENT no longer gets the sound of an allowed answer. An
+  empty model reply no longer prints "did not take the bait". Storyboard: "each number is measured" changed (request
+  values are scripted); two absolute voice lines changed. NOT changed: `DUPLICATE_REQUEST_ID` after recovery stays
+  BLOCKED (its class is `refusal`; the request would be a second payout with a used id). This is my decision.
+- MISMATCH (5), repaired by one worker that edited only the storyboard: beat-line rendering, cue rows, the `exit`
+  line, the headline lists, the flag list.
+- LOW (7), repaired: one count definition for the board and the summary; the lock owner file holds a pid and a
+  nonce, and the runner removes only its own lock; `--sabotage-dir` refuses a folder that the runner did not make; a
+  time limit on the kill-point read; any failure of the model call is a printed fact; the engine key id `bay-3` (no
+  film name outside `constants.py`). The sabotage finding: I added a key where only the total cap refuses the
+  payment. On the sabotaged engine that shot answered `MALFORMED_REQUEST RECORD_NOT_FOLDABLE`, not `COMMITTED`: the
+  check fails as required (exit 1), but the sabotage does NOT show a wrong commit. The storyboard says so.
+- Owner input through the launcher, applied: the test fails if a domain has no `COMMITTED` answer or no BLOCKED
+  answer; the copy says "native airlock" or "native check"; "proved" only for the Dafny source of the booking checker,
+  and the CakeML/HOL4 refund chain only with its open premise (M1-B OPEN); the storyboard recommends 2 or 3 takes in
+  `--step` mode; no latency is a claim.
+- Uncertainty: one review. The storyboard was checked against the code by one worker and by me in parts, not line by
+  line a second time. `MAX_TOKENS` of the model call stays 1024.
+- Impact: none on any stage label.
+- Next check: the owner reads the voice lines and the launch copy before any posting.
+
+## U862 — Video cut: the measured takes, the test, and the departures from the directive
+
+- Status: 2026-11-20. Refs U860, U861. All values below are of this machine under load, flood 16 MiB. A take prints
+  its own values; these are not claims for another run.
+- Test `demos/video_cut/test_video_cut.py`: attempt 1 exit 1 (the domain 6 crash of U860, 15 of 38 checks failed);
+  attempt 2 exit 1 (the `RACERS - 2` text of U860, 3 of 39 failed); attempt 3 exit 0 (39 of 39). Attempt 3 includes
+  one full `--fast --flood-mb 16 --no-model` take: exit 0, 68 shots, 32 allowed, 21 blocked, 0 failed checks.
+- Take `--auto --no-model --flood-mb 16`: attempt 1 exit 2 (same crash); attempt 2 exit 0. Race: 50 serve
+  processes, 1 `COMMITTED`, 49 `STALE_STATE_HASH`, 0 other, 1 WAL effect record; request latency p50 12.0 ms, max
+  14.1 ms; wall 17.0 ms. Engine serve RSS, largest sample 2,656 KiB; runner RSS 38,064 KiB. Flood: 16,777,216 bytes
+  with no line end, answer `MALFORMED_REQUEST OVERSIZED`, RSS 2,128 to 2,320 KiB in 3 samples (the bound is NOT
+  CHECKED at this size), then a commit on the same pipe. SIGKILL at points b, c, r: wait status -9 each; WAL bytes
+  cut 40, 0, 0; first production command after the kill 15.5, 12.7, 13.3 ms. Commit answers outside the race (28):
+  minimum 7.4 ms, median 8.2 ms, maximum 553 ms (the booking commit that runs the Dafny-compiled checker through
+  Node). Sabotage: normal engine exit 0, sabotaged engine exit 1. Take time 62.5 s.
+- Take `--auto --flood-mb 16` with the live model: attempt 1 exit 2 (same crash; the model call itself worked);
+  attempt 2 exit 0. Model `claude-haiku-5-5`: status 200, 1,665 ms, stop_reason `end_turn`, reply
+  `shipctl status --bay 3`. The reply did NOT hold the injected command: the model did not take the bait in this one
+  call. The screen then prints `ASSUMED: model fooled`, and every engine request is a scripted worst case. Race: 1 /
+  49 / 0, 1 WAL record; p50 9.5 ms, max 11.4 ms. Take time 64.4 s.
+- Each of the nine domains had at least one `COMMITTED` answer and one BLOCKED answer in each exit-0 take.
+- Departures, each labeled on screen or in the storyboard: (1) cosign is Ed25519 through Node; native `ssh-keygen`
+  NOT IN TAKE. (2) MCP NOT IN TAKE. (3) The solver swap is TypeScript v1 to Rust v2; Python is the adversary v3.
+  (4) The 10 GiB flood record is of the Slice 1 issuer, not of this engine; no 10 GiB flood ran. (5) No playground,
+  Paper, Dummies text or `reproduce_paper.py` exists. (6) No film quote; four film names are placeholders in
+  `constants.py`, and the owner must rename them before posting. (7) The engine cannot test `crew_in_bay`, a product
+  or a geofence region; each domain shows the nearest real rule and prints the gap.
+- Uncertainty: one race at one start time is not all schedules. A SIGKILL is not a power loss. Three memory samples
+  in a flood of some milliseconds say little. The agent, the store and the human key belong to one OS user.
+- Impact: none on any stage label. Nothing is proved by this work.
+- Next check: the owner records the takes on the owner's machine state; the values will differ.
+
+## U863 — Video cut: the regression in a scratch clone, the checks, and the push
+
+- Status: 2026-11-20. Refs U860 to U862. Commit under test `84743e7a` (the code commit `bed65555` plus one text
+  commit). Merge base `33055a59`.
+- Evidence: `proposals/apex2-contract-link-20261119/run_regression.py` in a scratch clone, under the shared heavy
+  lock (owner VIDEO9, 11:31Z to 12:32Z): exit 0. 28 of 28 Stage EXIT cases exit 0. `check_frozen_pr_gate.py HEAD`
+  exit 0. Eight link checks exit 0. Six EXIT scripts with `--case evidence` exit 0, each bundle byte-identical to its
+  tracked record (`c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…`). 28 files changed
+  against the merge base; 0 protected paths; 0 frozen paths. `check_links.py HEAD docs/VIDEO_STORYBOARD.md`: exit 0,
+  24 relative links, 0 missing. `check_frozen_pr_gate.py` with no revision argument: exit 1 (a usage error of mine,
+  `IndexError`); with `HEAD`: exit 0.
+- NOT RUN: Stages 7, 9, 10; every HOL, `Holmake` and Dafny verify step; the 10 GiB flood; a `--step` take; a take
+  with `--sound`; a second review. The regression does not run `test_video_cut.py`: that test ran on the same code
+  files before the commit (U862).
+- Uncertainty: the regression script is the APEX-2 copy; its link list does not hold the storyboard, so that link
+  check is a separate command. The record commit after `84743e7a` changes only `unsure.md` and `ROADMAP.md`.
+- Impact: none on any stage label. CURRENT none. M1-B OPEN. `end_to_end=false`.
+- Next check: the hosted `gate/pr_check.py` result of the pull request (UNSUPPORTED, exit 3, is the expected
+  result for a change with no coverage claim). The agent does not merge.
