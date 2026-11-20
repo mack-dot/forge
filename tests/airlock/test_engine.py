@@ -344,14 +344,19 @@ def case_tenant(s):
     s.one(p, 'OPEN_SAGA tA s1 r2 payout', 'COMMITTED')
     h, hs = s.h(p, 'tA', 'k1'), s.h(p, 'tA', 's1')
     before = files(p)
-    for line in ['REFUND tB k1 r3 %s DUPLICATE_CHARGE 10' % h, 'OPEN_MONEY tB k1 r3 store-refunds 1000', 'GET tB k1',
-                 'SAGA tB s1 r3 %s IN_FLIGHT stripe i1' % hs, 'OPEN_INVENTORY tB s1 r3 seats 3']:
-        s.one(p, line, 'TENANT_ISOLATION_BREACH')
+    # Per-tenant namespaces (review D3): a key of another tenant is not visible; the answer is UNKNOWN_KEY, as for a key
+    # that nobody opened. (Before D3 these answers were TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT.)
+    for line in ['REFUND tB k1 r3 %s DUPLICATE_CHARGE 10' % h, 'GET tB k1', 'SAGA tB s1 r3 %s IN_FLIGHT stripe i1' % hs]:
+        s.one(p, line, 'UNKNOWN_KEY')
     code, out, _ = s.run(['get', p, 'tB', 'k1'])
-    require(code == 16, 'get under another tenant: %r' % out)
-    require(files(p) == before, 'a breach changed the store')
+    require(code == 21 and out == 'UNKNOWN_KEY\n', 'get under another tenant: %r' % out)
+    require(files(p) == before, 'a refused cross-tenant request changed the store')
+    # an open by tB of the same key name makes tB's own key; tA's key does not change
+    s.one(p, 'OPEN_MONEY tB k1 r3 store-refunds 1000', 'COMMITTED')
+    s.one(p, 'OPEN_INVENTORY tB s1 r4 seats 3', 'COMMITTED')
+    require(s.h(p, 'tA', 'k1') == h and s.h(p, 'tA', 's1') == hs, "tB's opens changed tA's keys")
     s.one(p, 'REFUND tA k1 r3 %s DUPLICATE_CHARGE 10' % h, 'COMMITTED')
-    return '5 cross-tenant requests and 1 get refused; store unchanged'
+    return "3 cross-tenant requests and 1 get -> UNKNOWN_KEY, store unchanged; tB's opens of the same names leave tA's keys unchanged"
 
 
 def case_money(s):
@@ -801,7 +806,7 @@ def case_leases(s):
         require(tok[3:] == [str(dl), 't1', 'k1'], 'LEASE_OPENED answer: %r' % tok)
     s.one(p, 'OPEN_LEASE L1 100 t1 k1', 'DUPLICATE_REQUEST_ID')
     s.one(p, 'OPEN_LEASE r0 100 t1 k1', 'DUPLICATE_REQUEST_ID')
-    s.one(p, 'OPEN_LEASE Lx 100 t2 k1', 'TENANT_ISOLATION_BREACH')
+    # per-tenant namespaces (review D3): t2's lease Lx is t2's own (before D3: TENANT_ISOLATION_BREACH); see case tenant_namespace
     s.one(p, 'OPEN_LEASE Lx 100', 'MALFORMED_REQUEST')  # the unbound form is gone
     h = s.h(p, 't1', 'k1')
     s.one(p, 'REFUND t1 k1 L1 %s DUPLICATE_CHARGE 5' % h, 'COMMITTED')  # closes L1
@@ -813,7 +818,7 @@ def case_leases(s):
     s.one(p, 'REFUND t1 k1 L4 %s DUPLICATE_CHARGE 01' % h, 'MALFORMED_REQUEST')  # does NOT close L4
     s.one(p, 'REFUND t1 k1 r0 %s DUPLICATE_CHARGE 5' % h, 'DUPLICATE_REQUEST_ID')
     closes = [e for _, e, _ in read_wal(p) if e.startswith('CLOSE ')]
-    require(closes == ['CLOSE L2 REJECTED_POLICY REASON_CAP', 'CLOSE L3 REJECTED_POLICY TOTAL_CAP'], 'close records: %r' % closes)
+    require(closes == ['CLOSE L2 t1 REJECTED_POLICY REASON_CAP', 'CLOSE L3 t1 REJECTED_POLICY TOTAL_CAP'], 'close records: %r' % closes)
     code, out, _ = s.run(['leases', p])
     require(code == 0 and out == 'LEASES 2\nLEASE L4 400 t1 k1\nLEASE L5 500 t1 k1\n', 'list: %r' % out)
     code, out, _ = s.run(['leases', p, '--sweep', '--now', '450'])
@@ -873,6 +878,69 @@ def case_lease_binding(s):
         s.one(p, 'REFUND t1 order-1 wh-2 %s NOSUCH 1' % s.h(p, 't1', 'order-1'), 'REJECTED_POLICY')
     require(len(read_wal(p)) == n, 'the lease loop wrote records: %d -> %d' % (n, len(read_wal(p))))
     return 'unknown key -> UNKNOWN_KEY; a rejection and a commit on another key leave the lease open (DROPPED_OBLIGATION); no lease loop'
+
+
+def normalize(answer):
+    """An answer with every epoch and state hash replaced: what is left must not depend on another tenant."""
+    tok = answer.split(' ')
+    out = []
+    for i, t in enumerate(tok):
+        epoch = t.isdigit() and ((i == 2 and tok[0] in ('COMMITTED', 'LEASE_OPENED')) or (i > 0 and tok[i - 1] in ('LEASE_CLOSED', 'LEASE_PENDING')))
+        if len(t) == 32 and all(c in '0123456789abcdef' for c in t):
+            t = '<hash>'
+        elif epoch:
+            t = '<epoch>'
+        out.append(t)
+    return ' '.join(out)
+
+
+def case_tenant_namespace(s):
+    """Review D3: keys, request ids and leases are per tenant. Tenant B cannot squat a key or a request id of tenant A,
+    and no answer to tenant B depends on what tenant A did (the same script of tenant B gives the same answers, up to
+    epochs and state hashes, on a store where tenant A was busy and on a store where tenant A did nothing)."""
+    # 1. squatting: B opens A's key name and uses A's request ids first; A's legitimate requests still commit
+    p = s.store('ns-squat')
+    s.one(p, 'OPEN_MONEY tB order-1 r1 store-refunds 10', 'COMMITTED')
+    s.one(p, 'OPEN_LEASE wh-1 100 tB order-1', 'LEASE_OPENED')
+    s.one(p, 'OPEN_MONEY tA order-1 r1 store-refunds 1000', 'COMMITTED')  # same key name, same request id, other tenant
+    s.one(p, 'OPEN_LEASE wh-1 100 tA order-1', 'LEASE_OPENED')  # same lease id, other tenant
+    hA, hB = s.h(p, 'tA', 'order-1'), s.h(p, 'tB', 'order-1')
+    require(hA != hB, 'two tenants share one key state')
+    require(s.get(p, 'tA', 'order-1')['original'] == '1000' and s.get(p, 'tB', 'order-1')['original'] == '10', 'the two keys are not separate')
+    # A's rejection with id wh-1 closes only A's lease; the CLOSE record names the tenant
+    tok = s.one(p, 'REFUND tA order-1 wh-1 %s NOSUCH 1' % hA, 'REJECTED_POLICY')
+    require(tok[2:3] == ['LEASE_CLOSED'], "A's rejection must close A's lease: %r" % tok)
+    closes = [e for _, e, _ in read_wal(p) if e.startswith('CLOSE ')]
+    require(closes == ['CLOSE wh-1 tA REJECTED_POLICY NO_RULE'], 'close records: %r' % closes)
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '200'])
+    require(code == 24 and out == 'SWEEP 1 1 now=200\nDROPPED_OBLIGATION wh-1 100 tB order-1\n', "B's lease must stay open: %d %r" % (code, out))
+    s.one(p, 'REFUND tB order-1 wh-1 %s DUPLICATE_CHARGE 1' % hB, 'COMMITTED')  # closes B's lease
+    s.one(p, 'REFUND tA order-1 wh-1 %s DUPLICATE_CHARGE 1' % hA, 'COMMITTED')  # the id is fresh in A's namespace
+    s.one(p, 'REFUND tA order-1 wh-1 %s DUPLICATE_CHARGE 1' % s.h(p, 'tA', 'order-1'), 'DUPLICATE_REQUEST_ID')
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '200'])
+    require(code == 0 and out == 'SWEEP 0 0 now=200\n', 'both leases closed: %d %r' % (code, out))
+    code, out, _ = s.run(['state', p])
+    require(code == 0 and ' keys=2 effects=4 leases=0' in out, 'the store folds: %d %r' % (code, out))
+    # 2. probes: the same script of tenant B on a busy store (A has keys, ids and leases) and on a store where A did nothing
+    script = ['OPEN_MONEY tB k1 r1 store-refunds 1000', 'GET tB k2', 'REFUND tB k2 r2 %s DUPLICATE_CHARGE 1' % ZERO,
+              'OPEN_SAGA tB s1 r2 payout', 'OPEN_INVENTORY tB inv r1 seats 3', 'OPEN_LEASE r1 100 tB k1', 'OPEN_LEASE wh-9 100 tB k2',
+              'OPEN_LEASE wh-9 100 tB k2', 'OPEN_MONEY tB k2 wh-9 store-refunds 5', 'GET tB s2', 'OPEN_LEASE a-r 100 tB k1']
+    busy, quiet = s.store('ns-busy'), s.store('ns-quiet')
+    for line in ['OPEN_MONEY tA k1 r1 store-refunds 1000', 'OPEN_MONEY tA k2 r2 store-refunds 1000', 'OPEN_SAGA tA s1 r3 payout',
+                 'OPEN_SAGA tA s2 wh-9 payout', 'OPEN_LEASE a-r 100 tA k1', 'OPEN_LEASE r9 100 tA k2', 'OPEN_INVENTORY tA inv r4 seats 3']:
+        s.one(busy, line, 'COMMITTED' if not line.startswith('OPEN_LEASE') else 'LEASE_OPENED')
+    answers = []
+    for st in (busy, quiet):
+        code, out, _ = s.serve(st, script)
+        require(len(out) == len(script), 'one answer per line: %r' % out)
+        answers.append([normalize(a) for a in out])
+    diff = [(l, a, b) for l, a, b in zip(script, answers[0], answers[1]) if a != b]
+    require(not diff, "an answer to tenant B depends on what tenant A did: %r" % diff[:3])
+    require(answers[0][0].startswith('COMMITTED') and answers[0][1] == 'UNKNOWN_KEY', 'probe answers: %r' % answers[0])
+    for cmd in (['get', busy, 'tB', 's2'], ['get', busy, 'tB', 'zz']):
+        code, out, _ = s.run(cmd)
+        require(code == 21 and out == 'UNKNOWN_KEY\n', 'get of a key of another tenant must be UNKNOWN_KEY: %d %r' % (code, out))
+    return "B's key, id and lease names do not block A; a CLOSE names its tenant; %d lines of B answer the same on a busy and a quiet store" % len(script)
 
 
 def case_nonce(s):
@@ -1406,6 +1474,42 @@ def case_crafted(s):
     return '1 crafted record adopted; %d crafted records refused by the fold; version-2 store refused (STORE_VERSION_2); ratchet maximum, not last entry' % len(bad)
 
 
+def case_legacy_wal(s):
+    """WAL compatibility (review D3): records in the form of the engine before the per-tenant namespaces, with a correct
+    CRC and chain, fold to the same keys, ids and leases. The old `CLOSE <request_id> <verdict> <detail>` (no tenant) is
+    read only while exactly one lease in the whole store has that id; the new form names the tenant."""
+    p = s.store('legacy')
+    s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000', 'COMMITTED')
+    good = files(p)
+    recs = read_wal(p)
+
+    def build(payloads):
+        for n, b in good.items():
+            (p / n).write_bytes(b)
+        data, epoch, tail = good['airlock.wal'], recs[-1][0] + 1, recs[-1][2]
+        for pl in payloads:
+            rec = wal_record(epoch, tail, pl.encode())
+            data, tail, epoch = data + rec, fnv128(rec), epoch + 1
+        (p / 'airlock.wal').write_bytes(data)
+        return s.run(['state', p])
+    code, out, _ = build(['LEASE L1 100 t1 k1', 'CLOSE L1 REJECTED_POLICY NO_RULE', 'LEASE L2 200 t1 k1'])
+    require(code == 0 and ' leases=1' in out, 'an old CLOSE of the one lease with its id must fold: %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(code == 0 and out == 'LEASES 1 all=2\nLEASE L1 100 t1 k1 CLOSED 3 REJECTED_POLICY NO_RULE\nLEASE L2 200 t1 k1 OPEN\n', 'old close: %r' % out)
+    bad = {'an old CLOSE while two tenants have a lease with that id': ['LEASE L1 100 t1 k1', 'LEASE L1 100 t2 k9', 'CLOSE L1 REJECTED_POLICY NO_RULE'],
+           'an old CLOSE of a closed lease': ['LEASE L1 100 t1 k1', 'CLOSE L1 REJECTED_POLICY NO_RULE', 'CLOSE L1 REJECTED_POLICY NO_RULE'],
+           'a new CLOSE of the lease of another tenant': ['LEASE L1 100 t1 k1', 'CLOSE L1 t2 REJECTED_POLICY NO_RULE'],
+           'an old CLOSE with no lease': ['CLOSE L1 REJECTED_POLICY NO_RULE']}
+    for why, payloads in bad.items():
+        code, out, _ = build(payloads)
+        require(code == 17 and out.startswith('CORRUPT_WAL'), '%s must be CORRUPT_WAL: %d %r' % (why, code, out))
+    code, out, _ = build(['LEASE L1 100 t1 k1', 'LEASE L1 100 t2 k9', 'CLOSE L1 t2 REJECTED_POLICY NO_RULE'])
+    require(code == 0 and ' leases=1' in out, 'a new CLOSE closes the lease of its tenant only: %d %r' % (code, out))
+    for n, b in good.items():
+        (p / n).write_bytes(b)
+    return 'old CLOSE form folds while its id is unique in the store; %d ambiguous or invalid closes refused; new CLOSE names its tenant' % len(bad)
+
+
 def case_native_bound(s):
     """STAND-IN refund binaries (test doubles of the helper process) that accept what the native check must refuse:
     an amount above the remaining amount, and a reason outside the three approved reasons."""
@@ -1454,7 +1558,7 @@ CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
          ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
          ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env),
-         ('lease_binding', case_lease_binding), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
+         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
 
 
 def main():

@@ -9,7 +9,9 @@ Label: FINITE TEST. It proves nothing. It tries a finite, seeded list of inputs 
 Each round, against ONE real store (a fresh temp folder; the real engine through bin/forge-airlock serve):
   * boundary integers as refund amounts: 0, -1, 1, remaining, remaining+1, MaxMoney, MaxMoney+1, 2^64, '01'
   * strings: NUL, CR, tab, Unicode, 0xff, oversized (> 65,536 bytes) lines as RAW lines; unsafe ids through the SDK
-  * cross-tenant tokens: another tenant writes, reads and gets the key; mixed-tenant row sets through read_scoped
+  * cross-tenant tokens: another tenant writes and gets the key (UNKNOWN_KEY: keys, request ids and leases are per
+    tenant, review D3) and opens a lease with an id of the first tenant in its own namespace; mixed-tenant row sets
+    through read_scoped
   * injected mid-handler exceptions inside with_lease (before the sink, and after the sink)
   * a 50-way TOCTOU burst: 50 engine `serve` processes, one pre_state_hash, one REFUND each (raw lines)
   * a duplicate-id replay storm: one fresh request id sent by 20 processes at once, then a used id resent 20 times
@@ -20,7 +22,7 @@ Oracle after EVERY round, from the engine's own `replay`, `state` and `leases --
   I4 exactly one effect per request id; every id answered COMMITTED is in the WAL once; every WAL id was answered COMMITTED
   I5 every refused request id (never answered COMMITTED) left no effect record
   I6 the store still opens: `state` exit 0 (no CORRUPT_WAL), its effect count equals the replay count
-  I7 the open leases past their deadline are exactly the leases whose handler raised before the sink
+  I7 the open leases past their deadline are exactly the leases (request id, tenant) whose handler raised before the sink
   I8 burst: exactly 1 COMMITTED and 49 STALE_STATE_HASH; storm: exactly 1 COMMITTED for the fresh id; 0 for the used id
 Deterministic for a seed (random.Random(seed)). The bursts are racy in WHICH process wins; only invariant facts are
 recorded. The --json file holds no time, pid, path or state hash. Exit 0 only if every invariant held.
@@ -60,7 +62,8 @@ class Fuzz:
         self.n = 0
         self.answers = {}        # request id -> list of first tokens the engine answered
         self.keys = {}           # key -> (tenant, original, shipping_paid)
-        self.expect_open = set()
+        self.expect_open = set()  # (request id, tenant) of every lease that must stay open
+        self.open_rid = {}        # key -> the request id of its OPEN_MONEY
         self.counts = {'requests': 0, 'local_refusals': 0, 'raw_lines': 0, 'by_code': {}, 'burst_processes': 0,
                        'storm_processes': 0, 'handler_exceptions': 0, 'reads': 0}
         self.violations = []
@@ -107,6 +110,7 @@ class Fuzz:
             res = self.call(rid, lambda: st.open_money(tenant, key, rid, 'store-refunds', original, {'shipping_paid': ship}))
             if res and res.committed:
                 self.keys[key] = (tenant, original, ship)
+                self.open_rid[key] = rid  # a request id that this tenant used
                 made.append(key)
         return made
 
@@ -151,11 +155,14 @@ class Fuzz:
         h = st.get(tenant, key).state_hash
         rid = self.rid('x')
         r = self.call(rid, lambda: st.refund(other, key, rid, h, 'DUPLICATE_CHARGE', 1))
-        if r is None or r.code != 'TENANT_ISOLATION_BREACH':
-            self.violations.append('cross-tenant write was not TENANT_ISOLATION_BREACH: %r' % r)
-        g = st.get(other, key)
-        if g.code != 'TENANT_ISOLATION_BREACH':
-            self.violations.append('cross-tenant get was not refused')
+        if r is not None or self.answers.get(rid, [None])[-1] != 'UNKNOWN_KEY':
+            self.violations.append('cross-tenant write was not UNKNOWN_KEY: %r %r' % (r, self.answers.get(rid)))
+        try:
+            g = st.get(other, key)
+            self.violations.append('cross-tenant get was not refused: %r' % g)
+        except fa.EngineRefusal as e:
+            if e.code != 'UNKNOWN_KEY':
+                self.violations.append('cross-tenant get was not UNKNOWN_KEY: %s' % e.code)
         rows = [{'tenant_id': tenant, 'n': i} for i in range(self.rng.randint(1, 5))]
         rows.insert(self.rng.randint(0, len(rows)), self.rng.choice([{'tenant_id': other}, {'x': 1}, {'tenant_id': 7}, {'tenant_id': tenant + ' '}]))
         res = st.read_scoped(tenant, rows)
@@ -163,13 +170,21 @@ class Fuzz:
         self.note(None, res.code)
         if res.code != 'TENANT_ISOLATION_BREACH' or res.rows:
             self.violations.append('a mixed-tenant row set was released: %r' % res)
-        rid = self.rid('xl')
-        try:  # a lease bound to a key of another tenant
-            st.with_lease(rid, 1, other, key, lambda lease: self.violations.append('a lease opened on a key of another tenant'))
+        # a lease of the other tenant on the same key name, with a request id that the first tenant used: it is the other
+        # tenant's own lease (no squatting, no breach); its handler raises before the sink, so the sweep must report it
+        used = self.open_rid[key]
+
+        def raises_before(lease):
+            raise ValueError('injected before the sink (other tenant)')
+        try:
+            st.with_lease(used, 1, other, key, raises_before)
+            self.violations.append('a handler exception did not propagate')
+        except ValueError:
+            self.counts['handler_exceptions'] += 1
+            self.expect_open.add((used, other))
         except fa.LeaseNotOpened as e:
-            self.note(rid, e.code)
-            if e.code != 'TENANT_ISOLATION_BREACH':
-                self.violations.append('cross-tenant lease: %s' % e.code)
+            self.note(None, e.code)
+            self.violations.append("a lease of tenant %s was refused because tenant %s used its id: %s" % (other, tenant, e.code))
 
     def handlers(self, st, key, r):
         tenant, _, _ = self.keys[key]
@@ -192,12 +207,12 @@ class Fuzz:
             except ValueError:
                 self.counts['handler_exceptions'] += 1
             if where == 'before':
-                self.expect_open.add(rid)
+                self.expect_open.add((rid, tenant))
             else:
                 # the commit closes the lease if it COMMITTED or got a terminal refusal; else it stays open
                 last = self.answers.get(rid, [None])[-1]
                 if last not in ('COMMITTED', 'REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN'):
-                    self.expect_open.add(rid)
+                    self.expect_open.add((rid, tenant))
 
     def burst(self, st, key):
         tenant, _, _ = self.keys[key]
@@ -307,7 +322,7 @@ class Fuzz:
         if not i6:
             self.violations.append('round %d: state %d %r' % (r, code, st[:120]))
         code, sw = self.cli(['leases', self.store, '--sweep', '--now', str(10 ** 12)])
-        dropped = {ln.split(' ')[1] for ln in sw.split('\n') if ln.startswith('DROPPED_OBLIGATION ')}
+        dropped = {(ln.split(' ')[1], ln.split(' ')[3]) for ln in sw.split('\n') if ln.startswith('DROPPED_OBLIGATION ')}
         i7 = dropped == self.expect_open and code == (24 if dropped else 0)
         if not i7:
             self.violations.append('round %d: dropped %s, expected %s' % (r, sorted(dropped), sorted(self.expect_open)))

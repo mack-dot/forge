@@ -6,7 +6,9 @@ Label of the SDK itself: not trusted for a write decision; not proved. FINITE TE
 
 Typed results (class Result, field `code`):
   COMMITTED, REJECTED_POLICY, REQUIRE_HUMAN_COSIGN, STALE_STATE_HASH, DUPLICATE_REQUEST_ID,
-  TENANT_ISOLATION_BREACH, DROPPED_OBLIGATION (from Store.sweep), plus OK for get/read/state answers.
+  TENANT_ISOLATION_BREACH (read_scoped only), DROPPED_OBLIGATION (from Store.sweep), plus OK for get/read/state
+  answers. Keys, request ids and leases are per tenant (review D3): a key of another tenant is UNKNOWN_KEY (an
+  EngineRefusal), exactly like a key that nobody opened; the engine gives TENANT_ISOLATION_BREACH only for READ.
 Every other outcome RAISES a subclass of AirlockError and is never a commit:
   LocalRefusal      the SDK refused the input BEFORE sending (LF/CR/NUL/space, a non-canonical id or hash)
   EngineRefusal     the engine answered MALFORMED_REQUEST, UNKNOWN_KEY, HELPER_FAILED or BAD_FRAME (nothing committed)
@@ -264,8 +266,7 @@ def parse_commit_answer(line, verb, tenant, key, request_id):
         if not ok:
             raise ProtocolError('BAD_ANSWER', 'a COMMITTED line that does not name this request', line)
         return Result('COMMITTED', line=line, request_id=t[1], epoch=int(t[2]), state_hash=t[3], payload=' '.join(t[4:]))
-    return _refusal(line, t, ('REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID',
-                              'TENANT_ISOLATION_BREACH'))
+    return _refusal(line, t, ('REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID'))
 
 
 def _refusal(line, t, typed):
@@ -458,7 +459,7 @@ class Store:
         return self.commit('book', tenant=tenant, key=key, request_id=request_id, pre_state_hash=pre_state_hash, certificate=certificate)
 
     def get(self, tenant, key):
-        """OK Result with .state_hash, .kind, .fields; or TENANT_ISOLATION_BREACH; UNKNOWN_KEY raises EngineRefusal."""
+        """OK Result with .state_hash, .kind, .fields. UNKNOWN_KEY (also for a key of another tenant) raises EngineRefusal."""
         text = self._send('GET %s %s' % (_id('tenant', tenant), _id('key', key)))
 
         def parse(a):
@@ -467,7 +468,7 @@ class Store:
                 if len(t) < 3 or not HASH_RE.match(t[1]) or any('=' not in x for x in t[3:]):
                     raise ProtocolError('BAD_ANSWER', 'bad GET answer', a)
                 return Result('OK', line=a, state_hash=t[1], kind=t[2], fields=dict(x.split('=', 1) for x in t[3:]))
-            return _refusal(a, t, ('TENANT_ISOLATION_BREACH',))
+            return _refusal(a, t, ())
         return self._guard(parse, text)
 
     def state(self):
@@ -517,7 +518,7 @@ class Store:
 
         deadline_ms: absolute milliseconds since the Unix epoch (the sweep compares it with its clock or --now).
         Returns what the handler returns. A handler exception propagates; the lease stays open. One lease per
-        request id, ever (DUPLICATE_REQUEST_ID LEASE_USED).
+        request id and tenant, ever (DUPLICATE_REQUEST_ID LEASE_USED). The key need not exist.
         """
         dl = _amount('deadline_ms', deadline_ms)
         text = self._send('OPEN_LEASE %s %s %s %s' % (_id('request_id', request_id), dl, _id('tenant', tenant), _id('key', key)))
@@ -526,7 +527,7 @@ class Store:
             if len(t) != 6 or t[1] != request_id or not DIGITS_RE.match(t[2]) or t[3] != dl or t[4] != tenant or t[5] != key:
                 self._bad('LEASE_OPENED for another lease', text)
             return handler(Lease(self, request_id, int(t[2]), deadline_ms, tenant, key))
-        res = self._guard(lambda a: _refusal(a, t, ('DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH')), text)
+        res = self._guard(lambda a: _refusal(a, t, ('DUPLICATE_REQUEST_ID',)), text)
         raise LeaseNotOpened(res)
 
     def leases(self, all=False):

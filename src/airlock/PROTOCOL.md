@@ -67,7 +67,7 @@ the kill-points build; case `seams` checks that the production build ignores the
 | `init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey KEY] [--node P]` | `INITIALIZED <store_id> <genesis_hash>` | 0, or a code |
 | `serve <dir> [--refund-binary P] [--node P] [--checker MODEL]` | one answer line per request line | code of the last answer; 2 if no line |
 | `state <dir>` | `STATE <epoch> <tail_hash> <store_id> keys=<n> effects=<n> leases=<n>` | 0 |
-| `get <dir> <tenant> <key>` | as the `GET` verb | 0, 16, 21 |
+| `get <dir> <tenant> <key>` | as the `GET` verb | 0, 21 |
 | `replay <dir>` | `REPLAY <n>`, then n lines `EFFECT <epoch> <payload>` | 0 |
 | `leases <dir>` | `LEASES <open>`, then one line `LEASE <request_id> <deadline_ms> <tenant> <key>` per OPEN lease (WAL order) | 0 |
 | `leases <dir> --all` | `LEASES <open> all=<n>`, then one line per lease ever opened: `LEASE <request_id> <deadline_ms> <tenant> <key> OPEN` or `LEASE <request_id> <deadline_ms> <tenant> <key> CLOSED <epoch> <COMMITTED -\|REJECTED_POLICY <detail>\|REQUIRE_HUMAN_COSIGN <detail>>` | 0 |
@@ -169,9 +169,10 @@ Payloads:
 | `OPEN_INVENTORY <tenant> <key> <request_id> <policy> <c1,c2,...>` | yes | `OPEN_INVENTORY` |
 | `BOOK <tenant> <key> <request_id> <x as 0/1 digits> <new remaining c1,c2,...>` | yes | `BOOK` |
 | `LEASE <request_id> <deadline_ms> <tenant> <key>` | no | `OPEN_LEASE` |
-| `CLOSE <request_id> <REJECTED_POLICY or REQUIRE_HUMAN_COSIGN> <detail>` | no | a terminal refusal on the lease's tenant and key while the lease is open |
+| `CLOSE <request_id> <tenant> <REJECTED_POLICY or REQUIRE_HUMAN_COSIGN> <detail>` | no | a terminal refusal on the lease's tenant and key while the lease is open |
 
-The fold (`ledger.rs`) checks each record again: fresh request id, key kind and tenant,
+The fold (`ledger.rs`) checks each record again: fresh request id in the record's tenant, a key of
+that tenant and of the right kind,
 `1 <= amount <= remaining` for a refund, new remaining capacity not above the old one, a
 `CLOSE` only for an open lease. A record that fails is `CORRUPT_WAL`. The writer applies
 the same fold to a record before it writes it: a record that the fold would refuse is
@@ -213,13 +214,39 @@ ratchet entry -> `sync_all` -> lock released -> answer line. `sync_all` is
 ## 5. Request verbs (`serve`)
 
 Check order for a write to an existing key: grammar (no file opened) -> lock and fold ->
-`UNKNOWN_KEY` -> `TENANT_ISOLATION_BREACH` -> `DUPLICATE_REQUEST_ID` ->
-`STALE_STATE_HASH` -> policy. An open verb names no `pre_state_hash`; the key must be
-absent: a key of another tenant is `TENANT_ISOLATION_BREACH`, a key of the same tenant
-is `STALE_STATE_HASH <present hash>`.
+`UNKNOWN_KEY` -> `DUPLICATE_REQUEST_ID` -> `STALE_STATE_HASH` -> policy. An open verb
+names no `pre_state_hash`; the key must be absent in the caller's tenant: a key of the
+same tenant is `STALE_STATE_HASH <present hash>`.
 
-Request ids are fresh per store: one namespace for all keys, tenants and verbs. Only an
-effect record uses an id up. A refusal (also a terminal one) leaves the id fresh.
+Namespaces (review D3). Keys, request ids and leases are PER TENANT. The fold indexes each
+of them by (tenant, name). `t1 order-1` and `t2 order-1` are two keys; request id `r1` of
+`t1` and request id `r1` of `t2` are two ids; a lease id can have one lease in each tenant.
+A key of another tenant is `UNKNOWN_KEY`, exactly like a key that nobody opened. So one
+tenant cannot squat a key name or a request id of another tenant, and no answer about a
+key, a request id or a lease tells one tenant what another tenant has. Only an effect
+record uses an id up (in its tenant). A refusal (also a terminal one) leaves the id fresh.
+
+What the namespaces do NOT do:
+
+- They do not authenticate the tenant. The tenant is a field of the request line. In the
+  shipped flow the engine is a child process of the caller, under the caller's OS user
+  (`bin/forge-airlock serve`, both SDKs). Nothing in the engine checks that the caller may
+  use the tenant that it names. The namespaces stop accidents, squatting and probes
+  between callers that something OUTSIDE the engine holds to their tenant label (for
+  example a gateway that writes the tenant field itself). A caller that can name any
+  tenant can act as that tenant. A caller that can read the WAL file reads every tenant.
+  Real per-tenant authentication needs an isolation mode (a service user, a socket,
+  per-tenant credentials): a separate design, not built here. Nothing here is an
+  isolation claim.
+- Store-wide values stay store-wide: the epoch in `COMMITTED` and `LEASE_OPENED`, the
+  state hash (it chains every record of the store), the `STATE` verb (`epoch`, tail hash,
+  `keys=`, `effects=`, `leases=` of the whole store), and the time a request waits for the
+  store lock. A caller sees from them that other records were written (how many), not which
+  keys, ids or leases they name. The subcommands `state`, `replay`, `leases` and
+  `cosign-message` are operator views of the whole store.
+- Saga idempotency keys are not unique across keys or tenants (they never were): two keys
+  can hold the same processor and idempotency key. A real processor that de-duplicates on
+  that key across one merchant account can then merge the two. The engine does not see it.
 
 | Verb | Grammar | Success answer |
 | --- | --- | --- |
@@ -253,7 +280,7 @@ Examples (hashes shortened here; on the wire they are 32 digits):
 > REFUND t1 order-1 r3 4b8b…bf21 SHIPPING 500
 < STALE_STATE_HASH 88e0…ac41
 > REFUND t2 order-1 r3 88e0…ac41 SHIPPING 1
-< TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT
+< UNKNOWN_KEY
 > OPEN_SAGA t1 pay-1 r4 payout
 > SAGA t1 pay-1 r5 <hash> IN_FLIGHT stripe idem-1
 > SAGA t1 pay-1 r6 <hash> IN_FLIGHT paypal idem-2
@@ -274,10 +301,11 @@ Examples (hashes shortened here; on the wire they are 32 digits):
 - A lease is bound to a request id, a tenant and a key. There is only this bound form;
   `OPEN_LEASE <request_id> <deadline_ms>` (the old two-field form) is
   `MALFORMED_REQUEST FIELDS`.
-- `OPEN_LEASE` refuses an id that is used up (`DUPLICATE_REQUEST_ID`), an id that EVER had
-  a lease, open or closed (`DUPLICATE_REQUEST_ID LEASE_USED ...`: one lease per id, so no
-  open/close loop writes records without bound), and a key of another tenant
-  (`TENANT_ISOLATION_BREACH`).
+- `OPEN_LEASE` refuses an id that is used up in the lease's tenant (`DUPLICATE_REQUEST_ID`),
+  and an id that EVER had a lease in that tenant, open or closed
+  (`DUPLICATE_REQUEST_ID LEASE_USED ...`: one lease per id and tenant, so no open/close
+  loop writes records without bound). The key need not exist. Ids, keys and leases of
+  other tenants change nothing (section 5, namespaces).
 - A lease closes ONLY by a terminal verdict of a request with its request id ON its
   tenant and key: an effect record (`COMMITTED`), or a `REJECTED_POLICY` or
   `REQUIRE_HUMAN_COSIGN` answer. For the two refusals, the engine writes a durable `CLOSE`
@@ -291,7 +319,7 @@ Examples (hashes shortened here; on the wire they are 32 digits):
 - `leases --all` shows each closed lease with its closing record, so an obligation that a
   rejection closed stays visible.
 - Other refusals (`STALE_STATE_HASH`, `DUPLICATE_REQUEST_ID`, `MALFORMED_REQUEST`,
-  `TENANT_ISOLATION_BREACH`, `UNKNOWN_KEY`, `HELPER_FAILED`, `BAD_FRAME`, faults) do not
+  `UNKNOWN_KEY`, `HELPER_FAILED`, `BAD_FRAME`, faults) do not
   close a lease.
 - Limit: the engine sees only handlers that opened a lease.
 
@@ -613,7 +641,7 @@ Every other refusal has a detail. A parser must accept both forms for every code
 | 13 | `STALE_STATE_HASH` | refusal | detail = the present state hash |
 | 14 | `DUPLICATE_REQUEST_ID` | refusal | id used up; or `OPEN_LEASE` for an id that had a lease (`LEASE_USED`) |
 | 15 | `EPOCH_REGRESSION` | fault | the WAL is older than its ratchet |
-| 16 | `TENANT_ISOLATION_BREACH` | refusal | key of another tenant; read airlock |
+| 16 | `TENANT_ISOLATION_BREACH` | refusal | read airlock only (a row set that holds a row of another tenant). Since the per-tenant namespaces (review D3) no write, `GET` or lease answer gives it: a key of another tenant is `UNKNOWN_KEY`. The name stays for the wire; the tenant is not authenticated (section 5) |
 | 17 | `CORRUPT_WAL` | fault | a record, the ratchet or a pinned policy file is not valid; `STORE_VERSION_2` (a store of the Node cosign engine) |
 | 18 | `IO_ERROR` | fault | nothing committed; also `STORE_EXISTS` and `NO_RANDOM` at `init` |
 | 19 | `OUTCOME_UNKNOWN` | fault | a record may stay in the WAL; it was not answered as committed |
@@ -629,7 +657,7 @@ further line. Its exit code is the code of its last answer.
 
 ## 11. Trust boundary, trusted assumptions and not claimed
 
-Trust boundary. Every rule here (CAS, fresh ids, tenant isolation, caps, cosign, saga,
+Trust boundary. Every rule here (CAS, fresh ids, per-tenant namespaces, caps, cosign, saga,
 inventory, leases) holds only against a caller that reaches the store THROUGH the
 production engine. A process that can write the store folder can append records itself:
 the CRC-32 and the FNV-1a-128 chain authenticate nothing. A process that can start its
@@ -723,11 +751,20 @@ bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `repla
 18. The helpers are compiled into the engine; DESIGN.md's `--helpers` folder is gone.
     `init` takes `--node` and pins it; DESIGN.md had no Node pin.
 19. Leases are bound to a tenant and a key (`OPEN_LEASE <request_id> <deadline_ms>
-    <tenant> <key>`), and one request id can have only one lease, ever.
+    <tenant> <key>`), and one request id can have only one lease per tenant, ever.
 20. Apex addendum: DESIGN.md's Node Ed25519 helper is replaced by `/usr/bin/ssh-keygen -Y
     verify`. The cosign key is an OpenSSH `ssh-ed25519` key token, the signature an SSHSIG
     token, the message `forge-airlock-cosign-v3`, the genesis record version 3 (no
     version-2 store is read). Node is needed only for the inventory airlock.
+21. Review D3: keys, request ids and leases are per tenant (DESIGN.md had one store-wide
+    namespace). The `CLOSE` record names the tenant: `CLOSE <request_id> <tenant> <verdict>
+    <detail>`. The form without a tenant (written by the engine before this change) is
+    still read, but only while exactly one lease in the whole store has that request id
+    (always true in a WAL of that engine: it allowed one lease per id in the store);
+    otherwise it is `CORRUPT_WAL`. No genesis version change: a WAL of the engine before
+    this change folds to the same keys, ids, effects and leases (case `legacy_wal` of
+    `tests/airlock/test_engine.py` and `proposals/review-20261120-engine/compat_wal.py`), and
+    that engine refuses (`CORRUPT_WAL`) every record that only the new engine writes.
 
 ## 13. Mutation seams
 

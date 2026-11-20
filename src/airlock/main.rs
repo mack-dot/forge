@@ -29,6 +29,9 @@ pub const MAX_LINE: usize = 65536;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Code {
+    // `Breach` (TENANT_ISOLATION_BREACH, 16): since the per-tenant namespaces (review D3) only the read airlock gives it
+    // (a row set that holds a row of another tenant). No write, GET or lease answer gives it any more: a key of another
+    // tenant is UNKNOWN_KEY. The tenant field is not authenticated (PROTOCOL.md section 11): the name is kept for the wire.
     Ok, Usage, RejectedPolicy, RequireHumanCosign, Malformed, Stale, Duplicate, EpochRegression, Breach, CorruptWal,
     IoError, OutcomeUnknown, DispatchFailed, UnknownKey, HelperFailed, BadFrame, DroppedObligation, MalformedPolicy,
 }
@@ -196,7 +199,7 @@ fn eval_line(m: &policy::Money, raw: &[u8]) -> Result<String, Refusal> {
 fn leases(dir: &str, sweep: bool, all: bool, now: Option<u64>) -> i32 {
     let s = match store::open(dir) { Ok(s) => s, Err(e) => return answer(Err(e)) };
     let now = now.unwrap_or_else(|| std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis() as u64).unwrap_or(u64::MAX));
-    let mut list: Vec<(&String, &ledger::Lease)> = s.l.leases.iter().filter(|(_, l)| all || l.is_open()).collect();
+    let mut list: Vec<(&String, &ledger::Lease)> = s.l.leases.iter().filter(|(_, l)| all || l.is_open()).map(|((_, req), l)| (req, l)).collect();
     list.sort_by_key(|(_, l)| l.epoch);
     let open = s.l.open_leases();
     let mut text = String::new();

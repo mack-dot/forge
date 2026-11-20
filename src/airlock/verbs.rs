@@ -4,7 +4,7 @@
 use crate::cosign;
 use crate::helpers::{self, Node};
 use crate::json::{self, J};
-use crate::ledger::{parse_csv, Body, Key, MAX_FACTS, MAX_ROWS};
+use crate::ledger::{parse_csv, tk, Body, Key, MAX_FACTS, MAX_ROWS};
 use crate::policy::{self, Verdict, REASONS};
 use crate::store::{self, canonical_id, hx, money, parse_hash, Store};
 use crate::{no, Code, Line, Refusal};
@@ -64,22 +64,20 @@ pub fn handle(ctx: &Ctx, raw: &[u8]) -> Result<String, Refusal> {
     }
 }
 
-/// Tenant isolation, then the request id, then compare-and-swap. In this order.
+/// The key in the caller's tenant, then the request id in the caller's tenant, then compare-and-swap. In this order.
+/// Keys and request ids are per tenant (review D3): a key or an id of another tenant is not visible here, so no answer
+/// tells one tenant what another tenant has (a key of another tenant is UNKNOWN_KEY, like a key that nobody opened).
 fn check_key<'a>(s: &'a Store, tenant: &str, key: &str, req: &str, pre: u128) -> Result<&'a Key, Refusal> {
-    let Some(k) = s.l.keys.get(key) else { return no(Code::UnknownKey, "UNKNOWN_KEY") };
-    if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }
-    if s.l.ids.contains(req) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }
+    let Some(k) = s.l.keys.get(&tk(tenant, key)) else { return no(Code::UnknownKey, "UNKNOWN_KEY") };
+    if s.l.ids.contains(&tk(tenant, req)) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }
     if k.hash != pre { return no(Code::Stale, hx(k.hash)) }
     Ok(k)
 }
-/// An open names no pre_state_hash: the key must be absent. A key that exists is STALE_STATE_HASH (same tenant)
-/// or TENANT_ISOLATION_BREACH (another tenant).
+/// An open names no pre_state_hash: the key must be absent IN THE CALLER'S TENANT. A key of the same tenant is
+/// STALE_STATE_HASH; the same key name in another tenant is another key (no answer depends on it).
 fn check_open<'a>(s: &'a Store, tenant: &str, key: &str, req: &str, policy: &str, kind: &str) -> Result<&'a policy::Policy, Refusal> {
-    if let Some(k) = s.l.keys.get(key) {
-        if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }
-    }
-    if s.l.ids.contains(req) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }
-    if let Some(k) = s.l.keys.get(key) { return no(Code::Stale, hx(k.hash)) }
+    if s.l.ids.contains(&tk(tenant, req)) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }
+    if let Some(k) = s.l.keys.get(&tk(tenant, key)) { return no(Code::Stale, hx(k.hash)) }
     match s.policies.get(policy) {
         Some(p) if p.kind() == kind => Ok(p),
         Some(_) => no(Code::Malformed, "POLICY_KIND the policy is of another airlock"),
@@ -93,10 +91,11 @@ fn commit(s: Store, req: &str, payload: String) -> Result<String, Refusal> {
 /// A terminal refusal (REJECTED_POLICY or REQUIRE_HUMAN_COSIGN). If a lease is open for the request id, a durable
 /// CLOSE record is written (synced) before the answer.
 fn verdict(s: Store, req: &str, code: Code, detail: &'static str) -> Result<String, Refusal> {
-    // Only a lease bound to this request id AND to the tenant and key of the request (`Store::target`) is closed.
-    let bound = s.target.as_ref().map_or(false, |(t, k)| s.l.leases.get(req).map_or(false, |l| l.binds(t, k)));
-    if bound {
-        let (epoch, _) = s.append(&format!("CLOSE {req} {} {detail}", code.name()))?;
+    // Only a lease of the request's tenant with this request id AND bound to the request's key (`Store::target`) is
+    // closed. The CLOSE record names the tenant: a request id can have one lease in each tenant.
+    let bound = s.target.clone().filter(|(t, k)| s.l.leases.get(&tk(t, req)).map_or(false, |l| l.binds(t, k)));
+    if let Some((tenant, _)) = bound {
+        let (epoch, _) = s.append(&format!("CLOSE {req} {tenant} {} {detail}", code.name()))?;
         return no(code, format!("{detail} LEASE_CLOSED {epoch}"));
     }
     no(code, detail)
@@ -267,10 +266,10 @@ fn open_lease(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
     let t = toks(line, 5, 5)?;
     let (req, deadline, tenant, key) = (id(t[1], "request_id")?, amount(t[2], "deadline_ms")?, id(t[3], "tenant")?, id(t[4], "key")?);
     let s = store::open(&ctx.dir)?;
-    if s.l.keys.get(key).map_or(false, |k| k.tenant != tenant) { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }
-    if s.l.ids.contains(req) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }
-    // One lease per request id, ever: a closed lease cannot be opened again (no open/close loop, no hidden obligation).
-    if s.l.leases.contains_key(req) { return no(Code::Duplicate, "LEASE_USED this request id had a lease already") }
+    // Per tenant (review D3): the key need not exist, and a key, id or lease of another tenant changes nothing here.
+    if s.l.ids.contains(&tk(tenant, req)) { return no(Code::Duplicate, "DUPLICATE_REQUEST_ID") }
+    // One lease per request id and tenant, ever: a closed lease cannot be opened again (no open/close loop, no hidden obligation).
+    if s.l.leases.contains_key(&tk(tenant, req)) { return no(Code::Duplicate, "LEASE_USED this request id had a lease already") }
     let (epoch, _) = s.append(&format!("LEASE {req} {deadline} {tenant} {key}"))?;
     Ok(format!("LEASE_OPENED {req} {epoch} {deadline} {tenant} {key}"))
 }
@@ -278,8 +277,8 @@ fn open_lease(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
 /// `OK <state_hash> <kind> <field>=<value>...`
 pub fn get(dir: &str, tenant: &str, key: &str) -> Result<String, Refusal> {
     let s = store::open(dir)?;
-    let Some(k) = s.l.keys.get(key) else { return no(Code::UnknownKey, "UNKNOWN_KEY") };
-    if k.tenant != tenant { return no(Code::Breach, "KEY_OF_ANOTHER_TENANT") }
+    // a key of another tenant is UNKNOWN_KEY, exactly like a key that nobody opened (no existence probe)
+    let Some(k) = s.l.keys.get(&tk(tenant, key)) else { return no(Code::UnknownKey, "UNKNOWN_KEY") };
     let rest = match &k.body {
         Body::Money { policy, original, remaining, facts, totals } => {
             let f: String = facts.iter().map(|(n, v)| format!(" fact.{n}={v}")).collect();

@@ -8,7 +8,9 @@
 //   * one long-lived `forge-airlock serve <dir>` child per Store, over its pipes; the API is async (Promises);
 //     requests go one at a time in call order (a queue). No spawnSync per call.
 //   * typed results: COMMITTED, REJECTED_POLICY, REQUIRE_HUMAN_COSIGN, STALE_STATE_HASH, DUPLICATE_REQUEST_ID,
-//     TENANT_ISOLATION_BREACH, DROPPED_OBLIGATION (from sweep), and OK for get/read/state.
+//     TENANT_ISOLATION_BREACH (readScoped only), DROPPED_OBLIGATION (from sweep), and OK for get/read/state.
+//     Keys, request ids and leases are per tenant (review D3): a key of another tenant is UNKNOWN_KEY (an
+//     EngineRefusal), exactly like a key that nobody opened.
 //   * every other outcome REJECTS with an AirlockError subclass (LocalRefusal, EngineRefusal, EngineFault,
 //     ProtocolError, EngineDead, EngineTimeout, LeaseNotOpened); never a commit. After ProtocolError, EngineDead,
 //     EngineTimeout or EngineFault the Store is closed (fail closed).
@@ -46,7 +48,7 @@ const DIGITS_RE = /^(0|[1-9][0-9]*)$/;
 const MAX_READ_ROWS = 100000;
 const REFUSALS = ['MALFORMED_REQUEST', 'UNKNOWN_KEY', 'HELPER_FAILED', 'BAD_FRAME'];
 const FAULTS = ['EPOCH_REGRESSION', 'CORRUPT_WAL', 'IO_ERROR', 'OUTCOME_UNKNOWN', 'DISPATCH_FAILED'];
-const COMMIT_TYPED = ['REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH'];
+const COMMIT_TYPED = ['REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID'];
 const VERBS: Record<string, string> = {
   open_money: 'OPEN_MONEY', refund: 'REFUND', open_saga: 'OPEN_SAGA', saga: 'SAGA',
   open_inventory: 'OPEN_INVENTORY', book: 'BOOK',
@@ -436,7 +438,7 @@ class Store {
         for (const x of t.slice(3)) { const i = x.indexOf('='); r.fields[x.slice(0, i)] = x.slice(i + 1); }
         return r;
       }
-      return refusal(a, t, ['TENANT_ISOLATION_BREACH']);
+      return refusal(a, t, []);
     });
   }
 
@@ -484,7 +486,7 @@ class Store {
 
   // Open a durable lease bound to (requestId, tenant, key), then run handler(lease). The SDK never closes the
   // lease. deadlineMs: absolute ms since the Unix epoch. Resolves with the handler's value; a handler error
-  // propagates and the lease stays open. One lease per request id, ever (DUPLICATE_REQUEST_ID LEASE_USED).
+  // propagates and the lease stays open. One lease per request id and tenant, ever (DUPLICATE_REQUEST_ID LEASE_USED).
   async withLease<T>(requestId: string, deadlineMs: Amount, tenant: string, key: string, handler: (lease: Lease) => T | Promise<T>): Promise<T> {
     const dl = amount('deadline_ms', deadlineMs);
     const a = await this.send('OPEN_LEASE ' + id('request_id', requestId) + ' ' + dl + ' ' + id('tenant', tenant) + ' ' + id('key', key));
@@ -496,7 +498,7 @@ class Store {
       }
       return await handler(new Lease(this, requestId, Number(t[2]), dl, tenant, key));
     }
-    const r = this.guard(() => refusal(a, t, ['DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH']));
+    const r = this.guard(() => refusal(a, t, ['DUPLICATE_REQUEST_ID']));
     throw new LeaseNotOpened(r);
   }
 
