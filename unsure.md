@@ -20803,3 +20803,75 @@ curl: (6) Could not resolve host: github.com
   test. Not proved.
 - Impact: none on any stage label; `end_to_end=false`. Next check: owner decision on the new bundle; a review of the
   repairs.
+
+## U884 — Review fix PR-2: the review finding "no CI covers the engine" is confirmed; a new macOS arm64 workflow builds the airlock engine and runs 121 of 193 airlock and SDK cases; protected path, NOT merged
+
+- Status: 2026-11-20. Refs U720 to U725 (Goal 20 SDK), U840. Record: `proposals/review-20261120-ci/README.md`.
+  Branch `ci/airlock-macos` from `33055a59`; pull request 71. One new file `.github/workflows/airlock-ci.yml`
+  (SHA-256 `d4fe0580d0c8f273fde92745aefbd72ee26d47d1c235b7b4df45eacf53ebf770`). `.github/` is protected by
+  `gate/incremental.py`: the file needs the owner's exact-bytes approval. No test file and no existing workflow changed.
+- Evidence: `grep -n -i -E "airlock|rustc|silicon" .github/workflows/*` on `33055a59` gave exit 1 (no match): the
+  review finding is CONFIRMED. Local dry run of the seven `run:` scripts in a worktree with no build products: all exit
+  0 (`race` also skipped locally: heavy lock held by another team). Hosted run 44692795822 at `0846e403`: success, job
+  1m23s; engine 24 PASS, node helpers 74 PASS, SDK 17 PASS, diff-policy 6 PASS, 0 FAIL. Hosted proof gate run
+  44692795915: failure, `UNAPPROVED_PROTECTED_CHANGE: .github/workflows/airlock-ci.yml`, as expected.
+- Skipped (72): every case that needs the Dafny-compiled `build/airlock/checker/model.cjs` (engine `inventory`, `pin`;
+  63 `booking_*` node-helper cases; SDK `py_saga_inventory`, `ts_typed`) and the diff-policy cases `demo`, `choice`,
+  `fault`, `refused` (start Dafny) and `identical` (without Dafny it passes on two equal empty failure outputs).
+- Uncertainty: the hosted toolchains are not the pins (rustc 1.100.0, not 1.92; Node 24.22.3 from the tool cache, not
+  24.3.0; Python 3.15.2). They float with the image. A pass is a FINITE TEST on that image only. It proves nothing.
+  `end_to_end=false`. M1-B OPEN.
+- Impact: none on any stage label or gate result. The job is not a required check.
+- Next check: the owner's exact-bytes approval and merge; after `apex1/native-cosign` merges, the changes listed in the
+  record (kill-engine path, a `test_cosign.py` step).
+
+## U885 — Review fix PR-2: findings of the review that this work rejects, narrows or defers
+
+- Status: 2026-11-20. Refs U884. Record: `proposals/review-20261120-ci/README.md`.
+- Narrowed: the review says the platform needs "rustc 1.92". `bin/forge-airlock build` enforces no rustc version; the
+  hosted rustc 1.100.0 built the engine and every selected case passed. The repository RECORDS 1.92; it does not pin it
+  in the build. The Node rule is "24.x" (exit 2 otherwise), with a note when it is not 24.3.0.
+- Deferred: a Linux job (review recommendation 2 asks for Linux and macOS). The refund binary is Mach-O arm64, so a
+  Linux job can run only a smaller subset; the engine build on Linux is NOT RUN. Also deferred: `src/silicon_sink` in
+  CI, the Dafny-backed cases, `scripts/exit_goal20_sdk.py`, the demo and the fuzz pass.
+- Finding of this work: `test_diff_policy.py` case `identical` passes without Dafny (0 bytes, exit 1, twice). The test
+  file is not changed here; the workflow skips the case.
+- Uncertainty: none of the deferred items was tried on a hosted runner.
+- Impact: none on any stage label.
+- Next check: the owner's word on a Linux job and on Dafny in CI (an install from the network needs a pinned step that
+  no existing workflow has for macOS).
+
+## U886 — Review fix PR-2: the one fresh review of pull request 71 (0 HIGH, 3 MEDIUM, 8 LOW); 10 repaired, 1 recorded only; new workflow bytes
+
+- Status: 2026-11-20. Refs U884, U885. Record: `proposals/review-20261120-ci/REVIEW.md`. The review read head
+  `b98a06cf`; its text came through the orchestrator and is not stored in the repository.
+- Evidence: each finding checked against the code, `git show e3322303:…` and the hosted logs. Repaired: a count check
+  (PASS names = RUN names; `MIN_RUN_*` 24, 74, 17, 6), `cancel-in-progress` for pull requests only, `timeout-minutes`
+  10, the highest Node 24.x by `sort -V`, the header text, `pull_request` limited to `main`, the README (coverage that
+  the skips lose; the apex1 steps; run 2 versions; saved outputs). Recorded only: the weakness of
+  `booking_model_substituted_always_true` (any exit 2 passes). New SHA-256 of the workflow:
+  `b190ba53a3e97254786fbad1315ef462be0322371c7efe3c2477c25bf9f5e946`. Local dry run of the repaired bytes: seven
+  steps exit 0; six negative controls of the count check and the Node choice exit 1 or pick 24.22.3 over 24.9.0.
+- Finding: the hosted image is not monotonic. Run 44692795822 had image 20261118.0550.1 (rustc 1.100.0, Node 24.22.3);
+  the later run 44693275108 had image 20261104.0514.1 (rustc 1.99.1, Node 24.22.2).
+- Uncertainty: the repairs were not reviewed again. The skips lose non-Dafny coverage (the TypeScript typed verdicts of
+  `ts_typed`, the saga half of `py_saga_inventory`, the first lines of engine `inventory`); splitting them needs a later
+  change to the test files. After `apex1/native-cosign` merges, `MIN_RUN_NODE_HELPERS` must fall to 5 and a
+  `test_cosign.py` step must come in the same change. A finite test only. `end_to_end=false`. M1-B OPEN.
+- Impact: none on any stage label or gate result.
+- Next check: the hosted run of the repaired bytes (in the pull request); the owner's exact-bytes approval.
+
+## U897 — Review fix PR-2: the workflow updated after pull requests 72 and 73 merged; new bytes for approval
+
+- Refers to: U884, U885, U886.
+- Evidence: `main` = `7e5842d0` is merged into the branch (records only). The workflow now uses
+  `build/silicon/test/airlock-engine-kill`, runs `tests/airlock/test_cosign.py`, and skips `pin_window` too.
+  New SHA-256 of `.github/workflows/airlock-ci.yml`: `b10831fe97ca4c546ca74aafc1b0d5ef84ff3aaa24d9e3453cd74a0227aeade8`. The bytes `b190ba53…e946` of U886 are replaced.
+  One local run of each suite file, with no checker model: engine 33 cases (29 PASS, 3 NOT RUN for the model,
+  `race` not run locally), cosign 56 of 56 PASS, node helpers 68 cases (5 PASS, 63 NOT RUN for the model), SDK 21
+  cases (19 PASS, 2 NOT RUN for the model), diff-policy 6 of the 6 selected PASS.
+- Uncertainty: the hosted result of these bytes is not in the tree (see the pull request). The run minimums are
+  30, 56, 5, 19, 6, not the full counts, because the hosted image has no Dafny-built model. `race` and the
+  hosted behaviour of `cosign_faults` (its path probe depends on the runner's folders) have no local result.
+- Impact: none on any stage label or gate result. A finite test only. `end_to_end=false`. M1-B OPEN.
+- Next check: the hosted run; the owner's exact-bytes approval of the new SHA-256.

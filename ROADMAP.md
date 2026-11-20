@@ -28,6 +28,32 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Review fix PR-2, CI for the airlock engine: one new macOS arm64 workflow builds the engine and runs 121 of 193 airlock and SDK cases; a finite test; protected path, needs the owner's exact-bytes approval — U884 to U886
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Branch `ci/airlock-macos` from `33055a59`; pull request 71;
+NOT merged by the agent. One new file `.github/workflows/airlock-ci.yml`
+(SHA-256 `b190ba53…e946` after the review repairs). 72 cases that need
+Dafny are skipped. The image versions float and are not monotonic.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `grep -n -i -E "airlock\|rustc\|silicon" .github/workflows/*` on `33055a59` |1|no match: the review finding is confirmed |
+| local dry run of the seven `run:` scripts, first and repaired bytes (no build products; `race` also skipped) |0 each (7); 0 each (7)|engine 23, node helpers 74, SDK 17, diff-policy 6 PASS; repaired: four count checks pass, six negative controls exit 1 |
+| hosted airlock-ci run 44692795822 at `0846e403` |success|job 1m23s; 121 PASS, 0 FAIL; rustc 1.100.0, Node 24.22.3 |
+| hosted proof gate run 44692795915 at `0846e403` |failure|`UNAPPROVED_PROTECTED_CHANGE`, as expected |
+| hosted airlock-ci run 44693275108 at `b98a06cf` |success|job 1m20s; same counts; older image: rustc 1.99.1, Node 24.22.2 |
+| hosted proof gate run 44693272518 at `b98a06cf` |failure|as expected |
+| one fresh-context review of `b98a06cf` |0 HIGH; 3 MEDIUM; 8 LOW|11 accepted (1 in part); 10 repaired, 1 recorded only; NOT reviewed again |
+| `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` (5 `.md` files) |0; 0|outputs in `checks.txt` of the record |
+| hosted run of the repaired bytes |NOT RUN when this row was written|in the pull request |
+| update after pull requests 72 and 73 merged (`main` `7e5842d0`): one local run of each suite file, no checker model |engine 1 (29 PASS, 3 NOT RUN for the model); cosign 0 (56 PASS); node helpers 1 (5 PASS, 63 NOT RUN for the model); SDK 1 (19 PASS, 2 NOT RUN for the model); diff-policy 0 (6 PASS)|new workflow bytes `b10831fe…`; totals 33, 56, 68, 21, 11; run minimums 30, 56, 5, 19, 6 (U897) |
+| hosted run of the updated bytes |NOT RUN when this row was written|in the pull request |
+| Dafny cases; Linux job; `src/silicon_sink`; full local suites under the heavy lock |NOT RUN|deferred (U885) |
+
+[Record](proposals/review-20261120-ci/README.md).
+[Review](proposals/review-20261120-ci/REVIEW.md).
+
 ## Review of 2026-11-20: README top and claims 1, 2, 4, 5, 8, 11 corrected; documents only — U880 to U882
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
