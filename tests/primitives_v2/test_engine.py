@@ -15,7 +15,10 @@ read-only test interposer tests/airlock/interpose.c (built with /usr/bin/cc into
 absent) to see the F_FULLFSYNC of the WAL before the answer, and to make that sync fail.
 All times are indicative: the machine is shared and loaded.
 A case that cannot run FAILS with NOT RUN in its message; it never passes.
-Exit 0: every selected case passed. 1: at least one failed. 2: the suite could not start.
+After each case the suite kills and reaps every child process it started that is still alive (unsure.md U927). At the
+end it lists the processes whose command line names its work folder: one found there is a failure (line TEARDOWN).
+Exit 0: every selected case passed and no engine process of the run is alive at the end. 1: otherwise. 2: the suite
+could not start.
 """
 
 import argparse
@@ -110,6 +113,48 @@ def wal_of(store):
 
 
 # ---- processes ----------------------------------------------------------------------------------------------------
+# Every child process a case starts goes through spawn(). After each case, main() kills (SIGKILL) and reaps each one
+# that is still alive, so a case that FAILS on any path leaves no `serve` behind. Before this, case `lock` under the
+# changed copy S2_shared_lock failed before `holder.kill()`, and the holder, paused at the seam with the lock held,
+# waited for SIGKILL forever (unsure.md U927).
+CHILDREN = []
+
+
+def spawn(argv, **kw):
+    p = subprocess.Popen([str(a) for a in argv], **kw)
+    CHILDREN.append(p)
+    return p
+
+
+def reap():
+    """SIGKILL and wait for every child of spawn() that is still alive; return how many were alive."""
+    alive = [p for p in CHILDREN if p.poll() is None]
+    for p in alive:
+        p.kill()
+    for p in CHILDREN:
+        p.wait()
+        for f in (p.stdin, p.stdout, p.stderr):
+            try:
+                if f:
+                    f.close()
+            except OSError:
+                pass
+    CHILDREN.clear()
+    return len(alive)
+
+
+def alive_under(work):
+    """Regression check of U927: the processes of this machine whose command line names the work folder of this run
+    (every engine process of the suite names a store under it). The suite itself and ps do not name it."""
+    p = subprocess.run(['/bin/ps', '-ax', '-o', 'pid=,command='], capture_output=True, text=True)
+    out = []
+    for line in p.stdout.splitlines():
+        pid, _, cmd = line.strip().partition(' ')
+        if pid.isdigit() and int(pid) != os.getpid() and str(work) in cmd:
+            out.append(line.strip())
+    return out
+
+
 class Suite:
     def __init__(self, engine, seams, work, big_gib, interposer):
         self.engine, self.seams, self.work, self.big_gib, self.interposer = engine, seams, Path(work), big_gib, interposer
@@ -166,8 +211,8 @@ class Clock:
 
 class Session:
     def __init__(self, engine, store, env=None):
-        self.p = subprocess.Popen([str(engine), 'serve', str(store)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                  stderr=subprocess.PIPE, env=env or ENV, bufsize=0)
+        self.p = spawn([engine, 'serve', store], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE, env=env or ENV, bufsize=0)
 
     def send(self, line):
         self.p.stdin.write(line.encode() + b'\n')
@@ -416,7 +461,7 @@ def case_lock(s):
 
 
 def burst(engine, st, lines, env=None):
-    procs = [subprocess.Popen([str(engine), 'serve', str(st)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env or ENV) for _ in lines]
+    procs = [spawn([engine, 'serve', st], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env or ENV) for _ in lines]
     for p, line in zip(procs, lines):
         p.stdin.write(line.encode() + b'\n')
         p.stdin.flush()
@@ -513,7 +558,7 @@ def case_lines(s):
     ses.close()
     # The big line: N GiB of one line, then a valid request. RSS of the engine is sampled with ps.
     size = int(s.big_gib * (1 << 30))
-    p = subprocess.Popen([str(s.engine), 'serve', str(st)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENV)
+    p = spawn([s.engine, 'serve', st], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENV)
     peak, stop = [0], threading.Event()
 
     def sample():
@@ -852,7 +897,7 @@ def case_kill9(s):
     for rnd_no in range(4):
         procs = []
         for pno in range(3):
-            p = subprocess.Popen([str(s.engine), 'serve', str(st)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=ENV, bufsize=0)
+            p = spawn([s.engine, 'serve', st], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=ENV, bufsize=0)
             procs.append(p)
 
             def feed(p=p, tag='%d-%d' % (rnd_no, pno)):
@@ -1093,6 +1138,20 @@ def main():
         except Exception as e:  # noqa: BLE001  (a crash of the suite is a failure, never a pass)
             failed += 1
             print('FAIL %-13s %6.1fs suite error %s: %s' % (name, time.time() - t, type(e).__name__, str(e)[:400]), flush=True)
+        finally:
+            n = reap()
+            if n:
+                print('REAPED after %s: %d child process(es) still alive were killed' % (name, n), flush=True)
+    # Regression check of U927 (not a case, so it runs with every --case selection): no engine process of this run
+    # may be alive at the end. A process found here counts as a failure (exit 1) and is killed.
+    left = alive_under(work)
+    print('TEARDOWN %d engine process(es) of this run alive at the end%s' % (len(left), ': ' + ' | '.join(left)[:400] if left else ''), flush=True)
+    for line in left:
+        try:
+            os.kill(int(line.split(' ', 1)[0]), signal.SIGKILL)
+        except OSError:
+            pass
+    failed += 1 if left else 0
     if not args.keep:
         shutil.rmtree(work, ignore_errors=True)
     return 1 if failed else 0

@@ -28,6 +28,39 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Test hygiene 2026-11-20: `S2_shared_lock` left a hung `serve` process after each run; every child of the engine suites is now killed and reaped on every exit path — U927
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Test files only: `tests/primitives_v2/test_engine.py`,
+`test_ledger_graph.py` and the five `mutants*.py` drivers. No engine
+source and no protected file changed. Branch
+`fix/s2-shared-lock-teardown` from `b1c98822`; NOT pushed; NOT merged.
+Cause: case `lock` failed (as it must under the changed copy) before
+`holder.kill()`; the holder, paused at the test seam with the lock held,
+waits for SIGKILL forever. Repair: the suites register each child and
+kill and reap the ones still alive after each case; the drivers run each
+suite in its own process group and SIGKILL the group on every exit path,
+also a timeout. New check: line `TEARDOWN` of `test_engine.py` fails the
+run (exit 1) when a process that names the run's work folder is alive at
+the end. FINITE TEST on one machine.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| before the repair: `mutants.py --only S2_shared_lock` |0|KILLED; 1 `primitives-engine-seams serve …/lock-1/st` left alive (killed by hand) |
+| before the repair: `test_engine.py --case lock` on the S2 copy |1|FAIL lock; 1 process left alive |
+| after: `mutants.py --only S2_shared_lock` |0|KILLED for its named reason; 0 processes left |
+| after: `test_engine.py --case lock` on the S2 copy |1|FAIL lock (named reason); REAPED 2; TEARDOWN 0; 0 left |
+| after, reaping disabled in a scratch copy (check of the new check) |1|TEARDOWN 2 (the check finds the leak) |
+| after: `mutants.py` (all) |0|control PASS; 30 of 30 copies KILLED; 0 left |
+| after: `test_engine.py` (unchanged build, all cases) |0|23 of 23 PASS; TEARDOWN 0; 0 left |
+| after: `test_ledger_graph.py` (all) |0|0 left |
+| after: `mutants_p7.py`; `mutants_p8.py` |0; 0|25 of 25 and 20 of 20 KILLED; 0 left |
+| `mutants_p9.py`, `mutants_sdk.py`, `test_policy_to_dfy.py`, any Dafny or HOL, `scripts/exit_universal_primitives.py` (all cases) |NOT RUN|p9 and sdk: changed, compile check only |
+
+The `suite` and `mutations` cases of
+`scripts/exit_universal_primitives.py` hash the test files into the
+bundle, so its bundle digest changes; no tracked record holds that
+digest. Entry U927.
 ## Discovery One web showcase restored on `main` (owner's word of 2026-11-20): `web/` from commit `3731ab8e`, on top of the HAL demo; header spacing repaired; a finite test of the unproved engine; nothing deployed; NOT pushed; NOT merged — U926
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
