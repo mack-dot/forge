@@ -21148,3 +21148,43 @@ curl: (6) Could not resolve host: github.com
   `scripts/exit_universal_primitives.py` changes (it hashes the test files); no tracked record holds it.
 - NOT RUN: `mutants_p9.py`, `mutants_sdk.py` (compile check only), `test_policy_to_dfy.py`, Dafny, HOL, the EXIT
   script. Next check: one `exit_universal_primitives.py --case mutations` run, then `pgrep -fl primitives-engine`.
+
+## U923 — Goal 20 record refreshed: a fresh evidence run on `main` `e4901ffc` replaces the tracked bundle `1e75ab47…` with `4a66ddc8…`
+
+- Refs U724, U807, U881, U891, U893, U921. Owner approval of 2026-11-20: "Goal 20 record: Approved--regenerate and
+  record the fresh Goal 20 bundle matching main's current post-#72/#73 files." Branch `records/goal20-bundle-refresh`
+  from `origin/main` `e4901ffc`. Evidence: `proposals/forge2-goal20-sdk/records/evidence.json` (a byte copy of
+  `build/goal20/evidence/attempt-0001/evidence.json`; the build folder is ignored by git).
+- OLD digest `1e75ab471b5fe3cede67f2746fa8c0542fbafff6959bd5a8199cfca3338a70fa` (tracked since `9a9a8943`; does not
+  reproduce on `main`, U921 finding 8). NEW digest `4a66ddc86d4e954e6e2ce215f4fb0d5d49abc1d5cb80ba1c1b5c7fd891d62f65`.
+  The digest `69fbd676…9467` of U893 is for tree `9a17c95d`; it differs because `docs/quickstart-5min.md` and
+  `src/airlock/PROTOCOL.md` changed after `9a17c95d` (pull request 68); it was never a tracked record.
+- The 20 old subject rows that changed or went away (pull requests 68, 72, 73), by class: documents (2):
+  `docs/quickstart-5min.md`, `src/airlock/PROTOCOL.md`; engine Rust (6): `helpers.rs`, `ledger.rs`, `main.rs`,
+  `pin.rs`, `store.rs`, `verbs.rs`; Node helpers (2): `booking_check.cjs` changed, `src/airlock/node/cosign.cjs`
+  DELETED (pull request 72); SDKs (2): `sdk/py/forge_airlock.py`, `sdk/ts/forge_airlock.ts`; dispatcher and demo (3):
+  `bin/forge-airlock`, `examples/unbreakable_store/run_demo.py`, `ts_part.ts`; Python tool (1):
+  `src/airlock/py/fuzz.py`; tests (3): `test_engine.py`, `test_node_helpers.py`, `test_sdk.py`; the EXIT script (1):
+  `scripts/exit_goal20_sdk.py`. New subject rows (3): `src/airlock/cosign.rs`, `src/airlock/py/cosign_tool.py`,
+  `tests/airlock/test_cosign.py`. Subject rows: 64 old, 66 new.
+- Actual: `python3 scripts/exit_goal20_sdk.py --case evidence` exit 0, `GOAL20 evidence: PASSED; end_to_end=false;
+  wall 2437 s` (12:32:53 to 13:13:31). Both runs: build exit 0; suite 33 engine + 68 Node + 56 cosign + 11 diff + 21
+  SDK cases passed; changed copies 145 of 145 killed, 3 not killed; disasters 8 of 8, money leaked from the WAL 0;
+  fuzz 8 of 8 invariants held. Run 1 and run 2 bundles byte-identical (`cmp` exit 0). The SHA-256 comparison of
+  `proposals/forge2-goal20-sdk/run_regression.py` (attempt file vs tracked record) gives byte-identical.
+- Not killed, as the script records them: X01 (`helpers.rs`, rule that a helper reads all its input: every helper
+  input fits one 64 KiB pipe buffer, so no repeatable test sees it); R8 (`sdk/ts/forge_airlock.ts`, the hole/undefined
+  guard of `readScoped`: `jsonText` refuses the same input with the same code, two layers the suite cannot tell apart);
+  N15 (`src/airlock/py/cosign_tool.py`, binding of the second key open to the checked descriptor: needs a race).
+- Toolchain: rustc 1.92.0 (ded5c06cf 2025-12-08); Apple clang 17.0.0 (clang-1700.0.13.5) at `/usr/bin/cc`; Python
+  3.10.11; Node v24.3.0 (executable SHA-256 `bcc119a0…43b6`); Darwin arm64. Tool folders `.toolchain` and
+  `node_modules` linked from the owner's checkout (not committed). One machine, shared with other sessions; the proof
+  slot was free for 3 checks one minute apart before the start.
+- Labels: FINITE TEST and NATIVE CHECK record. Not a proof of the engine, helpers, SDKs, demo or dispatcher. PROVED CORE
+  rows of the bundle are unchanged in kind. `end_to_end=false`. M1-B OPEN.
+- NOT RUN: the full scratch-clone regression (28 Stage EXIT cases, frozen gate, links, the other five bundles); push;
+  pull request; hosted `gate/pr_check.py` (expected exit 3, UNSUPPORTED); HOL or Holmake; Stages 7, 9, 10; a
+  power-loss test. `README.md` and `docs/STATUS.md` do not state this digest and are not changed; older records that
+  name `1e75ab47…` are records of their own commits and are not changed.
+- Impact: none on any stage label. Next check: the owner's decision on this records branch; a scratch-clone regression
+  on its commit.
