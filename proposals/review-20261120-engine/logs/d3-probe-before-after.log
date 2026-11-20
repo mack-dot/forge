@@ -1,0 +1,18 @@
+# D3 probe part alone (part 2 of case tenant_namespace; scratch driver), engine of e3322303
+DIFF OPEN_MONEY tB k1 r1 store-refunds 1000   busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='COMMITTED r1 <epoch> <hash> OPEN_MONEY tB k1 r1 store-refunds 1000'
+DIFF GET tB k2                                busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='UNKNOWN_KEY'
+DIFF REFUND tB k2 r2 000000000000000000000000 busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='UNKNOWN_KEY'
+DIFF OPEN_SAGA tB s1 r2 payout                busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='COMMITTED r2 <epoch> <hash> OPEN_SAGA tB s1 r2 payout PAID'
+DIFF OPEN_INVENTORY tB inv r1 seats 3         busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='DUPLICATE_REQUEST_ID'
+DIFF OPEN_LEASE r1 100 tB k1                  busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='DUPLICATE_REQUEST_ID'
+DIFF OPEN_LEASE wh-9 100 tB k2                busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='LEASE_OPENED wh-9 <epoch> 100 tB k2'
+DIFF OPEN_LEASE wh-9 100 tB k2                busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='DUPLICATE_REQUEST_ID LEASE_USED this request id had a lease already'
+DIFF OPEN_MONEY tB k2 wh-9 store-refunds 5    busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='COMMITTED wh-9 <epoch> <hash> OPEN_MONEY tB k2 wh-9 store-refunds 5'
+DIFF GET tB s2                                busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='UNKNOWN_KEY'
+DIFF OPEN_LEASE a-r 100 tB k1                 busy='TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT' quiet='LEASE_OPENED a-r <epoch> 100 tB k1'
+lines that differ: 11 of 11
+exit 1
+
+# the same on this branch
+lines that differ: 0 of 11
+exit 0

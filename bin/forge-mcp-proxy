@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""forge-mcp-proxy: the launcher of the MCP stdio airlock (Python stdlib only). end_to_end=false.
+
+It decides nothing. It builds the proxy or replaces itself with it, and passes every argument and the exit code
+through unchanged. Every decision is the proxy's (src/mcp_proxy/*.rs: NATIVE CHECK, not proved).
+It is a separate file on purpose: bin/forge-airlock is in the Goal 20 bundle and stays byte-identical.
+
+  forge-mcp-proxy build                       one rustc build: build/mcp_proxy/mcp-proxy
+  forge-mcp-proxy mcp --policy P.json --agent-id ID --store DIR --key KEYFILE [--facts F.json]
+                      [--session k=v]... [--sign-mode sync|async] [--test-clock N] -- <mcp-server-cmd...>
+  forge-mcp-proxy verify-evidence <evidence.wal> --allowed-signers FILE [--identity NAME]
+  forge-mcp-proxy state <dir>                 prints epoch=<n> state=<32 hex>
+
+$FORGE_MCP_PROXY names another proxy binary (tests use it). Exit 2: a usage error of the launcher, or no binary.
+Wire and limits: src/mcp_proxy/PROTOCOL.md.
+"""
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+BINARY = ROOT / 'build' / 'mcp_proxy' / 'mcp-proxy'
+RUSTC = ['rustc', '--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3', 'src/mcp_proxy/main.rs',
+         '-o', 'build/mcp_proxy/mcp-proxy']
+USAGE = 2
+
+
+def say(msg):
+    sys.stderr.write('forge-mcp-proxy: %s\n' % msg)
+
+
+def main():
+    args = sys.argv[1:]
+    if not args or args[0] in ('-h', '--help'):
+        print(__doc__)
+        return 0 if args else USAGE
+    sub, rest = args[0], args[1:]
+    if sub == 'build':
+        if rest:
+            say('build takes no option')
+            return USAGE
+        BINARY.parent.mkdir(parents=True, exist_ok=True)
+        print('$ ' + ' '.join(RUSTC), flush=True)
+        try:
+            code = subprocess.run(RUSTC, cwd=ROOT).returncode
+        except OSError as e:
+            say('cannot start rustc: %s' % e.strerror)
+            return 127
+        return code if code >= 0 else 128 - code
+    if sub in ('mcp', 'verify-evidence', 'state'):
+        binary = os.environ.get('FORGE_MCP_PROXY') or str(BINARY)
+        if not os.path.isfile(binary):
+            say('%s is missing: run `forge-mcp-proxy build` first' % binary)
+            return USAGE
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os.execv(binary, [binary, sub] + rest)
+    say('unknown subcommand %r' % sub)
+    return USAGE
+
+
+if __name__ == '__main__':
+    sys.exit(main())

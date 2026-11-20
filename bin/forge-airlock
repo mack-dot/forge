@@ -3,31 +3,52 @@
 
 It decides nothing. It finds paths, starts the engine (build/airlock/airlock-engine) or a helper with the right
 options, and passes the exit code through unchanged. Every write decision is the engine's (NATIVE CHECK), the
-CakeML refund binary's (PROVED CORE, canonical-refund profile only) or the Dafny-compiled booking checker's
-(PROVED CORE source; Dafny compiler and Node trusted).
+CakeML refund binary's (canonical-refund profile only; compiled by a verified compiler, a model-level HOL4 theorem,
+the native link M1-B OPEN: the binary is not proved) or the Dafny-compiled booking checker's (compiled from a Dafny
+source proof; the compiled JavaScript is not proved; Dafny compiler and Node trusted). A cosign is verified by the engine through the system
+OpenSSH (/usr/bin/ssh-keygen; trusted assumption): no Node runs for a store without an inventory policy.
 
-  forge-airlock build [--checker]            two rustc builds + a private 0700 copy of the pinned refund binary;
+  forge-airlock build [--checker]            the production engine build/airlock/airlock-engine, the TEST-ONLY
+                                             kill-points build build/silicon/test/airlock-engine-kill (live test
+                                             seams; never beside the production engine, never deploy it) and a
+                                             private 0700 copy of the pinned refund binary;
                                              --checker ALSO runs src/airlock/node/build_checker.py (starts Dafny)
-  forge-airlock init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64] [--node P]
-                                             --node is required by the engine with a cosign key or an inventory
-                                             policy; the store pins the SHA-256 of that Node binary
+  forge-airlock init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey SSH_ED25519_BASE64] [--node P]
+                                             --cosign-pubkey: the token that cosign-keygen prints (the middle field
+                                             of an OpenSSH ssh-ed25519 .pub line); --node is required by the engine
+                                             only with an inventory policy; the store pins the SHA-256 of that Node
   forge-airlock serve <dir> [--node P]       one answer line per request line (src/airlock/PROTOCOL.md);
-                                             passes --node, --refund-binary (the engine pins its SHA-256) and
-                                             --checker (booking_check.cjs pins the model)
-  (serve, init, state, replay, get, leases, cosign-message also take --engine-dir DIR: DIR/airlock-engine and
-   DIR/checker/model.cjs instead of build/airlock; the refund binary copy is always build/airlock/refund-binary)
+                                             passes --node (if one is given or found; never started here),
+                                             --refund-binary (the engine pins its SHA-256) and --checker
+                                             (booking_check.cjs pins the model)
+  (serve, init, state, replay, get, leases, cosign-message, cosign-info also take --engine-dir DIR:
+   DIR/airlock-engine and DIR/checker/model.cjs instead of build/airlock; the refund binary copy is always
+   build/airlock/refund-binary)
   forge-airlock state|replay <dir>
   forge-airlock get <dir> <tenant> <key>
   forge-airlock leases <dir> [--all | --sweep [--now MS]]
   forge-airlock cosign-message <dir> <action>
-  forge-airlock cosign-keygen <new-key-file> [--node P]     the HUMAN's tool (src/airlock/node/cosign.cjs)
-  forge-airlock cosign-sign <key-file> [--node P]           the HUMAN's tool; message on stdin
+  forge-airlock cosign-info                  path, SHA-256, owner, mode and version of the trusted /usr/bin/ssh-keygen
+  forge-airlock cosign-keygen <new-key-file> the HUMAN's tool (src/airlock/py/cosign_tool.py; ssh-keygen; no Node)
+  forge-airlock cosign-sign <key-file>       the HUMAN's tool; message on stdin; prints the signature token
   forge-airlock diff-policy <old.json> <new.json> [diff_policy.py options]
   forge-airlock fuzz [fuzz.py options]
   forge-airlock demo [run_demo.py options]
 
-Node: --node P, else $FORGE_AIRLOCK_NODE, else `node` on PATH. It must be Node 24.x (the repository pins 24.3.0);
-another version is refused with exit 2 and a message. Exit 2 is also used for a usage error of the dispatcher.
+Node (inventory airlock, TypeScript SDK, demo, fuzz only): --node P, else $FORGE_AIRLOCK_NODE, else `node` on PATH.
+An explicit --node must be Node 24.x (the repository pins 24.3.0; it is started once with --version); another
+version is refused with exit 2 and a message. `serve` without --node passes a Node that it finds without starting
+it (the engine checks the store's SHA-256 pin before the first booking), or no --node at all. Exit 2 is also used
+for a usage error of the dispatcher.
+Review D2: the engine runs a pinned helper FILE only from a path that no other non-root user can change (owner root or
+the engine's uid, no group or other write bit on the file and on every folder up to /). The Homebrew Node lies under
+/opt/homebrew/Cellar, which the group admin may write, so the engine refuses it there. So the dispatcher passes a
+PRIVATE COPY of the Node it found or was given: build/airlock/node-private/node-<first 16 hex digits of its SHA-256>
+(folder 0700, file 0500, made once, never overwritten). The bytes are the same, so the store's SHA-256 pin is the
+same. The copy belongs to the user who runs the dispatcher: it stops another user, not that user. The copy covers the
+Node FILE only. NOT covered: the libraries that the Node binary loads. The Homebrew Node 24.3.0 loads 9 libraries by absolute path under /opt/homebrew/opt (libuv, brotlidec, brotlienc, cares, nghttp2, libcrypto, libssl, icui18n, icuuc; otool -L), through symbolic links and folders of mode 775 group admin; the private copy loads the same paths. They are outside the pin and outside the path check, so any user of the admin group can still run code inside the booking checker. OPEN, owner decision: a Node build that links only system libraries, or no inventory store where the pin must hold.
+One 89 MB copy stays for each distinct Node file that the dispatcher finds or is given (also one that no store pins);
+nothing removes them: delete build/airlock/node-private/ by hand when no serve runs.
 """
 
 import hashlib
@@ -44,12 +65,17 @@ ENGINE = BUILD / 'airlock-engine'
 REFUND_SRC = ROOT / 'proposals' / 'forge2-m1-conformance' / 'artifacts' / 'refund-arm64-macho'
 REFUND_COPY = BUILD / 'refund-binary'
 REFUND_SHA256 = 'b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8'
-HELPERS = ROOT / 'src' / 'airlock' / 'node'
+COSIGN_TOOL = ROOT / 'src' / 'airlock' / 'py' / 'cosign_tool.py'
 MODEL = BUILD / 'checker' / 'model.cjs'  # build-time note only; serve uses <engine-dir>/checker/model.cjs
 RUSTC = [['rustc', '--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3', 'src/airlock/main.rs',
           '-o', 'build/airlock/airlock-engine'],
          ['rustc', '--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3', '--cfg', 'kill_points',
-          'src/airlock/main.rs', '-o', 'build/airlock/airlock-engine-kill']]
+          'src/airlock/main.rs', '-o', 'build/silicon/test/airlock-engine-kill']]
+# The kill-points build accepts the test seams (a stand-in verifier commits a cosign). It lives ONLY in this test-only
+# folder (review F2, owner decision): build/airlock/ holds no binary that accepts a seam. build/silicon/ is the
+# raw-output folder of scripts/exit_silicon_sink.py; it writes native_sink, native_sink_kill, interpose.dylib, bin/
+# and <case>/attempt-* (case in build, suite, mutations, evidence) there, so test/ collides with nothing.
+TEST_BUILD = ROOT / 'build' / 'silicon' / 'test'
 USAGE = 2
 
 
@@ -95,7 +121,42 @@ def find_node(explicit):
         return None
     if out != 'v24.3.0':
         say('note: node %s is %s; the repository pins v24.3.0' % (path, out))
-    return str(path)
+    return private_node(path)
+
+
+def found_node():
+    """A Node path for `serve`, found WITHOUT starting it: $FORGE_AIRLOCK_NODE or `node` on PATH, made absolute; or None.
+    The engine checks it against the store's SHA-256 pin before the first booking; no other verb starts it. Returned as
+    its private copy (private_node)."""
+    cand = os.environ.get('FORGE_AIRLOCK_NODE') or shutil.which('node')
+    if not cand:
+        return None
+    path = Path(cand) if Path(cand).is_absolute() else Path(shutil.which(cand) or cand).resolve()
+    return private_node(path) if path.is_file() else None
+
+
+def private_node(path):
+    """Review D2: the private copy of a Node binary, build/airlock/node-private/node-<16 hex of its SHA-256> (folder 0700,
+    file 0500). Made once (a temporary file, then a rename); an existing copy is not changed and not hashed again here:
+    the engine hashes it against the store's pin. None if the file cannot be read or copied (a message is printed)."""
+    folder = BUILD / 'node-private'
+    try:
+        h = hashlib.sha256()
+        with open(path, 'rb') as f:
+            for block in iter(lambda: f.read(1 << 20), b''):
+                h.update(block)
+        dest = folder / ('node-' + h.hexdigest()[:16])
+        folder.mkdir(mode=0o700, parents=True, exist_ok=True)
+        os.chmod(folder, 0o700)
+        if not dest.is_file():
+            tmp = folder / ('%s.tmp-%d' % (dest.name, os.getpid()))
+            shutil.copyfile(path, tmp)
+            os.chmod(tmp, 0o500)
+            os.replace(tmp, dest)
+        return str(dest)
+    except OSError as e:
+        say('node %s: no private copy: %s' % (path, e))
+        return None
 
 
 def engine_in(engine_dir):
@@ -140,6 +201,11 @@ def cmd_build(args):
     if args:
         return usage('build takes only --checker')
     BUILD.mkdir(parents=True, exist_ok=True)
+    TEST_BUILD.mkdir(parents=True, exist_ok=True)
+    stale = BUILD / 'airlock-engine-kill'  # an old build put the test build beside the production engine
+    if stale.exists() or stale.is_symlink():
+        stale.unlink()
+        print('removed the old test build build/airlock/airlock-engine-kill (it now lives in build/silicon/test/)', flush=True)
     for argv in RUSTC:
         print('$ ' + ' '.join(argv), flush=True)
         code = run(argv, cwd=ROOT)
@@ -168,10 +234,10 @@ def cmd_serve(args):
     if len(args) != 1:
         return usage('serve <dir> [--node P] [--engine-dir DIR]')
     engine = engine_in(engine_dir)
-    node = find_node(node_opt)
-    if node is None:
+    node = find_node(node_opt) if node_opt is not None else found_node()
+    if node_opt is not None and node is None:
         return USAGE
-    argv = [str(engine), 'serve', args[0], '--node', node]  # the helpers are compiled into the engine
+    argv = [str(engine), 'serve', args[0]] + (['--node', node] if node else [])  # the booking helper is compiled in
     binary = refund_copy()
     if binary:
         argv += ['--refund-binary', binary]
@@ -198,13 +264,10 @@ def cmd_init(args):
 
 
 def cmd_cosign(sub, args):
-    node_opt = take_option(args, '--node')
-    if len(args) != 1:
-        return usage('cosign-%s <file> [--node P]' % sub)
-    node = find_node(node_opt)
-    if node is None:
-        return USAGE
-    exec_([node, str(HELPERS / 'cosign.cjs'), sub, args[0]])
+    """The human's tools: no Node; src/airlock/py/cosign_tool.py runs /usr/bin/ssh-keygen."""
+    if len(args) != 1 or args[0].startswith('--'):
+        return usage('cosign-%s <file> (no options; no Node is used)' % sub)
+    exec_([sys.executable, '-I', str(COSIGN_TOOL), sub, args[0]])
 
 
 def cmd_python(script, args, extra=()):
@@ -228,7 +291,7 @@ def main():
         return cmd_engine('leases', rest + (['--engine-dir', engine_dir] if engine_dir else []))
     if sub == 'init':
         return cmd_init(rest)
-    if sub in ('state', 'replay', 'get', 'cosign-message'):
+    if sub in ('state', 'replay', 'get', 'cosign-message', 'cosign-info'):
         return cmd_engine(sub, rest)
     if sub in ('cosign-keygen', 'cosign-sign'):
         return cmd_cosign(sub.split('-', 1)[1], rest)

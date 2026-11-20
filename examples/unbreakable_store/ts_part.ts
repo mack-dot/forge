@@ -32,8 +32,8 @@ function subst(v: any, saved: Record<string, string>): any {
 
 function describe(r: any): Out {
   return { code: r.code, detail: r.detail, committed: r.committed, state_hash: r.stateHash, lease_closed: r.leaseClosed,
-    rows: r.rows ? r.rows.length : 0, rows_bytes: r.rows && r.rows.length ? Buffer.byteLength(JSON.stringify(r.rows)) : 0,
-    dropped: r.dropped, fields: r.fields };
+    lease_pending: r.leasePending, rows: r.rows ? r.rows.length : 0,
+    rows_bytes: r.rows && r.rows.length ? Buffer.byteLength(JSON.stringify(r.rows)) : 0, dropped: r.dropped, pending: r.pending, fields: r.fields };
 }
 
 function describeError(e: any): Out {

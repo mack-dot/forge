@@ -1,0 +1,22 @@
+# Finding 1: otool -L of the Homebrew Node 24.3.0 and of the refund binary; modes of /opt/homebrew/opt
+/opt/homebrew/Cellar/node/24.3.0/bin/node:
+	/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.12)
+	/opt/homebrew/opt/libuv/lib/libuv.1.dylib (compatibility version 2.0.0, current version 2.0.0)
+	/opt/homebrew/opt/brotli/lib/libbrotlidec.1.dylib (compatibility version 1.0.0, current version 1.1.0)
+	/opt/homebrew/opt/brotli/lib/libbrotlienc.1.dylib (compatibility version 1.0.0, current version 1.1.0)
+	/opt/homebrew/opt/c-ares/lib/libcares.2.dylib (compatibility version 2.0.0, current version 2.19.4)
+	/opt/homebrew/opt/libnghttp2/lib/libnghttp2.14.dylib (compatibility version 43.0.0, current version 43.5.0)
+	/opt/homebrew/opt/openssl@3/lib/libcrypto.3.dylib (compatibility version 3.0.0, current version 3.0.0)
+	/opt/homebrew/opt/openssl@3/lib/libssl.3.dylib (compatibility version 3.0.0, current version 3.0.0)
+	/opt/homebrew/opt/icu4c@77/lib/libicui18n.77.dylib (compatibility version 77.0.0, current version 77.1.0)
+	/opt/homebrew/opt/icu4c@77/lib/libicuuc.77.dylib (compatibility version 77.0.0, current version 77.1.0)
+	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 3423.0.0)
+	/System/Library/Frameworks/Security.framework/Versions/A/Security (compatibility version 1.0.0, current version 61439.101.1)
+	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 1900.178.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1351.0.0)
+drwxrwxr-x  138 <user>  admin  4416 Oct 27 14:27 /opt/homebrew/opt
+lrwxr-xr-x    1 <user>  admin    23 Mar 17  2025 /opt/homebrew/opt/icu4c@77 -> ../Cellar/icu4c@77/77.1
+lrwxr-xr-x    1 <user>  admin    22 Jun 26  2025 /opt/homebrew/opt/libuv -> ../Cellar/libuv/1.51.0
+lrwxr-xr-x@   1 <user>  admin    25 Jul  2 17:17 /opt/homebrew/opt/openssl@3 -> ../Cellar/openssl@3/3.6.3
+build/airlock/refund-binary:
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1351.0.0)

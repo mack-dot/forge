@@ -1,0 +1,7 @@
+# D2 after: the same case on this branch (commit of the D2 fix)
+PASS pin_window   7.6s refund binary changed in place and Node replaced after first use -> PIN_MISMATCH; pinned files in 0777 and 0775 folders -> PIN_PATH_UNTRUSTED; a changed bignumber.js beside the model -> HELPER_FAILED; a link to a good Node copy commits
+exit 0
+
+# soft driver on this branch
+checks failed: 0
+exit 0

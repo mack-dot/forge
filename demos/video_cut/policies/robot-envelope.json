@@ -1,0 +1,6 @@
+{"airlock": "money", "version": 1, "name": "robot-envelope", "profile": "parametric",
+ "rules": [
+  {"reason": "SET_SPEED_MM_S", "max_amount": "1500", "verdict": "COMMIT"},
+  {"reason": "SET_SPEED_MM_S", "min_amount": "1501", "verdict": "REJECTED_POLICY"},
+  {"reason": "REACH_MM", "max_reason_total_fact": "geofence_radius_mm", "verdict": "COMMIT"}
+ ]}

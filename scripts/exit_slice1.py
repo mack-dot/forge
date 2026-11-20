@@ -35,7 +35,20 @@ CORE = 'impl/RefundFinality.dfy'
 BINDING = 'tests/refund-finality/Bindings.dfy'
 FIXTURES = 'tests/refund-finality/fixtures'
 SUITE = 'tests/refund-finality/suite.ts'
-FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
+# The issuer's compiled module: IssueAuth (rule 2, night shift h-minter2: the memory rule with the authoritative stored
+# state around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check and returns the body bytes to sign).
+ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
+FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
+# The sink's compiled module: ShellCoreV6 (StepQ6 decides each commit; the ShellCoreV5 fold AInit/AuditStep/AuditEnd
+# decides the start-up audit and every re-audit). It is committed at SINK_MODULE (sink.ts loads it from there);
+# this script rebuilds it and requires byte equality.
+SINK_CORE = 'impl/finality-core/ShellCoreV6.dfy'
+SINK_MODULE = 'ts/refund-finality/core/sinkcore-v6.cjs'
+SINK_FOOTER = (b'module.exports = { Shell6: ShellCoreV6, Shell5: ShellCoreV5, Shell4: ShellCoreV4, Shell: ShellCoreV3, '
+               b'C: SinkCoreV3, F: RefundFinality, R: Refund, rt: _dafny, BigNumber };\n')
+FINALITY_CORE = ['impl/finality-core/' + name for name in
+                 ('IssueAuth.dfy', 'IssueOnce.dfy', 'IssueBytes2.dfy', 'SerModel.dfy', 'ShellCoreV6.dfy', 'ShellCoreV5.dfy', 'ShellCoreV4.dfy',
+                  'ShellCoreV3.dfy', 'SinkCoreV3.dfy')]
 REQUIRED = {
     'Refund.Assess (correctness)', 'Refund.Assess (well-formedness)',
     'RefundSpec.Assess (well-formedness)', 'RefundSpec.Eligible (well-formedness)',
@@ -62,7 +75,9 @@ CONTROLS = {
 SUBJECT = [CORE, BINDING, SUITE, 'tests/refund-finality/commit_cli.ts', 'tests/refund-finality/dispatch_cli.ts',
            'tests/refund-finality/issuer_exports_probe.ts', 'scripts/exit_slice1.py',
            'ts/refund-finality/encoding.ts', 'ts/refund-finality/minter.ts', 'ts/refund-finality/sink.ts',
-           'ts/refund-finality/dispatcher.ts', 'ts/refund-finality/proposer.ts'] + [
+           'ts/refund-finality/dispatcher.ts', 'ts/refund-finality/proposer.ts', 'ts/refund-finality/core/store.ts', SINK_MODULE,
+           'ts/refund-finality/keyfile.ts', 'ts/refund-finality/mintmemory.ts', 'tests/refund-finality/regress/kf_lib.ts',
+           'proposals/forge2-pillar2-finality-protocol/FinalityProtocol.dfy'] + FINALITY_CORE + [
                FIXTURES + '/' + name + '.dfy' for name in sorted(CONTROLS)]
 APPROVED = ['impl/Refund.dfy', 'spec/refund/RefundSpec.dfy', 'spec/refund/protocol.md',
             'spec/refund/spec.lock', 'policy/refund.yaml']
@@ -271,12 +286,22 @@ def sink_controls(run):
     toolchain(run)
     core_dir = run.work / 'core'
     core_dir.mkdir()
-    command = [dafny.DAFNY, 'build', CORE, '--target', 'js', '--output', rel(core_dir / 'model'), *dafny.OPTIONS]
+    command = [dafny.DAFNY, 'build', ISSUER_CORE, '--target', 'js', '--output', rel(core_dir / 'model'), *dafny.OPTIONS]
     built = run.execute(command, 'compile-js')
     require(built.returncode == 0, 'compile: expected exit 0, observed ' + str(built.returncode))
     generated = (core_dir / 'model.js').read_bytes()
     module = core_dir / 'model.cjs'
     module.write_bytes(generated + FOOTER)
+    sink_dir = run.work / 'sink-core'
+    sink_dir.mkdir()
+    sink_command = [dafny.DAFNY, 'build', SINK_CORE, '--target', 'js', '--output', rel(sink_dir / 'model'), *dafny.OPTIONS]
+    sink_built = run.execute(sink_command, 'compile-sink-js')
+    require(sink_built.returncode == 0, 'compile sink core: expected exit 0, observed ' + str(sink_built.returncode))
+    sink_generated = (sink_dir / 'model.js').read_bytes()
+    require(digest(sink_generated + SINK_FOOTER) == digest((ROOT / SINK_MODULE).read_bytes()),
+            'compile sink core: the committed ' + SINK_MODULE + ' is not the rebuilt module')
+    audits = {source: audit(run, source, 'audit-' + source.rsplit('/', 1)[1][:-4]) for source in (ISSUER_CORE, SINK_CORE)}
+    require(set(audits.values()) == {digest(dafny.AUDIT.read_bytes())}, 'audit: a new core differs from the empty baseline')
     types = run.execute(['node', 'node_modules/typescript/bin/tsc', '--noEmit'], 'type-check')
     require(types.returncode == 0, 'type check: expected exit 0, observed ' + str(types.returncode))
     out = run.work / 'suite'
@@ -294,10 +319,17 @@ def sink_controls(run):
     require(digest(module.read_bytes()) == digest(generated + FOOTER) == report['ids']['core_module_sha256'],
             'suite: the compiled module changed during the tests')
     require(check_javascript() == js_pins, 'suite: the JavaScript toolchain changed')
-    return {'compiled_core': {'build_argv': ['.toolchain/dafny-4.11.0/dafny/dafny', 'build', CORE, '--target', 'js',
-                                             *dafny.OPTIONS],
+    return {'compiled_core': {'build_argv': ['.toolchain/dafny-4.11.0/dafny/dafny', 'build', ISSUER_CORE, '--target',
+                                             'js', *dafny.OPTIONS],
                               'generated_js_sha256': digest(generated), 'export_footer_sha256': digest(FOOTER),
-                              'module_sha256': digest(generated + FOOTER), 'source_to_module_proved': False},
+                              'module_sha256': digest(generated + FOOTER), 'source_to_module_proved': False,
+                              'sink_core': {'build_argv': ['.toolchain/dafny-4.11.0/dafny/dafny', 'build', SINK_CORE,
+                                                           '--target', 'js', *dafny.OPTIONS],
+                                            'generated_js_sha256': digest(sink_generated),
+                                            'export_footer_sha256': digest(SINK_FOOTER), 'module': SINK_MODULE,
+                                            'module_sha256': digest(sink_generated + SINK_FOOTER),
+                                            'source_to_module_proved': False},
+                              'audit': {'exit_code': 0, 'findings': 0, 'sources': [ISSUER_CORE, SINK_CORE]}},
             'type_check': {'argv': ['node', 'node_modules/typescript/bin/tsc', '--noEmit'], 'exit_code': 0},
             'suite': {'argv': ['node', '--import', 'tsx', SUITE], 'exit_code': suite.returncode,
                       'node_version': 'v' + js_pins['node_version'], 'report_sha256': digest(report_bytes),

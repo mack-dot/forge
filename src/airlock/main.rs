@@ -3,15 +3,20 @@
 //! forge-airlock engine (Goal 20). NATIVE CHECK: Rust, standard library only, no crate, no `unsafe`. NOT PROVED.
 //! Generalizes src/silicon_sink/sink.rs (unchanged) to many keys with a tenant field and three write airlocks:
 //! money, saga, inventory; plus a read airlock (READ) and durable obligation leases.
-//! PROVED CORE only where stated: the CakeML refund binary decides a `canonical-refund` REFUND; the Dafny-compiled
-//! BookingDualCert checker (run by Node: Node and the Dafny compiler are trusted) must accept a BOOK. Everything
+//! Two decisions use code with a machine-checked SOURCE or MODEL, not a proved binary: the CakeML refund binary decides a
+//! `canonical-refund` REFUND (compiled by a verified compiler (CakeML); a model-level HOL4 theorem; the native link (M1-B) is OPEN, so the binary itself is NOT proved); the
+//! BookingDualCert checker must accept a BOOK (compiled from a Dafny source proof; the compiled JavaScript is NOT proved;
+//! Node and the Dafny compiler are trusted). Everything
 //! else here (WAL, fold, CAS, parametric money rules, saga table, cosign wiring, read airlock, leases) is a native
 //! check with finite tests. `sync_all` is fcntl(F_FULLFSYNC) on macOS; the kernel and the drive are assumptions.
-//! FNV-1a-128 is not cryptographic. Cosign signatures are verified by Node's `node:crypto` through the embedded
-//! src/airlock/node/cosign.cjs (trusted); the engine never reads a private key. Pins: the refund binary (compiled-in
-//! SHA-256), the Node binary (SHA-256 in the genesis record), the helpers (compiled in). Trust boundary: every rule
+//! FNV-1a-128 is not cryptographic. Cosign signatures are verified by the system OpenSSH, `/usr/bin/ssh-keygen -Y
+//! verify` (a trusted assumption, with its LibreSSL; no Node, no V8), after native checks of the SSHSIG form
+//! (cosign.rs); the engine never reads a private key. Pins: the refund binary (compiled-in SHA-256), the Node binary
+//! of an inventory store (SHA-256 in the genesis record), the booking helper (compiled in); ssh-keygen is checked
+//! (root-owned, not writable by group or other, no symbolic link on its path), not pinned. Trust boundary: every rule
 //! holds only for a caller that goes through this engine; whoever can write the store folder or run another engine
 //! build on it is trusted (PROTOCOL.md section 11). Wire: PROTOCOL.md.
+mod cosign;
 mod helpers;
 mod json;
 mod ledger;
@@ -26,6 +31,9 @@ pub const MAX_LINE: usize = 65536;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Code {
+    // `Breach` (TENANT_ISOLATION_BREACH, 16): since the per-tenant namespaces (review D3) only the read airlock gives it
+    // (a row set that holds a row of another tenant). No write, GET or lease answer gives it any more: a key of another
+    // tenant is UNKNOWN_KEY. The tenant field is not authenticated (PROTOCOL.md section 11): the name is kept for the wire.
     Ok, Usage, RejectedPolicy, RequireHumanCosign, Malformed, Stale, Duplicate, EpochRegression, Breach, CorruptWal,
     IoError, OutcomeUnknown, DispatchFailed, UnknownKey, HelperFailed, BadFrame, DroppedObligation, MalformedPolicy,
 }
@@ -189,23 +197,40 @@ fn eval_line(m: &policy::Money, raw: &[u8]) -> Result<String, Refusal> {
 
 /// `leases <dir> [--sweep [--now MS] | --all]`. Read-only: a sweep writes no record (a dropped lease stays open and is
 /// reported again by the next sweep). Exit 24 if a sweep reports at least one DROPPED_OBLIGATION. `--all` also lists
-/// each closed lease with the record that closed it, so an obligation closed by a rejection stays visible.
+/// each closed lease with the record that closed it, so an obligation closed by a rejection stays visible. A lease in
+/// the state PENDING_COSIGN (review D6) is open: listed with that state, swept as PENDING_COSIGN before its deadline
+/// and as DROPPED_OBLIGATION after it.
 fn leases(dir: &str, sweep: bool, all: bool, now: Option<u64>) -> i32 {
     let s = match store::open(dir) { Ok(s) => s, Err(e) => return answer(Err(e)) };
     let now = now.unwrap_or_else(|| std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis() as u64).unwrap_or(u64::MAX));
-    let mut list: Vec<(&String, &ledger::Lease)> = s.l.leases.iter().filter(|(_, l)| all || l.is_open()).collect();
+    // a sweep also sees a lease that a REJECTED_POLICY closed after a cosign verdict (review of PR-3, finding 3)
+    let after_pending = |l: &ledger::Lease| l.pending.is_some() && l.closed.as_ref().map_or(false, |(_, v, _)| v == "REJECTED_POLICY");
+    let mut list: Vec<(&String, &ledger::Lease)> =
+        s.l.leases.iter().filter(|(_, l)| all || l.is_open() || (sweep && after_pending(l))).map(|((_, req), l)| (req, l)).collect();
     list.sort_by_key(|(_, l)| l.epoch);
     let open = s.l.open_leases();
     let mut text = String::new();
     let mut dropped = 0;
     for (req, l) in &list {
         let (deadline, tenant, key) = (&l.deadline, &l.tenant, &l.key);
+        let pending = l.pending.as_ref().map(|(epoch, detail)| format!(" PENDING_COSIGN {epoch} {detail}"));
         if !sweep {
-            let status = match &l.closed { None => "OPEN".to_string(), Some((epoch, verdict, detail)) => format!("CLOSED {epoch} {verdict} {detail}") };
-            text.push_str(&if all { format!("\nLEASE {req} {deadline} {tenant} {key} {status}") } else { format!("\nLEASE {req} {deadline} {tenant} {key}") });
+            let status = match (&l.closed, &pending) {
+                (Some((epoch, verdict, detail)), _) => format!(" CLOSED {epoch} {verdict} {detail}"),
+                (None, Some(p)) => p.clone(),
+                (None, None) => if all { " OPEN".to_string() } else { String::new() },
+            };
+            text.push_str(&format!("\nLEASE {req} {deadline} {tenant} {key}{status}"));
+        } else if let Some((epoch, _, detail)) = l.closed.as_ref().filter(|_| after_pending(l)) {
+            // closed, not dropped: no effect on the exit code; but the work that waited for a human was ended by a
+            // rejection that any caller of the tenant can cause, so it stays visible
+            text.push_str(&format!("\nREJECTED_AFTER_PENDING {req} {deadline} {tenant} {key} {epoch} {detail}"));
         } else if now > *deadline {
             dropped += 1;
             text.push_str(&format!("\nDROPPED_OBLIGATION {req} {deadline} {tenant} {key}"));
+        } else if let Some((_, detail)) = &l.pending {
+            // review D6: a cosign verdict was given and the signed retry has not come yet (not dropped before the deadline)
+            text.push_str(&format!("\nPENDING_COSIGN {req} {deadline} {tenant} {key} {detail}"));
         }
     }
     let head = if sweep { format!("SWEEP {open} {dropped} now={now}") } else if all { format!("LEASES {open} all={}", list.len()) } else { format!("LEASES {open}") };
@@ -242,10 +267,10 @@ fn flag_values(rest: &[String], names: &[&str], multi: &str, bools: &[&str]) -> 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let usage = || {
-        eprintln!("usage: airlock-engine init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64] [--node P]");
+        eprintln!("usage: airlock-engine init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey SSH_ED25519_BASE64] [--node P]");
         eprintln!("       airlock-engine serve <dir> [--refund-binary P] [--node P] [--checker MODEL]");
         eprintln!("       airlock-engine state|replay <dir> | get <dir> <tenant> <key> | leases <dir> [--sweep [--now MS] | --all]");
-        eprintln!("       airlock-engine eval <policy.json> | cosign-message <dir> <action> | sha256 <file>");
+        eprintln!("       airlock-engine eval <policy.json> | cosign-message <dir> <action> | cosign-info | sha256 <file> | base64-decode <token>");
         Code::Usage.num()
     };
     let a: Vec<&str> = args.iter().map(String::as_str).collect();
@@ -297,6 +322,9 @@ fn main() {
         },
         ["eval", file] => eval(file),
         ["sha256", file] => answer(pin::file_sha256(file).map(|h| format!("SHA256 {h}")).map_err(Refusal::from)),
+        // test vectors of the strict base64 decoder of cosign.rs (hex of the bytes, or a refusal)
+        ["base64-decode", token] => answer(cosign::b64_decode(token).map(|b| format!("BASE64 {}", b.iter().map(|x| format!("{x:02x}")).collect::<String>())).ok_or(Refusal(Code::Malformed, "BAD_BASE64".into()))),
+        ["cosign-info"] => answer(cosign::info()),
         ["cosign-message", dir, action] => match verbs::cosign_message_cmd(dir, action) {
             Ok(m) => {
                 let mut out = io::stdout().lock();

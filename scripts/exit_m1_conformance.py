@@ -4,6 +4,8 @@
 Two stacks decide the same refund question:
   M1       the CakeML refund program as the tracked ARM64 Mach-O executable (SHA-256 b8ed5ec2...7bb8)
   Slice 1  impl/Refund.dfy (Assess) and impl/RefundFinality.dfy (Check), compiled to JavaScript by the pinned Dafny
+           as part of the Slice 1 module: impl/finality-core/IssueAuth.dfy (it includes both), the module that the
+           Slice 1 record pins and that the issuer process (ts/refund-finality/minter.ts) needs
 
 This script makes one vector corpus, gives every TYPED vector to both stacks, and compares the answers:
 accept or reject, amount, reason, charge id, request id and intent count. Changed wire inputs and the
@@ -31,6 +33,7 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 import copy
 import json
+import os
 from pathlib import Path
 import platform
 import shutil
@@ -55,8 +58,17 @@ SLICE1_FIXTURES = 'tests/refund-finality/fixtures'
 REPLAY_PLAN = 'proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/plan-phase2.json'
 REPLAY_BUDGET = 'proposals/refund-executable-feasibility/m1-chain-replay-20261118/records/budget-phase2.json'
 CORE = 'impl/RefundFinality.dfy'
+# The TRUE core: the Slice 1 compiled module, built as scripts/exit_slice1.py builds it (source ISSUER_CORE, footer
+# TRUE_FOOTER, the same bytes as FOOTER there). It exports IssueAuth for the issuer process (minter.ts refuses a module
+# without it) and RefundFinality, Refund and runtime for the driver (a superset of FOOTER below). The Slice 1 record
+# pins this module (compiled_core.module_sha256); check_core_module requires byte equality.
+ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
+ISSUER_CORE_INCLUDES = ['impl/finality-core/IssueBytes2.dfy', 'impl/finality-core/SerModel.dfy']  # and CORE, impl/Refund.dfy
+TRUE_FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
 ISSUER = 'ts/refund-finality/minter.ts'
+ISSUER_IMPORTS = ['ts/refund-finality/encoding.ts', 'ts/refund-finality/keyfile.ts', 'ts/refund-finality/mintmemory.ts']
 SPEC_LOCK = 'spec/refund/spec.lock'
+# Footer of the WRONG cores (driver only; they are built from RefundFinality-shaped sources and have no IssueAuth).
 FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
 M1_ENVIRONMENT = {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'LC_ALL': 'C', 'CML_HEAP_SIZE': '256', 'CML_STACK_SIZE': '256'}
 MAX_MONEY = 9223372036854775807
@@ -89,7 +101,7 @@ WRONG_CORES = {
 REVIEW_CORES = ['CoreIntentAmountAtMost', 'CoreIntentIdPrefix', 'CorePostOriginalAtMost']
 SUBJECT = ['scripts/exit_m1_conformance.py', DRIVER, RECORDED, EXECUTABLE] + [
     FIXTURES + '/' + name + '.dfy' for name in WRONG_DECISIONS + REVIEW_CORES]
-SLICE1 = [CORE, 'impl/Refund.dfy', ISSUER, 'ts/refund-finality/encoding.ts', SLICE1_RECORD] + [
+SLICE1 = [ISSUER_CORE] + ISSUER_CORE_INCLUDES + [CORE, 'impl/Refund.dfy', ISSUER] + ISSUER_IMPORTS + [SLICE1_RECORD] + [
     SLICE1_FIXTURES + '/' + name + '.dfy' for name in sorted(WRONG_CORES)]
 APPROVED = ['spec/refund/RefundSpec.dfy', 'spec/refund/protocol.md', SPEC_LOCK, 'policy/refund.yaml']
 M1_RECORDS = [REPLAY_PLAN, REPLAY_BUDGET]
@@ -499,7 +511,7 @@ def run_m1(executable, inputs):
     return records
 
 
-def compile_core(run, source, name, verify):
+def compile_core(run, source, name, verify, footer=FOOTER):
     out = run.work / name
     out.mkdir()
     options = dafny.OPTIONS if verify else ['--no-verify']
@@ -508,7 +520,7 @@ def compile_core(run, source, name, verify):
     require(built.returncode == 0, 'compile ' + name + ': expected exit 0, observed ' + str(built.returncode))
     generated = (out / 'model.js').read_bytes()
     module = out / 'model.cjs'
-    module.write_bytes(generated + FOOTER)
+    module.write_bytes(generated + footer)
     return module, generated
 
 
@@ -530,10 +542,25 @@ def run_driver(run, module, typed, name):
     return {row['id']: row for row in rows}
 
 
+def issuer_test_key(work):
+    """OWNER DECISION D-1 (h-key): the issuer reads its key ONLY from a key file. A NEW throwaway Ed25519 TEST key,
+    written with mode 0600 (O_EXCL) under this run's work folder. No real key is read. Neither the key, its key id nor
+    the path goes into the bundle (the answers keep only the token body, which has no key id)."""
+    path = Path(work) / 'issuer-test-key.pem'
+    made = subprocess.run(['node', '-e', "process.stdout.write(require('node:crypto').generateKeyPairSync('ed25519')"
+                           ".privateKey.export({type: 'pkcs8', format: 'pem'}))"], capture_output=True, check=True)
+    fd = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, 'wb') as out:
+        out.write(made.stdout)
+    return str(path)
+
+
 def run_issuer(run, module, typed):
-    """Sends the honest transition of every finality vector to the real Slice 1 issuer process."""
+    """Sends the honest transition of every finality vector to the real Slice 1 issuer process (test mode "off", no
+    store: every call is decided by IssueAuth.Issue on an empty memory, so a repeated (charge id, request id) with other
+    values is decided on its own, as before)."""
     errors = open(run.work / 'issuer.stderr', 'wb')  # a file, not a pipe: a pipe that nobody reads can block
-    process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off'], cwd=ROOT,
+    process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off', issuer_test_key(run.work)], cwd=ROOT,
                                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=errors)
     answers = {}
     try:
@@ -740,9 +767,9 @@ def observe(run, module, with_issuer, executable_source=None):
 
 
 def true_core(run):
-    module, generated = compile_core(run, CORE, 'core', verify=True)
+    module, generated = compile_core(run, ISSUER_CORE, 'core', verify=True, footer=TRUE_FOOTER)
     recorded = check_core_module(module)
-    return module, {'build_command_without_the_output_path': ['.toolchain/dafny-4.11.0/dafny/dafny', 'build', CORE, '--target', 'js', *dafny.OPTIONS],
+    return module, {'build_command_without_the_output_path': ['.toolchain/dafny-4.11.0/dafny/dafny', 'build', ISSUER_CORE, '--target', 'js', *dafny.OPTIONS],
                     'generated_js_sha256': digest(generated), 'module_sha256': recorded,
                     'equal_to_the_slice1_record': True, 'source_to_module_proved': False}
 
@@ -1049,7 +1076,7 @@ def bundle_of(run):
     require(snapshot(inputs) == before, 'INPUT_CHANGED: a source or trusted input changed during the checks')
     evidence = [{'claim_id': claim, 'statement_plain_english': statement, 'method': method, 'result': 'passed',
                  'tool': 'the M1 executable, node (compiled Dafny core), python3 (comparison)',
-                 'artifact': EXECUTABLE + ' and ' + CORE, 'assumptions': ASSUMPTIONS,
+                 'artifact': EXECUTABLE + ' and ' + ISSUER_CORE, 'assumptions': ASSUMPTIONS,
                  'reproduce_cmd': 'python3 scripts/exit_m1_conformance.py --case evidence'}
                 for claim, method, statement in CLAIMS]
     return {

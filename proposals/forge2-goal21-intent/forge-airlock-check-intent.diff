@@ -1,0 +1,21 @@
+diff --git a/bin/forge-airlock b/bin/forge-airlock
+index 9059fa183ccc3134ec3bf176b1562f30acf6d57f..cab359fca385ee76fb5073eaca3ad8a528908fb8 100755
+--- a/bin/forge-airlock
++++ b/bin/forge-airlock
+@@ -23,6 +23,7 @@ CakeML refund binary's (PROVED CORE, canonical-refund profile only) or the Dafny
+   forge-airlock cosign-keygen <new-key-file> [--node P]     the HUMAN's tool (src/airlock/node/cosign.cjs)
+   forge-airlock cosign-sign <key-file> [--node P]           the HUMAN's tool; message on stdin
+   forge-airlock diff-policy <old.json> <new.json> [diff_policy.py options]
++  forge-airlock check-intent <spec.json> [intent_clearing.py options]
+   forge-airlock fuzz [fuzz.py options]
+   forge-airlock demo [run_demo.py options]
+ 
+@@ -234,6 +235,8 @@ def main():
+         return cmd_cosign(sub.split('-', 1)[1], rest)
+     if sub == 'diff-policy':
+         return cmd_python('src/airlock/py/diff_policy.py', rest)  # its default engine is build/airlock/airlock-engine
++    if sub == 'check-intent':
++        return cmd_python('scripts/intent_clearing.py', ['check-intent'] + rest)
+     if sub in ('fuzz', 'demo'):
+         script = 'src/airlock/py/fuzz.py' if sub == 'fuzz' else 'examples/unbreakable_store/run_demo.py'
+         extra = [] if '--engine-dir' in rest else ['--engine-dir', str(BUILD)]
