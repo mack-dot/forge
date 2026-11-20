@@ -1,0 +1,11 @@
+{"airlock": "money", "version": 1, "name": "refunds-p9", "profile": "parametric",
+ "rules": [
+  {"reason": "DUPLICATE_CHARGE", "max_amount": "100000", "verdict": "COMMIT"},
+  {"reason": "SHIPPING", "max_reason_total_fact": "shipping_paid", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "max_amount": "2000", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "min_amount": "1500", "max_amount": "5000", "max_reason_total_fact": "goodwill_budget", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "min_amount": "2001", "verdict": "REQUIRE_HUMAN_COSIGN"},
+  {"reason": "GOODWILL", "min_amount": "9001", "verdict": "REJECTED_POLICY"},
+  {"reason": "CHARGEBACK", "verdict": "REQUIRE_HUMAN_COSIGN"},
+  {"reason": "CHARGEBACK", "min_amount": "50000", "verdict": "REJECTED_POLICY"}
+ ]}
