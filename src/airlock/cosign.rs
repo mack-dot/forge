@@ -9,10 +9,11 @@
 //! in a private 0700 folder of the store that the engine creates (exclusive), with fixed file names. Valid: exit 0,
 //! exactly the "Good" line with the fingerprint of the pinned key, empty stderr. Invalid: exit 255, exactly
 //! "Could not verify signature." and exactly "Signature verification failed: incorrect signature". Anything else is
-//! HELPER_FAILED: a refusal, never a commit. Before its first use in a process, /usr/bin/ssh-keygen must be a
-//! regular file owned by uid 0 with no group or other write bit, and no part of its path may be a symbolic link.
-//! Limit: a file swapped after that check is not detected. Its SHA-256 is NOT pinned (an OS update would refuse
-//! every store); `cosign-info` prints it so that an operator can record it.
+//! HELPER_FAILED: a refusal, never a commit. Before EVERY run (review D2; before: once per process),
+//! /usr/bin/ssh-keygen must be a regular file owned by uid 0 with no group or other write bit, every folder on its
+//! path must be owned by uid 0 with no group or other write bit, and no part of its path may be a symbolic link. Only
+//! root can change such a path, so a swap between the check and the exec needs root. Its SHA-256 is NOT pinned (an
+//! OS update would refuse every store); `cosign-info` prints it so that an operator can record it.
 //! Test seams, live ONLY in the `--cfg kill_points` build: AIRLOCK_TEST_SSH_KEYGEN=<path> runs another program in
 //! place of /usr/bin/ssh-keygen (the ownership and link checks still apply), AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN=1
 //! skips those checks (for stand-in programs owned by the test user).
@@ -23,7 +24,6 @@ use std::fs::{self, DirBuilder, OpenOptions};
 use std::io::Write;
 use std::os::unix::fs::{DirBuilderExt, MetadataExt, OpenOptionsExt};
 use std::path::Path;
-use std::sync::OnceLock;
 use std::time::Duration;
 
 pub const SSH_KEYGEN: &str = "/usr/bin/ssh-keygen";
@@ -165,10 +165,24 @@ pub fn walk(p: &Path) -> Vec<&Path> {
     parts.reverse();
     parts
 }
+/// Who may own the parts of a checked path. `Root`: uid 0 only, no exception (ssh-keygen). `RootOrUid(u)` (the pinned
+/// helper files, review D2): uid 0 or the engine's own uid `u`; a root-owned folder with the sticky bit (such as
+/// /private/tmp) may be writable by others, because then no other user can rename or remove an entry that it does not
+/// own, and the next part of the path must pass on its own.
+#[derive(Clone, Copy)]
+pub enum Owners {
+    Root,
+    RootOrUid(u32),
+}
 /// Std-only checks of the program file: every path part exists and is not a symbolic link; the file is regular,
 /// owned by uid 0 and has no group or other write bit; each folder on the path (the root folder `/` included) is owned by uid 0 with no group or
 /// other write bit.
 pub fn binary_checks(path: &str) -> Result<fs::Metadata, String> {
+    path_checks(path, Owners::Root)
+}
+/// binary_checks with a choice of owners (review D2 generalises it for the pinned helper files; for `Owners::Root` the
+/// checks are exactly those of binary_checks).
+pub fn path_checks(path: &str, owners: Owners) -> Result<fs::Metadata, String> {
     let p = Path::new(path);
     if !p.is_absolute() { return Err("NOT_ABSOLUTE".into()) }
     let parts = walk(p);
@@ -179,8 +193,13 @@ pub fn binary_checks(path: &str) -> Result<fs::Metadata, String> {
         let file = i + 1 == parts.len();
         if file && !m.file_type().is_file() { return Err("NOT_A_REGULAR_FILE".into()) }
         if !file && !m.file_type().is_dir() { return Err(format!("NOT_A_FOLDER {}", part.display())) }
-        if m.uid() != 0 { return Err(format!("NOT_ROOT_OWNED {} uid {}", part.display(), m.uid())) }
-        if m.mode() & 0o022 != 0 { return Err(format!("WRITABLE {} mode {:o}", part.display(), m.mode() & 0o7777)) }
+        let own = matches!(owners, Owners::RootOrUid(u) if u == m.uid());
+        if m.uid() != 0 && !own {
+            let why = if matches!(owners, Owners::Root) { "NOT_ROOT_OWNED" } else { "UNTRUSTED_OWNER" };
+            return Err(format!("{why} {} uid {}", part.display(), m.uid()));
+        }
+        let sticky_root_folder = !file && m.uid() == 0 && m.mode() & 0o1000 != 0 && matches!(owners, Owners::RootOrUid(_));
+        if m.mode() & 0o022 != 0 && !sticky_root_folder { return Err(format!("WRITABLE {} mode {:o}", part.display(), m.mode() & 0o7777)) }
         last = Some(m);
     }
     last.ok_or_else(|| "NO_PATH".into())
@@ -188,17 +207,16 @@ pub fn binary_checks(path: &str) -> Result<fs::Metadata, String> {
 fn program() -> String {
     test_seam("AIRLOCK_TEST_SSH_KEYGEN").unwrap_or_else(|| SSH_KEYGEN.to_string())
 }
-static PROGRAM_CHECKED: OnceLock<Result<(), String>> = OnceLock::new();
+/// The path checks of the program, at every verification (review D2: a few `lstat` calls; before, once per process).
 fn trusted(prog: &str) -> Result<(), Refusal> {
     if test_seam("AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN").as_deref() == Some("1") { return Ok(()) }
-    let r = PROGRAM_CHECKED.get_or_init(|| binary_checks(prog).map(|_| ()));
-    r.clone().map_err(|why| Refusal(Code::HelperFailed, format!("SSH_KEYGEN_UNTRUSTED {why}")))
+    binary_checks(prog).map(|_| ()).map_err(|why| Refusal(Code::HelperFailed, format!("SSH_KEYGEN_UNTRUSTED {why}")))
 }
 
 /// The private folder `<store>/cosign.tmp`. Called with the store lock held, so no other engine uses it at the same
 /// time: a leftover (a crash between create and remove) is removed first, then the folder is created exclusively
 /// with mode 0700 and checked.
-fn private_folder(store_dir: &str) -> Result<String, Refusal> {
+pub fn private_folder(store_dir: &str) -> Result<String, Refusal> {
     let dir = format!("{store_dir}/{TMP_DIR}");
     let io = |e: std::io::Error| Refusal(Code::HelperFailed, format!("TMP_IO {:?}", e.kind()));
     match fs::symlink_metadata(&dir) {

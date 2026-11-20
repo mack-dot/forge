@@ -142,7 +142,7 @@ pub fn open(dir: &str) -> Result<Store, Refusal> {
     wal.lock()?; // exclusive flock, taken before any file of the store is read; the kernel releases it at exit or kill
     let (l, total) = scan(&mut BufReader::new(&wal), &mut |_, _| {})?;
     let mut ratchet = OpenOptions::new().read(true).append(true).open(path(dir, EPOCH))?;
-    let (mut size, mut floor) = (0u64, None::<u64>);
+    let (mut size, mut floor, mut bad) = (0u64, None::<u64>, Vec::<u64>::new());
     {
         let mut rd = BufReader::new(&ratchet);
         let mut e = [0u8; 12];
@@ -153,17 +153,37 @@ pub fn open(dir: &str) -> Result<Store, Refusal> {
             if e[8..] == crc32(&e[..8]).to_le_bytes() {
                 let v = u64::from_le_bytes(e[..8].try_into().expect("8 bytes"));
                 floor = Some(floor.map_or(v, |f| f.max(v)));
+            } else {
+                bad.push(size / 12 - 1); // a full-length entry with a bad CRC (review D7: never skipped silently)
             }
         }
     }
     let Some(floor) = floor else { return no(Code::CorruptWal, "CORRUPT_WAL the ratchet has no valid entry") };
     if l.epoch < floor { return no(Code::EpochRegression, "EPOCH_REGRESSION the WAL is older than its ratchet (a restored file?)") }
-    if size % 12 != 0 || l.len < total || floor < l.epoch {
-        ratchet.set_len(size - size % 12)?; // a torn ratchet entry
+    // Review D7. A commit writes the WAL record, syncs, then appends its ratchet entry and syncs; a recovery appends an
+    // entry only when the ratchet is BELOW the WAL epoch. So the one entry that a crash can leave damaged is the LAST one,
+    // and it was meant to hold the WAL epoch, one above the last good entry. Only that shape is repaired (the entry is cut
+    // and the WAL epoch is pushed again: the floor does not go down). Any other bad entry, in the middle or at the end
+    // with the WAL epoch equal to the last good entry (the shape of a one-record WAL rollback after a one-bit change of
+    // the newest entry), is CORRUPT_WAL: the floor would be lower than the one written.
+    let entries = size / 12;
+    let crash_shape = bad.len() == 1 && bad[0] + 1 == entries && size % 12 == 0 && l.epoch == floor + 1;
+    if !bad.is_empty() && !crash_shape {
+        return no(Code::CorruptWal, format!("CORRUPT_WAL RATCHET_ENTRY_BAD entry {} of {entries} has a bad CRC; the floor cannot be trusted", bad[0]));
+    }
+    let keep = 12 * (entries - bad.len() as u64); // without a torn entry and without the one crash-shaped bad entry
+    if keep < size || l.len < total || floor < l.epoch {
+        if keep < size {
+            ratchet.set_len(keep)?; // a torn ratchet entry
+        }
         let wal_ref = &wal;
         wal_ref.set_len(l.len)?; // a torn record
         wal_ref.sync_all()?;
-        push(&mut ratchet, l.epoch)?;
+        if floor < l.epoch {
+            push(&mut ratchet, l.epoch)?;
+        } else if keep < size {
+            ratchet.sync_all()?; // the ratchet holds the WAL epoch already: no second entry of the same value
+        }
     }
     let mut policies = HashMap::new();
     for pin in &l.pins {

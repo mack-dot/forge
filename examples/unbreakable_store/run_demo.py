@@ -4,8 +4,11 @@
   python3 examples/unbreakable_store/run_demo.py --engine-dir build/airlock [--node PATH] [--json OUT] [--measurements OUT2]
   (or: bin/forge-airlock demo [--json OUT] [--measurements OUT2])
 
-end_to_end=false. Labels: PROVED CORE (the CakeML refund binary b8ed5ec2...7bb8 for the canonical-refund profile;
-the Dafny-compiled BookingDualCert checker for inventory, PROVED CORE source, Dafny compiler and Node trusted),
+end_to_end=false. Labels: the CakeML refund binary b8ed5ec2...7bb8 for the canonical-refund profile (compiled by a
+verified compiler; a model-level HOL4 theorem; the native link M1-B is OPEN, so the binary is not proved); the
+BookingDualCert checker for inventory (compiled from a Dafny source proof; the compiled JavaScript is not proved;
+Dafny compiler and Node trusted). The label strings LBL_CANON and LBL_INV below keep the old words: they are part of
+the recorded demo output that the EXIT script checks;
 NATIVE CHECK (the Rust engine, not proved), FINITE TEST (this demo). No "% of bugs" figure.
 
 Honesty rules kept here:
@@ -75,7 +78,7 @@ LIMITS = [
     'pins: the engine pins the refund binary and (through its compiled-in helper) the checker model; the store pins the SHA-256 '
     'of the Node binary at init (inventory only); a cosign is verified by /usr/bin/ssh-keygen, which the engine checks (root-owned, '
     'not writable by group or other, no symbolic link on its path) but does not pin: the system OpenSSH is a trusted assumption; '
-    'a file swapped after its check is not detected',
+    'the helper files are checked at every run but still run by path: the engine uid or root can change them between check and run',
     'Stripe and PayPal are LOCAL FAKE in-process stand-ins; SIGKILL is not a power loss; end_to_end=false',
 ]
 

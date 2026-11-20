@@ -20691,3 +20691,115 @@ curl: (6) Could not resolve host: github.com
 - Not affected (checked): pull request 77 (`a2ef7c0a`); git merged its `ROADMAP.md` without the helper's union step.
 - Impact: none on any stage label. `end_to_end=false`. Next check: the pre-release audit compares every ROADMAP
   section heading of each merged branch head with `main`.
+
+## U887 — Review D3 (2026-11-20): keys, request ids and leases per tenant; the tenant is still not authenticated
+
+- Refs the review of `33055a59` (D3), U750 to U752 (the base). Branch `feat/airlock-review-hardening`, stacked on
+  `apex1/native-cosign` `e3322303` (not on origin, not merged). Record: `proposals/review-20261120-engine/README.md`.
+- Evidence: at `e3322303` the fold had one key map, one id set and one lease map for all tenants (`ledger.rs:52-54`,
+  `:67-73`, `:83-86`; `verbs.rs:68-88`, `:266-282`). Run on that engine: tenant B's open of `order-1` blocked tenant
+  A's open (`TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT`); 11 of 11 lines of a tenant-B script answered differently
+  on a busy store. After the change: 0 of 11 differ (case `tenant_namespace`; log `d3-probe-before-after.log`).
+- Change: maps indexed by (tenant, name); a key of another tenant is `UNKNOWN_KEY`; `CLOSE` names its tenant; the
+  old `CLOSE` without a tenant is read only while its id has one lease in the store. No genesis version change:
+  `compat_wal.py` on a WAL of the `e3322303` engine: `state`, `replay`, `leases --all`, sweep, `get` equal; that
+  engine answers `CORRUPT_WAL` (17) for each record that only the new engine writes (4 of 4 tried).
+- Uncertainty: the tenant is NOT authenticated. In the shipped flow the engine runs under the caller's OS user; the
+  namespaces stop only accidents, squatting and probes between callers held to their tenant by something outside the
+  engine. Store-wide values (epoch, state hash chain, `STATE` counts, lock wait time) still show that others wrote.
+  Saga idempotency keys are not unique across keys or tenants.
+- Impact: none on any stage label; `end_to_end=false`. Next check: a fresh-context review; an isolation mode
+  (service user, socket, per-tenant credentials) is a separate design.
+
+## U888 — Review D6: REQUIRE_HUMAN_COSIGN leaves a lease PENDING_COSIGN; an old cosign CLOSE is read as pending
+
+- Refs U887, the review (D6). Evidence: at `e3322303` `verbs.rs:93-103` wrote `CLOSE <id> REQUIRE_HUMAN_COSIGN` and
+  `ledger.rs:183-187` accepted it while the id stayed fresh; run: the first cosign verdict answered `LEASE_CLOSED 3`
+  (case `lease_cosign_pending`, exit 1). After: one `COSIGN_PENDING` record, retries write none, the sweep lists
+  `PENDING_COSIGN` before and `DROPPED_OBLIGATION` after the deadline, the signed commit or `REJECTED_POLICY` closes
+  (exit 0).
+- Decision on old records: `CLOSE <id> REQUIRE_HUMAN_COSIGN <detail>` is read as `COSIGN_PENDING`. `compat_wal.py`:
+  `state`, `leases --all` and the sweep differ from the old engine exactly by that rule; `replay` and `get` equal.
+- Uncertainty: an old lease that the old engine later rejected (no record then) is reported as dropped: a false
+  alarm. A cosign without a lease is not tracked.
+- Impact: none on any stage label. Next check: the fresh review.
+
+## U889 — Review D7 (first bullet): a full-length bad ratchet entry is repaired only in its one crash shape; the owner's idea was half right
+
+- Refs the review (D7). Evidence: at `e3322303` `store.rs:145-158` skipped a bad entry. Run: one bit of the newest
+  entry flipped and the WAL of the epoch before restored: `STATE 2` (the rollback passed `EPOCH_REGRESSION`);
+  after: `CORRUPT_WAL RATCHET_ENTRY_BAD` (case `ratchet_entry`).
+- Finding on the owner's unverified idea ("a bad last entry with WAL epoch = previous good entry cannot come from a
+  crash"): FALSE for the `e3322303` order. Its recovery after a torn WAL record pushed the same epoch again
+  (`store.rs:161-167`); a power loss during that push leaves exactly that shape. This change removes the duplicate
+  push; then only the last entry can be damaged by a crash and it was meant to hold WAL epoch = last good + 1. Only
+  that shape is repaired; every other bad entry is `CORRUPT_WAL`.
+- Uncertainty: rests on "a power loss damages at most the entry being written" and on `F_FULLFSYNC`; power loss is
+  NOT tested. Old stores with a bad middle or bad duplicate last entry now fail closed (none known).
+  `src/silicon_sink/sink.rs` still skips bad entries (not changed). D7 second bullet stays open.
+- Impact: none on any stage label. Next check: a power-loss test on real hardware; the fresh review.
+
+## U890 — Review D2: pinned helper files checked at every run; exec of an open descriptor is not possible here; the one-user flow is not protected
+
+- Refs the review (D2), U750 to U752 (ssh-keygen walk). Evidence (logs `d2-*.log`): exec of `/dev/fd/N` gave
+  `EACCES` for a Mach-O and a script on this macOS (no `fexecve`). On the `e3322303` engine: a refund binary changed
+  in place and a Node binary replaced after the first use in one `serve` process were run; pinned files in a 0777
+  folder committed; a changed `bignumber.js` beside a model copy gave `ACCEPT`; the Homebrew Node committed. After:
+  `PIN_MISMATCH`, `PIN_PATH_UNTRUSTED`, `HELPER_FAILED`; Homebrew Node refused (`/opt/homebrew/Cellar` mode 775).
+- Change: canonicalize, ownership walk (root or engine uid; root-owned sticky folder allowed; ssh-keygen keeps the
+  strict root rule, now every run), refund binary hashed every run, Node re-hashed when its identity changed,
+  `bignumber.js` pinned by SHA-256 `08ff132b…f0ce`; the dispatcher passes a private 0500 Node copy.
+- Measured: one SHA-256 of Node (89,025,440 bytes) 0.49 to 0.50 s user CPU; refund binary 0.00 to 0.01 s wall (load
+  average 37 to 116: wall time not valid). The walk was not timed.
+- Uncertainty: files are still run by path; root or the engine uid can change one between check and exec. In the
+  one-user flow the engine uid is the caller: the checks close nothing against the caller. The engine uid comes from
+  a probe folder in the store (std has no geteuid). The per-run ssh-keygen check is not tested (needs a root-owned
+  stand-in).
+- Impact: none on any stage label. Next check: the fresh review; a service-user deployment test.
+
+## U891 — Review fixes: D4 deferred, D7 second bullet open, D8 not handled; Goal 20 digest; stacking
+
+- Refs U887 to U890. D4 (the whole WAL folded under the one lock per request) is deferred: no small safe change; a
+  snapshot or cache touches the recovery design and needs its own crash tests. D7 second bullet (a bad full last WAL
+  record: `CORRUPT_WAL`, no repair tool) is open. D8 is not handled.
+- Digest: OLD `1e75ab471b5fe3cede67f2746fa8c0542fbafff6959bd5a8199cfca3338a70fa` (tracked record on `main`
+  `33055a59`). `e3322303` has NO digest (the evidence case was not run there, owner decision U752). The NEW digest is
+  in U892. The tracked bundle and digest are not replaced; the owner decides.
+- Stacked on `e3322303`; if `apex1/native-cosign` moves, this branch needs a rebase. Comments-only change: the
+  "PROVED CORE" label in `main.rs`, `verbs.rs`, `booking_check.cjs` and `bin/forge-airlock` now says what is true
+  (CakeML: verified compiler, model-level HOL4 theorem, M1-B OPEN; Dafny: source proof, compiled JavaScript not
+  proved). Left with the label: the claim keys of `scripts/exit_goal20_sdk.py` (bundle structure) and one summary
+  string of `tests/airlock/test_sdk.py`.
+- Impact: none on any stage label. Next check: owner decision on the new bundle.
+
+## U892 — Fresh review of this branch (head `aaaca9e6`): 8 findings, the Node libraries are not covered (OPEN), a guess oracle across tenants
+
+- Refs U887 to U891. Record: `proposals/review-20261120-engine/REVIEW.md` (one fresh-context reviewer of the same
+  model family; report relayed by the orchestrator; not in the tree). The repairs were NOT reviewed again.
+- Verified: (1) `otool -L` of the Homebrew Node: 9 libraries under `/opt/homebrew/opt` (775, group admin), outside
+  the pin and the path check: any admin-group user can run code in the booking checker; documents corrected; OPEN,
+  owner decision. (2) The unkeyed FNV chain gives a guess-confirmation oracle across tenants, also from two own
+  `COMMITTED` answers without `STATE` (measured: wrong guess no, right guess MATCH); `STATE` not changed; sentence
+  corrected. (3) A caller can close a PENDING_COSIGN lease with any rejection: now visible in the sweep as
+  `REJECTED_AFTER_PENDING` (fails before, passes after). (4) ACLs not read: documented. (5) Label words: fixed where
+  no other PR and no recorded string holds them. (6) A failed uid probe is no longer cached. (7) Fuzz round with
+  shared names; oracle keyed by (tenant, name). (8) Private Node copies stay: documented.
+- Uncertainty: (6) is not tested; (4) is not tested; the Node library gap stays open.
+- Impact: none on any stage label. Next check: owner decision on the Node libraries; the isolation design (keyed
+  chain, authentication).
+
+## U893 — Review fixes (PR-3): heavy runs, the scratch-clone regression and the NEW Goal 20 bundle digest
+
+- Refs U887 to U892. Branch `feat/airlock-review-hardening`, stacked on `apex1/native-cosign` `a96c916f` (pull request
+  72); code commits made on `e3322303`; merged `a96c916f` as `5685b673` (records only); draft pull request 73.
+- Evidence (runs under the heavy lock): fuzz seed 20 x3 exit 0 (twice); 27 changed or new copies all killed;
+  `proposals/forge2-goal20-sdk/run_regression.py` on a scratch clone of `9a17c95d`: 28 of 28 Stage EXIT cases exit
+  0, frozen gate 0, 9 link checks 0, six evidence cases exit 0, five bundles byte-identical to the tracked records,
+  Goal 20 bundle `69fbd6769ce0fec43ad5f6c5b46774e2e33551dbdbc57f9b4865f9581c1a9467` (145 of 145 copies killed, X01,
+  R8, N15 not killed as before), 0 protected paths. Record: `proposals/review-20261120-engine/logs/regression-9a17c95d.json`.
+- OLD digest `1e75ab47…70fa` (tracked, `main`); `e3322303` has none. The tracked record is NOT replaced.
+- Failed attempts first (all list or test-probe errors of this branch, no engine code): see the README results.
+- Uncertainty: one machine, load average about 8 to 15 during the regression; no power-loss test; no service-user
+  test. Not proved.
+- Impact: none on any stage label; `end_to_end=false`. Next check: owner decision on the new bundle; a review of the
+  repairs.

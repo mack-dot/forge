@@ -6,7 +6,9 @@ Label of the SDK itself: not trusted for a write decision; not proved. FINITE TE
 
 Typed results (class Result, field `code`):
   COMMITTED, REJECTED_POLICY, REQUIRE_HUMAN_COSIGN, STALE_STATE_HASH, DUPLICATE_REQUEST_ID,
-  TENANT_ISOLATION_BREACH, DROPPED_OBLIGATION (from Store.sweep), plus OK for get/read/state answers.
+  TENANT_ISOLATION_BREACH (read_scoped only), DROPPED_OBLIGATION (from Store.sweep), plus OK for get/read/state
+  answers. Keys, request ids and leases are per tenant (review D3): a key of another tenant is UNKNOWN_KEY (an
+  EngineRefusal), exactly like a key that nobody opened; the engine gives TENANT_ISOLATION_BREACH only for READ.
 Every other outcome RAISES a subclass of AirlockError and is never a commit:
   LocalRefusal      the SDK refused the input BEFORE sending (LF/CR/NUL/space, a non-canonical id or hash)
   EngineRefusal     the engine answered MALFORMED_REQUEST, UNKNOWN_KEY, HELPER_FAILED or BAD_FRAME (nothing committed)
@@ -26,8 +28,11 @@ Rules kept here (the engine is the real check):
     be out of step).
   * with_lease(request_id, deadline_ms, tenant, key, handler) opens a durable lease bound to (request id,
     tenant, key) BEFORE the handler runs and never closes it; only a terminal verdict of the engine for the
-    same request id ON the same tenant and key closes it. A handler that raises leaves it open (the exception
-    propagates); `Store.sweep` then reports DROPPED_OBLIGATION. Only handlers that opened a lease are covered.
+    same request id ON the same tenant and key closes it (a commit or REJECTED_POLICY). REQUIRE_HUMAN_COSIGN does
+    not close it (review D6): the answer carries `.lease_pending` (the epoch of the COSIGN_PENDING record) and the
+    signed retry is still expected. A handler that raises leaves it open (the exception propagates);
+    `Store.sweep` then reports DROPPED_OBLIGATION after the deadline (`.pending` lists pending cosigns before it).
+    Only handlers that opened a lease are covered.
 
 Trust boundary (src/airlock/PROTOCOL.md section 11): every rule holds only against a caller that reaches the
 store THROUGH the engine. A process that can write the store folder can append records itself; a process that
@@ -129,10 +134,13 @@ class Result:
         self.state_hash = kw.get('state_hash')
         self.payload = kw.get('payload')
         self.lease_closed = kw.get('lease_closed')
+        self.lease_pending = kw.get('lease_pending')  # review D6: epoch of the COSIGN_PENDING record of the lease
         self.fields = kw.get('fields', {})
         self.kind = kw.get('kind')
         self.rows = kw.get('rows', [])
         self.dropped = kw.get('dropped', [])
+        self.pending = kw.get('pending', [])
+        self.rejected_after_pending = kw.get('rejected_after_pending', [])  # leases closed by a rejection after a cosign verdict
 
     @property
     def committed(self):
@@ -264,23 +272,27 @@ def parse_commit_answer(line, verb, tenant, key, request_id):
         if not ok:
             raise ProtocolError('BAD_ANSWER', 'a COMMITTED line that does not name this request', line)
         return Result('COMMITTED', line=line, request_id=t[1], epoch=int(t[2]), state_hash=t[3], payload=' '.join(t[4:]))
-    return _refusal(line, t, ('REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID',
-                              'TENANT_ISOLATION_BREACH'))
+    return _refusal(line, t, ('REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID'))
 
 
 def _refusal(line, t, typed):
     code = t[0]
     detail = ' '.join(t[1:])
     if code in typed:
-        closed = None  # a bare code (no detail) is a valid answer form (PROTOCOL.md section 10)
+        closed = pending = None  # a bare code (no detail) is a valid answer form (PROTOCOL.md section 10)
         if 'LEASE_CLOSED' in t:
             i = t.index('LEASE_CLOSED')
-            if i + 2 != len(t) or not DIGITS_RE.match(t[i + 1]) or code not in ('REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN'):
+            if i + 2 != len(t) or not DIGITS_RE.match(t[i + 1]) or code != 'REJECTED_POLICY':
                 raise ProtocolError('BAD_ANSWER', 'bad LEASE_CLOSED part', line)
             closed = int(t[i + 1])
+        if 'LEASE_PENDING' in t:  # review D6: a cosign verdict leaves the lease open
+            i = t.index('LEASE_PENDING')
+            if i + 2 != len(t) or not DIGITS_RE.match(t[i + 1]) or code != 'REQUIRE_HUMAN_COSIGN':
+                raise ProtocolError('BAD_ANSWER', 'bad LEASE_PENDING part', line)
+            pending = int(t[i + 1])
         if code == 'STALE_STATE_HASH' and (len(t) < 2 or not HASH_RE.match(t[1])):
             raise ProtocolError('BAD_ANSWER', 'STALE_STATE_HASH without a hash', line)
-        return Result(code, detail, line, lease_closed=closed, state_hash=t[1] if code == 'STALE_STATE_HASH' else None)
+        return Result(code, detail, line, lease_closed=closed, lease_pending=pending, state_hash=t[1] if code == 'STALE_STATE_HASH' else None)
     if code in REFUSALS:
         raise EngineRefusal(code, detail, line)
     if code in FAULTS:
@@ -458,7 +470,7 @@ class Store:
         return self.commit('book', tenant=tenant, key=key, request_id=request_id, pre_state_hash=pre_state_hash, certificate=certificate)
 
     def get(self, tenant, key):
-        """OK Result with .state_hash, .kind, .fields; or TENANT_ISOLATION_BREACH; UNKNOWN_KEY raises EngineRefusal."""
+        """OK Result with .state_hash, .kind, .fields. UNKNOWN_KEY (also for a key of another tenant) raises EngineRefusal."""
         text = self._send('GET %s %s' % (_id('tenant', tenant), _id('key', key)))
 
         def parse(a):
@@ -467,7 +479,7 @@ class Store:
                 if len(t) < 3 or not HASH_RE.match(t[1]) or any('=' not in x for x in t[3:]):
                     raise ProtocolError('BAD_ANSWER', 'bad GET answer', a)
                 return Result('OK', line=a, state_hash=t[1], kind=t[2], fields=dict(x.split('=', 1) for x in t[3:]))
-            return _refusal(a, t, ('TENANT_ISOLATION_BREACH',))
+            return _refusal(a, t, ())
         return self._guard(parse, text)
 
     def state(self):
@@ -517,7 +529,7 @@ class Store:
 
         deadline_ms: absolute milliseconds since the Unix epoch (the sweep compares it with its clock or --now).
         Returns what the handler returns. A handler exception propagates; the lease stays open. One lease per
-        request id, ever (DUPLICATE_REQUEST_ID LEASE_USED).
+        request id and tenant, ever (DUPLICATE_REQUEST_ID LEASE_USED). The key need not exist.
         """
         dl = _amount('deadline_ms', deadline_ms)
         text = self._send('OPEN_LEASE %s %s %s %s' % (_id('request_id', request_id), dl, _id('tenant', tenant), _id('key', key)))
@@ -526,7 +538,7 @@ class Store:
             if len(t) != 6 or t[1] != request_id or not DIGITS_RE.match(t[2]) or t[3] != dl or t[4] != tenant or t[5] != key:
                 self._bad('LEASE_OPENED for another lease', text)
             return handler(Lease(self, request_id, int(t[2]), deadline_ms, tenant, key))
-        res = self._guard(lambda a: _refusal(a, t, ('DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH')), text)
+        res = self._guard(lambda a: _refusal(a, t, ('DUPLICATE_REQUEST_ID',)), text)
         raise LeaseNotOpened(res)
 
     def leases(self, all=False):
@@ -567,7 +579,9 @@ class Store:
         return effects
 
     def sweep(self, now_ms=None):
-        """`leases --sweep`: Result DROPPED_OBLIGATION (.dropped = [(request_id, deadline_ms, tenant, key)]) or OK."""
+        """`leases --sweep`: Result DROPPED_OBLIGATION (.dropped = [(request_id, deadline_ms, tenant, key)]) or OK.
+        .pending = [(request_id, deadline_ms, tenant, key, detail)]: leases in the state PENDING_COSIGN whose deadline
+        has not passed (review D6); after the deadline such a lease is in .dropped."""
         args = ['leases', self.store_dir, '--sweep'] + (['--now', str(int(now_ms))] if now_ms is not None else [])
         code, out = self._sub(args)
         lines = [ln for ln in out.split('\n') if ln]
@@ -578,7 +592,14 @@ class Store:
             raise ProtocolError('BAD_ANSWER', 'bad DROPPED_OBLIGATION line', out)
         if (code == 24) != bool(dropped):
             raise ProtocolError('BAD_ANSWER', 'sweep exit code and lines disagree', out)
-        return Result('DROPPED_OBLIGATION' if dropped else 'OK', lines[0], out, dropped=dropped)
+        pend = [ln.split(' ') for ln in lines[1:] if ln.startswith('PENDING_COSIGN ')]
+        rej = [ln.split(' ') for ln in lines[1:] if ln.startswith('REJECTED_AFTER_PENDING ')]
+        if any(len(x) != 6 for x in pend) or any(len(x) != 7 or not DIGITS_RE.match(x[5]) for x in rej) or len(pend) + len(rej) + len(dropped) != len(lines) - 1:
+            raise ProtocolError('BAD_ANSWER', 'bad PENDING_COSIGN or REJECTED_AFTER_PENDING line, or an unknown sweep line', out)
+        pending = [(x[1], int(x[2]), x[3], x[4], x[5]) for x in pend]
+        rejected = [(x[1], int(x[2]), x[3], x[4], int(x[5]), x[6]) for x in rej]
+        return Result('DROPPED_OBLIGATION' if dropped else 'OK', lines[0], out, dropped=dropped, pending=pending,
+                      rejected_after_pending=rejected)
 
 
 def _printable_action(a):

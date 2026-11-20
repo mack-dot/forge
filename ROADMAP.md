@@ -188,6 +188,34 @@ Dafny source of the booking checker; the CakeML/HOL4 refund chain has an
 open premise. A SIGKILL is not a power loss. One race is not all
 schedules. M1 and integration EXIT NOT_ESTABLISHED.
 
+## Review 2026-11-20, engine hardening (PR-3): per-tenant namespaces (D3), PENDING_COSIGN leases (D6), bad ratchet entries (D7), pin checks at every run (D2); one fresh review with repairs; NOT merged — U887 to U893
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Branch
+`feat/airlock-review-hardening`, stacked on `apex1/native-cosign` `a96c916f` (pull request
+72; code commits made on `e3322303`); draft pull request 73; NOT merged by the agent. Nothing
+is proved: every row is a finite test on one machine. The tenant is NOT authenticated; the
+Node libraries are NOT covered by the pin checks (OPEN).
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| new cases on the engine of `e3322303` (before): `tenant_namespace`, `lease_cosign_pending`, `ratchet_entry`, `pin_window` |1; 1; 1; 1|each fix's test fails before (logs in the package) |
+| `lease_pending_rejected` on the engine of `aaaca9e6` (before) |1|fresh-review finding 3 |
+| `tests/airlock/test_engine.py` on `8fc0de2f`; again with `--work` under the worktree on `6289d9aa` |0; 0|33 of 33 |
+| `test_node_helpers.py`; `test_cosign.py`; `test_diff_policy.py`; `test_sdk.py` on `8fc0de2f` |0; 0; 0; 0|68; 56; all; 21 |
+| `compat_wal.py` (`e3322303` engine vs this tree) |0|old WAL folds to the same state; old engine refuses new records (17) |
+| `bin/forge-airlock fuzz --seed 20 --rounds 3` (heavy lock; `7cb7cac1`, `6289d9aa`) |0; 0|8 of 8 invariants held |
+| 27 changed or new copies through the EXIT script's runner (heavy lock; `6289d9aa` to `9a17c95d`) |27 killed|three list texts and one test message corrected on the way (records in the commits); no engine source changed after `6289d9aa` |
+| regression on a scratch clone of `9a17c95d`: 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links of 9 files; six EXIT scripts, each `--case evidence` |0 each (28); 0; 0 each (9); 0 each (6)|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…` byte-identical to the tracked records; Goal 20 bundle NEW `69fbd676…9467` (145 of 145 copies killed, 3 known not killed), not the tracked `1e75ab47…70fa`; 0 protected paths changed |
+| earlier regression attempts of `3d9dabbb` (Goal 20 evidence) and the copy runs of `7cb7cac1`, `6289d9aa`, `ccbb8264` |1; 1; 1; 1|list errors of this branch (shared texts, wrong first-failure texts) and one test probe; repaired |
+| one fresh-context review of `aaaca9e6` |1 HIGH; 2 MEDIUM; 5 LOW|repaired once (REVIEW.md); NOT reviewed again |
+| power loss; a service-user deployment; the per-run ssh-keygen check |NOT RUN|not part of this work |
+
+[Package](proposals/review-20261120-engine/README.md).
+[Review](proposals/review-20261120-engine/REVIEW.md).
+The tracked Goal 20 bundle and digest are not replaced; the owner decides.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

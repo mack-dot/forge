@@ -1,0 +1,16 @@
+# compat_wal.py <e3322303 engine> <D3+D6 engine> <work> (the D6 rule applied to the old answers)
+old engine answers: COMMITTED L1 8 9deecc74f0469768fdc477079d5249df REFUND tA o1 | REJECTED_POLICY REASON_CAP LEASE_CLOSED 9 | REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED LEASE_CLOSED 10
+old WAL: 937 bytes
+state            EQUAL AFTER THE D6 RULE
+replay           EQUAL
+leases-all       EQUAL AFTER THE D6 RULE
+sweep            EQUAL AFTER THE D6 RULE
+get tA o1        EQUAL
+get tB o2        EQUAL
+get tA s1        EQUAL
+a CLOSE that names its tenant            new: 'REJECTED_POLICY REASON_CAP LEASE_CLOSED 13'; new state exit 0; old state exit 17 CORRUPT_WAL record 13: CRC, epoch, chain or conten
+the same key name in another tenant      new: 'COMMITTED x1 12 8417ea87995d8b113d5bfea55dec762f O'; new state exit 0; old state exit 17 CORRUPT_WAL record 12: CRC, epoch, chain or conten
+the same request id in another tenant    new: 'COMMITTED r1 12 40c31868829895ac8f1eae2feb45d7c6 O'; new state exit 0; old state exit 17 CORRUPT_WAL record 12: CRC, epoch, chain or conten
+a COSIGN_PENDING record                  new: 'REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED LEASE_PENDING'; new state exit 0; old state exit 17 CORRUPT_WAL record 13: CRC, epoch, chain or conten
+compat_wal: PASS
+exit 0

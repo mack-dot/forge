@@ -114,10 +114,26 @@ def files(store):
     return {p.name: p.read_bytes() for p in sorted(Path(store).iterdir())}
 
 
+def private_copy(work, node):
+    """A private copy of the Node binary (0700 folder, 0500 file) in the work folder. Review D2: the engine runs a pinned
+    helper file only from a path that no other non-root user can change; the Homebrew Node is under /opt/homebrew/Cellar,
+    which the group admin may write, so the engine refuses it there. The copy has the same bytes, so the same SHA-256
+    pin. It covers the Node file only, not the libraries that Node loads from /opt/homebrew/opt (PROTOCOL.md section 2). A missing Node is passed on unchanged (the cases that need it then fail with NOT RUN)."""
+    if not node or not Path(node).is_file():
+        return node
+    d = Path(work) / 'node-private'
+    d.mkdir(mode=0o700)
+    shutil.copyfile(node, d / 'node')
+    os.chmod(d / 'node', 0o500)
+    return str(d / 'node')
+
+
 class Suite:
     def __init__(self, a):
         self.engine, self.kill_engine, self.node = str(Path(a.engine).resolve()), str(Path(a.kill_engine).resolve()), a.node
         self.work = Path(tempfile.mkdtemp(prefix='airlock-', dir=a.work))
+        self.node_src = a.node  # the Node path as given (case cosign_faults uses its path parts, not those of the copy)
+        self.node = private_copy(self.work, a.node)
         self.n = 0
         self.refund = None
         self.interposer = str(Path(a.interposer).resolve()) if a.interposer else None
@@ -344,14 +360,19 @@ def case_tenant(s):
     s.one(p, 'OPEN_SAGA tA s1 r2 payout', 'COMMITTED')
     h, hs = s.h(p, 'tA', 'k1'), s.h(p, 'tA', 's1')
     before = files(p)
-    for line in ['REFUND tB k1 r3 %s DUPLICATE_CHARGE 10' % h, 'OPEN_MONEY tB k1 r3 store-refunds 1000', 'GET tB k1',
-                 'SAGA tB s1 r3 %s IN_FLIGHT stripe i1' % hs, 'OPEN_INVENTORY tB s1 r3 seats 3']:
-        s.one(p, line, 'TENANT_ISOLATION_BREACH')
+    # Per-tenant namespaces (review D3): a key of another tenant is not visible; the answer is UNKNOWN_KEY, as for a key
+    # that nobody opened. (Before D3 these answers were TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT.)
+    for line in ['REFUND tB k1 r3 %s DUPLICATE_CHARGE 10' % h, 'GET tB k1', 'SAGA tB s1 r3 %s IN_FLIGHT stripe i1' % hs]:
+        s.one(p, line, 'UNKNOWN_KEY')
     code, out, _ = s.run(['get', p, 'tB', 'k1'])
-    require(code == 16, 'get under another tenant: %r' % out)
-    require(files(p) == before, 'a breach changed the store')
+    require(code == 21 and out == 'UNKNOWN_KEY\n', 'get under another tenant: %r' % out)
+    require(files(p) == before, 'a refused cross-tenant request changed the store')
+    # an open by tB of the same key name makes tB's own key; tA's key does not change
+    s.one(p, 'OPEN_MONEY tB k1 r3 store-refunds 1000', 'COMMITTED')
+    s.one(p, 'OPEN_INVENTORY tB s1 r4 seats 3', 'COMMITTED')
+    require(s.h(p, 'tA', 'k1') == h and s.h(p, 'tA', 's1') == hs, "tB's opens changed tA's keys")
     s.one(p, 'REFUND tA k1 r3 %s DUPLICATE_CHARGE 10' % h, 'COMMITTED')
-    return '5 cross-tenant requests and 1 get refused; store unchanged'
+    return "3 cross-tenant requests and 1 get -> UNKNOWN_KEY, store unchanged; tB's opens of the same names leave tA's keys unchanged"
 
 
 def case_money(s):
@@ -689,7 +710,7 @@ def case_cosign_faults(s):
             'a symbolic link named cosign.tmp: expected COMMITTED with the link removed and its target kept, got exit %d %r' % (code, out[:120]))
     require(not (p / 'cosign.tmp').exists(), 'the private cosign folder stayed after use')
     # the checks of the program path (no AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN): owner uid 0, no symbolic link
-    owned = os.path.realpath(s.node)
+    owned = os.path.realpath(s.node_src)  # the given Node, not the private copy: the copy may lie under /private/tmp (1777)
     parts = [Path(*Path(owned).parts[:i]) for i in range(2, len(Path(owned).parts) + 1)]
     first_user = next((x for x in parts if os.lstat(x).st_uid != 0), None)
     require(first_user is not None and all(os.lstat(x).st_mode & 0o022 == 0 and not os.path.islink(x) for x in parts[:parts.index(first_user)]),
@@ -801,7 +822,7 @@ def case_leases(s):
         require(tok[3:] == [str(dl), 't1', 'k1'], 'LEASE_OPENED answer: %r' % tok)
     s.one(p, 'OPEN_LEASE L1 100 t1 k1', 'DUPLICATE_REQUEST_ID')
     s.one(p, 'OPEN_LEASE r0 100 t1 k1', 'DUPLICATE_REQUEST_ID')
-    s.one(p, 'OPEN_LEASE Lx 100 t2 k1', 'TENANT_ISOLATION_BREACH')
+    # per-tenant namespaces (review D3): t2's lease Lx is t2's own (before D3: TENANT_ISOLATION_BREACH); see case tenant_namespace
     s.one(p, 'OPEN_LEASE Lx 100', 'MALFORMED_REQUEST')  # the unbound form is gone
     h = s.h(p, 't1', 'k1')
     s.one(p, 'REFUND t1 k1 L1 %s DUPLICATE_CHARGE 5' % h, 'COMMITTED')  # closes L1
@@ -813,7 +834,7 @@ def case_leases(s):
     s.one(p, 'REFUND t1 k1 L4 %s DUPLICATE_CHARGE 01' % h, 'MALFORMED_REQUEST')  # does NOT close L4
     s.one(p, 'REFUND t1 k1 r0 %s DUPLICATE_CHARGE 5' % h, 'DUPLICATE_REQUEST_ID')
     closes = [e for _, e, _ in read_wal(p) if e.startswith('CLOSE ')]
-    require(closes == ['CLOSE L2 REJECTED_POLICY REASON_CAP', 'CLOSE L3 REJECTED_POLICY TOTAL_CAP'], 'close records: %r' % closes)
+    require(closes == ['CLOSE L2 t1 REJECTED_POLICY REASON_CAP', 'CLOSE L3 t1 REJECTED_POLICY TOTAL_CAP'], 'close records: %r' % closes)
     code, out, _ = s.run(['leases', p])
     require(code == 0 and out == 'LEASES 2\nLEASE L4 400 t1 k1\nLEASE L5 500 t1 k1\n', 'list: %r' % out)
     code, out, _ = s.run(['leases', p, '--sweep', '--now', '450'])
@@ -831,20 +852,20 @@ def case_leases(s):
     before = files(p)
     s.run(['leases', p, '--sweep', '--now', '9999'])
     require(files(p) == before, 'a sweep wrote to the store')
-    # REQUIRE_HUMAN_COSIGN closes a lease too
+    # REQUIRE_HUMAN_COSIGN does NOT close a lease (review D6; before D6 it did): the lease becomes PENDING_COSIGN
     s.one(p, 'OPEN_LEASE L6 600 t1 k1', 'LEASE_OPENED')
     s.one(p, 'REFUND t1 k1 L6 %s GOODWILL 2001' % h, 'REJECTED_POLICY')
     s.one(p, 'OPEN_MONEY t1 k2 r-k2 store-refunds 100000', 'COMMITTED')
     s.one(p, 'OPEN_LEASE L7 700 t1 k2', 'LEASE_OPENED')
     tok = s.one(p, 'REFUND t1 k2 L7 %s GOODWILL 2001' % s.h(p, 't1', 'k2'), 'REQUIRE_HUMAN_COSIGN')
-    require('LEASE_CLOSED' in tok, 'cosign closes: %r' % tok)
+    require(tok[2:3] == ['LEASE_PENDING'], 'a cosign verdict leaves the lease pending: %r' % tok)
     code, out, _ = s.run(['leases', p])
-    require(out.startswith('LEASES 2\n'), 'leases after closes: %r' % out)
+    require(out.startswith('LEASES 3\n') and out.endswith('LEASE L7 700 t1 k2 PENDING_COSIGN %s COSIGN_REQUIRED\n' % tok[3]), 'leases after closes: %r' % out)
     s.one(p, 'OPEN_LEASE L2 900 t1 k1', 'DUPLICATE_REQUEST_ID')  # a closed lease is never opened again
     for bad in (['--now', '5'], ['--sweep', '--all'], ['--sweep', '--sweep']):
         code, out, _ = s.run(['leases', p] + bad)
         require(code == 2, 'leases %r must be a usage error' % bad)
-    return '5 bound leases; commit, REJECTED_POLICY x3, REQUIRE_HUMAN_COSIGN close; stale and malformed do not; --all shows closes; sweep exact and read-only'
+    return '5 bound leases; commit and REJECTED_POLICY x3 close; REQUIRE_HUMAN_COSIGN leaves it pending; stale and malformed do not close; --all shows closes; sweep exact and read-only'
 
 
 def case_lease_binding(s):
@@ -853,6 +874,11 @@ def case_lease_binding(s):
     s.one(p, 'OPEN_MONEY t1 order-1 r0 store-refunds 1000', 'COMMITTED')
     s.one(p, 'OPEN_LEASE wh-1 100 t1 order-1', 'LEASE_OPENED')
     h = s.h(p, 't1', 'order-1')
+    # a verdict on another key of the SAME tenant (keys and ids are per tenant since review D3, so only this form can
+    # reach the lease of t1)
+    s.one(p, 'OPEN_MONEY t1 order-2 r-o2 store-refunds 10', 'COMMITTED')
+    tok = s.one(p, 'REFUND t1 order-2 wh-1 %s NOSUCH 1' % s.h(p, 't1', 'order-2'), 'REJECTED_POLICY')
+    require(tok == ['REJECTED_POLICY', 'NO_RULE'], 'a verdict on another key of the same tenant must not name a close: %r' % tok)
     s.one(p, 'REFUND t9 junk wh-1 %s NOSUCH 1' % h, 'UNKNOWN_KEY')  # the reviewer's line: a key never opened
     s.one(p, 'OPEN_MONEY t9 junk r-j store-refunds 10', 'COMMITTED')
     tok = s.one(p, 'REFUND t9 junk wh-1 %s NOSUCH 1' % s.h(p, 't9', 'junk'), 'REJECTED_POLICY')
@@ -873,6 +899,144 @@ def case_lease_binding(s):
         s.one(p, 'REFUND t1 order-1 wh-2 %s NOSUCH 1' % s.h(p, 't1', 'order-1'), 'REJECTED_POLICY')
     require(len(read_wal(p)) == n, 'the lease loop wrote records: %d -> %d' % (n, len(read_wal(p))))
     return 'unknown key -> UNKNOWN_KEY; a rejection and a commit on another key leave the lease open (DROPPED_OBLIGATION); no lease loop'
+
+
+def case_lease_cosign_pending(s):
+    """Review D6: REQUIRE_HUMAN_COSIGN does not close a lease (the action is still pending: the request id stays fresh
+    and the signed retry is still expected). The lease gets the state PENDING_COSIGN (one durable COSIGN_PENDING record,
+    never a second one); the sweep lists it as PENDING_COSIGN before its deadline and as DROPPED_OBLIGATION after it; the
+    signed commit or a terminal REJECTED_POLICY closes it."""
+    key, pub = keygen(s, 'pending')
+    p = s.store('lease-pending', pubkey=pub)
+    s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
+    s.one(p, 'OPEN_LEASE g1 500 t1 o1', 'LEASE_OPENED')
+    h = s.h(p, 't1', 'o1')
+    tok = s.one(p, 'REFUND t1 o1 g1 %s GOODWILL 7500' % h, 'REQUIRE_HUMAN_COSIGN')
+    require(tok[1] == 'COSIGN_REQUIRED' and tok[2:3] == ['LEASE_PENDING'] and len(tok) == 4, 'a cosign verdict must not close the lease: %r' % tok)
+    epoch = tok[3]
+    code, out, _ = s.run(['leases', p])
+    require(code == 0 and out == 'LEASES 1\nLEASE g1 500 t1 o1 PENDING_COSIGN %s COSIGN_REQUIRED\n' % epoch, 'leases: %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '400'])
+    require(code == 0 and out == 'SWEEP 1 0 now=400\nPENDING_COSIGN g1 500 t1 o1 COSIGN_REQUIRED\n', 'sweep before the deadline: %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '501'])
+    require(code == 24 and out == 'SWEEP 1 1 now=501\nDROPPED_OBLIGATION g1 500 t1 o1\n', 'sweep after the deadline: %d %r' % (code, out))
+    n = len(read_wal(p))
+    for _ in range(3):  # retries without a signature: no second record, the same answer
+        code, out, _ = s.serve(p, ['REFUND t1 o1 g1 %s GOODWILL 7500' % h])
+        require(code == 11 and out == ['REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED LEASE_PENDING %s' % epoch],
+                'a cosign retry must name the same pending record and write none: %d %r' % (code, out))
+    require(len(read_wal(p)) == n, 'retries wrote records: %d -> %d' % (n, len(read_wal(p))))
+    pend = [e for _, e, _ in read_wal(p) if e.startswith(('COSIGN_PENDING ', 'CLOSE '))]
+    require(pend == ['COSIGN_PENDING g1 t1 COSIGN_REQUIRED'], 'records: %r' % pend)
+    action = 'REFUND t1 o1 g1 %s GOODWILL 7500' % h
+    code, msg, _ = s.run(['cosign-message', p, action])
+    s.one(p, action + ' ' + sign(s, key, msg.encode()), 'COMMITTED')  # the signed retry closes the lease
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(code == 0 and out.split('\n')[1].endswith(' CLOSED %d COMMITTED -' % (n)), 'the signed commit must close the lease: %r' % out)
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '501'])
+    require(code == 0 and out == 'SWEEP 0 0 now=501\n', 'after the commit: %d %r' % (code, out))
+    # a pending lease, then a terminal REJECTED_POLICY on it: closed by a CLOSE record
+    s.one(p, 'OPEN_LEASE g2 900 t1 o1', 'LEASE_OPENED')
+    h = s.h(p, 't1', 'o1')
+    s.one(p, 'REFUND t1 o1 g2 %s GOODWILL 2001' % h, 'REQUIRE_HUMAN_COSIGN')
+    tok = s.one(p, 'REFUND t1 o1 g2 %s GOODWILL 9000' % h, 'REJECTED_POLICY')
+    require(tok[1:3] == ['TOTAL_CAP', 'LEASE_CLOSED'], 'a rejection closes a pending lease: %r' % tok)
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(code == 0 and out.split('\n')[0] == 'LEASES 0 all=2' and ' CLOSED %s REJECTED_POLICY TOTAL_CAP' % tok[3] in out, 'leases --all: %r' % out)
+    # a COSIGN_INVALID verdict (signature of another key) also leaves the lease pending
+    key2, _ = keygen(s, 'pending-other')
+    s.one(p, 'OPEN_LEASE g3 900 t1 o1', 'LEASE_OPENED')
+    action = 'REFUND t1 o1 g3 %s GOODWILL 2500' % h
+    code, msg, _ = s.run(['cosign-message', p, action])
+    tok = s.one(p, action + ' ' + sign(s, key2, msg.encode()), 'REQUIRE_HUMAN_COSIGN')
+    require(tok[1:3] == ['COSIGN_INVALID', 'LEASE_PENDING'], 'COSIGN_INVALID must leave the lease pending: %r' % tok)
+    code, out, _ = s.run(['state', p])
+    require(code == 0 and out.endswith(' leases=1\n'), 'state: %r' % out)
+    return 'cosign verdict -> PENDING_COSIGN (1 record, retries write none); sweep: PENDING_COSIGN before, DROPPED_OBLIGATION after the deadline; signed commit and REJECTED_POLICY close it'
+
+
+def case_lease_pending_rejected(s):
+    """Fresh review of PR-3, finding 3: a caller can close a PENDING_COSIGN lease on purpose with any REJECTED_POLICY on
+    the same tenant, key and request id (for example an unknown reason). The close stays allowed (a rejection is a
+    terminal verdict), but the sweep now reports such a lease on its own line, REJECTED_AFTER_PENDING, before and after
+    its deadline; the exit code is not changed (the lease is closed, not dropped)."""
+    p = s.store('lease-pend-rej')
+    s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
+    s.one(p, 'OPEN_LEASE g1 500 t1 o1', 'LEASE_OPENED')
+    s.one(p, 'OPEN_LEASE g2 500 t1 o1', 'LEASE_OPENED')
+    h = s.h(p, 't1', 'o1')
+    s.one(p, 'REFUND t1 o1 g1 %s GOODWILL 7500' % h, 'REQUIRE_HUMAN_COSIGN')
+    tok = s.one(p, 'REFUND t1 o1 g1 %s BOGUS 1' % h, 'REJECTED_POLICY')
+    require(tok[1:3] == ['NO_RULE', 'LEASE_CLOSED'], 'a rejection closes the pending lease: %r' % tok)
+    s.one(p, 'REFUND t1 o1 g2 %s BOGUS 1' % h, 'REJECTED_POLICY')  # a rejection of a lease that was never pending
+    for now in (400, 501):
+        code, out, _ = s.run(['leases', p, '--sweep', '--now', str(now)])
+        want = 'SWEEP 0 0 now=%d\nREJECTED_AFTER_PENDING g1 500 t1 o1 %s NO_RULE\n' % (now, tok[3])
+        require(code == 0 and out == want, 'a pending lease closed by a rejection must stay visible in the sweep: %d %r' % (code, out))
+    return 'a rejection after a cosign verdict closes the lease; the sweep reports it as REJECTED_AFTER_PENDING; a plain rejection does not'
+
+
+def normalize(answer):
+    """An answer with every epoch and state hash replaced: what is left must not depend on another tenant."""
+    tok = answer.split(' ')
+    out = []
+    for i, t in enumerate(tok):
+        epoch = t.isdigit() and ((i == 2 and tok[0] in ('COMMITTED', 'LEASE_OPENED')) or (i > 0 and tok[i - 1] in ('LEASE_CLOSED', 'LEASE_PENDING')))
+        if len(t) == 32 and all(c in '0123456789abcdef' for c in t):
+            t = '<hash>'
+        elif epoch:
+            t = '<epoch>'
+        out.append(t)
+    return ' '.join(out)
+
+
+def case_tenant_namespace(s):
+    """Review D3: keys, request ids and leases are per tenant. Tenant B cannot squat a key or a request id of tenant A,
+    and no answer to tenant B depends on what tenant A did (the same script of tenant B gives the same answers, up to
+    epochs and state hashes, on a store where tenant A was busy and on a store where tenant A did nothing)."""
+    # 1. squatting: B opens A's key name and uses A's request ids first; A's legitimate requests still commit
+    p = s.store('ns-squat')
+    s.one(p, 'OPEN_MONEY tB order-1 r1 store-refunds 10', 'COMMITTED')
+    s.one(p, 'OPEN_LEASE wh-1 100 tB order-1', 'LEASE_OPENED')
+    s.one(p, 'OPEN_MONEY tA order-1 r1 store-refunds 1000', 'COMMITTED')  # same key name, same request id, other tenant
+    s.one(p, 'OPEN_LEASE wh-1 100 tA order-1', 'LEASE_OPENED')  # same lease id, other tenant
+    hA, hB = s.h(p, 'tA', 'order-1'), s.h(p, 'tB', 'order-1')
+    require(hA != hB, 'two tenants share one key state')
+    require(s.get(p, 'tA', 'order-1')['original'] == '1000' and s.get(p, 'tB', 'order-1')['original'] == '10', 'the two keys are not separate')
+    # A's rejection with id wh-1 closes only A's lease; the CLOSE record names the tenant
+    tok = s.one(p, 'REFUND tA order-1 wh-1 %s NOSUCH 1' % hA, 'REJECTED_POLICY')
+    require(tok[2:3] == ['LEASE_CLOSED'], "A's rejection must close A's lease: %r" % tok)
+    closes = [e for _, e, _ in read_wal(p) if e.startswith('CLOSE ')]
+    require(closes == ['CLOSE wh-1 tA REJECTED_POLICY NO_RULE'], 'close records: %r' % closes)
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '200'])
+    require(code == 24 and out == 'SWEEP 1 1 now=200\nDROPPED_OBLIGATION wh-1 100 tB order-1\n', "B's lease must stay open: %d %r" % (code, out))
+    s.one(p, 'REFUND tB order-1 wh-1 %s DUPLICATE_CHARGE 1' % hB, 'COMMITTED')  # closes B's lease
+    s.one(p, 'REFUND tA order-1 wh-1 %s DUPLICATE_CHARGE 1' % hA, 'COMMITTED')  # the id is fresh in A's namespace
+    s.one(p, 'REFUND tA order-1 wh-1 %s DUPLICATE_CHARGE 1' % s.h(p, 'tA', 'order-1'), 'DUPLICATE_REQUEST_ID')
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '200'])
+    require(code == 0 and out == 'SWEEP 0 0 now=200\n', 'both leases closed: %d %r' % (code, out))
+    code, out, _ = s.run(['state', p])
+    require(code == 0 and ' keys=2 effects=4 leases=0' in out, 'the store folds: %d %r' % (code, out))
+    # 2. probes: the same script of tenant B on a busy store (A has keys, ids and leases) and on a store where A did nothing
+    script = ['OPEN_MONEY tB k1 r1 store-refunds 1000', 'GET tB k2', 'REFUND tB k2 r2 %s DUPLICATE_CHARGE 1' % ZERO,
+              'OPEN_SAGA tB s1 r2 payout', 'OPEN_INVENTORY tB inv r1 seats 3', 'OPEN_LEASE r1 100 tB k1', 'OPEN_LEASE wh-9 100 tB k2',
+              'OPEN_LEASE wh-9 100 tB k2', 'OPEN_MONEY tB k2 wh-9 store-refunds 5', 'GET tB s2', 'OPEN_LEASE a-r 100 tB k1']
+    busy, quiet = s.store('ns-busy'), s.store('ns-quiet')
+    for line in ['OPEN_MONEY tA k1 r1 store-refunds 1000', 'OPEN_MONEY tA k2 r2 store-refunds 1000', 'OPEN_SAGA tA s1 r3 payout',
+                 'OPEN_SAGA tA s2 wh-9 payout', 'OPEN_LEASE a-r 100 tA k1', 'OPEN_LEASE r9 100 tA k2', 'OPEN_INVENTORY tA inv r4 seats 3']:
+        s.one(busy, line, 'COMMITTED' if not line.startswith('OPEN_LEASE') else 'LEASE_OPENED')
+    answers = []
+    for st in (busy, quiet):
+        code, out, _ = s.serve(st, script)
+        require(len(out) == len(script), 'one answer per line: %r' % out)
+        answers.append([normalize(a) for a in out])
+    diff = [(l, a, b) for l, a, b in zip(script, answers[0], answers[1]) if a != b]
+    require(not diff, "an answer to tenant B depends on what tenant A did: %r" % diff[:3])
+    require(answers[0][0].startswith('COMMITTED') and answers[0][1] == 'UNKNOWN_KEY', 'probe answers: %r' % answers[0])
+    for cmd in (['get', busy, 'tB', 's2'], ['get', busy, 'tB', 'zz']):
+        code, out, _ = s.run(cmd)
+        require(code == 21 and out == 'UNKNOWN_KEY\n', 'get of a key of another tenant must be UNKNOWN_KEY: %d %r' % (code, out))
+    return "B's key, id and lease names do not block A; a CLOSE names its tenant; %d lines of B answer the same on a busy and a quiet store" % len(script)
 
 
 def case_nonce(s):
@@ -1142,8 +1306,12 @@ def calls(events, parent=None):
 
 COMMIT_ORDER = ['flock airlock.wal 2', 'write airlock.wal N', 'fullfsync airlock.wal 0', 'write airlock.epoch 12', 'fullfsync airlock.epoch 0',
                 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
-RECOVERY_ORDER = ['flock airlock.wal 2', 'ftruncate airlock.epoch N', 'ftruncate airlock.wal N', 'fullfsync airlock.wal 0', 'write airlock.epoch 12',
-                  'fullfsync airlock.epoch 0', 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
+# Review D7: a recovery pushes a ratchet entry only when the ratchet is below the WAL epoch (no second entry of the
+# same value). A torn record with the ratchet at the WAL epoch: the WAL is cut and synced, the ratchet is not touched.
+RECOVERY_ORDER = ['flock airlock.wal 2', 'ftruncate airlock.wal N', 'fullfsync airlock.wal 0', 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
+# A record whose ratchet entry is missing (a crash after the WAL sync): the WAL epoch is pushed and synced.
+RECOVERY_PUSH_ORDER = ['flock airlock.wal 2', 'ftruncate airlock.wal N', 'fullfsync airlock.wal 0', 'write airlock.epoch 12',
+                       'fullfsync airlock.epoch 0', 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
 
 
 def order_diff(got, want):
@@ -1224,13 +1392,17 @@ def case_trace(s):
     code, out, events = traced(s, ['serve', p], ('REFUND t1 k1 L1 %s NOPE 5\n' % h).encode())
     require(out[:1] and 'LEASE_CLOSED' in out[0], 'traced lease close: %r' % out)
     require_order('a lease close', calls(events), COMMIT_ORDER)
-    # a recovery: lock -> cut the torn tail -> F_FULLFSYNC -> ratchet entry -> F_FULLFSYNC -> answer
+    # a recovery: lock -> cut the torn tail -> F_FULLFSYNC -> (ratchet entry -> F_FULLFSYNC, only if it is missing) -> answer
     good = files(p)
     (p / 'airlock.wal').write_bytes(good['airlock.wal'] + b'FAR1')
     code, out, events = traced(s, ['state', p])
     lock_first(events, 'traced recovery')
     require_order('a recovery', calls(events), RECOVERY_ORDER)
     require(code == 0 and (p / 'airlock.wal').read_bytes() == good['airlock.wal'], 'traced recovery: exit %d %r, or the torn tail was not cut exactly' % (code, out))
+    (p / 'airlock.epoch').write_bytes(good['airlock.epoch'][:-12])  # the last ratchet entry is missing
+    code, out, events = traced(s, ['state', p])
+    require_order('a recovery that pushes the WAL epoch', calls(events), RECOVERY_PUSH_ORDER)
+    require(code == 0 and (p / 'airlock.epoch').read_bytes() == good['airlock.epoch'], 'traced recovery push: exit %d %r' % (code, out))
     # a recovery whose WAL sync fails: refused; the next start recovers
     (p / 'airlock.wal').write_bytes(good['airlock.wal'] + b'FAR1')
     code, out, events = traced(s, ['state', p], AIRLOCK_FAIL_SYNC='1')
@@ -1406,6 +1578,221 @@ def case_crafted(s):
     return '1 crafted record adopted; %d crafted records refused by the fold; version-2 store refused (STORE_VERSION_2); ratchet maximum, not last entry' % len(bad)
 
 
+def case_legacy_wal(s):
+    """WAL compatibility (review D3): records in the form of the engine before the per-tenant namespaces, with a correct
+    CRC and chain, fold to the same keys, ids and leases. The old `CLOSE <request_id> <verdict> <detail>` (no tenant) is
+    read only while exactly one lease in the whole store has that id; the new form names the tenant."""
+    p = s.store('legacy')
+    s.one(p, 'OPEN_MONEY t1 k1 r0 store-refunds 1000', 'COMMITTED')
+    good = files(p)
+    recs = read_wal(p)
+
+    def build(payloads):
+        for n, b in good.items():
+            (p / n).write_bytes(b)
+        data, epoch, tail = good['airlock.wal'], recs[-1][0] + 1, recs[-1][2]
+        for pl in payloads:
+            rec = wal_record(epoch, tail, pl.encode())
+            data, tail, epoch = data + rec, fnv128(rec), epoch + 1
+        (p / 'airlock.wal').write_bytes(data)
+        return s.run(['state', p])
+    code, out, _ = build(['LEASE L1 100 t1 k1', 'CLOSE L1 REJECTED_POLICY NO_RULE', 'LEASE L2 200 t1 k1'])
+    require(code == 0 and ' leases=1' in out, 'an old CLOSE of the one lease with its id must fold: %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(code == 0 and out == 'LEASES 1 all=2\nLEASE L1 100 t1 k1 CLOSED 3 REJECTED_POLICY NO_RULE\nLEASE L2 200 t1 k1 OPEN\n', 'old close: %r' % out)
+    bad = {'an old CLOSE while two tenants have a lease with that id': ['LEASE L1 100 t1 k1', 'LEASE L1 100 t2 k9', 'CLOSE L1 REJECTED_POLICY NO_RULE'],
+           'an old CLOSE of a closed lease': ['LEASE L1 100 t1 k1', 'CLOSE L1 REJECTED_POLICY NO_RULE', 'CLOSE L1 REJECTED_POLICY NO_RULE'],
+           'a new CLOSE of the lease of another tenant': ['LEASE L1 100 t1 k1', 'CLOSE L1 t2 REJECTED_POLICY NO_RULE'],
+           'an old CLOSE with no lease': ['CLOSE L1 REJECTED_POLICY NO_RULE'],
+           'a new CLOSE with REQUIRE_HUMAN_COSIGN (review D6: never written)': ['LEASE L1 100 t1 k1', 'CLOSE L1 t1 REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED'],
+           'a second COSIGN_PENDING of one lease': ['LEASE L1 100 t1 k1', 'COSIGN_PENDING L1 t1 COSIGN_REQUIRED', 'COSIGN_PENDING L1 t1 COSIGN_INVALID'],
+           'a COSIGN_PENDING with another detail': ['LEASE L1 100 t1 k1', 'COSIGN_PENDING L1 t1 NO_RULE'],
+           'a COSIGN_PENDING of a closed lease': ['LEASE L1 100 t1 k1', 'CLOSE L1 t1 REJECTED_POLICY NO_RULE', 'COSIGN_PENDING L1 t1 COSIGN_REQUIRED'],
+           'an old cosign CLOSE of a pending lease': ['LEASE L1 100 t1 k1', 'CLOSE L1 REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED', 'CLOSE L1 REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED']}
+    for why, payloads in bad.items():
+        code, out, _ = build(payloads)
+        require(code == 17 and out.startswith('CORRUPT_WAL'), '%s must be CORRUPT_WAL: %d %r' % (why, code, out))
+    code, out, _ = build(['LEASE L1 100 t1 k1', 'LEASE L1 100 t2 k9', 'CLOSE L1 t2 REJECTED_POLICY NO_RULE'])
+    require(code == 0 and ' leases=1' in out, 'a new CLOSE closes the lease of its tenant only: %d %r' % (code, out))
+    # review D6: an old `CLOSE <id> REQUIRE_HUMAN_COSIGN <detail>` means that the action is still pending: PENDING_COSIGN
+    code, out, _ = build(['LEASE L1 100 t1 k1', 'CLOSE L1 REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED'])
+    require(code == 0 and ' leases=1' in out, 'an old cosign close is read as pending (still open): %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '101'])
+    require(code == 24 and out == 'SWEEP 1 1 now=101\nDROPPED_OBLIGATION L1 100 t1 k1\n', 'an old cosign close: dropped after its deadline: %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(out == 'LEASES 1 all=1\nLEASE L1 100 t1 k1 PENDING_COSIGN 3 COSIGN_REQUIRED\n', 'old cosign close: %r' % out)
+    h = s.h(p, 't1', 'k1')
+    tok = s.one(p, 'REFUND t1 k1 L1 %s DUPLICATE_CHARGE 1' % h, 'COMMITTED')  # the later commit closes it
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(out == 'LEASES 0 all=1\nLEASE L1 100 t1 k1 CLOSED %s COMMITTED -\n' % tok[2], 'old cosign close, then a commit: %r' % out)
+    for n, b in good.items():
+        (p / n).write_bytes(b)
+    return 'old CLOSE form folds while its id is unique in the store (an old cosign close as PENDING_COSIGN); %d ambiguous or invalid closes refused; new CLOSE names its tenant' % len(bad)
+
+
+def ratchet_entries(store):
+    """(value or None for a bad CRC) of each full 12-byte entry, and the number of bytes after the last full entry."""
+    data = (Path(store) / 'airlock.epoch').read_bytes()
+    out = []
+    for i in range(0, len(data) - len(data) % 12, 12):
+        v, c = struct.unpack('<Q', data[i:i + 8])[0], struct.unpack('<I', data[i + 8:i + 12])[0]
+        out.append(v if c == zlib.crc32(data[i:i + 8]) & 0xffffffff else None)
+    return out, len(data) % 12
+
+
+def case_ratchet_entry(s):
+    """Review D7: a full-length ratchet entry with a bad CRC is no longer skipped silently. Write order of a commit: WAL
+    record, sync, ratchet entry, sync; a recovery pushes an entry only when the ratchet is below the WAL. So a crash can
+    leave a bad entry only as the LAST entry and only when the WAL epoch is one above the last good entry: that one shape
+    is repaired (the entry is cut and the WAL epoch pushed again). Every other bad entry (in the middle, or at the end
+    with the WAL epoch equal to the last good entry, the shape of a one-record rollback) is CORRUPT_WAL."""
+    p = s.store('ratchet')
+    for i, line in enumerate(['OPEN_MONEY t1 k1 r0 store-refunds 1000'] + ['REFUND t1 k1 r%d %%s DUPLICATE_CHARGE 1' % n for n in (1, 2)]):
+        s.one(p, line % s.h(p, 't1', 'k1') if '%s' in line else line, 'COMMITTED')
+        if i == 1:
+            older = files(p)  # epoch 2
+    good = files(p)  # epoch 3; ratchet 0,1,2,3
+    rat = p / 'airlock.epoch'
+
+    def put(wal, ratchet):
+        (p / 'airlock.wal').write_bytes(wal)
+        rat.write_bytes(ratchet)
+        return s.run(['state', p])
+
+    def flip(data, entry, bit=0):
+        b = bytearray(data)
+        b[12 * entry + bit // 8] ^= 1 << (bit % 8)
+        return bytes(b)
+    # 1. the attack of the review: one bit of the newest entry (3) and the WAL of epoch 2
+    code, out, _ = put(older['airlock.wal'], flip(good['airlock.epoch'], 3))
+    require(code == 17 and out.startswith('CORRUPT_WAL RATCHET_ENTRY_BAD'), 'a bad last entry and a one-record rollback must be CORRUPT_WAL: %d %r' % (code, out))
+    require((p / 'airlock.wal').read_bytes() == older['airlock.wal'] and rat.read_bytes() == flip(good['airlock.epoch'], 3), 'a refusal changed the store')
+    # 2. a bad entry in the middle, the WAL unchanged
+    for entry in (1, 2):
+        code, out, _ = put(good['airlock.wal'], flip(good['airlock.epoch'], entry, 70))
+        require(code == 17 and out.startswith('CORRUPT_WAL RATCHET_ENTRY_BAD'), 'a bad middle entry %d must be CORRUPT_WAL: %d %r' % (entry, code, out))
+    # 3. the crash shape: the WAL holds epoch 3, the ratchet ends with a full-length garbage block where entry 3 was being written
+    for garbage in (b'\0' * 12, b'\xff' * 12, flip(good['airlock.epoch'], 3)[-12:]):
+        code, out, _ = put(good['airlock.wal'], good['airlock.epoch'][:-12] + garbage)
+        vals, torn = ratchet_entries(p)
+        require(code == 0 and out.startswith('STATE 3 ') and vals == [0, 1, 2, 3] and torn == 0,
+                'a crash-shaped bad last entry must be cut and the WAL epoch pushed again: %d %r %r' % (code, out, vals))
+    # 4. a torn (short) last entry is cut as before; when the ratchet already holds the WAL epoch, nothing is pushed
+    code, out, _ = put(good['airlock.wal'], good['airlock.epoch'] + b'\x04\0\0')
+    require(code == 0 and ratchet_entries(p) == ([0, 1, 2, 3], 0), 'a torn last entry: %d %r %r' % (code, out, ratchet_entries(p)))
+    code, out, _ = put(good['airlock.wal'][:-5], good['airlock.epoch'][:-12] + b'\x03\0')  # torn record and torn entry
+    require(code == 0 and out.startswith('STATE 2 ') and ratchet_entries(p) == ([0, 1, 2], 0), 'a torn record and a torn entry: %d %r %r' % (code, out, ratchet_entries(p)))
+    code, out, _ = put(good['airlock.wal'] + b'FAR1', good['airlock.epoch'])  # a torn record: the WAL is cut, no duplicate entry
+    require(code == 0 and rat.read_bytes() == good['airlock.epoch'], 'a torn record with the ratchet at the WAL epoch must not push again: %r' % (ratchet_entries(p),))
+    # 5. a crash after the WAL sync (no ratchet entry yet): the WAL epoch is pushed
+    code, out, _ = put(good['airlock.wal'], good['airlock.epoch'][:-12])
+    require(code == 0 and ratchet_entries(p) == ([0, 1, 2, 3], 0), 'a missing last entry must be pushed: %r' % (ratchet_entries(p),))
+    put(good['airlock.wal'], good['airlock.epoch'])
+    return 'bad last entry + one-record rollback -> CORRUPT_WAL; bad middle entries -> CORRUPT_WAL; 3 crash-shaped last entries repaired; torn entries cut; no duplicate push'
+
+
+class Server:
+    """One long `serve` process: the requests go one at a time, so a file can be changed BETWEEN two requests."""
+
+    def __init__(self, s, store, extra):
+        self.proc = subprocess.Popen([s.engine, 'serve', store] + [str(x) for x in extra], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE, env=ENV)
+
+    def ask(self, line):
+        self.proc.stdin.write((line + '\n').encode())
+        self.proc.stdin.flush()
+        return self.proc.stdout.readline().decode().rstrip('\n')
+
+    def close(self):
+        self.proc.stdin.close()
+        self.proc.wait(timeout=60)
+        self.proc.stdout.close()
+        self.proc.stderr.close()
+
+
+def case_pin_window(s):
+    """Review D2: the pinned helper files are checked at EVERY exec, not once per process, and only on a path that no
+    other non-root user can change. (a) the refund binary is changed in place after its first use in one `serve`
+    process: HELPER_FAILED PIN_MISMATCH (it is hashed at every exec); (b) the Node binary is replaced (rename) after its
+    first use: HELPER_FAILED (an identity re-check at every exec, a new hash when it changed); (c) a pinned file in a
+    folder that another user can write (0777, 0775) is refused (PIN_PATH_UNTRUSTED); (d) a bignumber.js next to a
+    caller-chosen checker model that is not the pinned one is refused; (e) a symbolic link to a good Node copy works (the
+    engine checks and runs the resolved file)."""
+    ex = s.node_ok()
+    require(MODEL.exists(), 'NOT RUN: the checker model %s is missing' % MODEL)
+    reject_frame = "#!/bin/sh\ncat > /dev/null\nprintf '%s' '(refund-result-v1 False 0 \"\" \"\" \"\" 0)'\n"
+    # (a) refund binary, changed in place (same inode) between two requests of one process
+    p = s.store('pinwin-c', policies=('money-canonical',))
+    s.one(p, 'OPEN_MONEY t1 charge-1 r0 canonical 100', 'COMMITTED')
+    b = s.folder('pinwin-bin') / 'refund'
+    shutil.copyfile(BINARY, b)
+    os.chmod(b, 0o700)
+    srv = Server(s, p, ['--refund-binary', b])
+    try:
+        a1 = srv.ask('REFUND t1 charge-1 rq1 %s returned_item 5' % s.h(p, 't1', 'charge-1'))
+        require(a1.startswith('COMMITTED rq1 '), 'first refund with the pinned binary: %r' % a1)
+        with open(b, 'r+b') as f:  # the same file, new bytes: a script that always rejects
+            f.write(reject_frame.encode())
+            f.truncate()
+        a2 = srv.ask('REFUND t1 charge-1 rq2 %s returned_item 5' % a1.split(' ')[3])
+    finally:
+        srv.close()
+    require(a2.startswith('HELPER_FAILED PIN_MISMATCH'), 'a refund binary changed after its first use must be refused: %r' % a2)
+    # (b) Node, replaced (rename) between two requests of one process
+    q = s.store('pinwin-n')
+    s.one(q, 'OPEN_INVENTORY t1 inv r0 seats 3', 'COMMITTED')
+    s.one(q, 'OPEN_INVENTORY t1 inv2 r0b seats 3', 'COMMITTED')
+    nd = s.folder('pinwin-node')
+    node = nd / 'node'
+    shutil.copyfile(s.node, node)
+    os.chmod(node, 0o700)
+    fake = nd / 'fake'
+    fake.write_text('#!/bin/sh\ncat > /dev/null\nprintf \'REJECT\\n\'\nexit 1\n')
+    os.chmod(fake, 0o700)
+    srv = Server(s, q, ['--node', node, '--checker', MODEL])
+    try:
+        a1 = srv.ask(cert_line(s, q, 'b1', VALID_CERT))
+        require(a1.startswith('COMMITTED b1 '), 'first booking with the pinned Node: %r' % a1)
+        os.replace(fake, node)
+        a2 = srv.ask(cert_line(s, q, 'b2', VALID_CERT, 'inv2'))
+    finally:
+        srv.close()
+    require(a2.startswith('HELPER_FAILED PIN_MISMATCH'), 'a Node binary replaced after its first use must be refused: %r' % a2)
+    # (c) a pinned file in a folder that another user can write
+    for mode in (0o777, 0o775):
+        d = s.folder('pinwin-open-%o' % mode)
+        shutil.copyfile(BINARY, d / 'refund')
+        os.chmod(d / 'refund', 0o700)
+        os.chmod(d, mode)
+        tok = s.one(p, 'REFUND t1 charge-1 rq3 %s returned_item 5' % s.h(p, 't1', 'charge-1'), 'HELPER_FAILED', ['--refund-binary', d / 'refund'])
+        require(tok[1] == 'PIN_PATH_UNTRUSTED' and 'WRITABLE' in tok, 'a refund binary in a %o folder: %r' % (mode, tok))
+        shutil.copyfile(s.node, d / 'node')
+        os.chmod(d / 'node', 0o700)
+        tok = s.one(q, cert_line(s, q, 'b3', VALID_CERT, 'inv2'), 'HELPER_FAILED', ['--node', d / 'node', '--checker', MODEL])
+        require(tok[1] == 'PIN_PATH_UNTRUSTED' and 'WRITABLE' in tok, 'a Node binary in a %o folder: %r' % (mode, tok))
+        os.chmod(d, 0o700)
+    # (d) a bignumber.js next to a caller-chosen checker model that is not the pinned one
+    cd = s.folder('pinwin-checker')
+    shutil.copyfile(MODEL, cd / 'model.cjs')
+    # the bignumber.js that Node finds from the built model's folder (the repository's node_modules, or one above a mirror)
+    found = [d / 'node_modules' / 'bignumber.js' for d in MODEL.resolve().parents if (d / 'node_modules' / 'bignumber.js' / 'bignumber.js').is_file()]
+    require(found, 'NOT RUN: no node_modules/bignumber.js above %s' % MODEL)
+    real = found[0]
+    (cd / 'node_modules' / 'bignumber.js').mkdir(parents=True)
+    shutil.copyfile(real / 'package.json', cd / 'node_modules' / 'bignumber.js' / 'package.json')
+    (cd / 'node_modules' / 'bignumber.js' / 'bignumber.js').write_bytes((real / 'bignumber.js').read_bytes() + b'\n// changed\n')
+    tok = s.one(q, cert_line(s, q, 'b3', VALID_CERT, 'inv2'), 'HELPER_FAILED', ex + ['--checker', cd / 'model.cjs'])
+    # (e) a symbolic link to a good private Node copy: the engine resolves it, checks the target and runs the target
+    good = s.folder('pinwin-good') / 'node'
+    shutil.copyfile(s.node, good)
+    os.chmod(good, 0o700)
+    link = s.folder('pinwin-link') / 'node'
+    link.symlink_to(good)
+    s.one(q, cert_line(s, q, 'b3', VALID_CERT, 'inv2'), 'COMMITTED', ['--node', link, '--checker', MODEL])
+    return ('refund binary changed in place and Node replaced after first use -> PIN_MISMATCH; pinned files in 0777 and 0775 folders -> '
+            'PIN_PATH_UNTRUSTED; a changed bignumber.js beside the model -> HELPER_FAILED; a link to a good Node copy commits')
+
+
 def case_native_bound(s):
     """STAND-IN refund binaries (test doubles of the helper process) that accept what the native check must refuse:
     an amount above the remaining amount, and a reason outside the three approved reasons."""
@@ -1454,7 +1841,7 @@ CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
          ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
          ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env),
-         ('lease_binding', case_lease_binding), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
+         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('lease_cosign_pending', case_lease_cosign_pending), ('lease_pending_rejected', case_lease_pending_rejected), ('ratchet_entry', case_ratchet_entry), ('pin_window', case_pin_window), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
 
 
 def main():

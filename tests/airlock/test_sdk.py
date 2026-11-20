@@ -181,8 +181,11 @@ def case_py_typed(s):
         stale = expect(st.refund('t1', 'o1', 'r4', h, 'DUPLICATE_CHARGE', 5), 'STALE_STATE_HASH', 'stale')
         require(stale.state_hash == r.state_hash, 'stale detail names the present hash')
         expect(st.refund('t1', 'o1', 'r1', r.state_hash, 'DUPLICATE_CHARGE', 5), 'DUPLICATE_REQUEST_ID', 'duplicate')
-        expect(st.refund('t2', 'o1', 'r5', r.state_hash, 'DUPLICATE_CHARGE', 5), 'TENANT_ISOLATION_BREACH', 'other tenant write')
-        expect(st.get('t2', 'o1'), 'TENANT_ISOLATION_BREACH', 'other tenant get')
+        # per-tenant namespaces (review D3): a key of another tenant is UNKNOWN_KEY (before D3: TENANT_ISOLATION_BREACH)
+        e = raises(lambda: st.refund('t2', 'o1', 'r5', r.state_hash, 'DUPLICATE_CHARGE', 5), fa.EngineRefusal, 'other tenant write')
+        require(e.code == 'UNKNOWN_KEY', 'other tenant write: %r' % e.code)
+        e = raises(lambda: st.get('t2', 'o1'), fa.EngineRefusal, 'other tenant get')
+        require(e.code == 'UNKNOWN_KEY', 'other tenant get: %r' % e.code)
         raises(lambda: st.refund('t1', 'nokey', 'r6', r.state_hash, 'DUPLICATE_CHARGE', 5), fa.EngineRefusal, 'unknown key')
         e = raises(lambda: st.refund('t1', 'o1', 'r6', r.state_hash, 'DUPLICATE_CHARGE', '01'), fa.EngineRefusal, 'non-canonical amount')
         require(e.code == 'MALFORMED_REQUEST', 'code: %r' % e.code)
@@ -207,7 +210,7 @@ def case_py_typed(s):
         sw.close()
     eff = s.effects(p)
     require(eff == ['OPEN_MONEY t1 o1 r0 store-refunds 10000 shipping_paid=1000', 'REFUND t1 o1 r1 DUPLICATE_CHARGE 500 0'], 'WAL effects: %r' % eff)
-    return 'all 7 typed results from the real engine; UNKNOWN_KEY and MALFORMED_REQUEST raise EngineRefusal; 9 unsafe inputs refused locally; WAL = 2 effects'
+    return '6 typed results of a write from the real engine (TENANT_ISOLATION_BREACH is now READ only); UNKNOWN_KEY (also another tenant) and MALFORMED_REQUEST raise EngineRefusal; 9 unsafe inputs refused locally; WAL = 2 effects'
 
 
 def case_py_cosign(s):
@@ -314,15 +317,26 @@ def case_py_lease(s):
         except TypeError:
             pass
         require(st.with_lease('w4', 5000, 't1', 'o1', lambda lease: 'done') == 'done', 'return value')
+
+        def cosign(lease):
+            h = st.get('t1', 'o1').state_hash
+            return lease.commit('refund', tenant='t1', key='o1', pre_state_hash=h, reason='GOODWILL', amount=7500)
+        # review D6: a cosign verdict leaves the lease open (PENDING_COSIGN); before D6 it closed it
+        r = expect(st.with_lease('w5', 9000, 't1', 'o1', cosign), 'REQUIRE_HUMAN_COSIGN', 'cosign handler')
+        require(r.lease_pending is not None and r.lease_closed is None, 'LEASE_PENDING part: %r' % r.line)
         e = raises(lambda: st.with_lease('w4', 5000, 't1', 'o1', lambda lease: 1 / 0), fa.LeaseNotOpened, 'second lease on an open id')
         require(e.result.code == 'DUPLICATE_REQUEST_ID', 'code %r' % e.result.code)
         e = raises(lambda: st.with_lease('w2', 5000, 't1', 'o1', lambda lease: 1 / 0), fa.LeaseNotOpened, 'second lease on a closed id')
         require(e.result.code == 'DUPLICATE_REQUEST_ID' and e.result.detail.startswith('LEASE_USED'), 'one lease per id: %r' % e.result.line)
         d = expect(st.sweep(now_ms=5001), 'DROPPED_OBLIGATION', 'sweep')
         require(sorted(x[0] for x in d.dropped) == ['w3', 'w4'] and all(x[2:] == ('t1', 'o1') for x in d.dropped), 'dropped %r' % d.dropped)
+        require(d.pending == [('w5', 9000, 't1', 'o1', 'COSIGN_REQUIRED')], 'pending %r' % d.pending)
         expect(st.sweep(now_ms=5000), 'OK', 'deadline itself is not past')
-    require(s.leases(p) == ['w3', 'w4'], 'open leases: %r' % s.leases(p))
-    return 'commit and policy rejection close the lease; TypeError and no-sink handlers leave it open; sweep -> DROPPED_OBLIGATION w3, w4'
+        d = expect(st.sweep(now_ms=9001), 'DROPPED_OBLIGATION', 'sweep after the cosign deadline')
+        require(sorted(x[0] for x in d.dropped) == ['w3', 'w4', 'w5'] and d.pending == [], 'dropped %r pending %r' % (d.dropped, d.pending))
+    require(s.leases(p) == ['w3', 'w4', 'w5'], 'open leases: %r' % s.leases(p))
+    return ('commit and policy rejection close the lease; TypeError and no-sink handlers leave it open; a cosign verdict leaves it '
+            'PENDING_COSIGN; sweep -> DROPPED_OBLIGATION w3, w4 (and w5 after its deadline)')
 
 
 def case_py_kill(s):
@@ -476,12 +490,13 @@ def case_py_lease_bound(s):
             return lease.commit('refund', key='o2', pre_state_hash=h, reason='GOODWILL', amount=5000)  # TOTAL_CAP on o2
         r = expect(st.with_lease('b1', 5000, 't1', 'o1', other_key), 'REJECTED_POLICY', 'rejection on another key')
         require(r.lease_closed is None, 'a rejection on another key closed the lease: %r' % r.line)
-        e = raises(lambda: st.with_lease('b2', 5000, 't2', 'o1', lambda lease: 1 / 0), fa.LeaseNotOpened, 'lease on a key of another tenant')
-        require(e.result.code == 'TENANT_ISOLATION_BREACH', 'other tenant: %r' % e.result.line)
         d = expect(st.sweep(now_ms=5001), 'DROPPED_OBLIGATION', 'sweep')
         require(d.dropped == [('b1', 5000, 't1', 'o1')], 'dropped %r' % d.dropped)
         require(st.leases(all=True) == [['b1', '5000', 't1', 'o1', 'OPEN']], 'leases --all %r' % st.leases(all=True))
-    return 'rejection on another key leaves the lease open (no LEASE_CLOSED; sweep reports it); a lease on another tenant key refused'
+        # per-tenant namespaces (review D3): t2's lease b1 on the key name o1 is t2's own (before D3: TENANT_ISOLATION_BREACH)
+        require(st.with_lease('b1', 9000, 't2', 'o1', lambda lease: 'own') == 'own', "t2's lease with t1's lease id")
+        require(st.leases(all=True) == [['b1', '5000', 't1', 'o1', 'OPEN'], ['b1', '9000', 't2', 'o1', 'OPEN']], 'leases --all %r' % st.leases(all=True))
+    return "rejection on another key leaves the lease open (no LEASE_CLOSED; sweep reports it); another tenant's lease with the same id is its own"
 
 
 def case_ts_read_tricks(s):
@@ -543,7 +558,7 @@ def case_ts_typed(s):
         R('book', 'book', tenant='t1', key='seats', request_id='b2', pre_state_hash='$hi', certificate=CERT_OK),
     ])
     want = {'open': 'COMMITTED', 'refund': 'COMMITTED', 'cap': 'REJECTED_POLICY', 'cosign': 'REQUIRE_HUMAN_COSIGN', 'stale': 'STALE_STATE_HASH',
-            'dup': 'DUPLICATE_REQUEST_ID', 'tenant': 'TENANT_ISOLATION_BREACH', 'sweep': 'DROPPED_OBLIGATION', 'state': 'OK',
+            'dup': 'DUPLICATE_REQUEST_ID', 'sweep': 'DROPPED_OBLIGATION', 'state': 'OK',
             'open-saga': 'COMMITTED', 'in-flight': 'COMMITTED', 'failover': 'REJECTED_POLICY', 'open-inv': 'COMMITTED', 'book-bad': 'REJECTED_POLICY'}
     if (s.engine_dir / 'checker' / 'model.cjs').is_file():
         want['book'] = 'COMMITTED'
@@ -552,6 +567,8 @@ def case_ts_typed(s):
     for k, v in want.items():
         require(o[k].get('code') == v and 'error' not in o[k], 'TS %s: expected %s, got %r' % (k, v, o[k]))
     require(o['unknown-key'].get('error') == 'EngineRefusal' and o['unknown-key']['code'] == 'UNKNOWN_KEY', 'TS unknown key %r' % o['unknown-key'])
+    # per-tenant namespaces (review D3): a key of another tenant is UNKNOWN_KEY (before D3: TENANT_ISOLATION_BREACH)
+    require(o['tenant'].get('error') == 'EngineRefusal' and o['tenant']['code'] == 'UNKNOWN_KEY', 'TS other tenant %r' % o['tenant'])
     require(o['malformed'].get('error') == 'EngineRefusal' and o['malformed']['code'] == 'MALFORMED_REQUEST', 'TS malformed %r' % o['malformed'])
     for k in ('lf-id', 'nul-id', 'cr-amount', 'unsafe-number'):
         require(o[k].get('error') == 'LocalRefusal', 'TS %s: %r' % (k, o[k]))
@@ -559,7 +576,7 @@ def case_ts_typed(s):
     require(o['sweep']['dropped'] == [['L1', '1000', 't1', 'o1']], 'TS dropped %r' % o['sweep'])
     eff = s.effects(p)
     require(len(eff) == 6 and eff[1] == 'REFUND t1 o1 r1 DUPLICATE_CHARGE 500 0' and eff[-1].startswith('BOOK t1 seats b2 '), 'WAL %r' % eff)
-    return 'TS SDK: all 7 typed results from the real engine; EngineRefusal x2; 4 unsafe inputs refused locally; saga and inventory verbs; WAL = 6 effects'
+    return 'TS SDK: 6 typed results of a write from the real engine; EngineRefusal x3 (one for another tenant); 4 unsafe inputs refused locally; saga and inventory verbs; WAL = 6 effects'
 
 
 def case_ts_read(s):
@@ -598,6 +615,8 @@ def case_ts_lease(s):
          'fields': dict(rf, reason='SHIPPING', amount=8000)},
         {'do': 'lease', 'name': 'throws', 'request_id': 'w3', 'deadline_ms': 5000, 'tenant': 't1', 'key': 'o1', 'handler': 'typeerror_before_sink', 'event': '{"id":"evt"}', 'fields': rf},
         {'do': 'lease', 'name': 'no-sink', 'request_id': 'w4', 'deadline_ms': 5000, 'tenant': 't1', 'key': 'o1', 'handler': 'return_without_sink'},
+        {'do': 'lease', 'name': 'cosign', 'request_id': 'w5', 'deadline_ms': 9000, 'tenant': 't1', 'key': 'o1', 'handler': 'commit', 'op': 'refund',
+         'fields': dict(rf, reason='GOODWILL', amount=7500)},
         {'do': 'sweep', 'name': 'sweep', 'now_ms': 5001},
     ])
     require(o['commit']['handler_returned']['code'] == 'COMMITTED', 'TS commit %r' % o['commit'])
@@ -607,8 +626,12 @@ def case_ts_lease(s):
     require(o['no-sink']['handler_returned'] == {'returned': True}, 'TS no-sink %r' % o['no-sink'])
     require(o['sweep']['code'] == 'DROPPED_OBLIGATION' and sorted(x[0] for x in o['sweep']['dropped']) == ['w3', 'w4']
             and all(x[2:] == ['t1', 'o1'] for x in o['sweep']['dropped']), 'TS sweep %r' % o['sweep'])
-    require(s.leases(p) == ['w3', 'w4'], 'open leases %r' % s.leases(p))
-    return 'TS SDK: commit and rejection close; TypeError and no-sink leave the lease open; sweep -> DROPPED_OBLIGATION w3, w4'
+    # review D6: a cosign verdict leaves the lease open (PENDING_COSIGN); before D6 it closed it
+    cs = o['cosign']['handler_returned']
+    require(cs['code'] == 'REQUIRE_HUMAN_COSIGN' and cs['lease_pending'] is not None and cs['lease_closed'] is None, 'TS cosign %r' % cs)
+    require(o['sweep']['pending'] == [['w5', '9000', 't1', 'o1', 'COSIGN_REQUIRED']], 'TS pending %r' % o['sweep'])
+    require(s.leases(p) == ['w3', 'w4', 'w5'], 'open leases %r' % s.leases(p))
+    return 'TS SDK: commit and rejection close; TypeError and no-sink leave the lease open; cosign -> PENDING_COSIGN; sweep -> DROPPED_OBLIGATION w3, w4'
 
 
 def case_ts_kill(s):

@@ -1,0 +1,3 @@
+# D6 after: the same case on this branch (commit of the D6 fix)
+PASS lease_cosign_pending   1.5s cosign verdict -> PENDING_COSIGN (1 record, retries write none); sweep: PENDING_COSIGN before, DROPPED_OBLIGATION after the deadline; signed commit and REJECTED_POLICY close it
+exit 0
