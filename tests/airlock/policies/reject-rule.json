@@ -1,0 +1,8 @@
+{"airlock": "money", "version": 1, "name": "store-refunds", "profile": "parametric",
+ "rules": [
+  {"reason": "DUPLICATE_CHARGE", "verdict": "COMMIT"},
+  {"reason": "SHIPPING", "max_reason_total_fact": "shipping_paid", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "max_amount": "2000", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "min_amount": "2001", "max_amount": "5000", "verdict": "REQUIRE_HUMAN_COSIGN"},
+  {"reason": "GOODWILL", "min_amount": "5001", "verdict": "REJECTED_POLICY"}
+ ]}

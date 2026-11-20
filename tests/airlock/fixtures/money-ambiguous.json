@@ -1,0 +1,6 @@
+{"airlock": "money", "version": 1, "name": "ambiguous", "profile": "parametric",
+ "rules": [
+  {"reason": "GOODWILL", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "min_amount": "500", "verdict": "REQUIRE_HUMAN_COSIGN"},
+  {"reason": "GOODWILL", "min_amount": "900", "max_amount": "999", "verdict": "REJECTED_POLICY"}
+ ]}
