@@ -28,6 +28,37 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Gate F2a (Goal 22): Stage 9 lock rebind proposed as an exact diff of two protected files; NOT merged; Stage 9 NOT unlocked; no EXIT case of Stage 9 ran — U900
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 stays deferred until the owner merges the lock.
+Branch `proposal/stage9-lock-rebind-f2a` from `main` `33055a59`; NOT
+merged by the agent; no administrator rights; pull request 76. Protected files changed:
+`gate/provenance/implementation.lock` (`76b983ac…` to `08ae51d0…f6cb`)
+and `spec/provenance/spec.lock` (`43610d81…` to `256310d8…a976`). No
+other protected path changed. Nothing under `clearing/` changed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 proposals/stage9-lock-rebind-20261120/regen_locks.py <worktree> --write` |0|17 changed digests (9 in `implementation.lock`, 8 in `spec.lock`), 9 added keys (8 scripts, `gate/ratification.py`); 109 and 47 entries |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 08ae51d0…f6cb --check` (worktree with the two files changed) |0|`BOOTSTRAP_VERIFIED` (a lock check, not a Stage 9 EXIT) |
+| the same with the old value `76b983ac…` on the new bytes |1|`BOOTSTRAP_REJECTED: IMPLEMENTATION_LOCK` |
+| `main`'s own two files with the old value |1|`BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py` |
+| every entry of both proposed locks against the file |109 of 109; 47 of 47 equal|after the change |
+| `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` for the proposal, `ROADMAP.md`, `unsure.md` (commit `40847aec`) |0; 0|the eight PR-gate modules unchanged; no missing link target |
+| `git push origin proposal/stage9-lock-rebind-f2a:refs/heads/proposal/stage9-lock-rebind-f2a`; `gh pr create` (pull request 76) |0; 0|no administrator rights; the agent did not merge |
+| hosted `gate/pr_check.py`, pull request 76, head `40847aec`, run 44737627885 |1|REJECTED, as expected: `UNAPPROVED_PROTECTED_CHANGE: gate/provenance/implementation.lock, spec/provenance/spec.lock`. Not an approval; the later records commit changes no protected byte |
+| REGENERATED after the merge queue: `git merge origin/main` (`7e5842d0`; two additive conflicts in `ROADMAP.md` and `unsure.md`); `regen_locks.py . --write` from `main`'s own locks (merge commit `7cd94375`) |0; 0|`implementation.lock` `fef55690…1fc0` (113 entries: 9 changed digests, 13 added keys); `spec.lock` `256310d8…a976` (unchanged against the first version). The digest `08ae51d0…` in the rows above is no longer the proposed value |
+| `bootstrap.py --implementation-sha256 fef55690…1fc0 --check`; the same with the old value `76b983ac…`; with the first version's value `08ae51d0…` |0; 1; 1|`BOOTSTRAP_VERIFIED`; `IMPLEMENTATION_LOCK`; `IMPLEMENTATION_LOCK` |
+| `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` (proposal, `ROADMAP.md`, `unsure.md`); `git diff --name-status origin/main HEAD` |0; 0; 7 files|the two lock files, the three proposal files, `ROADMAP.md`, `unsure.md`; no other path |
+| REGENERATED AGAIN on `main` `058eabcb` (pull requests 79 and 71): `git merge origin/main`; `regen_locks.py . --write` (merge commit `69ae6bca`) |0; 0|`implementation.lock` `7afef10a…85ea` (114 entries; against `fef55690…`: one key added, `scripts/exit_universal_primitives.py`; no digest changed); `spec.lock` `256310d8…a976` unchanged. `fef55690…` is no longer the proposed value |
+| `bootstrap.py --check` with `7afef10a…`; with `76b983ac…`; with `fef55690…`; `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD`; `git diff --name-status origin/main HEAD` |0; 1; 1; 0; 0; 7 files|`BOOTSTRAP_VERIFIED`; the two lock files, three proposal files, `ROADMAP.md`, `unsure.md` |
+| `scripts/exit_stage_9.py` (six cases); the hosted signing run; the benchmark |NOT RUN|after the owner's merge; the benchmark after the owner's batch word |
+
+[Lock rebind proposal](proposals/stage9-lock-rebind-20261120/PROPOSAL.md).
+Finding to keep: pull requests 70, 72, 73 and 74 each add or change a
+code file under `scripts/`. Each of them makes this lock stale if it
+merges after it, and makes this diff stale if it merges before it.
 ## V1.1 universal primitives pack: a new additive engine `src/primitives_v2` with rate windows, double-entry ledgers and graph uniqueness, recursive taint egress, Farkas certificate checks and a policy-to-Dafny model generator; a finite test of unproved Rust and Python around Dafny models; one review with repairs — U910 to U912
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

@@ -21007,3 +21007,97 @@ curl: (6) Could not resolve host: github.com
   explicitly on 2026-11-20; (4) "all prior bundles byte-identical" holds for this branch because it is additive,
   but the clone check has not run; (5) whether rate_window should bind keys to an authenticated caller (M2).
 - Impact: none on any stage label; M1-B OPEN. Next check: the scratch-clone regression, then the pull request.
+
+## U900 — Gate F2a: Stage 9 lock rebind proposed as an exact diff (two protected files); valid only while four open pull requests are not merged; NOT merged; Stage 9 NOT unlocked
+
+- Status: 2026-11-20 12:40Z (system clock). Refs U468, U469, U470 (the earlier lock inspection, the packet of pull
+  request 53, the deferral), U170 to U176 (Stage 9 runs), R4C-1. Record: `proposals/stage9-lock-rebind-20261120/PROPOSAL.md`.
+- Source of the task: Gate F2, step F2a, of the finish-line directive (branch `docs/finish-line-directive`). The start
+  word reached this session through the launcher session. I did not see an owner message. The directive puts F2 after
+  the F1 merge; pull request 70 (F1) is OPEN. I did not resolve this difference; it is an owner decision.
+- Actual, base `main` `33055a59`: `gate/provenance/implementation.lock` `76b983ac…` to
+  `08ae51d078e8e8f1bd392e98477927c3c6fe72f9a228eb53ad5081066326f6cb` (9 digests changed, 9 keys added: 8 scripts and
+  `gate/ratification.py`; 109 entries). `spec/provenance/spec.lock` `43610d81…` to
+  `256310d851669cdeab2498b0a58fe6bcd4b7ba1f741396a9f608d644fa72a976` (8 digests changed; 47 entries; byte-equal to the
+  `spec.lock` of the closed pull request 53). `bootstrap.py --check` with the new value: exit 0, `BOOTSTRAP_VERIFIED`.
+  With the old value on the new bytes: exit 1. `main`'s own files with the old value: exit 1
+  (`UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py`). These ran in a git worktree, not in a fresh clone.
+- Finding: against the packet of pull request 53 the lock needs two more scripts (`scripts/exit_goal20_sdk.py`,
+  `scripts/exit_silicon_sink.py`). Pull requests 70, 72, 73, 74 add or change code files under `scripts/` (list in the
+  record, from `git diff --name-status`). So these bytes are valid only for a `main` that equals `33055a59` in the
+  listed files. A merge of one of the four before this one needs a regeneration and a new review of the bytes.
+- NOT checked: the inference of the draft `STAGE9_BINDING_PROPOSAL_DRAFT.md` (row R4) that today's lineage fails the
+  release check without a new baseline record. If it holds, the six EXIT cases cannot pass after this merge alone.
+- NOT changed: `.github/workflows/booking-reuse.yml` (holds the old lock value in one experiment command).
+- `gate/ratification.py` is in the lock because the directive names it. No lock rule needs it. The sign job does not
+  import it (observation of U-records, not re-checked here).
+- NOT RUN: `scripts/exit_stage_9.py` (six cases); the hosted signing run; any benchmark trial.
+- Impact: none on any stage label until the owner merges. CURRENT none. `end_to_end=false`. M1-B OPEN.
+- Next check: the hosted gate result of the pull request (expected exit 1, REJECTED); the owner's decision on the merge
+  order and on the two points not in this diff (the workflow pin, the baseline record).
+
+## U901 — Gate F2a: pull request 76 opened; hosted gate result exit 1 (REJECTED), as expected for a protected change; the agent did not merge
+
+- Status: 2026-11-20 12:45Z (system clock and GitHub). Refs U900, U469 (the same result for pull request 53).
+- Actual: commit `40847aec8c9f53af3151f5cc70228a4221164aec` pushed with an explicit refspec (exit 0). `gh pr create`
+  exit 0: pull request 76, base `main`, no administrator rights. At that commit: `bootstrap.py --check` with
+  `08ae51d0…f6cb` exit 0 (`BOOTSTRAP_VERIFIED`); `check_frozen_pr_gate.py HEAD` exit 0; `check_links.py HEAD` for the
+  proposal, `ROADMAP.md` and `unsure.md` exit 0.
+- Hosted `gate/pr_check.py`, run 44737627885, base `33055a59`, head `40847aec`: exit code 1, outcome REJECTED, line
+  `UNAPPROVED_PROTECTED_CHANGE: gate/provenance/implementation.lock, spec/provenance/spec.lock`. This is the expected
+  result: `gate/provenance/` is protected and not ratifiable, so the PR gate cannot approve a lock change. It is not an
+  approval and it says nothing about the diff being right.
+- This entry and the changed `ROADMAP.md` rows are in a later records commit. That commit changes no protected byte:
+  the two lock files keep `08ae51d0…f6cb` and `256310d8…a976`. Its hosted result is in the pull request; I expect the
+  same exit 1 and did not wait for it when I wrote this.
+- NOT RUN: `scripts/exit_stage_9.py`; the hosted signing run; any benchmark trial.
+- Impact: none on any stage label. CURRENT none. Stage 9 deferred. `end_to_end=false`. M1-B OPEN.
+- Next check: the owner's review of the exact bytes and the merge-order decision of U900.
+
+## U904 — Gate F2a: `main` `7e5842d0` merged into the lock rebind branch; both locks regenerated; the digest of U900 is replaced; NOT merged
+
+- Status: 2026-11-20 (system clock, after the merge queue). Refs U900 (its `implementation.lock` digest `08ae51d0…` is
+  NO LONGER the proposed value), U901.
+- Source: a message of the coordinator session: the merge queue is done and the owner wants pull request 76 last, with
+  a fresh lock. I did not see an owner message.
+- Actual: `git merge origin/main` (`7e5842d0c24b58c522a493ebd0155bc99d8ed201`) with two additive conflicts
+  (`ROADMAP.md`: both sections kept; `unsure.md`: `main`'s text is an exact prefix, U900 and U901 follow it; no existing
+  entry changed). Both lock files taken from `main`, then `regen_locks.py . --write`: exit 0. Merge commit `7cd94375`.
+  `gate/provenance/implementation.lock` = `fef556903c8ae9358a0c04a320f1c2d9f488ca9af84325de7428b266e4821fc0` (113
+  entries; 9 changed digests; 13 added keys: 12 scripts and `gate/ratification.py`). `spec/provenance/spec.lock` =
+  `256310d851669cdeab2498b0a58fe6bcd4b7ba1f741396a9f608d644fa72a976` (byte-equal to the first version).
+- Checks at `7cd94375` (a git worktree, not a fresh clone): `bootstrap.py --check` with `fef55690…` exit 0
+  (`BOOTSTRAP_VERIFIED`); with the old value `76b983ac…` exit 1; with `08ae51d0…` exit 1. `check_frozen_pr_gate.py
+  HEAD` exit 0. `check_links.py HEAD` for the proposal, `ROADMAP.md`, `unsure.md` exit 0. `git diff --name-status
+  origin/main HEAD`: 7 files (two locks, three proposal files, `ROADMAP.md`, `unsure.md`).
+- Against the first version the lock lists four more scripts (`exit_archia_mcp.py`, `exit_goal21_intent.py`,
+  `intent_clearing.py`, `intent_restate.py`) and has new digests for five scripts that changed on `main`.
+- Still true from U900: the lock is stale again after any later change of a listed file or a new code file under
+  `scripts/`. The workflow pin in `.github/workflows/booking-reuse.yml` and the baseline record are not in this diff.
+- NOT RUN: `scripts/exit_stage_9.py`; the hosted signing run; Batch 36 of the benchmark. The hosted gate result of the
+  new head is in the pull request (expected exit 1, REJECTED).
+- Impact: none on any stage label until the owner merges. CURRENT none. `end_to_end=false`. M1-B OPEN.
+- Next check: the owner's review of the exact bytes; `main` must not move in the listed files before the merge.
+
+## U913 — Gate F2a: `main` `058eabcb` merged into the lock rebind branch; locks regenerated again; the digest of U904 is replaced; NOT merged
+
+- Status: 2026-11-20 (system clock). Refs U900, U901, U904 (its `implementation.lock` digest `fef55690…` is NO LONGER
+  the proposed value).
+- Source: a message of the coordinator session that quotes an owner instruction (pull request 79 merged; refresh pull
+  request 76 once). I did not see an owner message.
+- Actual: `git merge origin/main` (`058eabcbe722dff1a08f1563cf4103d9fcd21a20`), two additive conflicts resolved as in
+  U904 (`main`'s `unsure.md` is an exact prefix; U900, U901, U904 follow it unchanged). Both locks taken from `main`,
+  then `regen_locks.py . --write`: exit 0. Merge commit `69ae6bca`.
+  `gate/provenance/implementation.lock` = `7afef10a2f5e5fd372e1a129b25b8f0d87277bbd4cec5bf2c773ea60a71285ea` (114
+  entries). `spec/provenance/spec.lock` = `256310d851669cdeab2498b0a58fe6bcd4b7ba1f741396a9f608d644fa72a976` (unchanged).
+- Against `fef55690…`: one key added, `scripts/exit_universal_primitives.py` =
+  `e4772b7910de430b3c70d9191fd72e92b6ff12b2e197cb5adf24732be72e782a`; no digest changed; no key removed.
+- Checks at `69ae6bca` (a git worktree, not a fresh clone): `bootstrap.py --check` with `7afef10a…` exit 0
+  (`BOOTSTRAP_VERIFIED`); with `76b983ac…` exit 1; with `fef55690…` exit 1. `check_frozen_pr_gate.py HEAD` exit 0.
+  `check_links.py HEAD` (proposal, `ROADMAP.md`, `unsure.md`) exit 0. `git diff --name-status origin/main HEAD`: 7 files
+  (two locks, three proposal files, `ROADMAP.md`, `unsure.md`).
+- Observation: pull request 71 changed files under `.github/`; none of them is a lock entry (no digest changed).
+- NOT RUN: `scripts/exit_stage_9.py`; the hosted signing run; Batch 36. NOT confirmed by me: the hosted gate result of
+  the head of U904 (it was pending when I stopped) and of this head; expected exit 1 (REJECTED).
+- Impact: none on any stage label until the owner merges. CURRENT none. `end_to_end=false`. M1-B OPEN.
+- Next check: the owner's review of the exact bytes; `main` must not move in a listed file or under `scripts/` first.
