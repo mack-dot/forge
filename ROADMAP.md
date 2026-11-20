@@ -28,6 +28,46 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Review of 2026-11-20: README top and claims 1, 2, 4, 5, 8, 11 corrected; documents only — U880 to U882
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Documents only; no behaviour change. Branch
+`docs/review-readme-claims` from `33055a59`; NOT merged by the agent.
+The Goal 20 bundle subject digests of `docs/quickstart-5min.md` and
+`src/airlock/PROTOCOL.md` change (U881); no new evidence run.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `gh repo view mack-dot/forge --json visibility,licenseInfo` |0|`PRIVATE`; `licenseInfo` null |
+| `rustc --edition 2021 -D unsafe_code -C opt-level=3 src/airlock/main.rs` (scratch output) |0|engine for the README example |
+| `bin/forge-airlock init` (scratch store, `refunds.json`, `--engine-dir`) |0|`INITIALIZED` |
+| the README Python example with `engine_dir=` (scratch) |0|`COMMITTED`; `REJECTED_POLICY REASON_CAP`; `COMMITTED`. The README text with the default folders: NOT RUN |
+| `check_frozen_pr_gate.py HEAD` (commit `3d25286a`) |0|frozen modules unchanged |
+| `check_links.py HEAD` on 8 files (commit `3d25286a`) |0|0 missing targets |
+| `git diff --name-only 33055a59..HEAD`, protected-path grep |0; 1|7 files at `3d25286a`, 8 with this section; no protected path (grep exit 1 = no match) |
+| `git merge-tree --write-tree 3d25286a e3322303` (`apex1/native-cosign`) |1|conflict only in `unsure.md` (also for `33055a59` alone); docs auto-merge |
+| test suites; Goal 20 `--case evidence` |NOT RUN|not part of this work |
+
+[Disposition](proposals/review-20261120/README.md).
+[Decision note](proposals/review-20261120/DECISION_NOTE_LICENCE_PACKAGING.md).
+## Review 2026-11-20, defect D1: design of a shipped isolation mode for the airlock engine (service user, per-tenant sockets, root-owned pins, WAL MAC); NOT started — U894 to U896
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Documents only: `proposals/review-20261120-isolation/`. Branch
+`docs/isolation-mode-design` from `33055a59`; NOT merged by the agent. The
+build is NOT STARTED. No `sudo` step ran; every owner step is text.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `rustc` 1.92.0, probe with `UnixStream::peer_cred` (scratchpad) |1|`E0658`: unstable; std gives no peer uid |
+| `rustc` probe: bind, connect, accept; run |0; 0|std Unix socket works (one user) |
+| the same probe with a 117-byte socket path |101|`SUN_LEN`: socket paths must stay short |
+| `rustc` probe: accepted stream as a child's stdin and stdout, no `unsafe`; run |0; 0|the child answered the client's line |
+| Python `socket.LOCAL_PEERCRED` on a socket pair |0|own uid read back; two users NOT TESTED |
+| engine build of `33055a59` in the scratchpad; `otool -L` |0|links only `libSystem` |
+| `check_frozen_pr_gate.py HEAD` at `86582052` |0| |
+| `check_links.py HEAD` (DESIGN.md, README.md, unsure.md) at `86582052` |0|0 missing targets |
+| the build, the malicious-agent test, every owner setup step |NOT RUN|NOT STARTED |
 ## Gate F1 (Goal 21), intent clearing: branch-boundary tables, weird-but-legal queries and a blind restater over a generated Dafny model; one review with repairs — U780 to U784
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
