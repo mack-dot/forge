@@ -41,8 +41,10 @@ ROOT = Path(__file__).resolve().parents[2]
 GENERATOR = ROOT / 'src/primitives_v2/py/policy_to_dfy.py'
 POLICIES = ROOT / 'domains/compiled_policies/policies'
 COMMITTED = ROOT / 'domains/compiled_policies'
-DAFNY = '/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny'
-DAFNY_ROOT = '/Users/mackianni/forge'
+# Pinned Dafny: FORGE_DAFNY, else <FORGE_TOOLCHAIN_ROOT or this repository>/.toolchain/dafny-4.11.0/dafny/dafny
+# (src/primitives_v2/PROTOCOL.md, Tests). The toolchain root is the cwd of every Dafny run.
+DAFNY_ROOT = os.environ.get('FORGE_TOOLCHAIN_ROOT') or str(ROOT)
+DAFNY = os.environ.get('FORGE_DAFNY') or str(Path(DAFNY_ROOT) / '.toolchain/dafny-4.11.0/dafny/dafny')
 OPTIONS = ['--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1', '--resource-limit', '1000000',
            '--verification-time-limit', '0', '--cores', '1', '--verify-included-files', '--track-print-effects']
 BASELINE = Path(DAFNY_ROOT) / 'gate/expected-audit.md'
@@ -91,7 +93,8 @@ def wait_slot(limit=3600):
 
 
 def dafny(args, log):
-    require(Path(DAFNY).is_file(), 'NOT RUN: the pinned Dafny is missing')
+    require(Path(DAFNY).is_file(), 'NOT RUN: the pinned Dafny is missing at %s: set FORGE_TOOLCHAIN_ROOT to the checkout '
+            'that holds .toolchain/dafny-4.11.0, or FORGE_DAFNY to the dafny binary' % DAFNY)
     require(wait_slot(), 'NOT RUN: the Dafny slot was not free in 60 min')
     p = subprocess.run([DAFNY] + args, cwd=DAFNY_ROOT, capture_output=True, text=True)
     log.append('%s -> exit %d: %s' % (' '.join(['dafny'] + args[:2]), p.returncode, (p.stdout.strip().splitlines() or [''])[-1]))

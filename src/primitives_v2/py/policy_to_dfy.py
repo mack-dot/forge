@@ -56,8 +56,14 @@ import policy_model as pm  # noqa: E402  (Goal 20 strict money loader; read-only
 
 GENERATOR = 'src/primitives_v2/py/policy_to_dfy.py v1'
 OUT = ROOT / 'domains/compiled_policies'
-DAFNY = '/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny'
-DAFNY_ROOT = Path('/Users/mackianni/forge')      # the checkout that holds the pinned toolchain (cwd of every Dafny run)
+# The pinned Dafny. Order: FORGE_DAFNY (the dafny binary); else <toolchain root>/.toolchain/dafny-4.11.0/dafny/dafny,
+# where the toolchain root (the checkout that holds .toolchain; cwd of every Dafny run) is FORGE_TOOLCHAIN_ROOT, else
+# this repository. No silent fallback: a missing binary is reported with the variables to set (PROTOCOL.md, Tests).
+DAFNY_PIN = '.toolchain/dafny-4.11.0/dafny/dafny'
+DAFNY_ROOT = Path(os.environ.get('FORGE_TOOLCHAIN_ROOT') or ROOT)
+DAFNY = os.environ.get('FORGE_DAFNY') or str(DAFNY_ROOT / DAFNY_PIN)
+DAFNY_MISSING = ('the pinned Dafny is missing at %s: set FORGE_TOOLCHAIN_ROOT to the checkout that holds '
+                 '.toolchain/dafny-4.11.0, or FORGE_DAFNY to the dafny binary' % DAFNY)
 U64 = (1 << 64) - 1
 ID = re.compile(r'[A-Za-z0-9_-]{1,24}')
 DECIMAL = re.compile(r'0|[1-9][0-9]{0,19}')
@@ -897,7 +903,7 @@ def generate(data):
 # Running Dafny (one process at a time; wait while another Dafny process runs).
 # ---------------------------------------------------------------------------------------------------------------------
 SLOT = re.compile(r'dafny/dafny|Holmake|/hol |z3-4\.12\.1')
-DAFNY_VERSION = re.search(r'dafny-(\d+\.\d+\.\d+)', DAFNY).group(1)
+DAFNY_VERSION = re.search(r'dafny-(\d+\.\d+\.\d+)', DAFNY_PIN).group(1)
 
 
 def slot_busy():
@@ -927,6 +933,10 @@ def wait_slot(limit=3600):
 
 def run_dafny(args, log, shown):
     """Runs the pinned Dafny with `args`; logs `shown` (the same argv without machine paths) with the exit code."""
+    if not Path(DAFNY).is_file():
+        print('NOT RUN: ' + DAFNY_MISSING, file=sys.stderr)
+        log.append({'tool': 'dafny ' + DAFNY_VERSION, 'argv': shown, 'exit_code': None, 'result': 'NOT RUN: ' + DAFNY_MISSING})
+        return None
     if not wait_slot():
         log.append({'tool': 'dafny ' + DAFNY_VERSION, 'argv': shown, 'exit_code': None, 'result': 'NOT RUN: Dafny slot not free in 60 min'})
         return None

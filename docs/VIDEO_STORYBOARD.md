@@ -218,9 +218,17 @@ headlines only.
 Voice: 29 words in 14 s (6 + 7 + 3 + 3 + 4 + 6).
 
 What is real: six requests to one engine process, through the Python SDK.
-The signatures are Ed25519, made and verified through Node. The `label`
-line of shots 3, 4 and 6 says: `NATIVE CHECK + FINITE TEST; Ed25519 verify
-through Node (trusted)`.
+The signatures are Ed25519. This text and the `label` line of shots 3, 4
+and 6 (`NATIVE CHECK + FINITE TEST; Ed25519 verify through Node
+(trusted)`) were written before pull request 72 (`cad68a5f`). On `main`
+since that merge, `cosign-keygen` and `cosign-sign` run
+`/usr/bin/ssh-keygen`, and the engine verifies with `/usr/bin/ssh-keygen
+-Y verify` (trusted; no Node). The label text of the code at `058eabcb`
+still said "through Node", and the take on `058eabcb` exited 2 (the
+harness passed an option that pull request 72 removed). The release audit
+of 2026-11-20 corrected the harness, the kill-build path and the label
+(now "through ssh-keygen -Y"); the take then exited 0 from a clean clone
+(`proposals/release-audit-20261120/AUDIT2_DEMOS.md`).
 
 What the screen must not suggest: the engine does not test
 `crew_in_bay`. It tests a sum against the fact `vents_allowed`. The
@@ -432,8 +440,8 @@ number. The hedged-pair shots of row 5 use the verb `SAGA`.
 | Scene 1 line ends at 0:08 | The last sentence of the line is spoken at 0:08.0, after the silence. The first two sentences are said in a softer form with no absolute claim (19 words). | The full line has 25 words. That is more than 8 s at 2.5 words in each second. An absolute claim about all humans or all prompts is not supportable. |
 | Scene 1: the model is fooled | If the reply is empty or the call stops with `stop_reason` `refusal` or `max_tokens`, the screen says `no full command line in the reply (stop_reason ...): this call shows nothing about the model`. | Such a call shows nothing about the model, in either direction. |
 | Scene 2: the engine blocks against `crew_in_bay=1` | The engine tests `VENT_BAY` against the fact `vents_allowed=0`. The trusted opener derives it from `crew_in_bay=1`. | The engine tests a sum against a fact. It has no equality test on a fact. |
-| Scene 2: native `ssh-keygen -Y` cosign | NOT IN TAKE. The cosign is Ed25519 through Node. | The native cosign is not on `main`. |
-| Healthcare through MCP | NOT IN TAKE. The read airlock and the dose cap are in the take. | No MCP part is in this branch. |
+| Scene 2: native `ssh-keygen -Y` cosign | Written before pull request 72: "NOT IN TAKE. The cosign is Ed25519 through Node." On `main` since `cad68a5f` the engine checks every cosign with `/usr/bin/ssh-keygen -Y verify`; a take on that tree is NOT RUN. | The native cosign is on `main` since pull request 72 (`cad68a5f`). |
+| Healthcare through MCP | NOT IN TAKE. The read airlock and the dose cap are in the take. | The MCP proxy is on `main` since pull request 77 (`a2ef7c0a`); the take does not use it. |
 | Montage: a model acts in each domain | Every request is a scripted worst case. An overlay says so. | Model disclosure. |
 | Montage: one 4-word headline and one verdict for each 2 s | Each beat shows all answers of the domain, one line each. Some headlines have more than four words. | Each domain has one allowed case and one blocked case or more. |
 | Montage in real time, 2 s for each beat | The raw beats 6, 7 and 9 are longer. The edit cuts waiting time and shows `time cut`. | 50 processes, a `rustc` build, a flood and three kills take real time. |
@@ -475,7 +483,7 @@ Setup:
    system audio if `--sound` is used.
 3. Shell: Node 24.3.0 first in `PATH`. `rustc` and Dafny in `PATH`.
 4. Build one time: `python3 bin/forge-airlock build --checker`. The build
-   also makes the kill-points build `build/airlock/airlock-engine-kill`.
+   also makes the kill-points build `build/silicon/test/airlock-engine-kill` (moved by pull request 73).
    Without it, or without `rustc` at take time, a part of a module does
    not run and the take is PARTIAL (exit 3).
 5. For the live model call: `ANTHROPIC_API_KEY` is in the environment
@@ -587,6 +595,7 @@ end_to_end=false. The engine is a native check, not proved. "Proved" applies onl
 
 The three `blob/main` links work only after the branch is merged to
 `main`. Before the merge, Post 2 must name the branch (checklist item 8).
+The branch is merged: pull request 75, `ccdd8e5f` (2026-11-20).
 
 ### Show HN
 

@@ -21,6 +21,7 @@ import argparse
 import os
 from pathlib import Path
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -102,6 +103,22 @@ MUTANTS = [
 ]
 
 
+
+def run_group(argv, timeout, **kw):
+    """subprocess.run(argv, capture_output=True, text=True, timeout=timeout), with the suite in its own process group.
+    On every exit path (pass, fail, timeout, interrupt) SIGKILL goes to the whole group, so no `serve` child of the
+    suite outlives it (unsure.md U927). A timeout still raises TimeoutExpired, as before."""
+    p = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True, **kw)
+    try:
+        out, err = p.communicate(timeout=timeout)
+    finally:
+        try:
+            os.killpg(p.pid, signal.SIGKILL)
+        except OSError:
+            pass
+        p.wait()
+    return subprocess.CompletedProcess(argv, p.returncode, out, err)
+
 def tree_engine(folder, file=None, text=None):
     src = folder / 'src/primitives_v2'
     src.mkdir(parents=True)
@@ -125,8 +142,8 @@ def tree_engine(folder, file=None, text=None):
 
 
 def run_a(engine, case, work):
-    p = subprocess.run([sys.executable, str(FARKAS_SUITE), str(engine), '--case', case, '--work', str(work), '--dafny-py', ARGS.dafny_py],
-                       capture_output=True, text=True, timeout=7200)
+    p = run_group([sys.executable, str(FARKAS_SUITE), str(engine), '--case', case, '--work', str(work), '--dafny-py', ARGS.dafny_py],
+                  timeout=7200)
     return p.returncode, line_of(p, case)
 
 
@@ -135,7 +152,9 @@ def run_b(gen, case, policy, work):
             '--airlock-engine', ARGS.airlock_engine, '--seams-engine', ARGS.seams_engine]
     if policy:
         argv += ['--policy', str(POL / policy)]
-    p = subprocess.run(argv, capture_output=True, text=True, timeout=14400)
+    # a changed copy sits under a temporary folder, so its own ROOT holds no .toolchain: point it at this checkout's
+    env = dict(os.environ, FORGE_TOOLCHAIN_ROOT=os.environ.get('FORGE_TOOLCHAIN_ROOT') or str(ROOT))
+    p = run_group(argv, timeout=14400, env=env)
     return p.returncode, line_of(p, case)
 
 
@@ -149,11 +168,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--only', action='append')
     ap.add_argument('--work')
-    ap.add_argument('--rustc', default='/Users/mackianni/.cargo/bin/rustc')
+    ap.add_argument('--rustc', default=os.environ.get('FORGE_RUSTC') or shutil.which('rustc'))   # --rustc, FORGE_RUSTC, PATH
     ap.add_argument('--dafny-py', required=True)
     ap.add_argument('--airlock-engine', required=True)
     ap.add_argument('--seams-engine', required=True)
     ARGS = ap.parse_args()
+    if not ARGS.rustc:
+        print('NOT RUN: no rustc: pass --rustc PATH or set FORGE_RUSTC (rustc is not on PATH)')
+        return 2
     names = [m[0] for m in MUTANTS]
     if len(set(names)) != len(names):
         print('ERROR: a name is used twice')

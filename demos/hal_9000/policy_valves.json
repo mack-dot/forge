@@ -1,0 +1,5 @@
+{"airlock": "saga", "version": 1, "name": "valve",
+ "states": ["SEALED", "OPENING_IN_FLIGHT", "OPENED"], "initial": "SEALED",
+ "in_flight": ["OPENING_IN_FLIGHT"],
+ "transitions": [["SEALED", "OPENING_IN_FLIGHT"], ["OPENING_IN_FLIGHT", "OPENED"], ["OPENING_IN_FLIGHT", "SEALED"],
+                 ["OPENED", "SEALED"]]}

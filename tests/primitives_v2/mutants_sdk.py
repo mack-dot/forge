@@ -13,8 +13,10 @@ every copy was killed for its named reason. 1: otherwise.
 """
 
 import argparse
+import os
 from pathlib import Path
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -40,6 +42,22 @@ MUTANTS = [
 ]
 
 
+
+def run_group(argv, timeout, **kw):
+    """subprocess.run(argv, capture_output=True, text=True, timeout=timeout), with the suite in its own process group.
+    On every exit path (pass, fail, timeout, interrupt) SIGKILL goes to the whole group, so no `serve` child of the
+    suite outlives it (unsure.md U927). A timeout still raises TimeoutExpired, as before."""
+    p = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True, **kw)
+    try:
+        out, err = p.communicate(timeout=timeout)
+    finally:
+        try:
+            os.killpg(p.pid, signal.SIGKILL)
+        except OSError:
+            pass
+        p.wait()
+    return subprocess.CompletedProcess(argv, p.returncode, out, err)
+
 def tree(folder, text=None):
     (folder / 'sdk/py').mkdir(parents=True)
     (folder / 'tests/primitives_v2').mkdir(parents=True)
@@ -49,7 +67,7 @@ def tree(folder, text=None):
 
 
 def run_case(suite, engine, case, work):
-    p = subprocess.run([sys.executable, str(suite), str(engine), '--case', case, '--work', str(work)], capture_output=True, text=True, timeout=3600)
+    p = run_group([sys.executable, str(suite), str(engine), '--case', case, '--work', str(work)], timeout=3600)
     lines = [x for x in p.stdout.splitlines() if x.startswith(('PASS ' + case, 'FAIL ' + case))]
     return p.returncode, (lines[0] if lines else 'no result line: ' + p.stdout[-300:] + p.stderr[-300:])
 
@@ -58,8 +76,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--only', action='append')
     ap.add_argument('--work', default=None)
-    ap.add_argument('--rustc', default='/Users/mackianni/.cargo/bin/rustc')
+    ap.add_argument('--rustc', default=os.environ.get('FORGE_RUSTC') or shutil.which('rustc'))   # --rustc, FORGE_RUSTC, PATH
     args = ap.parse_args()
+    if not args.rustc:
+        print('NOT RUN: no rustc: pass --rustc PATH or set FORGE_RUSTC (rustc is not on PATH)')
+        return 2
     table = [m for m in MUTANTS if not args.only or m[0] in args.only]
     names = [m[0] for m in MUTANTS]
     if len(set(names)) != len(names):

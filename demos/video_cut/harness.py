@@ -95,8 +95,8 @@ class Ctx:
             d = self.tmp / 'keys'
             d.mkdir(mode=0o700)
             human, other = d / 'human.key', d / 'other.key'
-            code, pub, err = self.cli(['cosign-keygen', human, '--node', self.node])
-            code2, _, err2 = self.cli(['cosign-keygen', other, '--node', self.node])
+            code, pub, err = self.cli(['cosign-keygen', human])  # no options: the cosign tools run ssh-keygen, no Node
+            code2, _, err2 = self.cli(['cosign-keygen', other])
             if code or code2:
                 raise TakeFailed('cosign keygen failed: %r %r' % (err[-300:], err2[-300:]))
             self._keys = (human, other, pub.strip())
@@ -125,9 +125,9 @@ class Ctx:
         return st
 
     def sign(self, st, action, stranger=False):
-        """The human (or a stranger) signs the engine's own cosign message for `action`. Returns the signature hex."""
+        """The human (or a stranger) signs the engine's own cosign message for `action`. Returns the one-line SSHSIG token that cosign-sign prints."""
         key = self.keys()[1 if stranger else 0]
-        code, sig, err = self.cli(['cosign-sign', key, '--node', self.node], stdin=st.cosign_message(action))
+        code, sig, err = self.cli(['cosign-sign', key], stdin=st.cosign_message(action))
         if code != 0:
             raise TakeFailed('cosign-sign failed: %r' % err[-300:])
         return sig.strip()

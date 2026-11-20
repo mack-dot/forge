@@ -21031,6 +21031,124 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on V1 and on the
   stateful specification text that V1 needs (its approval is a missing edge today).
 
+## U920 — Release audit 2026-11-20: results, repairs, and what stays open
+
+- Refs U744, U745, U881, U912. Evidence: `proposals/release-audit-20261120/` (README with the release-readiness table,
+  AUDIT1_HYGIENE.md, AUDIT2_DEMOS.md, AUDIT3_DOCUMENTS.md). Base `058eabcb`; working commit `e847e5ee`; scratch-clone
+  regression on `e847e5ee`: 28 of 28 Stage EXIT cases exit 0, frozen PR-gate check exit 0, the Slice 1, 2, 3, M1
+  conformance and native silicon sink bundles byte-identical to the tracked records. FINITE TEST on one machine.
+- Found and repaired: the video cut exited 2 on `main` (pull request 72 removed an option its harness passed; pull
+  request 73 moved a test build); each pull request had passed alone. Nine V1.1 files held paths of one machine. Two
+  EXIT scripts held pre-merge checks that fail after their merge. Two numbers and six statements in living documents
+  were false on `main`.
+- Consequence of the script repairs: `scripts/exit_archia_mcp.py` and `scripts/exit_universal_primitives.py` hash
+  themselves into their bundles. The digests `13608d7e…` (U744) and `100476fe…` (U912) are not reproduced by the
+  changed scripts. NOT RUN after the repairs: the `proofs`, `mutations` and `evidence` cases of both scripts.
+- Open, not changed: the tracked Goal 20 record does not reproduce on `main` (20 of 64 subject files; U881 foresaw
+  two of them); two missing link targets older than this audit (`results/stage9/receipt-repair-published/README.md`);
+  no LICENSE on `main`; 2,039 record files hold local paths and cannot be scrubbed without changing digests; the
+  names `INFEASIBILITY_PROVED` and `unbreakable_store` claim more than a finite test supports (bundle subjects).
+- Not checked: the HAL demo and the web showcase (not on `main`); OS user separation (NOT TESTED; no artifact on
+  `main`); Stage 7, Stage 9, Stage 10; any HOL process; the Goal 21 intent bundle. The video take was NOT RUN again
+  after the last label correction.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's review of the pull request.
+
+## U922 — LICENSE: Apache-2.0 added on the owner's decision; third-party notices not re-checked
+
+- Refs U097, U882. Evidence: `LICENSE` is the unchanged Apache License 2.0 text (SHA-256 `cfc7749b96f63bd3…`, the same
+  bytes as in pull request 14); `NOTICE` names mack-dot and Forge contributors. The owner chose Apache-2.0 on
+  2026-10-28 (`proposals/license.md` in pull request 14) and repeated the decision on 2026-11-20 in a pasted
+  decision text ("LICENSE: Add `Apache-2.0` (or dual `MIT OR Apache-2.0`)"); the agent took the first option, which
+  matches the earlier decision. The dual option was NOT taken.
+- Uncertain: `THIRD_PARTY_NOTICES.md` of pull request 14 dates from 2026-10-28 and was not re-checked against the
+  present tree, so it is NOT added and `NOTICE` does not refer to it. No per-file licence header is added. The
+  earlier advice to the owner to check the employment agreement (pull request 14) is not resolved by this entry.
+- No tracked evidence record, no bundle subject and no protected path changes. `README.md` changes in two places.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the owner's review; a fresh third-party notice list.
+
+## U925 — HAL 9000 demo restored on `main` from commit `ff03fac3` (owner's word of 2026-11-20): what was brought, what was adapted, actual results, and what stays NOT TESTED
+
+- Refs U745, U746, U747, U748 (the demo's records on its old branch, not on `main`), U750 (native cosign), U887 to
+  U893 (engine hardening), U920 (release audit: HAL NOT PRESENT). The owner deleted the demo on 2026-11-20 and asked
+  on 2026-11-20 to bring it back onto `main`. Branch `demo/hal-9000` from `origin/main` `b1c98822`.
+- Brought: `demos/hal_9000/**` only (18 files, byte-equal to `ff03fac3` except the text changes below). NOT brought:
+  the old branch's copies of `src/airlock/`, `sdk/`, `bin/forge-airlock`, `scripts/exit_goal20_sdk.py`,
+  `docs/quickstart-5min.md`, `tests/airlock/` (main's versions are newer: pull requests 72 and 73).
+- Adapted: text only. The demo already called `cosign-keygen` and `cosign-sign` without `--node` and used no
+  kill-points build, so the engine of `main` ran it without a code change. Changed: the trust-limit line and the
+  `hal_agent.py` docstring (the Node-swap attack was on the old Goal 20 engine), the Act 2 note (no Node runs), the
+  credits engine label, the request-id limit (per tenant since review D3; every party uses the tenant `crew`, which
+  is not authenticated, so the denial-of-service limit still holds), the README test list (it named cases that the
+  suite does not have), the owner's sudo steps in the README, and the owner's login name in `vault/README.md`.
+- Actual results (2026-11-20, shared machine, load average about 15): `test_hal_demo.py` exit 0, 26 of 26 (twice);
+  the show `--fast --no-color` with the 10 GiB flood exit 0, 32 of 32 checks; with a logging `node` stand-in first in
+  `PATH` the stand-in was never started (exit 0); `--engine-dir /nonexistent/engine` exit 2; `vault/test_vault.py`
+  exit 0, 20 of 20 (one user); `setup_vault.sh --dry-run` exit 0. All with no model key in the environment.
+- The "no Node" statement is a finite observation of one run with a stand-in, plus reading `bin/forge-airlock`
+  (`cosign-keygen`, `cosign-sign` start `cosign_tool.py` with `/usr/bin/ssh-keygen`); it is not a trace of every
+  process (macOS has no unprivileged exec trace).
+- NOT TESTED: OS user separation (vault and nobody modes) until the owner runs the `sudo` steps printed in
+  `demos/hal_9000/README.md`; the interactive mode against a real model service; another machine.
+- Open for the owner: the film characters belong to another party (rights question for a public launch, raised
+  before, still the owner's); the cost of a live model per turn. Labels: NATIVE CHECK (engine), FINITE TEST (demo).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. NOT pushed; NOT merged. Next check: the
+  orchestrator's regression and the owner's review of the pull request.
+
+## U926 — Discovery One web showcase restored on `main` from commit `3731ab8e` (owner's word of 2026-11-20): the header defect, actual results, and what stays NOT RUN
+
+- Refs U749 (the showcase's record on its old branch, not on `main`), U925 (the HAL demo it stacks on), U920 (release
+  audit: web NOT PRESENT). Branch `demo/discovery-one-web` on `demo/hal-9000`.
+- Brought: `web/**` only (44 files). No backend code change was needed: the backend already drove `init` without
+  `--node`, `cosign-keygen` without options, and one `serve` per store through `sdk/py/forge_airlock.py`.
+- Defect found and repaired: the `<h1>` of `Experience.tsx` had the text `DISCOVERY ONE` and then a `<span>` with
+  no space between them (JSX drops the line break). The rendered text was `DISCOVERY ONEFORGE AIRLOCK SHOWCASE`; the
+  `ml-3` margin hid it on wide screens only (the owner saw `COVERY ONEFORGE`). Shown by a server-side render of the
+  component with React's own renderer, before (exit 1) and after (exit 0). The compiled chunk now holds
+  `"DISCOVERY ONE"," "`. Not seen in a browser.
+- Actual results (2026-11-20, no model key in the environment): backend 51 tests exit 0 (twice); typecheck, lint
+  and build exit 0 (twice); live HTTP on 127.0.0.1 against the real backend: every route answered 200, the vent and
+  the 5 presets got the expected refusals, free text got `no_model`, telemetry `ALIVE`; no HTTP 500 in the logs.
+- Positive control: a second process opened a key on the live store through its own engine; telemetry turned to
+  `LOST`, `reconciled` false, 1 unauthorised effect listed; the page component rendered with that real answer shows
+  `data-breach="true"` and the BREACH banner, and with the clean answer none. The red colour is read from the CSS.
+  The seeding of the page state for this render is a scratch method (the state normally comes from a fetch in an
+  effect), so it is not a browser test.
+- NOT RUN: the headless-Chrome scripts (`browser-check.mjs`, 79 checks against a test double; `real-backend-run.mjs`)
+  because of the process limit on the shared machine; a real model; a Linux build; Safari, Firefox, a phone, a screen
+  reader; any deployment.
+- Open for the owner before any public launch: film characters that another party owns (rights; raised before);
+  each model turn spends the owner's API key (the daily budget counter is in memory only); hosting, TLS and a
+  separate OS user for `serve` (none built).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. NOT pushed; NOT merged. Next check: the browser
+  scripts on a quiet machine; the orchestrator's regression; the owner's review.
+
+## U927 — Test hygiene: the changed copy `S2_shared_lock` left one hung `serve` process per run; the repair and the new teardown check
+
+- Refs U910, U912, U920. Branch `fix/s2-shared-lock-teardown` from `b1c98822`; NOT pushed; NOT merged.
+- Cause (reproduced): case `lock` of `tests/primitives_v2/test_engine.py` starts a holder with
+  `PRIMITIVES_TEST_PAUSE_AT=locked`; `pause()` in `src/primitives_v2/store.rs` then waits for SIGKILL. Under the shared
+  lock the second process answers, `require` raises, and `holder.kill()` never runs. The other `serve` children end at
+  EOF when the suite exits; the paused holder does not. `mutants.py` ran the suite with `subprocess.run`, which kills
+  only the suite on a timeout. Before the repair: 1 process left per run (the nine old ones match this).
+- Repair: `test_engine.py` and `test_ledger_graph.py` start every child through `spawn()`; after each case `main()`
+  kills and reaps each child still alive (line `REAPED`). `mutants.py`, `mutants_p7.py`, `mutants_p8.py`,
+  `mutants_p9.py` and `mutants_sdk.py` run each suite with `run_group()`: own process group, SIGKILL to the group on
+  every exit path; a timeout still raises as before. Same pattern found: `test_ledger_graph.py` (Session, the 50-process
+  claim race; no leak seen, the children end at EOF) and the four other drivers. `test_policy_to_dfy.py` already closes
+  its sessions in `finally`; the other suites use `subprocess.run` only. Not changed: `run()` of
+  `scripts/exit_universal_primitives.py` kills only the suite on its 6-hour timeout (the same shape; out of scope).
+- Regression check: at the end of every run `test_engine.py` lists the processes whose command line names its work
+  folder (line `TEARDOWN`); one found is a failure (exit 1) and is killed. Shown to fire: with reaping disabled in a
+  scratch copy it reported 2 processes.
+- Results (actual): see the ROADMAP section. All 30 copies of `mutants.py` are still KILLED for their named reasons,
+  the control passes, `test_engine.py` passes 23 of 23; 0 processes left after each run.
+- Uncertainty: the ps check matches a substring of the command line; an engine started with a path outside the work
+  folder would not be seen (none is today). `killpg` after the leader is reaped could in principle reach a reused group
+  id; no member alive means the group id is free, so the risk is small. Impact: the bundle digest of
+  `scripts/exit_universal_primitives.py` changes (it hashes the test files); no tracked record holds it.
+- NOT RUN: `mutants_p9.py`, `mutants_sdk.py` (compile check only), `test_policy_to_dfy.py`, Dafny, HOL, the EXIT
+  script. Next check: one `exit_universal_primitives.py --case mutations` run, then `pgrep -fl primitives-engine`.
+
 ## U923 — Goal 20 record refreshed: a fresh evidence run on `main` `e4901ffc` replaces the tracked bundle `1e75ab47…` with `4a66ddc8…`
 
 - Refs U724, U807, U881, U891, U893, U921. Owner approval of 2026-11-20: "Goal 20 record: Approved--regenerate and

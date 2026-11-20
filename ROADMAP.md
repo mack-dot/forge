@@ -57,6 +57,178 @@ other than `1e75ab47…` (20 of its 64 subject rows changed or deleted).
 they are not changed. Older records that name `1e75ab47…` stay as they
 are (they describe their own commits). M1 and integration EXIT
 NOT_ESTABLISHED.
+## Test hygiene 2026-11-20: `S2_shared_lock` left a hung `serve` process after each run; every child of the engine suites is now killed and reaped on every exit path — U927
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Test files only: `tests/primitives_v2/test_engine.py`,
+`test_ledger_graph.py` and the five `mutants*.py` drivers. No engine
+source and no protected file changed. Branch
+`fix/s2-shared-lock-teardown` from `b1c98822`; NOT pushed; NOT merged.
+Cause: case `lock` failed (as it must under the changed copy) before
+`holder.kill()`; the holder, paused at the test seam with the lock held,
+waits for SIGKILL forever. Repair: the suites register each child and
+kill and reap the ones still alive after each case; the drivers run each
+suite in its own process group and SIGKILL the group on every exit path,
+also a timeout. New check: line `TEARDOWN` of `test_engine.py` fails the
+run (exit 1) when a process that names the run's work folder is alive at
+the end. FINITE TEST on one machine.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| before the repair: `mutants.py --only S2_shared_lock` |0|KILLED; 1 `primitives-engine-seams serve …/lock-1/st` left alive (killed by hand) |
+| before the repair: `test_engine.py --case lock` on the S2 copy |1|FAIL lock; 1 process left alive |
+| after: `mutants.py --only S2_shared_lock` |0|KILLED for its named reason; 0 processes left |
+| after: `test_engine.py --case lock` on the S2 copy |1|FAIL lock (named reason); REAPED 2; TEARDOWN 0; 0 left |
+| after, reaping disabled in a scratch copy (check of the new check) |1|TEARDOWN 2 (the check finds the leak) |
+| after: `mutants.py` (all) |0|control PASS; 30 of 30 copies KILLED; 0 left |
+| after: `test_engine.py` (unchanged build, all cases) |0|23 of 23 PASS; TEARDOWN 0; 0 left |
+| after: `test_ledger_graph.py` (all) |0|0 left |
+| after: `mutants_p7.py`; `mutants_p8.py` |0; 0|25 of 25 and 20 of 20 KILLED; 0 left |
+| `mutants_p9.py`, `mutants_sdk.py`, `test_policy_to_dfy.py`, any Dafny or HOL, `scripts/exit_universal_primitives.py` (all cases) |NOT RUN|p9 and sdk: changed, compile check only |
+
+The `suite` and `mutations` cases of
+`scripts/exit_universal_primitives.py` hash the test files into the
+bundle, so its bundle digest changes; no tracked record holds that
+digest. Entry U927.
+## Discovery One web showcase restored on `main` (owner's word of 2026-11-20): `web/` from commit `3731ab8e`, on top of the HAL demo; header spacing repaired; a finite test of the unproved engine; nothing deployed; NOT pushed; NOT merged — U926
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Additive: only `web/**` (44 files) is new on this branch
+(it stacks on branch `demo/hal-9000`); no file of `main` changed except
+this file and `unsure.md`. Brought from `3731ab8e` (branch
+`recover/discovery-one-web`): `web/**` only. Third-party packages stay
+inside `web/` with exact pins and lock files; `node_modules/`, `.next/`,
+`out/`, `.venv/` and screenshots are untracked (`web/.gitignore`); the
+largest tracked file is `web/frontend/package-lock.json` (237,347
+bytes). The root `tsconfig.json` includes only `app/`, `ts/`,
+`interop/`, `tests/`, `bugs/` (read): it does not pick up `web/`.
+Adapted: no backend code change was needed for the engine and SDK of
+`main`. Repaired: the page header rendered `DISCOVERY ONEFORGE AIRLOCK
+SHOWCASE` (no space between the `<h1>` text and its `<span>`; the
+margin hid it only on wide screens); one `{" "}` in
+`web/frontend/src/components/Experience.tsx`. Documents: the virtual
+environment is now `web/backend/.venv`; a scratch path in the
+`run_server.py` docstring removed.
+
+Commands (worktree; Node 24.3.0 for the frontend; the backend venv from
+`requirements.lock` with `--require-hashes`; backend runs with
+`PATH=/usr/bin:/bin`; `env -u ANTHROPIC_API_KEY -u OPENAI_API_KEY`;
+`NEXT_TELEMETRY_DISABLED=1`; no model call):
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `npm ci` in `web/frontend` |0|369 packages from the lock file |
+| `pip install --require-hashes -r requirements.lock` in `web/backend/.venv` |0|fastapi 0.162.5, uvicorn 0.54.0, anthropic 2.11.0 |
+| backend `python -m unittest discover` (before and after the repairs) |0, 0|51 tests each time; 50 concurrent preset turns: 50 refusals, 0 commits |
+| `npm run typecheck`, `npm run lint`, `npm run build` (before the repair; after the repair) |0 0 0; 0 0 0|static export |
+| live HTTP, real backend on 127.0.0.1, no model: `GET /api/health`, `GET /api/presets`, `POST /api/story/vent`, `POST /api/chat` with each of 5 presets, `POST /api/chat` with free text, `GET /api/telemetry` |200 each|vent `REJECTED_POLICY REASON_CAP`; presets: REASON_CAP x2, `COSIGN_INVALID`, `TOTAL_CAP`, `UNKNOWN_KEY`, each `as_expected`; free text: event `no_model`; telemetry `ALIVE`, reconciled, 0 unauthorised; no HTTP 500 in either server log |
+| header text, server-side render of `Experience` (scratch script, React's own renderer) |1 before, 0 after|before `DISCOVERY ONEFORGE AIRLOCK SHOWCASE`; after `DISCOVERY ONE FORGE AIRLOCK SHOWCASE` |
+| positive control: a second writer opens a key on the live store through its own engine process |COMMITTED|telemetry `LOST`, `reconciled` false, 1 unauthorised effect; the page rendered with that answer has `data-breach="true"` and the BREACH banner (red: `#7f1d1d`, stage `#2a0204`, read from the CSS); with the clean answer: no banner |
+| `node test/browser-check.mjs`, `node test/real-backend-run.mjs` (headless Chrome) |NOT RUN|the process limit of the shared machine; no browser render; colour read from the CSS, not seen |
+| model mode with a real model |NOT RUN|no key by rule; the unit tests use a test double |
+
+Limits: the engine is unproved Rust (NATIVE CHECK); this showcase is a
+FINITE TEST; the breach decision is the exact reconciliation of `replay`
+with the server's ledger; a full compromise of the server bypasses every
+rule (PROTOCOL.md section 11). Nothing deployed. Open for the owner:
+film characters (rights), cost of a live model per visitor turn (the
+daily budget counter is in memory only), hosting.
+
+## Release audit 2026-11-20: merge state
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Documents only. The sections below were written on their
+branches BEFORE these merges. Their words "NOT merged", "NOT merged by
+the agent", "draft pull request" and "branch ... from" are the record of
+that time and are not changed. The merge state on `main` = `058eabcb`
+(read with `gh pr list --state merged` and `git log --oneline
+origin/main`; both exit 0):
+
+| Pull request | Squash commit on `main` | Section below |
+| --- | --- | --- |
+| 65 | `9a9a8943` | Goal 20, `forge-airlock` SDK |
+| 66 | `b2249ea2` | Gate APEX-2 |
+| 67 | `33055a59` | none (Formal Ceiling v2, design only; `unsure.md` U840) |
+| 68 | `be9c1cc2` | Review of 2026-11-20: README top and claims |
+| 69 | `0a84902a` | Review 2026-11-20, defect D1: isolation-mode design |
+| 70 | `116f675f` | Gate F1 (Goal 21), intent clearing |
+| 71 | `c1490f92` | Review fix PR-2, CI for the airlock engine |
+| 72 | `cad68a5f` | Goal 21, phase 1: cosign check without Node |
+| 73 | `7e5842d0` | Review 2026-11-20, engine hardening (PR-3) |
+| 74 | `f1d87032` | T19, the hardened refund sink, minter and dispatcher |
+| 75 | `ccdd8e5f` | Video cut |
+| 77 | `a2ef7c0a` | Archia MCP airlock demo, Phases 1 to 4 |
+| 78 | `e9e30a64` | none (ROADMAP repair) |
+| 79 | `058eabcb` | V1.1 universal primitives pack |
+
+Still OPEN: pull request 76 (Gate F2a, Stage 9 lock rebind; protected
+files; no section here). Stage 9 stays deferred.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `gh pr list --state merged`; `git log --oneline origin/main` |0; 0|the table above |
+| `gh run list --workflow airlock-ci.yml --branch main` |0|hosted runs 44756122944 (`c1490f92`) and 44767657892 (`058eabcb`): success |
+| link check of the five changed documents (a working-tree variant of `proposals/round4-20261117/check_links.py`) |0|0 missing targets |
+| any test suite, EXIT script or bundle run |NOT RUN|documents only |
+
+Findings, the number ledger and the proposed code-comment changes:
+[AUDIT3_DOCUMENTS.md](proposals/release-audit-20261120/AUDIT3_DOCUMENTS.md).
+Two record facts that the sections below do not show: (1) the tracked
+Goal 20 bundle record (`1e75ab47…`) does not reproduce on `main`: 20 of
+its 64 subject files changed in pull requests 68, 72 and 73, and no
+newer bundle is tracked; (2) `scripts/exit_archia_mcp.py` pinned the
+pre-merge `bin/forge-airlock` (`bd56d8b6…`), but `main` has `8d9296ac…`,
+so its `--case build` could not pass on `main` as written. This branch
+makes that pre-merge check "not applicable" after the script's own
+merge (the same for the additive check of
+`scripts/exit_universal_primitives.py`); both `--case build` runs then
+gave exit 0.
+
+Final results of the audit (hygiene, demos, the clean scratch clone:
+28 of 28 Stage EXIT cases exit 0, five bundles byte-identical, Goal 20
+bundle NOT RUN, 2 older missing link targets), with every actual exit
+code and every NOT RUN item:
+[release-readiness table](proposals/release-audit-20261120/README.md).
+Entry U920.
+## HAL 9000 demo restored on `main` (owner's word of 2026-11-20): `demos/hal_9000/` from commit `ff03fac3`, adapted to the engine of `main`; a finite test of the unproved engine; NOT pushed; NOT merged — U925
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Additive: only `demos/hal_9000/**` (18 files) is new; no
+file of `main` changed except this file and `unsure.md`. Brought from
+`ff03fac3` (branch `recover/hal-9000`): the demo's own files only. The
+old copies of `src/airlock/`, `sdk/`, `bin/forge-airlock`,
+`scripts/exit_goal20_sdk.py`, `docs/quickstart-5min.md` and
+`tests/airlock/` on that branch were NOT brought: `main` wins. Code
+change for `main`'s engine: none was needed (the old branch already
+used the native cosign tools without `--node` and no kill-points build).
+Adapted: on-screen and README text (request ids are per tenant since
+review D3, but every party uses the tenant `crew`; no Node runs; the
+Node-swap attack belongs to the old Goal 20 engine), the test list in
+the README, the owner's sudo steps in the README, and the owner's login
+name removed from `vault/README.md`.
+
+Commands (worktree, pinned Python 3.10.11, Node 24.3.0 first in `PATH`,
+rustc; `env -u ANTHROPIC_API_KEY -u OPENAI_API_KEY`; no model call):
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 bin/forge-airlock build` |0|engine, `build/silicon/test/airlock-engine-kill`, refund copy |
+| `python3 demos/hal_9000/test_hal_demo.py` (before and after the text changes) |0, 0|26 of 26 cases, each time |
+| `python3 demos/hal_9000/run_discovery_one.py --fast --no-color` (10 GiB flood) |0|32 of 32 checks true; peak RSS 2,384 KiB; 30.2 s |
+| same, `--flood-gib 0.25`, a logging `node` stand-in first in `PATH`, `FORGE_AIRLOCK_NODE` unset |0|the stand-in was passed to `serve` and never started (log file not created); the commander's cosigned pulse committed |
+| same, `--engine-dir /nonexistent/engine` |2|`SETUP ERROR: /nonexistent/engine/airlock-engine is missing` |
+| `python3 demos/hal_9000/vault/test_vault.py` (one user, NO separation) |0|20 of 20 |
+| `sh demos/hal_9000/vault/setup_vault.sh --dry-run` |0|24 printed commands, nothing changed |
+| positive controls in the test (occupancy 0; a real commander signature not in the ledger; no cap; direct SAGA; A2, A2b, A3, A5; mutants M1, M4b, M9, M10) |0 (suite)|each bad effect commits or each mutant runs, and the checker or show exits 1 |
+| vault and nobody mode under a second user ID (`sudo`) |NOT RUN|no agent runs `sudo`; the owner's commands are in `demos/hal_9000/README.md` |
+| the interactive mode with a real model |NOT RUN|no key in the environment by rule; local test doubles only |
+
+Limits: the engine is unproved Rust (NATIVE CHECK); the demo is a FINITE
+TEST; the scorecard is an exact reconciliation of `replay` against the
+trusted side's ledger (it detects, it does not prevent, a same-user
+bypass); OS user separation is NOT TESTED. Open for the owner: the film
+characters (rights question for a public launch), the cost of a live
+model.
 
 ## Assurance-chain investigation 2026-11-20: where the chain from authorization to receipt holds, where it breaks, and the shortest path to an independent verifier (read-only; nothing proved here) — U921
 

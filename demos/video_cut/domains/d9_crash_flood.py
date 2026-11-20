@@ -39,6 +39,7 @@ NUMBER, NAME, TITLE = 9, 'crash_flood', 'Crash and flood'
 D = 'crash_flood'
 ROOT = Path(__file__).resolve().parents[3]
 RECORD_10GIB = ROOT / 'proposals/forge2-demo-gauntlet/records/run-10gib.json'
+KILL_BUILD = ROOT / 'build' / 'silicon' / 'test' / 'airlock-engine-kill'  # the kill-points build of `bin/forge-airlock build`
 LBL = 'NATIVE CHECK + FINITE TEST'
 LBL_REPORT = 'NATIVE CHECK + FINITE TEST (a report of the engine, not a refusal)'
 LBL_PY = 'PYTHON RUNTIME (the handler\'s own exception; not an engine answer)'
@@ -277,7 +278,11 @@ def kill_once(ctx, st, kill_engine, point, split, rid, amount, present, what):
 
 
 def kill_part(ctx):
+    # `bin/forge-airlock build` puts the test-seam build in build/silicon/test/, never beside the production engine
+    # (src/airlock/PROTOCOL.md section 1). An --engine-dir folder may still hold its own airlock-engine-kill.
     kill_engine = Path(ctx.engine_dir) / 'airlock-engine-kill'
+    if not kill_engine.is_file() and Path(ctx.engine_dir).resolve() == (ROOT / 'build' / 'airlock').resolve():
+        kill_engine = KILL_BUILD
     if not kill_engine.is_file():
         ctx.skip(D, 'SIGKILL at a kill point: NOT IN TAKE (%s is not built)' % kill_engine.name)
         return
@@ -289,7 +294,7 @@ def kill_part(ctx):
         res = st.refund(T, K, 'pay-%d' % i, h, 'PAYOUT', 100 * i)
         if not res.committed:
             raise TakeFailed('setup payout %d: %r' % (i, res))
-    ctx.note(D, 'SIGKILL: the killed process is build/airlock/airlock-engine-kill', 'the test-seam build of the same source (--cfg kill_points); '
+    ctx.note(D, 'SIGKILL: the killed process is %s' % (kill_engine.relative_to(ROOT) if kill_engine.is_relative_to(ROOT) else kill_engine), 'the test-seam build of the same source (--cfg kill_points); '
              'the production build ignores AIRLOCK_KILL_AT. Recovery and every later answer are of the production engine.', 'src/airlock/PROTOCOL.md section 1')
     kill_once(ctx, st, kill_engine, 'b', 40, 'pay-torn', 700, False, 'SIGKILL: record half written')
     kill_once(ctx, st, kill_engine, 'c', None, 'pay-unsynced', 800, True, 'SIGKILL: written, not synced')
