@@ -1,0 +1,7 @@
+# APEX-2. Build with:  Holmake --no_prereqs   (never rebuild the pinned tool tree).
+# CAKEMLDIR must name the pinned CakeML tree. This file changes no file outside this folder.
+DAFNYDIR = $(CAKEMLDIR)/compiler/dafny
+INCLUDES = $(DAFNYDIR) $(DAFNYDIR)/semantics $(DAFNYDIR)/forge_refund_experiment $(DAFNYDIR)/forge_refundCertifiedProg_experiment
+ifdef POLY
+HOLHEAP = $(CAKEMLDIR)/misc/cakeml-heap
+endif

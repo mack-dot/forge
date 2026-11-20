@@ -1,0 +1,61 @@
+<<HOL message: Created theory "forge_refundRouteAFlat">>
+TEXT_CHECK flat_plain is in the conclusion
+TEXT_CHECK no evaluate_exps and no exported_ensures in the statement
+TEXT_CHECK the premises are those of refund_model_frame_decision_shape, unchanged
+TEXT_CHECK 12 premises
+Saved theorem _______ "refund_route_a_flat_plain_shape"
+FORGE_BEGIN refund_entry_forces_plain_user_state
+Saved theorem _______ "refund_entry_forces_plain_user_state"
+FORGE_BEGIN refund_entry_refuses_tagged_user_state
+Saved theorem _______ "refund_entry_refuses_tagged_user_state"
+FORGE_THEOREM refund_route_a_flat_plain_shape
+FORGE_ORACLES DISK_THM
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_entry_pre_sl sl s h stk e ∧ aligned 3 e ∧ h ≤₊ e ∧ 8192w ≤₊ e − h ∧
+  refund_heap_clear_sl sl h e ∧
+  envmc.prog_addresses = refund_mem_dm_sl sl h e ∧
+  interference_ok envmc.next_interfer (arm8_target.proj envmc.prog_addresses) ∧
+  refund_ffi_contract_on (sl + 0x1000040D0w) envmc.prog_addresses
+    (λi nb s.
+       (i = 0 ∨ i = 1 ⇒ 4 ≤ w2n (s.REG 3w)) ∧
+       (i = 2 ⇒ s.REG 1w = 8w ∧ s.REG 3w ≠ 0w) ∧ (i = 3 ⇒ s.REG 3w ≠ 0w))
+    envmc.ffi_interfer ∧
+  stdin_content fs =
+  SOME
+    (explode
+       (sexp_to_string
+          (refund_request charge request original remaining enabled opened
+             candidate amount reason))) ∧ wfcl cl ∧ wfFS fs ∧ STD_streams fs ⇒
+  ∃ms.
+    (arm8_run 27 s = SOME ms ∧ ms.PC = sl + 0x1000040D0w) ∧
+    ∀b. machine_sem (refund_mc (sl + 0x1000040D0w) envmc)
+          (basis_ffi no_ext cl fs) ms b ⇒
+        ∃t io.
+          b = Terminate t io ∧
+          ∀g. refund_strict_parse (fd1_written io) = SOME g ⇒
+              g =
+              refund_fields charge request original remaining enabled opened
+                candidate amount reason ∧
+              fd1_written io =
+              explode
+                (refund_render_fields
+                   (refund_fields charge request original remaining enabled
+                      opened candidate amount reason)) ∧
+              ∀ok a r c q n.
+                g = (ok,a,r,c,q,n) ⇒
+                flat_plain (codes charge) (codes request) original remaining
+                  enabled opened candidate amount (codes reason) ok a
+                  (codes r) (codes c) (codes q) n
+FORGE_THEOREM refund_entry_forces_plain_user_state
+FORGE_ORACLES DISK_THM
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_entry_pre_sl sl s h stk e ⇒
+  ¬s.TCR_EL1.TBI0 ∧ ¬s.TCR_EL1.TBI1 ∧ ¬s.SCTLR_EL1.SA0 ∧ ¬s.SCTLR_EL1.E0E ∧
+  s.PSTATE.EL = 0w ∧ s.exception = NoException
+FORGE_THEOREM refund_entry_refuses_tagged_user_state
+FORGE_ORACLES DISK_THM
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ s.TCR_EL1.TBI0 ∨ s.SCTLR_EL1.SA0 ⇒ ¬refund_entry_pre_sl sl s h stk e
+Exporting theory "forge_refundRouteAFlat" ... done.
+Theory "forge_refundRouteAFlat" took 12.8s to build
+ROUTE_A_FLAT_COMPLETE
