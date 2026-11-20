@@ -455,7 +455,7 @@ MUTANTS = [
      'the REJECTED_AFTER_PENDING line of a sweep (fresh review of PR-3, finding 3)'),
     ('V7a_bad_entry_skipped', 'store.rs', 'a bad last entry and a one-record rollback must be CORRUPT_WAL', '    if !bad.is_empty() && !crash_shape {', '    if false {',
      'engine', 'ratchet_entry', 'the refusal of a full-length ratchet entry with a bad CRC (D7)'),
-    ('V7b_duplicate_push', 'store.rs', 'a torn record with the ratchet at the WAL epoch must not push again', '        if floor < l.epoch {\n            push(&mut ratchet, l.epoch)?;',
+    ('V7b_duplicate_push', 'store.rs', 'a torn last entry: 0', '        if floor < l.epoch {\n            push(&mut ratchet, l.epoch)?;',
      '        if floor <= l.epoch {\n            push(&mut ratchet, l.epoch)?;', 'engine', 'ratchet_entry', 'the rule that a recovery pushes no second entry of the same value (D7)'),
     ('V7c_crash_shape_not_repaired', 'store.rs', 'a crash-shaped bad last entry must be cut',
      'let crash_shape = bad.len() == 1 && bad[0] + 1 == entries && size % 12 == 0 && l.epoch == floor + 1;', 'let crash_shape = false;', 'engine', 'ratchet_entry',
