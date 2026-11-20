@@ -1,0 +1,3 @@
+# D7 after: the same case on this branch (commit of the D7 fix)
+PASS ratchet_entry   1.6s bad last entry + one-record rollback -> CORRUPT_WAL; bad middle entries -> CORRUPT_WAL; 3 crash-shaped last entries repaired; torn entries cut; no duplicate push
+exit 0

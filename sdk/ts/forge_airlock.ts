@@ -8,7 +8,9 @@
 //   * one long-lived `forge-airlock serve <dir>` child per Store, over its pipes; the API is async (Promises);
 //     requests go one at a time in call order (a queue). No spawnSync per call.
 //   * typed results: COMMITTED, REJECTED_POLICY, REQUIRE_HUMAN_COSIGN, STALE_STATE_HASH, DUPLICATE_REQUEST_ID,
-//     TENANT_ISOLATION_BREACH, DROPPED_OBLIGATION (from sweep), and OK for get/read/state.
+//     TENANT_ISOLATION_BREACH (readScoped only), DROPPED_OBLIGATION (from sweep), and OK for get/read/state.
+//     Keys, request ids and leases are per tenant (review D3): a key of another tenant is UNKNOWN_KEY (an
+//     EngineRefusal), exactly like a key that nobody opened.
 //   * every other outcome REJECTS with an AirlockError subclass (LocalRefusal, EngineRefusal, EngineFault,
 //     ProtocolError, EngineDead, EngineTimeout, LeaseNotOpened); never a commit. After ProtocolError, EngineDead,
 //     EngineTimeout or EngineFault the Store is closed (fail closed).
@@ -19,13 +21,18 @@
 //     other than `OK <n>` or TENANT_ISOLATION_BREACH closes the client (the stream may be out of step).
 //   * withLease(requestId, deadlineMs, tenant, key, handler) opens a durable lease bound to (request id, tenant,
 //     key) before the handler runs and never closes it; only a terminal verdict for the same id on the same
-//     tenant and key closes it; a throwing handler leaves it open. Only handlers that opened a lease are covered.
+//     tenant and key closes it (a commit or REJECTED_POLICY); REQUIRE_HUMAN_COSIGN leaves it open as PENDING_COSIGN
+//     (review D6: `leasePending`; `sweep().pending` before the deadline); a throwing handler leaves it open. Only
+//     handlers that opened a lease are covered.
 // Trust boundary (src/airlock/PROTOCOL.md section 11): every rule holds only against a caller that reaches the
 // store THROUGH the engine. A process that can write the store folder can append records itself; a process that
 // can start its own engine on the folder can ignore every check. The opener of a key is trusted for its tenant,
 // `original` and facts; the tenant field is not authenticated. "The agent cannot self-cosign" needs BOTH the
 // private key outside the agent's reach AND an agent that cannot write the store folder or run another engine on
 // it (for example `serve` runs under another OS user and the agent holds only its pipe).
+// Cosign: cosignMessage(action) returns the six-line message (`forge-airlock-cosign-v3`); the human signs it with
+// `bin/forge-airlock cosign-sign <key-file>` (OpenSSH ssh-keygen; no Node) and passes the printed token as the
+// `signature` of refund(). The engine verifies it with /usr/bin/ssh-keygen (a trusted assumption).
 // Label: not trusted for a write decision; not proved. FINITE TEST only.
 
 const childProcess = require('node:child_process');
@@ -36,12 +43,14 @@ const DISPATCHER: string = pathMod.join(ROOT, 'bin', 'forge-airlock');
 const MAX_ANSWER = 1 << 17;
 const ID_RE = /^[A-Za-z0-9_-]{1,24}$/;
 const HASH_RE = /^[0-9a-f]{32}$/;
-const SIG_RE = /^[0-9a-f]{128}$/;
+// A cosign signature token: the base64 body of one SSHSIG armor without line breaks (src/airlock/PROTOCOL.md section 7):
+// 256 characters, canonical (the last data character carries no unused bit), ending with "==". The engine checks the rest.
+const SIG_RE = /^[A-Za-z0-9+/]{253}[AQgw]==$/;
 const DIGITS_RE = /^(0|[1-9][0-9]*)$/;
 const MAX_READ_ROWS = 100000;
 const REFUSALS = ['MALFORMED_REQUEST', 'UNKNOWN_KEY', 'HELPER_FAILED', 'BAD_FRAME'];
 const FAULTS = ['EPOCH_REGRESSION', 'CORRUPT_WAL', 'IO_ERROR', 'OUTCOME_UNKNOWN', 'DISPATCH_FAILED'];
-const COMMIT_TYPED = ['REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH'];
+const COMMIT_TYPED = ['REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN', 'STALE_STATE_HASH', 'DUPLICATE_REQUEST_ID'];
 const VERBS: Record<string, string> = {
   open_money: 'OPEN_MONEY', refund: 'REFUND', open_saga: 'OPEN_SAGA', saga: 'SAGA',
   open_inventory: 'OPEN_INVENTORY', book: 'BOOK',
@@ -112,10 +121,13 @@ class Result {
   stateHash: string | null = null;
   payload: string | null = null;
   leaseClosed: number | null = null;
+  leasePending: number | null = null;  // review D6: epoch of the COSIGN_PENDING record of the lease
   kind: string | null = null;
   fields: Record<string, string> = {};
   rows: unknown[] = [];
   dropped: Array<[string, string, string, string]> = [];
+  pending: Array<[string, string, string, string, string]> = [];  // review D6: PENDING_COSIGN lines of a sweep
+  rejectedAfterPending: Array<[string, string, string, string, string, string]> = [];  // REJECTED_AFTER_PENDING lines
   constructor(code: Code, detail: string, line: string) {
     this.code = code;
     this.detail = detail;
@@ -208,7 +220,7 @@ function buildLine(op: string, f: Fields): string {
   } else if (op === 'refund') {
     t.push(hash('pre_state_hash', f.pre_state_hash), id('reason', f.reason), amount('amount', f.amount));
     if (f.signature !== undefined && f.signature !== null) {
-      if (typeof f.signature !== 'string' || !SIG_RE.test(f.signature)) throw new LocalRefusal('signature: not 128 lowercase hex digits');
+      if (typeof f.signature !== 'string' || !SIG_RE.test(f.signature)) throw new LocalRefusal('signature: not one SSHSIG token (256 characters of canonical base64; see cosign-sign)');
       t.push(f.signature);
     }
   } else if (op === 'open_saga') {
@@ -238,10 +250,15 @@ function refusal(line: string, t: string[], typed: string[]): Result {
     const r = new Result(code as Code, detail, line);
     const i = t.indexOf('LEASE_CLOSED');
     if (i >= 0) {
-      if (i + 2 !== t.length || !DIGITS_RE.test(t[i + 1]) || (code !== 'REJECTED_POLICY' && code !== 'REQUIRE_HUMAN_COSIGN')) {
+      if (i + 2 !== t.length || !DIGITS_RE.test(t[i + 1]) || code !== 'REJECTED_POLICY') {
         throw new ProtocolError('bad LEASE_CLOSED part', line);
       }
       r.leaseClosed = Number(t[i + 1]);
+    }
+    const j = t.indexOf('LEASE_PENDING');  // review D6: a cosign verdict leaves the lease open
+    if (j >= 0) {
+      if (j + 2 !== t.length || !DIGITS_RE.test(t[j + 1]) || code !== 'REQUIRE_HUMAN_COSIGN') throw new ProtocolError('bad LEASE_PENDING part', line);
+      r.leasePending = Number(t[j + 1]);
     }
     if (code === 'STALE_STATE_HASH') {
       if (t.length < 2 || !HASH_RE.test(t[1])) throw new ProtocolError('STALE_STATE_HASH without a hash', line);
@@ -431,7 +448,7 @@ class Store {
         for (const x of t.slice(3)) { const i = x.indexOf('='); r.fields[x.slice(0, i)] = x.slice(i + 1); }
         return r;
       }
-      return refusal(a, t, ['TENANT_ISOLATION_BREACH']);
+      return refusal(a, t, []);
     });
   }
 
@@ -479,7 +496,7 @@ class Store {
 
   // Open a durable lease bound to (requestId, tenant, key), then run handler(lease). The SDK never closes the
   // lease. deadlineMs: absolute ms since the Unix epoch. Resolves with the handler's value; a handler error
-  // propagates and the lease stays open. One lease per request id, ever (DUPLICATE_REQUEST_ID LEASE_USED).
+  // propagates and the lease stays open. One lease per request id and tenant, ever (DUPLICATE_REQUEST_ID LEASE_USED).
   async withLease<T>(requestId: string, deadlineMs: Amount, tenant: string, key: string, handler: (lease: Lease) => T | Promise<T>): Promise<T> {
     const dl = amount('deadline_ms', deadlineMs);
     const a = await this.send('OPEN_LEASE ' + id('request_id', requestId) + ' ' + dl + ' ' + id('tenant', tenant) + ' ' + id('key', key));
@@ -491,7 +508,7 @@ class Store {
       }
       return await handler(new Lease(this, requestId, Number(t[2]), dl, tenant, key));
     }
-    const r = this.guard(() => refusal(a, t, ['DUPLICATE_REQUEST_ID', 'TENANT_ISOLATION_BREACH']));
+    const r = this.guard(() => refusal(a, t, ['DUPLICATE_REQUEST_ID']));
     throw new LeaseNotOpened(r);
   }
 
@@ -536,8 +553,16 @@ class Store {
     if (dropLines.some((x) => x.length !== 5)) throw new ProtocolError('bad DROPPED_OBLIGATION line', r.out);
     const dropped: Array<[string, string, string, string]> = dropLines.map((x) => [x[1], x[2], x[3], x[4]]);
     if ((r.code === 24) !== (dropped.length > 0)) throw new ProtocolError('sweep exit code and lines disagree', r.out);
+    const pendLines = lines.slice(1).filter((x) => x.startsWith('PENDING_COSIGN ')).map((x) => x.split(' '));
+    const rejLines = lines.slice(1).filter((x) => x.startsWith('REJECTED_AFTER_PENDING ')).map((x) => x.split(' '));
+    if (pendLines.some((x) => x.length !== 6) || rejLines.some((x) => x.length !== 7 || !DIGITS_RE.test(x[5]))
+        || pendLines.length + rejLines.length + dropLines.length !== lines.length - 1) {
+      throw new ProtocolError('bad PENDING_COSIGN or REJECTED_AFTER_PENDING line, or an unknown sweep line', r.out);
+    }
     const res = new Result(dropped.length ? 'DROPPED_OBLIGATION' : 'OK', lines[0], r.out);
     res.dropped = dropped;
+    res.pending = pendLines.map((x) => [x[1], x[2], x[3], x[4], x[5]]);
+    res.rejectedAfterPending = rejLines.map((x) => [x[1], x[2], x[3], x[4], x[5], x[6]]);
     return res;
   }
 

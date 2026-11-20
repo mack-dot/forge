@@ -1,0 +1,3 @@
+# D7 before: tests/airlock/test_engine.py --case ratchet_entry on the engine built from e3322303 (unchanged sources)
+FAIL ratchet_entry   1.8s a bad last entry and a one-record rollback must be CORRUPT_WAL: 0 'STATE 2 1040f2940ef2f080e35f687a18007025 st-ratchet keys=1 effects=2 leases=0\n'
+exit 1

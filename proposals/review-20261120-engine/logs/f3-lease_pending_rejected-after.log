@@ -1,0 +1,6 @@
+# Finding 3 after: the same case (and three lease and pin cases) on the repair
+PASS leases       0.9s 5 bound leases; commit and REJECTED_POLICY x3 close; REQUIRE_HUMAN_COSIGN leaves it pending; stale and malformed do not close; --all shows closes; sweep exact and read-only
+PASS lease_cosign_pending   1.0s cosign verdict -> PENDING_COSIGN (1 record, retries write none); sweep: PENDING_COSIGN before, DROPPED_OBLIGATION after the deadline; signed commit and REJECTED_POLICY close it
+PASS lease_pending_rejected   0.7s a rejection after a cosign verdict closes the lease; the sweep reports it as REJECTED_AFTER_PENDING; a plain rejection does not
+PASS pin_window   4.9s refund binary changed in place and Node replaced after first use -> PIN_MISMATCH; pinned files in 0777 and 0775 folders -> PIN_PATH_UNTRUSTED; a changed bignumber.js beside the model -> HELPER_FAILED; a link to a good Node copy commits
+exit 0

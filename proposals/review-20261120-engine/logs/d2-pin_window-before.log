@@ -1,0 +1,15 @@
+# D2 before: tests/airlock/test_engine.py --case pin_window on the engine built from e3322303 (unchanged sources)
+FAIL pin_window   0.2s a refund binary changed after its first use must be refused: 'REJECTED_POLICY CAKEML_REJECTED'
+exit 1
+
+# the same case with every check made soft (scratch driver soft_case.py), so the later parts are seen too; parts after the first commit cascade (used ids)
+CHECK FAILED: a refund binary changed after its first use must be refused: 'REJECTED_POLICY CAKEML_REJECTED'
+CHECK FAILED: a Node binary replaced after its first use must be refused: 'REJECTED_POLICY CHECKER_REJECTED'
+CHECK FAILED: 'REFUND t1 charge-1 rq3 2487b135578272625b27603e1cd02048 returned_item 5': expected HELPER_FAILED (exit 22), got exit 0 'COMMITTED rq3 3 d3e5a4bef2c0d83b1a0094c865ae9356 REFUND t1 charge-1 rq3 returned_item 5 0'
+CHECK FAILED: a refund binary in a 777 folder: ['COMMITTED', 'rq3', '3', 'd3e5a4bef2c0d83b1a0094c865ae9356', 'REFUND', 't1', 'charge-1', 'rq3', 'returned_item', '5', '0']
+CHECK FAILED: 'BOOK t1 inv2 b3 bf3ba9056ac9558b7c2beaa95c715dd0 {"A":[["1","1"]],"c":["3"],"w":["5","2"],"x":["1","': expected HELPER_FAILED (exit 22), got exit 0 'COMMITTED b3 4 d0b7d6f66d5e015bd7eb6c39b1332bbd BOOK t1 inv2 b3 11 1'
+CHECK FAILED: a Node binary in a 777 folder: ['COMMITTED', 'b3', '4', 'd0b7d6f66d5e015bd7eb6c39b1332bbd', 'BOOK', 't1', 'inv2', 'b3', '11', '1']
+CHECK FAILED: 'REFUND t1 charge-1 rq3 d3e5a4bef2c0d83b1a0094c865ae9356 returned_item 5': expected HELPER_FAILED (exit 22), got exit 14 'DUPLICATE_REQUEST_ID'
+STOPPED: IndexError list index out of range
+checks failed: 8
+exit 1

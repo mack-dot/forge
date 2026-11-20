@@ -1,0 +1,6 @@
+{"airlock": "money", "version": 1, "name": "ship-autonomy", "profile": "parametric",
+ "rules": [
+  {"reason": "VENT_BAY", "max_reason_total_fact": "vents_allowed", "verdict": "COMMIT"},
+  {"reason": "OVERRIDE_BAY_LOCK", "verdict": "REQUIRE_HUMAN_COSIGN"},
+  {"reason": "CYCLE_AIR_FILTER", "max_amount": "1", "verdict": "COMMIT"}
+ ]}

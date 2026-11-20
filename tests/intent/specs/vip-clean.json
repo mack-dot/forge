@@ -1,0 +1,7 @@
+{"intent_spec": 1, "name": "goodwill-vip",
+ "rules": [
+  {"reason": "GOODWILL", "amount": [["<=", "5000"]], "when": [["vip", "==", "0"]], "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "amount": [[">", "5000"]], "when": [["vip", "==", "0"]], "verdict": "REQUIRE_HUMAN_COSIGN"},
+  {"reason": "GOODWILL", "amount": [["<=", "20000"]], "when": [["vip", "==", "1"]], "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "amount": [[">", "20000"]], "when": [["vip", "==", "1"]], "verdict": "REQUIRE_HUMAN_COSIGN"}
+ ]}

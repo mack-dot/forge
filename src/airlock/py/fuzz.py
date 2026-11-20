@@ -9,18 +9,21 @@ Label: FINITE TEST. It proves nothing. It tries a finite, seeded list of inputs 
 Each round, against ONE real store (a fresh temp folder; the real engine through bin/forge-airlock serve):
   * boundary integers as refund amounts: 0, -1, 1, remaining, remaining+1, MaxMoney, MaxMoney+1, 2^64, '01'
   * strings: NUL, CR, tab, Unicode, 0xff, oversized (> 65,536 bytes) lines as RAW lines; unsafe ids through the SDK
-  * cross-tenant tokens: another tenant writes, reads and gets the key; mixed-tenant row sets through read_scoped
+  * shared names: both tenants open the same key name with the same request id, refund and lease with the same ids
+  * cross-tenant tokens: another tenant writes and gets the key (UNKNOWN_KEY: keys, request ids and leases are per
+    tenant, review D3) and opens a lease with an id of the first tenant in its own namespace; mixed-tenant row sets
+    through read_scoped
   * injected mid-handler exceptions inside with_lease (before the sink, and after the sink)
   * a 50-way TOCTOU burst: 50 engine `serve` processes, one pre_state_hash, one REFUND each (raw lines)
   * a duplicate-id replay storm: one fresh request id sent by 20 processes at once, then a used id resent 20 times
 Oracle after EVERY round, from the engine's own `replay`, `state` and `leases --sweep`:
   I1 per money key: sum of committed refunds <= original
   I2 per key: SHIPPING total <= the shipping_paid fact; no GOODWILL refund above 2000 without a cosign (no key pinned)
-  I3 no effect under a wrong tenant (every record of a key names the tenant that opened it)
-  I4 exactly one effect per request id; every id answered COMMITTED is in the WAL once; every WAL id was answered COMMITTED
+  I3 no effect on a key that its tenant did not open (keys are per tenant: (tenant, key))
+  I4 exactly one effect per (tenant, request id); every id answered COMMITTED is in the WAL once; every WAL id was answered COMMITTED
   I5 every refused request id (never answered COMMITTED) left no effect record
   I6 the store still opens: `state` exit 0 (no CORRUPT_WAL), its effect count equals the replay count
-  I7 the open leases past their deadline are exactly the leases whose handler raised before the sink
+  I7 the open leases past their deadline are exactly the leases (request id, tenant) whose handler raised before the sink
   I8 burst: exactly 1 COMMITTED and 49 STALE_STATE_HASH; storm: exactly 1 COMMITTED for the fresh id; 0 for the used id
 Deterministic for a seed (random.Random(seed)). The bursts are racy in WHICH process wins; only invariant facts are
 recorded. The --json file holds no time, pid, path or state hash. Exit 0 only if every invariant held.
@@ -58,9 +61,11 @@ class Fuzz:
         self.store = self.work / 'store'
         self.engine = str(Path(a.engine_dir).resolve() / 'airlock-engine')
         self.n = 0
-        self.answers = {}        # request id -> list of first tokens the engine answered
+        self.answers = {}        # (tenant, request id) -> list of first tokens the engine answered (ids are per tenant, review D3)
         self.keys = {}           # key -> (tenant, original, shipping_paid)
-        self.expect_open = set()
+        self.expect_open = set()  # (request id, tenant) of every lease that must stay open
+        self.open_rid = {}        # key -> the request id of its OPEN_MONEY
+        self.expect_open_late = set()  # leases with a deadline after the sweep's --now: open, never dropped
         self.counts = {'requests': 0, 'local_refusals': 0, 'raw_lines': 0, 'by_code': {}, 'burst_processes': 0,
                        'storm_processes': 0, 'handler_exceptions': 0, 'reads': 0}
         self.violations = []
@@ -104,11 +109,35 @@ class Fuzz:
             original = self.rng.choice([1, 2, 100, 10000, self.rng.randint(1, 10 ** 6), MAX_MONEY])
             ship = self.rng.choice([0, 1, 10, original])
             rid = self.rid('op')
-            res = self.call(rid, lambda: st.open_money(tenant, key, rid, 'store-refunds', original, {'shipping_paid': ship}))
+            res = self.call((tenant, rid), lambda: st.open_money(tenant, key, rid, 'store-refunds', original, {'shipping_paid': ship}))
             if res and res.committed:
                 self.keys[key] = (tenant, original, ship)
+                self.open_rid[key] = rid  # a request id that this tenant used
                 made.append(key)
         return made
+
+    def shared_names(self, st, r):
+        """Per-tenant namespaces (review D3; fresh review of PR-3, finding 7): tenants tA and tB open the SAME key name
+        with the SAME request id, refund with the same request id, and open a lease with the same id. Each must commit
+        in its own namespace, and each GET must show its own key."""
+        key, rid, rid2 = 'sh%d' % r, 'sh%d' % r, 'shr%d' % r
+        originals = {'tA': 1000 + r, 'tB': 2000 + r}
+        for tenant, original in originals.items():
+            res = self.call((tenant, rid), lambda: st.open_money(tenant, key, rid, 'store-refunds', original, {'shipping_paid': 0}))
+            if res is None or not res.committed:
+                self.violations.append('shared names: open of %s by %s did not commit: %r' % (key, tenant, res))
+                return
+        for tenant, original in originals.items():
+            g = st.get(tenant, key)
+            if g.fields.get('original') != str(original):
+                self.violations.append('shared names: %s sees original %s, not its own %d' % (tenant, g.fields.get('original'), original))
+            res = self.call((tenant, rid2), lambda: st.refund(tenant, key, rid2, g.state_hash, 'DUPLICATE_CHARGE', 1))
+            if res is None or not res.committed:
+                self.violations.append('shared names: refund of %s by %s did not commit: %r' % (key, tenant, res))
+        for tenant in originals:
+            if st.with_lease('shl%d' % r, 10 ** 13, tenant, key, lambda lease: 'opened') != 'opened':
+                self.violations.append('shared names: lease of %s not opened' % tenant)
+            self.expect_open_late.add(('shl%d' % r, tenant))
 
     def boundary(self, st, key):
         tenant, original, _ = self.keys[key]
@@ -119,7 +148,7 @@ class Fuzz:
             reason = self.rng.choice(REASONS)
             pre = h.state_hash if self.rng.random() < 0.85 else self.rng.choice(['0' * 32, 'f' * 32])
             rid = self.rid('b')
-            self.call(rid, lambda: st.refund(tenant, key, rid, pre, reason, amount))
+            self.call((tenant, rid), lambda: st.refund(tenant, key, rid, pre, reason, amount))
 
     def strings(self, st, key):
         tenant, _, _ = self.keys[key]
@@ -142,20 +171,23 @@ class Fuzz:
                 self.violations.append('a raw garbage line committed: %r' % line[:60])
         for bad in ('a\nb', 'a\rb', 'a\x00b', 'café', 'x' * 25, '', 'a b'):
             rid = self.rid('u')
-            self.call(rid, lambda: st.refund(tenant, key, bad, h, 'DUPLICATE_CHARGE', 1))
-            self.call(rid, lambda: st.refund(bad, key, rid, h, 'DUPLICATE_CHARGE', 1))
+            self.call((tenant, rid), lambda: st.refund(tenant, key, bad, h, 'DUPLICATE_CHARGE', 1))
+            self.call((bad, rid), lambda: st.refund(bad, key, rid, h, 'DUPLICATE_CHARGE', 1))
 
     def cross_tenant(self, st, key):
         tenant, _, _ = self.keys[key]
         other = 'tB' if tenant == 'tA' else 'tA'
         h = st.get(tenant, key).state_hash
         rid = self.rid('x')
-        r = self.call(rid, lambda: st.refund(other, key, rid, h, 'DUPLICATE_CHARGE', 1))
-        if r is None or r.code != 'TENANT_ISOLATION_BREACH':
-            self.violations.append('cross-tenant write was not TENANT_ISOLATION_BREACH: %r' % r)
-        g = st.get(other, key)
-        if g.code != 'TENANT_ISOLATION_BREACH':
-            self.violations.append('cross-tenant get was not refused')
+        r = self.call((other, rid), lambda: st.refund(other, key, rid, h, 'DUPLICATE_CHARGE', 1))
+        if r is not None or self.answers.get((other, rid), [None])[-1] != 'UNKNOWN_KEY':
+            self.violations.append('cross-tenant write was not UNKNOWN_KEY: %r %r' % (r, self.answers.get((other, rid))))
+        try:
+            g = st.get(other, key)
+            self.violations.append('cross-tenant get was not refused: %r' % g)
+        except fa.EngineRefusal as e:
+            if e.code != 'UNKNOWN_KEY':
+                self.violations.append('cross-tenant get was not UNKNOWN_KEY: %s' % e.code)
         rows = [{'tenant_id': tenant, 'n': i} for i in range(self.rng.randint(1, 5))]
         rows.insert(self.rng.randint(0, len(rows)), self.rng.choice([{'tenant_id': other}, {'x': 1}, {'tenant_id': 7}, {'tenant_id': tenant + ' '}]))
         res = st.read_scoped(tenant, rows)
@@ -163,13 +195,21 @@ class Fuzz:
         self.note(None, res.code)
         if res.code != 'TENANT_ISOLATION_BREACH' or res.rows:
             self.violations.append('a mixed-tenant row set was released: %r' % res)
-        rid = self.rid('xl')
-        try:  # a lease bound to a key of another tenant
-            st.with_lease(rid, 1, other, key, lambda lease: self.violations.append('a lease opened on a key of another tenant'))
+        # a lease of the other tenant on the same key name, with a request id that the first tenant used: it is the other
+        # tenant's own lease (no squatting, no breach); its handler raises before the sink, so the sweep must report it
+        used = self.open_rid[key]
+
+        def raises_before(lease):
+            raise ValueError('injected before the sink (other tenant)')
+        try:
+            st.with_lease(used, 1, other, key, raises_before)
+            self.violations.append('a handler exception did not propagate')
+        except ValueError:
+            self.counts['handler_exceptions'] += 1
+            self.expect_open.add((used, other))
         except fa.LeaseNotOpened as e:
-            self.note(rid, e.code)
-            if e.code != 'TENANT_ISOLATION_BREACH':
-                self.violations.append('cross-tenant lease: %s' % e.code)
+            self.note(None, e.code)
+            self.violations.append("a lease of tenant %s was refused because tenant %s used its id: %s" % (other, tenant, e.code))
 
     def handlers(self, st, key, r):
         tenant, _, _ = self.keys[key]
@@ -183,7 +223,7 @@ class Fuzz:
                     raise ValueError('injected before the sink')
                 h = st.get(tenant, key).state_hash
                 res = lease.commit('refund', tenant=tenant, key=key, pre_state_hash=h, reason='DUPLICATE_CHARGE', amount=1)
-                self.note(rid, res.code)
+                self.note((tenant, rid), res.code)
                 if where == 'after':
                     raise ValueError('injected after the sink')
                 return res
@@ -192,12 +232,13 @@ class Fuzz:
             except ValueError:
                 self.counts['handler_exceptions'] += 1
             if where == 'before':
-                self.expect_open.add(rid)
+                self.expect_open.add((rid, tenant))
             else:
-                # the commit closes the lease if it COMMITTED or got a terminal refusal; else it stays open
-                last = self.answers.get(rid, [None])[-1]
-                if last not in ('COMMITTED', 'REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN'):
-                    self.expect_open.add(rid)
+                # the commit closes the lease if it COMMITTED or got REJECTED_POLICY; else it stays open (also after
+                # REQUIRE_HUMAN_COSIGN: the lease is then PENDING_COSIGN and dropped after its deadline, review D6)
+                last = self.answers.get((tenant, rid), [None])[-1]
+                if last not in ('COMMITTED', 'REJECTED_POLICY'):
+                    self.expect_open.add((rid, tenant))
 
     def burst(self, st, key):
         tenant, _, _ = self.keys[key]
@@ -220,7 +261,7 @@ class Fuzz:
             code = p.stdout.read().decode('ascii', 'replace').split(' ')[0].strip()
             p.wait(timeout=120)
             codes.append(code)
-            self.note(rid, code)
+            self.note((tenant, rid), code)
         self.counts['burst_processes'] += BURST
         if codes.count('COMMITTED') != 1 or codes.count('STALE_STATE_HASH') != BURST - 1:
             self.violations.append('burst: %d COMMITTED, %d STALE of %d' % (codes.count('COMMITTED'), codes.count('STALE_STATE_HASH'), BURST))
@@ -243,7 +284,7 @@ class Fuzz:
                 codes.append(p.stdout.read().decode('ascii', 'replace').split(' ')[0].strip())
                 p.wait(timeout=120)
             for c in codes:
-                self.note(rid, c)
+                self.note((tenant, rid), c)
             self.counts['storm_processes'] += STORM
             want = 1 if fresh else 0
             if codes.count('COMMITTED') != want or codes.count('DUPLICATE_REQUEST_ID') != STORM - want:
@@ -264,18 +305,19 @@ class Fuzz:
         i1 = i2 = i3 = i4 = i5 = True
         for e in effects:
             kind, tenant, key, rid = e[0], e[1], e[2], e[3]
-            ids[rid] = ids.get(rid, 0) + 1
+            ids[(tenant, rid)] = ids.get((tenant, rid), 0) + 1  # request ids are per tenant (review D3)
+            tkey = (tenant, key)
             if kind == 'OPEN_MONEY':
                 facts = dict(x.split('=', 1) for x in e[6:])
-                opened[key] = (tenant, int(e[5]), int(facts.get('shipping_paid', '0')))
+                opened[tkey] = (tenant, int(e[5]), int(facts.get('shipping_paid', '0')))
             elif kind == 'REFUND':
-                if key not in opened or opened[key][0] != tenant:
+                if tkey not in opened:
                     i3 = False
                     self.violations.append('round %d: REFUND %s under tenant %s' % (r, key, tenant))
                 amount = int(e[5])
-                refunded[key] = refunded.get(key, 0) + amount
+                refunded[tkey] = refunded.get(tkey, 0) + amount
                 if e[4] == 'SHIPPING':
-                    ship[key] = ship.get(key, 0) + amount
+                    ship[tkey] = ship.get(tkey, 0) + amount
                 if e[4] == 'GOODWILL' and amount > 2000 and e[6] != '1':
                     i2 = False
                     self.violations.append('round %d: GOODWILL %d without a cosign' % (r, amount))
@@ -307,7 +349,7 @@ class Fuzz:
         if not i6:
             self.violations.append('round %d: state %d %r' % (r, code, st[:120]))
         code, sw = self.cli(['leases', self.store, '--sweep', '--now', str(10 ** 12)])
-        dropped = {ln.split(' ')[1] for ln in sw.split('\n') if ln.startswith('DROPPED_OBLIGATION ')}
+        dropped = {(ln.split(' ')[1], ln.split(' ')[3]) for ln in sw.split('\n') if ln.startswith('DROPPED_OBLIGATION ')}
         i7 = dropped == self.expect_open and code == (24 if dropped else 0)
         if not i7:
             self.violations.append('round %d: dropped %s, expected %s' % (r, sorted(dropped), sorted(self.expect_open)))
@@ -328,6 +370,7 @@ class Fuzz:
         with fa.Store(self.store, node=self.a.node, engine_dir=Path(self.a.engine_dir).resolve()) as st:
             for r in range(self.a.rounds):
                 keys = self.open_keys(st, r)
+                self.shared_names(st, r)
                 for key in keys:
                     self.boundary(st, key)
                     self.strings(st, key)
@@ -335,7 +378,7 @@ class Fuzz:
                     self.handlers(st, key, r)
                 race = 'race%d' % r
                 rid = self.rid('op')
-                res = self.call(rid, lambda: st.open_money('tA', race, rid, 'store-refunds', 1000000, {'shipping_paid': 0}))
+                res = self.call(('tA', rid), lambda: st.open_money('tA', race, rid, 'store-refunds', 1000000, {'shipping_paid': 0}))
                 if res is None or not res.committed:
                     self.violations.append('round %d: could not open the race key' % r)
                     continue
