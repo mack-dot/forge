@@ -28,6 +28,33 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Gate F2a (Goal 22): Stage 9 lock rebind proposed as an exact diff of two protected files; NOT merged; Stage 9 NOT unlocked; no EXIT case of Stage 9 ran — U900
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 stays deferred until the owner merges the lock.
+Branch `proposal/stage9-lock-rebind-f2a` from `main` `33055a59`; NOT
+merged by the agent; no administrator rights. Protected files changed:
+`gate/provenance/implementation.lock` (`76b983ac…` to `08ae51d0…f6cb`)
+and `spec/provenance/spec.lock` (`43610d81…` to `256310d8…a976`). No
+other protected path changed. Nothing under `clearing/` changed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 proposals/stage9-lock-rebind-20261120/regen_locks.py <worktree> --write` |0|17 changed digests (9 in `implementation.lock`, 8 in `spec.lock`), 9 added keys (8 scripts, `gate/ratification.py`); 109 and 47 entries |
+| `python3 -I -S -B gate/provenance/bootstrap.py --implementation-sha256 08ae51d0…f6cb --check` (worktree with the two files changed) |0|`BOOTSTRAP_VERIFIED` (a lock check, not a Stage 9 EXIT) |
+| the same with the old value `76b983ac…` on the new bytes |1|`BOOTSTRAP_REJECTED: IMPLEMENTATION_LOCK` |
+| `main`'s own two files with the old value |1|`BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py` |
+| every entry of both proposed locks against the file |109 of 109; 47 of 47 equal|after the change |
+| `check_frozen_pr_gate.py`; `check_links.py` for the proposal |see the pull request|recorded in U900 |
+| hosted `gate/pr_check.py` for the pull request |see the pull request|expected exit 1 (REJECTED): `gate/provenance/` is protected and not ratifiable |
+| `scripts/exit_stage_9.py` (six cases); the hosted signing run; the benchmark |NOT RUN|after the owner's merge; the benchmark after the owner's batch word |
+
+[Lock rebind proposal](proposals/stage9-lock-rebind-20261120/PROPOSAL.md).
+Finding to keep: pull requests 70, 72, 73 and 74 each add or change a
+code file under `scripts/`. Each of them makes this lock stale if it
+merges after it, and makes this diff stale if it merges before it.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

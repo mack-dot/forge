@@ -19956,3 +19956,31 @@ curl: (6) Could not resolve host: github.com
   pull request).
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Nothing started.
 - Next check: the owner's budget word and the answers to Q-1 to Q-8 of the record.
+
+## U900 — Gate F2a: Stage 9 lock rebind proposed as an exact diff (two protected files); valid only while four open pull requests are not merged; NOT merged; Stage 9 NOT unlocked
+
+- Status: 2026-11-20 12:40Z (system clock). Refs U468, U469, U470 (the earlier lock inspection, the packet of pull
+  request 53, the deferral), U170 to U176 (Stage 9 runs), R4C-1. Record: `proposals/stage9-lock-rebind-20261120/PROPOSAL.md`.
+- Source of the task: Gate F2, step F2a, of the finish-line directive (branch `docs/finish-line-directive`). The start
+  word reached this session through the launcher session. I did not see an owner message. The directive puts F2 after
+  the F1 merge; pull request 70 (F1) is OPEN. I did not resolve this difference; it is an owner decision.
+- Actual, base `main` `33055a59`: `gate/provenance/implementation.lock` `76b983ac…` to
+  `08ae51d078e8e8f1bd392e98477927c3c6fe72f9a228eb53ad5081066326f6cb` (9 digests changed, 9 keys added: 8 scripts and
+  `gate/ratification.py`; 109 entries). `spec/provenance/spec.lock` `43610d81…` to
+  `256310d851669cdeab2498b0a58fe6bcd4b7ba1f741396a9f608d644fa72a976` (8 digests changed; 47 entries; byte-equal to the
+  `spec.lock` of the closed pull request 53). `bootstrap.py --check` with the new value: exit 0, `BOOTSTRAP_VERIFIED`.
+  With the old value on the new bytes: exit 1. `main`'s own files with the old value: exit 1
+  (`UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py`). These ran in a git worktree, not in a fresh clone.
+- Finding: against the packet of pull request 53 the lock needs two more scripts (`scripts/exit_goal20_sdk.py`,
+  `scripts/exit_silicon_sink.py`). Pull requests 70, 72, 73, 74 add or change code files under `scripts/` (list in the
+  record, from `git diff --name-status`). So these bytes are valid only for a `main` that equals `33055a59` in the
+  listed files. A merge of one of the four before this one needs a regeneration and a new review of the bytes.
+- NOT checked: the inference of the draft `STAGE9_BINDING_PROPOSAL_DRAFT.md` (row R4) that today's lineage fails the
+  release check without a new baseline record. If it holds, the six EXIT cases cannot pass after this merge alone.
+- NOT changed: `.github/workflows/booking-reuse.yml` (holds the old lock value in one experiment command).
+- `gate/ratification.py` is in the lock because the directive names it. No lock rule needs it. The sign job does not
+  import it (observation of U-records, not re-checked here).
+- NOT RUN: `scripts/exit_stage_9.py` (six cases); the hosted signing run; any benchmark trial.
+- Impact: none on any stage label until the owner merges. CURRENT none. `end_to_end=false`. M1-B OPEN.
+- Next check: the hosted gate result of the pull request (expected exit 1, REJECTED); the owner's decision on the merge
+  order and on the two points not in this diff (the workflow pin, the baseline record).
