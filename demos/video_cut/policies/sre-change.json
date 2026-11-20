@@ -1,0 +1,5 @@
+{"airlock": "money", "version": 1, "name": "sre-change", "profile": "parametric",
+ "rules": [
+  {"reason": "DELETE_PODS", "max_reason_total_fact": "max_delete", "verdict": "COMMIT"},
+  {"reason": "OPEN_PUBLIC_5432", "verdict": "REQUIRE_HUMAN_COSIGN"}
+ ]}

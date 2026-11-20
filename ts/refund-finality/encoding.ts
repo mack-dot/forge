@@ -3,7 +3,7 @@
 // refuse an input, they can never authorize one.
 // Canonical JSON: objects with sorted keys; only strings, booleans, arrays and plain objects.
 // No JSON numbers: money is a decimal string.
-import { createHash } from "node:crypto";
+import { KeyObject, createHash, createPublicKey } from "node:crypto";
 
 export type ChargeState = { chargeId: string; original: string; remaining: string; refundEnabled: boolean };
 export type RefundRequest = { requestId: string; amount: string; reason: string };
@@ -15,9 +15,13 @@ export type TokenBody = {
   domain: string; specLockSha256: string; checkerSha256: string;
   preStateSha256: string; requestId: string; post: ChargeState; intent: Intent;
 };
-export type Token = { body: TokenBody; signature: string };
+// OWNER DECISION D-1 (h-key): every token names the issuer key that signed it. keyId is OUTSIDE the proved body
+// bytes (the Dafny byte model is unchanged) and INSIDE the signed bytes (signedBytes below): glue step KEYID-GLUE.
+export type Token = { body: TokenBody; keyId: string; signature: string };
 
 export const DOMAIN = "FORGE_REFUND_FINALITY_SLICE1_V1";
+// Domain of the signed envelope {body, keyId, sigDomain} (h-key, D-1). Old tokens signed the body alone.
+export const KEYID_DOMAIN = "FORGE_REFUND_FINALITY_KEYID_V1";
 export const MAX_TEXT = 256;
 const MONEY = /^(0|[1-9][0-9]{0,18})$/;
 const HEX64 = /^[0-9a-f]{64}$/;
@@ -73,12 +77,28 @@ export function signatureBytes(signature: unknown): Buffer | null {
   return raw.length === 64 && raw.toString("base64") === signature ? raw : null;
 }
 export function isToken(x: unknown): x is Token {
-  return exact(x, ["body", "signature"]) && isTokenBody(x.body) && signatureBytes(x.signature) !== null;
+  return exact(x, ["body", "keyId", "signature"]) && isTokenBody(x.body) && hex64(x.keyId) && signatureBytes(x.signature) !== null;
+}
+export const isKeyId = hex64;
+// key_id (D-1): the lower-case hex SHA-256 of the DER SubjectPublicKeyInfo bytes of the Ed25519 public key
+// (44 bytes: the 12-byte SPKI prefix 302a300506032b6570032100 and the 32-byte raw key). Throws for any other key type.
+export function keyIdOf(publicKey: KeyObject | string): string {
+  const key = typeof publicKey === "string" ? createPublicKey(publicKey) : publicKey;
+  if (key.type !== "public" || key.asymmetricKeyType !== "ed25519") throw new Error("key id: not an Ed25519 public key");
+  const der = key.export({ type: "spki", format: "der" });
+  if (der.length !== 44) throw new Error("key id: the SPKI encoding is not 44 bytes");
+  return sha256hex(der);
 }
 // The one text of a token that the sink accepts.
 export const tokenText = (token: Token): string => canon(token);
-// The signed bytes: the whole body, by value.
-export const signedBytes = (body: TokenBody): Buffer => Buffer.from(canon(body), "utf8");
+// The signed bytes (D-1, KEYID-GLUE): the canonical text of {body, keyId, sigDomain}. It holds the canonical body
+// text VERBATIM: '{"body":' + canon(body) + ',"keyId":"<64 hex>","sigDomain":"FORGE_REFUND_FINALITY_KEYID_V1"}'.
+// So the key id is signed together with the proved body bytes; a signature of the old format (body alone) never
+// verifies here (its bytes start with '{"checkerSha256"'). Throws if keyId is not 64 lower-case hex digits.
+export const signedBytes = (body: TokenBody, keyId: string): Buffer => {
+  if (!hex64(keyId)) throw new Error("signed bytes: keyId is not 64 lower-case hex digits");
+  return Buffer.from(canon({ body, keyId, sigDomain: KEYID_DOMAIN }), "utf8");
+};
 export const stateSha256 = (state: ChargeState): string => sha256hex(canon(state));
 // Identity of the token issuer: the compiled core module and the two glue files of the minter process.
 export function checkerSha256Of(coreModule: Buffer, encodingSource: Buffer, minterSource: Buffer): string {

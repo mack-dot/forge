@@ -1,0 +1,8 @@
+{"intent_queries": 1, "queries": [
+ {"id": "SHIP-1", "question": "can a SHIPPING refund of 8000 or more be committed when shipping_paid is 1000 or less?",
+  "where": [["reason", "==", "SHIPPING"], ["amount", ">=", "8000"], ["fact:shipping_paid", "<=", "1000"]], "verdict": ["COMMIT"]},
+ {"id": "SHIP-2", "question": "can amount be above shipping_paid in a committed SHIPPING refund when item_returned == 0?",
+  "where": [["reason", "==", "SHIPPING"], ["amount", ">", "fact:shipping_paid"], ["fact:item_returned", "==", "0"]], "verdict": ["COMMIT"]},
+ {"id": "SHIP-3", "question": "can a payout be above the captured amount (amount > remaining) with any verdict that is not a rejection?",
+  "where": [["amount", ">", "remaining"]], "verdict": ["COMMIT", "REQUIRE_HUMAN_COSIGN"]}
+]}
