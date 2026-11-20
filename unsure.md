@@ -21065,3 +21065,31 @@ curl: (6) Could not resolve host: github.com
   earlier advice to the owner to check the employment agreement (pull request 14) is not resolved by this entry.
 - No tracked evidence record, no bundle subject and no protected path changes. `README.md` changes in two places.
 - Impact: none on any stage label. `end_to_end=false`. Next check: the owner's review; a fresh third-party notice list.
+
+## U925 — HAL 9000 demo restored on `main` from commit `ff03fac3` (owner's word of 2026-11-20): what was brought, what was adapted, actual results, and what stays NOT TESTED
+
+- Refs U745, U746, U747, U748 (the demo's records on its old branch, not on `main`), U750 (native cosign), U887 to
+  U893 (engine hardening), U920 (release audit: HAL NOT PRESENT). The owner deleted the demo on 2026-11-20 and asked
+  on 2026-11-20 to bring it back onto `main`. Branch `demo/hal-9000` from `origin/main` `b1c98822`.
+- Brought: `demos/hal_9000/**` only (18 files, byte-equal to `ff03fac3` except the text changes below). NOT brought:
+  the old branch's copies of `src/airlock/`, `sdk/`, `bin/forge-airlock`, `scripts/exit_goal20_sdk.py`,
+  `docs/quickstart-5min.md`, `tests/airlock/` (main's versions are newer: pull requests 72 and 73).
+- Adapted: text only. The demo already called `cosign-keygen` and `cosign-sign` without `--node` and used no
+  kill-points build, so the engine of `main` ran it without a code change. Changed: the trust-limit line and the
+  `hal_agent.py` docstring (the Node-swap attack was on the old Goal 20 engine), the Act 2 note (no Node runs), the
+  credits engine label, the request-id limit (per tenant since review D3; every party uses the tenant `crew`, which
+  is not authenticated, so the denial-of-service limit still holds), the README test list (it named cases that the
+  suite does not have), the owner's sudo steps in the README, and the owner's login name in `vault/README.md`.
+- Actual results (2026-11-20, shared machine, load average about 15): `test_hal_demo.py` exit 0, 26 of 26 (twice);
+  the show `--fast --no-color` with the 10 GiB flood exit 0, 32 of 32 checks; with a logging `node` stand-in first in
+  `PATH` the stand-in was never started (exit 0); `--engine-dir /nonexistent/engine` exit 2; `vault/test_vault.py`
+  exit 0, 20 of 20 (one user); `setup_vault.sh --dry-run` exit 0. All with no model key in the environment.
+- The "no Node" statement is a finite observation of one run with a stand-in, plus reading `bin/forge-airlock`
+  (`cosign-keygen`, `cosign-sign` start `cosign_tool.py` with `/usr/bin/ssh-keygen`); it is not a trace of every
+  process (macOS has no unprivileged exec trace).
+- NOT TESTED: OS user separation (vault and nobody modes) until the owner runs the `sudo` steps printed in
+  `demos/hal_9000/README.md`; the interactive mode against a real model service; another machine.
+- Open for the owner: the film characters belong to another party (rights question for a public launch, raised
+  before, still the owner's); the cost of a live model per turn. Labels: NATIVE CHECK (engine), FINITE TEST (demo).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. NOT pushed; NOT merged. Next check: the
+  orchestrator's regression and the owner's review of the pull request.

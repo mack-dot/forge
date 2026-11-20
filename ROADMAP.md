@@ -84,6 +84,46 @@ bundle NOT RUN, 2 older missing link targets), with every actual exit
 code and every NOT RUN item:
 [release-readiness table](proposals/release-audit-20261120/README.md).
 Entry U920.
+## HAL 9000 demo restored on `main` (owner's word of 2026-11-20): `demos/hal_9000/` from commit `ff03fac3`, adapted to the engine of `main`; a finite test of the unproved engine; NOT pushed; NOT merged — U925
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Additive: only `demos/hal_9000/**` (18 files) is new; no
+file of `main` changed except this file and `unsure.md`. Brought from
+`ff03fac3` (branch `recover/hal-9000`): the demo's own files only. The
+old copies of `src/airlock/`, `sdk/`, `bin/forge-airlock`,
+`scripts/exit_goal20_sdk.py`, `docs/quickstart-5min.md` and
+`tests/airlock/` on that branch were NOT brought: `main` wins. Code
+change for `main`'s engine: none was needed (the old branch already
+used the native cosign tools without `--node` and no kill-points build).
+Adapted: on-screen and README text (request ids are per tenant since
+review D3, but every party uses the tenant `crew`; no Node runs; the
+Node-swap attack belongs to the old Goal 20 engine), the test list in
+the README, the owner's sudo steps in the README, and the owner's login
+name removed from `vault/README.md`.
+
+Commands (worktree, pinned Python 3.10.11, Node 24.3.0 first in `PATH`,
+rustc; `env -u ANTHROPIC_API_KEY -u OPENAI_API_KEY`; no model call):
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 bin/forge-airlock build` |0|engine, `build/silicon/test/airlock-engine-kill`, refund copy |
+| `python3 demos/hal_9000/test_hal_demo.py` (before and after the text changes) |0, 0|26 of 26 cases, each time |
+| `python3 demos/hal_9000/run_discovery_one.py --fast --no-color` (10 GiB flood) |0|32 of 32 checks true; peak RSS 2,384 KiB; 30.2 s |
+| same, `--flood-gib 0.25`, a logging `node` stand-in first in `PATH`, `FORGE_AIRLOCK_NODE` unset |0|the stand-in was passed to `serve` and never started (log file not created); the commander's cosigned pulse committed |
+| same, `--engine-dir /nonexistent/engine` |2|`SETUP ERROR: /nonexistent/engine/airlock-engine is missing` |
+| `python3 demos/hal_9000/vault/test_vault.py` (one user, NO separation) |0|20 of 20 |
+| `sh demos/hal_9000/vault/setup_vault.sh --dry-run` |0|24 printed commands, nothing changed |
+| positive controls in the test (occupancy 0; a real commander signature not in the ledger; no cap; direct SAGA; A2, A2b, A3, A5; mutants M1, M4b, M9, M10) |0 (suite)|each bad effect commits or each mutant runs, and the checker or show exits 1 |
+| vault and nobody mode under a second user ID (`sudo`) |NOT RUN|no agent runs `sudo`; the owner's commands are in `demos/hal_9000/README.md` |
+| the interactive mode with a real model |NOT RUN|no key in the environment by rule; local test doubles only |
+
+Limits: the engine is unproved Rust (NATIVE CHECK); the demo is a FINITE
+TEST; the scorecard is an exact reconciliation of `replay` against the
+trusted side's ledger (it detects, it does not prevent, a same-user
+bypass); OS user separation is NOT TESTED. Open for the owner: the film
+characters (rights question for a public launch), the cost of a live
+model.
+
 ## Assurance-chain investigation 2026-11-20: where the chain from authorization to receipt holds, where it breaks, and the shortest path to an independent verifier (read-only; nothing proved here) — U921
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
