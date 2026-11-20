@@ -191,9 +191,33 @@ ratchet entry -> `sync_all` -> lock released -> answer line. `sync_all` is
   (a record may stay). A failed ratchet entry after a durable record: `OUTCOME_UNKNOWN`.
 - Recovery: after the valid prefix, at most one incomplete record may follow, and only
   at the end of the file: fewer than 32 bytes, or a header whose length runs past the
-  end. It is cut, the WAL is synced, and a ratchet entry is pushed. A whole record that
-  is not valid, anywhere, is `CORRUPT_WAL`. A ratchet maximum above the last epoch is
+  end. It is cut and the WAL is synced. A whole record that is not valid, anywhere, is
+  `CORRUPT_WAL` (also a full-length LAST record with a bad CRC, for example a zero-filled
+  block after a power loss: the store then stays unavailable; there is no repair tool;
+  open, review D7 second bullet). A ratchet maximum above the last epoch is
   `EPOCH_REGRESSION` (an older WAL with the present ratchet).
+- Ratchet recovery (review D7). The floor is the maximum of the ratchet entries with a
+  good CRC. A torn (short) last entry is cut. A ratchet entry is pushed only when the
+  ratchet is below the WAL epoch; it is never pushed a second time with the same value.
+  A full-length entry with a bad CRC is no longer skipped silently:
+  - The write order (WAL record, `sync_all`, ratchet entry, `sync_all`; a recovery pushes
+    only below the WAL epoch) lets a crash damage only the LAST entry, and that entry was
+    meant to hold the WAL epoch, one above the last good entry. That one shape (exactly
+    one bad entry, the last one, no torn bytes after it, WAL epoch = floor + 1) is
+    repaired: the entry is cut and the WAL epoch is pushed again. The floor does not go
+    down. This rests on two assumptions: a power loss damages at most the entry that was
+    being written (entries synced before stay intact), and `F_FULLFSYNC` works.
+  - Every other full-length bad entry is `CORRUPT_WAL RATCHET_ENTRY_BAD entry <i> of <n>`:
+    an entry in the middle, or a bad last entry with WAL epoch = floor (the shape of a
+    one-record WAL rollback after a one-bit change of the newest entry; before this change
+    that rollback passed `EPOCH_REGRESSION`). The engine cannot tell bit rot from an edit;
+    it fails closed and an operator must decide.
+  - Cost: a store of the engine before this change can hold a bad entry in the middle (that
+    engine skipped a bad last entry and then pushed after it) or a bad last entry of a
+    duplicate value (that engine pushed the same value again after a torn record). Such a
+    store now answers `CORRUPT_WAL` until an operator repairs the ratchet. No such store is
+    known. `src/silicon_sink/sink.rs` (Goal 19, pinned by its bundle) still skips a bad
+    entry; it is not changed here.
 - A policy file whose FNV-1a-128 differs from its genesis pin: `CORRUPT_WAL POLICY_CHANGED`.
 - A store of the Node cosign engine (genesis version 2): `CORRUPT_WAL STORE_VERSION_2 ...`
   for every command. It is never read as version 3. There is no migration: its key is a raw
@@ -660,7 +684,7 @@ Every other refusal has a detail. A parser must accept both forms for every code
 | 14 | `DUPLICATE_REQUEST_ID` | refusal | id used up; or `OPEN_LEASE` for an id that had a lease (`LEASE_USED`) |
 | 15 | `EPOCH_REGRESSION` | fault | the WAL is older than its ratchet |
 | 16 | `TENANT_ISOLATION_BREACH` | refusal | read airlock only (a row set that holds a row of another tenant). Since the per-tenant namespaces (review D3) no write, `GET` or lease answer gives it: a key of another tenant is `UNKNOWN_KEY`. The name stays for the wire; the tenant is not authenticated (section 5) |
-| 17 | `CORRUPT_WAL` | fault | a record, the ratchet or a pinned policy file is not valid; `STORE_VERSION_2` (a store of the Node cosign engine) |
+| 17 | `CORRUPT_WAL` | fault | a record, the ratchet or a pinned policy file is not valid; `RATCHET_ENTRY_BAD` (section 4, review D7); `STORE_VERSION_2` (a store of the Node cosign engine) |
 | 18 | `IO_ERROR` | fault | nothing committed; also `STORE_EXISTS` and `NO_RANDOM` at `init` |
 | 19 | `OUTCOME_UNKNOWN` | fault | a record may stay in the WAL; it was not answered as committed |
 | 20 | `DISPATCH_FAILED` | fault | the answer line could not be written; a commit of that line stays committed |
@@ -790,6 +814,9 @@ bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `repla
     as `PENDING_COSIGN` before its deadline and as `DROPPED_OBLIGATION` after it. An old
     `CLOSE <request_id> REQUIRE_HUMAN_COSIGN <detail>` record is read as `COSIGN_PENDING`.
     The new `CLOSE` form takes only `REJECTED_POLICY`.
+23. Review D7: a full-length ratchet entry with a bad CRC is `CORRUPT_WAL RATCHET_ENTRY_BAD`,
+    except the one crash shape of section 4 (repaired). A recovery no longer pushes a
+    ratchet entry of the value that the ratchet holds already.
 
 ## 13. Mutation seams
 

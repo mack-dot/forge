@@ -1263,8 +1263,12 @@ def calls(events, parent=None):
 
 COMMIT_ORDER = ['flock airlock.wal 2', 'write airlock.wal N', 'fullfsync airlock.wal 0', 'write airlock.epoch 12', 'fullfsync airlock.epoch 0',
                 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
-RECOVERY_ORDER = ['flock airlock.wal 2', 'ftruncate airlock.epoch N', 'ftruncate airlock.wal N', 'fullfsync airlock.wal 0', 'write airlock.epoch 12',
-                  'fullfsync airlock.epoch 0', 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
+# Review D7: a recovery pushes a ratchet entry only when the ratchet is below the WAL epoch (no second entry of the
+# same value). A torn record with the ratchet at the WAL epoch: the WAL is cut and synced, the ratchet is not touched.
+RECOVERY_ORDER = ['flock airlock.wal 2', 'ftruncate airlock.wal N', 'fullfsync airlock.wal 0', 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
+# A record whose ratchet entry is missing (a crash after the WAL sync): the WAL epoch is pushed and synced.
+RECOVERY_PUSH_ORDER = ['flock airlock.wal 2', 'ftruncate airlock.wal N', 'fullfsync airlock.wal 0', 'write airlock.epoch 12',
+                       'fullfsync airlock.epoch 0', 'close airlock.wal', 'close airlock.epoch', 'write stdout N']
 
 
 def order_diff(got, want):
@@ -1345,13 +1349,17 @@ def case_trace(s):
     code, out, events = traced(s, ['serve', p], ('REFUND t1 k1 L1 %s NOPE 5\n' % h).encode())
     require(out[:1] and 'LEASE_CLOSED' in out[0], 'traced lease close: %r' % out)
     require_order('a lease close', calls(events), COMMIT_ORDER)
-    # a recovery: lock -> cut the torn tail -> F_FULLFSYNC -> ratchet entry -> F_FULLFSYNC -> answer
+    # a recovery: lock -> cut the torn tail -> F_FULLFSYNC -> (ratchet entry -> F_FULLFSYNC, only if it is missing) -> answer
     good = files(p)
     (p / 'airlock.wal').write_bytes(good['airlock.wal'] + b'FAR1')
     code, out, events = traced(s, ['state', p])
     lock_first(events, 'traced recovery')
     require_order('a recovery', calls(events), RECOVERY_ORDER)
     require(code == 0 and (p / 'airlock.wal').read_bytes() == good['airlock.wal'], 'traced recovery: exit %d %r, or the torn tail was not cut exactly' % (code, out))
+    (p / 'airlock.epoch').write_bytes(good['airlock.epoch'][:-12])  # the last ratchet entry is missing
+    code, out, events = traced(s, ['state', p])
+    require_order('a recovery that pushes the WAL epoch', calls(events), RECOVERY_PUSH_ORDER)
+    require(code == 0 and (p / 'airlock.epoch').read_bytes() == good['airlock.epoch'], 'traced recovery push: exit %d %r' % (code, out))
     # a recovery whose WAL sync fails: refused; the next start recovers
     (p / 'airlock.wal').write_bytes(good['airlock.wal'] + b'FAR1')
     code, out, events = traced(s, ['state', p], AIRLOCK_FAIL_SYNC='1')
@@ -1579,6 +1587,67 @@ def case_legacy_wal(s):
     return 'old CLOSE form folds while its id is unique in the store (an old cosign close as PENDING_COSIGN); %d ambiguous or invalid closes refused; new CLOSE names its tenant' % len(bad)
 
 
+def ratchet_entries(store):
+    """(value or None for a bad CRC) of each full 12-byte entry, and the number of bytes after the last full entry."""
+    data = (Path(store) / 'airlock.epoch').read_bytes()
+    out = []
+    for i in range(0, len(data) - len(data) % 12, 12):
+        v, c = struct.unpack('<Q', data[i:i + 8])[0], struct.unpack('<I', data[i + 8:i + 12])[0]
+        out.append(v if c == zlib.crc32(data[i:i + 8]) & 0xffffffff else None)
+    return out, len(data) % 12
+
+
+def case_ratchet_entry(s):
+    """Review D7: a full-length ratchet entry with a bad CRC is no longer skipped silently. Write order of a commit: WAL
+    record, sync, ratchet entry, sync; a recovery pushes an entry only when the ratchet is below the WAL. So a crash can
+    leave a bad entry only as the LAST entry and only when the WAL epoch is one above the last good entry: that one shape
+    is repaired (the entry is cut and the WAL epoch pushed again). Every other bad entry (in the middle, or at the end
+    with the WAL epoch equal to the last good entry, the shape of a one-record rollback) is CORRUPT_WAL."""
+    p = s.store('ratchet')
+    for i, line in enumerate(['OPEN_MONEY t1 k1 r0 store-refunds 1000'] + ['REFUND t1 k1 r%d %%s DUPLICATE_CHARGE 1' % n for n in (1, 2)]):
+        s.one(p, line % s.h(p, 't1', 'k1') if '%s' in line else line, 'COMMITTED')
+        if i == 1:
+            older = files(p)  # epoch 2
+    good = files(p)  # epoch 3; ratchet 0,1,2,3
+    rat = p / 'airlock.epoch'
+
+    def put(wal, ratchet):
+        (p / 'airlock.wal').write_bytes(wal)
+        rat.write_bytes(ratchet)
+        return s.run(['state', p])
+
+    def flip(data, entry, bit=0):
+        b = bytearray(data)
+        b[12 * entry + bit // 8] ^= 1 << (bit % 8)
+        return bytes(b)
+    # 1. the attack of the review: one bit of the newest entry (3) and the WAL of epoch 2
+    code, out, _ = put(older['airlock.wal'], flip(good['airlock.epoch'], 3))
+    require(code == 17 and out.startswith('CORRUPT_WAL RATCHET_ENTRY_BAD'), 'a bad last entry and a one-record rollback must be CORRUPT_WAL: %d %r' % (code, out))
+    require((p / 'airlock.wal').read_bytes() == older['airlock.wal'] and rat.read_bytes() == flip(good['airlock.epoch'], 3), 'a refusal changed the store')
+    # 2. a bad entry in the middle, the WAL unchanged
+    for entry in (1, 2):
+        code, out, _ = put(good['airlock.wal'], flip(good['airlock.epoch'], entry, 70))
+        require(code == 17 and out.startswith('CORRUPT_WAL RATCHET_ENTRY_BAD'), 'a bad middle entry %d must be CORRUPT_WAL: %d %r' % (entry, code, out))
+    # 3. the crash shape: the WAL holds epoch 3, the ratchet ends with a full-length garbage block where entry 3 was being written
+    for garbage in (b'\0' * 12, b'\xff' * 12, flip(good['airlock.epoch'], 3)[-12:]):
+        code, out, _ = put(good['airlock.wal'], good['airlock.epoch'][:-12] + garbage)
+        vals, torn = ratchet_entries(p)
+        require(code == 0 and out.startswith('STATE 3 ') and vals == [0, 1, 2, 3] and torn == 0,
+                'a crash-shaped bad last entry must be cut and the WAL epoch pushed again: %d %r %r' % (code, out, vals))
+    # 4. a torn (short) last entry is cut as before; when the ratchet already holds the WAL epoch, nothing is pushed
+    code, out, _ = put(good['airlock.wal'], good['airlock.epoch'] + b'\x04\0\0')
+    require(code == 0 and ratchet_entries(p) == ([0, 1, 2, 3], 0), 'a torn last entry: %d %r %r' % (code, out, ratchet_entries(p)))
+    code, out, _ = put(good['airlock.wal'][:-5], good['airlock.epoch'][:-12] + b'\x03\0')  # torn record and torn entry
+    require(code == 0 and out.startswith('STATE 2 ') and ratchet_entries(p) == ([0, 1, 2], 0), 'a torn record and a torn entry: %d %r %r' % (code, out, ratchet_entries(p)))
+    code, out, _ = put(good['airlock.wal'] + b'FAR1', good['airlock.epoch'])  # a torn record: the WAL is cut, no duplicate entry
+    require(code == 0 and rat.read_bytes() == good['airlock.epoch'], 'a torn record with the ratchet at the WAL epoch must not push again: %r' % (ratchet_entries(p),))
+    # 5. a crash after the WAL sync (no ratchet entry yet): the WAL epoch is pushed
+    code, out, _ = put(good['airlock.wal'], good['airlock.epoch'][:-12])
+    require(code == 0 and ratchet_entries(p) == ([0, 1, 2, 3], 0), 'a missing last entry must be pushed: %r' % (ratchet_entries(p),))
+    put(good['airlock.wal'], good['airlock.epoch'])
+    return 'bad last entry + one-record rollback -> CORRUPT_WAL; bad middle entries -> CORRUPT_WAL; 3 crash-shaped last entries repaired; torn entries cut; no duplicate push'
+
+
 def case_native_bound(s):
     """STAND-IN refund binaries (test doubles of the helper process) that accept what the native check must refuse:
     an amount above the remaining amount, and a reason outside the three approved reasons."""
@@ -1627,7 +1696,7 @@ CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
          ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
          ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env),
-         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('lease_cosign_pending', case_lease_cosign_pending), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
+         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('lease_cosign_pending', case_lease_cosign_pending), ('ratchet_entry', case_ratchet_entry), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
 
 
 def main():
