@@ -19979,3 +19979,22 @@ curl: (6) Could not resolve host: github.com
 - NOT RUN: any batch; cell D; `scripts/exit_stage_9.py`; the hosted signing run.
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN.
 - Next check: the owner's batch size (36, 54 or 72) and the choice among options 1 to 3 of the plan.
+
+## U903 — Gate F2b: blind task texts committed before any blind cell; controls and one blind probe ran; Batch 36 NOT started (the permission system refused the start)
+
+- Status: 2026-11-20 14:10Z (system clock). Refs U902. Record: `proposals/forge2-stage9-benchmark/PLAN.md` (last two
+  sections), `records/probe-0002-blind.json`, `records/controls-0002.json`.
+- The owner's approval (blind prompts with hidden hazards; Batch 36) reached this session as a quotation in a message
+  of the coordinator session. I did not see an owner message.
+- Actual: commit `b6862094` holds the blind texts and their six SHA-256 values; it was pushed before any blind cell
+  ran. One text per task for the three arms. `bench.py controls`: exit 0, 30 of 30. Blind probe on T2, one cell per
+  arm: exit 0; cells 91.2 s, 510.1 s, 210.0 s; escaped scenarios 0 of 18 in each arm; legal requests not paid 0. Both
+  ran under the shared heavy lock (swap free 1,046 MB at the start; lock released after 594 s).
+- The texts were not changed after the probe.
+- NOT RUN: Batch 36. The start command (detached, with the swap check and the heavy lock) was refused by the
+  session's permission system. I did not try another way to start it. No batch cell exists; no lock is held.
+- Open point: the owner's words say "Batch 36 (6 tasks x 3 arms)". In this harness `--batch 36` is 36 cells (two
+  repetitions, 12 per arm, 60 agent calls). 6 x 3 once is 18 cells (30 agent calls). The owner must say which.
+- Finding kept from U902, now also for the blind text: in one probe the baselines had no escaped scenario. Not a result.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN.
+- Next check: the owner's permission to start the batch, and the 18-or-36 answer.

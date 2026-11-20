@@ -205,3 +205,22 @@ Batch 36 in this harness is 36 cells: 6 tasks x 3 arms x 2
 repetitions (12 cells per arm, 60 agent calls). The owner's words name
 "6 tasks x 3 arms"; the results are also given for repetition s1 alone
 (6 cells per arm).
+
+## After the blind texts: controls and one blind probe (Batch 36 NOT started)
+
+| Command | Actual exit | Result |
+| --- | --- | --- |
+| `bench.py controls --out <DIR>` (second run) | 0 | 30 of 30 as expected ([controls-0002.json](records/controls-0002.json)) |
+| `bench.py run --out <DIR> --variant blind --cell T2-A-s1 --cell T2-B-s1 --cell T2-C-s1 --jobs 3` | 0 | three cells SCORED ([probe-0002-blind.json](records/probe-0002-blind.json)); both commands together 594 s under the shared heavy lock |
+| `bench.py run --out <DIR> --variant blind --resume --batch 36 --jobs 3` | NOT RUN | the session's permission system refused the start; it needs the owner's own permission |
+
+| Blind probe cell (T2) | Wall s | Agent calls (s) | Turns | Output tokens | Code bytes | Review bytes | Escaped (boundary, race, replay) | Legal not paid |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| T2-A-s1 | 91.2 | 88.2 | 9 | 9,096 | 6,620 | 0 | 0 of 12, 0 of 3, 0 of 3 | 0 |
+| T2-B-s1 | 510.1 | 128.9 + 148.7 + 230.0 | 13 + 10 + 12 | 52,030 | 12,533 | 9,187 | 0 of 12, 0 of 3, 0 of 3 | 0 |
+| T2-C-s1 | 210.0 | 205.8 | 26 | 20,549 | 9,631 | 0 | 0 of 12, 0 of 3, 0 of 3 | 0 |
+
+Policy file of T2: 395 bytes. The blind texts were NOT changed after
+this probe; the SHA-256 values above still hold. With the blind text
+the two baselines again had no escaped scenario (n = 1 per arm, one
+task; no claim about the arms). The probe is not part of Batch 36.

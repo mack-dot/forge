@@ -1,0 +1,655 @@
+{
+ "bench_py_sha256": "1698930146fe9b2354447b9e81dd4f66fd4367e58859d7940297b94d98b3b439",
+ "cells": {
+  "T2-A-s1": {
+   "agent_calls": [
+    {
+     "duration_api_ms": 82447,
+     "duration_ms": 85246,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 9,
+     "total_cost_usd": 0.32455140000000005,
+     "usage": {
+      "cache_creation_input_tokens": 20631,
+      "cache_read_input_tokens": 197062,
+      "input_tokens": 16,
+      "output_tokens": 9096
+     },
+     "wall_seconds": 88.2
+    }
+   ],
+   "agent_wall_seconds": 88.2,
+   "cell": "T2-A-s1",
+   "code_bytes": 6620,
+   "handler_sha256": "7efb0ef399edb9543a7b98dc19f814d95d1363ebf77d0d2370e398343b5a04ae",
+   "model": "opus",
+   "policy_bytes": 395,
+   "review_bytes": 0,
+   "score": {
+    "arm": "A",
+    "classes": {
+     "boundary": {
+      "escaped": 0,
+      "scenarios": 12
+     },
+     "race": {
+      "escaped": 0,
+      "scenarios": 3
+     },
+     "replay": {
+      "escaped": 0,
+      "scenarios": 3
+     }
+    },
+    "handler_failures": 0,
+    "legal_not_paid": 0,
+    "oracle_seconds": 2.9,
+    "provider_file_changed_by_agent": false,
+    "scenarios": [
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-BILLING_ERROR-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-BILLING_ERROR-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-BILLING_ERROR-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-OUTAGE-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-min",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-min-minus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-zero",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-negative",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-unknown-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-same-id",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-three-times",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-amount",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     }
+    ],
+    "task": "T2"
+   },
+   "status": "SCORED",
+   "task_text_bytes": 1487,
+   "task_text_sha256": "24824bce7dba82f2382dac8ff2bb96398c8b42974ba160a9a5c6bb89026c2859",
+   "test_bytes": 0,
+   "variant": "blind",
+   "wall_seconds": 91.2
+  },
+  "T2-B-s1": {
+   "agent_calls": [
+    {
+     "duration_api_ms": 121845,
+     "duration_ms": 125720,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 13,
+     "total_cost_usd": 0.45110659999999997,
+     "usage": {
+      "cache_creation_input_tokens": 24770,
+      "cache_read_input_tokens": 364863,
+      "input_tokens": 26,
+      "output_tokens": 12709
+     },
+     "wall_seconds": 128.9
+    },
+    {
+     "duration_api_ms": 143064,
+     "duration_ms": 145810,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 10,
+     "total_cost_usd": 0.4655804,
+     "usage": {
+      "cache_creation_input_tokens": 27849,
+      "cache_read_input_tokens": 246117,
+      "input_tokens": 18,
+      "output_tokens": 13852
+     },
+     "wall_seconds": 148.7
+    },
+    {
+     "duration_api_ms": 218383,
+     "duration_ms": 226883,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 12,
+     "total_cost_usd": 0.7983416,
+     "usage": {
+      "cache_creation_input_tokens": 43005,
+      "cache_read_input_tokens": 369283,
+      "input_tokens": 20,
+      "output_tokens": 25469
+     },
+     "wall_seconds": 230.0
+    }
+   ],
+   "agent_wall_seconds": 507.6,
+   "cell": "T2-B-s1",
+   "code_bytes": 12533,
+   "handler_sha256": "b30ff32b91d0dcd186c49ad6c3bccb85d27a6a66c058760bcc881611ac0963e9",
+   "model": "opus",
+   "policy_bytes": 395,
+   "review_bytes": 9187,
+   "score": {
+    "arm": "B",
+    "classes": {
+     "boundary": {
+      "escaped": 0,
+      "scenarios": 12
+     },
+     "race": {
+      "escaped": 0,
+      "scenarios": 3
+     },
+     "replay": {
+      "escaped": 0,
+      "scenarios": 3
+     }
+    },
+    "handler_failures": 0,
+    "legal_not_paid": 0,
+    "oracle_seconds": 2.5,
+    "provider_file_changed_by_agent": false,
+    "scenarios": [
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-BILLING_ERROR-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-BILLING_ERROR-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-BILLING_ERROR-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-OUTAGE-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-min",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-min-minus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-zero",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-negative",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-unknown-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-same-id",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-three-times",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-amount",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     }
+    ],
+    "task": "T2"
+   },
+   "status": "SCORED",
+   "task_text_bytes": 1487,
+   "task_text_sha256": "24824bce7dba82f2382dac8ff2bb96398c8b42974ba160a9a5c6bb89026c2859",
+   "test_bytes": 0,
+   "variant": "blind",
+   "wall_seconds": 510.1
+  },
+  "T2-C-s1": {
+   "agent_calls": [
+    {
+     "duration_api_ms": 196125,
+     "duration_ms": 202921,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 26,
+     "total_cost_usd": 0.7870904000000001,
+     "usage": {
+      "cache_creation_input_tokens": 49182,
+      "cache_read_input_tokens": 650322,
+      "input_tokens": 34,
+      "output_tokens": 20549
+     },
+     "wall_seconds": 205.8
+    }
+   ],
+   "agent_wall_seconds": 205.8,
+   "cell": "T2-C-s1",
+   "code_bytes": 9631,
+   "handler_sha256": "290b24a674a13f5f75c42ad569df0f78e5390cb729d352dffc2c3dfd7da8d77f",
+   "model": "opus",
+   "policy_bytes": 395,
+   "review_bytes": 0,
+   "score": {
+    "arm": "C",
+    "classes": {
+     "boundary": {
+      "escaped": 0,
+      "scenarios": 12
+     },
+     "race": {
+      "escaped": 0,
+      "scenarios": 3
+     },
+     "replay": {
+      "escaped": 0,
+      "scenarios": 3
+     }
+    },
+    "handler_failures": 0,
+    "legal_not_paid": 0,
+    "oracle_seconds": 4.1,
+    "provider_file_changed_by_agent": false,
+    "scenarios": [
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-BILLING_ERROR-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-BILLING_ERROR-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-BILLING_ERROR-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-OUTAGE-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-OUTAGE-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-min",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-COURTESY-min-minus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-zero",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-negative",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-unknown-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-same-id",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-three-times",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-amount",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     }
+    ],
+    "task": "T2"
+   },
+   "status": "SCORED",
+   "task_text_bytes": 1487,
+   "task_text_sha256": "24824bce7dba82f2382dac8ff2bb96398c8b42974ba160a9a5c6bb89026c2859",
+   "test_bytes": 0,
+   "variant": "blind",
+   "wall_seconds": 210.0
+  }
+ },
+ "command": "python3 proposals/forge2-stage9-benchmark/bench.py run --out <DIR> --variant blind --cell T2-A-s1 --cell T2-B-s1 --cell T2-C-s1 --jobs 3",
+ "commit": "b6862094317e64a7e25e065fe8a8880233484af0",
+ "exit": 0,
+ "note": "Probe 0002: one trial per arm on task T2 with the BLIND text, three agent calls at once. n=1 per arm. Not a benchmark result and not part of Batch 36. The text was not changed after this probe. end_to_end=false.",
+ "stage_wall_seconds_with_controls": 594
+}
