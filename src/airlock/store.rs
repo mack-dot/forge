@@ -103,6 +103,9 @@ pub fn scan(r: &mut impl Read, on: &mut dyn FnMut(u64, &str)) -> Result<(Ledger,
         let mut rec = hdr.to_vec();
         rec.extend_from_slice(&body);
         let payload = &rec[HDR..HDR + len];
+        if index == 0 && payload.starts_with(b"GENESIS 2 ") {
+            return no(Code::CorruptWal, "CORRUPT_WAL STORE_VERSION_2 a store of the Node cosign engine (genesis version 2); this engine reads only version 3");
+        }
         let framed = rec[HDR + len..] == crc32(&rec[..HDR + len]).to_le_bytes()
             && hdr[4..12] == index.to_le_bytes()
             && hdr[12..28] == l.tail.to_le_bytes()
@@ -217,8 +220,10 @@ impl Store {
 pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&str>, node: Option<&str>) -> Result<String, Refusal> {
     if !canonical_id(store_id) { return no(Code::Malformed, "BAD_ID store_id") }
     if let Some(k) = pubkey {
-        if k.len() != 64 || !k.bytes().all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)) { return no(Code::Malformed, "BAD_PUBKEY") }
-        if crate::pin::weak_ed25519(k) { return no(Code::Malformed, "WEAK_PUBKEY a small-order or non-canonical Ed25519 key") }
+        // The middle field of an OpenSSH `.pub` line: strict base64 of the ssh-ed25519 wire encoding, 32 key bytes.
+        let Some(raw) = crate::cosign::parse_key_token(k) else { return no(Code::Malformed, "BAD_PUBKEY the base64 blob of an OpenSSH ssh-ed25519 public key (68 characters)") };
+        let raw: String = raw.iter().map(|b| format!("{b:02x}")).collect();
+        if crate::pin::weak_ed25519(&raw) { return no(Code::Malformed, "WEAK_PUBKEY a small-order or non-canonical Ed25519 key") }
     }
     if policy_paths.len() > MAX_POLICIES { return no(Code::MalformedPolicy, "TOO_MANY_POLICIES") }
     let mut loaded: Vec<(String, &'static str, Vec<u8>)> = Vec::new();
@@ -229,11 +234,12 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
         if loaded.iter().any(|(n, _, _)| n == pol.name()) { return no(Code::MalformedPolicy, "DUPLICATE_POLICY_NAME") }
         loaded.push((pol.name().to_string(), pol.kind(), bytes));
     }
-    // A store whose policies need a Node helper (cosign, inventory) pins the SHA-256 of the Node binary.
-    let needs_node = pubkey.is_some() || loaded.iter().any(|(_, kind, _)| *kind == "inventory");
+    // Only the inventory airlock runs Node (the booking checker): such a store pins the SHA-256 of the Node binary.
+    // A cosign key needs no Node (it is verified by /usr/bin/ssh-keygen).
+    let needs_node = loaded.iter().any(|(_, kind, _)| *kind == "inventory");
     let node_pin = match node {
         Some(n) => crate::pin::file_sha256(n).map_err(|e| Refusal(Code::Malformed, format!("NODE_UNREADABLE {:?}", e.kind())))?,
-        None if needs_node => return no(Code::Malformed, "NODE_REQUIRED --node is required with a cosign key or an inventory policy"),
+        None if needs_node => return no(Code::Malformed, "NODE_REQUIRED --node is required with an inventory policy"),
         None => "-".to_string(),
     };
     // 16 bytes from the kernel's random source: two stores never share a genesis record (and so no state hash).
@@ -254,7 +260,7 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
             f.sync_all()?;
             pins.push_str(&format!(" {name} {kind} {}", hx(fnv128(bytes))));
         }
-        let genesis = encode(0, 0, &format!("GENESIS 2 {store_id} {nonce} {node_pin} {} {}{pins}", pubkey.unwrap_or("-"), loaded.len()));
+        let genesis = encode(0, 0, &format!("GENESIS 3 {store_id} {nonce} {node_pin} {} {}{pins}", pubkey.unwrap_or("-"), loaded.len()));
         let mut ratchet = OpenOptions::new().append(true).create_new(true).open(path(&tmp, EPOCH))?;
         push(&mut ratchet, 0)?;
         let mut wal = OpenOptions::new().write(true).create_new(true).open(path(&tmp, WAL))?;
