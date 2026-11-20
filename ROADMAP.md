@@ -28,6 +28,29 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Review of 2026-11-20: README top and claims 1, 2, 4, 5, 8, 11 corrected; documents only — U880 to U882
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Documents only; no behaviour change. Branch
+`docs/review-readme-claims` from `33055a59`; NOT merged by the agent.
+The Goal 20 bundle subject digests of `docs/quickstart-5min.md` and
+`src/airlock/PROTOCOL.md` change (U881); no new evidence run.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `gh repo view mack-dot/forge --json visibility,licenseInfo` |0|`PRIVATE`; `licenseInfo` null |
+| `rustc --edition 2021 -D unsafe_code -C opt-level=3 src/airlock/main.rs` (scratch output) |0|engine for the README example |
+| `bin/forge-airlock init` (scratch store, `refunds.json`, `--engine-dir`) |0|`INITIALIZED` |
+| the README Python example with `engine_dir=` (scratch) |0|`COMMITTED`; `REJECTED_POLICY REASON_CAP`; `COMMITTED`. The README text with the default folders: NOT RUN |
+| `check_frozen_pr_gate.py HEAD` (commit `3d25286a`) |0|frozen modules unchanged |
+| `check_links.py HEAD` on 8 files (commit `3d25286a`) |0|0 missing targets |
+| `git diff --name-only 33055a59..HEAD`, protected-path grep |0; 1|7 files at `3d25286a`, 8 with this section; no protected path (grep exit 1 = no match) |
+| `git merge-tree --write-tree 3d25286a e3322303` (`apex1/native-cosign`) |1|conflict only in `unsure.md` (also for `33055a59` alone); docs auto-merge |
+| test suites; Goal 20 `--case evidence` |NOT RUN|not part of this work |
+
+[Disposition](proposals/review-20261120/README.md).
+[Decision note](proposals/review-20261120/DECISION_NOTE_LICENCE_PACKAGING.md).
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
