@@ -132,6 +132,7 @@ class Suite:
     def __init__(self, a):
         self.engine, self.kill_engine, self.node = str(Path(a.engine).resolve()), str(Path(a.kill_engine).resolve()), a.node
         self.work = Path(tempfile.mkdtemp(prefix='airlock-', dir=a.work))
+        self.node_src = a.node  # the Node path as given (case cosign_faults uses its path parts, not those of the copy)
         self.node = private_copy(self.work, a.node)
         self.n = 0
         self.refund = None
@@ -709,7 +710,7 @@ def case_cosign_faults(s):
             'a symbolic link named cosign.tmp: expected COMMITTED with the link removed and its target kept, got exit %d %r' % (code, out[:120]))
     require(not (p / 'cosign.tmp').exists(), 'the private cosign folder stayed after use')
     # the checks of the program path (no AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN): owner uid 0, no symbolic link
-    owned = os.path.realpath(s.node)
+    owned = os.path.realpath(s.node_src)  # the given Node, not the private copy: the copy may lie under /private/tmp (1777)
     parts = [Path(*Path(owned).parts[:i]) for i in range(2, len(Path(owned).parts) + 1)]
     first_user = next((x for x in parts if os.lstat(x).st_uid != 0), None)
     require(first_user is not None and all(os.lstat(x).st_mode & 0o022 == 0 and not os.path.islink(x) for x in parts[:parts.index(first_user)]),
