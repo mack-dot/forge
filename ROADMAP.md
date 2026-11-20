@@ -28,6 +28,61 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## T19, the hardened refund sink, minter and dispatcher applied (owner items B-15 and B-16 approved): one pull request; TESTED level only; new Slice 1, Slice 3, M1 conformance and native sink bundles — U760 to U765
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. No frozen
+module changed. Branch `feat/t19-hardened-sink` from `main` at
+`a5133c01`, with `main` at `9a9a8943` (Goal 20), `b2249ea2` (APEX-2)
+and `33055a59` merged in. NOT merged
+by the agent. Nothing is proved: the sink, the minter and the
+dispatcher are unverified TypeScript, and every row is a finite test
+on one machine. Rows marked (w) are a worker's runs.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `git apply --check` of the two unapplied diffs; `git apply` |0; 0|120 files; no hunk failed; equal to `nightshift/B-trust@12d634f6` except one sanitised line |
+| `scripts/exit_slice1.py --case evidence` on the applied tree, unchanged |1|`tsc --noEmit` exit 2: 7 type errors in 6 regression test files |
+| the same after two type-only edits and one more pinned input |0|126 rows, 0 failed; two runs byte-identical; bundle `b8a30595…9cac` |
+| the same after the `WfAt` edit (final) |0|126 rows, 0 failed; bundle `756babc5…00ef` (on `main`: `c7f2f41c…`) |
+| `scripts/exit_slice2.py --case evidence` |0|bundle `2721a293…`: byte-identical to the record |
+| `scripts/exit_slice3.py --case evidence` |0|bundle `6b21a487…cc5a` (old `3cdfebfc…`); cause: its reused input `encoding.ts` |
+| `scripts/exit_silicon_sink.py --case evidence`, while the old M1 record was in place; after the pin change (final) |0; 0|`1f569fcf…` (unchanged); then `f8b85b97…faae`: the script pins the M1 conformance record |
+| (w) `scripts/exit_m1_conformance.py --case conformance`; `--case evidence` (script changed: owner item B-15, last line) |0; 0|bundle `0325b191…97d7`; every count equal to the old record; 0 findings |
+| `exit_m1_conformance.py --case evidence` after the `WfAt` edit (final) |0|bundle `91b49423…b1ce` (on `main`: `f55391da…`) |
+| `dafny verify` of `IssueAuth.dfy` with a CSV log: resource use of `WfAt` before; after the edit |0; 0|757,787 (ten runs); 317,241 (limit 1,000,000) |
+| (w) `scripts/demo_gauntlet.py --flood-mb 16`, three runs |1; 1; 3|script not yet repaired; Dafny exit 4 (1 out of resource on `IssueAuth.WfAt`); REDUCED (every check held; NOT a pass of the demo) |
+| (w) regression runner `regress/run.ts` on the hardened tree |0|29 of 29 PASS |
+| (w) control: the runner before decision D-1 against the sink and dispatcher of unchanged `main` |1|exactly the 8 known ids FAIL, as required |
+| (w) `db_safeguards_hkey.ts` (B's file; not in the repository) |0|69 rows, 0 failed |
+| (w) 13 key-file tests; 15 minter tests; 7 provider tests; 27 dispatcher and sink tests; real kill 12 rounds |0 each|TESTED-UNPROVED |
+| (w) provider tests with the old adapter (control), 5 runs; red team `c25` with the old adapter, 3 runs |1 each|controls FAIL, as required |
+| (w) `m3_zero_squat_limit`; `p3_rollback_rebind first none`; red team `a7_full_restore nofloor`; provider matrix without anchors |1 each|stated known limits, present |
+| (w) red team `c25-provider` (4), `c28-keyfile` (1), `c19-dispatch2` (8) on the hardened tree |0 each|TESTED-UNPROVED |
+| (w) red team `c21-sink2` (12 runs), `c24-minter2` (3 runs) |1 each; 3 each|NOT valid, NOT counted: the scripts predate D-1 (no key id; no key file) |
+| one fresh-context review of the diff (reading only) |0 FAIL-OPEN; 2 MEDIUM; 5 LOW|F4 fixed; F3 fixed in part; F1 (no lock on the mint memory file) left as a new known limit |
+| scratch clone of the pushed branch at `b70900e4`: 28 Stage EXIT cases; frozen-gate check; links; evidence of Slice 1, 2, 3, Goal 20; M1 conformance; native sink |0 each (28); 0; 0; 0 each (4); 1; 1|Dafny exit 4 on `IssueAuth.WfAt` (1 out of resource); the native sink script pins the old M1 record |
+| scratch clone of the pushed branch at `64a16246` (final code): 28 Stage EXIT cases; `check_frozen_pr_gate.py HEAD`; 8 link checks; six evidence runs |0 each (28); 0; 0 each; 0 each (6)|six bundles byte-identical to the tracked records; 0 protected paths changed; the APEX-2 package unchanged |
+| `git push` (explicit refspec); `gh pr create`; hosted `gate/pr_check.py` |see the pull request|expected 3 (UNSUPPORTED); the agent did not merge |
+| the full demo (default flood); spec-conformance 5,000 sequences; the kill loop with 24 rounds; any power-loss test; every HOL and Holmake case; Stages 7, 9, 10 |NOT RUN|not part of this work |
+
+Changed suite expectations (the owner's approval): six hostile-write
+rows are STRONGER (the database refuses the write); 11 rows are NEW;
+row x5 is a SEMANTIC CHANGE (a failed emit is IN DOUBT, not counted as
+sent); the single-use row is WEAKER at token level (one token per
+charge id and request id, not per pre-state). The exact table is in the
+report.
+Known limits, kept: a full restore without a ledger floor sends effects
+again; a zero-amount squat takes a request id; a lost or restored mint
+record brings a second valid token back; the provider is a FAKE and its
+key window is an ASSUMPTION; exactly-once is NOT claimed; power loss is
+NOT TESTED; NEW: two minter processes on one memory file are not
+excluded by a lock.
+[Report](proposals/t19-hardened-sink-20261119/REPORT.md).
+[Graph refresh for T19](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH_REFRESH_20261120_T19.md).
+[Owner items](proposals/night-shift-20261119/OWNER_REQUIRED.md).
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
