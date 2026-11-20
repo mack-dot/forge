@@ -704,7 +704,7 @@ def case_cosign_faults(s):
     require(len(effects(p)) == 4, 'effects: %r' % effects(p))
     code, out, _ = s.run(['cosign-info'])
     require(code == 0 and out.startswith('COSIGN_INFO path=/usr/bin/ssh-keygen sha256=%s uid=0 ' % hashlib.sha256(Path(SSH_KEYGEN).read_bytes()).hexdigest())
-            and ' checks=OK version=OpenSSH_' in out, 'cosign-info: %r' % out)
+            and ' checks=OK walked=/:/usr:/usr/bin:/usr/bin/ssh-keygen version=OpenSSH_' in out, 'cosign-info: the walk of the ssh-keygen path (from /): %r' % out)
     return ('%d stand-in answers -> 8 HELPER_FAILED, 1 COSIGN_INVALID; missing program; leftover folder and link cleaned; argv, 0700 folder, '
             '0600 files checked; untrusted owner and linked path refused; cosign-info' % len(want))
 

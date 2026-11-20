@@ -159,14 +159,19 @@ fn armor(sig_token: &str) -> String {
     format!("-----BEGIN SSH SIGNATURE-----\n{}\n-----END SSH SIGNATURE-----\n", lines.join("\n"))
 }
 
+/// The path parts that binary_checks walks, from the root folder `/` (review F4: `/` is checked too) to the file.
+pub fn walk(p: &Path) -> Vec<&Path> {
+    let mut parts: Vec<&Path> = p.ancestors().collect();
+    parts.reverse();
+    parts
+}
 /// Std-only checks of the program file: every path part exists and is not a symbolic link; the file is regular,
-/// owned by uid 0 and has no group or other write bit; each folder on the path is owned by uid 0 with no group or
+/// owned by uid 0 and has no group or other write bit; each folder on the path (the root folder `/` included) is owned by uid 0 with no group or
 /// other write bit.
 pub fn binary_checks(path: &str) -> Result<fs::Metadata, String> {
     let p = Path::new(path);
     if !p.is_absolute() { return Err("NOT_ABSOLUTE".into()) }
-    let mut parts: Vec<&Path> = p.ancestors().filter(|a| a.parent().is_some()).collect();
-    parts.reverse();
+    let parts = walk(p);
     let mut last = None;
     for (i, part) in parts.iter().enumerate() {
         let m = fs::symlink_metadata(part).map_err(|e| format!("UNREADABLE {} {:?}", part.display(), e.kind()))?;
@@ -242,5 +247,6 @@ pub fn info() -> Result<String, Refusal> {
     let version = version.map(|r| String::from_utf8_lossy(&r.err).trim().replace(['\r', '\n'], " ")).unwrap_or_else(|| "unknown".into());
     let (uid, mode) = match &checks { Ok(m) => (m.uid().to_string(), format!("{:04o}", m.mode() & 0o7777)), Err(_) => ("-".into(), "-".into()) };
     let state = match checks { Ok(_) => "OK".to_string(), Err(e) => e.replace(' ', "_") };
-    Ok(format!("COSIGN_INFO path={SSH_KEYGEN} sha256={sha} uid={uid} mode={mode} checks={state} version={version}"))
+    let walked: Vec<String> = walk(Path::new(SSH_KEYGEN)).iter().map(|x| x.display().to_string()).collect();
+    Ok(format!("COSIGN_INFO path={SSH_KEYGEN} sha256={sha} uid={uid} mode={mode} checks={state} walked={} version={version}", walked.join(":")))
 }

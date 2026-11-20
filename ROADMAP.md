@@ -63,6 +63,7 @@ the processor bits, the entry state) are assumptions about the real
 machine. M1 and integration EXIT NOT_ESTABLISHED.
 ## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750
 ## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750, U751
+## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750 to U752
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed.
@@ -82,6 +83,7 @@ Nothing is proved. The machine was under load: no time is recorded here.
 | changed copies through a scratch harness (the worker's run) |0|122 of 122 killed; NOT KILLED: X01, R8, N15 |
 | `disasters`; `fuzz` through the same harness (the worker's runs) |0; 0|8 of 8; 8 of 8 |
 | the one review of `73758bda` (fresh context) |0 FAIL-OPEN through the production engine; 2 FAIL-OPEN inside the stated one-user limit; 1 MEDIUM; 1 LOW; 5 NOTE|one false sentence of PROTOCOL.md corrected; items 1 and 2 open (U751) |
+| after the review repairs (test engine in `build/silicon/test/`; walk includes `/`; `cosign-sign` cross-check): build; cosign; engine; node helpers; SDK suites (orchestrator) |0; 0; 0; 0; 0|56 of 56; 27 of 27; 68 of 68; 21 of 21 (U752) |
 | `scripts/exit_goal20_sdk.py --case evidence`; the Dafny diff cases |NOT RUN|no new bundle; the record `1e75ab47` is of the tree before this change |
 | every HOL and Holmake step |NOT RUN|not part of this work |
 

@@ -19999,3 +19999,25 @@ curl: (6) Could not resolve host: github.com
 - Not examined by the review: a full disk, signals during a run, the TypeScript SDK, any other OpenSSH version.
 - Impact: none on any stage label. Next check: owner decisions on items 1 and 2; the vault setup copies only
   `airlock-engine` (to be confirmed by reading `setup_vault.sh` before the owner runs it).
+
+## U752 — Goal 21, phase 1: owner decisions on the review (U751) and the repairs that followed
+
+- Refs U751, U750. Owner decisions (pasted texts of 2026-11-19, in the session): item 1 of U751 (the signature in
+  the WAL record): NO change; it stays a stated limit of the one-user model (PROTOCOL.md section 11 now says it).
+  Item 2: YES, the test engine goes to a test-only folder; the owner named `build/silicon/test/`.
+- Done: `bin/forge-airlock build` writes only the production engine into `build/airlock/` and the
+  `cfg(kill_points)` build into `build/silicon/test/` (the Goal 19 script writes only its own named files in
+  `build/silicon/`; no collision by reading). New suite case `py_build_separation`: no executable in
+  `build/airlock/` accepts the test seams. The ownership walk of `/usr/bin/ssh-keygen` now includes `/`.
+  `cosign-sign` refuses a message whose request-id or state-hash line differs from the action.
+- My own runs (2026-11-19): `bin/forge-airlock build` exit 0; `test_cosign.py` exit 0, 56 of 56; `test_engine.py`
+  exit 0, 27 of 27; `test_node_helpers.py` exit 0, 68 of 68; `test_sdk.py` exit 0, 21 of 21.
+- The worker's runs, not repeated: 19 changed copies through the scratch harness, 18 killed, N15 not killed (as
+  before). The other 112 changed copies were NOT RUN after this change (their text did not change; the worker's
+  anchor check found all 131 anchors once). The `evidence` case and the Dafny cases stay NOT RUN by the owner's
+  decision: no Dafny or HOL is started for this work, and the bundle record `1e75ab47` does not match this tree.
+- The owner's manual test of the separation: a 0600 file owned by `root`, a write by the owner's user, refused
+  (machine state seen: owner uid 0, size 0). An earlier try with user ID 501 (the owner's own ID) had let the
+  write through. This is the general kernel rule for one file. The project's probe (`probe_boundary.py` as
+  `nobody` or against a `forge_vault` user) is NOT RUN; every separation claim of the demo stays NOT TESTED.
+- Impact: none on any stage label. Next check: the hosted `gate/pr_check.py` (expected exit 3).

@@ -198,6 +198,7 @@ def form_case(name, mutate):
         key, _ = ctx.key('a')
         rc, out, err = ctx.tool(['sign', key], mutate(message()))
         check(rc == 2 and out == b'' and err.startswith(b'cosign: '), 'exit %d stdout %r' % (rc, out[:60]))
+        check(b'you sign' not in err, 'the fields were shown to the human before the refusal: %r' % err[:120])
         return 'exit 2 (%s)' % err.decode().strip()[8:70]
     C[name] = fn
 
@@ -212,6 +213,16 @@ form_case('sign_msg_long_request_id', lambda m: m.replace(b'req-1\n', b'r' * 25 
 form_case('sign_msg_empty_action', lambda m: m[:m.rindex(b'\n', 0, len(m) - 1) + 1] + b'\n')
 form_case('sign_msg_nul', lambda m: m.replace(b'GOODWILL', b'GOOD\x00WILL'))
 form_case('sign_msg_oversize', lambda m: m[:-1] + b'x' * 4100 + b'\n')
+# review F6: the action must be one exact REFUND line whose request id and pre-state hash are lines 4 and 5
+form_case('sign_action_request_id_differs', lambda m: m.replace(b'\nreq-1\n', b'\ns9\n'))
+form_case('sign_action_pre_hash_differs', lambda m: m.replace(b'\n0123456789abcdef0123456789abcdef\nREFUND', b'\n0123456789abcdef0123456789abcdee\nREFUND'))
+form_case('sign_action_padded', lambda m: m[:-1] + b' ' * 3800 + b'\n')
+form_case('sign_action_double_space', lambda m: m.replace(b'GOODWILL 7500', b'GOODWILL  7500'))
+form_case('sign_action_not_refund', lambda m: m.replace(b'REFUND t1', b'REFUNDX t1'))
+form_case('sign_action_long_field', lambda m: m.replace(b'order-9', b'o' * 25))
+form_case('sign_action_bad_amount', lambda m: m.replace(b'GOODWILL 7500', b'GOODWILL 07500'))
+form_case('sign_action_amount_above_max', lambda m: m.replace(b'GOODWILL 7500', b'GOODWILL 9223372036854775808'))
+form_case('sign_action_esc', lambda m: m.replace(b'GOODWILL', b'GOOD\x1bWILL'))
 
 
 def key_copy(ctx, mode):

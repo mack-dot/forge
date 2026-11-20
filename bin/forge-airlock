@@ -7,7 +7,10 @@ CakeML refund binary's (PROVED CORE, canonical-refund profile only) or the Dafny
 (PROVED CORE source; Dafny compiler and Node trusted). A cosign is verified by the engine through the system
 OpenSSH (/usr/bin/ssh-keygen; trusted assumption): no Node runs for a store without an inventory policy.
 
-  forge-airlock build [--checker]            two rustc builds + a private 0700 copy of the pinned refund binary;
+  forge-airlock build [--checker]            the production engine build/airlock/airlock-engine, the TEST-ONLY
+                                             kill-points build build/silicon/test/airlock-engine-kill (live test
+                                             seams; never beside the production engine, never deploy it) and a
+                                             private 0700 copy of the pinned refund binary;
                                              --checker ALSO runs src/airlock/node/build_checker.py (starts Dafny)
   forge-airlock init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey SSH_ED25519_BASE64] [--node P]
                                              --cosign-pubkey: the token that cosign-keygen prints (the middle field
@@ -57,7 +60,12 @@ MODEL = BUILD / 'checker' / 'model.cjs'  # build-time note only; serve uses <eng
 RUSTC = [['rustc', '--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3', 'src/airlock/main.rs',
           '-o', 'build/airlock/airlock-engine'],
          ['rustc', '--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3', '--cfg', 'kill_points',
-          'src/airlock/main.rs', '-o', 'build/airlock/airlock-engine-kill']]
+          'src/airlock/main.rs', '-o', 'build/silicon/test/airlock-engine-kill']]
+# The kill-points build accepts the test seams (a stand-in verifier commits a cosign). It lives ONLY in this test-only
+# folder (review F2, owner decision): build/airlock/ holds no binary that accepts a seam. build/silicon/ is the
+# raw-output folder of scripts/exit_silicon_sink.py; it writes native_sink, native_sink_kill, interpose.dylib, bin/
+# and <case>/attempt-* (case in build, suite, mutations, evidence) there, so test/ collides with nothing.
+TEST_BUILD = ROOT / 'build' / 'silicon' / 'test'
 USAGE = 2
 
 
@@ -158,6 +166,11 @@ def cmd_build(args):
     if args:
         return usage('build takes only --checker')
     BUILD.mkdir(parents=True, exist_ok=True)
+    TEST_BUILD.mkdir(parents=True, exist_ok=True)
+    stale = BUILD / 'airlock-engine-kill'  # an old build put the test build beside the production engine
+    if stale.exists() or stale.is_symlink():
+        stale.unlink()
+        print('removed the old test build build/airlock/airlock-engine-kill (it now lives in build/silicon/test/)', flush=True)
     for argv in RUSTC:
         print('$ ' + ' '.join(argv), flush=True)
         code = run(argv, cwd=ROOT)

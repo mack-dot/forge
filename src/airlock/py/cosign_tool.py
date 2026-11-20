@@ -52,6 +52,8 @@ KEY_TYPE = b'ssh-ed25519'
 KEY_TOKEN_LEN, SIG_TOKEN_LEN = 68, 256
 ID_RE = re.compile(r'[A-Za-z0-9_-]{1,24}\Z')
 HASH_RE = re.compile(r'[0-9a-f]{32}\Z')
+AMOUNT_RE = re.compile(r'(0|[1-9][0-9]{0,18})\Z')
+MAX_MONEY = 9223372036854775807
 B64_RE = re.compile(r'[A-Za-z0-9+/]*={0,2}\Z')
 ARMOR_HEAD, ARMOR_FOOT = '-----BEGIN SSH SIGNATURE-----', '-----END SSH SIGNATURE-----'
 KEY_HEAD, KEY_FOOT = '-----BEGIN OPENSSH PRIVATE KEY-----', '-----END OPENSSH PRIVATE KEY-----'
@@ -137,6 +139,21 @@ def parse_message(buf):
         raise Refused('pre_state_hash is not 32 lowercase hex')
     if not action or any(not 0x20 <= ord(c) <= 0x7e for c in action):
         raise Refused('action is empty or not printable ASCII')
+    # Review F6: the action is one exact REFUND line (single spaces, canonical fields, as the engine's grammar), and
+    # lines 4 and 5 are its request id and pre-state hash; else the signature could never verify. All of this is
+    # checked before anything is shown to the human.
+    t = action.split(' ')
+    if len(t) != 7 or t[0] != 'REFUND':
+        raise Refused('action is not one REFUND line of 7 fields with single spaces')
+    for i, what in ((1, 'tenant'), (2, 'key'), (3, 'request_id'), (5, 'reason')):
+        if not ID_RE.match(t[i]):
+            raise Refused('action %s is not [A-Za-z0-9_-]{1,24}' % what)
+    if not HASH_RE.match(t[4]):
+        raise Refused('action pre_state_hash is not 32 lowercase hex')
+    if not AMOUNT_RE.match(t[6]) or int(t[6]) > MAX_MONEY:
+        raise Refused('action amount is not a canonical amount of at most %d' % MAX_MONEY)
+    if t[3] != request_id or t[4] != pre:
+        raise Refused('the request_id or pre_state_hash line differs from the field of the action')
     return {'store_id': store_id, 'genesis_hash': genesis, 'request_id': request_id, 'pre_state_hash': pre, 'action': action}
 
 

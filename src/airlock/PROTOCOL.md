@@ -23,8 +23,19 @@ production engine. Read section 11 ("Trust boundary") before you rely on any of 
 
 ```sh
 rustc --edition 2021 -D unsafe_code -C opt-level=3 src/airlock/main.rs -o build/airlock/airlock-engine
-rustc --edition 2021 -D unsafe_code -C opt-level=3 --cfg kill_points src/airlock/main.rs -o build/airlock/airlock-engine-kill
+rustc --edition 2021 -D unsafe_code -C opt-level=3 --cfg kill_points src/airlock/main.rs -o build/silicon/test/airlock-engine-kill
 ```
+
+The second line is the TEST-ONLY build (live test seams). It goes to `build/silicon/test/`,
+never beside the production engine in `build/airlock/` (review F2). `build/silicon/` is the
+raw-output folder of `scripts/exit_silicon_sink.py`; that script writes `native_sink`,
+`native_sink_kill`, `interpose.dylib`, `bin/` and `<case>/attempt-*` (case `build`, `suite`,
+`mutations` or `evidence`) there, so `test/` collides with none of them. `bin/forge-airlock
+build` removes an old `build/airlock/airlock-engine-kill`. Case `py_build_separation` of
+`tests/airlock/test_sdk.py` runs every executable in `build/airlock/` with the cosign test
+seams set: none may commit. In the EXIT script the attempt's kill build lies in
+`<attempt>/build/test/`, apart from the engine folder that the SDKs, the demo and the fuzz
+pass use.
 
 Standard library only. No crate, no Cargo. `#![forbid(unsafe_code)]`. Modules:
 `main.rs` (CLI, `serve`, answers, codes), `store.rs` (records, WAL, ratchet, `init`),
@@ -63,7 +74,7 @@ the kill-points build; case `seams` checks that the production build ignores the
 | `leases <dir> --sweep [--now MS]` | `SWEEP <open> <dropped> now=<MS>`, then one line `DROPPED_OBLIGATION <request_id> <deadline_ms> <tenant> <key>` per open lease with `now > deadline_ms` | 0 none dropped; 24 at least one |
 | `eval <policy.json>` | one answer per stdin line (section 6) | 0; 25 bad policy |
 | `cosign-message <dir> <action>` | the exact message bytes (6 lines, LF-terminated; section 7) | 0, or a code |
-| `cosign-info` | `COSIGN_INFO path=/usr/bin/ssh-keygen sha256=<64 hex> uid=<n> mode=<octal> checks=<OK or the failed check> version=<text of ssh -V>` | 0, 22 |
+| `cosign-info` | `COSIGN_INFO path=/usr/bin/ssh-keygen sha256=<64 hex> uid=<n> mode=<octal> checks=<OK or the failed check> walked=<the checked parts, : separated, from /> version=<text of ssh -V>` | 0, 22 |
 | `sha256 <file>` | `SHA256 <64 hex>` (the engine's own SHA-256; for its test vectors) | 0, 18 |
 | `base64-decode <token>` | `BASE64 <hex of the bytes>`, or `MALFORMED_REQUEST BAD_BASE64` (the strict decoder of section 7; for its test vectors) | 0, 12 |
 
@@ -444,7 +455,7 @@ ssh-keygen runs); else the engine runs ssh-keygen:
 
 - program: `/usr/bin/ssh-keygen`, fixed. Before its first use in a process, the engine
   checks with std only (`symlink_metadata`): no part of the path is a symbolic link, every
-  folder on it and the file are owned by uid 0 with no group or other write bit, the file
+  folder on it (from the root folder `/`, which is checked too) and the file are owned by uid 0 with no group or other write bit, the file
   is a regular file (`HELPER_FAILED SSH_KEYGEN_UNTRUSTED <check>` otherwise). Its SHA-256
   is NOT pinned (an OS update would refuse every store); `cosign-info` prints it and the
   `ssh -V` text so that an operator can record them. Limit: a file swapped after the check
@@ -628,6 +639,23 @@ keep the agent from writing the store folder and from running another engine on 
 example `serve` runs under another OS user that owns the folder, and the agent holds
 only its pipe. The engine cannot check this.
 
+Cosign limits of the same-user threat model (review F1, F9, F7; owner decision: stated, not
+changed):
+
+- A process of the store's own OS user can append a record with cosign flag 1 by hand. The
+  record holds no signature, so no later audit can tell. The separation by OS user ID
+  removes that attacker.
+- A signature has no expiry. It stays valid for its request while the key's state hash is
+  unchanged: a holder of the request pipe can keep a signature back and use it later, as long
+  as no other write changed the key (and FNV-1a-128 collisions can be computed, so the
+  state hash is a weak freshness value). There is no deadline field in the message.
+- A mixed-order public key (a valid key plus a small-order component) is accepted at `init`.
+  The weak-key rule refuses only the small-order and non-canonical encodings; no check that
+  L times the key is the identity is done. No third-party forgery through such a key is known.
+- The kill-points build accepts the test seams (a stand-in verifier commits a cosign).
+  `bin/forge-airlock build` writes it only to the test-only folder `build/silicon/test/`,
+  never into `build/airlock/` (review F2); a deployment copies only `airlock-engine`.
+
 What is pinned by what:
 
 - the refund binary: by the engine (compiled-in SHA-256, checked once per process);
@@ -713,6 +741,11 @@ result, the order of the lock, or the `DISPATCH_FAILED` code; the cases `trace`,
 `dispatch` and `lock` see them (the test interposer `tests/airlock/interpose.c` traces
 the system calls and injects failed syncs and writes). Results: see the exit script's
 record, not this file.
+
+Review of the native cosign (F2, F4, F6): new copies `F2_kill_build_beside_engine`
+(bin/forge-airlock; case `py_build_separation`), `F4_root_not_walked` (cosign.rs; case
+`cosign_faults`) and `F6_sign_lines_not_crosschecked` (cosign_tool.py; case
+`sign_action_request_id_differs`).
 
 Apex addendum (cosign through `/usr/bin/ssh-keygen`): in the table below, M09 now reads
 `if !cosign::verify(&ctx.dir, &pk, sig, &msg)? {` (verbs.rs) and M10 reads

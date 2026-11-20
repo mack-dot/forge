@@ -85,11 +85,11 @@ ENGINE_CASES = ['init', 'recovery', 'cas', 'tenant', 'money', 'canonical', 'cosi
                 'replay', 'race', 'kill', 'trace', 'dispatch', 'lock', 'pin', 'crafted', 'native_bound', 'helper_env',
                 'lease_binding', 'nonce', 'weakkey', 'seams']
 NODE_CASE_COUNT = 68  # booking_check.cjs only (the 69 cosign.cjs cases moved to test_cosign.py and test_engine.py)
-COSIGN_CASE_COUNT = 47
+COSIGN_CASE_COUNT = 56
 DIFF_CASES = ['loader', 'malformed', 'no-engine', 'engine', 'mismatch', 'demo', 'choice', 'fault', 'refused', 'saga', 'identical']
 SDK_CASES = ['py_typed', 'py_cosign', 'py_canonical', 'py_saga_inventory', 'py_read', 'py_lease', 'py_kill', 'py_garbage', 'py_protocol',
              'py_lease_durable', 'ts_typed', 'ts_read', 'ts_lease', 'ts_kill', 'ts_garbage', 'ts_protocol', 'py_read_tricks', 'py_lease_bound',
-             'ts_read_tricks', 'py_no_node']
+             'ts_read_tricks', 'py_no_node', 'py_build_separation']
 FUZZ_SEED, FUZZ_ROUNDS = 20, 3
 HEX32 = re.compile(r'[0-9a-f]{32}')  # a state hash, genesis hash, nonce or signature: never in the bundle
 DISASTER_CODES = {  # the engine codes that the directive names for each disaster; each must appear in `observed`
@@ -380,6 +380,15 @@ MUTANTS = [
      '                let msg = cosign_message(&s.l.store_id, s.l.genesis_hash, req, t[4], &action);\n'
      '                if !cosign::verify(&ctx.dir, &pk, sig, &msg)? { return verdict(s, req, Code::RequireHumanCosign, "COSIGN_INVALID") }\n', '', 'demo', 'D4',
      'the cosign verification: the key compare and the ssh-keygen call (the demo must see it)'),
+    # the one review of the native cosign (owner decisions F2, F4, F6)
+    ('F2_kill_build_beside_engine', 'bin/forge-airlock', 'a binary in build/airlock/ accepts the test seams',
+     "'src/airlock/main.rs', '-o', 'build/silicon/test/airlock-engine-kill']]", "'src/airlock/main.rs', '-o', 'build/airlock/airlock-engine-kill']]", 'sdk',
+     'py_build_separation', 'the test-only folder of the kill-points build (it was written beside the production engine)'),
+    ('F4_root_not_walked', 'cosign.rs', 'cosign-info: the walk of the ssh-keygen path (from /)', '    let mut parts: Vec<&Path> = p.ancestors().collect();',
+     '    let mut parts: Vec<&Path> = p.ancestors().filter(|a| a.parent().is_some()).collect();', 'engine', 'cosign_faults',
+     'the check of the root folder / in the walk of the ssh-keygen path'),
+    ('F6_sign_lines_not_crosschecked', 'py/cosign_tool.py', "exit 0 stdout b'", '    if t[3] != request_id or t[4] != pre:\n', '    if False:\n', 'cosign',
+     'sign_action_request_id_differs', 'the cross-check of the request id and pre-state hash lines with the action before a signature'),
     # cosign through /usr/bin/ssh-keygen (Apex addendum): the native checks before and around the call
     ('C01_embedded_key_not_compared', 'verbs.rs', 'wrong key: expected REQUIRE_HUMAN_COSIGN COSIGN_INVALID, got exit 22', 'if Some(embedded) != cosign::pinned_key(&pk) {', 'if false {',
      'engine', 'cosign', 'the comparison of the key inside the signature with the pinned key'),
@@ -673,7 +682,8 @@ def build(work):
     work.mkdir(parents=True)
     rules = {'rust': rust_rules(), 'node_requires': node_rules(), 'python_imports': python_rules()}
     built = {}
-    for kill, out in ((False, 'airlock-engine'), (True, 'airlock-engine-kill')):
+    (work / 'test').mkdir()  # the kill-points build lies apart from the engine folder (review F2)
+    for kill, out in ((False, 'airlock-engine'), (True, 'test/airlock-engine-kill')):
         done = compile_engine(ROOT / ENGINE_DIR, work / out, kill)
         require(done.returncode == 0 and done.stdout == '' and done.stderr == '', 'BUILD: %s gave exit %d\n%s' % (out, done.returncode, done.stderr[-2000:]))
         built[out] = {'command': [str(x) for x in RUSTC] + (['--cfg', 'kill_points'] if kill else []) + [ENGINE_DIR + '/main.rs', '-o', '<attempt>/' + out],
@@ -766,7 +776,7 @@ def run_suite(kind, root, cases, work, engines, interposer, timeout=7200):
     elif kind == 'diff':
         argv = [sys.executable, '-B', root / DIFF_SUITE, '--engine', engines[0]]
     elif kind == 'sdk':
-        argv = [sys.executable, '-B', root / SDK_SUITE, '--engine-dir', engine_dir, '--node', node_path()]
+        argv = [sys.executable, '-B', root / SDK_SUITE, '--engine-dir', engine_dir, '--kill-engine', engines[1], '--node', node_path()]
     elif kind == 'demo':
         argv = [sys.executable, '-B', root / DEMO, '--engine-dir', engine_dir, '--node', node_path(), '--json', out_json, '--measurements', work / 'demo-measurements.json']
     else:
@@ -829,11 +839,11 @@ def full_suites(work, engines, interposer):
 
 
 def kind_argv(kind):
-    return {'engine': 'python3 -B %s <attempt>/airlock-engine <attempt>/airlock-engine-kill --node <pinned node> --work <attempt> --interposer <attempt>/interpose.dylib' % ENGINE_SUITE,
+    return {'engine': 'python3 -B %s <attempt>/airlock-engine <attempt>/test/airlock-engine-kill --node <pinned node> --work <attempt> --interposer <attempt>/interpose.dylib' % ENGINE_SUITE,
             'node': 'python3 -B %s <pinned node> --model %s' % (NODE_SUITE, MODEL),
             'cosign': 'python3 -B %s <attempt>/airlock-engine' % COSIGN_SUITE,
             'diff': 'FORGE_DAFNY_LOCK=<lock> python3 -B %s --engine <attempt>/airlock-engine' % DIFF_SUITE,
-            'sdk': 'python3 -B %s --engine-dir <attempt> --node <pinned node>' % SDK_SUITE}[kind]
+            'sdk': 'python3 -B %s --engine-dir <attempt> --kill-engine <attempt>/test/airlock-engine-kill --node <pinned node>' % SDK_SUITE}[kind]
 
 
 # ------------------------------------------------------------------------------------------------------------- demo and fuzz
@@ -906,7 +916,8 @@ def apply(name, file, old, new):
 
 def engines_from(folder, src):
     engines = []
-    for kill, out in ((False, 'airlock-engine'), (True, 'airlock-engine-kill')):
+    (folder / 'test').mkdir()
+    for kill, out in ((False, 'airlock-engine'), (True, 'test/airlock-engine-kill')):
         done = compile_engine(src, folder / out, kill)
         require(done.returncode == 0, 'MUTANTS: ERROR of the list: copy %s does not build (%s)\n%s' % (folder.name, out, done.stderr[-1500:]))
         engines.append(folder / out)
@@ -995,7 +1006,7 @@ SHARED_TEXT_ALLOWED = {
 }
 
 GROUPS = [('engine seams of PROTOCOL.md section 13', 'M'), ('durable order and answer (interposer)', 'S'), ('checks without a test in PART 1', 'X'),
-          ('cosign tools and Node helper', 'N'), ('cosign through ssh-keygen (Apex addendum)', 'C'), ('diff-policy', 'D'), ('Python SDK', 'P'), ('TypeScript SDK', 'T'), ('demo and fuzz honesty (engine changed)', 'H'),
+          ('cosign tools and Node helper', 'N'), ('cosign through ssh-keygen (Apex addendum)', 'C'), ('the review of the native cosign', 'F'), ('diff-policy', 'D'), ('Python SDK', 'P'), ('TypeScript SDK', 'T'), ('demo and fuzz honesty (engine changed)', 'H'),
           ('repairs of the review', 'R')]
 
 
@@ -1036,7 +1047,7 @@ def bundle_of(work):
     before = snapshot()
     tools = toolchain()
     built = build(work / 'build')
-    engines = [work / 'build/airlock-engine', work / 'build/airlock-engine-kill']
+    engines = [work / 'build/airlock-engine', work / 'build/test/airlock-engine-kill']
     interposer = work / 'build/interpose.dylib'
     print('  build: exit 0', flush=True)
     suites, _ = full_suites(work / 'suite', engines, interposer)
@@ -1098,7 +1109,7 @@ def main():
     name = work.relative_to(ROOT).as_posix()
     print('GOAL20 ' + args.case + ': ' + name, flush=True)
     start = time.monotonic()
-    engines = [work / 'build/airlock-engine', work / 'build/airlock-engine-kill']
+    engines = [work / 'build/airlock-engine', work / 'build/test/airlock-engine-kill']
     try:
         toolchain()
         if args.case == 'build':
