@@ -19790,3 +19790,22 @@ curl: (6) Could not resolve host: github.com
 - Uncertainty: no second review of the repairs ran (the directive asks for one review). The repairs changed the
   wire (cosign message version 2, bound leases, `init --node`).
 - Impact: none on any stage label. Next check: the owner may ask for a second review.
+
+## U724 — goal 20: the regression in a scratch clone of the merged tree; what the records commit holds
+
+- Refs U705 (the same check for goal 19), U722. Evidence: `proposals/forge2-goal20-sdk/records/regression.json`;
+  `proposals/forge2-goal20-sdk/run_regression.py` (the goal 19 runner with one more bundle, more link checks and
+  `clearing/` in its protected list).
+- Actual: a throwaway clone of commit `c02abb74` (merge base with `origin/main`: `a5133c01`). 28 of 28 Stage EXIT
+  cases exit 0. `check_frozen_pr_gate.py HEAD` exit 0. `check_links.py` exit 0 for `FORGE_MASTER_IDEA.md`,
+  `ROADMAP.md`, `unsure.md`, the goal 19 report and five new documents: 0 dangling links. Six EXIT scripts with
+  `--case evidence` exit 0; bundles `c7f2f41c…` (Slice 1), `2721a293…` (Slice 2), `3cdfebfc…` (Slice 3),
+  `f55391da…` (M1 conformance), `1f569fcf…` (goal 19), `1e75ab47…` (goal 20) byte-identical to the tracked
+  records. Protected paths changed against the merge base: 0.
+- The stage runs wrote files under `results/stage5` and `results/stage8` in the clone only, as in goal 19.
+- The run waited 180 s for a heavy job of another team on the same machine, then ran alone as far as I checked.
+- NOT RUN: Stage 7, Stage 9, Stage 10, any HOL or Holmake process.
+- This entry, the regression record and one changed `ROADMAP.md` row are in a records commit after `c02abb74`
+  (documents only). The regression did not run on that commit.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the hosted `gate/pr_check.py` on the pull
+  request (expected exit 3, UNSUPPORTED).

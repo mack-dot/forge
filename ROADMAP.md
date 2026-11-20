@@ -50,7 +50,8 @@ on one machine.
 | `--case mutations`, before the review; after the repairs |0; 0|100 of 100 with 1 not killed; 114 of 114 with 2 not killed (X01, R8), recorded |
 | `--case evidence` (final) |0|twice; bundle `1e75ab47…70fa`, byte-identical |
 | the one fresh-context review |2 FAIL-OPEN; 1 HIGH; 3 MEDIUM; 3 LOW; 2 NOTE|a fake helper folder gave a commit; SDK reads returned unchecked objects; a signature replayed across equal stores; repaired in one pass; 3 findings stated only; NOT reviewed again |
-| regression on a scratch clone; the pull request; hosted `gate/pr_check.py` |NOT RUN at this commit|recorded by the next commit |
+| regression on a scratch clone of `c02abb74` (merged tree, base `a5133c01`): 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links of 9 files; six EXIT scripts, each `--case evidence` |0 each (28); 0; 0 each (9); 0 each (6)|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…` byte-identical to the tracked records; 0 protected paths changed |
+| `gh pr create`; hosted `gate/pr_check.py` |NOT RUN at this commit|expected exit 3 (UNSUPPORTED) |
 | every HOL and Holmake step; Stages 7, 9, 10; a power-loss test; a second review |NOT RUN|not part of this work |
 
 [Report](proposals/forge2-goal20-sdk/REPORT.md).
