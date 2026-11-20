@@ -21078,3 +21078,26 @@ curl: (6) Could not resolve host: github.com
   new head is in the pull request (expected exit 1, REJECTED).
 - Impact: none on any stage label until the owner merges. CURRENT none. `end_to_end=false`. M1-B OPEN.
 - Next check: the owner's review of the exact bytes; `main` must not move in the listed files before the merge.
+
+## U913 — Gate F2a: `main` `058eabcb` merged into the lock rebind branch; locks regenerated again; the digest of U904 is replaced; NOT merged
+
+- Status: 2026-11-20 (system clock). Refs U900, U901, U904 (its `implementation.lock` digest `fef55690…` is NO LONGER
+  the proposed value).
+- Source: a message of the coordinator session that quotes an owner instruction (pull request 79 merged; refresh pull
+  request 76 once). I did not see an owner message.
+- Actual: `git merge origin/main` (`058eabcbe722dff1a08f1563cf4103d9fcd21a20`), two additive conflicts resolved as in
+  U904 (`main`'s `unsure.md` is an exact prefix; U900, U901, U904 follow it unchanged). Both locks taken from `main`,
+  then `regen_locks.py . --write`: exit 0. Merge commit `69ae6bca`.
+  `gate/provenance/implementation.lock` = `7afef10a2f5e5fd372e1a129b25b8f0d87277bbd4cec5bf2c773ea60a71285ea` (114
+  entries). `spec/provenance/spec.lock` = `256310d851669cdeab2498b0a58fe6bcd4b7ba1f741396a9f608d644fa72a976` (unchanged).
+- Against `fef55690…`: one key added, `scripts/exit_universal_primitives.py` =
+  `e4772b7910de430b3c70d9191fd72e92b6ff12b2e197cb5adf24732be72e782a`; no digest changed; no key removed.
+- Checks at `69ae6bca` (a git worktree, not a fresh clone): `bootstrap.py --check` with `7afef10a…` exit 0
+  (`BOOTSTRAP_VERIFIED`); with `76b983ac…` exit 1; with `fef55690…` exit 1. `check_frozen_pr_gate.py HEAD` exit 0.
+  `check_links.py HEAD` (proposal, `ROADMAP.md`, `unsure.md`) exit 0. `git diff --name-status origin/main HEAD`: 7 files
+  (two locks, three proposal files, `ROADMAP.md`, `unsure.md`).
+- Observation: pull request 71 changed files under `.github/`; none of them is a lock entry (no digest changed).
+- NOT RUN: `scripts/exit_stage_9.py`; the hosted signing run; Batch 36. NOT confirmed by me: the hosted gate result of
+  the head of U904 (it was pending when I stopped) and of this head; expected exit 1 (REJECTED).
+- Impact: none on any stage label until the owner merges. CURRENT none. `end_to_end=false`. M1-B OPEN.
+- Next check: the owner's review of the exact bytes; `main` must not move in a listed file or under `scripts/` first.
