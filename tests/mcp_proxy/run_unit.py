@@ -47,12 +47,12 @@ ROOT = HERE.parents[1]
 DEFAULT_SOURCE = ROOT / 'src' / 'mcp_proxy'
 
 # Recorded minimums (2026-11-19). Raise them when tests are added; never lower them to make a run pass.
-MIN_PASSED = 101            # 102 tests in total, 1 ignored (ledger::tests::bench_commit_median_of_200)
+MIN_PASSED = 146            # 102 tests in total, 1 ignored (ledger::tests::bench_commit_median_of_200)
 MIN_PER_MODULE = {
-    'policy_tests::': 47,   # round 1 POLICY test root, every case
-    'evidence_tests::': 31, # round 1 EVIDENCE test root (30) + the driver mix case (1)
-    'ledger::tests::': 13,
-    'proxy::tests::': 3,
+    'policy_tests::': 78,   # round 1 POLICY test root, every case
+    'evidence_tests::': 41, # round 1 EVIDENCE test root (30) + the driver mix case (1)
+    'ledger::tests::': 16,
+    'proxy::tests::': 4,
     'jsonw::tests::': 3,
     'hash::tests::': 2,
     'tests::': 2,           # main.rs (matched as a name that starts with `tests::`)

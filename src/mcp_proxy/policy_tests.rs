@@ -449,3 +449,291 @@ fn read_two_scope_keys() {
     assert_eq!(code(p.check_read_result("r", &j(&text_item(r#"{"clinic_id":"A"}"#)))), "UNLABELLED");
     assert_eq!(code(p.check_read_result("r", &j(&text_item(r#"{"clinic_id":"A","org_id":"X"}"#)))), "SCOPE");
 }
+
+// ---------------- round 3 repairs (REPAIR-POLICY; REVIEW-B findings 1, 2, 3) ----------------
+// Each `r3_` case fails on the policy.rs of commit 65ccdc55 (shown in the round 3 report; `filters_result` added
+// there as a shim with the old behaviour). The filter cases use POL, so they fail on the old code for the filter
+// reason, not for a load error. The `limit_` cases pin a STATED limit of policy.rs ("Known limits") and the
+// `keep_` case a legitimate result; both pass on both versions.
+
+/// The shipped healthcare policy (examples/archia_mcp_showcase/policies/healthcare.policy.json), copied.
+const HC_POL: &str = r#"{"version": 1, "tools": {
+  "update_dosage": {"kind": "mutating",
+    "bind": [{"fact": "clinic/{patient_id}", "session": "clinic_id"}],
+    "args": "closed",
+    "subcaps": [{"arg": "mg", "max_fact": "max_mg/{patient_id}/{medication}"}],
+    "scope": ["clinic_id"], "labels": "optional"},
+  "get_patient_chart": {"kind": "sensitive_read", "scope": ["clinic_id"]}}}"#;
+/// A part of the shipped facts, plus two odd facts for the type checks.
+const HC_FACTS: &str = r#"{"clinic/PT-A-001": {"id": "Clinic_Alpha"}, "clinic/PT-B-001": {"id": "Clinic_Beta"},
+  "max_mg/PT-A-001/metoprolol": "50", "max_mg/PT-B-001/warfarin": "10", "max_mg/PT-B-001/metoprolol": "50",
+  "clinic/PT-A-777": "5", "max_mg/PT-A-001/idcap": {"id": "50"}, "clinic/PT-A-002": {"id": "Clinic_Alpha"}}"#;
+
+fn hc() -> Policy {
+    load_from_text(HC_POL, Some(HC_FACTS), &sess()).expect("healthcare policy loads")
+}
+fn hdose(args: &str) -> Result<(), policy::Deny> {
+    hc().check_mutation("update_dosage", &j(args))
+}
+fn hread(tool: &str, result: &str) -> &'static str {
+    code(hc().check_read_result(tool, &j(result)))
+}
+/// The read filter of `get_patient_chart` under POL (the policy that also loads on the old policy.rs).
+fn cread(result: &str) -> &'static str {
+    code(read(result))
+}
+/// A chart text item with one extra member `note` (any JSON value text).
+fn chart_with(extra: &str) -> String {
+    text_item(&format!(r#"{{"clinic_id":"Clinic_Alpha","patient_id":"PT-A-001",{extra}}}"#))
+}
+
+// Finding 1 (FAIL-OPEN): cross-clinic write.
+#[test]
+fn r3_bind_foreign_patient_refused() {
+    let e = hdose(r#"{"patient_id":"PT-B-001","medication":"warfarin","mg":10}"#).unwrap_err();
+    assert_eq!(e.code, "SCOPE_BIND");
+    assert!(!e.subcap);
+}
+#[test]
+fn r3_bind_own_patient_then_subcap() {
+    assert_eq!(code(hdose(r#"{"patient_id":"PT-A-001","medication":"metoprolol","mg":50}"#)), "OK");
+    assert_eq!(code(hdose(r#"{"patient_id":"PT-A-001","medication":"metoprolol","mg":50.01}"#)), "SUBCAP");
+    assert_eq!(code(hdose(r#"{"patient_id":"PT-A-001","medication":"insulin","mg":1}"#)), "SUBCAP");
+}
+#[test]
+fn r3_bind_missing_fact_refused() {
+    // PT-A-002 has a bind fact and no cap; PT-Z-009 has no fact at all.
+    assert_eq!(code(hdose(r#"{"patient_id":"PT-Z-009","medication":"warfarin","mg":1}"#)), "SCOPE_BIND");
+    let nofacts = load_from_text(HC_POL, None, &sess()).unwrap();
+    assert_eq!(code(nofacts.check_mutation("update_dosage", &j(r#"{"patient_id":"PT-A-001","medication":"metoprolol","mg":1}"#))), "SCOPE_BIND");
+}
+#[test]
+fn r3_bind_fact_types() {
+    // A decimal fact never satisfies a bind; an id fact never satisfies a sub-cap.
+    assert_eq!(code(hdose(r#"{"patient_id":"PT-A-777","medication":"metoprolol","mg":1}"#)), "SCOPE_BIND");
+    assert_eq!(code(hdose(r#"{"patient_id":"PT-A-001","medication":"idcap","mg":1}"#)), "SUBCAP");
+}
+#[test]
+fn r3_bind_bad_template_argument() {
+    for a in [
+        r#"{"medication":"metoprolol","mg":1}"#,
+        r#"{"patient_id":"PT-A-001/x","medication":"metoprolol","mg":1}"#,
+        r#"{"patient_id":["PT-A-001"],"medication":"metoprolol","mg":1}"#,
+        r#"{"patient_id":"PT-A-001 ","medication":"metoprolol","mg":1}"#,
+    ] {
+        assert_eq!(code(hdose(a)), "SCOPE_BIND", "{a}");
+    }
+}
+#[test]
+fn r3_bind_session_missing_or_other() {
+    let none = load_from_text(HC_POL, Some(HC_FACTS), &[]).unwrap();
+    assert_eq!(code(none.check_mutation("update_dosage", &j(r#"{"patient_id":"PT-A-001","medication":"metoprolol","mg":1}"#))), "SCOPE_BIND");
+    let beta = load_from_text(HC_POL, Some(HC_FACTS), &[("clinic_id".into(), "Clinic_Beta".into())]).unwrap();
+    assert_eq!(code(beta.check_mutation("update_dosage", &j(r#"{"patient_id":"PT-A-001","medication":"metoprolol","mg":1}"#))), "SCOPE_BIND");
+    assert_eq!(code(beta.check_mutation("update_dosage", &j(r#"{"patient_id":"PT-B-001","medication":"warfarin","mg":10}"#))), "OK");
+}
+
+// Finding 3 (oracle): the code of a foreign call does not depend on its facts or its dose.
+#[test]
+fn r3_foreign_code_independent_of_facts_and_dose() {
+    for a in [
+        r#"{"patient_id":"PT-B-001","medication":"warfarin","mg":1}"#,      // fact exists, under the cap
+        r#"{"patient_id":"PT-B-001","medication":"warfarin","mg":99999}"#,  // fact exists, over the cap
+        r#"{"patient_id":"PT-B-001","medication":"insulin","mg":1}"#,       // no cap fact
+        r#"{"patient_id":"PT-B-001","medication":"warfarin"}"#,             // dose missing
+        r#"{"patient_id":"PT-B-001","medication":"warfarin","mg":1,"x":1}"#, // extra argument (args closed)
+        r#"{"patient_id":"PT-B-404","medication":"warfarin","mg":1}"#,      // no bind fact
+    ] {
+        let e = hdose(a).unwrap_err();
+        assert_eq!((e.code, e.subcap), ("SCOPE_BIND", false), "{a}");
+    }
+}
+#[test]
+fn r3_own_subcap_one_code_missing_or_exceeded() {
+    let over = hdose(r#"{"patient_id":"PT-A-001","medication":"metoprolol","mg":51}"#).unwrap_err();
+    let missing = hdose(r#"{"patient_id":"PT-A-002","medication":"metoprolol","mg":1}"#).unwrap_err();
+    assert_eq!((over.code, over.subcap), ("SUBCAP", true));
+    assert_eq!((missing.code, missing.subcap), ("SUBCAP", true));
+    assert!(over.detail != missing.detail); // the precise reason stays in `detail` (stderr only)
+}
+
+// New rule: "args": "closed".
+#[test]
+fn r3_args_closed() {
+    let e = hdose(r#"{"patient_id":"PT-A-001","medication":"metoprolol","mg":1,"note":"x"}"#).unwrap_err();
+    assert_eq!((e.code, e.subcap), ("ARGS", false));
+    // Without "closed" (POL, the default "open") an unnamed argument passes with any value.
+    assert_eq!(code(dose(r#"{"patient_id":"P-1001","medication":"Warfarin","mg":1,"note":{"x":[1]}}"#)), "OK");
+}
+
+// New rules: load errors of bind, args, scope on mutating, labels, id facts.
+#[test]
+fn r3_load_new_key_errors() {
+    let m = |extra: &str| format!(r#"{{"version":1,"tools":{{"a":{{"kind":"mutating"{extra}}}}}}}"#);
+    for extra in [
+        r#","bind":[]"#,
+        r#","bind":{}"#,
+        r#","bind":[{"fact":"clinic/{p}"}]"#,
+        r#","bind":[{"session":"clinic_id"}]"#,
+        r#","bind":[{"fact":"clinic/{p}","session":"clinic-id"}]"#,
+        r#","bind":[{"fact":"clinic/{","session":"clinic_id"}]"#,
+        r#","bind":[{"fact":"clinic/{p}","session":"clinic_id","x":1}]"#,
+        r#","args":"shut""#,
+        r#","args":true"#,
+        r#","labels":"optional""#,
+        r#","scope":["clinic_id"],"labels":"maybe""#,
+        r#","scope":[]"#,
+        r#","scope":["clinic_id"]"#, // a mutating scope needs an explicit "labels"
+        r#","scope":["clinic_id","clinicId"]"#,
+    ] {
+        load_err(&m(extra));
+    }
+    load_err(r#"{"version":1,"tools":{"r":{"kind":"sensitive_read","scope":["clinic_id"],"labels":"optional"}}}"#);
+    assert!(load_from_text(&m(r#","bind":[{"fact":"clinic/{p}","session":"clinic_id"}],"args":"closed","scope":["clinic_id"],"labels":"required""#), None, &[]).is_ok());
+}
+#[test]
+fn r3_id_fact_syntax() {
+    let ok = r#"{"version":1,"tools":{}}"#;
+    assert!(load_from_text(ok, Some(r#"{"clinic/P":{"id":"Clinic_Alpha"},"cap":"5"}"#), &[]).is_ok());
+    for bad in [r#"{"c":{"id":""}}"#, r#"{"c":{"id":1}}"#, r#"{"c":{"id":"A","x":1}}"#, r#"{"c":{}}"#, r#"{"c":{"id":"A\nB"}}"#, r#"{"c":"Clinic_Alpha"}"#] {
+        assert!(load_from_text(ok, Some(bad), &[]).is_err(), "{bad}");
+    }
+    let long = format!(r#"{{"c":{{"id":"{}"}}}}"#, "a".repeat(257));
+    assert!(load_from_text(ok, Some(&long), &[]).is_err());
+}
+
+// New interface: filters_result and the result filter of a mutating tool.
+#[test]
+fn r3_filters_result() {
+    let p = hc();
+    assert!(p.filters_result("update_dosage"));
+    assert!(p.filters_result("get_patient_chart"));
+    let q = pol();
+    assert!(q.filters_result("get_patient_chart") && q.filters_result("list_invoices"));
+    assert!(!q.filters_result("issue_payout")); // mutating, no scope
+    assert!(!q.filters_result("ping"));
+    assert!(!q.filters_result("nope"));
+}
+#[test]
+fn r3_mutating_result_filter() {
+    // The real server's update result (no clinic_id): passes with "labels": "optional".
+    let ack = r#"{"max_safe_mg":50,"medication":"metoprolol","mg":25,"patient_id":"PT-A-001","previous_mg":"12.5","status":"applied"}"#;
+    let both = format!(r#"{{"content":[{{"type":"text","text":{}}}],"structuredContent":{ack},"isError":false}}"#, json_str(ack));
+    assert_eq!(hread("update_dosage", &both), "OK");
+    // A hostile upstream that returns a foreign record, or a scope name in text, is refused.
+    assert_eq!(hread("update_dosage", &text_item(r#"{"status":"applied","clinic_id":"Clinic_Beta","previous_mg":5}"#)), "SCOPE");
+    assert_eq!(hread("update_dosage", &text_item(r#"{"status":"applied","note":"clinicId Clinic_Beta"}"#)), "SCOPE_IN_TEXT");
+    assert_eq!(hread("update_dosage", &format!(r#"{{"content":[{{"type":"text","text":{}}}],"isError":true}}"#, json_str(ack))), "UPSTREAM_ERROR");
+    // With required labels, the same acknowledgement is UNLABELLED.
+    let req = HC_POL.replace(r#""labels": "optional""#, r#""labels": "required""#);
+    let p = load_from_text(&req, Some(HC_FACTS), &sess()).unwrap();
+    assert_eq!(code(p.check_read_result("update_dosage", &j(&both))), "UNLABELLED");
+}
+
+// Finding 2 (HIGH): the nine shapes of REVIEW-B a1 (rows 5 to 13), each with the payload of a1/payloads.py.
+#[test]
+fn r3_a1_row05_text_label_upper_hyphen() {
+    assert_eq!(cread(&chart_with(r#""note":"CLINIC-ID: Clinic_Beta BETA_PHI_MARK""#)), "SCOPE_IN_TEXT");
+}
+#[test]
+fn r3_a1_row06_text_label_camel_case() {
+    assert_eq!(cread(&chart_with(r#""note":"clinicId: Clinic_Beta BETA_PHI_MARK""#)), "SCOPE_IN_TEXT");
+}
+#[test]
+fn r3_a1_row07_nested_trailing_comma() {
+    let note = json_str(r#"{"clinicId":"Clinic_Beta","name":"Synthetic Patient Beta-One","MARK":"BETA_PHI_MARK",}"#);
+    assert_eq!(cread(&chart_with(&format!(r#""note":{note}"#))), "SCOPE_IN_TEXT");
+}
+#[test]
+fn r3_a1_row08_nested_duplicate_keys() {
+    let note = json_str(r#"{"clinicId":"Clinic_Alpha","clinicId":"Clinic_Beta","MARK":"BETA_PHI_MARK"}"#);
+    assert_eq!(cread(&chart_with(&format!(r#""note":{note}"#))), "SCOPE_IN_TEXT");
+}
+#[test]
+fn r3_a1_row09_escaped_key_trailing_text() {
+    // The key holds a literal backslash-u escape of `_` (one JSON escape level inside the note text).
+    let note = json_str(&format!(r#"{{"clinic{}u005fid":"Clinic_Beta","MARK":"BETA_PHI_MARK"}} end"#, '\\'));
+    assert_eq!(cread(&chart_with(&format!(r#""note":{note}"#))), "SCOPE_IN_TEXT");
+}
+#[test]
+fn r3_a1_row10_json_after_form_feed() {
+    let note = format!(r#""\f{}""#, &json_str(r#"{"clinicId":"Clinic_Beta","MARK":"BETA_PHI_MARK"}"#)[1..].trim_end_matches('"'));
+    assert_eq!(cread(&chart_with(&format!(r#""note":{note}"#))), "SCOPE_IN_TEXT");
+}
+#[test]
+fn r3_a1_row11_foreign_record_in_object_key() {
+    let key = json_str(r#"{"clinic_id": "Clinic_Beta", "name": "Synthetic Patient Beta-One", "MARK": "BETA_PHI_MARK"}"#);
+    assert_eq!(cread(&chart_with(&format!(r#"{key}:"Clinic_Alpha""#))), "SCOPE");
+}
+#[test]
+fn r3_a1_row12_plain_text_in_object_key() {
+    assert_eq!(cread(&chart_with(r#""x":{"clinic_id=Clinic_Beta BETA_PHI_MARK":"Clinic_Alpha"}"#)), "SCOPE_IN_TEXT");
+}
+#[test]
+fn r3_a1_row13_nested_json_deeper_than_parser() {
+    let inner = format!("{}{}{}", "[".repeat(70), r#"{"clinicId":"Clinic_Beta","MARK":"BETA_PHI_MARK"}"#, "]".repeat(70));
+    assert_eq!(cread(&chart_with(&format!(r#""note":{}"#, json_str(&inner)))), "SCOPE_IN_TEXT");
+}
+
+// Finding 2, the new rules in general form (no scope key name involved, or a key as the carrier).
+#[test]
+fn r3_json_like_text_that_is_not_strict_json_refused() {
+    for s in ["[draft] note", r#"{"name":"B",}"#, r#"{"a":1,"a":2}"#, r#""quoted" words"#, "\u{a0}{\"name\":\"B\"}"] {
+        assert_eq!(cread(&chart_with(&format!(r#""note":{}"#, json_str(s)))), "NESTED_NOT_JSON", "{s}");
+    }
+    let deep = format!("{}{}", "[".repeat(70), "]".repeat(70)); // deeper than the parser's 64 levels
+    assert_eq!(cread(&chart_with(&format!(r#""note":{}"#, json_str(&deep)))), "NESTED_NOT_JSON");
+}
+#[test]
+fn r3_json_like_object_key_not_strict_refused() {
+    let key = json_str(r#"{"name":"Synthetic Patient Beta-One",}"#);
+    assert_eq!(cread(&chart_with(&format!(r#"{key}:1"#))), "NESTED_NOT_JSON");
+}
+#[test]
+fn r3_text_check_after_u_decoding() {
+    // Literal backslash-u sequences in plain text (not JSON-like): one round, two rounds.
+    assert_eq!(cread(&chart_with(r#""note":"see clinic\\u005fid=Clinic_Beta""#)), "SCOPE_IN_TEXT");
+    assert_eq!(cread(&chart_with(r#""note":"see clinic\\u005cu005fid=Clinic_Beta""#)), "SCOPE_IN_TEXT");
+    assert_eq!(cread(&chart_with(r#""note":"see \\u0063linic\\u0049D""#)), "SCOPE_IN_TEXT");
+    // The same in an object key.
+    assert_eq!(cread(&chart_with(r#""clinic\\u005fid":"Clinic_Beta""#)), "SCOPE_IN_TEXT");
+    // Still escaped after 4 rounds: refused.
+    let mut s = String::from("\\u005f");
+    for _ in 0..4 {
+        s = s.replacen('\\', "\\u005c", 1);
+    }
+    assert_eq!(cread(&chart_with(&format!(r#""note":{}"#, json_str(&s)))), "ESCAPED_TEXT");
+}
+#[test]
+fn r3_variant_key_must_end_with_scope_key() {
+    assert_eq!(cread(&chart_with(r#""clinic_id_Clinic_Beta":"Clinic_Alpha""#)), "SCOPE_IN_TEXT");
+    assert_eq!(cread(&chart_with(r#""clinic_id: Beta":"Clinic_Alpha""#)), "SCOPE_IN_TEXT");
+    assert_eq!(cread(&chart_with(r#""referring clinic-id":"Clinic_Alpha""#)), "OK");
+}
+#[test]
+fn keep_own_chart_of_the_real_server_passes() {
+    // The real server's chart of PT-A-003 (both parts): no false refusal of the repaired rules.
+    let c = r#"{"birth_year":1958,"clinic_id":"Clinic_Alpha","medications":[{"max_safe_mg":80,"medication":"atorvastatin","mg":20},{"max_safe_mg":50,"medication":"metoprolol","mg":"12.5"}],"name":"Synthetic Patient Alpha-Three","patient_id":"PT-A-003"}"#;
+    let both = format!(r#"{{"content":[{{"type":"text","text":{}}}],"structuredContent":{c},"isError":false}}"#, json_str(c));
+    assert_eq!(cread(&both), "OK");
+}
+
+// Stated limits ("Known limits" in policy.rs): these still PASS. Each is the a1 payload or the doc example.
+#[test]
+fn limit_unlabelled_foreign_record_next_to_label_passes() {
+    assert_eq!(cread(&chart_with(r#""rows":[{"name":"Synthetic Patient Beta-One","MARK":"BETA_PHI_MARK"}]"#)), "OK");
+}
+#[test]
+fn limit_other_label_word_and_lookalike_pass() {
+    assert_eq!(cread(&chart_with(r#""rows":[{"clinic":"Clinic_Beta"}]"#)), "OK");
+    assert_eq!(cread(&chart_with(r#""rows":[{"clinіc_id":"Clinic_Beta"}]"#)), "OK"); // Cyrillic і
+}
+#[test]
+fn limit_words_before_scope_name_in_variant_key_pass() {
+    assert_eq!(cread(&chart_with(r#""Clinic_Beta_Beta_One_clinic_id":"Clinic_Alpha""#)), "OK");
+}
+#[test]
+fn limit_other_encodings_pass() {
+    assert_eq!(cread(&chart_with(r#""note":"clinic%5Fid=Clinic_Beta""#)), "OK"); // URL encoding
+    assert_eq!(cread(&chart_with(r#""note":"Y2xpbmljX2lkPUNsaW5pY19CZXRh""#)), "OK"); // base64
+}

@@ -72,6 +72,21 @@ pub fn dropped_read(id: &str, reason: &str) -> String {
     o
 }
 
+/// The answer to a mutating call whose upstream result the filter withheld. Same shape as `dropped_read`, verdict
+/// `RESULT_DROPPED`. The call was committed at `epoch` and forwarded, so its effect may have happened upstream:
+/// the answer says so. No byte of the upstream response is copied.
+pub fn dropped_result(id: &str, reason: &str, epoch: u64) -> String {
+    let mut o = String::with_capacity(320);
+    o.push_str("{\"jsonrpc\":\"2.0\",\"id\":");
+    o.push_str(id);
+    o.push_str(",\"result\":{\"content\":[],\"isError\":true,\"_meta\":{\"forge-airlock/verdict\":\"RESULT_DROPPED\",\"forge-airlock/reason\":");
+    push_str(&mut o, reason);
+    let _ = write!(o, ",\"forge-airlock/epoch\":{epoch},\"forge-airlock/effect\":");
+    push_str(&mut o, "the call was committed and forwarded; the upstream may have applied its effect; its result was withheld");
+    o.push_str("}}}");
+    o
+}
+
 /// The answer to the extension method `forge-airlock/state`.
 pub fn state_result(id: &str, epoch: u64, state_hex: &str) -> String {
     let mut o = String::with_capacity(100);
@@ -120,6 +135,13 @@ mod tests {
         let r = d.get("result").unwrap();
         assert_eq!(r.get("content"), Some(&J::Arr(vec![])));
         assert_eq!(r.get("isError"), Some(&J::Bool(true)));
+        let m = json::parse(&dropped_result("\"u1\"", "SCOPE", 4)).unwrap();
+        let mr = m.get("result").unwrap();
+        assert_eq!(mr.get("content"), Some(&J::Arr(vec![])));
+        assert_eq!(mr.get("isError"), Some(&J::Bool(true)));
+        let mm = mr.get("_meta").unwrap();
+        assert_eq!(mm.get("forge-airlock/verdict"), Some(&J::Str("RESULT_DROPPED".into())));
+        assert_eq!(mm.get("forge-airlock/epoch"), Some(&J::Num("4".into())));
         let s = json::parse(&state_result("null", 0, "ab")).unwrap();
         assert_eq!(s.get("result").unwrap().get("epoch"), Some(&J::Num("0".into())));
     }

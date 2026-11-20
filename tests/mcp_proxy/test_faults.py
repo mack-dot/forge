@@ -499,9 +499,9 @@ def _rspell_own():
 
 @case('read_answered_twice_second_not_passed', needs=H)
 def _rtwice():
-    # Requirement (worker contract): the second answer must not reach the client as a second answer to the read.
-    # PROTOCOL.md: after the first (allowed) answer the id leaves the in-flight set; U9 then passes "any other
-    # response" unchanged. This case checks the requirement, so it FAILS when U9 passes the second answer.
+    # Requirement (worker contract; TESTS finding T1): the second answer must not reach the client as a second
+    # answer to the read. CONTRACT3: a response passes only while its id is in flight, then the id leaves the set;
+    # any other response is DISCARDED. So this case must PASS as a protection.
     r = read(T['hc'], 'twice', 'MARK-TWICE-5d5d')
     answers = [x for x in r['lines'] if (b'"id":%d,' % r['id']) in x or (b'"id":%d}' % r['id']) in x]
     check(len(answers) == 1, '%d answers with the read id reached the client; the second one carries foreign-clinic data'
@@ -511,11 +511,13 @@ def _rtwice():
 
 @case('read_with_unasked_response_id', needs=H)
 def _runasked():
+    # CONTRACT3 (round 3): a response whose id is not in flight is DISCARDED. Before round 3 this was a KNOWN LIMIT
+    # (U9 passed it unfiltered with foreign-clinic data); now it is a protection and must hold.
     r = read(T['hc'], 'unasked', 'MARK-UNASKED-6e6e')
     check(r['msg'] and 'content' in r['msg'].get('result', {}) and r['msg']['result']['content'], 'own read was not answered: %r' % (r['msg'],))
-    leaked = 'MARK-UNASKED-6e6e' in r['raw']
-    check(leaked, 'PROTOCOL.md U9 says pass unchanged, but the unasked response did not reach the client')
-    return 'KNOWN LIMIT: a response with an id the client never used (987654321) passes UNFILTERED (U9) with foreign-clinic data'
+    check('MARK-UNASKED-6e6e' not in r['raw'] and 'Clinic_Beta' not in r['raw'], 'the unasked response (id 987654321) reached the client')
+    check(not any(b'987654321' in x for x in r['lines']), 'a line with the unasked id reached the client')
+    return 'the response with an id that nobody asked (987654321) is discarded; the own read passes'
 
 
 @case('server_notification_with_foreign_data', needs=H)
@@ -528,12 +530,13 @@ def _rnotify():
 
 @case('response_with_method_key_and_foreign_result', needs=H)
 def _rmethod():
-    # A line with the read's id, a `method` AND a `result` is routed as a server request (U1) and passes.
+    # CONTRACT3 (round 3, REVIEW-A D1): a line with BOTH `method` and `result` (or `error`) is discarded. Before
+    # round 3 it passed as a server request (U1) and this case was a KNOWN LIMIT; now it must hold.
     r = read(T['hc'], 'with_method', 'MARK-METH-9a9a')
     check(r['msg'] and r['msg'].get('result', {}).get('content'), 'own read was not answered')
-    check('MARK-METH-9a9a' in r['raw'], 'expected U1 pass-through did not happen')
-    return ('KNOWN LIMIT: {"id":<read id>,"method":..,"result":<foreign>} passes unfiltered (U1: it has a method); '
-            'a client that reads id+result first would take it as the read answer')
+    check('MARK-METH-9a9a' not in r['raw'] and 'Clinic_Beta' not in r['raw'], 'the line with method AND result reached the client')
+    check(not any(b'"x/leak"' in x for x in r['lines']), 'a line with the method x/leak reached the client')
+    return '{"id":<read id>,"method":..,"result":<foreign>} discarded; the own answer passes'
 
 
 @case('request_id_reused_while_in_flight', needs=H)
@@ -865,11 +868,26 @@ spell('escaped_slash_method_valid_meta',
       lambda pre, i: enc(valid(pre, i)).replace(b'"tools/call"', b'"tools\\u002fcall"') + b'\n', committed)
 spell('escaped_tool_name_without_meta',
       lambda pre, i: enc(no_meta(pre, i)).replace(b'"issue_payout"', b'"issue\\u005fpayout"') + b'\n', lambda r: refused(r, -32001, 'META_MISSING'))
-spell('leading_spaces_without_meta', lambda pre, i: b'   \t' + enc(no_meta(pre, i)) + b'\n', lambda r: refused(r, -32001, 'META_MISSING'))
-spell('leading_spaces_valid_meta', lambda pre, i: b'   \t' + enc(valid(pre, i)) + b'\n', committed)
+def control_byte_refused(r):
+    # CONTRACT3 (round 3, REVIEW-A R1 and R3): a client line with any raw byte < 0x20 or 0x7f (for example `\r`
+    # directly before the line end, or a tab) is refused (BlockedMalformed) before anything is forwarded.
+    check(r['dwire'] == 0, 'the server wire log shows %d new line(s)' % r['dwire'])
+    check(r['depoch'] == 0, 'epoch moved by %d' % r['depoch'])
+    check(r['dpaid'] == 0, 'a payout ran')
+    check(len(r['answers']) == 1 and 'error' in r['answers'][0], 'answers %r' % (r['answers'],))
+    e = r['answers'][0]['error']
+    return 'refused %d %s, wire +0, epoch +0' % (e.get('code'), e.get('data', {}).get('detail') or e.get('message'))
+
+
+spell('leading_spaces_without_meta', lambda pre, i: b'   ' + enc(no_meta(pre, i)) + b'\n', lambda r: refused(r, -32001, 'META_MISSING'))
+spell('leading_spaces_valid_meta', lambda pre, i: b'   ' + enc(valid(pre, i)) + b'\n', committed)
+spell('leading_tab_valid_meta', lambda pre, i: b'\t' + enc(valid(pre, i)) + b'\n', control_byte_refused)
 spell('utf8_bom_valid_meta', lambda pre, i: b'\xef\xbb\xbf' + enc(valid(pre, i)) + b'\n', lambda r: refused(r, -32700, ''))
-spell('cr_before_lf_without_meta', lambda pre, i: enc(no_meta(pre, i)) + b'\r\n', lambda r: refused(r, -32001, 'META_MISSING'))
-spell('cr_before_lf_valid_meta', lambda pre, i: enc(valid(pre, i)) + b'\r\n', committed)
+spell('cr_before_lf_without_meta', lambda pre, i: enc(no_meta(pre, i)) + b'\r\n', control_byte_refused)
+spell('cr_before_lf_valid_meta', lambda pre, i: enc(valid(pre, i)) + b'\r\n', control_byte_refused)
+spell('cr_smuggled_call_inside_a_ping',
+      lambda pre, i: b'{"jsonrpc":"2.0","id":%d,"method":"ping","params":{"x":\r' % i + enc(valid(pre, i + 100000)) + b'\r}}\n',
+      control_byte_refused)
 spell('tools_call_notification_no_id',
       lambda pre, i: enc({k: v for k, v in valid(pre, i).items() if k != 'id'}) + b'\n', lambda r: refused(r, -32600, 'TOOLS_CALL_WITHOUT_ID'))
 spell('id_null', lambda pre, i: enc(dict(valid(pre, i), id=None)) + b'\n', lambda r: refused(r, -32600, 'BAD_ID'))

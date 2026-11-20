@@ -320,12 +320,18 @@ def case_facts_agree_with_server():
     c, _, _, s = health(d)
     check(c.close() == 0, 'exit code')
     st = json.loads(Path(s).read_text())
-    want = {}
+    want, want_clinic = {}, {}
     for pid, chart in st['patients'].items():
+        want_clinic['clinic/%s' % pid] = {'id': chart['clinic_id']}
         for m in chart['medications']:
             want['max_mg/%s/%s' % (pid, m['medication'])] = str(m['max_safe_mg'])
-    got = {k: str(v) for k, v in facts.items()}
+    # Two fact families, both must equal the server's data: the dose caps and (since the review repair) the
+    # clinic of each patient, which binds update_dosage to the session's clinic.
+    got = {k: str(v) for k, v in facts.items() if k.startswith('max_mg/')}
+    got_clinic = {k: v for k, v in facts.items() if k.startswith('clinic/')}
+    check(set(facts) == set(got) | set(got_clinic), 'unexpected fact names %r' % sorted(set(facts) - set(got) - set(got_clinic)))
     check(got == want, 'facts %r != server %r' % (got, want))
+    check(got_clinic == want_clinic, 'clinic facts %r != server %r' % (got_clinic, want_clinic))
 
 
 @case

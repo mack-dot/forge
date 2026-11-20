@@ -4,7 +4,9 @@
 //!             [--session k=v]... [--sign-mode sync|async] [--test-clock N] -- <server-cmd> [args...]
 //!   mcp-proxy verify-evidence <evidence.wal> --allowed-signers FILE [options of evidence.rs]
 //!   mcp-proxy state DIR
-//! Exit codes: 2 = usage error; 1 = start-up fault; `mcp` otherwise exits with the upstream server's exit code.
+//! Exit codes: 2 = usage error; 1 = start-up fault (also: ledger.wal and evidence.wal disagree); `mcp` otherwise
+//! exits with the upstream server's exit code, except 1 after a receipt fault, an evidence finish fault or a reader
+//! thread panic (whatever the upstream code was).
 #![forbid(unsafe_code)]
 #![allow(dead_code)]
 #[path = "../airlock/json.rs"]
@@ -168,13 +170,19 @@ fn mcp(a: &[String]) -> i32 {
         }
     };
     let opts = evidence::Options { dir, key_path: &o.key, agent_id: &o.agent_id, sync_sign: o.sync_sign, test_clock: o.test_clock };
-    let ev = match evidence::Evidence::open(&opts) {
+    let mut ev = match evidence::Evidence::open(&opts) {
         Ok(e) => e,
         Err(e) => {
             eprintln!("mcp-proxy: evidence: {e}");
             return 1;
         }
     };
+    // The two logs must agree before any message is read (finding R2; PROTOCOL.md section 7).
+    if let Err(e) = proxy::reconcile(&ledger, &mut ev) {
+        eprintln!("mcp-proxy: start refused: {e}");
+        let _ = ev.finish();
+        return 1;
+    }
     proxy::run(policy, ledger, ev, &o.server)
 }
 

@@ -10,8 +10,9 @@
 //! - `MAGIC` = the 30 ASCII bytes `forge-airlock-evidence-wal-v1\n`.
 //! - `frame` = `type u8 | len u32 | payload (len bytes) | check (8 bytes)`.
 //!   `check` = the first 8 bytes of `SHA-256("forge-airlock-evidence-frame-v1" | type | len | payload)`.
-//!   The check has no key. It finds torn or damaged frames. It does NOT stop a forger; the chain and the
-//!   signatures do that.
+//!   The check has no key. It finds torn or damaged frames. It does NOT stop a forger. The chain has no key
+//!   either: anyone who can write the file can append a well-formed record with a correct chain value. Only the
+//!   signatures (checked by `verify-evidence`) and the open rules below stop a forged record.
 //! - Type `0x01`, RECORD frame, `len == 153`: `index u64 | record (113 bytes) | chain (32 bytes)`.
 //! - Type `0x02`, SIGNATURE frame, `9 <= len <= 8 + 4096`: `index u64 | armor`. `armor` is the exact stdout of
 //!   `ssh-keygen -Y sign` (`-----BEGIN SSH SIGNATURE-----\n` ... `-----END SSH SIGNATURE-----\n`).
@@ -32,9 +33,19 @@
 //! `chain_i`; the verifier recomputes it.
 //!
 //! Signature. The signed message is the 64 lowercase hex characters of `chain_i`, with no newline. The
-//! namespace is `forge-airlock-evidence`. The signer is `/usr/bin/ssh-keygen -Y sign -f KEY -n NAMESPACE`,
-//! message on stdin, armor on stdout (checked on this machine with OpenSSH_10.3p1). An absolute path, an empty
-//! environment, the working folder `/`, and no shell.
+//! namespace is `forge-airlock-evidence`. The signer is `/usr/bin/ssh-keygen -Y sign -P "" -f KEY -n NAMESPACE`,
+//! message on stdin, armor on stdout (checked on this machine with OpenSSH_10.3p1). An absolute path, an
+//! environment with only `SSH_ASKPASS_REQUIRE=never`, the working folder `/`, and no shell. stdin is a pipe that
+//! is closed after the message.
+//! `-P ""` (an explicit empty passphrase) is REQUIRED: without it, `ssh-keygen` asks for the passphrase of a
+//! protected key on the controlling terminal (`/dev/tty`), also when stdin is a pipe, and a proxy started from a
+//! terminal then hangs (measured on this machine: the prompt waited until it was killed). With `-P ""` a protected
+//! key fails at once ("incorrect passphrase"). `SSH_ASKPASS_REQUIRE=never` alone does NOT stop the tty prompt.
+//!
+//! Test signature at `open` (finding B6): `open` signs one fixed test message (namespace
+//! `forge-airlock-open-test`, so it can never pass as a record signature) and checks only that `ssh-keygen`
+//! exited 0 and printed an SSH SIGNATURE armor. A key that cannot sign (protected by a passphrase, a public key
+//! given as `--key`, a damaged file) refuses the start. The test signature is not written anywhere.
 //!
 //! Order rules (the one verifier checks them):
 //! - RECORD frames have the indexes 1, 2, 3, ... in file order.
@@ -47,10 +58,17 @@
 //!
 //! - `sync`: `append` computes the record and the chain, signs, writes the RECORD and the SIGNATURE frame in one
 //!   write, then `sync_data` (on macOS, std uses `F_FULLFSYNC`). If signing fails, nothing is written.
-//! - `async`: `append` writes the RECORD frame and syncs it, then gives `(index, chain)` to one signer thread.
-//!   The thread signs in order, appends each SIGNATURE frame and syncs it. `finish` drains the thread. A signer
-//!   error makes every later `append` and `finish` return `Err` (fail closed).
-//! - After a write or sync error, the object is broken: every later call returns `Err`.
+//! - `async`: for every verdict EXCEPT `Committed`, `append` writes the RECORD frame and syncs it, then gives
+//!   `(index, chain)` to one signer thread. The thread signs in order, appends each SIGNATURE frame and syncs it.
+//!   `finish` drains the thread. A signer error makes every later `append` and `finish` return `Err` (fail closed).
+//! - `Committed` in BOTH modes (finding B5): `append` first waits until the signer thread has written and synced
+//!   every earlier signature (async mode only), then signs, writes the RECORD and the SIGNATURE frame in one write
+//!   and syncs, as in `sync` mode. So `append(.., Committed)` returns `Ok` only when the record AND its signature
+//!   are on disk, and the proxy forwards a mutating call only after that.
+//! - After a failed signature, a write error or a sync error, the object is broken: every later call returns
+//!   `Err`, and `finish` returns `Err`.
+//! - `last_commit()` gives `(epoch, post_hash)` of the last `Committed` record in the file (after `open` and after
+//!   every `append`), or `None`.
 //!
 //! # Opening an existing file
 //!
@@ -58,15 +76,34 @@
 //!   A new file gets mode 0600. An exclusive `flock` (`File::try_lock`) refuses a second writer. The lock is
 //!   advisory: a process that does not ask for it is not stopped.
 //! - The whole file is parsed. Every frame check, every order rule and every chain link is checked again from
-//!   `chain_0`. Any failure refuses the open. Signatures are NOT verified at open (that needs the allowed
-//!   signers file; use `verify-evidence`).
-//! - Torn tail: CUT. When the last frame is incomplete (the file ends inside its header or inside its declared
-//!   length), the file is truncated to the end of the last complete frame. Reason: `append` returns only after a
-//!   sync, so an incomplete frame was never acknowledged. A COMPLETE frame with a bad check is NOT cut: the open
-//!   is refused, because this can be damage and not a tear.
-//! - Records without a signature (an `async` crash, or a torn SIGNATURE frame): SIGN THEM FIRST, in order, then
-//!   continue. Reason: each such record was durable before the crash; refusing would block the store for ever.
-//!   Limit: such a record can belong to an `append` that never returned to its caller.
+//!   `chain_0`. Any failure refuses the open and changes nothing. Signatures are NOT verified at open (that
+//!   needs the allowed signers file; use `verify-evidence`). Commit continuity is NOT checked at open (only for
+//!   the unsigned records below, and by `verify-evidence`).
+//! - Torn tail: CUT, after all checks above passed. When the last frame is incomplete (the file ends inside its
+//!   header or inside its declared length), the file is truncated to the end of the last complete frame.
+//!   Reason: `append` returns only after a sync, so an incomplete frame was never acknowledged. A COMPLETE frame
+//!   with a bad check is NOT cut: the open is refused, because this can be damage and not a tear.
+//! - Torn RECORD+SIGNATURE write: when the frame just before the torn tail is a RECORD frame (so it has no
+//!   signature) and that record is `Committed` (both modes) or the open is in `sync` mode, the record is cut
+//!   together with the torn tail, with one line on stderr. Reason: those records are written in ONE write
+//!   together with their signature, and `append` returned only after the sync of both, so the record was never
+//!   acknowledged. Cutting removes bytes; it can never add a record.
+//! - Records without a signature after that (finding B4; the signature order rule makes them always a trailing
+//!   run, records `k..n`):
+//!   - `sync` mode: REFUSE the open. Reason: an honest `sync` writer never leaves a complete unsigned record. A
+//!     process crash cannot split its one `write` of RECORD+SIGNATURE (and a split write is the torn case above).
+//!     An unsigned record in `sync` mode is therefore a forgery or an `async` crash of an earlier run. The error
+//!     text says: if the last run used `--sign-mode async`, start once with `--sign-mode async`.
+//!   - `async` mode: accept them ONLY when none is `Committed`, each has a known verdict, and each has
+//!     `pre == post ==` the post of the last `Committed` record (or the ledger genesis) and `epoch ==` its epoch.
+//!     Then sign them in order before any new record and print ONE line to stderr. Anything else refuses the open.
+//!   - Limit (stated): in `async` mode a writer of `evidence.wal` (the same OS user or root) can still append
+//!     forged NON-commit records that copy the current head (for example a false BLOCKED_POLICY receipt), and the
+//!     next `async` start signs them. They cannot move the state, and they cannot be `Committed`.
+//!   - Limit (stated): an `async` run that crashed between a non-commit RECORD frame and its signature, then a
+//!     start in `sync` mode, cuts that record if a torn frame follows it (it was acknowledged), or refuses.
+//!   - Limit (stated): a power loss that keeps a later part of one write but not an earlier part (not a prefix) is
+//!     outside this model; the frame checks then refuse the file (the same holds for `ledger.wal`).
 //!
 //! # Key check (pre-flight rule 3)
 //!
@@ -97,12 +134,26 @@
 //!
 //! for example `printf 'forge-airlock namespaces="forge-airlock-evidence" %s\n' "$(cut -d' ' -f1,2 KEY.pub)"`.
 //! It checks offline: the magic, every frame check and length, the order rules, every chain link from
-//! `chain_0`, the zero padding of the names, known verdicts only, epochs never decreasing, `post == pre` for
-//! every blocked verdict, the armor shape, and exactly one signature per record that
+//! `chain_0`, the zero padding of the names, known verdicts only, COMMIT CONTINUITY (below), the armor shape, and
+//! exactly one signature per record that
 //! `/usr/bin/ssh-keygen -Y verify -f FILE -I NAME -n forge-airlock-evidence -s SIG` accepts with the chain hex
 //! on stdin. Signature files go into a new private 0700 folder under the temporary folder, removed at the end.
-//! Output: one line per record, then `final_chain=<hex>`, then `VERIFIED records=<n> signatures=<n> chain=OK`
-//! (exit 0), or `FAILED at=<index> ...` with the first failing record index (exit 1). Usage error: exit 2.
+//!
+//! Commit continuity (round 3, findings B4, B8 and R2). Let `(E, P)` start as `(0, ledger genesis)`, where the
+//! ledger genesis is `crate::ledger::genesis()` = `first16(SHA-256("forge-airlock-ledger-genesis-v1"))`.
+//! - A `Committed` record must have `epoch == E + 1` and `pre == P`; then `(E, P) = (epoch, post)`. So the
+//!   commits have the epochs 1, 2, 3, ... with no gap and no repeat, and each commit starts where the last ended.
+//! - Every other record must have `epoch == E` and `pre == post == P`.
+//!
+//! Trust root: the allowed signers file. Every key line in it is trusted for the identity and namespace that the
+//! line allows (`ssh-keygen` rules, including `*` patterns). The verifier prints one `trust_root=` line with the
+//! count of usable key lines (not empty, not a `#` comment) and puts `signer_lines=<n>` in the report line; more
+//! than one line adds `WARNING=more_than_one_key_line` there. It does not fail for that. The `agent_id` field is
+//! NOT bound to a key.
+//!
+//! Output: `trust_root=...`, one line per record, then `final_chain=<hex>`, then
+//! `VERIFIED records=<n> signatures=<n> chain=OK continuity=OK signer_lines=<k>` (exit 0), or
+//! `FAILED at=<index> ...` with the first failing record index (exit 1). Usage error: exit 2.
 //! A file with no record (empty, or the magic only) FAILS (exit 1): nothing to verify is not a pass.
 //! A torn tail FAILS in the verifier (only `open` cuts it).
 //! Honest limit: removal of WHOLE trailing records (with their signatures) is NOT detected. Every remaining
@@ -150,6 +201,9 @@ const MAX_ARMOR: usize = 4096;
 const CHECK_LEN: usize = 8;
 const ARMOR_BEGIN: &str = "-----BEGIN SSH SIGNATURE-----\n";
 const ARMOR_END: &str = "-----END SSH SIGNATURE-----\n";
+const TEST_NAMESPACE: &str = "forge-airlock-open-test";
+const TEST_MESSAGE: &[u8] = b"forge-airlock evidence key test: this key can sign";
+const V_COMMITTED: u8 = Verdict::Committed as u8;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(u8)]
@@ -410,7 +464,8 @@ fn field_text(f: &[u8]) -> Option<String> {
 
 // ---------------------------------------------------------------- key
 
-fn euid_probe(dir: &Path) -> Result<u32, String> {
+/// euid without `unsafe`: create a probe file in `dir`, read its owner, remove it. Shared with `ledger.rs`.
+pub(crate) fn euid_probe(dir: &Path) -> Result<u32, String> {
     let nanos = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_nanos()).unwrap_or(0);
     for n in 0..16u32 {
         let p = dir.join(format!(".forge-airlock-euid-probe-{}-{}-{}", std::process::id(), nanos, n));
@@ -479,22 +534,32 @@ impl Key {
     }
 
     fn sign(&self, chain: &[u8; 32]) -> Result<Vec<u8>, String> {
+        self.sign_msg(NAMESPACE, hash::hex(chain).as_bytes())
+    }
+
+    /// `ssh-keygen -Y sign -P "" -f KEY -n NS`, `msg` on a pipe that is closed after it. Never asks a terminal.
+    fn sign_msg(&self, ns: &str, msg: &[u8]) -> Result<Vec<u8>, String> {
         self.recheck()?;
         let mut child = Command::new(SSH_KEYGEN)
-            .args(["-Y", "sign", "-f"])
+            .args(["-Y", "sign", "-P", "", "-f"])
             .arg(&self.path)
-            .args(["-n", NAMESPACE])
+            .args(["-n", ns])
             .env_clear()
+            .env("SSH_ASKPASS_REQUIRE", "never")
             .current_dir("/")
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
             .map_err(|e| format!("spawn {SSH_KEYGEN}: {e}"))?;
-        let msg = hash::hex(chain);
         {
             let mut si = child.stdin.take().ok_or("ssh-keygen: no stdin")?;
-            si.write_all(msg.as_bytes()).map_err(|e| format!("ssh-keygen stdin: {e}"))?;
+            if let Err(e) = si.write_all(msg) {
+                drop(si);
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(format!("ssh-keygen stdin: {e}"));
+            }
         }
         let out = child.wait_with_output().map_err(|e| format!("ssh-keygen wait: {e}"))?;
         if !out.status.success() {
@@ -537,6 +602,12 @@ impl Shared {
     }
 }
 
+/// Work for the async signer thread. `Flush` answers after every earlier `Sign` is written and synced (or failed).
+enum Job {
+    Sign(u64, [u8; 32]),
+    Flush(mpsc::Sender<()>),
+}
+
 pub struct Evidence {
     shared: Arc<Shared>,
     key: Arc<Key>,
@@ -544,28 +615,51 @@ pub struct Evidence {
     next: u64,
     agent: [u8; 32],
     test_clock: Option<u64>,
-    tx: Option<mpsc::Sender<(u64, [u8; 32])>>,
+    tx: Option<mpsc::Sender<Job>>,
     worker: Option<JoinHandle<()>>,
     broken: Option<String>,
+    last_commit: Option<(u64, H16)>,
 }
 
 pub struct Options<'a> {
     pub dir: &'a Path,
     pub key_path: &'a str,
     pub agent_id: &'a str,
-    /// true: `append` returns after the signature is on disk. false: a signer thread signs in order.
+    /// true: `append` returns after the signature is on disk. false: a signer thread signs in order, except for
+    /// `Committed`, which is always signed and synced before `append` returns.
     pub sync_sign: bool,
     /// Test seam: timestamp = value + (record index - 1); the first record of a file gets the value itself.
     /// None = wall clock, Unix time in MILLISECONDS.
     pub test_clock: Option<u64>,
 }
 
+fn rec_epoch(r: &[u8; RECORD_LEN]) -> u64 {
+    u64::from_be_bytes(r[0..8].try_into().unwrap())
+}
+fn rec_pre(r: &[u8; RECORD_LEN]) -> H16 {
+    r[80..96].try_into().unwrap()
+}
+fn rec_post(r: &[u8; RECORD_LEN]) -> H16 {
+    r[96..112].try_into().unwrap()
+}
+
+/// (epoch, post) of the last `Committed` record in `es`, or None.
+fn last_commit_of(es: &[Entry]) -> Option<(u64, H16)> {
+    es.iter().rev().find(|e| e.rec[112] == V_COMMITTED).map(|e| (rec_epoch(&e.rec), rec_post(&e.rec)))
+}
+
+/// Byte length of one RECORD frame on disk.
+const REC_FRAME_LEN: u64 = (5 + REC_PAYLOAD + CHECK_LEN) as u64;
+
 impl Evidence {
-    /// Check the key file (O_NOFOLLOW, fstat: regular, uid == euid, mode & 0o077 == 0), open or continue `evidence.wal`.
+    /// Check the key file (O_NOFOLLOW, fstat: regular, uid == euid, mode & 0o077 == 0), sign one test message
+    /// (a key that cannot sign refuses the start), open or continue `evidence.wal` (rules at the top of this file).
     pub fn open(o: &Options) -> Result<Evidence, String> {
         let agent = name_field(o.agent_id).ok_or("agent id must be 1 to 32 bytes of UTF-8 with no NUL byte")?;
         let euid = euid_probe(o.dir)?;
         let key = open_key(o.key_path, euid)?;
+        key.sign_msg(TEST_NAMESPACE, TEST_MESSAGE)
+            .map_err(|e| format!("key {}: the test signature at start failed, so this key cannot sign receipts: {e}", key.path.display()))?;
         let wal = o.dir.join("evidence.wal");
         let mut file = OpenOptions::new()
             .read(true)
@@ -583,13 +677,11 @@ impl Evidence {
         let md = file.metadata().map_err(|e| format!("evidence.wal fstat: {e}"))?;
         check_md(&md, euid, "evidence.wal")?;
         let parsed = parse(&mut file).map_err(|e| format!("evidence.wal refused: {e}"))?;
-        if let Some(t) = &parsed.torn {
-            eprintln!("evidence.wal: torn tail cut ({t}); kept {} bytes", parsed.valid_len);
-            file.set_len(parsed.valid_len).map_err(|e| format!("evidence.wal cut: {e}"))?;
-            file.sync_all().map_err(|e| format!("evidence.wal sync: {e}"))?;
-        }
         let header = parsed.header;
-        let (entries, bad) = order(parsed.frames);
+        let torn = parsed.torn.clone();
+        let mut keep_len = parsed.valid_len;
+        let last_frame_is_record = matches!(parsed.frames.last(), Some(Frame::Rec { .. }));
+        let (mut entries, bad) = order(parsed.frames);
         if let Some((i, why)) = bad {
             return Err(format!("evidence.wal refused at record {i}: {why}"));
         }
@@ -600,6 +692,55 @@ impl Evidence {
             }
             head = e.chain;
         }
+        // A torn RECORD+SIGNATURE write: the record before the torn tail goes with it (rules at the top).
+        let mut cut_record = None;
+        if torn.is_some() && last_frame_is_record {
+            let e = entries.last().expect("a record frame was parsed");
+            if e.rec[112] == V_COMMITTED || o.sync_sign {
+                cut_record = Some(entries.len());
+                keep_len -= REC_FRAME_LEN;
+                entries.pop();
+                head = entries.last().map(|e| e.chain).unwrap_or_else(genesis);
+            }
+        }
+        // Unsigned records: always a trailing run (the signature order rule).
+        let first_unsigned = entries.iter().position(|e| e.sig.is_none());
+        if let Some(k) = first_unsigned {
+            let (a, b) = (k + 1, entries.len());
+            if o.sync_sign {
+                return Err(format!(
+                    "evidence.wal refused: records {a}..{b} have no signature; sync mode never signs a record that it did not write \
+                     (a forged record, or an async crash of an earlier run: if the last run used --sign-mode async, start once with --sign-mode async)"
+                ));
+            }
+            let (ce, cp) = last_commit_of(&entries[..k]).unwrap_or((0, crate::ledger::genesis()));
+            for (j, e) in entries[k..].iter().enumerate() {
+                let i = k + j + 1;
+                let v = e.rec[112];
+                if v == V_COMMITTED {
+                    return Err(format!("evidence.wal refused at record {i}: a COMMITTED record without a signature (a committed receipt is always written with its signature)"));
+                }
+                if verdict_name(v).is_none() {
+                    return Err(format!("evidence.wal refused at record {i}: unsigned record with unknown verdict {v}"));
+                }
+                if rec_epoch(&e.rec) != ce || rec_pre(&e.rec) != cp || rec_post(&e.rec) != cp {
+                    return Err(format!(
+                        "evidence.wal refused at record {i}: unsigned record does not continue the last commit (epoch {ce}, post {})",
+                        hash::hex(&cp)
+                    ));
+                }
+            }
+        }
+        if let Some(t) = &torn {
+            match cut_record {
+                Some(i) => eprintln!(
+                    "evidence.wal: torn tail cut ({t}) together with record {i}, which had no signature (one unfinished record+signature write; never acknowledged); kept {keep_len} bytes"
+                ),
+                None => eprintln!("evidence.wal: torn tail cut ({t}); kept {keep_len} bytes"),
+            }
+            file.set_len(keep_len).map_err(|e| format!("evidence.wal cut: {e}"))?;
+            file.sync_all().map_err(|e| format!("evidence.wal sync: {e}"))?;
+        }
         let shared = Arc::new(Shared { file: Mutex::new(file), err: Mutex::new(None) });
         if !header {
             shared.write_sync(MAGIC)?;
@@ -607,14 +748,20 @@ impl Evidence {
                 .and_then(|d| d.sync_all())
                 .map_err(|e| format!("store folder sync: {e}"))?;
         }
-        // Sign records that have no signature (in order), before any new record.
-        for (n, e) in entries.iter().enumerate() {
-            if e.sig.is_none() {
-                let idx = n as u64 + 1;
+        // async mode only (checked above): sign the trailing unsigned non-commit records, in order.
+        if let Some(k) = first_unsigned {
+            for (n, e) in entries.iter().enumerate().skip(k) {
                 let armor = key.sign(&e.chain)?;
-                shared.write_sync(&sig_frame(idx, &armor))?;
+                shared.write_sync(&sig_frame(n as u64 + 1, &armor))?;
             }
+            eprintln!(
+                "evidence.wal: signed {} trailing unsigned non-commit record(s) {}..{} at start (async mode recovery; each continues the last commit)",
+                entries.len() - k,
+                k + 1,
+                entries.len()
+            );
         }
+        let last_commit = last_commit_of(&entries);
         let key = Arc::new(key);
         let mut ev = Evidence {
             shared,
@@ -626,21 +773,29 @@ impl Evidence {
             tx: None,
             worker: None,
             broken: None,
+            last_commit,
         };
         if !o.sync_sign {
-            let (tx, rx) = mpsc::channel::<(u64, [u8; 32])>();
+            let (tx, rx) = mpsc::channel::<Job>();
             let sh = Arc::clone(&ev.shared);
             let k = Arc::clone(&ev.key);
             let h = std::thread::Builder::new()
                 .name("evidence-signer".into())
                 .spawn(move || {
-                    for (idx, chain) in rx {
-                        if sh.get_err().is_some() {
-                            continue;
-                        }
-                        let r = k.sign(&chain).and_then(|a| sh.write_sync(&sig_frame(idx, &a)));
-                        if let Err(e) = r {
-                            sh.set_err(format!("signer, record {idx}: {e}"));
+                    for job in rx {
+                        match job {
+                            Job::Flush(ack) => {
+                                let _ = ack.send(());
+                            }
+                            Job::Sign(idx, chain) => {
+                                if sh.get_err().is_some() {
+                                    continue;
+                                }
+                                let r = k.sign(&chain).and_then(|a| sh.write_sync(&sig_frame(idx, &a)));
+                                if let Err(e) = r {
+                                    sh.set_err(format!("signer, record {idx}: {e}"));
+                                }
+                            }
                         }
                     }
                 })
@@ -649,6 +804,11 @@ impl Evidence {
             ev.worker = Some(h);
         }
         Ok(ev)
+    }
+
+    /// (epoch, post_hash) of the last `Committed` record, or None. Valid after `open` and after every `append`.
+    pub fn last_commit(&self) -> Option<(u64, H16)> {
+        self.last_commit
     }
 
     fn timestamp(&self, idx: u64) -> Result<u64, String> {
@@ -661,13 +821,36 @@ impl Evidence {
         }
     }
 
-    /// One receipt. `Err` = the receipt is not durable: the caller fails closed for a mutating call.
+    fn fail(&mut self, e: String) -> String {
+        if self.broken.is_none() {
+            self.broken = Some(e.clone());
+        }
+        e
+    }
+
+    /// Async mode: wait until the signer thread has handled every earlier record. `Err` if it failed or is gone.
+    fn drain_signer(&mut self) -> Result<(), String> {
+        if let Some(tx) = &self.tx {
+            let (atx, arx) = mpsc::channel();
+            if tx.send(Job::Flush(atx)).is_err() || arx.recv().is_err() {
+                return Err(self.fail("signer thread is gone".into()));
+            }
+        }
+        if let Some(e) = self.shared.get_err() {
+            return Err(self.fail(format!("evidence signer failed: {e}")));
+        }
+        Ok(())
+    }
+
+    /// One receipt. `Err` = the receipt is not durable: the caller fails closed for a mutating call. Every `Err`
+    /// after the argument check breaks the object (every later call returns `Err`).
+    /// `Committed`: `Ok` means the record AND its signature are synced to disk, in both modes.
     pub fn append(&mut self, epoch: u64, tool: &str, pre: &H16, post: &H16, verdict: Verdict) -> Result<(), String> {
         if let Some(e) = &self.broken {
             return Err(format!("evidence broken: {e}"));
         }
         if let Some(e) = self.shared.get_err() {
-            return Err(format!("evidence signer failed: {e}"));
+            return Err(self.fail(format!("evidence signer failed: {e}")));
         }
         if is_blocked(verdict as u8) && pre != post {
             return Err("evidence: a blocked verdict needs post_hash == pre_hash".into());
@@ -682,32 +865,35 @@ impl Evidence {
         rec[96..112].copy_from_slice(post);
         rec[112] = verdict as u8;
         let chain = chain_next(&self.head, &rec);
-        match &self.tx {
-            None => {
-                // Sign first: a failed signature writes nothing.
-                let armor = self.key.sign(&chain)?;
-                let mut bytes = record_frame(idx, &rec, &chain);
-                bytes.extend_from_slice(&sig_frame(idx, &armor));
-                if let Err(e) = self.shared.write_sync(&bytes) {
-                    self.broken = Some(e.clone());
-                    return Err(e);
-                }
+        let inline = self.tx.is_none() || verdict == Verdict::Committed;
+        if inline {
+            // Async mode: every earlier signature first, so the signature order rule holds.
+            self.drain_signer()?;
+            // Sign first: a failed signature writes nothing.
+            let armor = match self.key.sign(&chain) {
+                Ok(a) => a,
+                Err(e) => return Err(self.fail(e)),
+            };
+            let mut bytes = record_frame(idx, &rec, &chain);
+            bytes.extend_from_slice(&sig_frame(idx, &armor));
+            if let Err(e) = self.shared.write_sync(&bytes) {
+                return Err(self.fail(e));
             }
-            Some(tx) => {
-                if let Err(e) = self.shared.write_sync(&record_frame(idx, &rec, &chain)) {
-                    self.broken = Some(e.clone());
-                    return Err(e);
-                }
-                if tx.send((idx, chain)).is_err() {
-                    let e = "signer thread is gone".to_string();
-                    self.broken = Some(e.clone());
-                    // The record is durable but will not be signed in this run; the next open signs it.
-                    return Err(e);
-                }
+        } else {
+            if let Err(e) = self.shared.write_sync(&record_frame(idx, &rec, &chain)) {
+                return Err(self.fail(e));
+            }
+            let sent = self.tx.as_ref().map(|tx| tx.send(Job::Sign(idx, chain)).is_ok()).unwrap_or(false);
+            if !sent {
+                // The record is durable but will not be signed in this run; an async start signs it.
+                return Err(self.fail("signer thread is gone".into()));
             }
         }
         self.head = chain;
         self.next = idx + 1;
+        if verdict == Verdict::Committed {
+            self.last_commit = Some((epoch, *post));
+        }
         Ok(())
     }
 
@@ -832,10 +1018,22 @@ fn fail(at: u64, ok: u64, why: &str) -> i32 {
     1
 }
 
+/// Usable key lines of an allowed signers file: not empty and not a `#` comment.
+fn signer_lines(text: &str) -> usize {
+    text.lines().map(str::trim).filter(|l| !l.is_empty() && !l.starts_with('#')).count()
+}
+
 fn verify(wal: &str, allowed: &str, ident: &str) -> i32 {
-    if let Err(e) = File::open(allowed) {
-        return fail(0, 0, &format!("cannot read allowed signers file: {e}"));
+    let mut atext = Vec::new();
+    match File::open(allowed).and_then(|f| f.take(1 << 20).read_to_end(&mut atext)) {
+        Ok(_) => {}
+        Err(e) => return fail(0, 0, &format!("cannot read allowed signers file: {e}")),
     }
+    let nsigners = signer_lines(&String::from_utf8_lossy(&atext));
+    println!(
+        "trust_root={allowed} usable_key_lines={nsigners} (the allowed signers file is the trust root: every key line in it is trusted{})",
+        if nsigners > 1 { "; WARNING: more than one key line" } else { "" }
+    );
     let f = match File::open(wal) {
         Ok(f) => f,
         Err(e) => return fail(0, 0, &format!("cannot open {wal}: {e}")),
@@ -854,7 +1052,8 @@ fn verify(wal: &str, allowed: &str, ident: &str) -> i32 {
         Err(e) => return fail(0, 0, &e),
     };
     let mut head = genesis();
-    let mut prev_epoch = 0u64;
+    // Commit continuity: (epoch, post) of the latest commit, from the ledger genesis.
+    let (mut ce, mut cp): (u64, H16) = (0, crate::ledger::genesis());
     let mut sigs = 0u64;
     for (n, e) in entries.iter().enumerate() {
         let idx = n as u64 + 1;
@@ -877,10 +1076,16 @@ fn verify(wal: &str, allowed: &str, ident: &str) -> i32 {
             why = Some("agent or tool field is not 1..32 bytes of UTF-8 with zero padding".into());
         } else if vname.is_none() {
             why = Some(format!("unknown verdict {v}"));
-        } else if epoch < prev_epoch {
-            why = Some(format!("epoch {epoch} decreases (previous {prev_epoch})"));
         } else if is_blocked(v) && pre != post {
             why = Some("blocked verdict with post != pre".into());
+        } else if v == V_COMMITTED && Some(epoch) != ce.checked_add(1) {
+            why = Some(format!("commit continuity: COMMITTED epoch {epoch}, expected {} (the commits must have the epochs 1, 2, 3, ...)", ce as u128 + 1));
+        } else if v == V_COMMITTED && pre != cp {
+            why = Some(format!("commit continuity: COMMITTED pre is not the post of the previous commit (or the ledger genesis) {}", hash::hex(&cp)));
+        } else if v != V_COMMITTED && epoch != ce {
+            why = Some(format!("commit continuity: epoch {epoch} of a non-commit record, expected {ce} (the epoch of the latest commit)"));
+        } else if v != V_COMMITTED && (pre != cp || post != cp) {
+            why = Some(format!("commit continuity: a non-commit record needs pre == post == the post of the latest commit {}", hash::hex(&cp)));
         } else {
             match &e.sig {
                 None => why = Some("record has no signature".into()),
@@ -920,7 +1125,10 @@ fn verify(wal: &str, allowed: &str, ident: &str) -> i32 {
         }
         sigs += 1;
         head = e.chain;
-        prev_epoch = epoch;
+        if v == V_COMMITTED {
+            ce = epoch;
+            cp.copy_from_slice(post);
+        }
     }
     let n = entries.len() as u64;
     if let Some((bi, why)) = bad {
@@ -931,6 +1139,9 @@ fn verify(wal: &str, allowed: &str, ident: &str) -> i32 {
     }
     drop(tmp);
     println!("final_chain={}", hash::hex(&head));
-    println!("VERIFIED records={n} signatures={sigs} chain=OK");
+    println!(
+        "VERIFIED records={n} signatures={sigs} chain=OK continuity=OK signer_lines={nsigners}{}",
+        if nsigners > 1 { " WARNING=more_than_one_key_line" } else { "" }
+    );
     0
 }

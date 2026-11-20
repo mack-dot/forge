@@ -5,6 +5,13 @@
 //! The frame code below is a second, independent reading of the format in the doc comment of `evidence.rs`.
 //! Only the `pub` surface of `evidence.rs` and `hash.rs` is used.
 //!
+//! Round 3 (worker REPAIR-STORE): the generators `gen_from` and the driver mix now write receipts that obey
+//! the verifier's new commit-continuity rule (start at the ledger genesis; non-commit records repeat the epoch and
+//! the post of the latest commit). Only the generated INPUT changed; no assertion of an earlier case was removed
+//! or weakened. `torn_tail_cut_and_unsigned_signed_at_open` now opens in async mode: the contract makes a sync
+//! open refuse unsigned records (case `sync_open_refuses_unsigned_records` checks that). The new cases at the
+//! end each fail on the code of commit 65ccdc55.
+//!
 //! Temporary files: every test makes its own private 0700 folder under `$MCP_TEST_TMP` (or the system temporary
 //! folder) and removes it on drop (also when the test panics). Keys come from
 //! `/usr/bin/ssh-keygen -t ed25519 -N '' -q -f ...` in such a folder. The one shared base file is made once in its
@@ -12,6 +19,7 @@
 //! 0600) into the folder of each test that needs it. So the tests are safe under the parallel test runner.
 use crate::evidence::{verify_cli, Evidence, Options, Verdict};
 use crate::hash;
+use crate::ledger;
 use std::io::Write;
 use std::os::unix::fs::{DirBuilderExt, OpenOptionsExt, PermissionsExt};
 use std::path::{Path, PathBuf};
@@ -80,15 +88,21 @@ fn gen(dir: &Path, key: &str, n: u64, sync: bool) -> PathBuf {
     gen_from(dir, key, n, sync, 0)
 }
 
+/// `n` receipts: every third one `Committed` (epoch + 1, a new post), the others `BlockedCas` at the latest
+/// commit. Continues from `last_commit()` of the file (or the ledger genesis). `e0` varies the post values.
 fn gen_from(dir: &Path, key: &str, n: u64, sync: bool, e0: u64) -> PathBuf {
     let o = Options { dir, key_path: key, agent_id: "agent-7", sync_sign: sync, test_clock: Some(1_700_000_000_000) };
     let mut ev = Evidence::open(&o).unwrap();
-    let mut pre = hash::h16(&[b"genesis"]);
+    let (mut ce, mut pre) = ev.last_commit().unwrap_or((0, ledger::genesis()));
     for i in 0..n {
-        let (tool, v) = if i % 3 == 0 { ("issue_payout", Verdict::Committed) } else { ("issue_payout", Verdict::BlockedCas) };
-        let post = if v == Verdict::Committed { hash::h16(&[&pre, &i.to_be_bytes()]) } else { pre };
-        ev.append(e0 + i + 1, tool, &pre, &post, v).unwrap();
-        pre = post;
+        if i % 3 == 0 {
+            let post = hash::h16(&[&pre, &(e0 + i).to_be_bytes()]);
+            ce += 1;
+            ev.append(ce, "issue_payout", &pre, &post, Verdict::Committed).unwrap();
+            pre = post;
+        } else {
+            ev.append(ce, "issue_payout", &pre, &pre, Verdict::BlockedCas).unwrap();
+        }
     }
     ev.finish().unwrap();
     dir.join("evidence.wal")
@@ -322,7 +336,7 @@ fn torn_tail_cut_and_unsigned_signed_at_open() {
     std::fs::write(&p, &bytes).unwrap();
     std::fs::set_permissions(&p, std::fs::Permissions::from_mode(0o600)).unwrap();
     assert_eq!(verify(&p, &allowed), 1, "verifier must refuse torn and unsigned");
-    let o = Options { dir: &d, key_path: &key, agent_id: "agent-7", sync_sign: true, test_clock: Some(5) };
+    let o = Options { dir: &d, key_path: &key, agent_id: "agent-7", sync_sign: false, test_clock: Some(5) };
     let ev = Evidence::open(&o).unwrap();
     ev.finish().unwrap();
     let after = std::fs::read(&p).unwrap();
@@ -560,7 +574,7 @@ fn driver_mix_long_tool_name_both_modes_verify() {
         let d = t.sub(mode);
         let o = Options { dir: &d, key_path: &key, agent_id: "agent-7", sync_sign: sync, test_clock: Some(1_700_000_000_000) };
         let mut ev = Evidence::open(&o).unwrap();
-        let mut pre = hash::h16(&[b"genesis"]);
+        let mut pre = ledger::genesis();
         for i in 0..12u64 {
             let (tool, v) = match i % 4 {
                 0 => ("issue_payout", Verdict::Committed),
@@ -589,4 +603,328 @@ fn driver_mix_long_tool_name_both_modes_verify() {
         std::fs::write(&bad, write_frames(&std::fs::read(&wal).unwrap(), &fs2)).unwrap();
         assert_eq!(verify(&bad, &allowed), 1, "{mode} control");
     }
+}
+
+// ---- round 3 repairs (worker REPAIR-STORE). Findings REVIEW-B 4, 5, 6, 8 and REVIEW-A R2 (the verifier half).
+// Each case below fails on the code of commit 65ccdc55 (a compile error where it uses `last_commit`).
+
+/// Put `bytes` as `evidence.wal` (mode 0600) into a new store folder `t/<name>`.
+fn put_store(t: &Tmp, name: &str, bytes: &[u8]) -> PathBuf {
+    let d = t.sub(name);
+    write_private(&d.join("evidence.wal"), bytes);
+    d
+}
+
+fn opts<'a>(d: &'a Path, key: &'a str, sync: bool) -> Options<'a> {
+    Options { dir: d, key_path: key, agent_id: "agent-7", sync_sign: sync, test_clock: Some(9) }
+}
+
+/// A 113-byte record (directive layout), timestamp 1.
+fn record(epoch: u64, agent: &str, pre: &[u8; 16], post: &[u8; 16], verdict: u8) -> Vec<u8> {
+    let mut r = Vec::with_capacity(113);
+    r.extend_from_slice(&epoch.to_be_bytes());
+    r.extend_from_slice(&1u64.to_be_bytes());
+    let mut a = agent.as_bytes().to_vec();
+    a.resize(32, 0);
+    r.extend_from_slice(&a);
+    let mut tl = b"issue_payout".to_vec();
+    tl.resize(32, 0);
+    r.extend_from_slice(&tl);
+    r.extend_from_slice(pre);
+    r.extend_from_slice(post);
+    r.push(verdict);
+    r
+}
+
+/// Append a RECORD frame with a correct chain value (no key is needed for that). Returns its index.
+fn push_record(fs: &mut Vec<F>, rec: &[u8]) -> u64 {
+    let prev = match fs.iter().rev().find(|f| f.t == 1) {
+        Some(f) => f.p[8 + 113..].to_vec(),
+        None => hash::sha256(&[b"forge-airlock-evidence-genesis-v1"]).to_vec(),
+    };
+    let i = fs.iter().filter(|f| f.t == 1).count() as u64 + 1;
+    let chain = hash::sha256(&[b"forge-airlock-evidence-v1", &prev, rec]);
+    let mut p = i.to_be_bytes().to_vec();
+    p.extend_from_slice(rec);
+    p.extend_from_slice(&chain);
+    fs.push(F { t: 1, p });
+    i
+}
+
+/// Sign record `i` with `key` (as an old proxy start did) and append its SIGNATURE frame.
+fn push_sig(fs: &mut Vec<F>, i: u64, key: &str) {
+    let chain_hex = hash::hex(&fs[rec_pos(fs, i)].p[8 + 113..]);
+    let mut p = i.to_be_bytes().to_vec();
+    p.extend_from_slice(&ssh_sign(key, "forge-airlock-evidence", chain_hex.as_bytes()));
+    fs.push(F { t: 2, p });
+}
+
+/// (epoch, post) of the last COMMITTED record in the frames.
+fn last_commit_in(fs: &[F]) -> (u64, [u8; 16]) {
+    let f = fs.iter().rev().find(|f| f.t == 1 && f.p[8 + 112] == 1).unwrap();
+    (u64::from_be_bytes(f.p[8..16].try_into().unwrap()), f.p[8 + 96..8 + 112].try_into().unwrap())
+}
+
+/// B8, R2 (verifier half): commit continuity. Every file below is fully signed by the right key; only the
+/// continuity rule refuses it. `double_epoch_1` is the shape of REVIEW-A a3 (one request committed twice).
+#[test]
+fn verifier_requires_commit_continuity() {
+    let t = tmp("continuity");
+    let (key, allowed) = base_key(&t);
+    let g = ledger::genesis();
+    let (p1, p2, x) = (hash::h16(&[b"p1"]), hash::h16(&[b"p2"]), hash::h16(&[b"x"]));
+    use Verdict::*;
+    let cases: Vec<(&str, i32, Vec<(u64, [u8; 16], [u8; 16], Verdict)>)> = vec![
+        ("control_ok", 0, vec![(0, g, g, BlockedPolicy), (1, g, p1, Committed), (1, p1, p1, ReadAllowed), (2, p1, p2, Committed), (2, p2, p2, BlockedMalformed)]),
+        ("double_epoch_1", 1, vec![(1, g, p1, Committed), (1, g, p2, Committed)]),
+        ("epoch_gap", 1, vec![(1, g, p1, Committed), (3, p1, p2, Committed)]),
+        ("epoch_0_commit", 1, vec![(0, g, p1, Committed)]),
+        ("first_pre_not_genesis", 1, vec![(1, x, p1, Committed)]),
+        ("pre_not_previous_post", 1, vec![(1, g, p1, Committed), (2, x, p2, Committed)]),
+        ("noncommit_epoch_ahead", 1, vec![(1, g, p1, Committed), (2, p1, p1, BlockedCas)]),
+        ("noncommit_not_at_head", 1, vec![(1, g, p1, Committed), (1, x, x, BlockedPolicy)]),
+        ("read_with_post_ne_pre", 1, vec![(1, g, p1, Committed), (1, p1, x, ReadAllowed)]),
+        ("noncommit_before_first_commit_not_genesis", 1, vec![(0, x, x, BlockedCas), (1, g, p1, Committed)]),
+    ];
+    for (name, want, recs) in cases {
+        let d = t.sub(name);
+        let mut ev = Evidence::open(&opts(&d, &key, true)).unwrap();
+        for (e, pre, post, v) in recs {
+            ev.append(e, "issue_payout", &pre, &post, v).unwrap();
+        }
+        ev.finish().unwrap();
+        assert_eq!(verify(&d.join("evidence.wal"), &allowed), want, "{name}");
+    }
+}
+
+/// B4 (REVIEW-B a4): three forged, unsigned COMMITTED records (no key needed) are refused at open in both modes
+/// and the file is not changed. If an old proxy had signed them, the verifier still refuses the file.
+#[test]
+fn forged_unsigned_records_refused_at_open() {
+    let b = base();
+    let t = tmp("forged");
+    let (key, allowed) = base_key(&t);
+    let mut fs = frames(&b.bytes);
+    let mut forged = vec![];
+    for _ in 0..3 {
+        forged.push(push_record(&mut fs, &record(0, "attacker-not-the-proxy", &[0xaa; 16], &[0xbb; 16], 1)));
+    }
+    let bytes = write_frames(&b.bytes, &fs);
+    for sync in [true, false] {
+        let d = put_store(&t, if sync { "s" } else { "a" }, &bytes);
+        let e = Evidence::open(&opts(&d, &key, sync)).err().expect("forged unsigned records accepted at open");
+        println!("sync={sync}: {e}");
+        assert!(e.contains("no signature") || e.contains("without a signature"), "{e}");
+        assert_eq!(std::fs::read(d.join("evidence.wal")).unwrap(), bytes, "a refused open must not change the file");
+    }
+    // What the start of 65ccdc55 did: sign them. The verifier must refuse the result.
+    for i in forged {
+        push_sig(&mut fs, i, &t.p("basekey").to_string_lossy());
+    }
+    let d = put_store(&t, "signed", &write_frames(&b.bytes, &fs));
+    assert_eq!(verify(&d.join("evidence.wal"), &allowed), 1);
+}
+
+/// B4: a sync open refuses unsigned records (here the shape of an async crash: the last two signatures missing).
+#[test]
+fn sync_open_refuses_unsigned_records() {
+    let b = base();
+    let t = tmp("syncunsigned");
+    let (key, _) = base_key(&t);
+    let mut fs = frames(&b.bytes);
+    fs.retain(|f| !(f.t == 2 && idx(f) >= 29));
+    let bytes = write_frames(&b.bytes, &fs);
+    let d = put_store(&t, "s", &bytes);
+    let e = Evidence::open(&opts(&d, &key, true)).err().expect("sync open accepted unsigned records");
+    assert!(e.contains("records 29..30 have no signature") && e.contains("--sign-mode async"), "{e}");
+    assert_eq!(std::fs::read(d.join("evidence.wal")).unwrap(), bytes);
+}
+
+/// B4: an async open signs a trailing run of unsigned records only when none is COMMITTED and each one repeats
+/// the epoch and the post of the latest commit.
+#[test]
+fn async_open_signs_only_a_continuing_noncommit_tail() {
+    let b = base();
+    let t = tmp("asynctail");
+    let (key, allowed) = base_key(&t);
+    let base_fs = frames(&b.bytes);
+    let (ce, cp) = last_commit_in(&base_fs);
+    let other = hash::h16(&[b"other"]);
+    let cases: Vec<(&str, bool, Vec<u8>)> = vec![
+        ("continuing_blocked", true, record(ce, "agent-7", &cp, &cp, 4)),
+        ("continuing_read", true, record(ce, "agent-7", &cp, &cp, 7)),
+        ("committed_continuing", false, record(ce + 1, "agent-7", &cp, &other, 1)),
+        ("blocked_other_state", false, record(ce, "agent-7", &other, &other, 4)),
+        ("blocked_epoch_ahead", false, record(ce + 1, "agent-7", &cp, &cp, 2)),
+        ("unknown_verdict", false, record(ce, "agent-7", &cp, &cp, 9)),
+    ];
+    for (name, ok, rec) in cases {
+        let mut fs = base_fs.clone();
+        push_record(&mut fs, &rec);
+        let bytes = write_frames(&b.bytes, &fs);
+        let d = put_store(&t, name, &bytes);
+        let r = Evidence::open(&opts(&d, &key, false));
+        let wal = d.join("evidence.wal");
+        if ok {
+            r.unwrap_or_else(|e| panic!("{name}: {e}")).finish().unwrap();
+            assert_eq!(verify(&wal, &allowed), 0, "{name}");
+        } else {
+            let e = r.err().unwrap_or_else(|| panic!("{name}: accepted"));
+            println!("{name}: {e}");
+            assert_eq!(std::fs::read(&wal).unwrap(), bytes, "{name}: a refused open must not change the file");
+        }
+    }
+}
+
+/// Crash cases: a RECORD frame followed by a torn tail is cut with it when it is COMMITTED (both modes) or the
+/// open is in sync mode (one record+signature write that never finished). In async mode a non-commit record
+/// before a torn tail is kept and signed (its append may have returned).
+#[test]
+fn torn_record_and_signature_write_is_cut() {
+    let b = base();
+    let t = tmp("tornpair");
+    let (key, allowed) = base_key(&t);
+    let base_fs = frames(&b.bytes);
+    let (ce, cp) = last_commit_in(&base_fs);
+    let next = hash::h16(&[b"next"]);
+    let cases: Vec<(&str, bool, u8, bool)> = vec![
+        // (name, sync, verdict, record cut)
+        ("sync_committed", true, 1, true),
+        ("async_committed", false, 1, true),
+        ("sync_blocked", true, 2, true),
+        ("async_blocked", false, 2, false),
+    ];
+    for (name, sync, v, cut) in cases {
+        let rec = if v == 1 { record(ce + 1, "agent-7", &cp, &next, 1) } else { record(ce, "agent-7", &cp, &cp, v) };
+        let mut fs = base_fs.clone();
+        push_record(&mut fs, &rec);
+        let mut bytes = write_frames(&b.bytes, &fs);
+        bytes.extend_from_slice(&[2, 0, 0, 1, 0x20, 0, 0, 0, 0, 0, 0, 0, 31, b'-', b'-']); // a torn SIGNATURE frame
+        let d = put_store(&t, name, &bytes);
+        let ev = Evidence::open(&opts(&d, &key, sync)).unwrap_or_else(|e| panic!("{name}: {e}"));
+        assert_eq!(ev.last_commit(), Some((ce, cp)), "{name}");
+        ev.finish().unwrap();
+        let after = std::fs::read(d.join("evidence.wal")).unwrap();
+        if cut {
+            assert_eq!(after, b.bytes, "{name}: the unfinished record must be cut with the torn tail");
+        } else {
+            assert_eq!(&after[..bytes.len() - 15], &bytes[..bytes.len() - 15], "{name}");
+            assert_eq!(frames(&after).len(), base_fs.len() + 2, "{name}: kept and signed");
+        }
+        assert_eq!(verify(&d.join("evidence.wal"), &allowed), 0, "{name}");
+    }
+}
+
+/// B5: in async mode `append(.., Committed)` returns only after the record AND its signature (and every earlier
+/// signature) are on disk.
+#[test]
+fn async_committed_is_signed_on_disk_when_append_returns() {
+    let t = tmp("asynccommit");
+    let (key, allowed) = base_key(&t);
+    let d = t.sub("store");
+    let mut ev = Evidence::open(&opts(&d, &key, false)).unwrap();
+    let g = ledger::genesis();
+    for _ in 0..3 {
+        ev.append(0, "issue_payout", &g, &g, Verdict::BlockedPolicy).unwrap();
+    }
+    let p1 = hash::h16(&[b"p1"]);
+    ev.append(1, "issue_payout", &g, &p1, Verdict::Committed).unwrap();
+    // Read the file BEFORE finish: the signer thread is not drained by anything but the commit.
+    let fs = frames(&std::fs::read(d.join("evidence.wal")).unwrap());
+    let order: String = fs.iter().map(|f| if f.t == 1 { 'R' } else { 'S' }).collect();
+    assert_eq!(fs.iter().filter(|f| f.t == 2).count(), 4, "frames on disk: {order}");
+    assert!(order.ends_with("RS"), "the commit is written with its signature: {order}");
+    assert_eq!(ev.last_commit(), Some((1, p1)));
+    ev.append(1, "issue_payout", &p1, &p1, Verdict::ReadAllowed).unwrap();
+    ev.finish().unwrap();
+    assert_eq!(verify(&d.join("evidence.wal"), &allowed), 0);
+}
+
+/// B5 (REVIEW-B a5): the key stops signing during an async run. The commit receipt fails, nothing of it is
+/// written, and the object stays broken (so the proxy never forwards the call).
+#[test]
+fn async_committed_with_a_key_that_stops_signing_writes_nothing() {
+    let t = tmp("asynckeylost");
+    let (key, _) = base_key(&t);
+    let d = t.sub("store");
+    let mut ev = Evidence::open(&opts(&d, &key, false)).unwrap();
+    let g = ledger::genesis();
+    ev.append(0, "issue_payout", &g, &g, Verdict::BlockedPolicy).unwrap();
+    std::fs::set_permissions(&key, std::fs::Permissions::from_mode(0o644)).unwrap();
+    let wal = d.join("evidence.wal");
+    let r = ev.append(1, "issue_payout", &g, &hash::h16(&[b"p1"]), Verdict::Committed);
+    assert!(r.is_err(), "a commit receipt was acknowledged without a signature");
+    let fs = frames(&std::fs::read(&wal).unwrap());
+    assert!(!fs.iter().any(|f| f.t == 1 && f.p[8 + 112] == 1), "no COMMITTED record may reach the disk");
+    std::fs::set_permissions(&key, std::fs::Permissions::from_mode(0o600)).unwrap();
+    assert!(ev.append(0, "issue_payout", &g, &g, Verdict::BlockedPolicy).is_err(), "must stay broken");
+    assert!(ev.finish().is_err());
+}
+
+/// B6: a key that cannot sign refuses the start, promptly, and creates no `evidence.wal`. `ssh-keygen` gets
+/// `-P ""`, so a protected key never waits for a terminal.
+#[test]
+fn key_that_cannot_sign_refuses_open() {
+    let t = tmp("cannotsign");
+    let kd = t.sub("keys");
+    let pp = kd.join("pp");
+    let st = Command::new("/usr/bin/ssh-keygen")
+        .args(["-q", "-t", "ed25519", "-N", "secret-passphrase", "-C", "test", "-f"])
+        .arg(&pp)
+        .stdin(Stdio::null())
+        .status()
+        .unwrap();
+    assert!(st.success());
+    let pubonly = kd.join("pubonly");
+    write_private(&pubonly, &std::fs::read(kd.join("pp.pub")).unwrap());
+    for (name, k) in [("passphrase", &pp), ("public_key", &pubonly)] {
+        let d = t.sub(name);
+        let start = std::time::Instant::now();
+        let e = Evidence::open(&opts(&d, &k.to_string_lossy(), true)).err().unwrap_or_else(|| panic!("{name}: key accepted"));
+        let secs = start.elapsed().as_secs_f64();
+        println!("{name}: {secs:.2}s: {e}");
+        assert!(e.contains("test signature"), "{name}: {e}");
+        assert!(secs < 20.0, "{name}: took {secs}s");
+        assert!(!d.join("evidence.wal").exists(), "{name}");
+    }
+}
+
+/// B6: a failed signature in sync mode breaks the object: later appends and `finish` fail even after the key
+/// is fine again.
+#[test]
+fn failed_signature_breaks_the_object() {
+    let t = tmp("signbreak");
+    let (key, _) = base_key(&t);
+    let d = t.sub("store");
+    let mut ev = Evidence::open(&opts(&d, &key, true)).unwrap();
+    let g = ledger::genesis();
+    std::fs::set_permissions(&key, std::fs::Permissions::from_mode(0o644)).unwrap();
+    assert!(ev.append(0, "t", &g, &g, Verdict::BlockedPolicy).is_err());
+    std::fs::set_permissions(&key, std::fs::Permissions::from_mode(0o600)).unwrap();
+    assert!(ev.append(0, "t", &g, &g, Verdict::BlockedPolicy).is_err(), "must stay broken");
+    assert!(ev.finish().is_err(), "finish must report the failed receipt");
+}
+
+/// `last_commit`: None on a new file; set by a commit; kept by other verdicts; the same after a reopen.
+#[test]
+fn last_commit_after_open_and_append() {
+    let t = tmp("lastcommit");
+    let (key, _) = base_key(&t);
+    let d = t.sub("store");
+    let g = ledger::genesis();
+    let (p1, p2) = (hash::h16(&[b"p1"]), hash::h16(&[b"p2"]));
+    let mut ev = Evidence::open(&opts(&d, &key, true)).unwrap();
+    assert_eq!(ev.last_commit(), None);
+    ev.append(0, "t", &g, &g, Verdict::BlockedCas).unwrap();
+    assert_eq!(ev.last_commit(), None);
+    ev.append(1, "t", &g, &p1, Verdict::Committed).unwrap();
+    ev.append(1, "t", &p1, &p1, Verdict::ReadDropped).unwrap();
+    assert_eq!(ev.last_commit(), Some((1, p1)));
+    ev.finish().unwrap();
+    let mut ev = Evidence::open(&opts(&d, &key, false)).unwrap();
+    assert_eq!(ev.last_commit(), Some((1, p1)));
+    ev.append(2, "t", &p1, &p2, Verdict::Committed).unwrap();
+    assert_eq!(ev.last_commit(), Some((2, p2)));
+    ev.finish().unwrap();
+    assert_eq!(Evidence::open(&opts(&d, &key, true)).unwrap().last_commit(), Some((2, p2)));
 }

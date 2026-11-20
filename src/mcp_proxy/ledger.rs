@@ -39,6 +39,21 @@
 //! 12+N    32    check = SHA-256( frame("forge-airlock-ledger-record-v1") || frame(bytes 0 .. 12+N) )
 //! ```
 //!
+//! # Store folder and file checks (on `open` and on `read_head`; round 3, findings R2 and D2)
+//!
+//! - The store folder (followed if it is a symlink) must be a directory with `mode & 0o022 == 0` (no group or other
+//!   WRITE bit) and owner uid == euid. A folder of mode 0755 is accepted: others can read and list it, but they
+//!   cannot add, remove or rename an entry (`ledger.wal` itself is 0600). A folder of mode 0775 or 0777 is refused.
+//!   `open` creates a missing folder with mode 0700.
+//! - `ledger.wal` must be a regular file (not a symlink), `mode & 0o077 == 0`, owner uid == euid.
+//! - euid without `unsafe` and without a crate: the same method as `evidence.rs` (`crate::evidence::euid_probe`):
+//!   create a new probe file with `O_CREAT | O_EXCL` in the store folder, read its owner with `fstat`, remove it.
+//!   So `read_head` creates and removes one probe file in the store folder; it never writes `ledger.wal`. A store
+//!   folder that is not writable is refused by both.
+//! - Limits: the parent folders are not checked. A writer of a parent folder can rename the whole store folder away
+//!   and put another one in its place; the start-up reconciliation with `evidence.wal` (in `proxy.rs`) is the check
+//!   that finds a replaced or rolled-back ledger, and only while `evidence.wal` is intact.
+//!
 //! # Replay checks (on `open` and on `read_head`)
 //!
 //! For every record: magic, `N == !(!N)`, N in range, the per-record check, epoch = previous + 1, pre = previous
@@ -65,11 +80,13 @@
 //!   record may be on disk; after a restart its epoch counts as consumed. The same holds for a crash between the
 //!   commit and the forward: at most once, never twice.
 //! - The durability claim is only as good as `fsync`/`F_FULLFSYNC` on the device and file system.
+//! - `records_after` reads the file again from the start (used once at start-up, for the reconciliation with
+//!   `evidence.wal`); it checks every record again and must end at the head held in memory.
 //! - The set of committed request id digests (32 bytes + 8-byte epoch each) is the only state that grows.
 use crate::hash::{h16, sha256, H16};
 use std::collections::HashMap;
 use std::fs::{self, File, OpenOptions};
-use std::io::{self, BufReader, ErrorKind, Read};
+use std::io::{self, BufReader, ErrorKind, Read, Seek, SeekFrom};
 use std::os::unix::fs::{DirBuilderExt, FileExt, MetadataExt, OpenOptionsExt};
 use std::path::{Path, PathBuf};
 
@@ -104,8 +121,19 @@ const O_NOFOLLOW: i32 = 0o400000;
 #[cfg(not(any(target_os = "macos", target_os = "ios", target_os = "linux")))]
 const O_NOFOLLOW: i32 = 0;
 
-fn genesis() -> H16 {
+/// The ledger genesis state `first16(SHA-256("forge-airlock-ledger-genesis-v1"))`. The one shared definition:
+/// `evidence.rs` (verifier commit continuity) and `proxy.rs` (start-up reconciliation) call this function.
+pub fn genesis() -> H16 {
     h16(&[TAG_GENESIS])
+}
+
+/// One ledger record, as `records_after` returns it.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Rec {
+    pub epoch: u64,
+    pub pre: H16,
+    pub post: H16,
+    pub tool: String,
 }
 
 fn framed(parts: &[&[u8]]) -> Vec<u8> {
@@ -167,7 +195,9 @@ struct Replayed {
     torn: u64,
 }
 
-fn replay<R: Read>(r: &mut R) -> Result<Replayed, String> {
+/// Replay and check every record. With `keep = Some((after, out))`, every record with `epoch > after` is also
+/// pushed to `out`.
+fn replay<R: Read>(r: &mut R, mut keep: Option<(u64, &mut Vec<Rec>)>) -> Result<Replayed, String> {
     let mut st = Replayed { epoch: 0, head: genesis(), ids: HashMap::new(), good_len: 0, torn: 0 };
     let mut rec = vec![0u8; HDR + FIXED_BODY + MAX_TOOL + CHECK];
     let io = |e: io::Error| format!("ledger.wal: read error: {e}");
@@ -227,6 +257,13 @@ fn replay<R: Read>(r: &mut R) -> Result<Replayed, String> {
         if let Some(first) = st.ids.insert(rid, epoch) {
             return Err(format!("ledger.wal: record at offset {off} (epoch {epoch}): request id already used at epoch {first}; store refused"));
         }
+        if let Some((after, out)) = keep.as_mut() {
+            if epoch > *after {
+                let tool = std::str::from_utf8(tool)
+                    .map_err(|_| format!("ledger.wal: record at offset {off} (epoch {epoch}): tool name is not UTF-8"))?;
+                out.push(Rec { epoch, pre, post, tool: tool.to_string() });
+            }
+        }
         st.epoch = epoch;
         st.head = post;
         st.good_len += total as u64;
@@ -234,8 +271,8 @@ fn replay<R: Read>(r: &mut R) -> Result<Replayed, String> {
 }
 
 /// Open `path` without following a symlink at the last component, then check that it is the same regular file as the
-/// lstat result, owned by nobody else's group or world bits (mode & 0o077 == 0).
-fn check_file(f: &File, path: &Path) -> Result<(), String> {
+/// lstat result, with no group or world bits (mode & 0o077 == 0), owned by `euid`.
+fn check_file(f: &File, path: &Path, euid: u32) -> Result<(), String> {
     let lm = fs::symlink_metadata(path).map_err(|e| format!("{}: lstat: {e}", path.display()))?;
     let fm = f.metadata().map_err(|e| format!("{}: fstat: {e}", path.display()))?;
     if !lm.file_type().is_file() || !fm.file_type().is_file() {
@@ -247,7 +284,30 @@ fn check_file(f: &File, path: &Path) -> Result<(), String> {
     if fm.mode() & 0o077 != 0 {
         return Err(format!("{}: mode {:o} gives group or other access; need 0600", path.display(), fm.mode() & 0o7777));
     }
+    if fm.uid() != euid {
+        return Err(format!("{}: owner uid {} is not the euid {euid}; refused", path.display(), fm.uid()));
+    }
     Ok(())
+}
+
+/// The store folder: a directory, `mode & 0o022 == 0`, owner uid == euid. Returns the euid (probe in the folder).
+fn check_dir(dir: &Path) -> Result<u32, String> {
+    let m = fs::metadata(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
+    if !m.is_dir() {
+        return Err(format!("{}: not a directory", dir.display()));
+    }
+    if m.mode() & 0o022 != 0 {
+        return Err(format!(
+            "{}: store folder mode {:o} lets group or others write it (need mode & 0o022 == 0, for example 0700); refused",
+            dir.display(),
+            m.mode() & 0o7777
+        ));
+    }
+    let euid = crate::evidence::euid_probe(dir)?;
+    if m.uid() != euid {
+        return Err(format!("{}: store folder owner uid {} is not the euid {euid}; refused", dir.display(), m.uid()));
+    }
+    Ok(euid)
 }
 
 fn open_nofollow(path: &Path, write: bool, create_new: bool) -> io::Result<File> {
@@ -295,6 +355,7 @@ impl Ledger {
             }
             Err(e) => return Err(format!("{}: {e}", dir.display())),
         }
+        let euid = check_dir(dir)?;
         let path = dir.join(WAL);
         let (file, created) = match open_nofollow(&path, true, true) {
             Ok(f) => (f, true),
@@ -310,7 +371,7 @@ impl Ledger {
             }
             Err(fs::TryLockError::Error(e)) => return Err(format!("{}: lock: {e}", path.display())),
         }
-        check_file(&file, &path)?;
+        check_file(&file, &path, euid)?;
         if created {
             file.sync_all().map_err(|e| format!("{}: sync: {e}", path.display()))?;
             sync_dir(dir)?;
@@ -320,7 +381,7 @@ impl Ledger {
                 }
             }
         }
-        let st = replay(&mut BufReader::with_capacity(64 * 1024, &file))?;
+        let st = replay(&mut BufReader::with_capacity(64 * 1024, &file), None)?;
         if st.torn > 0 {
             // Torn-tail rule (see the top of this file): cut the incomplete last record, make the cut durable, go on.
             file.set_len(st.good_len).map_err(|e| format!("{}: cut torn tail: {e}", path.display()))?;
@@ -332,6 +393,19 @@ impl Ledger {
     /// (epoch, state hash) of the head. Epoch 0 = genesis.
     pub fn head(&self) -> (u64, H16) {
         (self.epoch, self.head)
+    }
+
+    /// Every record with `epoch > after`, in order. Reads `ledger.wal` again from the start (only the bytes of the
+    /// complete records that this value knows) and checks every record again. Used once at start-up.
+    pub fn records_after(&self, after: u64) -> Result<Vec<Rec>, String> {
+        let mut f = &self.file;
+        f.seek(SeekFrom::Start(0)).map_err(|e| format!("{}: seek: {e}", self.path.display()))?;
+        let mut out = Vec::new();
+        let st = replay(&mut BufReader::with_capacity(64 * 1024, f.take(self.len)), Some((after, &mut out)))?;
+        if st.torn != 0 || st.good_len != self.len || st.epoch != self.epoch || st.head != self.head {
+            return Err(format!("{}: re-read does not end at the head in memory; refused", self.path.display()));
+        }
+        Ok(out)
     }
 
     /// One mutating call. `Err` = I/O fault: the caller fails closed (no forward).
@@ -376,14 +450,16 @@ impl Ledger {
     }
 }
 
-/// Read-only replay of `<dir>/ledger.wal` for `mcp-proxy state DIR`: no lock, no write, no cut. It checks every
-/// complete record like `open` does. A torn last record (for example an append in progress by a running proxy) is
+/// Read-only replay of `<dir>/ledger.wal` for `mcp-proxy state DIR`: no lock, no write to `ledger.wal`, no cut (the
+/// euid probe creates and removes one file in the store folder). It checks the folder, the file and every complete
+/// record like `open` does. A torn last record (for example an append in progress by a running proxy) is
 /// ignored, so the result is the head that `open` would give. A missing file is an error, not genesis.
 pub fn read_head(dir: &Path) -> Result<(u64, H16), String> {
     let path = dir.join(WAL);
+    let euid = check_dir(dir)?;
     let f = open_nofollow(&path, false, false).map_err(|e| format!("{}: open: {e} (a symlink is refused)", path.display()))?;
-    check_file(&f, &path)?;
-    let st = replay(&mut BufReader::with_capacity(64 * 1024, &f))?;
+    check_file(&f, &path, euid)?;
+    let st = replay(&mut BufReader::with_capacity(64 * 1024, &f), None)?;
     Ok((st.epoch, st.head))
 }
 
@@ -675,6 +751,79 @@ mod tests {
         let e = l.commit("b", "t", b"x", &g).err().unwrap();
         assert!(e.contains("poisoned"), "{e}");
         assert_eq!(size(&d), 0);
+    }
+
+    // ---- round 3 repairs (REVIEW-A R2 and D2; contract round 3, ledger.rs). Each case fails on the code of 65ccdc55.
+
+    fn chmod(p: &Path, mode: u32) {
+        fs::set_permissions(p, std::os::unix::fs::PermissionsExt::from_mode(mode)).unwrap();
+    }
+
+    /// R2: a store folder that group or others can write is refused by `open` and by `read_head`; 0755 and 0700 pass.
+    #[test]
+    fn store_folder_writable_by_group_or_other_is_refused() {
+        let (d, _, _, heads) = three("dirmode");
+        for mode in [0o777, 0o775, 0o757, 0o722, 0o720, 0o702] {
+            chmod(&d, mode);
+            let e = Ledger::open(&d).err().unwrap_or_else(|| panic!("open accepted folder mode {mode:o}"));
+            assert!(e.contains("store folder mode"), "{mode:o}: {e}");
+            let e = read_head(&d).err().unwrap_or_else(|| panic!("read_head accepted folder mode {mode:o}"));
+            assert!(e.contains("store folder mode"), "{mode:o}: {e}");
+        }
+        for mode in [0o755, 0o750, 0o700] {
+            chmod(&d, mode);
+            assert_eq!(Ledger::open(&d).unwrap_or_else(|e| panic!("{mode:o}: {e}")).head(), heads[3]);
+            assert_eq!(read_head(&d).unwrap(), heads[3]);
+        }
+        // A folder that `open` creates gets 0700, and the probe file is gone again.
+        let n = tdir("newdir");
+        drop(Ledger::open(&n).unwrap());
+        assert_eq!(fs::metadata(&n).unwrap().mode() & 0o777, 0o700);
+        let names: Vec<_> = fs::read_dir(&n).unwrap().map(|e| e.unwrap().file_name()).collect();
+        assert_eq!(names, vec![std::ffi::OsString::from(WAL)]);
+        read_head(&n).unwrap();
+        assert_eq!(fs::read_dir(&n).unwrap().count(), 1, "read_head must leave no probe file");
+    }
+
+    /// D2: `ledger.wal` must be owned by the euid. No second uid exists in a unit test, so the check is driven
+    /// with a uid that is not the euid; the real euid passes.
+    #[test]
+    fn wal_owner_other_than_euid_is_refused() {
+        let d = tdir("owner");
+        drop(Ledger::open(&d).unwrap());
+        let euid = crate::evidence::euid_probe(&d).unwrap();
+        let f = open_nofollow(&wal(&d), false, false).unwrap();
+        check_file(&f, &wal(&d), euid).unwrap();
+        let e = check_file(&f, &wal(&d), euid.wrapping_add(1)).err().expect("foreign owner accepted");
+        assert!(e.contains("owner uid"), "{e}");
+        assert_eq!(check_dir(&d).unwrap(), euid);
+    }
+
+    /// `records_after`: the records after an epoch, with their fields, also after a commit in the same session.
+    #[test]
+    fn records_after_gives_the_tail() {
+        let (d, _, _, heads) = three("after");
+        let mut l = Ledger::open(&d).unwrap();
+        let all = l.records_after(0).unwrap();
+        let tools: Vec<&str> = all.iter().map(|r| r.tool.as_str()).collect();
+        assert_eq!(tools, ["issue_payout", "update_dosage", "x"]);
+        for (i, r) in all.iter().enumerate() {
+            assert_eq!(r.epoch, i as u64 + 1);
+            assert_eq!(r.pre, heads[i].1);
+            assert_eq!(r.post, heads[i + 1].1);
+        }
+        assert_eq!(l.records_after(1).unwrap(), all[1..].to_vec());
+        assert!(l.records_after(3).unwrap().is_empty());
+        assert!(l.records_after(u64::MAX).unwrap().is_empty());
+        let (e4, p4) = committed(l.commit("req-9", "issue_payout", b"{}", &heads[3].1).unwrap());
+        assert_eq!(e4, 4);
+        let tail = l.records_after(3).unwrap();
+        assert_eq!(tail, vec![Rec { epoch: 4, pre: heads[3].1, post: p4, tool: "issue_payout".into() }]);
+        // A commit after `records_after` still goes to the end of the file (the read moves no write position).
+        let (e5, _) = committed(l.commit("req-10", "x", b"{}", &p4).unwrap());
+        assert_eq!(e5, 5);
+        drop(l);
+        assert_eq!(read_head(&d).unwrap().0, 5);
     }
 
     /// Run with `--ignored --nocapture`: median wall time of one `commit` (write + sync_all) over 200 commits.
