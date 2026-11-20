@@ -10,6 +10,8 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 pub const MAX_FACTS: usize = 16;
 pub const MAX_ROWS: usize = 64;
 pub const MAX_COLS: usize = 1024;
+/// The details of a REQUIRE_HUMAN_COSIGN answer (PROTOCOL.md section 6): the only details of a COSIGN_PENDING record.
+pub const COSIGN_DETAILS: [&str; 3] = ["COSIGN_REQUIRED", "NO_COSIGN_KEY", "COSIGN_INVALID"];
 
 #[derive(Clone)]
 pub enum Body {
@@ -22,13 +24,17 @@ pub struct Key {
     pub hash: u128,
     pub body: Body,
 }
-/// One lease, bound to a request id, a tenant and a key (indexed by (tenant, request id)). `closed`: (epoch, verdict, detail) of the closing record.
+/// One lease, bound to a request id, a tenant and a key (indexed by (tenant, request id)). `closed`: (epoch, verdict,
+/// detail) of the closing record. `pending` (review D6): (epoch, detail) of the COSIGN_PENDING record: a cosign verdict
+/// was given and the signed retry is still expected. A pending lease is still open: the sweep reports it, and only a
+/// commit or a REJECTED_POLICY of its request closes it.
 pub struct Lease {
     pub epoch: u64,
     pub deadline: u64,
     pub tenant: String,
     pub key: String,
     pub closed: Option<(u64, String, String)>,
+    pub pending: Option<(u64, String)>,
 }
 impl Lease {
     pub fn is_open(&self) -> bool {
@@ -183,23 +189,33 @@ impl Ledger {
             ["LEASE", req, deadline, tenant, key] => {
                 let deadline = money(deadline)?;
                 if !canonical_id(tenant) || !self.fresh(tenant, req) || self.leases.contains_key(&tk(tenant, req)) || !canonical_id(key) { return None }
-                let lease = Lease { epoch: index, deadline, tenant: tenant.to_string(), key: key.to_string(), closed: None };
+                let lease = Lease { epoch: index, deadline, tenant: tenant.to_string(), key: key.to_string(), closed: None, pending: None };
                 self.leases.insert(tk(tenant, req), lease);
             }
-            // The close names its tenant: a request id can have one lease in EACH tenant.
-            ["CLOSE", req, tenant, verdict, code] => {
-                if !["REJECTED_POLICY", "REQUIRE_HUMAN_COSIGN"].contains(verdict) || !canonical_id(code) { return None }
+            // The close names its tenant: a request id can have one lease in EACH tenant. Only a REJECTED_POLICY closes by
+            // a record; a cosign verdict leaves the lease open (COSIGN_PENDING below; review D6).
+            ["CLOSE", req, tenant, "REJECTED_POLICY", code] => {
+                if !canonical_id(code) { return None }
                 let l = self.leases.get_mut(&tk(tenant, req)).filter(|l| l.is_open())?;
-                l.closed = Some((index, verdict.to_string(), code.to_string()));
+                l.closed = Some((index, "REJECTED_POLICY".to_string(), code.to_string()));
             }
-            // The form of an engine before the per-tenant namespaces (no tenant). That engine allowed one lease per request
-            // id in the whole store, so the form is read only while exactly one lease, in any tenant, has this id.
+            // Review D6: a cosign verdict on the lease's request. At most one per lease (a retry writes no record).
+            ["COSIGN_PENDING", req, tenant, code] => {
+                if !COSIGN_DETAILS.contains(code) { return None }
+                let l = self.leases.get_mut(&tk(tenant, req)).filter(|l| l.is_open() && l.pending.is_none())?;
+                l.pending = Some((index, code.to_string()));
+            }
+            // The form of the engine before the per-tenant namespaces (no tenant). That engine allowed one lease per request
+            // id in the whole store, so the form is read only while exactly one lease, in any tenant, has this id. Its
+            // `CLOSE <id> REQUIRE_HUMAN_COSIGN <detail>` closed a lease whose action was still pending: it is read as
+            // COSIGN_PENDING (review D6), so the sweep reports such work after its deadline.
             ["CLOSE", req, verdict, code] => {
-                if !["REJECTED_POLICY", "REQUIRE_HUMAN_COSIGN"].contains(verdict) || !canonical_id(code) { return None }
+                let cosign = *verdict == "REQUIRE_HUMAN_COSIGN";
+                if !(cosign || *verdict == "REJECTED_POLICY") || !canonical_id(code) || (cosign && !COSIGN_DETAILS.contains(code)) { return None }
                 let mut same = self.leases.iter_mut().filter(|((_, r), _)| r == req);
                 let (Some((_, l)), None) = (same.next(), same.next()) else { return None };
-                if !l.is_open() { return None }
-                l.closed = Some((index, verdict.to_string(), code.to_string()));
+                if !l.is_open() || (cosign && l.pending.is_some()) { return None }
+                if cosign { l.pending = Some((index, code.to_string())) } else { l.closed = Some((index, verdict.to_string(), code.to_string())) }
             }
             _ => return None,
         }

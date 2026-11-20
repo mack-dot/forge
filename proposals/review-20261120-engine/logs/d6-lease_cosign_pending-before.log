@@ -1,0 +1,3 @@
+# D6 before: tests/airlock/test_engine.py --case lease_cosign_pending on the engine built from e3322303 (unchanged sources)
+FAIL lease_cosign_pending   1.1s a cosign verdict must not close the lease: ['REQUIRE_HUMAN_COSIGN', 'COSIGN_REQUIRED', 'LEASE_CLOSED', '3']
+exit 1

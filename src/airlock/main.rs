@@ -195,7 +195,9 @@ fn eval_line(m: &policy::Money, raw: &[u8]) -> Result<String, Refusal> {
 
 /// `leases <dir> [--sweep [--now MS] | --all]`. Read-only: a sweep writes no record (a dropped lease stays open and is
 /// reported again by the next sweep). Exit 24 if a sweep reports at least one DROPPED_OBLIGATION. `--all` also lists
-/// each closed lease with the record that closed it, so an obligation closed by a rejection stays visible.
+/// each closed lease with the record that closed it, so an obligation closed by a rejection stays visible. A lease in
+/// the state PENDING_COSIGN (review D6) is open: listed with that state, swept as PENDING_COSIGN before its deadline
+/// and as DROPPED_OBLIGATION after it.
 fn leases(dir: &str, sweep: bool, all: bool, now: Option<u64>) -> i32 {
     let s = match store::open(dir) { Ok(s) => s, Err(e) => return answer(Err(e)) };
     let now = now.unwrap_or_else(|| std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis() as u64).unwrap_or(u64::MAX));
@@ -206,12 +208,20 @@ fn leases(dir: &str, sweep: bool, all: bool, now: Option<u64>) -> i32 {
     let mut dropped = 0;
     for (req, l) in &list {
         let (deadline, tenant, key) = (&l.deadline, &l.tenant, &l.key);
+        let pending = l.pending.as_ref().map(|(epoch, detail)| format!(" PENDING_COSIGN {epoch} {detail}"));
         if !sweep {
-            let status = match &l.closed { None => "OPEN".to_string(), Some((epoch, verdict, detail)) => format!("CLOSED {epoch} {verdict} {detail}") };
-            text.push_str(&if all { format!("\nLEASE {req} {deadline} {tenant} {key} {status}") } else { format!("\nLEASE {req} {deadline} {tenant} {key}") });
+            let status = match (&l.closed, &pending) {
+                (Some((epoch, verdict, detail)), _) => format!(" CLOSED {epoch} {verdict} {detail}"),
+                (None, Some(p)) => p.clone(),
+                (None, None) => if all { " OPEN".to_string() } else { String::new() },
+            };
+            text.push_str(&format!("\nLEASE {req} {deadline} {tenant} {key}{status}"));
         } else if now > *deadline {
             dropped += 1;
             text.push_str(&format!("\nDROPPED_OBLIGATION {req} {deadline} {tenant} {key}"));
+        } else if let Some((_, detail)) = &l.pending {
+            // review D6: a cosign verdict was given and the signed retry has not come yet (not dropped before the deadline)
+            text.push_str(&format!("\nPENDING_COSIGN {req} {deadline} {tenant} {key} {detail}"));
         }
     }
     let head = if sweep { format!("SWEEP {open} {dropped} now={now}") } else if all { format!("LEASES {open} all={}", list.len()) } else { format!("LEASES {open}") };

@@ -88,17 +88,22 @@ fn commit(s: Store, req: &str, payload: String) -> Result<String, Refusal> {
     let (epoch, h) = s.append(&payload)?;
     Ok(format!("COMMITTED {req} {epoch} {} {payload}", hx(h)))
 }
-/// A terminal refusal (REJECTED_POLICY or REQUIRE_HUMAN_COSIGN). If a lease is open for the request id, a durable
-/// CLOSE record is written (synced) before the answer.
+/// A verdict refusal (REJECTED_POLICY or REQUIRE_HUMAN_COSIGN) on a request whose tenant has an open lease with this
+/// request id bound to the request's key (`Store::target`). REJECTED_POLICY is terminal: a durable CLOSE record (synced)
+/// is written before the answer. REQUIRE_HUMAN_COSIGN is NOT terminal for the work (review D6): the request id stays
+/// fresh and the signed retry is still expected, so the lease stays open; the first such verdict writes one durable
+/// COSIGN_PENDING record, a later one writes nothing and names the same record (no record loop).
 fn verdict(s: Store, req: &str, code: Code, detail: &'static str) -> Result<String, Refusal> {
-    // Only a lease of the request's tenant with this request id AND bound to the request's key (`Store::target`) is
-    // closed. The CLOSE record names the tenant: a request id can have one lease in each tenant.
+    // The CLOSE and COSIGN_PENDING records name the tenant: a request id can have one lease in each tenant.
     let bound = s.target.clone().filter(|(t, k)| s.l.leases.get(&tk(t, req)).map_or(false, |l| l.binds(t, k)));
-    if let Some((tenant, _)) = bound {
-        let (epoch, _) = s.append(&format!("CLOSE {req} {tenant} {} {detail}", code.name()))?;
-        return no(code, format!("{detail} LEASE_CLOSED {epoch}"));
+    let Some((tenant, _)) = bound else { return no(code, detail) };
+    if code == Code::RequireHumanCosign {
+        if let Some((epoch, _)) = s.l.leases.get(&tk(&tenant, req)).and_then(|l| l.pending.clone()) { return no(code, format!("{detail} LEASE_PENDING {epoch}")) }
+        let (epoch, _) = s.append(&format!("COSIGN_PENDING {req} {tenant} {detail}"))?;
+        return no(code, format!("{detail} LEASE_PENDING {epoch}"));
     }
-    no(code, detail)
+    let (epoch, _) = s.append(&format!("CLOSE {req} {tenant} {} {detail}", code.name()))?;
+    no(code, format!("{detail} LEASE_CLOSED {epoch}"))
 }
 
 fn open_money(ctx: &Ctx, line: &str) -> Result<String, Refusal> {

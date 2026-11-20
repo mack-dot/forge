@@ -21,7 +21,9 @@
 //     other than `OK <n>` or TENANT_ISOLATION_BREACH closes the client (the stream may be out of step).
 //   * withLease(requestId, deadlineMs, tenant, key, handler) opens a durable lease bound to (request id, tenant,
 //     key) before the handler runs and never closes it; only a terminal verdict for the same id on the same
-//     tenant and key closes it; a throwing handler leaves it open. Only handlers that opened a lease are covered.
+//     tenant and key closes it (a commit or REJECTED_POLICY); REQUIRE_HUMAN_COSIGN leaves it open as PENDING_COSIGN
+//     (review D6: `leasePending`; `sweep().pending` before the deadline); a throwing handler leaves it open. Only
+//     handlers that opened a lease are covered.
 // Trust boundary (src/airlock/PROTOCOL.md section 11): every rule holds only against a caller that reaches the
 // store THROUGH the engine. A process that can write the store folder can append records itself; a process that
 // can start its own engine on the folder can ignore every check. The opener of a key is trusted for its tenant,
@@ -119,10 +121,12 @@ class Result {
   stateHash: string | null = null;
   payload: string | null = null;
   leaseClosed: number | null = null;
+  leasePending: number | null = null;  // review D6: epoch of the COSIGN_PENDING record of the lease
   kind: string | null = null;
   fields: Record<string, string> = {};
   rows: unknown[] = [];
   dropped: Array<[string, string, string, string]> = [];
+  pending: Array<[string, string, string, string, string]> = [];  // review D6: PENDING_COSIGN lines of a sweep
   constructor(code: Code, detail: string, line: string) {
     this.code = code;
     this.detail = detail;
@@ -245,10 +249,15 @@ function refusal(line: string, t: string[], typed: string[]): Result {
     const r = new Result(code as Code, detail, line);
     const i = t.indexOf('LEASE_CLOSED');
     if (i >= 0) {
-      if (i + 2 !== t.length || !DIGITS_RE.test(t[i + 1]) || (code !== 'REJECTED_POLICY' && code !== 'REQUIRE_HUMAN_COSIGN')) {
+      if (i + 2 !== t.length || !DIGITS_RE.test(t[i + 1]) || code !== 'REJECTED_POLICY') {
         throw new ProtocolError('bad LEASE_CLOSED part', line);
       }
       r.leaseClosed = Number(t[i + 1]);
+    }
+    const j = t.indexOf('LEASE_PENDING');  // review D6: a cosign verdict leaves the lease open
+    if (j >= 0) {
+      if (j + 2 !== t.length || !DIGITS_RE.test(t[j + 1]) || code !== 'REQUIRE_HUMAN_COSIGN') throw new ProtocolError('bad LEASE_PENDING part', line);
+      r.leasePending = Number(t[j + 1]);
     }
     if (code === 'STALE_STATE_HASH') {
       if (t.length < 2 || !HASH_RE.test(t[1])) throw new ProtocolError('STALE_STATE_HASH without a hash', line);
@@ -543,8 +552,13 @@ class Store {
     if (dropLines.some((x) => x.length !== 5)) throw new ProtocolError('bad DROPPED_OBLIGATION line', r.out);
     const dropped: Array<[string, string, string, string]> = dropLines.map((x) => [x[1], x[2], x[3], x[4]]);
     if ((r.code === 24) !== (dropped.length > 0)) throw new ProtocolError('sweep exit code and lines disagree', r.out);
+    const pendLines = lines.slice(1).filter((x) => x.startsWith('PENDING_COSIGN ')).map((x) => x.split(' '));
+    if (pendLines.some((x) => x.length !== 6) || pendLines.length + dropLines.length !== lines.length - 1) {
+      throw new ProtocolError('bad PENDING_COSIGN line or an unknown sweep line', r.out);
+    }
     const res = new Result(dropped.length ? 'DROPPED_OBLIGATION' : 'OK', lines[0], r.out);
     res.dropped = dropped;
+    res.pending = pendLines.map((x) => [x[1], x[2], x[3], x[4], x[5]]);
     return res;
   }
 

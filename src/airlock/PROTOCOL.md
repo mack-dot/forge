@@ -69,9 +69,9 @@ the kill-points build; case `seams` checks that the production build ignores the
 | `state <dir>` | `STATE <epoch> <tail_hash> <store_id> keys=<n> effects=<n> leases=<n>` | 0 |
 | `get <dir> <tenant> <key>` | as the `GET` verb | 0, 21 |
 | `replay <dir>` | `REPLAY <n>`, then n lines `EFFECT <epoch> <payload>` | 0 |
-| `leases <dir>` | `LEASES <open>`, then one line `LEASE <request_id> <deadline_ms> <tenant> <key>` per OPEN lease (WAL order) | 0 |
-| `leases <dir> --all` | `LEASES <open> all=<n>`, then one line per lease ever opened: `LEASE <request_id> <deadline_ms> <tenant> <key> OPEN` or `LEASE <request_id> <deadline_ms> <tenant> <key> CLOSED <epoch> <COMMITTED -\|REJECTED_POLICY <detail>\|REQUIRE_HUMAN_COSIGN <detail>>` | 0 |
-| `leases <dir> --sweep [--now MS]` | `SWEEP <open> <dropped> now=<MS>`, then one line `DROPPED_OBLIGATION <request_id> <deadline_ms> <tenant> <key>` per open lease with `now > deadline_ms` | 0 none dropped; 24 at least one |
+| `leases <dir>` | `LEASES <open>`, then one line `LEASE <request_id> <deadline_ms> <tenant> <key>` per OPEN lease (WAL order); a lease in the state PENDING_COSIGN (section 5.1) has ` PENDING_COSIGN <epoch> <detail>` at the end | 0 |
+| `leases <dir> --all` | `LEASES <open> all=<n>`, then one line per lease ever opened: `LEASE <request_id> <deadline_ms> <tenant> <key> OPEN`, `LEASE <request_id> <deadline_ms> <tenant> <key> PENDING_COSIGN <epoch> <detail>` (open) or `LEASE <request_id> <deadline_ms> <tenant> <key> CLOSED <epoch> <COMMITTED -\|REJECTED_POLICY <detail>>` | 0 |
+| `leases <dir> --sweep [--now MS]` | `SWEEP <open> <dropped> now=<MS>`, then in WAL order one line `DROPPED_OBLIGATION <request_id> <deadline_ms> <tenant> <key>` per open lease (also a PENDING_COSIGN one) with `now > deadline_ms`, and one line `PENDING_COSIGN <request_id> <deadline_ms> <tenant> <key> <detail>` per PENDING_COSIGN lease whose deadline has not passed | 0 none dropped; 24 at least one |
 | `eval <policy.json>` | one answer per stdin line (section 6) | 0; 25 bad policy |
 | `cosign-message <dir> <action>` | the exact message bytes (6 lines, LF-terminated; section 7) | 0, or a code |
 | `cosign-info` | `COSIGN_INFO path=/usr/bin/ssh-keygen sha256=<64 hex> uid=<n> mode=<octal> checks=<OK or the failed check> walked=<the checked parts, : separated, from /> version=<text of ssh -V>` | 0, 22 |
@@ -169,7 +169,9 @@ Payloads:
 | `OPEN_INVENTORY <tenant> <key> <request_id> <policy> <c1,c2,...>` | yes | `OPEN_INVENTORY` |
 | `BOOK <tenant> <key> <request_id> <x as 0/1 digits> <new remaining c1,c2,...>` | yes | `BOOK` |
 | `LEASE <request_id> <deadline_ms> <tenant> <key>` | no | `OPEN_LEASE` |
-| `CLOSE <request_id> <tenant> <REJECTED_POLICY or REQUIRE_HUMAN_COSIGN> <detail>` | no | a terminal refusal on the lease's tenant and key while the lease is open |
+| `CLOSE <request_id> <tenant> REJECTED_POLICY <detail>` | no | a `REJECTED_POLICY` on the lease's tenant and key while the lease is open (also PENDING_COSIGN) |
+| `COSIGN_PENDING <request_id> <tenant> <COSIGN_REQUIRED or NO_COSIGN_KEY or COSIGN_INVALID>` | no | the first `REQUIRE_HUMAN_COSIGN` on the lease's tenant and key while the lease is open and not yet pending (review D6) |
+| `CLOSE <request_id> <REJECTED_POLICY or REQUIRE_HUMAN_COSIGN> <detail>` (no tenant) | no | never written now; the form of the engine before review D3 and D6, still read (section 12, items 21 and 22) |
 
 The fold (`ledger.rs`) checks each record again: fresh request id in the record's tenant, a key of
 that tenant and of the right kind,
@@ -307,13 +309,29 @@ Examples (hashes shortened here; on the wire they are 32 digits):
   loop writes records without bound). The key need not exist. Ids, keys and leases of
   other tenants change nothing (section 5, namespaces).
 - A lease closes ONLY by a terminal verdict of a request with its request id ON its
-  tenant and key: an effect record (`COMMITTED`), or a `REJECTED_POLICY` or
-  `REQUIRE_HUMAN_COSIGN` answer. For the two refusals, the engine writes a durable `CLOSE`
-  record (synced, ratcheted) before the answer, and the answer gets `LEASE_CLOSED <epoch>`
-  after its detail: `REJECTED_POLICY TOTAL_CAP LEASE_CLOSED 7`. A verdict on another
-  tenant or key leaves the lease open, writes no `CLOSE` record, and the answer has no
-  `LEASE_CLOSED`. A commit of the id on another key uses the id up and leaves the lease
-  open: the sweep then reports it until the end.
+  tenant and key: an effect record (`COMMITTED`), or a `REJECTED_POLICY` answer. For the
+  refusal, the engine writes a durable `CLOSE` record (synced, ratcheted) before the
+  answer, and the answer gets `LEASE_CLOSED <epoch>` after its detail:
+  `REJECTED_POLICY TOTAL_CAP LEASE_CLOSED 7`. A verdict on another tenant or key leaves
+  the lease open, writes no record, and the answer has no `LEASE_CLOSED`. A commit of the
+  id on another key uses the id up and leaves the lease open: the sweep then reports it
+  until the end.
+- `REQUIRE_HUMAN_COSIGN` does NOT close a lease (review D6). The request id stays fresh and
+  the signed retry is still expected, so the work is not done. The first such answer on
+  the lease's tenant and key writes one durable `COSIGN_PENDING` record (synced,
+  ratcheted) before the answer; the lease is then in the state PENDING_COSIGN, and the
+  answer gets `LEASE_PENDING <epoch>` after its detail:
+  `REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED LEASE_PENDING 7`. A later `REQUIRE_HUMAN_COSIGN`
+  (also `COSIGN_INVALID`) writes no record and names the same epoch. A PENDING_COSIGN lease
+  is open: `leases` lists it with its state, the sweep lists it as `PENDING_COSIGN` before
+  its deadline and as `DROPPED_OBLIGATION` after it, and the signed commit or a
+  `REJECTED_POLICY` closes it.
+- A `CLOSE <request_id> REQUIRE_HUMAN_COSIGN <detail>` record without a tenant (written by
+  the engine before review D6, which closed the lease there) is read as `COSIGN_PENDING`:
+  the action of such a lease was still pending. So the sweep now reports that old work
+  after its deadline. If the old engine later rejected that request, it wrote no record (the
+  lease was closed for it), and the sweep reports the lease as dropped: a false alarm, not
+  a hidden drop.
 - A request on a key that was never opened answers `UNKNOWN_KEY` before any policy
   verdict, so it never closes a lease.
 - `leases --all` shows each closed lease with its closing record, so an obligation that a
@@ -533,7 +551,7 @@ compare of the Good line with the fingerprint of the PINNED key:
 | ssh-keygen result | Answer |
 | --- | --- |
 | exit 0, stdout exactly the Good line with the SHA-256 fingerprint of the PINNED key + LF, stderr empty, all of stdin written | commit (cosign flag 1) |
-| exit 255, stdout exactly `Could not verify signature.` + LF, stderr exactly `Signature verification failed: incorrect signature` + CR LF, all of stdin written | `REQUIRE_HUMAN_COSIGN COSIGN_INVALID` (terminal; closes a bound lease) |
+| exit 255, stdout exactly `Could not verify signature.` + LF, stderr exactly `Signature verification failed: incorrect signature` + CR LF, all of stdin written | `REQUIRE_HUMAN_COSIGN COSIGN_INVALID` (a bound lease becomes PENDING_COSIGN, section 5.1) |
 | anything else: another exit code, other bytes, text on stderr with exit 0, a signal, a timeout, no program, a failed check of the program, a failed write of the folder or files | `HELPER_FAILED` (not terminal; never a commit) |
 
 When in doubt the answer is the more restrictive one: an unknown text of a later OpenSSH is
@@ -636,7 +654,7 @@ Every other refusal has a detail. A parser must accept both forms for every code
 | 0 | `COMMITTED` / `OK` / ... | success | |
 | 2 | `USAGE` | usage | bad arguments; `serve` with no request |
 | 10 | `REJECTED_POLICY` | terminal refusal | detail: `ZERO_AMOUNT`, `TOTAL_CAP`, `REASON_CAP`, `NO_RULE`, `RULE`, `CAKEML_REJECTED`, `UNKNOWN_STATE`, `PROCESSOR_IN_FLIGHT`, `NO_TRANSITION`, `PAIR_REQUIRED`, `PAIR_NOT_ALLOWED`, `CAPACITY_MISMATCH`, `ALPHA_ABOVE_POLICY`, `NOT_BINARY`, `OVERBOOKED`, `DUAL_INFEASIBLE`, `GAP_TOO_LARGE`, `CHECKER_REJECTED` |
-| 11 | `REQUIRE_HUMAN_COSIGN` | terminal refusal | `COSIGN_REQUIRED`, `NO_COSIGN_KEY`, `COSIGN_INVALID` |
+| 11 | `REQUIRE_HUMAN_COSIGN` | verdict refusal; the work is pending, not done (a bound lease becomes PENDING_COSIGN, section 5.1) | `COSIGN_REQUIRED`, `NO_COSIGN_KEY`, `COSIGN_INVALID` |
 | 12 | `MALFORMED_REQUEST` | refusal | grammar, ids, amounts, `OVERSIZED`, `NO_LINE_END`, `NON_ASCII`, `UNKNOWN_VERB`, `UNKNOWN_POLICY`, `POLICY_KIND`, `KEY_KIND`, `CERT_*`, `OVERFLOW`, `RECORD_NOT_FOLDABLE`; `BAD_SIGNATURE <part>` (section 7); at `init`: `BAD_PUBKEY`, `WEAK_PUBKEY`, `NODE_REQUIRED`, `NODE_UNREADABLE`; `base64-decode`: `BAD_BASE64` |
 | 13 | `STALE_STATE_HASH` | refusal | detail = the present state hash |
 | 14 | `DUPLICATE_REQUEST_ID` | refusal | id used up; or `OPEN_LEASE` for an id that had a lease (`LEASE_USED`) |
@@ -737,7 +755,8 @@ bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `repla
 7. An open of an existing key is `STALE_STATE_HASH` (no explicit "absent" hash token).
 8. Extra saga codes: `UNKNOWN_STATE`, `PAIR_REQUIRED`, `PAIR_NOT_ALLOWED`.
 9. A failed fact cap reports `REASON_CAP`, not `NO_RULE`.
-10. An invalid cosign is `REQUIRE_HUMAN_COSIGN COSIGN_INVALID` (terminal; it closes a lease).
+10. An invalid cosign is `REQUIRE_HUMAN_COSIGN COSIGN_INVALID` (since review D6 it leaves a
+    bound lease PENDING_COSIGN; before, it closed the lease).
 11. `cosign-message <dir> <action>` (subcommand first), not `<store> cosign-message`.
 12. Store ids are at most 24 bytes.
 13. `EPOCH_REGRESSION` ends `serve` (in `sink.rs` it did not).
@@ -765,6 +784,12 @@ bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `repla
     this change folds to the same keys, ids, effects and leases (case `legacy_wal` of
     `tests/airlock/test_engine.py` and `proposals/review-20261120-engine/compat_wal.py`), and
     that engine refuses (`CORRUPT_WAL`) every record that only the new engine writes.
+22. Review D6: `REQUIRE_HUMAN_COSIGN` no longer closes a lease. It writes one
+    `COSIGN_PENDING <request_id> <tenant> <detail>` record (the lease is PENDING_COSIGN)
+    and the answer names `LEASE_PENDING <epoch>`. The sweep reports a PENDING_COSIGN lease
+    as `PENDING_COSIGN` before its deadline and as `DROPPED_OBLIGATION` after it. An old
+    `CLOSE <request_id> REQUIRE_HUMAN_COSIGN <detail>` record is read as `COSIGN_PENDING`.
+    The new `CLOSE` form takes only `REJECTED_POLICY`.
 
 ## 13. Mutation seams
 

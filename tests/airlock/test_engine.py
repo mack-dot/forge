@@ -836,20 +836,20 @@ def case_leases(s):
     before = files(p)
     s.run(['leases', p, '--sweep', '--now', '9999'])
     require(files(p) == before, 'a sweep wrote to the store')
-    # REQUIRE_HUMAN_COSIGN closes a lease too
+    # REQUIRE_HUMAN_COSIGN does NOT close a lease (review D6; before D6 it did): the lease becomes PENDING_COSIGN
     s.one(p, 'OPEN_LEASE L6 600 t1 k1', 'LEASE_OPENED')
     s.one(p, 'REFUND t1 k1 L6 %s GOODWILL 2001' % h, 'REJECTED_POLICY')
     s.one(p, 'OPEN_MONEY t1 k2 r-k2 store-refunds 100000', 'COMMITTED')
     s.one(p, 'OPEN_LEASE L7 700 t1 k2', 'LEASE_OPENED')
     tok = s.one(p, 'REFUND t1 k2 L7 %s GOODWILL 2001' % s.h(p, 't1', 'k2'), 'REQUIRE_HUMAN_COSIGN')
-    require('LEASE_CLOSED' in tok, 'cosign closes: %r' % tok)
+    require(tok[2:3] == ['LEASE_PENDING'], 'a cosign verdict leaves the lease pending: %r' % tok)
     code, out, _ = s.run(['leases', p])
-    require(out.startswith('LEASES 2\n'), 'leases after closes: %r' % out)
+    require(out.startswith('LEASES 3\n') and out.endswith('LEASE L7 700 t1 k2 PENDING_COSIGN %s COSIGN_REQUIRED\n' % tok[3]), 'leases after closes: %r' % out)
     s.one(p, 'OPEN_LEASE L2 900 t1 k1', 'DUPLICATE_REQUEST_ID')  # a closed lease is never opened again
     for bad in (['--now', '5'], ['--sweep', '--all'], ['--sweep', '--sweep']):
         code, out, _ = s.run(['leases', p] + bad)
         require(code == 2, 'leases %r must be a usage error' % bad)
-    return '5 bound leases; commit, REJECTED_POLICY x3, REQUIRE_HUMAN_COSIGN close; stale and malformed do not; --all shows closes; sweep exact and read-only'
+    return '5 bound leases; commit and REJECTED_POLICY x3 close; REQUIRE_HUMAN_COSIGN leaves it pending; stale and malformed do not close; --all shows closes; sweep exact and read-only'
 
 
 def case_lease_binding(s):
@@ -878,6 +878,59 @@ def case_lease_binding(s):
         s.one(p, 'REFUND t1 order-1 wh-2 %s NOSUCH 1' % s.h(p, 't1', 'order-1'), 'REJECTED_POLICY')
     require(len(read_wal(p)) == n, 'the lease loop wrote records: %d -> %d' % (n, len(read_wal(p))))
     return 'unknown key -> UNKNOWN_KEY; a rejection and a commit on another key leave the lease open (DROPPED_OBLIGATION); no lease loop'
+
+
+def case_lease_cosign_pending(s):
+    """Review D6: REQUIRE_HUMAN_COSIGN does not close a lease (the action is still pending: the request id stays fresh
+    and the signed retry is still expected). The lease gets the state PENDING_COSIGN (one durable COSIGN_PENDING record,
+    never a second one); the sweep lists it as PENDING_COSIGN before its deadline and as DROPPED_OBLIGATION after it; the
+    signed commit or a terminal REJECTED_POLICY closes it."""
+    key, pub = keygen(s, 'pending')
+    p = s.store('lease-pending', pubkey=pub)
+    s.one(p, 'OPEN_MONEY t1 o1 r0 store-refunds 10000', 'COMMITTED')
+    s.one(p, 'OPEN_LEASE g1 500 t1 o1', 'LEASE_OPENED')
+    h = s.h(p, 't1', 'o1')
+    tok = s.one(p, 'REFUND t1 o1 g1 %s GOODWILL 7500' % h, 'REQUIRE_HUMAN_COSIGN')
+    require(tok[1] == 'COSIGN_REQUIRED' and tok[2:3] == ['LEASE_PENDING'] and len(tok) == 4, 'a cosign verdict must not close the lease: %r' % tok)
+    epoch = tok[3]
+    code, out, _ = s.run(['leases', p])
+    require(code == 0 and out == 'LEASES 1\nLEASE g1 500 t1 o1 PENDING_COSIGN %s COSIGN_REQUIRED\n' % epoch, 'leases: %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '400'])
+    require(code == 0 and out == 'SWEEP 1 0 now=400\nPENDING_COSIGN g1 500 t1 o1 COSIGN_REQUIRED\n', 'sweep before the deadline: %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '501'])
+    require(code == 24 and out == 'SWEEP 1 1 now=501\nDROPPED_OBLIGATION g1 500 t1 o1\n', 'sweep after the deadline: %d %r' % (code, out))
+    n = len(read_wal(p))
+    for _ in range(3):  # retries without a signature: no second record, the same answer
+        tok = s.one(p, 'REFUND t1 o1 g1 %s GOODWILL 7500' % h, 'REQUIRE_HUMAN_COSIGN')
+        require(tok == ['REQUIRE_HUMAN_COSIGN', 'COSIGN_REQUIRED', 'LEASE_PENDING', epoch], 'a retry: %r' % tok)
+    require(len(read_wal(p)) == n, 'retries wrote records: %d -> %d' % (n, len(read_wal(p))))
+    pend = [e for _, e, _ in read_wal(p) if e.startswith(('COSIGN_PENDING ', 'CLOSE '))]
+    require(pend == ['COSIGN_PENDING g1 t1 COSIGN_REQUIRED'], 'records: %r' % pend)
+    action = 'REFUND t1 o1 g1 %s GOODWILL 7500' % h
+    code, msg, _ = s.run(['cosign-message', p, action])
+    s.one(p, action + ' ' + sign(s, key, msg.encode()), 'COMMITTED')  # the signed retry closes the lease
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(code == 0 and out.split('\n')[1].endswith(' CLOSED %d COMMITTED -' % (n)), 'the signed commit must close the lease: %r' % out)
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '501'])
+    require(code == 0 and out == 'SWEEP 0 0 now=501\n', 'after the commit: %d %r' % (code, out))
+    # a pending lease, then a terminal REJECTED_POLICY on it: closed by a CLOSE record
+    s.one(p, 'OPEN_LEASE g2 900 t1 o1', 'LEASE_OPENED')
+    h = s.h(p, 't1', 'o1')
+    s.one(p, 'REFUND t1 o1 g2 %s GOODWILL 2001' % h, 'REQUIRE_HUMAN_COSIGN')
+    tok = s.one(p, 'REFUND t1 o1 g2 %s GOODWILL 9000' % h, 'REJECTED_POLICY')
+    require(tok[1:3] == ['TOTAL_CAP', 'LEASE_CLOSED'], 'a rejection closes a pending lease: %r' % tok)
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(code == 0 and out.split('\n')[0] == 'LEASES 0 all=2' and ' CLOSED %s REJECTED_POLICY TOTAL_CAP' % tok[3] in out, 'leases --all: %r' % out)
+    # a COSIGN_INVALID verdict (signature of another key) also leaves the lease pending
+    key2, _ = keygen(s, 'pending-other')
+    s.one(p, 'OPEN_LEASE g3 900 t1 o1', 'LEASE_OPENED')
+    action = 'REFUND t1 o1 g3 %s GOODWILL 2500' % h
+    code, msg, _ = s.run(['cosign-message', p, action])
+    tok = s.one(p, action + ' ' + sign(s, key2, msg.encode()), 'REQUIRE_HUMAN_COSIGN')
+    require(tok[1:3] == ['COSIGN_INVALID', 'LEASE_PENDING'], 'COSIGN_INVALID must leave the lease pending: %r' % tok)
+    code, out, _ = s.run(['state', p])
+    require(code == 0 and out.endswith(' leases=1\n'), 'state: %r' % out)
+    return 'cosign verdict -> PENDING_COSIGN (1 record, retries write none); sweep: PENDING_COSIGN before, DROPPED_OBLIGATION after the deadline; signed commit and REJECTED_POLICY close it'
 
 
 def normalize(answer):
@@ -1499,15 +1552,31 @@ def case_legacy_wal(s):
     bad = {'an old CLOSE while two tenants have a lease with that id': ['LEASE L1 100 t1 k1', 'LEASE L1 100 t2 k9', 'CLOSE L1 REJECTED_POLICY NO_RULE'],
            'an old CLOSE of a closed lease': ['LEASE L1 100 t1 k1', 'CLOSE L1 REJECTED_POLICY NO_RULE', 'CLOSE L1 REJECTED_POLICY NO_RULE'],
            'a new CLOSE of the lease of another tenant': ['LEASE L1 100 t1 k1', 'CLOSE L1 t2 REJECTED_POLICY NO_RULE'],
-           'an old CLOSE with no lease': ['CLOSE L1 REJECTED_POLICY NO_RULE']}
+           'an old CLOSE with no lease': ['CLOSE L1 REJECTED_POLICY NO_RULE'],
+           'a new CLOSE with REQUIRE_HUMAN_COSIGN (review D6: never written)': ['LEASE L1 100 t1 k1', 'CLOSE L1 t1 REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED'],
+           'a second COSIGN_PENDING of one lease': ['LEASE L1 100 t1 k1', 'COSIGN_PENDING L1 t1 COSIGN_REQUIRED', 'COSIGN_PENDING L1 t1 COSIGN_INVALID'],
+           'a COSIGN_PENDING with another detail': ['LEASE L1 100 t1 k1', 'COSIGN_PENDING L1 t1 NO_RULE'],
+           'a COSIGN_PENDING of a closed lease': ['LEASE L1 100 t1 k1', 'CLOSE L1 t1 REJECTED_POLICY NO_RULE', 'COSIGN_PENDING L1 t1 COSIGN_REQUIRED'],
+           'an old cosign CLOSE of a pending lease': ['LEASE L1 100 t1 k1', 'CLOSE L1 REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED', 'CLOSE L1 REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED']}
     for why, payloads in bad.items():
         code, out, _ = build(payloads)
         require(code == 17 and out.startswith('CORRUPT_WAL'), '%s must be CORRUPT_WAL: %d %r' % (why, code, out))
     code, out, _ = build(['LEASE L1 100 t1 k1', 'LEASE L1 100 t2 k9', 'CLOSE L1 t2 REJECTED_POLICY NO_RULE'])
     require(code == 0 and ' leases=1' in out, 'a new CLOSE closes the lease of its tenant only: %d %r' % (code, out))
+    # review D6: an old `CLOSE <id> REQUIRE_HUMAN_COSIGN <detail>` means that the action is still pending: PENDING_COSIGN
+    code, out, _ = build(['LEASE L1 100 t1 k1', 'CLOSE L1 REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED'])
+    require(code == 0 and ' leases=1' in out, 'an old cosign close is read as pending (still open): %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--sweep', '--now', '101'])
+    require(code == 24 and out == 'SWEEP 1 1 now=101\nDROPPED_OBLIGATION L1 100 t1 k1\n', 'an old cosign close: dropped after its deadline: %d %r' % (code, out))
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(out == 'LEASES 1 all=1\nLEASE L1 100 t1 k1 PENDING_COSIGN 3 COSIGN_REQUIRED\n', 'old cosign close: %r' % out)
+    h = s.h(p, 't1', 'k1')
+    tok = s.one(p, 'REFUND t1 k1 L1 %s DUPLICATE_CHARGE 1' % h, 'COMMITTED')  # the later commit closes it
+    code, out, _ = s.run(['leases', p, '--all'])
+    require(out == 'LEASES 0 all=1\nLEASE L1 100 t1 k1 CLOSED %s COMMITTED -\n' % tok[2], 'old cosign close, then a commit: %r' % out)
     for n, b in good.items():
         (p / n).write_bytes(b)
-    return 'old CLOSE form folds while its id is unique in the store; %d ambiguous or invalid closes refused; new CLOSE names its tenant' % len(bad)
+    return 'old CLOSE form folds while its id is unique in the store (an old cosign close as PENDING_COSIGN); %d ambiguous or invalid closes refused; new CLOSE names its tenant' % len(bad)
 
 
 def case_native_bound(s):
@@ -1558,7 +1627,7 @@ CASES = [('init', case_init), ('recovery', case_recovery), ('cas', case_cas), ('
          ('read', case_read), ('lines', case_lines), ('replay', case_replay), ('race', case_race), ('kill', case_kill),
          ('trace', case_trace), ('dispatch', case_dispatch), ('lock', case_lock), ('pin', case_pin),
          ('crafted', case_crafted), ('native_bound', case_native_bound), ('helper_env', case_helper_env),
-         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
+         ('lease_binding', case_lease_binding), ('tenant_namespace', case_tenant_namespace), ('legacy_wal', case_legacy_wal), ('lease_cosign_pending', case_lease_cosign_pending), ('nonce', case_nonce), ('weakkey', case_weakkey), ('seams', case_seams)]
 
 
 def main():

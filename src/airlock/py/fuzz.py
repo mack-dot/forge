@@ -209,9 +209,10 @@ class Fuzz:
             if where == 'before':
                 self.expect_open.add((rid, tenant))
             else:
-                # the commit closes the lease if it COMMITTED or got a terminal refusal; else it stays open
+                # the commit closes the lease if it COMMITTED or got REJECTED_POLICY; else it stays open (also after
+                # REQUIRE_HUMAN_COSIGN: the lease is then PENDING_COSIGN and dropped after its deadline, review D6)
                 last = self.answers.get(rid, [None])[-1]
-                if last not in ('COMMITTED', 'REJECTED_POLICY', 'REQUIRE_HUMAN_COSIGN'):
+                if last not in ('COMMITTED', 'REJECTED_POLICY'):
                     self.expect_open.add((rid, tenant))
 
     def burst(self, st, key):
