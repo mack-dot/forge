@@ -483,8 +483,13 @@ How the engine tells an invalid signature from a tool fault. Experiment on this 
 | S + L in place of S | 0 | the Good line | empty |
 
 The exit code does not separate an invalid signature from a fault (255 for both). So the
-engine takes only two exact results, and the native checks above come first, so that a
-signature that reaches ssh-keygen is well formed and names the pinned key:
+engine takes only two exact results. The native checks above come first: against a caller
+that holds only the request pipe, a signature that reaches ssh-keygen is well formed and
+names the pinned key. That sentence does NOT hold against a process that can write the
+store folder: it can replace the two files in `cosign.tmp` between the engine's write and
+ssh-keygen's read (one review did it: ssh-keygen then verified the attacker's own files in
+about 97% of 40,000 tries; 0 commits). In that case the ONE check that holds is the exact
+compare of the Good line with the fingerprint of the PINNED key:
 
 | ssh-keygen result | Answer |
 | --- | --- |

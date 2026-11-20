@@ -62,6 +62,7 @@ are NOT closed. Route A premises (the FFI contract at shape-valid calls,
 the processor bits, the entry state) are assumptions about the real
 machine. M1 and integration EXIT NOT_ESTABLISHED.
 ## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750
+## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750, U751
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed.
@@ -80,7 +81,8 @@ Nothing is proved. The machine was under load: no time is recorded here.
 | `tests/airlock/test_sdk.py --engine-dir build/airlock` (orchestrator) |0|includes a store that needs no Node |
 | changed copies through a scratch harness (the worker's run) |0|122 of 122 killed; NOT KILLED: X01, R8, N15 |
 | `disasters`; `fuzz` through the same harness (the worker's runs) |0; 0|8 of 8; 8 of 8 |
-| `scripts/exit_goal20_sdk.py --case evidence`; the Dafny diff cases; a review |NOT RUN|no new bundle; the record `1e75ab47` is of the tree before this change |
+| the one review of `73758bda` (fresh context) |0 FAIL-OPEN through the production engine; 2 FAIL-OPEN inside the stated one-user limit; 1 MEDIUM; 1 LOW; 5 NOTE|one false sentence of PROTOCOL.md corrected; items 1 and 2 open (U751) |
+| `scripts/exit_goal20_sdk.py --case evidence`; the Dafny diff cases |NOT RUN|no new bundle; the record `1e75ab47` is of the tree before this change |
 | every HOL and Holmake step |NOT RUN|not part of this work |
 
 [Wire and limits](src/airlock/PROTOCOL.md).

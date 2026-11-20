@@ -19968,3 +19968,34 @@ curl: (6) Could not resolve host: github.com
   `COSIGN_INVALID`; whether to record the `ssh-keygen` SHA-256 in the genesis record as a warning-only value.
 - Impact: none on any stage label. Next check: the Dafny cases and the `evidence` case in a quiet HOL/Dafny slot;
   a review of `cosign.rs`; rebase of the HAL demo onto this branch.
+
+## U751 — Goal 21, phase 1: the one review of the native cosign check; no forged cosign flag through the production engine; one sentence of the protocol was false; open items
+
+- Refs U750, U747. Evidence: the reviewer's report and scripts (session scratch folder
+  `w-cosignreview/REVIEW_COSIGN.md`; not in the tree). One fresh-context reviewer, a clone of `73758bda`, real
+  processes. Two adversaries: A holds only the request pipe; B is the same OS user as the store.
+- Result: the reviewer got NO commit with cosign flag 1 without a valid signature of the pinned key through the
+  PRODUCTION engine, as A or as B. Tried and refused: S+L, sha256, trailing bytes, a second signature, sk,
+  certificate and RSA types, namespace tricks, non-canonical base64, weak R, environment variables, replay on
+  another store, tenant, key, amount or state. A finite test by one reviewer, not a proof.
+- A sentence of PROTOCOL.md section 7 was FALSE and is corrected in this commit: "a signature that reaches
+  ssh-keygen is well formed and names the pinned key". As B, a racer replaced both temporary files; ssh-keygen
+  verified B's own files in about 97% of 2 x 20,000 tries. 0 commits followed, because the engine compares the
+  Good line with the fingerprint of the PINNED key. That compare is the one check that holds there.
+- The weak-key rule is load-bearing: the real ssh-keygen accepts a forgery (R = identity, S = 0) for the identity
+  key over a message that nobody signed. The engine refuses that key at `init` and in the fold.
+- Open, NOT repaired (each needs a decision or a larger change):
+  1. As B, a record with cosign flag 1 can be appended to the WAL by hand (CRC and chain recomputed). The record
+     keeps only the flag, not the signature, so no later audit can tell. Repair idea: store the token in the
+     record and verify it again in `replay`. This is inside the stated trust limit (section 11); the separation
+     by user ID removes B.
+  2. `bin/forge-airlock build` puts the test build (`airlock-engine-kill`, with live test seams that accept a
+     stand-in verifier) beside the production engine. As B, running that build on the store commits with flag 1.
+     Repair idea: build it into a test-only folder; never copy it into a vault.
+  3. LOW: the ownership walk of `/usr/bin/ssh-keygen` skips `/`; the text says "every folder".
+  4. NOTES: `cosign-sign` signs a message whose lines 4 and 5 it does not cross-check with the action (such a
+     signature never verifies); a mixed-order public key is accepted at `init`; a signature has no expiry while
+     the state hash stays the same; `DYLD_INSERT_LIBRARIES` runs code inside the engine as B.
+- Not examined by the review: a full disk, signals during a run, the TypeScript SDK, any other OpenSSH version.
+- Impact: none on any stage label. Next check: owner decisions on items 1 and 2; the vault setup copies only
+  `airlock-engine` (to be confirmed by reading `setup_vault.sh` before the owner runs it).
