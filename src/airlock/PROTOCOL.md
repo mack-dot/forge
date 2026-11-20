@@ -6,12 +6,16 @@ lists each difference. `end_to_end=false`.
 
 Labels: **PROVED CORE** (CakeML ARM64 binary, Dafny, Spec Clearing), **NATIVE CHECK**
 (Rust, not proved), **FINITE TEST**. The engine as a whole is a NATIVE CHECK. Only two
-decisions have a PROVED CORE part:
+engine decisions have a PROVED CORE part. "PROVED CORE" does not mean a proof of native
+execution:
 
 - a `REFUND` on a key whose policy has `"profile": "canonical-refund"`: the CakeML
-  refund binary (SHA-256 `b8ed5ec2…7bb8`) decides;
+  refund binary (SHA-256 `b8ed5ec2…7bb8`) decides. It is compiled by a verified
+  compiler; its HOL4 theorem is model-level; the native link (M1-B) is OPEN. The engine
+  re-checks the amount and the reason natively after the binary (section 6.1);
 - a `BOOK`: the Dafny-compiled `BookingDualCert` checker (`booking_check.cjs`, run by
-  Node) must accept. The Dafny compiler and Node are trusted.
+  Node) must accept. It is compiled from a Dafny source proof; the compiled JavaScript
+  is not proved. The Dafny compiler and Node are trusted.
 
 A cosign signature is verified by the system OpenSSH (`/usr/bin/ssh-keygen -Y verify`,
 section 7). No Node runs for a cosign. A store without an inventory policy needs no Node.
@@ -359,7 +363,7 @@ caps are only as good as the opener's values: an opener that writes `original=10
 `COMMIT`, `REQUIRE_HUMAN_COSIGN`, `REJECTED_POLICY <CODE>`, or
 `MALFORMED_REQUEST EVAL ...`. Only parametric money policies (else exit 25).
 
-### 6.1 Profile `canonical-refund` (PROVED CORE for the decision)
+### 6.1 Profile `canonical-refund` (PROVED CORE for the decision; model-level theorem; M1-B OPEN)
 
 Policy: `{"airlock": "money", "version": 1, "name": "<name>", "profile": "canonical-refund"}`
 (no other key). Scope, exactly:
