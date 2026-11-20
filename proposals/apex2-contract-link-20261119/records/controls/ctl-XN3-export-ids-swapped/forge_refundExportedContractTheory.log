@@ -1,0 +1,25 @@
+<<HOL message: Created theory "forge_refundExportedContract">>
+FORGE_BEGIN exported_contract_decode
+Saved theorem _______ "exported_contract_decode"
+FORGE_BEGIN exported_contract_shape
+Saved theorem _______ "exported_contract_shape"
+FORGE_BEGIN exported_ens1_value
+Saved theorem _______ "exported_ens1_value"
+FORGE_BEGIN exported_ens2_value
+Proof of 
+
+evaluate_exp
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n) env exported_ens2 =
+(exported_contract_state h charge request original remaining enabled opened
+   candidate amount reason ok a r c q n,
+ Rval
+   (BoolV (ok ⇒ a = amount ∧ r = reason ∧ c = charge ∧ q = request ∧ n = 1)))
+
+failed.
+First unsolved sub-goal is
+
+c = charge ⇒ q = request ⇒ n ≠ 1
+
+Tactic failure proving "exported_ens2_value"; heap saved to forge_refundExportedContract.exported_ens2_value.dumpedheap.
+Resume with: bin/hol --holstate=forge_refundExportedContract.exported_ens2_value.dumpedheap

@@ -28,6 +28,40 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected or frozen file changed.
+Branch `feat/m1-contract-link-closure` from `9a9a8943`; NOT merged by the
+agent. Every HOL row is model level, on one machine, with stored parent
+theories: not a clean replay, not an independent replay. Every Dafny row
+is a source-level result about a model. No row of the 45-link graph
+changed class.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `Holmake --no_prereqs` in a copy of `proposals/apex2-contract-link-20261119/hol` (run-0001; run-0002; run-0003 through `run_hol.sh`) |0; 0; 0|three theories; FC1 `refund_fields_flat_plain`: `refund_fields … = (ok,a,r,c,q,n)` ⇔ `flat_plain` on byte codes; the nine night-shift statements of `exported_contract_exact` rebuilt with equal text; FC3 the exported clauses ⇔ `flat_plain` |
+| the same build, repeat |byte-identical|nine `.dat/.sig/.sml` files and the generated Dafny file equal in run-0001 and run-0002; `.dat` files of run-0003 equal |
+| development attempts dev-0001 to dev-0004 |1; 1; 1; 1|a static error and three failed proofs; kept in `records/hol/dev-attempts` |
+| `run_case.py RA-FLAT-0002` (`hol run`, 146 stored parents; NOT Holmake) |0|R1: the Route A shape form (L2d-0001, 12 premises unchanged) with its conclusion on `flat_plain`; R2, R3: the entry premise forces TBI0 = TBI1 = SA0 = E0E = F |
+| `check_link.py --dafny … --z3 …` (17 pins; generated file = text in both HOL logs; `dafny verify HolLink.dfy`) |0|`CHECK_LINK PASS`; "11 verified, 0 errors"; D1, D2: the printed formula is exactly the contract of the real `AssessFlat` |
+| `check_link.py` without Dafny; with `--skip-pins` |5; 3|PARTIAL and CONTROL MODE; neither is a pass |
+| `dafny verify HolSlice.dfy` (includes `SliceTheorem.dfy`) |0|"1583 verified, 0 errors"; `FlatContract` ⇔ the printed formula on codes; A6 restated, also on byte inputs only |
+| `controls/eval_controls.py` (32 negative controls) |0|32 of 32 count: 9 HOL statement and 5 export controls exit 1 at the named theorem or pin; 3 printer controls pass HOL (exit 0) and are refused by the pin and by Dafny; 15 Dafny controls refused |
+| the one fresh-context review |1 FAIL-OPEN; 1 HIGH; 7 MEDIUM; 4 LOW; 3 NOTE|the FAIL-OPEN and the HIGH were in `check_link.py`; repaired in one pass; 3 findings stated only; NOT reviewed again |
+| regression on a scratch clone: 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links of 8 files; six EXIT scripts, each `--case evidence` |NOT RUN at this commit|added by the records commit |
+| `gh pr create`; hosted `gate/pr_check.py` |NOT RUN at this commit|expected exit 3 (UNSUPPORTED) |
+| a clean or independent HOL replay; the Dafny S3a run (1,486); Stages 7, 9, 10; a second review |NOT RUN|not part of this work |
+
+[Package](proposals/apex2-contract-link-20261119/README.md).
+[Review](proposals/apex2-contract-link-20261119/REVIEW.md).
+[Graph refresh](proposals/apex2-contract-link-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119_APEX2.md).
+The printing of the HOL formula as Dafny text is ML code outside the
+kernel: an ASSUMPTION (BETA-PLAIN) with a tested check. T2b, T3 and T4
+are NOT closed. Route A premises (the FFI contract at shape-valid calls,
+the processor bits, the entry state) are assumptions about the real
+machine. M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Goal 20, `forge-airlock` SDK: write, read and lease airlocks over a native WAL engine, with Python and TypeScript SDKs; a finite test of unproved Rust, JavaScript and Python around three proved cores; one review with repairs — U720 to U725
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

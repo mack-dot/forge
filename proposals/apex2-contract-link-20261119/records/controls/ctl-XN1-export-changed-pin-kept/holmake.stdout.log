@@ -1,0 +1,15 @@
+Scanning [1m$(CAKEMLDIR)/compiler/dafny[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundCertifiedProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/semantics[0m
+Scanned 6 directories
+Building 1 theory file
+Starting work on forge_refundExportedContractTheory
+forge_refundExportedContractTheory                          (8s)        FAIL<1>
+*** Holmake aborted - 1 target failed:
+*** forge_refundExportedContractTheory (status 1)
+ error in quse <scratch>/build2/ctl-XN1-export-changed-pin-kept/forge_refundExportedContractScript.sml : Fail "Export SHA-1 differs from the pin"
+ error in load <scratch>/build2/ctl-XN1-export-changed-pin-kept/forge_refundExportedContractScript : Fail "Export SHA-1 differs from the pin"
+ Uncaught exception at <scratch>/build2/ctl-XN1-export-changed-pin-kept/forge_refundExportedContractScript.sml:34: Fail "Export SHA-1 differs from the pin"
+ Full log: <scratch>/build2/ctl-XN1-export-changed-pin-kept/.hol/logs/forge_refundExportedContractTheory
