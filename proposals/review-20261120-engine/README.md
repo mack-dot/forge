@@ -3,11 +3,14 @@
 Status: NOT merged, NOT pushed. `end_to_end=false`. M1-B is OPEN. Nothing here is a proof:
 every result is a finite test of unproved Rust, JavaScript and Python on one machine.
 
-Stacking. This branch (`feat/airlock-review-hardening`) is stacked on the local branch
-`apex1/native-cosign` at `e33223032e525ba878fc35a0f7585ea8d98d9be2` (Goal 21, phase 1:
-the native cosign check; not on origin, not merged; based on `main` `b2249ea2`). Every
-"before" run below used the engine built from `e3322303` with unchanged sources. If that
-branch moves, this branch needs a rebase.
+Stacking. This branch (`feat/airlock-review-hardening`) is stacked on `apex1/native-cosign`
+at `a96c916f` (pull request 72, base `main`; NOT merged). The code commits were made on
+`e33223032e525ba878fc35a0f7585ea8d98d9be2` (Goal 21, phase 1: the native cosign check);
+`a96c916f` is `e3322303` plus one records-only merge of `main` `33055a59`, and this branch
+merged it (`5685b673`, records only: `git diff 8fc0de2f 5685b673 -- src sdk bin tests
+scripts docs examples` is empty). Every "before" run below used the engine built from
+`e3322303` with unchanged sources. If that branch moves again, this branch needs another
+merge or a rebase.
 
 The one fresh-context review of this branch and its repairs: [REVIEW.md](REVIEW.md).
 
