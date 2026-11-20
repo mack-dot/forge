@@ -125,7 +125,7 @@ MUTANTS = [
     ('M03_compare_and_swap', 'verbs.rs', 'race: 1 COMMITTED, 0 STALE', '    if k.hash != pre { return no(Code::Stale, hx(k.hash)) }\n', '', 'engine', 'race',
      'the compare-and-swap on the state hash'),
     # review D3: an open checks the key in the caller's tenant only; the copy checks the key name in every tenant (squatting)
-    ('M04_check_open_tenant', 'verbs.rs', "'OPEN_MONEY tA order-1 r1 store-refunds 1000': expected COMMITTED",
+    ('M04_check_open_tenant', 'verbs.rs', "'OPEN_MONEY tA order-1 r1 store-refunds 1000': expected COMMITTED (exit 0), got exit 13",
      '    if let Some(k) = s.l.keys.get(&tk(tenant, key)) { return no(Code::Stale, hx(k.hash)) }',
      '    if let Some(k) = s.l.keys.iter().find(|((_, n), _)| n == key).map(|(_, k)| k) { return no(Code::Stale, hx(k.hash)) }', 'engine', 'tenant_namespace',
      'the per-tenant key check of an open'),
@@ -433,7 +433,7 @@ MUTANTS = [
     ('H07_fuzz_sees_reason_cap', 'policy.rs', 'I2_reason_caps VIOLATED', '            if !within { capped = true; continue }\n', '', 'fuzz', 'I2_reason_caps',
      'the fact-bound reason cap (the fuzz oracle must see it)'),
     # review of 2026-11-20 (proposals/review-20261120-engine): D3, D6, D7, D2
-    ('V3a_namespace_collapsed', 'ledger.rs', "'OPEN_MONEY tA order-1 r1 store-refunds 1000': expected COMMITTED",
+    ('V3a_namespace_collapsed', 'ledger.rs', "'OPEN_MONEY tA order-1 r1 store-refunds 1000': expected COMMITTED (exit 0), got exit 14",
      'pub fn tk(tenant: &str, name: &str) -> (String, String) {\n    (tenant.to_string(), name.to_string())',
      'pub fn tk(tenant: &str, name: &str) -> (String, String) {\n    let _ = tenant;\n    (String::new(), name.to_string())', 'engine', 'tenant_namespace',
      'the per-tenant index of keys, request ids and leases (D3)'),
@@ -442,7 +442,7 @@ MUTANTS = [
      'the rule that a CLOSE without a tenant is read only while its request id has one lease in the store (D3)'),
     ('V6a_cosign_closes_lease', 'verbs.rs', "GOODWILL 7500': expected REQUIRE_HUMAN_COSIGN",
      '    if code == Code::RequireHumanCosign {\n', '    if false {\n', 'engine', 'lease_cosign_pending', 'the PENDING_COSIGN state of a lease (D6)'),
-    ('V6b_pending_retry_writes', 'verbs.rs', "GOODWILL 7500': expected REQUIRE_HUMAN_COSIGN",
+    ('V6b_pending_retry_writes', 'verbs.rs', 'a cosign retry must name the same pending record and write none',
      '        if let Some((epoch, _)) = s.l.leases.get(&tk(&tenant, req)).and_then(|l| l.pending.clone()) { return no(code, format!("{detail} LEASE_PENDING {epoch}")) }\n',
      '', 'engine', 'lease_cosign_pending', 'the rule that a second cosign verdict on a pending lease writes no record (D6)'),
     ('V6c_sweep_ignores_pending', 'main.rs', 'sweep before the deadline', '        } else if let Some((_, detail)) = &l.pending {',

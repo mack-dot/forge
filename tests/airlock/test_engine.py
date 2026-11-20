@@ -922,8 +922,9 @@ def case_lease_cosign_pending(s):
     require(code == 24 and out == 'SWEEP 1 1 now=501\nDROPPED_OBLIGATION g1 500 t1 o1\n', 'sweep after the deadline: %d %r' % (code, out))
     n = len(read_wal(p))
     for _ in range(3):  # retries without a signature: no second record, the same answer
-        tok = s.one(p, 'REFUND t1 o1 g1 %s GOODWILL 7500' % h, 'REQUIRE_HUMAN_COSIGN')
-        require(tok == ['REQUIRE_HUMAN_COSIGN', 'COSIGN_REQUIRED', 'LEASE_PENDING', epoch], 'a retry: %r' % tok)
+        code, out, _ = s.serve(p, ['REFUND t1 o1 g1 %s GOODWILL 7500' % h])
+        require(code == 11 and out == ['REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED LEASE_PENDING %s' % epoch],
+                'a cosign retry must name the same pending record and write none: %d %r' % (code, out))
     require(len(read_wal(p)) == n, 'retries wrote records: %d -> %d' % (n, len(read_wal(p))))
     pend = [e for _, e, _ in read_wal(p) if e.startswith(('COSIGN_PENDING ', 'CLOSE '))]
     require(pend == ['COSIGN_PENDING g1 t1 COSIGN_REQUIRED'], 'records: %r' % pend)
