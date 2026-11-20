@@ -888,6 +888,13 @@ both ways, and the named case failed):
 | M20_commit_closes_lease | ledger.rs | `l.closed = Some((index, "COMMITTED".into(), "-".into()))` | `l.closed = None` | leases |
 | M32_cosign_store_id_fixed | verbs.rs | `cosign_message(&s.l.store_id, s.l.genesis_hash, req, t[4], &action)` | `cosign_message("store-a", s.l.genesis_hash, req, t[4], &action)` | cosign |
 
+Review of 2026-11-20 (D2, D3, D6, D7; `proposals/review-20261120-engine/README.md`): the exit
+script is the reference. These copies have a new exact text there (the code they change
+moved): M01, M02, M04 (now case `tenant_namespace`), M12, M19, M33, N07, N12, R1a, R1c, R5a,
+R5b, C07. In the tables below their old texts are kept as history. New copies V2a to V2d
+(pin checks, D2), V3a and V3b (namespaces, D3), V6a to V6d (PENDING_COSIGN, D6), V7a to V7c
+(ratchet entries, D7).
+
 Proposed new seams for the repairs (each was run alone; the case failed):
 
 | Id | File | Exact text | Replacement | Case | Failure text |

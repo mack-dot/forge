@@ -873,6 +873,11 @@ def case_lease_binding(s):
     s.one(p, 'OPEN_MONEY t1 order-1 r0 store-refunds 1000', 'COMMITTED')
     s.one(p, 'OPEN_LEASE wh-1 100 t1 order-1', 'LEASE_OPENED')
     h = s.h(p, 't1', 'order-1')
+    # a verdict on another key of the SAME tenant (keys and ids are per tenant since review D3, so only this form can
+    # reach the lease of t1)
+    s.one(p, 'OPEN_MONEY t1 order-2 r-o2 store-refunds 10', 'COMMITTED')
+    tok = s.one(p, 'REFUND t1 order-2 wh-1 %s NOSUCH 1' % s.h(p, 't1', 'order-2'), 'REJECTED_POLICY')
+    require(tok == ['REJECTED_POLICY', 'NO_RULE'], 'a verdict on another key of the same tenant must not name a close: %r' % tok)
     s.one(p, 'REFUND t9 junk wh-1 %s NOSUCH 1' % h, 'UNKNOWN_KEY')  # the reviewer's line: a key never opened
     s.one(p, 'OPEN_MONEY t9 junk r-j store-refunds 10', 'COMMITTED')
     tok = s.one(p, 'REFUND t9 junk wh-1 %s NOSUCH 1' % s.h(p, 't9', 'junk'), 'REJECTED_POLICY')
@@ -1746,8 +1751,10 @@ def case_pin_window(s):
     # (d) a bignumber.js next to a caller-chosen checker model that is not the pinned one
     cd = s.folder('pinwin-checker')
     shutil.copyfile(MODEL, cd / 'model.cjs')
-    real = ROOT / 'node_modules' / 'bignumber.js'
-    require(real.is_dir(), 'NOT RUN: %s is missing' % real)
+    # the bignumber.js that Node finds from the built model's folder (the repository's node_modules, or one above a mirror)
+    found = [d / 'node_modules' / 'bignumber.js' for d in MODEL.resolve().parents if (d / 'node_modules' / 'bignumber.js' / 'bignumber.js').is_file()]
+    require(found, 'NOT RUN: no node_modules/bignumber.js above %s' % MODEL)
+    real = found[0]
     (cd / 'node_modules' / 'bignumber.js').mkdir(parents=True)
     shutil.copyfile(real / 'package.json', cd / 'node_modules' / 'bignumber.js' / 'package.json')
     (cd / 'node_modules' / 'bignumber.js' / 'bignumber.js').write_bytes((real / 'bignumber.js').read_bytes() + b'\n// changed\n')

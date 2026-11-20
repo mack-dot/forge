@@ -75,7 +75,7 @@ LIMITS = [
     'pins: the engine pins the refund binary and (through its compiled-in helper) the checker model; the store pins the SHA-256 '
     'of the Node binary at init (inventory only); a cosign is verified by /usr/bin/ssh-keygen, which the engine checks (root-owned, '
     'not writable by group or other, no symbolic link on its path) but does not pin: the system OpenSSH is a trusted assumption; '
-    'a file swapped after its check is not detected',
+    'the helper files are checked at every run but still run by path: the engine uid or root can change them between check and run',
     'Stripe and PayPal are LOCAL FAKE in-process stand-ins; SIGKILL is not a power loss; end_to_end=false',
 ]
 

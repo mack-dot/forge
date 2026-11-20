@@ -21,8 +21,8 @@
 //
 // Dependency pin (review D2, "Related"): the model's one dependency, bignumber.js 9.3.1, is found the usual way from
 // the model's folder (node_modules), but it is read once with O_NOFOLLOW, its SHA-256 must be PINNED_BIGNUMBER_SHA256
-// (the file of package-lock.json's bignumber.js 9.3.1), and the SAME bytes are compiled. The model gets a require()
-// that returns only this module: any other require of the model throws. So a bignumber.js in a node_modules folder
+// (the file of package-lock.json's bignumber.js 9.3.1), and the SAME bytes are compiled. The model gets a require
+// function that returns only this module: any other require of the model throws. So a bignumber.js in a node_modules folder
 // next to a caller-chosen --checker model is refused unless it has exactly the pinned bytes.
 //
 // Trusted (not proved): the Dafny 4.11.0 JavaScript compiler, the Dafny JavaScript runtime inside the module,
@@ -173,7 +173,7 @@ function readPinned(abs, what, pin) {
 }
 
 // Reads the model once through one descriptor, checks the pin, compiles the same bytes. Its one dependency
-// (bignumber.js) is pinned the same way and is the only module that its require() returns.
+// (bignumber.js) is pinned the same way and is the only module that its require function returns.
 function loadModel(file) {
   const abs = path.resolve(file);
   const bytes = readPinned(abs, 'model', PINNED_MODEL_SHA256);

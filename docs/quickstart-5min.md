@@ -101,11 +101,14 @@ Expected lines: `open: COMMITTED`, `shipping $80 on a $10 fact: REJECTED_POLICY 
 `read_scoped` serializes each row once, sends those bytes, and after `OK <n>` returns new
 objects parsed from exactly those bytes, never your own objects. It refuses more than
 100000 rows before it sends anything. `with_lease` binds the lease to a request id, a
-tenant and a key. Only a terminal verdict for that id on that tenant and key closes it.
-One lease per request id, ever.
+tenant and a key. Only a commit or a `REJECTED_POLICY` for that id on that tenant and key
+closes it. A `REQUIRE_HUMAN_COSIGN` leaves it open in the state PENDING_COSIGN (the signed
+retry is still expected; the sweep reports it after its deadline). One lease per request id
+and tenant, ever. Keys, request ids and leases are per tenant: a key of another tenant is
+`UNKNOWN_KEY`, like a key that nobody opened.
 
 Typed results: `COMMITTED`, `REJECTED_POLICY`, `REQUIRE_HUMAN_COSIGN`, `STALE_STATE_HASH`,
-`DUPLICATE_REQUEST_ID`, `TENANT_ISOLATION_BREACH`, `DROPPED_OBLIGATION`. Every other outcome
+`DUPLICATE_REQUEST_ID`, `TENANT_ISOLATION_BREACH` (read only), `DROPPED_OBLIGATION`. Every other outcome
 raises an `AirlockError` subclass (for example `EngineRefusal`, `EngineDead`,
 `ProtocolError`). An error is never a commit. After a dead engine, a timeout or a bad
 answer, the client closes itself (fail closed).
@@ -160,7 +163,8 @@ bin/forge-airlock leases build/quickstart/store
 `replay` lists every effect record of the WAL. `leases` lists the open leases
 (`leases --all` also lists the closed ones with the verdict that closed them). The
 command `bin/forge-airlock leases build/quickstart/store --sweep` reports each open
-lease past its deadline as `DROPPED_OBLIGATION` and exits 24 when there is at least one.
+lease past its deadline as `DROPPED_OBLIGATION` and exits 24 when there is at least one. It
+lists a lease in the state PENDING_COSIGN as `PENDING_COSIGN` before its deadline.
 
 ## 6. diff-policy on two policies
 
@@ -202,7 +206,7 @@ Three labels. Each result has one or more of them.
   - An inventory booking: the Dafny-compiled `BookingDualCert` checker must accept. This
     is a proved SOURCE. The Dafny compiler and Node are trusted.
   - The NO_CHOICE verdict of `diff-policy` holds for the GENERATED Dafny model only.
-- **NATIVE CHECK**: the Rust engine (WAL, compare-and-swap, tenant checks, parametric money
+- **NATIVE CHECK**: the Rust engine (WAL, compare-and-swap, per-tenant namespaces, parametric money
   rules, saga table, read airlock, leases). It is not proved.
 - **FINITE TEST**: the test suites, the fuzz pass and the demo. They try a finite set of
   inputs. They prove nothing.
@@ -221,17 +225,23 @@ engine cannot check this. See section 11 of [the protocol](../src/airlock/PROTOC
 
 The opener of a key is trusted. The `original` amount, the facts (for example
 `shipping_paid`) and the tenant of a key are inputs of whoever opens the key. Nothing
-authenticates the tenant field. The money caps (for example disasters 2 and 3 of the
+authenticates the tenant field: the per-tenant namespaces stop accidents, squatting and
+probes only between callers that something outside the engine holds to their tenant. The money caps (for example disasters 2 and 3 of the
 demo) block only relative to the values given at open.
 
 What pins what: the engine pins the refund binary (compiled-in SHA-256) and the Node
 booking helper (compiled in); the booking helper pins the checker model; the store pins the
-SHA-256 of the Node binary at `init` (inventory only). The engine checks
-`/usr/bin/ssh-keygen` before its first cosign in a process (owned by root, not writable by
-group or other, no symbolic link on its path) but does not pin it: an OS update must not
-lock every store. `bin/forge-airlock cosign-info` prints its SHA-256 and version so that
-you can record them. A file that is swapped after its check is not detected. Nothing in
-this repository pins the engine binary itself.
+SHA-256 of the Node binary at `init` (inventory only). At every run, the engine checks the
+path of the refund binary and of Node (owner root or the engine's own user, no group or
+other write bit up to `/`), hashes the refund binary again, and hashes Node again when its
+file identity changed. The Homebrew Node is under a folder that the `admin` group may
+write, so `bin/forge-airlock` passes a private copy of it. The engine checks
+`/usr/bin/ssh-keygen` before every cosign (owned by root, not writable by group or other,
+no symbolic link on its path) but does not pin it: an OS update must not lock every store.
+`bin/forge-airlock cosign-info` prints its SHA-256 and version so that you can record them.
+The files are still run by path: your own user (or root) can change them between the check
+and the run, so these checks matter only when `serve` runs as another user. Nothing in this
+repository pins the engine binary itself.
 
 ## Cosign: the same-OS-user limit
 
