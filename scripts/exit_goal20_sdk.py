@@ -460,7 +460,7 @@ MUTANTS = [
     ('V7c_crash_shape_not_repaired', 'store.rs', 'a crash-shaped bad last entry must be cut',
      'let crash_shape = bad.len() == 1 && bad[0] + 1 == entries && size % 12 == 0 && l.epoch == floor + 1;', 'let crash_shape = false;', 'engine', 'ratchet_entry',
      'the repair of the one crash shape of a bad ratchet entry (D7)'),
-    ('V2a_no_path_checks', 'helpers.rs', 'a refund binary in a 777 folder',
+    ('V2a_no_path_checks', 'helpers.rs', "expected HELPER_FAILED (exit 22), got exit 0 'COMMITTED rq3",
      '    let id = identity(&path_checks(&real, owners).map_err(|why| fail(format!("PIN_PATH_UNTRUSTED {what} {why}")))?);',
      '    let _ = owners;\n    let id = identity(&fs::symlink_metadata(&real).map_err(|e| fail(format!("PIN_UNREADABLE {what} {:?}", e.kind())))?);', 'engine', 'pin_window',
      'the ownership walk of a pinned helper file (D2)'),
