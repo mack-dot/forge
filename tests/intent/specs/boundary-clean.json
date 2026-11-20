@@ -1,0 +1,5 @@
+{"intent_spec": 1, "name": "goodwill-cosign-edge",
+ "rules": [
+  {"reason": "GOODWILL", "amount": [["<", "5000"]], "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "amount": [[">=", "5000"]], "verdict": "REQUIRE_HUMAN_COSIGN"}
+ ]}
