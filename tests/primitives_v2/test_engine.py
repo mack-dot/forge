@@ -898,15 +898,15 @@ def case_stubs(s):
     st, init = s.store(s.engine, d, [])
     g = init.f['genesis']
     ses = Session(s.engine, st)
-    for line in ['DO ledger_graph transfer s1 t1 2 a %s b %s x' % (g, g), 'DO ledger_graph claim s2 t1 1 a %s x' % g,
-                 'DO taint_egress check s3 t1 0 {"a":1}', 'DO farkas check s4 t1 0 {}']:
+    # Primitives 7 and 8 are real modules now (their own suites cover them); only farkas may still be a stub.
+    for line in ['DO farkas check s4 t1 0 {}']:
         a = ses.ask(line, 'NOT_IMPLEMENTED')
         require(ses.p.poll() is None, 'serve ended after NOT_IMPLEMENTED')
     ses.close()
     code, _ = s.run(s.engine, 'serve', st, inp=b'DO farkas check s5 t1 0 {}\n')
     require(code == 27, 'NOT_IMPLEMENTED exit code %d' % code)
     require(len(parse_wal(wal_of(st))[0]) == 1, 'a stub wrote a record')
-    return 'ledger_graph, taint_egress, farkas answer NOT_IMPLEMENTED (exit 27) and write nothing'
+    return 'farkas answers NOT_IMPLEMENTED (exit 27) and writes nothing'
 
 
 def build_interposer(s):
