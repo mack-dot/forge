@@ -20139,3 +20139,19 @@ curl: (6) Could not resolve host: github.com
 - Uncertainty: (6) is not tested; (4) is not tested; the Node library gap stays open.
 - Impact: none on any stage label. Next check: owner decision on the Node libraries; the isolation design (keyed
   chain, authentication).
+
+## U893 — Review fixes (PR-3): heavy runs, the scratch-clone regression and the NEW Goal 20 bundle digest
+
+- Refs U887 to U892. Branch `feat/airlock-review-hardening`, stacked on `apex1/native-cosign` `a96c916f` (pull request
+  72); code commits made on `e3322303`; merged `a96c916f` as `5685b673` (records only); draft pull request 73.
+- Evidence (runs under the heavy lock): fuzz seed 20 x3 exit 0 (twice); 27 changed or new copies all killed;
+  `proposals/forge2-goal20-sdk/run_regression.py` on a scratch clone of `9a17c95d`: 28 of 28 Stage EXIT cases exit
+  0, frozen gate 0, 9 link checks 0, six evidence cases exit 0, five bundles byte-identical to the tracked records,
+  Goal 20 bundle `69fbd6769ce0fec43ad5f6c5b46774e2e33551dbdbc57f9b4865f9581c1a9467` (145 of 145 copies killed, X01,
+  R8, N15 not killed as before), 0 protected paths. Record: `proposals/review-20261120-engine/logs/regression-9a17c95d.json`.
+- OLD digest `1e75ab47…70fa` (tracked, `main`); `e3322303` has none. The tracked record is NOT replaced.
+- Failed attempts first (all list or test-probe errors of this branch, no engine code): see the README results.
+- Uncertainty: one machine, load average about 8 to 15 during the regression; no power-loss test; no service-user
+  test. Not proved.
+- Impact: none on any stage label; `end_to_end=false`. Next check: owner decision on the new bundle; a review of the
+  repairs.

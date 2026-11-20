@@ -256,9 +256,19 @@ fresh review (production engine and kill-points build of this tree; load average
 | new cases on the `e3322303` engine (before) | 1 each | `tenant_namespace`, `lease_cosign_pending`, `ratchet_entry`, `pin_window` |
 | `lease_pending_rejected` on the `aaaca9e6` engine (before) | 1 | finding 3 of the fresh review |
 
-Heavy runs (fuzz, the changed copies, the scratch-clone regression with the Goal 20
-`evidence` case) ran under the heavy lock on the commit named in the ROADMAP section; their
-results are in the ROADMAP section and in `unsure.md` U893.
+Heavy runs, under the heavy lock (actual exits):
+
+| Check | Actual exit | Result |
+| --- | --- | --- |
+| fuzz seed 20, 3 rounds (`7cb7cac1`; `6289d9aa`) | 0; 0 | 8 of 8 invariants |
+| 27 changed or new copies (`6289d9aa` to `9a17c95d`) | 27 killed | M01 M02 M04 M12 M19 M33 N07 N12 R1a R1c R5a R5b C07 V2a-V2d V3a V3b V6a-V6e V7a-V7c |
+| scratch-clone regression of `9a17c95d` | 0 | 28 Stage cases 0; frozen gate 0; 9 links 0; six evidence cases 0; five bundles byte-identical; Goal 20 NEW `69fbd676…9467`; 0 protected paths |
+
+Failed attempts on the way (all from this branch's lists or one test probe, none from engine
+code): the unchanged-copy control on `7cb7cac1` (case `cosign_faults` probed the private Node
+copy under `/private/tmp`; fixed in `6289d9aa`); copies V7b and V2a killed at an earlier check
+than the list text (`ccbb8264`, `3d9dabbb`); the Goal 20 evidence of `3d9dabbb` stopped at the
+list check (two pairs of copies shared one text; `9a17c95d`).
 
 ## Evidence bundle digest
 
@@ -267,8 +277,10 @@ results are in the ROADMAP section and in `unsure.md` U893.
   `proposals/forge2-goal20-sdk/REPORT.md`. It describes the Goal 20 tree before Goal 21.
 - `e3322303`: NO digest. The native-cosign branch did not run the evidence case (owner
   decision, U752).
-- NEW: see the ROADMAP section and `unsure.md` U893 (the `evidence` case inside the
-  scratch-clone regression of the final code commit).
+- NEW: `69fbd6769ce0fec43ad5f6c5b46774e2e33551dbdbc57f9b4865f9581c1a9467`, the `evidence`
+  case (run twice, byte-identical, exit 0) inside the scratch-clone regression of
+  `9a17c95d` ([record](logs/regression-9a17c95d.json)): 145 of 145 changed copies killed,
+  3 known copies not killed (X01, R8, N15, as before).
   The tracked bundle and the tracked digest are NOT replaced; the owner decides.
 
 ## Deferred, open, not handled
