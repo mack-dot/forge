@@ -20849,3 +20849,28 @@ curl: (6) Could not resolve host: github.com
 - NOT RUN: `scripts/exit_stage_9.py`; the hosted signing run; any benchmark trial.
 - Impact: none on any stage label. CURRENT none. Stage 9 deferred. `end_to_end=false`. M1-B OPEN.
 - Next check: the owner's review of the exact bytes and the merge-order decision of U900.
+
+## U904 — Gate F2a: `main` `7e5842d0` merged into the lock rebind branch; both locks regenerated; the digest of U900 is replaced; NOT merged
+
+- Status: 2026-11-20 (system clock, after the merge queue). Refs U900 (its `implementation.lock` digest `08ae51d0…` is
+  NO LONGER the proposed value), U901.
+- Source: a message of the coordinator session: the merge queue is done and the owner wants pull request 76 last, with
+  a fresh lock. I did not see an owner message.
+- Actual: `git merge origin/main` (`7e5842d0c24b58c522a493ebd0155bc99d8ed201`) with two additive conflicts
+  (`ROADMAP.md`: both sections kept; `unsure.md`: `main`'s text is an exact prefix, U900 and U901 follow it; no existing
+  entry changed). Both lock files taken from `main`, then `regen_locks.py . --write`: exit 0. Merge commit `7cd94375`.
+  `gate/provenance/implementation.lock` = `fef556903c8ae9358a0c04a320f1c2d9f488ca9af84325de7428b266e4821fc0` (113
+  entries; 9 changed digests; 13 added keys: 12 scripts and `gate/ratification.py`). `spec/provenance/spec.lock` =
+  `256310d851669cdeab2498b0a58fe6bcd4b7ba1f741396a9f608d644fa72a976` (byte-equal to the first version).
+- Checks at `7cd94375` (a git worktree, not a fresh clone): `bootstrap.py --check` with `fef55690…` exit 0
+  (`BOOTSTRAP_VERIFIED`); with the old value `76b983ac…` exit 1; with `08ae51d0…` exit 1. `check_frozen_pr_gate.py
+  HEAD` exit 0. `check_links.py HEAD` for the proposal, `ROADMAP.md`, `unsure.md` exit 0. `git diff --name-status
+  origin/main HEAD`: 7 files (two locks, three proposal files, `ROADMAP.md`, `unsure.md`).
+- Against the first version the lock lists four more scripts (`exit_archia_mcp.py`, `exit_goal21_intent.py`,
+  `intent_clearing.py`, `intent_restate.py`) and has new digests for five scripts that changed on `main`.
+- Still true from U900: the lock is stale again after any later change of a listed file or a new code file under
+  `scripts/`. The workflow pin in `.github/workflows/booking-reuse.yml` and the baseline record are not in this diff.
+- NOT RUN: `scripts/exit_stage_9.py`; the hosted signing run; Batch 36 of the benchmark. The hosted gate result of the
+  new head is in the pull request (expected exit 1, REJECTED).
+- Impact: none on any stage label until the owner merges. CURRENT none. `end_to_end=false`. M1-B OPEN.
+- Next check: the owner's review of the exact bytes; `main` must not move in the listed files before the merge.

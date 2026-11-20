@@ -48,6 +48,9 @@ other protected path changed. Nothing under `clearing/` changed.
 | `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` for the proposal, `ROADMAP.md`, `unsure.md` (commit `40847aec`) |0; 0|the eight PR-gate modules unchanged; no missing link target |
 | `git push origin proposal/stage9-lock-rebind-f2a:refs/heads/proposal/stage9-lock-rebind-f2a`; `gh pr create` (pull request 76) |0; 0|no administrator rights; the agent did not merge |
 | hosted `gate/pr_check.py`, pull request 76, head `40847aec`, run 44737627885 |1|REJECTED, as expected: `UNAPPROVED_PROTECTED_CHANGE: gate/provenance/implementation.lock, spec/provenance/spec.lock`. Not an approval; the later records commit changes no protected byte |
+| REGENERATED after the merge queue: `git merge origin/main` (`7e5842d0`; two additive conflicts in `ROADMAP.md` and `unsure.md`); `regen_locks.py . --write` from `main`'s own locks (merge commit `7cd94375`) |0; 0|`implementation.lock` `fef55690…1fc0` (113 entries: 9 changed digests, 13 added keys); `spec.lock` `256310d8…a976` (unchanged against the first version). The digest `08ae51d0…` in the rows above is no longer the proposed value |
+| `bootstrap.py --implementation-sha256 fef55690…1fc0 --check`; the same with the old value `76b983ac…`; with the first version's value `08ae51d0…` |0; 1; 1|`BOOTSTRAP_VERIFIED`; `IMPLEMENTATION_LOCK`; `IMPLEMENTATION_LOCK` |
+| `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` (proposal, `ROADMAP.md`, `unsure.md`); `git diff --name-status origin/main HEAD` |0; 0; 7 files|the two lock files, the three proposal files, `ROADMAP.md`, `unsure.md`; no other path |
 | `scripts/exit_stage_9.py` (six cases); the hosted signing run; the benchmark |NOT RUN|after the owner's merge; the benchmark after the owner's batch word |
 
 [Lock rebind proposal](proposals/stage9-lock-rebind-20261120/PROPOSAL.md).
