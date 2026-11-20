@@ -50,7 +50,7 @@ one machine.
 | `--case dispatcher` |0|the UNAPPLIED diff on a copy: exit 0 and exit 4; tracked `bin/forge-airlock` still `bd56d8b6…6891` |
 | `--case evidence --write-record` |0|twice; bundle `9a3ea0ee…c2d8`, byte-identical; 23 of 23 changed copies killed for the named reason (20 of `intent_clearing.py`) |
 | the one fresh-context review |1 FAIL-OPEN; 0 HIGH; 2 MEDIUM; 7 LOW; 3 NOTE|a query on two unnamed reasons got a false "verified" warning; repaired in one pass; F13 and three guards of F6 stated only; NOT reviewed again |
-| regression on a scratch clone: 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links; seven EXIT scripts, each `--case evidence` |NOT RUN at this commit|recorded in a later records commit |
+| regression on a scratch clone of `faa46ae6` (merged tree, base `b2249ea2`): 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links of 17 files; seven EXIT scripts, each `--case evidence` |0 each (28); 0; 0 each (17); 0 each (7)|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…` byte-identical to the tracked records and to the records on `origin/main`; `9a3ea0ee…` (Goal 21) byte-identical to its record; 0 dangling links; 0 protected paths changed |
 | `gh pr create`; hosted `gate/pr_check.py` |NOT RUN at this commit|expected exit 3 (UNSUPPORTED) |
 | `--engine` (the Rust engine against the table rows); every HOL and Holmake step; Stages 7, 9, 10; a second review |NOT RUN|not part of this work |
 

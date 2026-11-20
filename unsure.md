@@ -19999,3 +19999,21 @@ curl: (6) Could not resolve host: github.com
   reviewer's report; I did not check them again.
 - Uncertainty: no second review of the repairs ran (the directive asks for one review).
 - Impact: none on any stage label. Next check: the owner may ask for a second review.
+
+## U784 — goal 21: the regression in a scratch clone of the merged tree; what the records commit holds
+
+- Refs U724 (the same check for goal 20), U782. Evidence: `proposals/forge2-goal21-intent/records/regression.json`;
+  `proposals/forge2-goal21-intent/run_regression.py` (the goal 20 runner with one more bundle, more link checks and
+  a comparison of the six prior records with `origin/main`).
+- Actual: a throwaway clone of commit `faa46ae6` (merge base with `origin/main`: `b2249ea2`). 28 of 28 Stage EXIT
+  cases exit 0. `check_frozen_pr_gate.py HEAD` exit 0. `check_links.py` exit 0 for 17 files: 0 dangling links. Seven
+  EXIT scripts with `--case evidence` exit 0; bundles `c7f2f41c…` (Slice 1), `2721a293…` (Slice 2), `3cdfebfc…`
+  (Slice 3), `f55391da…` (M1 conformance), `1f569fcf…` (goal 19), `1e75ab47…` (goal 20) byte-identical to the
+  tracked records, and those six records equal the files on `origin/main`; `9a3ea0ee…` (goal 21) byte-identical to
+  its record. Protected paths changed against the merge base: 0.
+- The run held the machine lock alone, as far as I checked; wall time about 2 hours 8 minutes.
+- NOT RUN: Stage 7, Stage 9, Stage 10, any HOL or Holmake process.
+- This entry, the regression record and one changed `ROADMAP.md` row are in a records commit after `faa46ae6`
+  (documents only). The regression did not run on that commit.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the hosted `gate/pr_check.py` on the pull
+  request (expected exit 3, UNSUPPORTED).
