@@ -1,0 +1,6 @@
+{"airlock": "money", "version": 1, "name": "store-ambiguous", "profile": "parametric",
+ "rules": [
+  {"reason": "DUPLICATE_CHARGE", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "max_amount": "2500", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "min_amount": "2001", "verdict": "REQUIRE_HUMAN_COSIGN"}
+ ]}

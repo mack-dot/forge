@@ -1,0 +1,6 @@
+{"airlock": "money", "version": 1, "name": "store-refunds", "profile": "parametric",
+ "rules": [
+  {"reason": "DUPLICATE_CHARGE", "verdict": "COMMIT"},
+  {"reason": "SHIPPING", "verdict": "COMMIT"},
+  {"reason": "GOODWILL", "max_amount": "2000", "verdict": "COMMIT"}
+ ]}

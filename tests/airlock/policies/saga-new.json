@@ -1,0 +1,5 @@
+{"airlock": "saga", "version": 1, "name": "payout",
+ "states": ["PAID", "IN_FLIGHT", "SETTLED", "CONFIRMED_REJECTED", "REFUNDED"], "initial": "PAID",
+ "in_flight": ["IN_FLIGHT"],
+ "transitions": [["PAID", "IN_FLIGHT"], ["IN_FLIGHT", "SETTLED"], ["IN_FLIGHT", "CONFIRMED_REJECTED"],
+                 ["SETTLED", "REFUNDED"]]}
