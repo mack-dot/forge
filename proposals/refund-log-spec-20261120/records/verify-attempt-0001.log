@@ -1,0 +1,23 @@
+proposals/refund-log-spec-20261120/RefundLogSpecLemmas.dfy(192,2): Error: a postcondition could not be proved on this return path
+    |
+192 |   {
+    |   ^
+
+proposals/refund-log-spec-20261120/RefundLogSpecLemmas.dfy(191,34): Related location: this is the postcondition that could not be proved
+    |
+191 |     ensures S.Replay(G(), [Q1()]) == S.Some(S1())
+    |                                   ^^
+
+proposals/refund-log-spec-20261120/RefundLogSpecLemmas.dfy(201,2): Error: a postcondition could not be proved on this return path
+    |
+201 |   {
+    |   ^
+
+proposals/refund-log-spec-20261120/RefundLogSpecLemmas.dfy(200,40): Related location: this is the postcondition that could not be proved
+    |
+200 |     ensures S.Replay(G(), [Q1(), Q2()]) == S.Some(S.LedgerState("ch_1", 100, 0, true, {"rq_1", "rq_2"}, 2))
+    |                                         ^^
+
+
+Dafny program verifier finished with 43 verified, 2 errors
+VERIFY_EXIT 4

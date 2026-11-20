@@ -1,0 +1,67 @@
+[
+ {
+  "check": "git-apply-check",
+  "exit": 0,
+  "last_line": "Checking patch spec/refund/RefundLogSpec.lock..."
+ },
+ {
+  "check": "git-apply",
+  "exit": 0,
+  "last_line": ""
+ },
+ {
+  "check": "git-add",
+  "exit": 0,
+  "last_line": ""
+ },
+ {
+  "check": "git-commit",
+  "exit": 0,
+  "last_line": ""
+ },
+ {
+  "check": "diff-name-status",
+  "exit": 0,
+  "last_line": "A\tspec/refund/RefundLogSpec.lock"
+ },
+ {
+  "check": "cmp-spec-bytes",
+  "exit": 0,
+  "last_line": ""
+ },
+ {
+  "check": "apply-again-refused",
+  "exit": 1,
+  "last_line": "error: spec/refund/RefundLogSpec.lock: already exists in working directory"
+ },
+ {
+  "check": "frozen-pr-gate-A",
+  "exit": 0,
+  "last_line": "}"
+ },
+ {
+  "check": "frozen-pr-gate-B",
+  "exit": 0,
+  "last_line": "}"
+ },
+ {
+  "check": "gate-probe",
+  "exit": 0,
+  "last_line": "}"
+ },
+ {
+  "check": "bootstrap-76b983ac-A",
+  "exit": 1,
+  "last_line": "BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py"
+ },
+ {
+  "check": "bootstrap-76b983ac-B",
+  "exit": 1,
+  "last_line": "BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py"
+ },
+ {
+  "check": "clearing-unchanged",
+  "exit": 0,
+  "last_line": ""
+ }
+]
