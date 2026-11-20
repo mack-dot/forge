@@ -19935,6 +19935,27 @@ curl: (6) Could not resolve host: github.com
 - The regression did NOT run on the two records commits (documents only). Their hosted results are in the pull request.
 - NOT RUN: Stage 7, Stage 9, Stage 10; a clean or independent HOL replay.
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on pull request 66.
+
+## U840 — Formal Ceiling v2 (R6 FFI, TBI0/SA0, WAL fold): a design and estimate only; the three items leave `end_to_end=false`; NOT started
+
+- Status: 2026-11-20. Refs U497, U498 (R6), U496, U804 (processor bits), U709 (APEX-3 findings), U806 (graph after APEX-2).
+  Record: `proposals/forge2-v2-formal-ceiling/DESIGN.md`. Documents only. No protected file. No frozen module.
+- Evidence class: reading of committed files and static commands (`git show`, `grep`, `wc`, `awk`) by one orchestrator and
+  two read-only workers; one fresh-context review (0 FAIL-OPEN, 3 HIGH, 13 MEDIUM, 4 LOW, 1 NOTE; repaired in one pass;
+  the repairs were not reviewed again). NOT RUN: every HOL, `Holmake`, `cake_compile` and Dafny step; every test.
+- Finding: by the rule of the accepted-assumptions list (branch `docs/finish-line-directive`), after R6, the T11 run lift
+  and the WAL fold, 17 transitions (up to 20 by a stricter reading of T7, T8v, T12k) are still neither MACHINE-CHECKED
+  nor signed. R6 closes only the model part of T9. The lift closes only the model part of T11. The fold closes no row of
+  the present graph, and it gives a new image for which the machine chain must be made again.
+- Estimates: R6 7 to 12 working days (recorded, U497; not re-based after R6w, R6r, R6t). T11 lift 10 to 19 working days
+  and the fold 9 to 18 calendar days without the Route A layer: both are MY estimates with no committed source; the
+  derivations are in the record. Sum 33 to 62 calendar days in one HOL slot.
+- Uncertainty: the day values for "medium" and "large" are mine. The reuse of the R6 library specifications for a new
+  program is my reading, not a recorded fact. The owner's request text came from the launcher; it is not in the repository.
+  `ROADMAP.md` is NOT changed by this work (not a stage; no command with an exit code other than the two checks of the
+  pull request).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Nothing started.
+- Next check: the owner's budget word and the answers to Q-1 to Q-8 of the record.
 ## U740 — Archia MCP airlock demo: start; the base is not the base that the directive names; the launcher is in the Goal 20 bundle
 
 - Refs U720 to U723 (Goal 20), U709. Evidence: the owner's directive, stored verbatim at `/tmp/forge_archia_demo.md`
