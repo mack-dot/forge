@@ -15,6 +15,10 @@ Cases (python3 scripts/exit_universal_primitives.py --case NAME):
              money vectors replay through it), a control copy with one `unsafe` block that must not compile, and the
              ADDITIVE check: against the merge-base with `main`, no tracked file is modified or deleted (only ROADMAP.md
              and unsure.md may be), and no changed or added path lies under a protected path.
+             The ADDITIVE check is a pre-merge condition and is false on every branch after the squash merge MERGED_AS,
+             so when MERGED_AS is an ancestor of HEAD it prints "pre-merge check not applicable" and the record says NOT
+             APPLICABLE (never passed), else it runs as before (NOT RUN, which fails, if git cannot say). The protected
+             path check stays active after the merge: no file that MERGED_AS added (this pack's own files) is protected.
   suite      every suite of tests/primitives_v2/ (test_engine, test_ledger_graph, test_taint, test_farkas,
              test_policy_to_dfy with all cases, test_sdk_primitives, test_demo), all cases, real exit codes; the case
              names must be the suite's own list. Dafny: the Python build of FarkasCert.dfy (for test_farkas) and the
@@ -39,6 +43,13 @@ Raw outputs: build/universal_primitives/<case>/attempt-NNNN/ (ignored by git).
 Dafny: one Dafny process at a time on this machine. Before each Dafny step this script waits (poll 30 s, at most
 60 min) while a process matches 'dafny/dafny|Holmake|/hol |z3-4.12.1'; the suites and the generator wait the same way
 for 'dafny/dafny'. A step that cannot get the slot is NOT RUN, and the case FAILS.
+Tools (no absolute path of any machine is written here; nothing falls back silently):
+  FORGE_RUSTC           the rustc binary; else `rustc` on PATH. It must report the pinned version (RUSTC_VERSION).
+  FORGE_TOOLCHAIN_ROOT  the checkout that holds .toolchain/ (the pinned Dafny; cwd of every Dafny run; its
+                        scripts/spec_clearing.py is imported); else this repository. A worktree without .toolchain/ sets
+                        it to the main checkout. The mutants_p9 copies of the generator get it too.
+  FORGE_DAFNY           the dafny binary; else <toolchain root>/.toolchain/dafny-4.11.0/dafny/dafny.
+  A missing tool makes the case NOT RUN (exit 2) with a message that names the variable to set.
 Exit: 0 every check of the case is true; 1 a check failed; 2 a case could not run (NOT RUN). Timings are indicative.
 """
 
@@ -59,11 +70,11 @@ import time
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / 'build/universal_primitives'
-RUSTC = '/Users/mackianni/.cargo/bin/rustc'
+RUSTC = os.environ.get('FORGE_RUSTC') or shutil.which('rustc')    # see Tools in the header
 RUSTC_FLAGS = ['--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3']   # PROTOCOL.md section 1
 RUSTC_VERSION = 'rustc 1.92.0 (ded5c06cf 2025-12-08)'
-DAFNY = '/Users/mackianni/forge/.toolchain/dafny-4.11.0/dafny/dafny'
-DAFNY_ROOT = Path('/Users/mackianni/forge')     # the checkout that holds the pinned toolchain (cwd of every Dafny run)
+DAFNY_ROOT = Path(os.environ.get('FORGE_TOOLCHAIN_ROOT') or ROOT)   # the checkout that holds the pinned toolchain (cwd of every Dafny run)
+DAFNY = os.environ.get('FORGE_DAFNY') or str(DAFNY_ROOT / '.toolchain/dafny-4.11.0/dafny/dafny')
 DAFNY_OPTIONS = ['--solver-path', '.toolchain/dafny-4.11.0/dafny/z3/bin/z3-4.12.1', '--resource-limit', '1000000',
                  '--verification-time-limit', '0', '--cores', '1', '--verify-included-files', '--track-print-effects']
 BASELINE = ROOT / 'gate/expected-audit.md'      # read only: the empty audit baseline
@@ -92,6 +103,8 @@ REPO_MODULES = {  # non-stdlib imports that the Python files may make, and why
 PROTECTED_DIRS = ('gate/', 'spec/', 'policy/', 'clearing/')
 PROTECTED_FILES = ('spec.lock', 'package.json', 'package-lock.json', 'tsconfig.json')
 ALLOWED_MODIFIED = ('ROADMAP.md', 'unsure.md')
+# The squash commit of this pack on main (pull request 79). The ADDITIVE check is a pre-merge condition only.
+MERGED_AS = '058eabcbe722dff1a08f1563cf4103d9fcd21a20'
 
 # Changed copies that nothing kills and that the owner or the orchestrator ACCEPTED, with the written reason.
 # name -> reason. EMPTY: no copy is accepted. This script never adds to it.
@@ -199,8 +212,7 @@ def wait_slot(label, limit=3600):
 
 
 def dafny(args, label, log):
-    if not Path(DAFNY).is_file():
-        raise NotRun('NOT RUN: the pinned Dafny is missing at %s' % DAFNY)
+    need_dafny()
     wait_slot(label)
     t = time.monotonic()
     p = run([DAFNY] + args, cwd=DAFNY_ROOT, timeout=7200)
@@ -278,6 +290,17 @@ def python_rules():
     return {'files': len(PYTHON_FILES), 'non_stdlib_imports': {k: v for k, v in seen.items() if v}, 'allowed_non_stdlib': REPO_MODULES}
 
 
+def need_rustc():
+    if not RUSTC or not Path(RUSTC).is_file():
+        raise NotRun('NOT RUN: no rustc (%s): set FORGE_RUSTC to the rustc binary or put rustc on PATH' % RUSTC)
+
+
+def need_dafny():
+    if not Path(DAFNY).is_file():
+        raise NotRun('NOT RUN: the pinned Dafny is missing at %s: set FORGE_TOOLCHAIN_ROOT to the checkout that holds '
+                     '.toolchain/dafny-4.11.0, or FORGE_DAFNY to the dafny binary' % DAFNY)
+
+
 def rustc(main_rs, out, seams=False):
     cmd = [RUSTC] + RUSTC_FLAGS + (['--cfg', 'test_seams'] if seams else []) + [main_rs, '-o', out]
     return run(cmd, timeout=3600)
@@ -299,7 +322,44 @@ def build_bins(work):
     return bins
 
 
+def merged():
+    """True when MERGED_AS is an ancestor of HEAD, False when it is not (the pre-merge check runs). Git cannot answer (no
+    repository, or a shallow clone without the commit): NOT RUN, which fails the case."""
+    p = run(['git', 'merge-base', '--is-ancestor', MERGED_AS, 'HEAD'])
+    if p.returncode == 0:
+        return True
+    if p.returncode == 1:
+        return False
+    known = run(['git', 'cat-file', '-e', MERGED_AS + '^{commit}']).returncode == 0
+    shallow = run(['git', 'rev-parse', '--is-shallow-repository'])
+    if not known and shallow.returncode == 0 and shallow.stdout.strip() == 'false':
+        return False    # a full history without the commit: it is not an ancestor
+    raise Failed('ADDITIVE: NOT RUN: git cannot say whether %s is an ancestor of HEAD (exit %s: %s)'
+                 % (MERGED_AS[:8], p.returncode, (p.stderr or '').strip()[:200]))
+
+
+def package_protected():
+    """After the merge: the files that MERGED_AS added (this pack's own files, from the squash commit, not from a diff
+    against main) must not lie under a protected path, and MERGED_AS must have modified only ALLOWED_MODIFIED."""
+    p = run(['git', 'show', '--no-renames', '--name-status', '--format=', MERGED_AS])
+    require(p.returncode == 0, 'ADDITIVE: NOT RUN: git show %s exit %s' % (MERGED_AS[:8], p.returncode))
+    rows = [line.split('\t', 1) for line in p.stdout.splitlines() if line.strip()]
+    require(rows, 'ADDITIVE: NOT RUN: git show %s lists no file' % MERGED_AS[:8])
+    own = sorted(path for status, path in rows if status == 'A')
+    other = sorted('%s %s' % (status, path) for status, path in rows if status != 'A' and path not in ALLOWED_MODIFIED)
+    protected = sorted(f for f in own if f.startswith(PROTECTED_DIRS) or f in PROTECTED_FILES)
+    require(other == [], 'ADDITIVE: the squash commit %s changed existing files: %r' % (MERGED_AS[:8], other))
+    require(protected == [], 'ADDITIVE: files of this pack under protected paths: %r' % protected)
+    print('  pre-merge check not applicable: ADDITIVE (merged as %s)' % MERGED_AS[:8], flush=True)
+    na = 'NOT APPLICABLE: pre-merge check; merged as ' + MERGED_AS
+    M.put('additive', na)
+    return {'status': na, 'merged_as': MERGED_AS, 'package_files': len(own), 'package_files_under_protected_paths': 0,
+            'protected': list(PROTECTED_DIRS) + list(PROTECTED_FILES), 'allowed_modified': list(ALLOWED_MODIFIED)}
+
+
 def additive():
+    if merged():
+        return package_protected()
     # `main` of this clone can lag behind `origin/main` (seen 2026-11-20: local main 9 commits behind). Take the merge-base
     # with each ref that exists and use the NEWER one (the other is its ancestor); a stale local main would otherwise
     # count the files changed on main since then as changes of this branch.
@@ -331,7 +391,8 @@ def additive():
         print('  ADDITIVE: modified existing file: %s %s%s' % (s, p, '' if p in ALLOWED_MODIFIED else '  <- NOT ALLOWED'))
     require(bad_mod == [], 'ADDITIVE: existing tracked files changed (only %s may be): %r' % (', '.join(ALLOWED_MODIFIED), bad_mod))
     require(protected == [], 'ADDITIVE: changed or added paths under protected paths: %r' % protected)
-    return {'merge_base_with_main': base, 'main_ref_used': ref,'added_files': sorted(p for _, p in added),
+    M.put('additive', 'RUN (%s is not an ancestor of HEAD)' % MERGED_AS[:8])
+    return {'status': 'RUN', 'merge_base_with_main': base, 'main_ref_used': ref,'added_files': sorted(p for _, p in added),
             'modified_files': sorted('%s %s' % (s, p) for s, p in modified), 'untracked_not_ignored': sorted(p for s, p in added if s == '?'),
             'protected_paths_touched': 0,
             'protected': list(PROTECTED_DIRS) + list(PROTECTED_FILES), 'allowed_modified': list(ALLOWED_MODIFIED)}
@@ -340,6 +401,7 @@ def additive():
 def case_build(work):
     work.mkdir(parents=True, exist_ok=True)
     rules = {'rust': rust_rules(), 'python': python_rules()}
+    need_rustc()
     v = run([RUSTC, '-V']).stdout.strip()
     require(v == RUSTC_VERSION, 'TOOLCHAIN: rustc is %r, pinned %r' % (v, RUSTC_VERSION))
     bins = build_bins(work)
@@ -482,6 +544,7 @@ def case_proofs(work):
     work.mkdir(parents=True, exist_ok=True)
     log = work / 'dafny.log'
     require(BASELINE.is_file(), 'PROOFS: no baseline %s' % BASELINE)
+    need_dafny()
     vers = run([DAFNY, '--version'], cwd=DAFNY_ROOT).stdout.strip()
     out = {'dafny_version': vers, 'options': DAFNY_OPTIONS, 'verify': {}, 'determinism': {}, 'vectors': {}, 'clearing': {}}
     out['verify']['FarkasCert'] = verify_and_audit(ROOT / FARKAS_DFY, 'FarkasCert', work, log)
@@ -702,8 +765,13 @@ def main():
     try:
         if args.case == 'build':
             result, _ = case_build(work)
-            print('  builds exit 0 and byte-identical twice; unsafe control exit %d; modified files: %s; added files: %d' % (
-                result['unsafe_control']['compile_exit'], result['additive']['modified_files'] or 'none', len(result['additive']['added_files'])))
+            add = result['additive']
+            if add['status'] == 'RUN':
+                print('  builds exit 0 and byte-identical twice; unsafe control exit %d; modified files: %s; added files: %d' % (
+                    result['unsafe_control']['compile_exit'], add['modified_files'] or 'none', len(add['added_files'])))
+            else:
+                print('  builds exit 0 and byte-identical twice; unsafe control exit %d; ADDITIVE %s; pack files %d, 0 under protected paths' % (
+                    result['unsafe_control']['compile_exit'], add['status'], add['package_files']))
         elif args.case == 'suite':
             _, bins = case_build(work / 'build')
             result, _ = case_suite(work, bins)
