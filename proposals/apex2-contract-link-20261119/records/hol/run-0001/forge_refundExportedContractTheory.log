@@ -1,0 +1,132 @@
+<<HOL message: Created theory "forge_refundExportedContract">>
+FORGE_BEGIN exported_contract_decode
+Saved theorem _______ "exported_contract_decode"
+FORGE_BEGIN exported_contract_shape
+Saved theorem _______ "exported_contract_shape"
+FORGE_BEGIN exported_ens1_value
+Saved theorem _______ "exported_ens1_value"
+FORGE_BEGIN exported_ens2_value
+Saved theorem _______ "exported_ens2_value"
+FORGE_BEGIN exported_ens3_value
+Saved theorem _______ "exported_ens3_value"
+FORGE_BEGIN exported_contract_value
+Saved theorem _______ "exported_contract_value"
+FORGE_BEGIN exported_contract_on_refund_fields
+Saved theorem _______ "exported_contract_on_refund_fields"
+FORGE_BEGIN exported_contract_exact
+Saved theorem _______ "exported_contract_exact"
+FORGE_BEGIN exported_contract_witnesses
+Saved theorem _______ "exported_contract_witnesses"
+FORGE_BEGIN exported_contract_text_length
+Saved theorem _______ "exported_contract_text_length"
+FORGE_THEOREM exported_contract_text_length
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ STRLEN exported_contract_text = 3621
+FORGE_THEOREM exported_contract_decode
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∃se.
+    parse exported_contract_text = INR (se,"") ∧
+    to_program se = INR exported_contract_program
+FORGE_THEOREM exported_contract_shape
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∃decrs body.
+    exported_contract_program =
+    Program
+      [Method «AssessFlat»
+         [(«chargeId»,StrT); («requestId»,StrT); («original»,IntT);
+          («remaining»,IntT); («enabled»,BoolT); («requestOpen»,BoolT);
+          («candidate»,BoolT); («amount»,IntT); («reason»,StrT)] []
+         exported_ensures [] decrs
+         [(«authorized»,BoolT); («outputAmount»,IntT); («outputReason»,StrT);
+          («outputCharge»,StrT); («outputRequest»,StrT);
+          («intentCount»,IntT)] [] body]
+FORGE_THEOREM exported_ens1_value
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ evaluate_exp
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ens1 =
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n,
+   Rval
+     (BoolV
+        (ok ⇔
+         eligible charge request original remaining enabled opened candidate
+           amount reason)))
+FORGE_THEOREM exported_ens2_value
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ evaluate_exp
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ens2 =
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n,
+   Rval
+     (BoolV (ok ⇒ a = amount ∧ r = reason ∧ c = charge ∧ q = request ∧ n = 1)))
+FORGE_THEOREM exported_ens3_value
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ evaluate_exp
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ens3 =
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n,
+   Rval (BoolV (¬ok ⇒ a = 0 ∧ r = «» ∧ c = «» ∧ q = «» ∧ n = 0)))
+FORGE_THEOREM exported_contract_value
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ evaluate_exps
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ensures =
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n,
+   Rval
+     [BoolV
+        (ok ⇔
+         eligible charge request original remaining enabled opened candidate
+           amount reason);
+      BoolV (ok ⇒ a = amount ∧ r = reason ∧ c = charge ∧ q = request ∧ n = 1);
+      BoolV (¬ok ⇒ a = 0 ∧ r = «» ∧ c = «» ∧ q = «» ∧ n = 0)])
+FORGE_THEOREM exported_contract_on_refund_fields
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_fields charge request original remaining enabled opened candidate
+    amount reason = (ok,a,r,c,q,n) ⇒
+  evaluate_exps
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ensures =
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n,Rval [BoolV T; BoolV T; BoolV T])
+FORGE_THEOREM exported_contract_exact
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ evaluate_exps
+    (exported_contract_state h charge request original remaining enabled
+       opened candidate amount reason ok a r c q n) env exported_ensures =
+  (exported_contract_state h charge request original remaining enabled opened
+     candidate amount reason ok a r c q n,Rval [BoolV T; BoolV T; BoolV T]) ⇔
+  refund_fields charge request original remaining enabled opened candidate
+    amount reason = (ok,a,r,c,q,n)
+FORGE_THEOREM exported_contract_witnesses
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_fields «ch_1» «rq_1» 100 60 T T T 40 «duplicate_charge» =
+  (T,40,«duplicate_charge»,«ch_1»,«rq_1»,1) ∧
+  refund_fields «ch_1» «rq_1» 100 60 T T T 61 «duplicate_charge» =
+  (F,0,«»,«»,«»,0)
+Exporting theory "forge_refundExportedContract" ... done.
+Theory "forge_refundExportedContract" took 18.1s to build
+EXPORTED_CONTRACT_COMPLETE

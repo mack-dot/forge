@@ -19809,3 +19809,129 @@ curl: (6) Could not resolve host: github.com
   (documents only). The regression did not run on that commit.
 - Impact: none on any stage label. `end_to_end=false`. Next check: the hosted `gate/pr_check.py` on the pull
   request (expected exit 3, UNSUPPORTED).
+
+## U800 — gate APEX-2 (Dafny <-> HOL4 contract link): start, what existed, and how I read the owner's text
+
+- Refs U709 (Text 7 read; no gate started then), U482, U473, U393. Owner text: `proposals/forge2-native-silicon-sink/OWNER_TEXTS.md`
+  Text 7, "GATE APEX-2"; the launcher gave the order to run it now, beside F1. Branch `feat/m1-contract-link-closure` from
+  `9a9a8943`. Package: `proposals/apex2-contract-link-20261119/`.
+- What existed (read, not proved again): link cases H1, H2 (`exported_contract_exact`, a `hol run`, not Holmake); U294
+  replays R1 to R3; `LinkedRefund.dfy`; `SliceTheorem.FlatContract`. T2b, T3, T4 were ASSUMPTIONS.
+- UNSURE, my reading: "Holmake exit 0" asks for a Holmake build. H1 and H2 were not one. I ported that script to Holmake
+  (same nine statements, equal text by a script comparison) and added new theories. I count this as reuse, not as a second proof.
+- UNSURE, my reading: "R1-R5 fallback" = R3's no-intent fallback = the third flat clause (the zero answer). "UTF-8 byte
+  sequences" = byte strings; the map HOL <-> Dafny is byte = character code, not a UTF-8 decoding.
+- The text says "`LinkedRefund.dfy` (1,486 obligations)". On `main` 1,486 is the run WITHOUT the library axiom module (S3a);
+  the base run is 1,489. I ran neither. I copied no count from the text.
+- The text says "post-APEX-1". APEX-1 is not merged. The launcher's order ("Clock 2") is my authority to start; I did not
+  see the owner's words myself. Impact: if the order was not the owner's, this pull request is still documents and proofs
+  only, and the owner can close it.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN.
+
+## U801 — APEX-2: the HOL results (Holmake), the failed attempts, the repeat
+
+- Refs U800. Evidence: `proposals/apex2-contract-link-20261119/records/hol/` (`run-0001`, `run-0002`, `run-0003`,
+  `exports.json`, `dev-attempts/`). Command: `Holmake --no_prereqs` in a copy of `hol/`, heap `cakeml/misc/cakeml-heap`,
+  one HOL process at a time under `hol.lock`.
+- Actual: exit 0 in run-0001, run-0002 (51 s each) and run-0003 (through `hol/run_hol.sh`). Three theories:
+  `forge_refundExportedContract` (10 theorems; 9 are the night-shift statements, equal text), `forge_refundFlatContract`
+  (FC1 `refund_fields_flat_plain` and 10 more), `forge_refundFlatExported` (FC3). 0 hypotheses, no axiom, tag `DISK_THM` only.
+- Repeat: the nine `.dat/.sig/.sml` files and `HolFlatGenerated.dfy` are byte-identical in run-0001 and run-0002; the three
+  `.dat` files of run-0003 are equal too.
+- Failed attempts, kept: dev-0001 exit 1 (static error, `open mlstringSyntax`); dev-0002 exit 1 (`codes_bytes`); dev-0003
+  exit 1 (`codes_literals`); dev-0004 exit 1 (`flat_plain_total`). dev-0005 and dev-0006 exit 0 on earlier script text.
+- The tool tree was only read (no file newer than the first job). Holmake ran a `.hol_preexec` hook of the HOL tree
+  (`asl-equiv`); it did nothing because its folder exists. If that folder is ever absent, the hook would fetch from the network.
+- Limits: model level; same machine; stored parents; not a clean or independent replay. The script pins the export by SHA-1
+  and length inside the build and by SHA-256 in `run_hol.sh`; the digest is not a HOL theorem.
+- Impact: S6 stays MACHINE-CHECKED (model). Next check: a clean replay on a second machine (V4, V5).
+
+## U802 — APEX-2: the translation boundary BETA-PLAIN is an ASSUMPTION with a tested check; it is not machine-checked
+
+- Refs U801. Evidence: `hol/forge_refundFlatContractScript.sml` (`dafny_of_term`), `dafny/HolFlatGenerated.dfy`,
+  `dafny/HolLink.dfy`, `check_link.py`, `PINS.json`.
+- Actual: `check_link.py --dafny … --z3 …` exit 0 (`CHECK_LINK PASS`; Dafny "11 verified, 0 errors"). Without Dafny: exit 5.
+- What stays assumed: (1) the ML printer gives a Dafny text with the meaning of the HOL term, under a table of 10 rows;
+  (2) HOL `int`, `bool`, `int list` and Dafny `int`, `bool`, `seq<int>` are the same mathematical values; (3) a HOL
+  `mlstring` and a Dafny `string` are the same value when their codes are equal, which needs all characters below 256;
+  (4) soundness of both tools and the identity of the loaded HOL parents (file evidence only).
+- The check compares the generated file with a log of the SAME printer. It does not check the printer. The printer is tested
+  by three controls and by the two-direction Dafny proof.
+- A consistent swap of the two identifiers on inputs and outputs together is not detectable. It changes no meaning.
+- Impact: T3 narrowed, not closed. Next check: a second, independent printer or a proof-producing translation.
+
+## U803 — APEX-2: negative controls, 32 of 32 count
+
+- Refs U801, U802. Evidence: `records/controls/controls.json`, `records/controls/CONTROLS.json`, one folder per HOL control.
+  Judge: `controls/eval_controls.py`, actual exit 0.
+- Actual: 9 HOL statement controls (ids swapped on outputs, ids swapped on inputs, MaxMoney + 1 and − 1, three altered guard
+  conjuncts, fallback, reason byte): Holmake exit 1 each, at `refund_fields_flat_plain`. 5 export controls: exit 1 each (pin
+  refusal; `exported_ens1_value`; `exported_ens2_value`). 3 printer controls: Holmake exit 0 as expected, then refused by the
+  pin (exit 1) and by Dafny (exit 4). 15 Dafny controls: refused by the pin and, with the pins off, by Dafny with
+  postcondition errors only in `HolLink.dfy`.
+- A first batch of 15 HOL controls ran on the script text before the review repairs, with the same exits; only its log is kept.
+- Not covered: a mutant of `SliceTheorem.FlatContract`; controls on the Route A case; a control on Dafny or Z3 themselves.
+- Impact: none on a class. Next check: none planned.
+
+## U804 — APEX-2: Route A in the reachable-call form on the plain contract; what the processor premise forces
+
+- Refs U393, U409, U473, U482. Evidence: `routeA/RA-FLAT.sml`; `records/routeA/RA-FLAT-0002/` (`command.json`: actual exit 0,
+  126.4 s, 3,186 MiB); RA-FLAT-0001 (earlier run, exit 0, same `.dat`).
+- Actual: R1 `refund_route_a_flat_plain_shape` = the stored `refund_model_frame_decision_shape` (L2d-0001) with its last
+  conjunct rewritten by two proved equivalences; the script checks that the 12 premises are unchanged. R2, R3: the entry
+  premise forces TBI0 = TBI1 = SA0 = E0E = F and refuses a state with TBI0 or SA0 set.
+- This is a `hol run` with 146 stored parent files. It is NOT a Holmake build. It loads the STORED night-shift theory
+  `forge_refundExportedContract`, not the Holmake port (same name; equal statements).
+- UNSURE: my reading of "apply the honest Route A simulation form for `fficlose` and ARMv8 TBI0/SA0 user-space premises" is
+  "state the result with the reachable-call FFI premise and make the processor premise explicit". No other record defines the phrase.
+- Honest limits: P8 (the FFI contract at shape-valid calls, close included) is an ASSUMPTION; the night-shift review found no
+  environment for the present C that meets it; the signed-length conjunct at close is absent. R1 speaks of the erased state
+  only; the run lift of erasure is MISSING. The real TBI0 and SA0 values were never observed on this machine.
+- Impact: X3, X7, X11 keep their classes. Next check: owner items A-3 (FFI) and the run lift ML-08, ML-09.
+
+## U805 — APEX-2: the one review (1 FAIL-OPEN, 1 HIGH, 7 MEDIUM, 4 LOW, 3 NOTE) and the repairs
+
+- Refs U802, U803. Evidence: `proposals/apex2-contract-link-20261119/REVIEW.md`.
+- The FAIL-OPEN was in my check script, not in a proof: `check_link.py --skip-pins` printed PASS after it checked nothing.
+  Repaired: control mode exits 3 and never prints PASS. The HIGH: no required pin keys. Repaired: 14 required keys.
+- The reviewer ran 9 Dafny mutants of its own; each was refused. It ran no HOL.
+- Repairs were made in one pass and were NOT reviewed again. Finding 9 (two theories with one name) and finding 16 (an old
+  comment in `SliceTheorem.dfy`) are stated only.
+- The reviewer is a worker of the same model family on the same machine. It is not an independent party.
+- Impact: none on a class. Next check: a second review, if the owner wants one.
+
+## U806 — APEX-2: state of T2b, T3, T4; the graph; the Dafny slice run; the regression; the hosted check
+
+- Refs U800 to U805. Evidence: `proposals/apex2-contract-link-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119_APEX2.md`,
+  `records/dafny/`, `records/regression.json`.
+- T2b: NOT closed; off the path of the contract link; still an ASSUMPTION for the `ExportBridge` route. T3: NARROWED to
+  BETA-PLAIN (U802); not closed. T4: NOT closed; off the path; a cross-check for the three `ensures` clauses only (FC3 with
+  D1, D2). No row of the 45 changed class. S7 is narrower.
+- Dafny slice run (`HolSlice.dfy`, includes `SliceTheorem.dfy`): actual exit 0, "1583 verified, 0 errors", twice (alone; inside
+  `check_link.py --slice`, which then printed `CHECK_LINK PASS (HolLink and HolSlice)`). The reviewer saw 1582 before the
+  byte-domain lemma was added.
+- Regression in a scratch clone: NOT RUN at the commit that adds this entry. See U807.
+- Hosted `gate/pr_check.py`: NOT RUN at the commit that adds this entry. Expected exit 3 (UNSUPPORTED). See U807.
+- NOT RUN: Stages 7, 9, 10; a clean or independent HOL replay; the S3a Dafny run (1,486).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on the pull request.
+
+## U807 — APEX-2: the regression in a scratch clone, the hosted check, and what the records commits hold
+
+- Refs U806 (its three "NOT RUN at the commit" lines are resolved here), U724 (the same check for goal 20). Evidence:
+  `proposals/apex2-contract-link-20261119/records/regression.json`; `proposals/apex2-contract-link-20261119/run_regression.py`
+  (the goal 20 runner; the tool folders are linked from the owner's checkout because a worktree has none; other link list).
+- Actual: a throwaway clone of commit `6606720f` (merge base with `origin/main`: `9a9a8943`). 28 of 28 Stage EXIT cases
+  exit 0. `check_frozen_pr_gate.py HEAD` exit 0. `check_links.py` exit 0 for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`,
+  `unsure.md`, two earlier reports and the three new documents: 0 dangling links. Six EXIT scripts with `--case evidence`
+  exit 0; bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…` byte-identical to the
+  tracked records. Protected paths changed against the merge base: 0.
+- A "Goal 21 Intent" bundle is named in the owner's hard rule 2. It is not on `main` at `9a9a8943`. It was NOT checked.
+- The regression waited for heavy jobs of two other teams; the machine was shared during the run.
+- Hosted `gate/pr_check.py` on pull request 66, head `6606720f`, run 44661325260: actual exit 3, outcome UNSUPPORTED. That
+  is the expected result for a pull request that changes only proposals and records.
+- My error, recorded: records commit `b8c1e92d` says in its message that it holds this entry. It holds only the regression
+  record and the changed README lines: a script of mine stopped before it wrote `ROADMAP.md` and this file. This entry and
+  the two changed `ROADMAP.md` rows are in the commit after `b8c1e92d`. No result changed.
+- The regression did NOT run on the two records commits (documents only). Their hosted results are in the pull request.
+- NOT RUN: Stage 7, Stage 9, Stage 10; a clean or independent HOL replay.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on pull request 66.
