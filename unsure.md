@@ -20568,3 +20568,61 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label. CURRENT none. M1-B OPEN. `end_to_end=false`.
 - Next check: the hosted `gate/pr_check.py` result of the pull request (UNSUPPORTED, exit 3, is the expected
   result for a change with no coverage claim). The agent does not merge.
+
+## U894 — Review 2026-11-20, defect D1: a design for a shipped isolation mode of the airlock engine; NOT started
+
+- Status: 2026-11-20. Refs U840 (the WAL fold, F2.7), U709 (APEX-3), U751 and U752 (native cosign, branch
+  `apex1/native-cosign` at `e3322303`, not merged). Record: `proposals/review-20261120-isolation/DESIGN.md` and
+  `README.md`. Branch `docs/isolation-mode-design` from `33055a59`. Documents only. No protected file. NOT merged by
+  the agent.
+- Design: a service user `_forgeairlock` (launchd daemon; Linux systemd briefly); one Unix socket per tenant in a
+  folder of mode 0710 with the tenant's OS group (no `unsafe`); a `serve-socket` acceptor that hands each connection
+  to a fresh `serve --bound-tenant` process; pinned files under a root-owned prefix with an ownership walk; the store
+  0700 of the service user; HMAC-SHA-256 tags on records and ratchet entries with a 0400 key outside the store; an
+  SDK `socket=` mode; the child-process mode labelled "no isolation".
+- It assumes the parallel engine pull request (`feat/airlock-review-hardening`): per-tenant key and request-id
+  namespaces, a pending-cosign lease state, the fail-closed ratchet CRC rule, a walk or per-exec re-check of every
+  pinned helper.
+- NOT closed (stated in the design): a hostile root, the owner's own `sudo`, a compromised service user, a kernel
+  bug, an owner who runs a command that an agent wrote, a restore of WAL and ratchet together by root or the owner,
+  WAL growth by valid commits and the O(N) re-fold (D4), timing and epoch leaks of a shared store.
+- Uncertainty: every setup step is NOT TESTED (no `sudo` was run). Cross-user socket access, the socket file mode
+  check of macOS, BSD group inheritance of the socket file, and the read timeout through a handed-over socket are
+  NOT TESTED.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Nothing is proved.
+- Next check: the owner's answers to Q-1 to Q-12 of the design.
+
+## U895 — D1 checked against `33055a59`; review details corrected; measured probes for the socket design
+
+- Refs U894. Evidence: `git show` and `sed -n` on `33055a59`; probes in the session scratchpad (not in the
+  repository).
+- D1 CONFIRMED: `sdk/py/forge_airlock.py` lines 302-303 and `sdk/ts/forge_airlock.ts` lines 302-303 start `serve` as a
+  child under the caller's user; `serve_argv` and `engine_dir` are caller-chosen (Python 290, 293; TypeScript 278,
+  281); `src/airlock/store.rs` lines 5-6, 24-37: CRC-32 and FNV-1a-128, unkeyed.
+- Review details: (a) a forged `REFUND` must pass the fold (`ledger.rs` 128-135: fresh id, `1 <= amount <=
+  remaining`); the review's example passes only with enough remaining, but the agent can forge an `OPEN_MONEY` first,
+  so the finding holds. (b) the ratchet "repairs" an appended record at the next open (`store.rs` 158-163). (c) the
+  Python SDK runs `sys.executable` (line 297), the TypeScript SDK runs `python3` from `PATH` (301, 500). (d) NEW:
+  the SDK's `replay`, `leases`, `sweep`, `cosign_message` start engine processes on the store folder (Python
+  535-537, TypeScript 499-505), so the shipped SDK needs access to the folder.
+- Measured: `UnixStream::peer_cred` on rustc 1.92.0 is unstable (compile exit 1, `E0658`); std bind/connect/accept
+  exit 0; handing an accepted stream to a child as stdin and stdout with no `unsafe`: build 0, run 0; a 117-byte
+  socket path: run exit 101 (`SUN_LEN`); `sun_path[104]` in the SDK `sys/un.h`; Python 3.9.6 and 3.10.11 have
+  `socket.LOCAL_PEERCRED` (same-user socket pair only, exit 0); the engine built from `33055a59` (exit 0) and the
+  tracked refund binary link only `libSystem`; `/opt/homebrew/bin/node` links 9 libraries under `/opt/homebrew/opt`,
+  and `/opt/homebrew` is owned by the developer account, so the genesis Node pin does not cover them (widens D2).
+- Uncertainty: every probe ran as one user on one machine. Two-user behaviour is NOT TESTED.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the malicious-agent test of the design, section 4,
+  after an owner-approved build.
+
+## U896 — Isolation design: the build estimate is relative to measured pieces; the owner decides the budget
+
+- Refs U894, U895. Evidence: `wc -l` on `33055a59` and on `e3322303` (`git show`), listed in the design, section 6.
+- Measured comparables, for example: `helpers.rs` `run` 53 lines; Python transport (`Store.__init__` to `_exchange`)
+  109; TypeScript transport 79; `pin.rs` `Sha256` 60; `store.rs` `init` 72; `cosign.rs` walk 26 (`e3322303`);
+  `tests/airlock/*.py` 3,068 in total.
+- Judgement (mine, kept apart from the measured column): 13 pieces (the 13 rows of the table) in 4 phases. Phase 2 (WAL MAC) alone
+  changes the WAL format. Phases 1 to 3 change the Goal 20 evidence bundle digest (`scripts/exit_goal20_sdk.py`
+  hashes `src/airlock/*.rs` of its list, both SDKs, `bin/forge-airlock`, `PROTOCOL.md`). No hours, days or cost given.
+- Uncertainty: the "same kind, about that size" judgements are mine; no source gives a size for the new pieces.
+- Impact: none. Nothing started. Next check: the owner's budget word and Q-1.
