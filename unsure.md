@@ -19956,3 +19956,51 @@ curl: (6) Could not resolve host: github.com
   pull request).
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Nothing started.
 - Next check: the owner's budget word and the answers to Q-1 to Q-8 of the record.
+
+## U880 — Review of 2026-11-20: claims 1, 2, 4, 5, 8, 11 verified against the files and corrected in the documents
+
+- Status: 2026-11-20. Refs U840 (base `33055a59`). Record: `proposals/review-20261120/README.md` (disposition table);
+  the review is copied byte-exact to `proposals/review-20261120/REVIEW.md` (SHA-256 `06367be4…ff70`). Documents only.
+  No protected file. No frozen module. No behaviour change.
+- Evidence class: reading of committed files, `gh repo view` (exit 0: `PRIVATE`, `licenseInfo: null`), `wc -l`
+  (`spec/refund/RefundSpec.dfy` 64, `impl/Refund.dfy` 15), `git log` of `ts/refund-finality/sink.ts` (last change
+  `136ad0bf`), the recorded E1 and E2 logs on the merged sink (`exit=1`, two refunds for `rq_1`).
+- Changed: the README top (what Forge is, a Python SDK example, limits, platform); the tagline is an aim; "public"
+  removed; the Slice 1 row names the KNOWN DEFECTIVE sink and pull request T19 (pending; `feat/t19-hardened-sink`); the
+  Round 4 row says "fresh-context reviews by separate workers of the same model family on the same machine" and that
+  nothing enforces the rule on `main`; "Run it" became "Run the proof-gate research stages"; the License section.
+  "PROVED CORE" wording in `docs/quickstart-5min.md` and `src/airlock/PROTOCOL.md` now states: model-level theorem,
+  M1-B OPEN, the compiled JavaScript is not proved, the native re-check of amount and reason.
+- Rejected: no claim. Precision: E2 uses two stores (two refunds for one charge and request id); E1 uses one store.
+- Not re-checked: claims 3 (only line counts), 6, 7, 9, 10. Defects D1 to D8 and the CI item: other pull requests or
+  open (README of the record folder). Nothing is fixed for them here.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's review of the pull request.
+
+## U881 — Review of 2026-11-20: the Goal 20 bundle subject changes; the `.rs` comments are deferred
+
+- Refs U880. Evidence: `scripts/exit_goal20_sdk.py` lines 94-97 (`SUBJECT`) and the `subject` key of the bundle (the
+  SHA-256 of each subject file). `docs/quickstart-5min.md` and `src/airlock/PROTOCOL.md` are subjects, and this pull
+  request changes both. So the subject digests change, and a new `--case evidence` run would NOT give the tracked
+  Goal 20 bundle bytes. NO new evidence run is made here. A regression that compares that bundle with the tracked
+  record (as in U807) is expected to differ on these two subject rows until the owner decides on a new record.
+- The "PROVED CORE" comments in `src/airlock/main.rs` line 6 and `src/airlock/verbs.rs` lines 162, 252 are NOT changed:
+  the `.rs` files are subjects, and branch `apex1/native-cosign` (head `e3322303`) edits both files. DEFERRED to the
+  engine pull request. Also unchanged and listed in the record: `bin/forge-airlock`, `booking_check.cjs`,
+  `diff_policy.py`, `run_demo.py` and `tests/airlock/test_sdk.py` (a test pins the label), the script's own labels.
+- Merge check (read-only): `git merge-tree --write-tree --name-only HEAD e3322303` after the documents commit: the
+  quickstart and `PROTOCOL.md` auto-merge; `unsure.md` conflicts, and it conflicts also for `33055a59` against
+  `e3322303` (a conflict of the two appends, not of this work).
+- Impact: none on any stage label. `end_to_end=false`. Next check: the owner decides when the Goal 20 record is renewed.
+
+## U882 — Review of 2026-11-20: what stays uncertain (SDK example run, registry names, platforms)
+
+- Refs U880. The README Python example: RUN in a variant. One `rustc` build of `src/airlock/main.rs` (exit 0, rustc
+  1.92.0) into a scratch folder, `bin/forge-airlock init` (exit 0), then the example with
+  `fa.Store(<scratch store>, engine_dir=<scratch engine>)` (exit 0; printed `COMMITTED`, `REJECTED_POLICY REASON_CAP`,
+  `COMMITTED`). The README text uses the default engine folder `build/airlock` and the store of quickstart step 2; that
+  exact text was NOT RUN.
+- Registry names: PyPI and npm answered HTTP 404 for `forge-airlock`, `forge_airlock`, `forge-airlock-sdk` (read-only
+  `curl`, 2026-11-20). A 404 reserves nothing. Scoped npm names and trademarks: NOT CHECKED.
+- Platform: no record shows a run of the engine or the SDKs on Linux or Windows; the README says "not tested". The
+  licence summaries in the decision note are general summaries, not legal advice.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the owner's licence and packaging decisions.
