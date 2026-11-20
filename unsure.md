@@ -19956,3 +19956,26 @@ curl: (6) Could not resolve host: github.com
   pull request).
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Nothing started.
 - Next check: the owner's budget word and the answers to Q-1 to Q-8 of the record.
+
+## U902 — Gate F2b, plan only: benchmark harness, six tasks, oracle controls, one probe per arm; in the probe the baselines had no escaped scenario; NO batch ran
+
+- Status: 2026-11-20 (system clock: the probe ended about 13:00Z). Refs U468 (the earlier printed plan; its 60 tasks,
+  540 runs and cost figure are NOT used here), U900, U901 (the lock, pull request 76). Record:
+  `proposals/forge2-stage9-benchmark/PLAN.md`, `records/probe-0001.json`, `records/controls-0001.json`.
+- Built: `bench.py` (matrix, controls, oracle, run with `--resume`), six money-policy tasks, a LOCAL FAKE provider, five
+  reference handlers as oracle controls. Under `proposals/`, not `scripts/`, so that the Stage 9 lock stays valid.
+- Actual: engine build exit 0 (2.21 s). `bench.py controls` exit 0: 30 of 30 as expected in 70.75 s. Probe
+  `bench.py run … --jobs 3` on T1, one cell per arm, exit 0 in 342.00 s: cells 83.0 s (A, 1 call), 341.9 s (B, 3
+  calls), 178.5 s (C, 1 call). Model reported by the CLI: `claude-opus-5-5`. Resume check: exit 0 with 0 cells run;
+  without `--resume` exit 2.
+- Finding: 0 escaped scenarios of 15 in each of the three probe cells. The task text names concurrency and repeated
+  delivery; both baseline handlers used a lock and a request-id record. With these tasks a batch can show no difference
+  between the arms. n = 1 per arm: this is not a result about the arms. I did not change the tasks after I saw it.
+- Uncertainty: the batch wall times in the plan are multiplications of one probe per arm on one task. The spread is
+  not known. Subscription rate limits are not measured. The cost figure (2.18 US dollars for five calls) is the CLI's
+  own print, not a bill. Cell D (`exit_slice3.py --case swap`) was not timed: the heavy lock was held by another team.
+- Limits: tasks, oracle and kit come from the Forge side; one policy shape; the oracle's rule model is test code; an
+  agent call can read outside its folder; the probe folder was beside a checkout.
+- NOT RUN: any batch; cell D; `scripts/exit_stage_9.py`; the hosted signing run.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN.
+- Next check: the owner's batch size (36, 54 or 72) and the choice among options 1 to 3 of the plan.

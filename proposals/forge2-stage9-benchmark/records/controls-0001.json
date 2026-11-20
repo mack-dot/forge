@@ -1,0 +1,669 @@
+{
+ "all_as_expected": true,
+ "command": "python3 proposals/forge2-stage9-benchmark/bench.py controls --out <DIR>",
+ "controls": [
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_airlock.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.8,
+   "task": "T1"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_locked.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.9,
+   "task": "T1"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 3,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_naive.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.9,
+   "task": "T1"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 1,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 3,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_no_dedupe.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.8,
+   "task": "T1"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 5,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_off_by_one.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.3,
+   "task": "T1"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 12
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_airlock.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 3.5,
+   "task": "T2"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 12
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_locked.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.2,
+   "task": "T2"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 12
+    },
+    "race": {
+     "escaped": 3,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_naive.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.1,
+   "task": "T2"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 12
+    },
+    "race": {
+     "escaped": 1,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 3,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_no_dedupe.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 3.1,
+   "task": "T2"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 5,
+     "scenarios": 12
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_off_by_one.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.7,
+   "task": "T2"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_airlock.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.5,
+   "task": "T3"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_locked.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.6,
+   "task": "T3"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 2,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_naive.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.5,
+   "task": "T3"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 1,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 3,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_no_dedupe.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.5,
+   "task": "T3"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 3,
+     "scenarios": 9
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_off_by_one.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.8,
+   "task": "T3"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_airlock.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 3.1,
+   "task": "T4"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_locked.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.9,
+   "task": "T4"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 3,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_naive.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.9,
+   "task": "T4"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 1,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 3,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_no_dedupe.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.9,
+   "task": "T4"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 4,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_off_by_one.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.3,
+   "task": "T4"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_airlock.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 3.1,
+   "task": "T5"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_locked.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.9,
+   "task": "T5"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 3,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_naive.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.9,
+   "task": "T5"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 1,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 3,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_no_dedupe.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.9,
+   "task": "T5"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 5,
+     "scenarios": 11
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 3
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_off_by_one.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.4,
+   "task": "T5"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 10
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_airlock.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.9,
+   "task": "T6"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 10
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_locked.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.8,
+   "task": "T6"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 10
+    },
+    "race": {
+     "escaped": 2,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_naive.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 1.7,
+   "task": "T6"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 0,
+     "scenarios": 10
+    },
+    "race": {
+     "escaped": 1,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 3,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_no_dedupe.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.7,
+   "task": "T6"
+  },
+  {
+   "as_expected": true,
+   "classes": {
+    "boundary": {
+     "escaped": 3,
+     "scenarios": 10
+    },
+    "race": {
+     "escaped": 0,
+     "scenarios": 2
+    },
+    "replay": {
+     "escaped": 0,
+     "scenarios": 3
+    }
+   },
+   "handler": "ref_off_by_one.py",
+   "handler_failures": 0,
+   "legal_not_paid": 0,
+   "oracle_seconds": 2.2,
+   "task": "T6"
+  }
+ ],
+ "exit": 0,
+ "note": "Oracle controls: the hidden oracle on five reference handlers for each of the six tasks. No model call. Not a benchmark result.",
+ "wall_seconds_time_p": 70.75
+}

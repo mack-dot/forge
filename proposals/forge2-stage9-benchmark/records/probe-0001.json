@@ -1,0 +1,581 @@
+{
+ "base_commit": "33055a591fd6c85eb7a342f0cc5e5de78f2145a3",
+ "bench_py_sha256": "224576b5e5f163400317e591ec614f71a202fe2392724c8a53a0cbc55d879e67",
+ "cells": {
+  "T1-A-s1": {
+   "agent_calls": [
+    {
+     "duration_api_ms": 74253,
+     "duration_ms": 78665,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 10,
+     "total_cost_usd": 0.31452460000000004,
+     "usage": {
+      "cache_creation_input_tokens": 19877,
+      "cache_read_input_tokens": 253498,
+      "input_tokens": 20,
+      "output_tokens": 8218
+     },
+     "wall_seconds": 81.1
+    }
+   ],
+   "agent_wall_seconds": 81.1,
+   "cell": "T1-A-s1",
+   "code_bytes": 5302,
+   "handler_sha256": "b6be8a44db4c65cb6b09fcac04da0f101ae7453e3785add5a5bf912c398526be",
+   "model": "opus",
+   "policy_bytes": 355,
+   "review_bytes": 0,
+   "score": {
+    "arm": "A",
+    "classes": {
+     "boundary": {
+      "escaped": 0,
+      "scenarios": 9
+     },
+     "race": {
+      "escaped": 0,
+      "scenarios": 3
+     },
+     "replay": {
+      "escaped": 0,
+      "scenarios": 3
+     }
+    },
+    "handler_failures": 0,
+    "legal_not_paid": 0,
+    "oracle_seconds": 1.8,
+    "provider_file_changed_by_agent": false,
+    "scenarios": [
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-DUPLICATE_CHARGE-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-DUPLICATE_CHARGE-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-DUPLICATE_CHARGE-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-SHIPPING-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-SHIPPING-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-SHIPPING-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-GOODWILL-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-GOODWILL-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-zero",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-negative",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-unknown-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-same-id",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-three-times",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-amount",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     }
+    ],
+    "task": "T1"
+   },
+   "status": "SCORED",
+   "task_text_bytes": 1987,
+   "task_text_sha256": "0bcc1482f639e73e19a3189efd6222a54fd6652d827f0eefe592a8d7e76f187e",
+   "test_bytes": 0,
+   "wall_seconds": 83.0
+  },
+  "T1-B-s1": {
+   "agent_calls": [
+    {
+     "duration_api_ms": 66986,
+     "duration_ms": 70591,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 9,
+     "total_cost_usd": 0.2839532,
+     "usage": {
+      "cache_creation_input_tokens": 18430,
+      "cache_read_input_tokens": 190596,
+      "input_tokens": 16,
+      "output_tokens": 7681
+     },
+     "wall_seconds": 73.4
+    },
+    {
+     "duration_api_ms": 103015,
+     "duration_ms": 105198,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 11,
+     "total_cost_usd": 0.3607412,
+     "usage": {
+      "cache_creation_input_tokens": 22603,
+      "cache_read_input_tokens": 253831,
+      "input_tokens": 20,
+      "output_tokens": 9844
+     },
+     "wall_seconds": 107.3
+    },
+    {
+     "duration_api_ms": 152394,
+     "duration_ms": 156955,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 11,
+     "total_cost_usd": 0.554502,
+     "usage": {
+      "cache_creation_input_tokens": 30441,
+      "cache_read_input_tokens": 311785,
+      "input_tokens": 20,
+      "output_tokens": 16993
+     },
+     "wall_seconds": 159.4
+    }
+   ],
+   "agent_wall_seconds": 340.1,
+   "cell": "T1-B-s1",
+   "code_bytes": 9458,
+   "handler_sha256": "9d0d9d7ba06f3c49fa34e278e2dfe062a69e885580eb396e4373902ea2bf1d00",
+   "model": "opus",
+   "policy_bytes": 355,
+   "review_bytes": 6603,
+   "score": {
+    "arm": "B",
+    "classes": {
+     "boundary": {
+      "escaped": 0,
+      "scenarios": 9
+     },
+     "race": {
+      "escaped": 0,
+      "scenarios": 3
+     },
+     "replay": {
+      "escaped": 0,
+      "scenarios": 3
+     }
+    },
+    "handler_failures": 0,
+    "legal_not_paid": 0,
+    "oracle_seconds": 1.9,
+    "provider_file_changed_by_agent": false,
+    "scenarios": [
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-DUPLICATE_CHARGE-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-DUPLICATE_CHARGE-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-DUPLICATE_CHARGE-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-SHIPPING-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-SHIPPING-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-SHIPPING-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-GOODWILL-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-GOODWILL-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-zero",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-negative",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-unknown-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-same-id",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-three-times",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-amount",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     }
+    ],
+    "task": "T1"
+   },
+   "status": "SCORED",
+   "task_text_bytes": 1987,
+   "task_text_sha256": "0bcc1482f639e73e19a3189efd6222a54fd6652d827f0eefe592a8d7e76f187e",
+   "test_bytes": 0,
+   "wall_seconds": 341.9
+  },
+  "T1-C-s1": {
+   "agent_calls": [
+    {
+     "duration_api_ms": 166171,
+     "duration_ms": 172080,
+     "exit": 0,
+     "is_error": false,
+     "models": [
+      "claude-opus-5-5"
+     ],
+     "num_turns": 16,
+     "total_cost_usd": 0.6641454,
+     "usage": {
+      "cache_creation_input_tokens": 41127,
+      "cache_read_input_tokens": 513352,
+      "input_tokens": 30,
+      "output_tokens": 17786
+     },
+     "wall_seconds": 174.9
+    }
+   ],
+   "agent_wall_seconds": 174.9,
+   "cell": "T1-C-s1",
+   "code_bytes": 7064,
+   "handler_sha256": "6cf4ad6fdb590f652ad7e86a5e992632201e577b9ed0a96d4c9845335143b134",
+   "model": "opus",
+   "policy_bytes": 355,
+   "review_bytes": 0,
+   "score": {
+    "arm": "C",
+    "classes": {
+     "boundary": {
+      "escaped": 0,
+      "scenarios": 9
+     },
+     "race": {
+      "escaped": 0,
+      "scenarios": 3
+     },
+     "replay": {
+      "escaped": 0,
+      "scenarios": 3
+     }
+    },
+    "handler_failures": 0,
+    "legal_not_paid": 0,
+    "oracle_seconds": 3.6,
+    "provider_file_changed_by_agent": false,
+    "scenarios": [
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-DUPLICATE_CHARGE-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-DUPLICATE_CHARGE-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-DUPLICATE_CHARGE-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-SHIPPING-cap-fill-then-over",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-SHIPPING-cap-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-SHIPPING-cap-race",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-GOODWILL-max",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-GOODWILL-max-plus-1",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-zero",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-negative",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "boundary",
+      "escaped": false,
+      "id": "B-unknown-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "race",
+      "escaped": false,
+      "id": "R-same-id",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-three-times",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-amount",
+      "legal_not_paid": 0,
+      "notes": []
+     },
+     {
+      "bad_payments": 0,
+      "class": "replay",
+      "escaped": false,
+      "id": "P-changed-reason",
+      "legal_not_paid": 0,
+      "notes": []
+     }
+    ],
+    "task": "T1"
+   },
+   "status": "SCORED",
+   "task_text_bytes": 2774,
+   "task_text_sha256": "8f31a41b3ab6c54482fe35ddf3205f87ba6c843ede7afb6d3346b6b8f28ec8ac",
+   "test_bytes": 0,
+   "wall_seconds": 178.5
+  }
+ },
+ "command": "python3 proposals/forge2-stage9-benchmark/bench.py run --out <DIR> --cell T1-A-s1 --cell T1-B-s1 --cell T1-C-s1 --jobs 3",
+ "engine_source": "src/airlock/main.rs at the base commit; rustc 1.92.0; first rustc command of bin/forge-airlock",
+ "exit": 0,
+ "note": "Probe 0001 of the Stage 9 benchmark harness: one trial per arm on task T1, three agent calls at once (--jobs 3). n=1 per arm. Not a benchmark result. end_to_end=false. total_cost_usd is the figure that the agent CLI printed; it was not checked against a bill.",
+ "wall_seconds_time_p": 342.0
+}

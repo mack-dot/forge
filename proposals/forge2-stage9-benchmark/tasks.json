@@ -1,0 +1,17 @@
+{
+ "note": "Six frozen tasks. One money policy each (COMMIT rules only; no cosign rule). Amounts are integer cents. Every order of a task has the same original and facts. The English task text is made from these fields by bench.py, the same text for the three arms.",
+ "tasks": {
+  "T1": {"domain": "online store refunds", "policy": "store-refunds", "original": 10000, "facts": {"shipping_paid": 1000},
+         "rules": [{"reason": "DUPLICATE_CHARGE"}, {"reason": "SHIPPING", "fact": "shipping_paid"}, {"reason": "GOODWILL", "max": 2000}]},
+  "T2": {"domain": "SaaS service credits", "policy": "saas-credits", "original": 50000, "facts": {"sla_budget": 6000},
+         "rules": [{"reason": "BILLING_ERROR"}, {"reason": "OUTAGE", "fact": "sla_budget", "max": 4000}, {"reason": "COURTESY", "min": 100, "max": 1500}]},
+  "T3": {"domain": "clinic claim adjustments", "policy": "claim-adjust", "original": 24000, "facts": {"copay_paid": 3000},
+         "rules": [{"reason": "COPAY", "fact": "copay_paid"}, {"reason": "ADMIN_FEE", "min": 500, "max": 2500}]},
+  "T4": {"domain": "marketplace buyer compensation", "policy": "buyer-comp", "original": 80000, "facts": {"fees_paid": 2400, "insurance_paid": 5000},
+         "rules": [{"reason": "FEES", "fact": "fees_paid"}, {"reason": "DAMAGE", "fact": "insurance_paid", "min": 1000}, {"reason": "LATE", "max": 800}]},
+  "T5": {"domain": "airline passenger compensation", "policy": "air-comp", "original": 120000, "facts": {"baggage_fee": 7000},
+         "rules": [{"reason": "BAGGAGE", "fact": "baggage_fee"}, {"reason": "DELAY", "min": 2500, "max": 60000}, {"reason": "FARE_ERROR"}]},
+  "T6": {"domain": "GPU cloud usage credits", "policy": "gpu-credits", "original": 300000, "facts": {"reserved_unused": 45000},
+         "rules": [{"reason": "UNUSED_RESERVATION", "fact": "reserved_unused", "max": 30000}, {"reason": "PREEMPTION", "min": 50, "max": 9000}]}
+ }
+}

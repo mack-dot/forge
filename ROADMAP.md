@@ -28,6 +28,28 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Gate F2b (Goal 22), plan only: Stage 9 benchmark harness, six frozen tasks, oracle controls and one probe per arm; NO batch ran; waits for the owner's batch size — U902
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing under
+`clearing/` or `scripts/` changed. Branch `f2/stage9-benchmark-plan`
+from `main` `33055a59`; NOT merged by the agent. Every row is a finite
+test on one machine; no row is a benchmark result.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `rustc --edition 2021 -D unsafe_code -C opt-level=3 src/airlock/main.rs -o build/airlock/airlock-engine` |0|2.21 s |
+| `bench.py controls --out <DIR>` |0|30 of 30 as expected in 70.75 s; no model call |
+| `bench.py run --out <DIR> --cell T1-A-s1 --cell T1-B-s1 --cell T1-C-s1 --jobs 3` (the probe: 5 agent calls) |0|342.00 s; cells 83.0 s, 341.9 s, 178.5 s; escaped scenarios 0 of 15 in each of the three arms |
+| the same with `--resume --cell T1-A-s1`; without `--resume` |0; 2|0 cells run; refused |
+| a batch of 36, 54 or 72 cells; `scripts/exit_slice3.py --case swap` as cell D; the six Stage 9 EXIT cases; the hosted signing run |NOT RUN|the batch waits for the owner's word; the others for the merge of pull request 76 |
+
+[Plan and matrix](proposals/forge2-stage9-benchmark/PLAN.md).
+Finding to keep: in the one probe the two baselines had no escaped
+scenario either. The batch times in the plan are arithmetic on one
+probe per arm, not measurements.
+M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
