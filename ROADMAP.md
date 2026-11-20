@@ -70,10 +70,20 @@ Findings, the number ledger and the proposed code-comment changes:
 Two record facts that the sections below do not show: (1) the tracked
 Goal 20 bundle record (`1e75ab47…`) does not reproduce on `main`: 20 of
 its 64 subject files changed in pull requests 68, 72 and 73, and no
-newer bundle is tracked; (2) `scripts/exit_archia_mcp.py` pins the
+newer bundle is tracked; (2) `scripts/exit_archia_mcp.py` pinned the
 pre-merge `bin/forge-airlock` (`bd56d8b6…`), but `main` has `8d9296ac…`,
-so its `--case build` cannot pass on `main` as written (NOT RUN; read
-from the script).
+so its `--case build` could not pass on `main` as written. This branch
+makes that pre-merge check "not applicable" after the script's own
+merge (the same for the additive check of
+`scripts/exit_universal_primitives.py`); both `--case build` runs then
+gave exit 0.
+
+Final results of the audit (hygiene, demos, the clean scratch clone:
+28 of 28 Stage EXIT cases exit 0, five bundles byte-identical, Goal 20
+bundle NOT RUN, 2 older missing link targets), with every actual exit
+code and every NOT RUN item:
+[release-readiness table](proposals/release-audit-20261120/README.md).
+Entry U920.
 
 ## V1.1 universal primitives pack: a new additive engine `src/primitives_v2` with rate windows, double-entry ledgers and graph uniqueness, recursive taint egress, Farkas certificate checks and a policy-to-Dafny model generator; a finite test of unproved Rust and Python around Dafny models; one review with repairs — U910 to U912
 
