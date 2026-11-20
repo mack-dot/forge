@@ -470,11 +470,12 @@ def case_multikey(s):
     ses.ask('DO cas_probe put p3 t1 2 a * b * 8', 'MALFORMED_REQUEST')
     ses.ask('DO cas_probe put x1 t2 1 z %s 1' % g, 'COMMITTED')
     a = ses.ask('DO cas_probe put p4 t1 2 a %s z %s 9' % (h, g), 'TENANT_ISOLATION_BREACH')
+    require(a.f.get('key_index') == '1' and 'key' not in a.f and ' z ' not in a.line + ' ', 'TENANT_ISOLATION_BREACH must name key_index=1, never the key: %r' % a.line)
     ses.ask('GET t1 z', 'TENANT_ISOLATION_BREACH')
     ses.ask(acquire('q1', 'rk', 1), 'COMMITTED')
     a = ses.ask('GET t1 rk', 'OK')
     a = ses.ask('DO cas_probe put p5 t1 2 a %s rk %s 9' % (h, a.f['hash']), 'MALFORMED_REQUEST')
-    require(a.f['why'] == 'KEY_KIND', 'a key of another primitive: %r' % a)
+    require(a.f['why'] == 'KEY_KIND' and a.f.get('key_index') == '1' and 'rk' not in a.line, 'a key of another primitive: %r' % a)
     a = ses.ask('DO cas_probe put p6 t1 3 a %s b %s c %s 9' % (h, h, h), 'COMMITTED')
     require(a.f['hash.a'] == a.f['hash.b'] == a.f['hash.c'] != h, 'second multi-key commit: %r' % a)
     ses.close()
@@ -754,6 +755,60 @@ def case_cooldown(s):
     return 'cooldown after 3 durable rejections, exact expiry across restarts, 0 records during cooldown'
 
 
+def case_cooldown_retry(s):
+    """Review finding M1: a RATE_LIMIT_EXCEEDED that itself starts the cooldown must state the wait until the SAME
+    request commits: max(window wait, cooldown_ms). Here cooldown_ms (30 s) > window_ms (3 s)."""
+    T = 10000000
+    out = []
+    for after, cool in ((1, 30000), (2, 30000), (1, 2000)):
+        d, clock, st = rate_store(s, 'cdretry%d' % after, max_ops_per_window=2, window_ms=3000, cooldown_after=after, cooldown_ms=cool)
+        ses = Session(s.seams, st, clock.env())
+        clock.set(T)
+        ses.ask(acquire('a1', 'k', 1), 'COMMITTED')
+        clock.set(T + 5)
+        ses.ask(acquire('a2', 'k', 1), 'COMMITTED')
+        t = T + 11
+        if after == 2:  # the first rejection does not start the cooldown: the window wait alone
+            clock.set(t)
+            a = ses.ask(acquire('r0', 'k', 1), 'RATE_LIMIT_EXCEEDED')
+            require(a.num('retry_after_ms') == 2989, 'a rejection that starts no cooldown: retry_after_ms must be the window wait 2989: %r' % a.line)
+            t += 1
+        clock.set(t)
+        a = ses.ask(acquire('r1', 'k', 1), 'RATE_LIMIT_EXCEEDED')
+        n = a.num('retry_after_ms')
+        want = max(T + 3000 - t, cool)
+        require(n == want, 'retry_after_ms of the refusal that starts the cooldown (cooldown_after=%d, cooldown_ms=%d): %d, expected %d: %r' % (after, cool, n, want, a.line))
+        require(ses.ask('GET t1 k', 'OK').num('cooldown_ms_left') == cool, 'the refusal did not start the cooldown')
+        if cool >= T + 3000 - t:  # one ms early: COOLDOWN_ACTIVE (writes nothing). With a shorter cooldown an early
+            clock.set(t + n - 1)     # retry would be a counted rejection that starts a new cooldown: not probed.
+            b = ses.ask(acquire('r2', 'k', 1), 'COOLDOWN_ACTIVE')
+            require(b.num('retry_after_ms') == 1, 'the retry one ms early must be refused with retry 1: %r' % b.line)
+        clock.set(t + n)
+        b = ses.ask(acquire('r3', 'k', 1))
+        require(b.code == 'COMMITTED', 'the retry at the stated time (now + %d) was not committed: %r' % (n, b.line))
+        ses.close()
+        out.append('after=%d cooldown=%d: retry %d commits' % (after, cool, n))
+    return 'the retry at the stated retry_after_ms commits (%s)' % '; '.join(out)
+
+
+def case_rate_key_limit(s):
+    """Review finding M2, a KNOWN LIMIT (not a protection): the caller picks the key and the tenant field is not
+    authenticated. A fresh key, or the same key name under another tenant name, has its own empty window and no
+    cooldown. This case pins that behaviour; it passes when the limit is as documented (PROTOCOL.md sections 9, 15)."""
+    d, clock, st = rate_store(s, 'keylimit', max_ops_per_window=1, window_ms=60000, cooldown_after=1, cooldown_ms=600000)
+    ses = Session(s.seams, st, clock.env())
+    ses.ask(acquire('a1', 'k', 1), 'COMMITTED')
+    ses.ask(acquire('a2', 'k', 1), 'RATE_LIMIT_EXCEEDED')
+    ses.ask(acquire('a3', 'k', 1), 'COOLDOWN_ACTIVE')
+    ses.ask(acquire('a4', 'k2', 1), 'COMMITTED')
+    ses.ask(acquire('a5', 'k', 1, tenant='t9'), 'TENANT_ISOLATION_BREACH')
+    ses.ask(acquire('a6', 'k3', 1, tenant='t9'), 'COMMITTED')
+    ses.close()
+    return ('KNOWN LIMIT (not a protection): with key k in a cooldown, a fresh key k2 of the same caller and a key k3 '
+            'under another unauthenticated tenant name commit at once; rate_window limits a key; the key and tenant must be '
+            'bound by a trusted wrapper outside the engine')
+
+
 SCRIPT = [(0, 'k', 1), (10, 'k', 1), (20, 'k', 1), (30, 'k', 1), (40, 'j', 5), (500, 'k', 1), (2000, 'k', 1),
           (2001, 'k', 1), (2002, 'k', 1), (2003, 'k', 1), (2500, 'k', 1), (3999, 'k', 1), (4000, 'k', 1), (7003, 'k', 1),
           (7004, 'k', 1), (9000, 'k', 1), (9001, 'j', 96), (9002, 'j', 95)]
@@ -930,6 +985,8 @@ def case_reserved(s):
         a = ses.ask(line)
         require(a.code == 'MALFORMED_REQUEST' and a.f.get('why') == 'RESERVED_KEY', '%s: expected MALFORMED_REQUEST why=RESERVED_KEY, got %r' % (who, a.line))
         require(a.f.get('owner') == 'ledger_graph' and a.f.get('prefix') == 'reg:' and 'now_ms' not in a.f, '%s: repair fields: %r' % (who, a))
+        require(a.f.get('key_index') == '0' and 'key' not in a.f and 'reg:t1' not in a.line.split(' -- ')[0].replace('prefix=reg:', ''),
+                '%s: the refusal must name key_index=0, never the key (review L4): %r' % (who, a.line))
     require(len(parse_wal(wal_of(st))[0]) == 1, 'a refused squat wrote a record')
     a = ses.ask('DO ledger_graph claim c1 t1 1 reg:t1 * names alice')
     require(a.code == 'COMMITTED', 'own claim with reg:t1 after the refused squats: expected COMMITTED, got %r' % a.line)
@@ -942,7 +999,8 @@ def case_reserved(s):
     st2, init2 = s.store(s.seams, d2, [], env=clock.env())
     g2 = init2.f['genesis']
     a = once(s.seams, st2, clock.env(), 'DO cas_probe put m1 t1 2 a %s reg:t1 %s 7' % (g2, g2))
-    require(a.code == 'MALFORMED_REQUEST' and a.f.get('key') == 'reg:t1', 'multi-key squat by cas_probe: expected MALFORMED_REQUEST why=RESERVED_KEY, got %r' % a.line)
+    require(a.code == 'MALFORMED_REQUEST' and a.f.get('why') == 'RESERVED_KEY' and a.f.get('key_index') == '1' and 'key' not in a.f,
+            'multi-key squat by cas_probe: expected MALFORMED_REQUEST why=RESERVED_KEY key_index=1, got %r' % a.line)
     require(len(parse_wal(wal_of(st2))[0]) == 1, 'a refused multi-key squat wrote a record')
     # replay: a forged record with a valid chain that names a reserved key under another primitive refuses the store
     good = wal_of(st)
@@ -998,7 +1056,8 @@ def case_trace(s):
 CASES = [('init', case_init), ('flip', case_flip), ('splice', case_splice), ('torn', case_torn), ('lock', case_lock),
          ('race', case_race), ('multikey', case_multikey), ('lines', case_lines), ('seams', case_seams),
          ('clock_setback', case_clock_setback), ('clock_request', case_clock_request), ('boundary', case_boundary),
-         ('volume', case_volume), ('cooldown', case_cooldown), ('restart', case_restart), ('kill9', case_kill9),
+         ('volume', case_volume), ('cooldown', case_cooldown), ('cooldown_retry', case_cooldown_retry),
+         ('rate_key_limit', case_rate_key_limit), ('restart', case_restart), ('kill9', case_kill9),
          ('u64', case_u64), ('cosign_ttl', case_cosign_ttl), ('unknown', case_unknown), ('reserved', case_reserved),
          ('trace', case_trace)]
 

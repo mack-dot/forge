@@ -129,10 +129,11 @@ def case_engine(s):
     st = s.store('engine', {'api.json': rate_pol('api')})
     with s.client(st) as c:
         r = expect(c.acquire('t2', 'reg:t1', 'api', 1), 'MALFORMED_REQUEST', 'squat of a registry handle', why='RESERVED_KEY')
-        require(r.repair.get('owner') == 'ledger_graph' and r.repair.get('prefix') == 'reg:' and r.repair.get('key') == 'reg:t1', 'reserved repair: %r' % r.line)
+        require(r.repair.get('owner') == 'ledger_graph' and r.repair.get('prefix') == 'reg:' and r.repair.get('key_index') == '0' and 'key' not in r.repair,
+                'reserved repair (key_index, never the key; review L4): %r' % r.line)
         expect(c.acquire('t1', 'k', 'api', 1), 'COMMITTED', 'owner commit')
         r = expect(c.acquire('t2', 'k', 'api', 1), 'TENANT_ISOLATION_BREACH', "another tenant's key")
-        require(r.repair.get('key') == 'k', 'tenant repair: %r' % r.line)
+        require(r.repair.get('key_index') == '0' and 'key' not in r.repair, 'tenant repair (key_index, never the key): %r' % r.line)
         expect(c.get('t2', 'k'), 'TENANT_ISOLATION_BREACH', "GET of another tenant's key")
         g = c.get('t1', 'k')
         require(isinstance(g, fp.KeyState) and g.exists and g.primitive == 'rate_window' and g.fields.get('ops') == '1', 'GET: %r' % g.line)
@@ -142,7 +143,7 @@ def case_engine(s):
         raises(fp.LocalRefusal, lambda: c.transfer('t1', 'L', 'a', 'b', 1, pre='*'), '* where CAS is required')
         st_ = c.state()
         require(st_['store_id'] == 'store' and st_['seq'] == '1', 'STATE: %r' % st_)
-    return 'RESERVED_KEY owner/prefix; TENANT_ISOLATION_BREACH key=; GET; local refusals before sending; STATE'
+    return 'RESERVED_KEY owner/prefix/key_index; TENANT_ISOLATION_BREACH key_index=; GET; local refusals before sending; STATE'
 
 
 def case_ledger(s):
@@ -254,6 +255,69 @@ FAKE_DEAD = '#!/bin/sh\nread l\nexit 0\n'
 FAKE_OK_FOR_KEYED = '#!/bin/sh\nread l\necho "OK verdict=ALLOW now_ms=1 skew_ms=0"\n'
 
 
+# A fake engine (Python, -I) that keeps serving: STATE answers, so a second call raises EngineDead ONLY if the SDK
+# closed the client itself. Each mode breaks one answer of the first DO.
+FAKE_PY = r"""#!%s -I
+import hashlib, json, sys
+MODE = %r
+H = 'a' * 64
+def sha(x):
+    return hashlib.sha256(x.encode()).hexdigest()
+for line in sys.stdin:
+    t = line.rstrip('\n').split(' ')
+    out = 'STATE store_id=s seq=0 tail=%%s now_ms=1' %% H
+    if t[:2] == ['DO', 'rate_window']:
+        rid, key = t[3], t[6]
+        if MODE == 'bad_seq_commit':
+            out = 'COMMITTED request_id=%%s seq=x now_ms=1 skew_ms=0 hash.%%s=%%s effect=A%%%%20api%%%%201' %% (rid, key, H)
+        else:
+            out = 'RATE_LIMIT_EXCEEDED retry_after_ms=1 request_id=%%s seq=x now_ms=1 skew_ms=0 hash.%%s=%%s' %% (rid, key, H)
+    elif t[:2] == ['DO', 'taint_egress']:
+        doc = ' '.join(t[8:])
+        word, now = ('ALLOW', 'x') if MODE == 'bad_now_verdict' else ('BLOCK', '1')
+        out = 'OK verdict=%%s policy=%%s destination=%%s mode=detect sha256=%%s bytes=%%d nodes=1 now_ms=%%s skew_ms=0' %% (word, t[6], t[7], sha(doc), len(doc), now)
+    elif t[:2] == ['DO', 'farkas']:
+        d = json.loads(' '.join(t[6:]))
+        v = lambda x: '[' + ','.join(str(i) for i in x) + ']'
+        s = sha('{"A":[%%s],"b":%%s}' %% (','.join(v(r) for r in d['A']), v(d['b'])))
+        c = sha('{"y":%%s}' %% v(d['y']))
+        out = 'OK verdict=FEASIBLE scope=nonneg_integer_x rows=2 cols=1 system_sha256=%%s cert_sha256=%%s now_ms=1 skew_ms=0' %% (s, c)
+    print(out, flush=True)
+"""
+
+FAKE_CALLS = [  # (mode, call, what it covers)
+    ('bad_seq_commit', lambda c: c.acquire('t1', 'k', 'api', 1, request_id='mine'), 'L1: COMMITTED with seq=x (_do)'),
+    ('bad_seq_refusal', lambda c: c.acquire('t1', 'k', 'api', 1, request_id='mine'), 'L1: durable refusal with seq=x (_refusal)'),
+    ('bad_now_verdict', lambda c: c.taint_check('t1', 'out', 'PUBLIC_HTTP', '{}'), 'L1: OK verdict with now_ms=x (_do)'),
+    ('taint_block', lambda c: c.taint_check('t1', 'out', 'PUBLIC_HTTP', '{}'), 'L2: taint OK verdict=BLOCK (sha256 and bytes right)'),
+    ('farkas_feasible', lambda c: c.farkas_check('t1', [[1], [-1]], [1, 0], [1, 1]), 'L2: farkas OK verdict=FEASIBLE (digests right)'),
+]
+
+
+def case_fake_answers(s):
+    """Review L1 and L2: each broken answer raises ProtocolError (never a result) AND closes the client."""
+    d = s.folder('fake-answers')
+    out = []
+    for mode, call, what in FAKE_CALLS:
+        p = d / ('fake-' + mode)
+        p.write_text(FAKE_PY % (sys.executable, mode))
+        os.chmod(p, 0o700)
+        c = fp.Primitives(d, engine=p)
+        try:
+            require(isinstance(c.state(), dict), '%s: the fake engine does not answer STATE' % mode)
+            e = raises(fp.ProtocolError, lambda: call(c), '%s (%s)' % (mode, what))
+            require(e.outcome_known is False, '%s: outcome must be unknown' % mode)
+            try:
+                r = c.state()
+            except fp.EngineDead:
+                r = None
+            require(r is None, '%s: the client was not closed after the ProtocolError (%s)' % (mode, what))
+        finally:
+            c.close()
+        out.append(mode)
+    return 'ProtocolError and a closed client for: %s' % ', '.join(out)
+
+
 def case_faults(s):
     d = s.folder('faults')
     out = []
@@ -284,7 +348,7 @@ def case_faults(s):
 
 
 CASES = [('rate', case_rate), ('engine', case_engine), ('ledger', case_ledger), ('registry', case_registry), ('graph', case_graph),
-         ('taint', case_taint), ('farkas', case_farkas), ('faults', case_faults)]
+         ('taint', case_taint), ('farkas', case_farkas), ('faults', case_faults), ('fake_answers', case_fake_answers)]
 
 
 def main():

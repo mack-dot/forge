@@ -428,7 +428,9 @@ def gen_rate(policy, sha):
           '// of consecutive counted rejections, the end of the cooldown (0: none). An event at t counts at `now` while',
           '// now < t + WindowMs. Post: (1) v > MaxVolume: VolumeAboveCap; (2) now < cooldownUntil: CooldownActive with',
           '// the exact rest; (3) it fits: Commit; (4) else RateLimited(n) where n is the LEAST d >= 1 at which the same',
-          '// request fits with no new event (and it does not fit at any d < n, d = 0 included).',
+          '// request COMMITS on the state this refusal leaves: the cooldown that this refusal starts (CoolEnd) is over',
+          '// and it fits with no new event (and it does not commit at any d < n, d = 0 included). Review finding M1',
+          '// (2026-11-20): before, (4) ignored the cooldown that the refusal itself starts.',
           'abstract module %sSpec {' % P,
           '  const PolicyName: string := %s' % lit(policy['name']),
           '  const PolicySha256: string := "%s"' % sha,
@@ -482,12 +484,22 @@ def gen_rate(policy, sha):
           '    LiveOps(es, now) + 1 <= MaxOps && LiveVol(es, now) + v <= MaxVolume',
           '  }',
           '',
+          '  // The end of the cooldown that a RateLimited refusal at `now` starts (0: it starts none).',
+          '  function CoolEnd(s: State, now: nat): nat {',
+          '    if CooldownAfter > 0 && s.rejections + 1 >= CooldownAfter then now + CooldownMs else 0',
+          '  }',
+          '  // After a RateLimited refusal at `now`, the same request commits at tau: the cooldown that the refusal starts',
+          '  // is over and the window has room (a refusal adds no event).',
+          '  predicate CommitsAfter(s: State, now: nat, tau: int, v: nat) {',
+          '    tau >= CoolEnd(s, now) && Fits(s.events, tau, v)',
+          '  }',
+          '',
           '  predicate Post(s: State, now: nat, v: nat, r: Verdict) {',
           '    if v > MaxVolume then r == VolumeAboveCap',
           '    else if now < s.cooldownUntil then r == CooldownActive(s.cooldownUntil - now)',
           '    else if Fits(s.events, now, v) then r == Commit',
-          '    else r.RateLimited? && r.retryAfter >= 1 && Fits(s.events, now + r.retryAfter, v) &&',
-          '         forall tau: int | now <= tau < now + r.retryAfter :: !Fits(s.events, tau, v)',
+          '    else r.RateLimited? && r.retryAfter >= 1 && CommitsAfter(s, now, now + r.retryAfter, v) &&',
+          '         forall tau: int | now <= tau < now + r.retryAfter :: !CommitsAfter(s, now, tau, v)',
           '  }',
           '',
           '  method Decide(s: State, now: nat, v: nat) returns (r: Verdict)',
@@ -516,12 +528,19 @@ def gen_rate(policy, sha):
           '    SearchFrom(es, now, v, 1, end)',
           '  }',
           '',
+          '  // The retry time: the window wait, or the end of the cooldown that this refusal starts when that is later.',
+          '  function RetryC(s: State, now: nat, v: nat): nat {',
+          '    var w := Retry(s.events, now, v);',
+          '    var c := CoolEnd(s, now);',
+          '    if c > now + w then c - now else w',
+          '  }',
+          '',
           '  // Total and deterministic (a function without precondition).',
           '  function DecideF(s: State, now: nat, v: nat): Verdict {',
           '    if v > MaxVolume then VolumeAboveCap',
           '    else if now < s.cooldownUntil then CooldownActive(s.cooldownUntil - now)',
           '    else if Fits(s.events, now, v) then Commit',
-          '    else RateLimited(Retry(s.events, now, v))',
+          '    else RateLimited(RetryC(s, now, v))',
           '  }',
           '',
           '  // The state after the request: a commit adds the event and clears the rejection count; with',
@@ -566,7 +585,24 @@ def gen_rate(policy, sha):
           '    }',
           '  }',
           '',
-          '  // R1: the retry time is the LEAST waiting time (the request fits at now + n and at no earlier time).',
+          '  // Fits is upward closed in time: an event that counts at b counts at every a <= b.',
+          '  lemma LiveMono(es: seq<Event>, a: int, b: int)',
+          '    requires a <= b',
+          '    ensures LiveOps(es, b) <= LiveOps(es, a) && LiveVol(es, b) <= LiveVol(es, a)',
+          '  {',
+          '    if |es| > 0 {',
+          '      LiveMono(es[..|es| - 1], a, b);',
+          '    }',
+          '  }',
+          '  lemma FitsMono(es: seq<Event>, a: int, b: int, v: int)',
+          '    requires a <= b && Fits(es, a, v)',
+          '    ensures Fits(es, b, v)',
+          '  {',
+          '    LiveMono(es, a, b);',
+          '  }',
+          '',
+          '  // R1: the retry time is the LEAST waiting time after which the same request commits (given the cooldown',
+          '  // that this refusal starts): it commits at now + n and at no earlier time.',
           '  lemma DecideFPost(s: State, now: nat, v: nat)',
           '    ensures Post(s, now, v, DecideF(s, now, v))',
           '  {',
@@ -581,6 +617,42 @@ def gen_rate(policy, sha):
           '      }',
           '      SearchIsLeast(es, now, v, 1, end);',
           '      assert Retry(es, now, v) == SearchFrom(es, now, v, 1, end);',
+          '      var w := Retry(es, now, v);',
+          '      var c := CoolEnd(s, now);',
+          '      if c > now + w {',
+          '        FitsMono(es, now + w, c, v);',
+          '        assert CommitsAfter(s, now, now + (c - now), v);',
+          '        forall tau: int | now <= tau < now + (c - now)',
+          '          ensures !CommitsAfter(s, now, tau, v)',
+          '        {',
+          '        }',
+          '      } else {',
+          '        assert CommitsAfter(s, now, now + w, v);',
+          '        forall tau: int | now <= tau < now + w',
+          '          ensures !CommitsAfter(s, now, tau, v)',
+          '        {',
+          '        }',
+          '      }',
+          '    }',
+          '  }',
+          '',
+          '  // R1b: the same request, sent again at now + retryAfter to the state that the refusal leaves (StepF), commits;',
+          '  // sent at any earlier time from now on, it does not commit.',
+          '  lemma RetryCommitsAfterStep(s: State, now: nat, v: nat)',
+          '    requires DecideF(s, now, v).RateLimited?',
+          '    ensures DecideF(StepF(s, now, v), now + DecideF(s, now, v).retryAfter, v) == Commit',
+          '    ensures forall tau: nat | now <= tau < now + DecideF(s, now, v).retryAfter :: DecideF(StepF(s, now, v), tau, v) != Commit',
+          '  {',
+          '    DecideFPost(s, now, v);',
+          '    var s2 := StepF(s, now, v);',
+          '    assert s2.events == s.events;',
+          '    assert (CooldownAfter > 0 && s.rejections + 1 >= CooldownAfter) ==> s2.cooldownUntil == CoolEnd(s, now);',
+          '    assert !(CooldownAfter > 0 && s.rejections + 1 >= CooldownAfter) ==> s2.cooldownUntil <= now && CoolEnd(s, now) == 0;',
+          '    var n := DecideF(s, now, v).retryAfter;',
+          '    forall tau: nat | now <= tau < now + n',
+          '      ensures DecideF(s2, tau, v) != Commit',
+          '    {',
+          '      assert !CommitsAfter(s, now, tau, v);',
           '    }',
           '  }',
           '',
@@ -698,9 +770,9 @@ def gen_rate(policy, sha):
           '  {',
           '    if r1.RateLimited? && r2.RateLimited? && r1.retryAfter != r2.retryAfter {',
           '      if r1.retryAfter < r2.retryAfter {',
-          '        assert !S.Fits(s.events, now + r1.retryAfter, v);',
+          '        assert !S.CommitsAfter(s, now, now + r1.retryAfter, v);',
           '      } else {',
-          '        assert !S.Fits(s.events, now + r2.retryAfter, v);',
+          '        assert !S.CommitsAfter(s, now, now + r2.retryAfter, v);',
           '      }',
           '    }',
           '  }',
@@ -824,9 +896,28 @@ def generate(data):
 # ---------------------------------------------------------------------------------------------------------------------
 # Running Dafny (one process at a time; wait while another Dafny process runs).
 # ---------------------------------------------------------------------------------------------------------------------
+SLOT = re.compile(r'dafny/dafny|Holmake|/hol |z3-4\.12\.1')
+DAFNY_VERSION = re.search(r'dafny-(\d+\.\d+\.\d+)', DAFNY).group(1)
+
+
+def slot_busy():
+    """A process whose command line matches SLOT holds the Dafny slot, except a shell, pgrep, grep, ps, tail or sleep:
+    a shell whose command text merely NAMES the pattern must not block (review: `pgrep -f 'dafny/dafny'` matched such
+    shells and could wait for ever)."""
+    p = subprocess.run(['ps', '-ax', '-o', 'pid=,command='], capture_output=True, text=True)
+    for line in p.stdout.splitlines():
+        pid, _, cmd = line.strip().partition(' ')
+        first = os.path.basename(cmd.split(' ', 1)[0]).lstrip('-')
+        if not pid.isdigit() or int(pid) == os.getpid() or first in ('sh', 'bash', 'zsh', 'pgrep', 'grep', 'ps', 'tail', 'sleep'):
+            continue
+        if SLOT.search(cmd):
+            return True
+    return False
+
+
 def wait_slot(limit=3600):
     waited = 0
-    while subprocess.run(['pgrep', '-f', 'dafny/dafny'], capture_output=True).returncode == 0:
+    while slot_busy():
         if waited >= limit:
             return False
         time.sleep(30)
@@ -834,12 +925,13 @@ def wait_slot(limit=3600):
     return True
 
 
-def run_dafny(args, log):
+def run_dafny(args, log, shown):
+    """Runs the pinned Dafny with `args`; logs `shown` (the same argv without machine paths) with the exit code."""
     if not wait_slot():
-        log.append({'argv': [DAFNY] + args, 'exit_code': None, 'result': 'NOT RUN: Dafny slot not free in 60 min'})
+        log.append({'tool': 'dafny ' + DAFNY_VERSION, 'argv': shown, 'exit_code': None, 'result': 'NOT RUN: Dafny slot not free in 60 min'})
         return None
     p = subprocess.run([DAFNY] + args, cwd=DAFNY_ROOT, capture_output=True, text=True)
-    log.append({'argv': [DAFNY] + args, 'cwd': str(DAFNY_ROOT), 'exit_code': p.returncode,
+    log.append({'tool': 'dafny ' + DAFNY_VERSION, 'argv': shown, 'exit_code': p.returncode,
                 'last_line': (p.stdout.strip().splitlines() or [''])[-1]})
     return p
 
@@ -942,8 +1034,9 @@ def transfer_vectors(policy, mod, _dafny, rnd, count):
 
 
 def build_py(dfy, work, log):
-    out = Path(work) / 'py'
-    p = run_dafny(['build', '--target', 'py', str(Path(dfy).resolve()), '--no-verify', '--output', str(out / 'model')], log)
+    out = Path(work).resolve() / 'py'   # absolute: Dafny runs with cwd = the toolchain checkout (a relative --work went there)
+    shown = ['dafny', 'build', '--target', 'py', '<out>/' + Path(dfy).name, '--no-verify', '--output', '<work>/py/model']
+    p = run_dafny(['build', '--target', 'py', str(Path(dfy).resolve()), '--no-verify', '--output', str(out / 'model')], log, shown)
     if p is None or p.returncode != 0:
         return None
     return out / 'model-py'
@@ -967,7 +1060,7 @@ def vectors(data, out_dir, work, count=None):
     record = {'generator': GENERATOR, 'kind': kind, 'policy': policy['name'], 'policy_sha256': hashlib.sha256(data).hexdigest(),
               'model_file': name, 'model_sha256': hashlib.sha256(text.encode()).hexdigest(),
               'computed_by': 'the Dafny-compiled (pinned Dafny, Python back end) function %s.DecideF%s' % (P, ' and StepF' if kind == 'rate_window' else ''),
-              'dafny': [{k: v for k, v in c.items() if k != 'cwd'} for c in log], 'vectors': table}
+              'dafny': log, 'vectors': table}   # the Dafny log holds no machine path (tool version, relative argv, exit code)
     target = Path(out_dir) / (name[:-4] + '.vectors.json')
     target.write_text(json.dumps(record, sort_keys=True, separators=(',', ':')) + '\n')
     n = sum(len(x) for x in table) if kind == 'rate_window' else len(table)

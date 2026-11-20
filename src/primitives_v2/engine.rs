@@ -261,7 +261,8 @@ fn do_request(ctx: &mut Ctx, r: &str) -> Result<String, Wire> {
         let (k, h) = (kh[2 * i], kh[2 * i + 1]);
         if !canonical_key(k) { return Err(malformed("BAD_KEY", "key: [A-Za-z0-9_.:@+-]{1,128}").into()) }
         if let Some((prefix, owner)) = reserved_for_other(prim, k) {
-            let f = vec![("why", "RESERVED_KEY".into()), ("key", k.to_string()), ("prefix", prefix.to_string()), ("owner", owner.to_string())];
+            // key_index, never the key itself: an engine refusal does not echo request data (review finding L4)
+            let f = vec![("why", "RESERVED_KEY".into()), ("key_index", i.to_string()), ("prefix", prefix.to_string()), ("owner", owner.to_string())];
             return Err(refusal("MALFORMED_REQUEST", f, "the key prefix is reserved by another primitive: choose another key name").into());
         }
         if let Some((prev, _)) = keys.last() {
@@ -278,10 +279,10 @@ fn do_request(ctx: &mut Ctx, r: &str) -> Result<String, Wire> {
 
     let mut s = store::open(&ctx.dir)?;
     let now = ctx.clock.read(s.f.last_ms)?;
-    for (k, _) in &keys {
+    for (i, (k, _)) in keys.iter().enumerate() {
         if let Some(info) = s.f.keys.get(*k) {
-            if info.tenant != tenant { return Err(refusal("TENANT_ISOLATION_BREACH", vec![("why", "KEY_OF_ANOTHER_TENANT".into()), ("key", k.to_string())], "").into()) }
-            if info.primitive != prim { return Err(malformed("KEY_KIND", "the key belongs to another primitive").into()) }
+            if info.tenant != tenant { return Err(refusal("TENANT_ISOLATION_BREACH", vec![("why", "KEY_OF_ANOTHER_TENANT".into()), ("key_index", i.to_string())], "").into()) }
+            if info.primitive != prim { return Err(refusal("MALFORMED_REQUEST", vec![("why", "KEY_KIND".into()), ("key_index", i.to_string())], "the key belongs to another primitive").into()) }
         }
     }
     if s.f.ids.contains(rid) { return Err(refusal("DUPLICATE_REQUEST_ID", vec![], "").into()) }

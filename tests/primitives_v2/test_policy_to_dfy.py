@@ -66,9 +66,23 @@ def load_generator(path):
     return mod
 
 
+def slot_busy():
+    """A process whose command line names the pinned Dafny, Holmake, hol or z3-4.12.1 holds the slot; a shell, pgrep,
+    grep, ps, tail or sleep that merely NAMES the text does not (`pgrep -f 'dafny/dafny'` matched such shells)."""
+    p = subprocess.run(['ps', '-ax', '-o', 'pid=,command='], capture_output=True, text=True)
+    for line in p.stdout.splitlines():
+        pid, _, cmd = line.strip().partition(' ')
+        first = os.path.basename(cmd.split(' ', 1)[0]).lstrip('-')
+        if not pid.isdigit() or int(pid) == os.getpid() or first in ('sh', 'bash', 'zsh', 'pgrep', 'grep', 'ps', 'tail', 'sleep'):
+            continue
+        if re.search(r'dafny/dafny|Holmake|/hol |z3-4\.12\.1', cmd):
+            return True
+    return False
+
+
 def wait_slot(limit=3600):
     waited = 0
-    while subprocess.run(['pgrep', '-f', 'dafny/dafny'], capture_output=True).returncode == 0:
+    while slot_busy():
         if waited >= limit:
             return False
         time.sleep(30)
@@ -319,8 +333,9 @@ def case_differential(s):
         require(record['model_sha256'] == hashlib.sha256(text.encode()).hexdigest(), 'the vectors are not those of this model')
         if s.generator == GENERATOR and not s.args.policy:
             committed = COMMITTED / (name[:-4] + '.vectors.json')
-            require(committed.is_file() and json.loads(committed.read_text())['vectors'] == record['vectors'],
-                    '%s: the committed vector table differs from a fresh computation' % committed.name)
+            fresh = (gen / (name[:-4] + '.vectors.json')).read_bytes()
+            require(committed.is_file() and committed.read_bytes() == fresh,
+                    '%s: the committed vector file differs from a fresh computation (whole file, byte for byte)' % committed.name)
         if kind == 'money':
             n, kinds = replay_money(s, policy, record)
         elif kind == 'rate_window':

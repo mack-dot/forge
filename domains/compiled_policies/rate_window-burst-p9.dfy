@@ -8,7 +8,9 @@
 // of consecutive counted rejections, the end of the cooldown (0: none). An event at t counts at `now` while
 // now < t + WindowMs. Post: (1) v > MaxVolume: VolumeAboveCap; (2) now < cooldownUntil: CooldownActive with
 // the exact rest; (3) it fits: Commit; (4) else RateLimited(n) where n is the LEAST d >= 1 at which the same
-// request fits with no new event (and it does not fit at any d < n, d = 0 included).
+// request COMMITS on the state this refusal leaves: the cooldown that this refusal starts (CoolEnd) is over
+// and it fits with no new event (and it does not commit at any d < n, d = 0 included). Review finding M1
+// (2026-11-20): before, (4) ignored the cooldown that the refusal itself starts.
 abstract module CompiledRate_62757273742d7039Spec {
   const PolicyName: string := "burst-p9"
   const PolicySha256: string := "358563970ea5d6d3d824351d5a1034f10a90d6e363a0d9ec7e4c857d7c157126"
@@ -62,12 +64,22 @@ abstract module CompiledRate_62757273742d7039Spec {
     LiveOps(es, now) + 1 <= MaxOps && LiveVol(es, now) + v <= MaxVolume
   }
 
+  // The end of the cooldown that a RateLimited refusal at `now` starts (0: it starts none).
+  function CoolEnd(s: State, now: nat): nat {
+    if CooldownAfter > 0 && s.rejections + 1 >= CooldownAfter then now + CooldownMs else 0
+  }
+  // After a RateLimited refusal at `now`, the same request commits at tau: the cooldown that the refusal starts
+  // is over and the window has room (a refusal adds no event).
+  predicate CommitsAfter(s: State, now: nat, tau: int, v: nat) {
+    tau >= CoolEnd(s, now) && Fits(s.events, tau, v)
+  }
+
   predicate Post(s: State, now: nat, v: nat, r: Verdict) {
     if v > MaxVolume then r == VolumeAboveCap
     else if now < s.cooldownUntil then r == CooldownActive(s.cooldownUntil - now)
     else if Fits(s.events, now, v) then r == Commit
-    else r.RateLimited? && r.retryAfter >= 1 && Fits(s.events, now + r.retryAfter, v) &&
-         forall tau: int | now <= tau < now + r.retryAfter :: !Fits(s.events, tau, v)
+    else r.RateLimited? && r.retryAfter >= 1 && CommitsAfter(s, now, now + r.retryAfter, v) &&
+         forall tau: int | now <= tau < now + r.retryAfter :: !CommitsAfter(s, now, tau, v)
   }
 
   method Decide(s: State, now: nat, v: nat) returns (r: Verdict)
@@ -96,12 +108,19 @@ module CompiledRate_62757273742d7039 refines CompiledRate_62757273742d7039Spec {
     SearchFrom(es, now, v, 1, end)
   }
 
+  // The retry time: the window wait, or the end of the cooldown that this refusal starts when that is later.
+  function RetryC(s: State, now: nat, v: nat): nat {
+    var w := Retry(s.events, now, v);
+    var c := CoolEnd(s, now);
+    if c > now + w then c - now else w
+  }
+
   // Total and deterministic (a function without precondition).
   function DecideF(s: State, now: nat, v: nat): Verdict {
     if v > MaxVolume then VolumeAboveCap
     else if now < s.cooldownUntil then CooldownActive(s.cooldownUntil - now)
     else if Fits(s.events, now, v) then Commit
-    else RateLimited(Retry(s.events, now, v))
+    else RateLimited(RetryC(s, now, v))
   }
 
   // The state after the request: a commit adds the event and clears the rejection count; with
@@ -146,7 +165,24 @@ module CompiledRate_62757273742d7039 refines CompiledRate_62757273742d7039Spec {
     }
   }
 
-  // R1: the retry time is the LEAST waiting time (the request fits at now + n and at no earlier time).
+  // Fits is upward closed in time: an event that counts at b counts at every a <= b.
+  lemma LiveMono(es: seq<Event>, a: int, b: int)
+    requires a <= b
+    ensures LiveOps(es, b) <= LiveOps(es, a) && LiveVol(es, b) <= LiveVol(es, a)
+  {
+    if |es| > 0 {
+      LiveMono(es[..|es| - 1], a, b);
+    }
+  }
+  lemma FitsMono(es: seq<Event>, a: int, b: int, v: int)
+    requires a <= b && Fits(es, a, v)
+    ensures Fits(es, b, v)
+  {
+    LiveMono(es, a, b);
+  }
+
+  // R1: the retry time is the LEAST waiting time after which the same request commits (given the cooldown
+  // that this refusal starts): it commits at now + n and at no earlier time.
   lemma DecideFPost(s: State, now: nat, v: nat)
     ensures Post(s, now, v, DecideF(s, now, v))
   {
@@ -161,6 +197,42 @@ module CompiledRate_62757273742d7039 refines CompiledRate_62757273742d7039Spec {
       }
       SearchIsLeast(es, now, v, 1, end);
       assert Retry(es, now, v) == SearchFrom(es, now, v, 1, end);
+      var w := Retry(es, now, v);
+      var c := CoolEnd(s, now);
+      if c > now + w {
+        FitsMono(es, now + w, c, v);
+        assert CommitsAfter(s, now, now + (c - now), v);
+        forall tau: int | now <= tau < now + (c - now)
+          ensures !CommitsAfter(s, now, tau, v)
+        {
+        }
+      } else {
+        assert CommitsAfter(s, now, now + w, v);
+        forall tau: int | now <= tau < now + w
+          ensures !CommitsAfter(s, now, tau, v)
+        {
+        }
+      }
+    }
+  }
+
+  // R1b: the same request, sent again at now + retryAfter to the state that the refusal leaves (StepF), commits;
+  // sent at any earlier time from now on, it does not commit.
+  lemma RetryCommitsAfterStep(s: State, now: nat, v: nat)
+    requires DecideF(s, now, v).RateLimited?
+    ensures DecideF(StepF(s, now, v), now + DecideF(s, now, v).retryAfter, v) == Commit
+    ensures forall tau: nat | now <= tau < now + DecideF(s, now, v).retryAfter :: DecideF(StepF(s, now, v), tau, v) != Commit
+  {
+    DecideFPost(s, now, v);
+    var s2 := StepF(s, now, v);
+    assert s2.events == s.events;
+    assert (CooldownAfter > 0 && s.rejections + 1 >= CooldownAfter) ==> s2.cooldownUntil == CoolEnd(s, now);
+    assert !(CooldownAfter > 0 && s.rejections + 1 >= CooldownAfter) ==> s2.cooldownUntil <= now && CoolEnd(s, now) == 0;
+    var n := DecideF(s, now, v).retryAfter;
+    forall tau: nat | now <= tau < now + n
+      ensures DecideF(s2, tau, v) != Commit
+    {
+      assert !CommitsAfter(s, now, tau, v);
     }
   }
 
@@ -278,9 +350,9 @@ abstract module CompiledRate_62757273742d7039Claim {
   {
     if r1.RateLimited? && r2.RateLimited? && r1.retryAfter != r2.retryAfter {
       if r1.retryAfter < r2.retryAfter {
-        assert !S.Fits(s.events, now + r1.retryAfter, v);
+        assert !S.CommitsAfter(s, now, now + r1.retryAfter, v);
       } else {
-        assert !S.Fits(s.events, now + r2.retryAfter, v);
+        assert !S.CommitsAfter(s, now, now + r2.retryAfter, v);
       }
     }
   }

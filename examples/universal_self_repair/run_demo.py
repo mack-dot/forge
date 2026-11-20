@@ -88,7 +88,8 @@ CANARIES = {
     'balance_tamper': ('balances_equal_ledger', 'the trusted ledger balance of one account changed by +1'),
     'secret_in_sink': ('zero_secret_bytes_in_sink', 'the raw secret value written to the sink'),
     'blocked_doc_in_sink': ('blocked_documents_never_in_sink', 'a blocked document written to the sink'),
-    'secret_in_answer': ('zero_secret_bytes_in_engine_output', 'a request whose key holds the secret: the engine echoes the key in RESERVED_KEY'),
+    'secret_in_answer': ('zero_secret_bytes_in_engine_output', 'a GET of a key that holds the secret: the engine echoes the caller\'s own key in key= '
+                         '(engine refusals name key_index, never the key, since review L4)'),
     'bad_schedule': ('schedule_satisfies_system', 'the submitted schedule replaced by all zeros before the demo check'),
     'dropped_refusal': ('refusal_records_equal_durable_refusals', 'one durable refusal answer removed from the trusted ledger'),
     'weak_true_cert': ('true_infeasibility_proved', 'the certificate of the true claim replaced by y = 0 (y^T b = 0)'),
@@ -637,9 +638,9 @@ class Run:
                 ok = True
             r = None
         elif k == 'secret_in_answer':
-            r = c.acquire(t, 'reg:' + next(iter(self.secrets.values())), 'api', 1, request_id='canary1')
+            r = c.get(t, 'canary:' + next(iter(self.secrets.values())))
             self.answers.append(r.line)
-            ok = isinstance(r, fp.Refusal)
+            ok = isinstance(r, fp.KeyState)
         line = getattr(r, 'line', None)
         if line:
             self.scr.out('ENGINE', short(line))

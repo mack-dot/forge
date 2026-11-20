@@ -40,7 +40,7 @@ the run.
 
 | # | Mistake | Engine answer | Repair (computed from the answer's fields) |
 | --- | --- | --- | --- |
-| 1 | a burst of `max_ops_per_window + 1` acquires | `RATE_LIMIT_EXCEEDED retry_after_ms=` (and `COOLDOWN_ACTIVE retry_after_ms=` when a cooldown starts) | sleep `retry_after_ms` in real time, send the rest of the burst |
+| 1 | a burst of `max_ops_per_window + 1` acquires | `RATE_LIMIT_EXCEEDED retry_after_ms=` (when this refusal starts the cooldown, the wait covers the cooldown too) or `COOLDOWN_ACTIVE retry_after_ms=` | sleep `retry_after_ms` in real time, send the rest of the burst |
 | 2a | a posting whose credits and debits differ | `CONSERVATION_BREACH debit_total= credit_total=` | cut the larger side by the difference, from the last leg in key order; a leg cut to 0 is dropped |
 | 2b | an edge batch where one edge closes a cycle | `DAG_CYCLE_DETECTED edge= cycle_len= index=` | drop exactly edge `index` (it must equal `edge=`) and send the rest of the batch |
 | 3 | a document with nested `PHI` (and `SECRET_KEY`) fields to a public sink | `TAINT_EGRESS_BLOCKED json_path= label= more=` | remove exactly the node at `json_path` (steps `.name`, `.~rank`, `[i]`, `@` for JSON inside a string) and send again |
@@ -76,7 +76,7 @@ The demo does not run Dafny.
 | `rate_equal_ledger` | `GET ops= volume= rejections=` = the values computed from the answers at the `GET` answer's `now_ms` | `extra_acquire` |
 | `hashes_equal_last_answer` | `GET` state hash of each key = the record hash of the last answer that named it | `extra_*` (also) |
 | `zero_secret_bytes_in_sink` | the sink file holds no secret and no 8-byte piece of one | `secret_in_sink` |
-| `zero_secret_bytes_in_engine_output` | every engine answer line (with the refusal detail texts) and the `replay` output hold no secret and no 8-byte piece of one | `secret_in_answer` (a key that holds the secret: `RESERVED_KEY key=` echoes it) |
+| `zero_secret_bytes_in_engine_output` | every engine answer line (with the refusal detail texts) and the `replay` output hold no secret and no 8-byte piece of one | `secret_in_answer` (a `GET` of a key that holds the secret: `OK key=` echoes the caller's own key; engine refusals name `key_index`, never the key) |
 | `blocked_documents_never_in_sink` | every sink entry is the exact bytes of an `ALLOW` answer (SHA-256 and length); no blocked document is in the sink | `blocked_doc_in_sink` |
 
 "0 bad writes" means: every record in the store is explained by one engine answer that the demo received, and the
@@ -91,6 +91,9 @@ canary.
 
 - Scripted agent, no model. The demo shows that the refusals carry enough structure for a mechanical repair. It
   does not show how a language model behaves.
+- rate_window limits a key; the key and tenant must be bound by a trusted wrapper outside the engine. The demo
+  agent names its own key and tenant; a fresh key, or another tenant name (not authenticated), has its own empty
+  window and no cooldown (PROTOCOL.md sections 9 and 15; review finding M2).
 - The engine trusts the host clock. The rate wait is real time; on a loaded machine a stall longer than
   `window_ms` during the burst would let the burst through, and then `mistakes_refused` FAILS (it is not hidden).
 - The schedule of mistake 4 is checked by the demo in Python (`DEMO CHECK`), not by the engine. The engine has no

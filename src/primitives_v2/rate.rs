@@ -20,12 +20,21 @@
 //! 2. A cooldown is active (`now < cooldown_until`): `COOLDOWN_ACTIVE retry_after_ms=<cooldown_until - now>`. No
 //!    record: the cooldown is already durable, so the WAL does not grow while it lasts.
 //! 3. It fits (`live_ops + 1 <= max_ops` and `live_volume + v <= max_volume`, sums in u128): commit, record `A <v>`.
-//! 4. Else `RATE_LIMIT_EXCEEDED retry_after_ms=<n>`: n is the exact time until it would fit: the k oldest live events
-//!    must stop counting, where k is the least number that frees one op AND enough volume; n = t_k + window_ms - now.
+//! 4. Else `RATE_LIMIT_EXCEEDED retry_after_ms=<n>`. n is the LEAST wait after which the same request commits, given
+//!    the state that this refusal leaves. Window part w: the k oldest live events must stop counting, where k is the
+//!    least number that frees one op AND enough volume; w = t_k + window_ms - now (`never` if that sum overflows).
 //!    With `cooldown_after > 0` the refusal changes state (the consecutive-rejection count), so it is a durable
 //!    record `X <v>` (it uses the request id up); the N-th consecutive one starts the cooldown
-//!    (`cooldown_until = t + cooldown_ms`, checked; an overflow gives u64::MAX). A commit resets the count.
-//!    With `cooldown_after = 0` the refusal changes nothing and writes nothing.
+//!    (`cooldown_until = now + cooldown_ms`, checked; an overflow gives u64::MAX). When THIS refusal starts the
+//!    cooldown, n = max(w, cooldown_until - now): a retry before the cooldown end would get COOLDOWN_ACTIVE (review
+//!    finding M1: before the repair n was w alone, and with cooldown_ms > window_ms the retry at the stated time was
+//!    refused). Otherwise n = w. A commit resets the count. With `cooldown_after = 0` the refusal changes nothing
+//!    and writes nothing. `COOLDOWN_ACTIVE retry_after_ms` (rule 2) is the rest of the cooldown only: the window can
+//!    still be full at that time.
+//!
+//! Limit (review finding M2, not repaired): the caller picks the key and the `<tenant>` field is not authenticated,
+//! so a fresh key (or another tenant name) has its own empty window and no cooldown. rate_window limits a KEY; the
+//! key and the tenant must be bound by a trusted wrapper outside the engine.
 //!
 //! Growth bound of refusal-only traffic: a rejection record exists only while the window of the key holds at least
 //! one committed event (rule 4 needs a live event; a request that can never fit is rule 1, no record), and at most
@@ -152,6 +161,15 @@ impl Primitive for RateWindow {
         match fits(&ks.events, p, now.now_ms, v) {
             Ok(()) => Decision::Commit(format!("A {name} {v}")),
             Err(wait) => {
+                // Does THIS refusal start the cooldown (the fold's rule)? Then the retry waits for its end as well.
+                let starts = p.cooldown_after > 0 && ks.rejections.checked_add(1).map_or(true, |r| r >= p.cooldown_after);
+                let wait = match wait {
+                    Some(w) if starts => {
+                        let until = now.now_ms.checked_add(p.cooldown_ms).unwrap_or(u64::MAX);
+                        Some(w.max(until - now.now_ms))
+                    }
+                    other => other,
+                };
                 let retry = wait.map_or("never".to_string(), |n| n.to_string());
                 let r = refusal("RATE_LIMIT_EXCEEDED", vec![("retry_after_ms", retry)], "the sliding window is full");
                 if p.cooldown_after > 0 { Decision::RefuseDurable(r, format!("X {name} {v}")) } else { Decision::Refuse(r) }

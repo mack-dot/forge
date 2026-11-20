@@ -142,7 +142,11 @@ def r_norm(k):
         o = ord(c)
         if 0xFF01 <= o <= 0xFF5E:
             c = chr(o - 0xFEE0)
-        if c in '_- ':
+        elif o == 0x17F:      # long s (review L3)
+            c = 's'
+        elif o == 0x212A:     # Kelvin sign (review L3)
+            c = 'k'
+        if c in '_-' or ord(c) in WS:   # every White_Space code point is dropped (review L3: NBSP)
             continue
         out.append(c.lower() if 'A' <= c <= 'Z' else c)
     return ''.join(out)
@@ -150,9 +154,9 @@ def r_norm(k):
 
 def r_jsonlike(s):
     i = 0
-    while i < len(s) and (ord(s[i]) in WS or r_ign(s[i])):
+    while i < len(s) and (ord(s[i]) in WS or r_ign(s[i]) or ord(s[i]) < 0x20 or 0x7F <= ord(s[i]) <= 0x9F):   # controls: review L3
         i += 1
-    return s[i:i + 1] in ('{', '[', '"')
+    return s[i:i + 1] in ('{', '[', '"', '\uff5b', '\uff3b', '\uff02')
 
 
 class RObj(list):
@@ -324,7 +328,7 @@ class Ref:
             if self.matches(r, lp):
                 matched = True
                 own |= r[2]
-        cval = None
+        cval, is_carrier = None, False   # a flag, not `cval is None`: a carrier's value can be JSON null (found 2026-11-20)
         if isinstance(v, RObj):
             norms = [r_norm(k) for k, _ in v]
             if len(set(norms)) != len(norms):
@@ -333,7 +337,7 @@ class Ref:
                 res = self.carrier(v, norms)
                 if res[0] == 'ok':
                     own |= res[1]
-                    cval = res[2]
+                    cval, is_carrier = res[2], True
                 elif res[0] == 'unknown':
                     add('s', 'UNKNOWN_LABEL')
                 else:
@@ -355,7 +359,7 @@ class Ref:
             add('u', 'UNLABELLED_FIELD')
             supp = True
         if isinstance(v, RObj):
-            if cval is not None:
+            if is_carrier:
                 self.visit(cval, path + '.value', lp, inh2, cov, supp, None)
             else:
                 order = sorted(range(len(v)), key=lambda i: v[i][0].encode())
@@ -651,6 +655,7 @@ TABLE = [
     T('t91 strict: nested JSON under a covered name', 'meds', P, {'meta': js({'anything': [1, 2]})}, ALLOW),
     T('t92 strict: own tenant', 'meds', A, {'tenant_id': 'a', 'id': 1}, ALLOW),
     T('t93 strict: carrier value leaf under a prefix', 'meds', P, {'patients': {'$taint': [], 'value': 1}}, un('$.patients.value')),
+    T('t93n strict: root carrier with a JSON null value (the reference once missed it)', 'meds', P, {'$taint': [], 'value': None}, un('$.value')),
     # the nine leaking result shapes of the MCP proxy review (REVIEW-B finding 2), translated, and its control
     T('r0 control: own label', 'med', A, {'tenant_id': 'a', 'n': 'ok'}, ALLOW),
     T('r1 free text TENANT-ID: b in a value (detect)', 'med', A, {'tenant_id': 'a', 'note': 'TENANT-ID: %s %s' % (B, BETA['MARK'])}, ALLOW),
@@ -835,9 +840,25 @@ EVASIONS = [
     ('E17 very wide document', 'med', P, [0] * 20000, ('TAINT_LIMIT', {'why': 'TOO_MANY_NODES', 'max': str(MAX_NODES)})),
     ('E18 carrier omitted by the author', 'med', A, {'tenant_id': 'a', 'rows': [{'name': BETA['name']}]}, ALLOW),
     ('E19 label name unknown to the policy', 'med', P, {'x': {'$taint': ['CREDIT_CARD'], 'value': S1}}, st_('UNKNOWN_LABEL', '$.~0')),
-    ('E20 Kelvin sign K in a key (no Unicode case fold)', 'med', P, {'api_Key': S2}, ALLOW),
+    ('E20 Kelvin sign K in a key (folded since review L3)', 'med', P, {'api_\u212aey': S2}, bl('$.apikey', 'SECRET_KEY')),
     ('E21 tenant id hidden in free text', 'med', A, {'tenant_id': 'a', 'note': 'tenant %s' % B}, ALLOW),
     ('E22 label by the key name only: secret in a sibling', 'med', P, {'ssn_hint': S1}, ALLOW),
+    # review L3 (2026-11-20): the repaired rows (blocked or refused now) and the rows that stay open (pinned as they are)
+    ('E23 NBSP in a key (dropped like a space)', 'med', P, {'ssn\u00a0': S1}, bl('$.ssn', 'PII')),
+    ('E24 long s in a key (folded)', 'med', P, {'\u017fsn': S1}, bl('$.ssn', 'PII')),
+    ('E25 ideographic space in a key (dropped)', 'med', P, {'s\u3000sn': S1}, bl('$.ssn', 'PII')),
+    ('E26 sharp s: full case fold not done (casefold gives ssn)', 'med', P, {'\u00dfn': S1}, ALLOW),
+    ('E26s same, strict', 'meds', P, {'\u00dfn': S1}, un('$.~0')),
+    ('E27 circled letter (NFKC) not folded', 'med', P, {'\u24e2sn': S1}, ALLOW),
+    ('E28 ligature ff (full case fold / NFKC) not folded', 'med', P, {'api_key\ufb00': S2}, ALLOW),
+    ('E29 JSON after U+001E (str.strip removes it)', 'med', P, {'n': '\u001e' + js({'ssn': S1})}, st_('OPAQUE_JSON', '$.~0', error='BAD_VALUE')),
+    ('E30 JSON after U+001C', 'med', P, {'n': '\u001c' + js({'ssn': S1})}, st_('OPAQUE_JSON', '$.~0', error='BAD_VALUE')),
+    ('E31 JSON after U+0000', 'med', P, {'n': '\u0000' + js({'ssn': S1})}, st_('OPAQUE_JSON', '$.~0', error='BAD_VALUE')),
+    ('E32 JSON after U+0008', 'med', P, {'n': '\u0008' + js({'ssn': S1})}, st_('OPAQUE_JSON', '$.~0', error='BAD_VALUE')),
+    ('E33 JSON after U+0085 (C1)', 'med', P, {'n': '\u0085' + js({'ssn': S1})}, st_('OPAQUE_JSON', '$.~0', error='BAD_VALUE')),
+    ('E34 fullwidth opening brace', 'med', P, {'n': '\uff5b"ssn":"%s"}' % S1}, st_('OPAQUE_JSON', '$.~0', error='BAD_VALUE')),
+    ('E35 fullwidth opening bracket', 'med', P, {'n': '\uff3b"%s"]' % S1}, st_('OPAQUE_JSON', '$.~0', error='BAD_VALUE')),
+    ('E36 JSON after a printable prefix (stays plain text)', 'med', P, {'n': 'x' + js({'ssn': S1})}, ALLOW),
 ]
 EVASIONS_T = [T(*e) for e in EVASIONS]
 
@@ -852,7 +873,8 @@ def case_evasions(s):
 KEYS = ['ssn', 'SSN', 's-s-n', 'Ssn', 'api_key', 'apiKey', 'API-KEY', 'notes', 'patients', 'billing', 'card', 'cards', 'tenant_id',
         'tenantId', 'TENANT_ID', 'value', 'Value', '$taint', 'id', 'name', 'note', 'meta', 'x', 'y', 'z', 'aa', 'zz',
         'ｓｓｎ', 's​sn', 'tenant_id_old', '{k}', 'é', 'café', 'café', 'k\u0001', 'internal_note',
-        'acme_rows', 'a.b', 'a[0]', 'MARK_KEY_sk', ' ', '', 'k' * 257, '"q', 'ѕsn']
+        'acme_rows', 'a.b', 'a[0]', 'MARK_KEY_sk', ' ', '', 'k' * 257, '"q', 'ѕsn',
+        'ssn\u00a0', '\u017fsn', 'api_\u212aey', '\u00dfn']   # review L3 keys
 LABELS = ['PII', 'PHI', 'SECRET_KEY', 'INTERNAL', 'TENANT:a', 'TENANT:b', 'TENANT:acme', 'CREDIT', 'pii']
 DESTS = ['PUBLIC_HTTP', 'LLM_STDOUT', 'AUDIT', 'TENANT:a', 'TENANT:b', 'TENANT:acme', 'NOPE']
 
@@ -865,7 +887,8 @@ def gen(rng, depth, budget):
         if c < 0.25:
             return rng.choice([0, 1, -5, 3.5, 78051120, True, False, None])
         if c < 0.55:
-            return rng.choice(['x', 'MARK_v', 'a', 'b', 'acme', 'a b', '', '[draft]', '"q" w', ' {', '\f{}', ' [1]'])
+            return rng.choice(['x', 'MARK_v', 'a', 'b', 'acme', 'a b', '', '[draft]', '"q" w', ' {', '\f{}', ' [1]',
+                               '\u001e{}', '\u0000[1]', '\uff5b}', 'x{}'])   # review L3 values
         if c < 0.8:
             inner = gen(rng, rng.randint(0, 3), budget)
             t = enc(inner)

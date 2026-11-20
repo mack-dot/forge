@@ -282,9 +282,23 @@ def case_stateless(s):
 
 
 # ---- the differential test ----------------------------------------------------------------------------------------
+def slot_busy():
+    """A process whose command line names the pinned Dafny, Holmake, hol or z3-4.12.1 holds the slot; a shell, pgrep,
+    grep, ps, tail or sleep that merely NAMES the text does not (`pgrep -f 'dafny/dafny'` matched such shells)."""
+    p = subprocess.run(['ps', '-ax', '-o', 'pid=,command='], capture_output=True, text=True)
+    for line in p.stdout.splitlines():
+        pid, _, cmd = line.strip().partition(' ')
+        first = os.path.basename(cmd.split(' ', 1)[0]).lstrip('-')
+        if not pid.isdigit() or int(pid) == os.getpid() or first in ('sh', 'bash', 'zsh', 'pgrep', 'grep', 'ps', 'tail', 'sleep'):
+            continue
+        if re.search(r'dafny/dafny|Holmake|/hol |z3-4\.12\.1', cmd):
+            return True
+    return False
+
+
 def wait_slot():
     waited = 0
-    while subprocess.run(['pgrep', '-f', 'dafny/dafny'], capture_output=True).returncode == 0:
+    while slot_busy():
         if waited >= 3600:
             return False
         time.sleep(30)

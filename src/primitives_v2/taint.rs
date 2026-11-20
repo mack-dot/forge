@@ -26,8 +26,11 @@
 //!   is refused contains everything below it); nodes below that carry the same label again are not counted.
 //!
 //! Key normalization (name rules, carriers, `AMBIGUOUS_KEY`), on the key AFTER the parser has decoded every `\u`
-//! escape: fullwidth ASCII U+FF01..U+FF5E becomes ASCII; `_`, `-` and space are dropped; ASCII A-Z becomes a-z.
-//! Nothing else: no Unicode case fold, no NFC/NFKC, no homoglyph map. Two keys of one object that are equal after
+//! escape: fullwidth ASCII U+FF01..U+FF5E becomes ASCII; U+017F (long s) becomes `s` and U+212A (Kelvin sign)
+//! becomes `k` (the two non-ASCII letters whose Unicode simple case fold is an ASCII letter); `_`, `-` and every
+//! Unicode White_Space code point (space, NBSP, U+2000..U+200A, U+3000, ...) are dropped; ASCII A-Z becomes a-z.
+//! Nothing else: no full Unicode case fold (`ß` stays, it does not become `ss`), no NFC/NFKC, no homoglyph map.
+//! (Review finding L3: before the repair, keys with NBSP or `ſ` passed a rule for `ssn`.) Two keys of one object that are equal after
 //! normalization: `AMBIGUOUS_KEY` (a lenient reader may merge them). Raw duplicate keys: the strict parser refuses
 //! the document (`MALFORMED_REQUEST why=BAD_JSON error=DUPLICATE_KEY`).
 //!
@@ -53,12 +56,15 @@
 //!
 //! 1. Strict parse of the document (src/airlock/json.rs: duplicate keys, lone surrogates, control bytes, trailing
 //!    bytes, depth > 64 refused): else `MALFORMED_REQUEST why=BAD_JSON error=<word>`.
-//! 2. Expansion: every string VALUE (also inside carriers) that LOOKS LIKE JSON (after leading Unicode White_Space
-//!    and default-ignorable code points it starts with `{`, `[` or `"`) is strict-parsed and takes the place of the
+//! 2. Expansion: every string VALUE (also inside carriers) that LOOKS LIKE JSON (after leading Unicode White_Space,
+//!    default-ignorable code points and C0/C1 controls U+0000..U+001F, U+007F..U+009F it starts with `{`, `[` or
+//!    `"`, or with the fullwidth `｛`, `［` or `＂`) is strict-parsed and takes the place of the
 //!    string, recursively, to MAX_NESTED = 4 levels. A JSON-like string that fails the strict parse stays a string
 //!    and is refused (`OPAQUE_JSON error=<parser word>`): a lenient reader downstream could parse it (trailing
 //!    comma, form feed, NBSP, duplicate key, trailing text, depth 65+). False refusals by design: `"quoted" words`,
 //!    `[draft] note`. Text that does not START like JSON is plain text (`note {"ssn":1}` passes in detect mode).
+//!    A JSON opener after a control (`\u001e{...}`: Python's `str.strip()` removes U+001C..U+001F) or a fullwidth
+//!    opener is refused as `OPAQUE_JSON` (review finding L3: before the repair such a string was plain text).
 //! 3. Bounds over the EXPANDED document, all counted before any label is checked, all order-independent, refused
 //!    whole, never truncated and passed: nodes (every value, plus one for each expanded string) > MAX_NODES =
 //!    16384: `TAINT_LIMIT why=TOO_MANY_NODES`; then a node deeper than MAX_DEPTH = 32 (root 0; an expanded
@@ -130,7 +136,12 @@
 //! | encodings of a KEY: `ss%6E`, `&#115;sn`, literal `\x73sn` | not decoded: detect ALLOW (passes); strict `UNLABELLED_FIELD`. JSON `ssn` IS decoded by the parser: blocked |
 //! | compressed (gzip+base64) or split secret across fields | ALLOW under unlabelled names (passes) |
 //! | numbers as carriers | a number under an unlabelled name: ALLOW (passes); under a labelled name: blocked |
-//! | homoglyph key (Cyrillic `ѕsn`), Kelvin sign in `api_Key` | not folded: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+//! | homoglyph key (Cyrillic `ѕsn`) | not folded: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+//! | Kelvin sign in `api_Key`, long s in `ſsn`, NBSP or U+3000 in `ssn\u00a0` | folded or dropped: blocked |
+//! | full case fold: `ßn` (Python `casefold()` gives `ssn`), ligature `ﬀ`, dotless `ı` | not folded: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+//! | compatibility forms (NFKC): superscript or circled letters, math alphanumerics | not folded: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+//! | JSON in a string after a control (`\u001e{`, `\u0000{`, `\u0008{`) or with a fullwidth opener (`｛`) | `OPAQUE_JSON` (refused) |
+//! | JSON in a string after a printable prefix (`x{"ssn":1}`, `note: {...}`) | plain text: detect ALLOW (passes); a downstream reader that searches for the first `{` recovers it |
 //! | zero-width or bidi code point in a key | `UNSAFE_KEY why=IGNORABLE` (refused in every mode) |
 //! | fullwidth key `ｓｓｎ` | folded: blocked |
 //! | keys that differ only by Unicode normalization (`café` NFC and NFD side by side) | no NFC: both kept, not `AMBIGUOUS_KEY`: ALLOW (passes) |
@@ -139,7 +150,7 @@
 //! | label carrier omitted by the author (a foreign record with no `tenant_id`) | detect: ALLOW (passes); only name rules apply |
 //! | label word the policy does not know | `UNKNOWN_LABEL` (refused) |
 //! | free text that names another tenant (`TENANT-ID: b` in a value; MCP review shapes 1 and 2) | text is never read: detect ALLOW (passes); strict: `UNLABELLED_FIELD` unless the name is covered |
-//! | ASCII case, `_`, `-`, space and fullwidth variants of a covered key | normalized to the policy name: a covert channel of a few bits per key (not refused) |
+//! | ASCII case, `_`, `-`, White_Space, `ſ`, Kelvin sign and fullwidth variants of a covered key | normalized to the policy name: a covert channel of a few bits per key (not refused) |
 //!
 //! This module checks LABELS and NAMES, not the content of values. It trusts the policy author for the rules and
 //! the document author for the carriers it contains: an omitted carrier is not detected, and a wrong `tenant_id`
@@ -227,26 +238,30 @@ pub fn ignorable(c: char) -> bool {
 }
 
 /// Key normalization for name rules, on the DECODED key (the parser has already decoded every `\u` escape):
-/// fullwidth ASCII U+FF01..U+FF5E becomes ASCII (minus 0xFEE0); then `_`, `-` and the space are dropped; then
-/// ASCII A-Z become a-z. Nothing else changes (no Unicode case folding, no NFC/NFKC, no homoglyph map).
+/// fullwidth ASCII U+FF01..U+FF5E becomes ASCII (minus 0xFEE0), U+017F becomes `s`, U+212A becomes `k`; then `_`,
+/// `-` and every White_Space code point are dropped; then ASCII A-Z become a-z. Nothing else changes (no full
+/// Unicode case folding, no NFC/NFKC, no homoglyph map).
 pub fn normalize(k: &str) -> String {
     let mut o = String::with_capacity(k.len());
     for c in k.chars() {
         let c = match c as u32 {
             u @ 0xFF01..=0xFF5E => char::from_u32(u - 0xFEE0).unwrap_or(c),
+            0x17F => 's',
+            0x212A => 'k',
             _ => c,
         };
-        if c == '_' || c == '-' || c == ' ' { continue }
+        if c == '_' || c == '-' || c.is_whitespace() { continue }
         o.push(c.to_ascii_lowercase());
     }
     o
 }
 
-/// A string "looks like JSON" when, after leading Unicode White_Space and ignorable code points, it starts with
-/// `{`, `[` or `"`.
+/// A string "looks like JSON" when, after leading Unicode White_Space, ignorable code points and C0/C1 controls
+/// (`char::is_control`: U+0000..U+001F, U+007F..U+009F), it starts with `{`, `[` or `"`, or with the fullwidth
+/// `｛` U+FF5B, `［` U+FF3B or `＂` U+FF02 (a lenient reader may strip or fold them; fail closed: OPAQUE_JSON).
 pub fn json_like(s: &str) -> bool {
-    let t = s.trim_start_matches(|c: char| c.is_whitespace() || ignorable(c));
-    t.starts_with('{') || t.starts_with('[') || t.starts_with('"')
+    let t = s.trim_start_matches(|c: char| c.is_whitespace() || ignorable(c) || c.is_control());
+    t.starts_with(['{', '[', '"', '\u{FF5B}', '\u{FF3B}', '\u{FF02}'])
 }
 
 /// Why a key is unsafe (first reason in this order), or None.

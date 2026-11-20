@@ -22,12 +22,13 @@ Cases (python3 scripts/exit_universal_primitives.py --case NAME):
   proofs     `dafny verify` + `dafny audit` (compared with the empty baseline gate/expected-audit.md) on
              src/primitives_v2/dafny/FarkasCert.dfy and the four committed generated models; generator determinism
              (`gen` in 16 processes with PYTHONHASHSEED 0..15, byte-compared with the committed .dfy; `vectors`
-             recomputed and compared with the committed vector tables); spec clearing of each model through
+             recomputed and compared with the committed vector files, whole file, byte for byte); spec clearing of each model through
              `policy_to_dfy.py clear` (scripts/spec_clearing.py of the main checkout, imported, as the primitive 9
              worker ran it; nothing is written under clearing/: checked before and after).
   demo       examples/universal_self_repair/run_demo.py twice (exit 0; the results files equal outside the key
              `measured`) and its --self-test (exit 0).
-  mutations  every changed copy of tests/primitives_v2/mutants.py, mutants_p7.py, mutants_p8.py and mutants_p9.py: each
+  mutations  every changed copy of tests/primitives_v2/mutants.py, mutants_p7.py, mutants_p8.py, mutants_p9.py and
+             mutants_sdk.py (changed copies of the SDK, killed by test_sdk_primitives.py): each
              must be KILLED for its named reason (the scripts check the reason text); each script's unchanged control
              must pass. A copy that nothing kills is NOT KILLED and the case FAILS unless it is in ACCEPTED_SURVIVORS
              with a written reason (that list is EMPTY; only the owner or the orchestrator may add to it).
@@ -78,7 +79,7 @@ MODELS = {'money-refunds': 'money-refunds-p9', 'rate-api': 'rate_window-api-p9',
           'transfer-cash': 'transfer-cash-p9'}
 DEMO = 'examples/universal_self_repair/run_demo.py'
 SUITES = ['test_engine', 'test_ledger_graph', 'test_taint', 'test_farkas', 'test_policy_to_dfy', 'test_sdk_primitives', 'test_demo']
-MUTANT_SCRIPTS = ['mutants', 'mutants_p7', 'mutants_p8', 'mutants_p9']
+MUTANT_SCRIPTS = ['mutants', 'mutants_p7', 'mutants_p8', 'mutants_p9', 'mutants_sdk']
 PYTHON_FILES = [GENERATOR, DEMO, 'sdk/py/forge_primitives.py', 'scripts/exit_universal_primitives.py'] + \
     ['tests/primitives_v2/%s.py' % n for n in SUITES + MUTANT_SCRIPTS]
 REPO_MODULES = {  # non-stdlib imports that the Python files may make, and why
@@ -509,16 +510,14 @@ def case_proofs(work):
         M.put('vectors_s/' + pol, round(time.monotonic() - t, 1))
         log.write_text(log.read_text() + '$ policy_to_dfy.py vectors %s\nexit %d\n%s%s\n' % (pol, p.returncode, p.stdout, p.stderr))
         require(p.returncode == 0, 'PROOFS: vectors %s exit %d %r' % (pol, p.returncode, (p.stdout + p.stderr)[-400:]))
-        fresh = json.loads((gen / (MODELS[pol] + '.vectors.json')).read_text())
+        fresh_bytes = (gen / (MODELS[pol] + '.vectors.json')).read_bytes()
         committed_bytes = (ROOT / 'domains/compiled_policies' / (MODELS[pol] + '.vectors.json')).read_bytes()
+        # the WHOLE file, byte for byte: its key `dafny` holds no machine path (tool version, relative argv, exit code)
+        require(fresh_bytes == committed_bytes, 'PROOFS: vectors %s: the recomputed file differs from the committed '
+                'domains/compiled_policies/%s.vectors.json (whole file, byte for byte)' % (pol, MODELS[pol]))
         committed = json.loads(committed_bytes)
-        strip = lambda r: {k: v for k, v in r.items() if k != 'dafny'}   # noqa: E731  (the Dafny command log holds absolute paths)
-        equal = canonical(strip(fresh)) == canonical(strip(committed))
-        require(equal, 'PROOFS: vectors %s: the recomputed table differs from the committed one (outside the key `dafny`)' % pol)
-        out['vectors'][pol] = {'equal_outside_dafny_log': True, 'byte_identical_file': (gen / (MODELS[pol] + '.vectors.json')).read_bytes() == committed_bytes,
-                               'why_not_byte_identical': 'the key `dafny` of the committed file holds the absolute paths of the primitive 9 '
-                                                         'worker\'s scratch build folder',
-                               'vectors': len(fresh['vectors']), 'sha256_outside_dafny_log': sha(canonical(strip(committed)))}
+        out['vectors'][pol] = {'byte_identical_file': True, 'vectors': len(committed['vectors']), 'sha256': sha(committed_bytes),
+                               'dafny_log': committed['dafny']}
     before = clearing_snapshot()
     for pol in POLICIES:
         wait_slot('clear-' + pol)

@@ -445,9 +445,9 @@ class Model:
 
     def request(self, tenant, op, keys, args, stale=()):
         """The whole predicted answer, engine checks included; applies a commit."""
-        for k in keys:
+        for i, k in enumerate(keys):
             if self.bound.get(k, tenant) != tenant:
-                return 'TENANT_ISOLATION_BREACH', {'why': 'KEY_OF_ANOTHER_TENANT', 'key': k}, None
+                return 'TENANT_ISOLATION_BREACH', {'why': 'KEY_OF_ANOTHER_TENANT', 'key_index': str(i)}, None
         if stale:
             return 'STALE_STATE_HASH', {'stale': str(len(stale))}, None
         code, f, payload = self.module(tenant, op, keys, args)

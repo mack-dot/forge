@@ -17,9 +17,10 @@ Raised (never a result, never a commit):
   LocalRefusal   the SDK refused the input BEFORE sending (bad id, key, hash or a byte outside the wire alphabet)
   EngineFault    CORRUPT_WAL, IO_ERROR, OUTCOME_UNKNOWN, UNSAFE_STORE (serve ends; .outcome_known is False for
                  OUTCOME_UNKNOWN), MODULE_FAULT (a module broke the interface; nothing written)
-  ProtocolError  an answer that breaks the wire grammar, a success line that does not match the request (another
-                 request id, a missing or extra key hash, a digest that is not the digest of the bytes sent), a short
-                 read: outcome unknown
+  ProtocolError  an answer that breaks the wire grammar (also a missing or non-decimal seq/now_ms/skew_ms), a success
+                 line that does not match the request (another request id, a missing or extra key hash, a digest that
+                 is not the digest of the bytes sent, an OK verdict other than ALLOW for taint_egress or
+                 INFEASIBILITY_PROVED for farkas), a short read: outcome unknown
   EngineDead     the serve process is gone (outcome unknown for a request in transit)
   EngineTimeout  no answer in time; the serve process is killed (outcome unknown)
 After ProtocolError, EngineDead, EngineTimeout or a serve-ending EngineFault the client is closed: fail closed.
@@ -328,6 +329,14 @@ class Primitives:
     def _bad(self, why, text):
         self._fail(ProtocolError('BAD_ANSWER', why, text))
 
+    def _num(self, name, v, text):
+        """A decimal field of an answer; a missing or bad one is a ProtocolError that CLOSES the client (review L1:
+        before the repair, _dec raised without closing)."""
+        try:
+            return _dec(name, v, text)
+        except ProtocolError as e:
+            self._fail(e)
+
     # -- read verbs
     def state(self):
         """The `STATE` fields as a dict (store_id, seq, tail, last_ms, now_ms, wall_ms, skew_ms, build)."""
@@ -349,7 +358,7 @@ class Primitives:
         if d.get('key') != key or not HASH_RE.match(d.get('hash', '')) or d.get('exists') not in ('0', '1'):
             self._bad('GET answer does not match the key asked', text)
         extra = {k: v for k, v in fields if k not in ('key', 'hash', 'exists', 'primitive', 'now_ms', 'skew_ms')}
-        return KeyState(text, key, d['hash'], d['exists'] == '1', d.get('primitive'), extra, _dec('now_ms', d.get('now_ms'), text))
+        return KeyState(text, key, d['hash'], d['exists'] == '1', d.get('primitive'), extra, self._num('now_ms', d.get('now_ms'), text))
 
     def read_hashes(self, tenant, keys):
         """{key: present state hash} by one GET per key (NOT atomic with a later write). Raises LocalRefusal when a key
@@ -407,13 +416,13 @@ class Primitives:
                 self._bad('COMMITTED does not match the request (id or key hashes)', text)
             if 'effect' not in d:
                 self._bad('COMMITTED without effect', text)
-            return Committed(text, rid, _dec('seq', d.get('seq'), text), _dec('now_ms', d.get('now_ms'), text),
-                             _dec('skew_ms', d.get('skew_ms'), text), got, d['effect'])
+            return Committed(text, rid, self._num('seq', d.get('seq'), text), self._num('now_ms', d.get('now_ms'), text),
+                             self._num('skew_ms', d.get('skew_ms'), text), got, d['effect'])
         if code == 'OK':
             if keys or 'verdict' not in d:
                 self._bad('OK verdict= for an op with keys, or without verdict', text)
             rest = {k: v for k, v in fields if k not in ('verdict', 'now_ms', 'skew_ms')}
-            return Verdict(text, d['verdict'], rest, detail, _dec('now_ms', d.get('now_ms'), text), _dec('skew_ms', d.get('skew_ms'), text))
+            return Verdict(text, d['verdict'], rest, detail, self._num('now_ms', d.get('now_ms'), text), self._num('skew_ms', d.get('skew_ms'), text))
         r = self._refusal(text, code, fields, detail)
         if r.durable:
             if r.request_id != rid or set(r.hashes) != set(keys):
@@ -433,7 +442,7 @@ class Primitives:
             self._bad('a state hash is not 64 lowercase hex', text)
         repair = {k: v for k, v in fields if k not in ENGINE_FIELDS and not (durable and k.startswith('hash.'))}
         return Refusal(text, code, repair, detail, durable=durable, request_id=d.get('request_id'),
-                       seq=_dec('seq', d['seq'], text) if durable else None, hashes=hashes,
+                       seq=self._num('seq', d['seq'], text) if durable else None, hashes=hashes,
                        now_ms=int(d['now_ms']) if d.get('now_ms', '').isdigit() else None,
                        skew_ms=int(d['skew_ms']) if d.get('skew_ms', '').isdigit() else None)
 
@@ -506,6 +515,8 @@ class Primitives:
         args = '%s %s %s' % (_local('policy', policy, ID_RE), _local('destination', destination, WORD_RE), text)
         r = self._do('taint_egress', 'check', tenant, [], {}, args, request_id, False)
         if isinstance(r, Verdict):
+            if r.verdict != 'ALLOW':  # review L2: only ALLOW is a document to emit; any other OK word fails closed
+                self._bad('taint_egress check answered OK verdict=%s; only ALLOW is defined' % r.verdict, r.line)
             raw = text.encode('ascii')
             if r.fields.get('sha256') != hashlib.sha256(raw).hexdigest() or r.fields.get('bytes') != str(len(raw)):
                 self._bad('ALLOW is not bound to the bytes sent (sha256/bytes)', r.line)
@@ -526,6 +537,8 @@ class Primitives:
         r = self._do('farkas', 'check', tenant, [], {}, doc, request_id, False)
         sys_h = hashlib.sha256(system.encode('ascii')).hexdigest()
         if isinstance(r, Verdict):
+            if r.verdict != 'INFEASIBILITY_PROVED':  # review L2: no other OK word is a proof; fail closed
+                self._bad('farkas check answered OK verdict=%s; only INFEASIBILITY_PROVED is defined' % r.verdict, r.line)
             if r.fields.get('system_sha256') != sys_h or r.fields.get('cert_sha256') != hashlib.sha256(('{"y":%s}' % vec(y)).encode('ascii')).hexdigest():
                 self._bad('INFEASIBILITY_PROVED is not bound to the system and certificate sent', r.line)
         elif 'system_sha256' in r.repair and r.repair['system_sha256'] != sys_h:

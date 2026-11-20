@@ -130,13 +130,19 @@ change cannot survive even within one process). Cost: every request reads the wh
 - Check order of `DO`: grammar (no file opened: primitive, op, ids, key count, per key: form (`BAD_KEY`), reserved
   prefix of another primitive (`RESERVED_KEY`, section 4.1), strictly ascending (`KEY_ORDER`, `DUPLICATE_KEY`),
   hash (`BAD_HASH`, `CAS_REQUIRED`)) -> lock and replay -> trusted Now -> for
-  every key: another tenant's key (`TENANT_ISOLATION_BREACH why=KEY_OF_ANOTHER_TENANT key=<k>`), another
-  primitive's key (`MALFORMED_REQUEST why=KEY_KIND`) -> request id used (`DUPLICATE_REQUEST_ID`) -> compare-and-swap
+  every key: another tenant's key (`TENANT_ISOLATION_BREACH why=KEY_OF_ANOTHER_TENANT key_index=<i>`), another
+  primitive's key (`MALFORMED_REQUEST why=KEY_KIND key_index=<i>`) -> request id used (`DUPLICATE_REQUEST_ID`) -> compare-and-swap
   of EVERY key: one or more stale keys refuse the whole request, `STALE_STATE_HASH stale=<count> hash.<key>=<present>`
   for each stale key -> module decision -> at most one record.
 - Request ids are one-time per store (one namespace). A record uses its id up (a commit, and also a durable
   refusal). A refusal without a record and a stateless answer leave the id fresh.
 - A key binds to (tenant, primitive) at the first record that touches it.
+- Engine refusals name a key by `key_index=<i>`, its 0-based position in the request, never by the key itself
+  (`RESERVED_KEY`, `TENANT_ISOLATION_BREACH`, `KEY_KIND`; review finding L4, 2026-11-20). Still named: the key of
+  a `STALE_STATE_HASH` in the field NAME `hash.<key>` (the caller's own key, needed for the repair), the key of a
+  `GET` answer (`OK key=`), and the caller's own key in the ledger_graph module refusals (`UNKNOWN_ACCOUNT key=`,
+  `INSUFFICIENT_FUNDS key=`, ...; section 14). A key is the caller's own request data; a caller that puts a secret
+  in a key name sees it in these answers.
 
 ### 4.1 Reserved key prefixes
 
@@ -148,7 +154,7 @@ binding is an engine rule:
 | `reg:` | `ledger_graph` | the registry handles `reg:<tenant>` (section 11.4) |
 
 - A `DO` of any OTHER primitive that names a key that starts with an owned prefix is refused in the grammar step,
-  before the store is opened and before any module code runs: `MALFORMED_REQUEST why=RESERVED_KEY key=<k>
+  before the store is opened and before any module code runs: `MALFORMED_REQUEST why=RESERVED_KEY key_index=<i>
   prefix=<p> owner=<primitive>` (exit 12; no record; no clock fields; the request id stays fresh). One such key
   refuses the whole multi-key request. The owner's own ops pass this step; the owner module keeps its own rules
   (`ledger_graph` refuses `reg:` keys for accounts and graphs and requires exactly `reg:<tenant>` for a claim).
@@ -315,10 +321,20 @@ u64; `*` allowed: the engine decides on the present state under the lock).
 - Decision, first match wins: (1) `volume > max_volume_per_window`: `VOLUME_ABOVE_CAP` (never fits), no record;
   (2) cooldown active (`now < cooldown_until`): `COOLDOWN_ACTIVE retry_after_ms=<cooldown_until - now>`, no record;
   (3) fits (`live_ops + 1 <= max_ops` and `live_volume + volume <= max_volume`, sums in u128): `COMMITTED`, record
-  `A <policy> <volume>`; (4) else `RATE_LIMIT_EXCEEDED retry_after_ms=<n>`. `n` is exact: let k be the least number
-  of oldest live events whose end frees one op AND enough volume; `n = t_k + window_ms - now` (`never` if that sum
-  overflows). At `now + n - 1` the same request is refused with `retry_after_ms=1`; at `now + n` it commits (case
-  `boundary`: 36 n-1/n checks on 12 random policies).
+  `A <policy> <volume>`; (4) else `RATE_LIMIT_EXCEEDED retry_after_ms=<n>`. `n` is the LEAST wait after which the
+  same request commits, given the state that this refusal leaves. Window part w: let k be the least number of
+  oldest live events whose end frees one op AND enough volume; `w = t_k + window_ms - now` (`never` if that sum
+  overflows). If THIS refusal starts the cooldown (`cooldown_after > 0` and `rejections + 1 >= cooldown_after`),
+  `n = max(w, cooldown_until - now)` with `cooldown_until = now + cooldown_ms` (checked; u64::MAX on overflow);
+  else `n = w`. At `now + n - 1` the same request is refused (`retry_after_ms=1`); at `now + n` it commits (case
+  `boundary`: 36 n-1/n checks on 12 random policies; case `cooldown_retry`: cooldown_ms 30,000 > window_ms 3,000,
+  review finding M1). Before the repair of 2026-11-20, `n` was `w` alone: with `cooldown_ms > window_ms` the retry
+  at the stated time got `COOLDOWN_ACTIVE` (repro: max_ops 2, window 3,000 ms, cooldown_after 1, cooldown 30,000 ms:
+  `retry_after_ms=2989`, then `COOLDOWN_ACTIVE retry_after_ms=26806`). `COOLDOWN_ACTIVE retry_after_ms` (rule 2)
+  is the rest of the cooldown only: the window can still be full at that time, and an early retry that is then
+  refused counts as a rejection. The generated Dafny MODEL of a rate policy (`policy_to_dfy.py`, `domains/compiled_policies/rate_window-*.dfy`)
+  states the corrected property in its `Post` (`CommitsAfter`, `CoolEnd`) and in the lemma `RetryCommitsAfterStep`;
+  that is a statement about the model, tied to `rate.rs` only by the finite differential replay of its vectors.
 - Cooldown: with `cooldown_after = N > 0`, a rule-4 refusal changes state (the count of consecutive rejections), so
   it is a durable record `X <policy> <volume>` (kind R, uses the request id up). The N-th consecutive one starts the
   cooldown: `cooldown_until = t + cooldown_ms` (checked; overflow gives u64::MAX). A commit resets the count; the
@@ -331,6 +347,10 @@ u64; `*` allowed: the engine decides on the present state under the lock).
 - Replay re-checks every record with its record time: a commit that did not fit, a rejection that would have
   fitted, a record during a cooldown, a rejection record without a cooldown, or a policy change refuses the store.
 - `GET` fields: `policy= ops= volume= rejections= cooldown_ms_left=`.
+- Limit, not a protection (review finding M2): rate_window limits a KEY; the key and tenant must be bound by a
+  trusted wrapper outside the engine. The caller picks the key, and the `<tenant>` field is not authenticated
+  (section 15): a fresh key, or the same key name under another tenant name, has its own empty window and no
+  cooldown. Case `rate_key_limit` pins this behaviour and prints `KNOWN LIMIT`; it is not counted as a protection.
 
 ## 10. Cosign TTL (`cosign_ttl.rs`)
 
@@ -381,6 +401,12 @@ The module writes only kind-C records (no durable refusal). `fold` parses each p
 canonical, re-runs the SAME checks as `decide` against the folded state, applies it, and re-checks
 `total == issued - destroyed` for the touched ledger. So a forged record with a valid chain that overdraws, breaks
 conservation, claims a held name, or closes a cycle refuses the store.
+
+Limit of that in-engine check (review finding L5): `total` is a running counter that each op changes by the same
+amounts as the balances it touches; the check does NOT sum the account balances. A bug that changes a balance and
+`total` alike, or a balance alone, is not caught by it. Only the OUTSIDE test covers a balance bug: the suites sum
+the balances read with `GET` and compare the sum with the issued amounts (`test_ledger_graph.py` cases `ledger`,
+`model`, `race_ledger`, `kill9`; the demo check `total_supply_constant`).
 
 ### 11.3 Ledger
 
@@ -465,8 +491,10 @@ A node gets labels from three sources, all unioned:
   strings, to any depth. A forbidden label is reported ONCE, at the topmost node that carries it.
 
 Key normalization (name rules, carriers, `AMBIGUOUS_KEY`), on the key AFTER the parser has decoded every `\u`
-escape: fullwidth ASCII U+FF01..U+FF5E becomes ASCII; `_`, `-` and space are dropped; ASCII A-Z becomes a-z.
-Nothing else: no Unicode case fold, no NFC/NFKC, no homoglyph map. Two keys of one object that are equal after
+escape: fullwidth ASCII U+FF01..U+FF5E becomes ASCII; U+017F (long s) becomes `s` and U+212A (Kelvin sign) becomes
+`k`; `_`, `-` and every Unicode White_Space code point (space, NBSP, U+2000..U+200A, U+3000, ...) are dropped; ASCII
+A-Z becomes a-z. Nothing else: no full Unicode case fold (`ß` stays), no NFC/NFKC, no homoglyph map. (Review
+finding L3, 2026-11-20: before, keys with NBSP or `ſ` passed a rule for `ssn`.) Two keys of one object that are equal after
 normalization: `AMBIGUOUS_KEY`. Raw duplicate keys: the strict parser refuses the document (`MALFORMED_REQUEST
 why=BAD_JSON error=DUPLICATE_KEY`).
 
@@ -491,10 +519,13 @@ for `TENANT:a` only when x == a (the policy cannot allow another tenant's label 
 
 1. Strict parse (src/airlock/json.rs: duplicate keys, lone surrogates, control bytes, trailing bytes, depth > 64
    refused): else `MALFORMED_REQUEST why=BAD_JSON error=<word>`.
-2. Expansion: every string VALUE that LOOKS LIKE JSON (after leading Unicode White_Space and default-ignorable code
-   points it starts with `{`, `[` or `"`) is strict-parsed and takes the place of the string, recursively, to
+2. Expansion: every string VALUE that LOOKS LIKE JSON (after leading Unicode White_Space, default-ignorable code
+   points and C0/C1 controls U+0000..U+001F, U+007F..U+009F it starts with `{`, `[` or `"`, or with the fullwidth
+   `｛`, `［` or `＂`) is strict-parsed and takes the place of the string, recursively, to
    MAX_NESTED = 4 levels. A JSON-like string that fails the strict parse is refused (`OPAQUE_JSON error=<word>`).
    False refusals by design: `"quoted" words`, `[draft] note`. Text that does not START like JSON is plain text.
+   (Review finding L3: before the repair, `\u001e{"ssn":...}` was plain text, and Python's `json.loads(v.strip())`
+   recovers it; now it is `OPAQUE_JSON`, as is a fullwidth opener.)
 3. Bounds over the EXPANDED document, counted before any label is checked, refused whole, never truncated: nodes >
    MAX_NODES = 16384: `TAINT_LIMIT why=TOO_MANY_NODES`; a node deeper than MAX_DEPTH = 32: `why=TOO_DEEP`; a
    JSON-like string at level 4: `why=NESTED_TOO_DEEP`. Every loop is iterative.
@@ -551,7 +582,12 @@ answer and returns the exact text sent; emitting it is still the caller's act.
 | encodings of a KEY: `ss%6E`, `&#115;sn`, literal `\x73sn` | not decoded: detect ALLOW (passes); strict `UNLABELLED_FIELD`. JSON `ssn` IS decoded by the parser: blocked |
 | compressed (gzip+base64) or split secret across fields | ALLOW under unlabelled names (passes) |
 | numbers as carriers | a number under an unlabelled name: ALLOW (passes); under a labelled name: blocked |
-| homoglyph key (Cyrillic `ѕsn`), Kelvin sign in `api_Key` | not folded: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+| homoglyph key (Cyrillic `ѕsn`) | not folded: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+| Kelvin sign in `api_Key`, long s in `ſsn`, NBSP or U+3000 in a key | folded or dropped (since review L3): blocked |
+| full case fold: `ßn` (Python `casefold()` gives `ssn`), ligature `ﬀ` | not folded: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+| compatibility forms (NFKC): circled letters such as `ⓢsn` | not folded: detect ALLOW (passes) |
+| JSON in a string after a C0/C1 control (`\u001e{`, `\u001c{`, `\u0000{`, `\u0008{`, `\u0085{`) or with a fullwidth opener (`｛`, `［`) | `OPAQUE_JSON` (refused, since review L3) |
+| JSON in a string after a printable prefix (`x{"ssn":1}`) | plain text: detect ALLOW (passes); a reader that searches for the first `{` recovers it |
 | zero-width or bidi code point in a key | `UNSAFE_KEY why=IGNORABLE` (refused in every mode) |
 | fullwidth key `ｓｓｎ` | folded: blocked |
 | keys that differ only by Unicode normalization (NFC and NFD side by side) | no NFC: both kept, not `AMBIGUOUS_KEY`: ALLOW (passes) |
@@ -560,7 +596,7 @@ answer and returns the exact text sent; emitting it is still the caller's act.
 | label carrier omitted by the author (a foreign record with no `tenant_id`) | detect: ALLOW (passes); only name rules apply |
 | label word the policy does not know | `UNKNOWN_LABEL` (refused) |
 | free text that names another tenant | text is never read: detect ALLOW (passes); strict: `UNLABELLED_FIELD` unless the name is covered |
-| ASCII case, `_`, `-`, space and fullwidth variants of a covered key | normalized to the policy name: a covert channel of a few bits per key (not refused) |
+| ASCII case, `_`, `-`, White_Space, `ſ`, Kelvin sign and fullwidth variants of a covered key | normalized to the policy name: a covert channel of a few bits per key (not refused) |
 
 This module checks LABELS and NAMES, not the content of values. It trusts the policy author for the rules and the
 document author for the carriers: an omitted carrier is not detected, and a wrong `tenant_id` written by the
@@ -630,10 +666,10 @@ a durable refusal `request_id`, `seq`, `hash.<key>`) are not repeated. A code th
 | Code | Exit | From | Repair fields |
 | --- | --- | --- | --- |
 | `USAGE` | 2 | CLI | `why=` (`NOT_AFTER_MS`, `MS`, ...) |
-| `MALFORMED_REQUEST` | 12 | engine, every module | `why=`: engine `NON_ASCII`, `SPACING`, `FIELDS`, `OVERSIZED max_line=`, `NO_LINE_END`, `UNKNOWN_VERB`, `UNKNOWN_PRIMITIVE`, `UNKNOWN_OP`, `BAD_REQUEST_ID`, `BAD_TENANT`, `KEY_COUNT`, `BAD_KEY`, `RESERVED_KEY key= prefix= owner=` (section 4.1), `DUPLICATE_KEY` (a key named twice), `KEY_ORDER`, `BAD_HASH`, `CAS_REQUIRED`, `KEY_KIND`; rate `RATE_ARGS`; ledger_graph `LG_ARGS`, `LEG_KEYS`, `LEG_COUNT`, `RESERVED_KEY` (no fields: a `reg:` key as account or graph), `REGISTRY_KEY expected=`, `NAME [max_name_bytes=]`, `NODE`; taint `TAINT_ARGS`, `BAD_JSON error=`; farkas `FARKAS_JSON`, `FARKAS_KEYS`, `FARKAS_NUMBER`, `FARKAS_OP` (behind the engine) |
+| `MALFORMED_REQUEST` | 12 | engine, every module | `why=`: engine `NON_ASCII`, `SPACING`, `FIELDS`, `OVERSIZED max_line=`, `NO_LINE_END`, `UNKNOWN_VERB`, `UNKNOWN_PRIMITIVE`, `UNKNOWN_OP`, `BAD_REQUEST_ID`, `BAD_TENANT`, `KEY_COUNT`, `BAD_KEY`, `RESERVED_KEY key_index= prefix= owner=` (section 4.1), `DUPLICATE_KEY` (a key named twice), `KEY_ORDER`, `BAD_HASH`, `CAS_REQUIRED`, `KEY_KIND key_index=`; rate `RATE_ARGS`; ledger_graph `LG_ARGS`, `LEG_KEYS`, `LEG_COUNT`, `RESERVED_KEY` (no fields: a `reg:` key as account or graph), `REGISTRY_KEY expected=`, `NAME [max_name_bytes=]`, `NODE`; taint `TAINT_ARGS`, `BAD_JSON error=`; farkas `FARKAS_JSON`, `FARKAS_KEYS`, `FARKAS_NUMBER`, `FARKAS_OP` (behind the engine) |
 | `STALE_STATE_HASH` | 13 | engine | `stale=<count>`, `hash.<key>=<present hash>` per stale key |
 | `DUPLICATE_REQUEST_ID` | 14 | engine | none: use a new id |
-| `TENANT_ISOLATION_BREACH` | 16 | engine | `why=KEY_OF_ANOTHER_TENANT`, `key=` (a `DO`; `GET` gives no `key=`) |
+| `TENANT_ISOLATION_BREACH` | 16 | engine | `why=KEY_OF_ANOTHER_TENANT`, `key_index=` (a `DO`; never the key; `GET` gives no index) |
 | `CORRUPT_WAL` | 17 | store | `why=` (`HEADER`, `CRC`, `CHAIN`, `MODULE`, ...), `record=` (fault: no repair) |
 | `IO_ERROR` | 18 | store | `why=` (fault; nothing committed) |
 | `OUTCOME_UNKNOWN` | 19 | store | `why=` (fault; a record may stay) |
@@ -642,7 +678,7 @@ a durable refusal `request_id`, `seq`, `hash.<key>`) are not repeated. A code th
 | `NOT_IMPLEMENTED` | 27 | cosign stub | `why=COSIGN_SIGNATURE` (unreachable in this build) |
 | `UNSAFE_STORE` | 28 | store | `why=` (fault) |
 | `MODULE_FAULT` | 29 | engine | `why=BAD_REFUSAL`, `BAD_ANSWER`, `WRITE_WITHOUT_KEY`, `BAD_PAYLOAD`, `RECORD_NOT_FOLDABLE`, `RECORD_TOO_LONG`, `SEQ_OVERFLOW` |
-| `RATE_LIMIT_EXCEEDED` | 10 | rate_window | `retry_after_ms=<n or never>`; durable when `cooldown_after > 0` |
+| `RATE_LIMIT_EXCEEDED` | 10 | rate_window | `retry_after_ms=<n or never>` (the least wait to commit, the cooldown this refusal starts included); durable when `cooldown_after > 0` |
 | `COOLDOWN_ACTIVE` | 10 | rate_window | `retry_after_ms=` |
 | `VOLUME_ABOVE_CAP` | 10 | rate_window | `max_volume_per_window=` |
 | `UNKNOWN_POLICY` | 10 | rate_window, ledger_graph, taint_egress | none |
@@ -694,7 +730,9 @@ JSON parser's duplicate member. Three different faults; a client must read the c
   check. Keep the agent out of the store folder (for example `serve` under another OS user that owns it).
 - Trusted: the kernel, the file system and the drive for `F_FULLFSYNC`; `flock`; `/dev/urandom`; the host clock;
   the engine binary; whoever can write the store folder. The `<tenant>` field of a request is NOT authenticated:
-  any caller of `serve` can name any tenant.
+  any caller of `serve` can name any tenant. The caller also picks every key name. So rate_window limits a key; the
+  key and tenant must be bound by a trusted wrapper outside the engine: a fresh key or another tenant name gets
+  around every window and cooldown (review finding M2; case `rate_key_limit`, a KNOWN LIMIT, not a protection).
 - Not claimed: no proof of anything in the engine or the modules. A SIGKILL is not a power loss. A WAL restored to
   an older copy is not detected (no epoch ratchet in this engine). A truncation of a whole committed last record
   looks like a torn record and is cut (only a writer of the folder can do it). The parent folders of the store are
@@ -702,7 +740,8 @@ JSON parser's duplicate member. Three different faults; a client must read the c
 - Leaks by design: `GET` of another tenant's key answers `TENANT_ISOLATION_BREACH` (it shows that the key exists);
   `STATE` shows the store's record count and tail hash to every caller of `serve`; a registry `DUPLICATE_KEY` shows
   that a name is taken (not by whom). Any tenant can bind an unused key name first, except a name under a prefix
-  reserved by another primitive (section 4.1).
+  reserved by another primitive (section 4.1). Engine refusals name a key by `key_index` only (section 4); a
+  `STALE_STATE_HASH` field name, a `GET` answer and the ledger_graph module refusals do name the caller's own key.
 - Limits: every request replays the whole WAL (O(WAL)); a `serve` waits at most 60 s for the lock. `state`, `get`,
   `replay` need write access.
 
@@ -715,21 +754,26 @@ Python stdlib only; not trusted for a write decision; FINITE TEST (`test_sdk_pri
 decoded fields without the engine's bookkeeping, `.detail`, `.durable`, `.hashes`), `KeyState`. Raised, never
 returned: `LocalRefusal` (nothing sent), `EngineFault` (sections 6 and 14 faults, and `MODULE_FAULT`),
 `ProtocolError` (an answer that breaks the grammar or does not match the request: another request id, missing or
-extra key hashes, OK for a keyed op, a digest that is not the digest of the bytes sent), `EngineDead`,
-`EngineTimeout`. The SDK reads state hashes only when the caller passes `pre='read'` (one `GET` per key, not atomic
+extra key hashes, a missing or non-decimal `seq`/`now_ms`/`skew_ms`, OK for a keyed op, a digest that is not the
+digest of the bytes sent, an OK word other than `ALLOW` for `taint_check` or `INFEASIBILITY_PROVED` for
+`farkas_check`), `EngineDead`, `EngineTimeout`. Every ProtocolError closes the client (review findings L1 and L2,
+2026-11-20: before, a bad decimal field raised without closing, and any OK word was returned as a Verdict; case
+`fake_answers`, copies `mutants_sdk.py`). The SDK reads state hashes only when the caller passes `pre='read'` (one `GET` per key, not atomic
 with the write) and never retries: a CAS conflict is returned as `STALE_STATE_HASH` with the present hashes. Not
 built: a TypeScript wrapper.
 
 ## 17. Tests and controls
 
-- `tests/primitives_v2/test_engine.py <engine> <seams-engine> [--case N]... [--big-gib G]` (21 cases; a case that
+- `tests/primitives_v2/test_engine.py <engine> <seams-engine> [--case N]... [--big-gib G]` (23 cases; `cooldown_retry`
+  covers review finding M1, `rate_key_limit` pins the KNOWN LIMIT of finding M2; a case that
   cannot run FAILS with NOT RUN). Case `unknown` replaced the old case `stubs` (primitive 9 is no longer a stub);
-  case `reserved` covers section 4.1. `tests/primitives_v2/mutants.py`: 28 changed copies, each with one exact-once
+  case `reserved` covers section 4.1. `tests/primitives_v2/mutants.py`: 30 changed copies, each with one exact-once
   text replacement, both builds, one case that must FAIL with a named text; the unchanged copy first passes every
   named case. The sync copy `S1` is seen only through the read-only test interposer `tests/airlock/interpose.c`
   (case `trace`); no test sees a power loss.
 - Per primitive: `test_ledger_graph.py` with `mutants_p7.py` (7), `test_taint.py` with `mutants_p8.py` (8),
-  `test_farkas.py`, `test_policy_to_dfy.py` with `mutants_p9.py` (9). SDK: `test_sdk_primitives.py <engine>`.
+  `test_farkas.py`, `test_policy_to_dfy.py` with `mutants_p9.py` (9). SDK: `test_sdk_primitives.py <engine>` with
+  `mutants_sdk.py` (changed copies of the SDK; the suite runs from a mirror tree that holds the copy).
 
 ## 18. Departures from the directive and open points
 
@@ -744,3 +788,15 @@ built: a TypeScript wrapper.
    change's file. Its replay fault word is `MODULE` (store.rs maps every fold error to it), not `RESERVED_KEY`.
 8. `taint_egress` checks labels and names, not values (section 12.7). A `farkas` verdict covers only non-negative
    INTEGER x, and the Rust check is tied to the Dafny predicate only by a finite differential test (section 13).
+9. No `source_proof` core runs in the engine. The directive asked the policy compiler to upgrade custom policies
+   "from NATIVE CHECK to real Dafny source_proof cores"; this pack does not: every verdict of the engine is Rust
+   (NATIVE CHECK). The Dafny files (FarkasCert.dfy and the four generated models) are verified MODELS.
+10. The tie between the Dafny models and the Rust engines (src/airlock for money, src/primitives_v2 for rate_window,
+   transfer and farkas) is a FINITE differential test: vectors computed by the Dafny-compiled Python and replayed
+   against the engines. It is not a proof that the engines implement the models.
+11. The TypeScript wrapper of this SDK is not built (only `sdk/py/forge_primitives.py`).
+12. The cosign signature check is a stub (item 1, section 10) until the native cosign branch is merged.
+13. Mistake 4 of the demo: the schedule that the agent finds is checked by a Python DEMO CHECK
+   (`examples/universal_self_repair`), not by the engine. The engine has no feasibility check.
+14. rate_window limits a key, not a caller (section 9, review finding M2): binding key and tenant to an
+   authenticated caller is left to a wrapper outside the engine.
