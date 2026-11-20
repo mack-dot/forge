@@ -1,0 +1,31 @@
+Scanning [1m$(CAKEMLDIR)/compiler/dafny[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundCertifiedProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/semantics[0m
+Scanned 6 directories
+Building 2 theory files
+Starting work on forge_refundExportedContractTheory
+forge_refundExportedContractTheory                         (30s)   [1/2]     OK
+Starting work on forge_refundFlatContractTheory
+forge_refundFlatContractTheory                              (9s)        FAIL<1>
+*** Holmake aborted - 1 target failed:
+*** forge_refundFlatContractTheory (status 1)
+ <<HOL message: Created theory "forge_refundFlatContract">>
+ FORGE_BEGIN code_map_11
+ Saved theorem _______ "code_map_11"
+ FORGE_BEGIN codes_11
+ Saved theorem _______ "codes_11"
+ FORGE_BEGIN codes_bytes
+ Proof of 
+ 
+ ∀s. EVERY (λx. 0 ≤ x ∧ x < 256) (codes s)
+ 
+ failed.
+ First unsolved sub-goal is
+ 
+ 0 ≤ x
+ 
+ Tactic failure proving "codes_bytes"; heap saved to forge_refundFlatContract.codes_bytes.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refundFlatContract.codes_bytes.dumpedheap
+ Full log: <scratch>/build/dev-0002/.hol/logs/forge_refundFlatContractTheory

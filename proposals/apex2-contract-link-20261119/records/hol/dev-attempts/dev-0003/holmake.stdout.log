@@ -1,0 +1,39 @@
+Scanning [1m$(CAKEMLDIR)/compiler/dafny[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundCertifiedProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/semantics[0m
+Scanned 6 directories
+Building 2 theory files
+Starting work on forge_refundExportedContractTheory
+forge_refundExportedContractTheory                         (28s)   [1/2]     OK
+Starting work on forge_refundFlatContractTheory
+forge_refundFlatContractTheory                              (9s)        FAIL<1>
+*** Holmake aborted - 1 target failed:
+*** forge_refundFlatContractTheory (status 1)
+ <<HOL message: Created theory "forge_refundFlatContract">>
+ FORGE_BEGIN code_map_11
+ Saved theorem _______ "code_map_11"
+ FORGE_BEGIN codes_11
+ Saved theorem _______ "codes_11"
+ FORGE_BEGIN codes_bytes
+ Saved theorem _______ "codes_bytes"
+ FORGE_BEGIN codes_onto
+ <<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFlatContract)>>
+ Saved theorem _______ "codes_onto"
+ FORGE_BEGIN codes_literals
+ Proof of 
+ 
+ codes «» = [] ∧
+ codes «duplicate_charge» =
+ [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97; 114; 103; 101] ∧
+ codes «service_not_delivered» =
+ [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95; 100; 101; 108; 105;
+  118; 101; 114; 101; 100] ∧
+ codes «returned_item» =
+ [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]
+ 
+ failed.
+ Tactic failure proving "codes_literals"; heap saved to forge_refundFlatContract.codes_literals.dumpedheap.
+ Resume with: bin/hol --holstate=forge_refundFlatContract.codes_literals.dumpedheap
+ Full log: <scratch>/build/dev-0003/.hol/logs/forge_refundFlatContractTheory

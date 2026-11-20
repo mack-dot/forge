@@ -1,0 +1,152 @@
+<<HOL message: Created theory "forge_refundFlatContract">>
+FORGE_BEGIN code_map_11
+Saved theorem _______ "code_map_11"
+FORGE_BEGIN codes_11
+Saved theorem _______ "codes_11"
+FORGE_BEGIN codes_bytes
+Saved theorem _______ "codes_bytes"
+FORGE_BEGIN codes_onto
+<<HOL warning: Context.snapshot: ambient context read while a proof was running (in forge_refundFlatContract)>>
+Saved theorem _______ "codes_onto"
+FORGE_BEGIN codes_literals
+Saved theorem _______ "codes_literals"
+FORGE_BEGIN refund_fields_flat_plain
+Saved theorem _______ "refund_fields_flat_plain"
+FORGE_BEGIN eligible_flat_plain
+Saved theorem _______ "eligible_flat_plain"
+FORGE_BEGIN flat_plain_functional
+Saved theorem _______ "flat_plain_functional"
+FORGE_BEGIN flat_plain_total
+Saved theorem _______ "flat_plain_total"
+FORGE_BEGIN flat_plain_fallback
+Saved theorem _______ "flat_plain_fallback"
+FORGE_BEGIN flat_plain_witnesses
+Saved theorem _______ "flat_plain_witnesses"
+FORGE_THEOREM codes_def
+FORGE_ORACLES 
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∀s. codes s = MAP (λc. &ORD c) (explode s)
+FORGE_THEOREM flat_plain_def
+FORGE_ORACLES 
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∀chargeId requestId original remaining enabled requestOpen candidate amount
+      reason authorized outputAmount outputReason outputCharge outputRequest
+      intentCount.
+    flat_plain chargeId requestId original remaining enabled requestOpen
+      candidate amount reason authorized outputAmount outputReason
+      outputCharge outputRequest intentCount ⇔
+    (authorized ⇔
+     chargeId ≠ [] ∧ requestId ≠ [] ∧ enabled ∧ requestOpen ∧ 0 ≤ original ∧
+     original ≤ 9223372036854775807 ∧ 0 ≤ remaining ∧ remaining ≤ original ∧
+     candidate ∧ 0 ≤ amount ∧ amount ≤ remaining ∧
+     (reason =
+      [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97; 114; 103;
+       101] ∨
+      reason =
+      [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95; 100; 101;
+       108; 105; 118; 101; 114; 101; 100] ∨
+      reason =
+      [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109])) ∧
+    (authorized ⇒
+     outputAmount = amount ∧ outputReason = reason ∧
+     outputCharge = chargeId ∧ outputRequest = requestId ∧ intentCount = 1) ∧
+    (¬authorized ⇒
+     outputAmount = 0 ∧ outputReason = [] ∧ outputCharge = [] ∧
+     outputRequest = [] ∧ intentCount = 0)
+FORGE_THEOREM code_map_11
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∀l1 l2. MAP (λc. &ORD c) l1 = MAP (λc. &ORD c) l2 ⇔ l1 = l2
+FORGE_THEOREM codes_11
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∀s t. codes s = codes t ⇔ s = t
+FORGE_THEOREM codes_bytes
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∀s. EVERY (λx. 0 ≤ x ∧ x < 256) (codes s)
+FORGE_THEOREM codes_onto
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∀l. EVERY (λx. 0 ≤ x ∧ x < 256) l ⇒ ∃s. codes s = l
+FORGE_THEOREM codes_literals
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ codes «» = [] ∧
+  codes «duplicate_charge» =
+  [100; 117; 112; 108; 105; 99; 97; 116; 101; 95; 99; 104; 97; 114; 103; 101] ∧
+  codes «service_not_delivered» =
+  [115; 101; 114; 118; 105; 99; 101; 95; 110; 111; 116; 95; 100; 101; 108;
+   105; 118; 101; 114; 101; 100] ∧
+  codes «returned_item» =
+  [114; 101; 116; 117; 114; 110; 101; 100; 95; 105; 116; 101; 109]
+FORGE_THEOREM refund_fields_flat_plain
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_fields charge request original remaining enabled opened candidate
+    amount reason = (ok,a,r,c,q,n) ⇔
+  flat_plain (codes charge) (codes request) original remaining enabled opened
+    candidate amount (codes reason) ok a (codes r) (codes c) (codes q) n
+FORGE_THEOREM eligible_flat_plain
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ eligible charge request original remaining enabled opened candidate amount
+    reason ⇔
+  ∃a r c q n.
+    flat_plain (codes charge) (codes request) original remaining enabled
+      opened candidate amount (codes reason) T a r c q n
+FORGE_THEOREM flat_plain_functional
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ flat_plain ch rq original remaining enabled opened candidate amount rs ok a
+    r c q n ∧
+  flat_plain ch rq original remaining enabled opened candidate amount rs ok'
+    a' r' c' q' n' ⇒
+  (ok' ⇔ ok) ∧ a' = a ∧ r' = r ∧ c' = c ∧ q' = q ∧ n' = n
+FORGE_THEOREM flat_plain_total
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ ∃ok a r c q n.
+    flat_plain ch rq original remaining enabled opened candidate amount rs ok
+      a r c q n
+FORGE_THEOREM flat_plain_fallback
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ flat_plain ch rq original remaining enabled opened candidate amount rs F a
+    r c q n ⇒
+  a = 0 ∧ r = [] ∧ c = [] ∧ q = [] ∧ n = 0
+FORGE_THEOREM flat_plain_witnesses
+FORGE_ORACLES DISK_THM
+FORGE_AXIOMS 
+FORGE_HYPOTHESES 0
+FORGE_STATEMENT ⊢ refund_fields «ch_1» «rq_1» 100 60 T T T 40 «duplicate_charge» =
+  (T,40,«duplicate_charge»,«ch_1»,«rq_1»,1) ∧
+  flat_plain [99; 104; 95; 49] [114; 113; 95; 49] 100 60 T T T 40
+    (codes «duplicate_charge») T 40 (codes «duplicate_charge»)
+    [99; 104; 95; 49] [114; 113; 95; 49] 1 ∧
+  ¬flat_plain [99; 104; 95; 49] [114; 113; 95; 49] 100 60 T T T 40
+    (codes «duplicate_charge») T 40 (codes «duplicate_charge»)
+    [114; 113; 95; 49] [99; 104; 95; 49] 1 ∧
+  refund_fields «ch_1» «rq_1» 100 60 T T T 61 «duplicate_charge» =
+  (F,0,«»,«»,«»,0) ∧
+  refund_fields «ch_1» «rq_1» 9223372036854775807 60 T T T 40 «returned_item» =
+  (T,40,«returned_item»,«ch_1»,«rq_1»,1) ∧
+  refund_fields «ch_1» «rq_1» 9223372036854775808 60 T T T 40 «returned_item» =
+  (F,0,«»,«»,«»,0)
+FORGE_DAFNY_PARAMS chargeId: seq<int>, requestId: seq<int>, original: int, remaining: int, enabled: bool, requestOpen: bool, candidate: bool, amount: int, reason: seq<int>, authorized: bool, outputAmount: int, outputReason: seq<int>, outputCharge: seq<int>, outputRequest: seq<int>, intentCount: int
+FORGE_DAFNY_BODY ((authorized <==> ((!(chargeId == [])) && ((!(requestId == [])) && (enabled && (requestOpen && ((0 <= original) && ((original <= 9223372036854775807) && ((0 <= remaining) && ((remaining <= original) && (candidate && ((0 <= amount) && ((amount <= remaining) && ((reason == [100, 117, 112, 108, 105, 99, 97, 116, 101, 95, 99, 104, 97, 114, 103, 101]) || ((reason == [115, 101, 114, 118, 105, 99, 101, 95, 110, 111, 116, 95, 100, 101, 108, 105, 118, 101, 114, 101, 100]) || (reason == [114, 101, 116, 117, 114, 110, 101, 100, 95, 105, 116, 101, 109]))))))))))))))) && ((authorized ==> ((outputAmount == amount) && ((outputReason == reason) && ((outputCharge == chargeId) && ((outputRequest == requestId) && (intentCount == 1)))))) && ((!authorized) ==> ((outputAmount == 0) && ((outputReason == []) && ((outputCharge == []) && ((outputRequest == []) && (intentCount == 0))))))))
+Exporting theory "forge_refundFlatContract" ... done.
+Theory "forge_refundFlatContract" took 13.6s to build
+FLAT_CONTRACT_COMPLETE

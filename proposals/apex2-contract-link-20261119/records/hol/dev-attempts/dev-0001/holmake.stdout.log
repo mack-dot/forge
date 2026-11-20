@@ -1,0 +1,17 @@
+Scanning [1m$(CAKEMLDIR)/compiler/dafny[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refundCertifiedProg_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/forge_refund_experiment[0m
+Scanning [1m$(CAKEMLDIR)/compiler/dafny/semantics[0m
+Scanned 6 directories
+Building 2 theory files
+Starting work on forge_refundExportedContractTheory
+forge_refundExportedContractTheory                          (8s)        FAIL<1>
+*** Holmake aborted - 1 target failed:
+*** forge_refundExportedContractTheory (status 1)
+ <scratch>/build/dev-0001/forge_refundExportedContractScript.sml:27: error: Structure (mlstringSyntax) has not been declared
+ Found near open mlstringSyntax
+ error in quse <scratch>/build/dev-0001/forge_refundExportedContractScript.sml : Fail "Static Errors"
+ error in load <scratch>/build/dev-0001/forge_refundExportedContractScript : Fail "Static Errors"
+ Uncaught exception at ./basis/FinalPolyML.sml:492: Fail "Static Errors"
+ Full log: <scratch>/build/dev-0001/.hol/logs/forge_refundExportedContractTheory
