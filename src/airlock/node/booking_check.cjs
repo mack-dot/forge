@@ -8,7 +8,7 @@
 //           "REJECT\n", exit 1, only when it returns false.
 //   exit 2: malformed input, a wrong model file, or any exception. A message goes to stderr. Nothing goes to stdout.
 //
-// Label: PROVED CORE source (proposals/forge2-pillar3-dual-certificate/BookingDualCert.dfy, method
+// Label: compiled from a Dafny source proof; the compiled JavaScript is NOT proved (proposals/forge2-pillar3-dual-certificate/BookingDualCert.dfy, method
 // VerifyCertifiedBooking, ensures ok == Accepts(A, c, w, x, y, z, alpha_bps)). This file decides NOTHING itself.
 // It parses, converts to Dafny values (BigNumber integers, Dafny sequences) and calls the compiled method.
 // Dimension mismatches, negative duals, non-binary x, alpha_bps > 10000: all go to the compiled method, which
@@ -19,9 +19,15 @@
 // src/airlock/node/build_checker.py (output build/airlock/checker/model.cjs). The file is opened once with
 // O_NOFOLLOW, hashed, and the SAME bytes are compiled. There is no second read by path.
 //
+// Dependency pin (review D2, "Related"): the model's one dependency, bignumber.js 9.3.1, is found the usual way from
+// the model's folder (node_modules), but it is read once with O_NOFOLLOW, its SHA-256 must be PINNED_BIGNUMBER_SHA256
+// (the file of package-lock.json's bignumber.js 9.3.1), and the SAME bytes are compiled. The model gets a require
+// function that returns only this module: any other require of the model throws. So a bignumber.js in a node_modules folder
+// next to a caller-chosen --checker model is refused unless it has exactly the pinned bytes.
+//
 // Trusted (not proved): the Dafny 4.11.0 JavaScript compiler, the Dafny JavaScript runtime inside the module,
-// bignumber.js 9.3.1 (the runtime's dependency, pinned in package-lock.json; it is loaded from node_modules and
-// is NOT covered by the pin), Node 24.3.0 (including the internal Module._compile), and the conversion code here.
+// bignumber.js 9.3.1 (pinned by content as above), Node 24.3.0 (including the internal Module._compile), and the
+// conversion code here.
 //
 // Input grammar (strict; stricter than JSON):
 //   - ASCII only. Whitespace between tokens: space, tab, LF, CR.
@@ -39,6 +45,7 @@ const crypto = require('node:crypto');
 const Module = require('node:module');
 
 const PINNED_MODEL_SHA256 = 'e705ec490e30572cc783da2d7f927d5b4201f6bec0bc0a64c9cde507384b85f4';
+const PINNED_BIGNUMBER_SHA256 = '08ff132ba18de1678e18a9f68bcad39cc970c94f7d219850468b2a7510cff0ce';  // bignumber.js 9.3.1, bignumber.js
 const MAX_INPUT = 1048576;
 const MAX_MODEL = 4194304;
 const MAX_INT_CHARS = 64;
@@ -142,30 +149,47 @@ function parseInput(buf) {
   return result;
 }
 
-// Reads the model once through one descriptor, checks the pin, compiles the same bytes.
-function loadModel(file) {
-  const abs = path.resolve(file);
+// Reads a file once through one descriptor (O_NOFOLLOW) and checks its SHA-256 pin. Returns the bytes that were hashed.
+function readPinned(abs, what, pin) {
   const fd = fs.openSync(abs, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
   let bytes;
   try {
     const st = fs.fstatSync(fd);
-    if (!st.isFile()) throw new Error('model is not a regular file');
-    if (st.size > MAX_MODEL) throw new Error('model is too large');
+    if (!st.isFile()) throw new Error(what + ' is not a regular file');
+    if (st.size > MAX_MODEL) throw new Error(what + ' is too large');
     bytes = Buffer.alloc(st.size);
     let got = 0;
     while (got < st.size) {
       const r = fs.readSync(fd, bytes, got, st.size - got, got);
-      if (r === 0) throw new Error('model file became shorter while read');
+      if (r === 0) throw new Error(what + ' file became shorter while read');
       got += r;
     }
   } finally {
     fs.closeSync(fd);
   }
   const digest = crypto.createHash('sha256').update(bytes).digest('hex');
-  if (digest !== PINNED_MODEL_SHA256) throw new Error('model SHA-256 ' + digest + ' is not the pinned ' + PINNED_MODEL_SHA256);
+  if (digest !== pin) throw new Error(what + ' SHA-256 ' + digest + ' is not the pinned ' + pin);
+  return bytes;
+}
+
+// Reads the model once through one descriptor, checks the pin, compiles the same bytes. Its one dependency
+// (bignumber.js) is pinned the same way and is the only module that its require function returns.
+function loadModel(file) {
+  const abs = path.resolve(file);
+  const bytes = readPinned(abs, 'model', PINNED_MODEL_SHA256);
+  const bnPath = require.resolve('bignumber.js', { paths: [path.dirname(abs)] });
+  const bn = new Module(bnPath, null);
+  bn.filename = bnPath;
+  bn.paths = [];
+  bn.require = (id) => { throw new Error('bignumber.js may require nothing, not ' + JSON.stringify(id)); };
+  bn._compile(readPinned(bnPath, 'bignumber.js', PINNED_BIGNUMBER_SHA256).toString('utf8'), bnPath);
   const m = new Module(abs, null);
   m.filename = abs;
-  m.paths = Module._nodeModulePaths(path.dirname(abs));
+  m.paths = [];
+  m.require = (id) => {
+    if (id === 'bignumber.js') return bn.exports;
+    throw new Error('the model may require only bignumber.js, not ' + JSON.stringify(id));
+  };
   m._compile(bytes.toString('utf8'), abs);
   const ex = m.exports;
   const D = ex && ex.BookingDualCert && ex.BookingDualCert.__default;

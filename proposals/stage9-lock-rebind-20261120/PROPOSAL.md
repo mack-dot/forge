@@ -1,5 +1,53 @@
 # Gate F2a: Stage 9 lock rebind (exact-diff proposal; NOT APPLIED until the owner merges)
 
+## REGENERATED 2026-11-20 on `main` `7e5842d0` (this section is the valid one)
+
+The merge queue is done (pull requests 68, 69, 70, 72, 73, 74, 75, 77,
+78 are on `main`, by the coordinator session's message and by `git log
+origin/main`). `origin/main` `7e5842d0c24b58c522a493ebd0155bc99d8ed201`
+was merged into this branch (a merge, no force-push) and both locks
+were made again with `regen_locks.py`, starting from `main`'s own two
+files. The sections below this one describe the first version on base
+`33055a59`; their digests of `implementation.lock`, of `proposed.diff`
+and of the changed scripts are NO LONGER the proposed bytes.
+
+| File | SHA-256 on `main` `7e5842d0` | SHA-256 proposed |
+| --- | --- | --- |
+| `gate/provenance/implementation.lock` | `76b983ac279a80ab42bf15c7446ee997a2bcd9b25a003db829f7e8fb2d4b8cd9` | `fef556903c8ae9358a0c04a320f1c2d9f488ca9af84325de7428b266e4821fc0` |
+| `spec/provenance/spec.lock` | `43610d8123ce21fdd1f9dac9469f78ad3efcb3af271a86011a18790099811a33` | `256310d851669cdeab2498b0a58fe6bcd4b7ba1f741396a9f608d644fa72a976` |
+
+[proposed.diff](proposed.diff) (SHA-256 `4192d7e639ec959f3e128b47cf05befa0d064536f6ecdb8b2fcd83c11539eec8`) is
+`git diff origin/main` of the two files. `spec.lock`: the same eight
+digests as in part B2 below; its bytes did not change against the
+first version. `implementation.lock`: the same nine changed digests as
+in A1 and B3 below, and 13 added keys (113 entries):
+
+| Added path | SHA-256 |
+| --- | --- |
+| `scripts/demo_gauntlet.py` | `31e03700da0c643e7ae5e7d4a79c70a9cd404eb6f89da0771ccef36f14ef0104` |
+| `scripts/exit_archia_mcp.py` | `0b51e1e181ddc6cb676e3708bcf0a164cc6715f2ad8837331d8b73e2cdedd064` |
+| `scripts/exit_goal20_sdk.py` | `e058400871c1d3924ec4c0f884c6717e77a75e93b49132b033b7ff3c402b84a5` |
+| `scripts/exit_goal21_intent.py` | `b46fb71b24d4e1ea87913abef8aaf20ab8e272419bb9e4c81dc708a5d76fae35` |
+| `scripts/exit_m1_conformance.py` | `68360431ab4af85b53532eb727a027bc2594b0193111c8a09b22819e7d4faafe` |
+| `scripts/exit_silicon_sink.py` | `bc8ea68a578abbcaa2b4889d150654995efe45e016415428c1d81e90181d6a09` |
+| `scripts/exit_slice1.py` | `db894acb80137f26d8901db15cbc1470300aacd93ec06f9b047b582dee0e61ef` |
+| `scripts/exit_slice2.py` | `34d2448b61b45a8303e98517994bc7edc5c8056047d8f3fc8976ebd3c59b51d2` |
+| `scripts/exit_slice3.py` | `23f4c3f3c2d49d8457fa194aac3d0fb3b95726f5c414837bee5c6352d03e08bc` |
+| `scripts/intent_clearing.py` | `63ea86b34a57b0f2501a537aae2e1553807ab7515bb36dd42fa35c8b9c7397a3` |
+| `scripts/intent_restate.py` | `78f0f32b83295753609fa9a31e52b70945199176898ca4e5d226c4493283f2e2` |
+| `scripts/spec_clearing.py` | `99f1000eae2340aa344b0d9f8d0dac1895c52c4c29c4843f4c03c2972d29ffc5` |
+| `gate/ratification.py` | `93bb23bc64f1c36174829602c4b480b93a2063cd2cd779bc98582d2f89870336` |
+
+Against the first version: four more scripts (`exit_archia_mcp.py`,
+`exit_goal21_intent.py`, `intent_clearing.py`, `intent_restate.py`),
+and five scripts have new bytes on `main` (`demo_gauntlet.py`,
+`exit_goal20_sdk.py`, `exit_m1_conformance.py`, `exit_silicon_sink.py`,
+`exit_slice1.py`). The checks of this version are in `unsure.md` U904
+and in the pull request. The lock is valid only while `main` does not
+change in a listed file or in a code file under `scripts/`.
+
+## First version (base `33055a59`; kept as the record)
+
 CURRENT none. Stage 9 stays deferred. M1-B open. Stage 12 unauthorized.
 `end_to_end=false`. This pull request changes two PROTECTED files. The
 owner's merge is the approval of their exact bytes. The agent does not

@@ -1,0 +1,3 @@
+# D3 before: tests/airlock/test_engine.py --case tenant_namespace on the engine built from e3322303 (unchanged sources)
+FAIL tenant_namespace   1.2s 'OPEN_MONEY tA order-1 r1 store-refunds 1000': expected COMMITTED (exit 0), got exit 16 'TENANT_ISOLATION_BREACH KEY_OF_ANOTHER_TENANT'
+exit 1

@@ -1,0 +1,5 @@
+{"airlock": "saga", "version": 1, "name": "quant-legs",
+ "states": ["FLAT", "LEG_IN_FLIGHT", "HEDGED", "LEG_REJECTED"], "initial": "FLAT",
+ "in_flight": ["LEG_IN_FLIGHT"],
+ "transitions": [["FLAT", "LEG_IN_FLIGHT"], ["LEG_IN_FLIGHT", "HEDGED"], ["LEG_IN_FLIGHT", "LEG_REJECTED"],
+                 ["LEG_REJECTED", "LEG_IN_FLIGHT"]]}

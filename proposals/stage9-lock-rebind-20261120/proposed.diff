@@ -1,5 +1,5 @@
 diff --git a/gate/provenance/implementation.lock b/gate/provenance/implementation.lock
-index 8d6efc4c..835b20bb 100644
+index 8d6efc4c..f84ed469 100644
 --- a/gate/provenance/implementation.lock
 +++ b/gate/provenance/implementation.lock
 @@ -11,15 +11,15 @@
@@ -31,15 +31,17 @@ index 8d6efc4c..835b20bb 100644
      "gate/refund/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
      "gate/refund/hostile.ts": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
      "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
-@@ -60,12 +61,19 @@
+@@ -60,22 +61,34 @@
      "scripts/check_stage_4_local.py": "c71f3811b1fd7291f85ea9d9eaef98fd23f8bdc76779a00a2ccda30e926c9189",
      "scripts/check_stage_6.py": "a718d948b5c1b4d5e1de9db3c6292b69cc94444dec9ba58beb6d10bd17e361c7",
      "scripts/collect_stage9_receipt_reference.py": "74a96dba9df7517cdbbaaa04bf7923d759d6f7e986dbff9af43acfe3de0053e4",
-+    "scripts/demo_gauntlet.py": "a26cac6355178d9a13797229a1ddbdc3618dd286b63d14012b2f79918aaf3334",
-+    "scripts/exit_goal20_sdk.py": "0ea4a0aa87ec9c5d2203da47f4437316e725c8c6acc5e3631898029f45d89787",
-+    "scripts/exit_m1_conformance.py": "96179077289b6242a7d14384e363219a47c6ba9d49eb846a0fbd4969b4d6fa52",
-+    "scripts/exit_silicon_sink.py": "b8787e515f554c654677cdb66ea29fa57494b971fd0af3290dea83cfb58cf717",
-+    "scripts/exit_slice1.py": "4cea7b69a4d74b61de7234c953c0d681bb8d5530acf84df4c908500b8b1680b9",
++    "scripts/demo_gauntlet.py": "31e03700da0c643e7ae5e7d4a79c70a9cd404eb6f89da0771ccef36f14ef0104",
++    "scripts/exit_archia_mcp.py": "0b51e1e181ddc6cb676e3708bcf0a164cc6715f2ad8837331d8b73e2cdedd064",
++    "scripts/exit_goal20_sdk.py": "e058400871c1d3924ec4c0f884c6717e77a75e93b49132b033b7ff3c402b84a5",
++    "scripts/exit_goal21_intent.py": "b46fb71b24d4e1ea87913abef8aaf20ab8e272419bb9e4c81dc708a5d76fae35",
++    "scripts/exit_m1_conformance.py": "68360431ab4af85b53532eb727a027bc2594b0193111c8a09b22819e7d4faafe",
++    "scripts/exit_silicon_sink.py": "bc8ea68a578abbcaa2b4889d150654995efe45e016415428c1d81e90181d6a09",
++    "scripts/exit_slice1.py": "db894acb80137f26d8901db15cbc1470300aacd93ec06f9b047b582dee0e61ef",
 +    "scripts/exit_slice2.py": "34d2448b61b45a8303e98517994bc7edc5c8056047d8f3fc8976ebd3c59b51d2",
 +    "scripts/exit_slice3.py": "23f4c3f3c2d49d8457fa194aac3d0fb3b95726f5c414837bee5c6352d03e08bc",
      "scripts/exit_stage_1.py": "bf85637155a63f48b737c20f6efdd4e4d9047afe3e1e5a252a3d31f9bc7f807f",
@@ -52,7 +54,12 @@ index 8d6efc4c..835b20bb 100644
      "scripts/exit_stage_6.py": "7217f399a6edae0131b1e22a8692c9ec984198b04c1b3e2150cf2c7f12675352",
      "scripts/exit_stage_7.py": "f4ed261250bddea351177a0aa80ff906ea8b3a8dff645b928eb79a42bc453544",
      "scripts/exit_stage_8.py": "6fbca72b078bf29d816b3e08b1cdb45cecef855635fc58127185e57e2ca2ce2f",
-@@ -76,6 +84,7 @@
+     "scripts/exit_stage_9.py": "d66d598f382e83840aeb5e365a5b18af6a498efbf055264bf93a3fe658fa9611",
+     "scripts/export_stage6_usage.py": "deddefa05edfc672a1418ac20042853380fd3dde1ec1e0477c767efa55421444",
+     "scripts/generate_claim_docs.py": "fc7b454c88590487105013ff82cb7d255d3eb70667dcc54b077ad62f9e584950",
++    "scripts/intent_clearing.py": "63ea86b34a57b0f2501a537aae2e1553807ab7515bb36dd42fa35c8b9c7397a3",
++    "scripts/intent_restate.py": "78f0f32b83295753609fa9a31e52b70945199176898ca4e5d226c4493283f2e2",
+     "scripts/inventory_hardware.py": "abeab328debfb5eb91b68eacf126db308748634d3f91bf7aa800fe6c2cc3f297",
      "scripts/javascript_env.py": "22c882c3c7f82677d50f2cffc242782eb324ccae2ce07b0812dfc38fc99eb415",
      "scripts/probe_stage_4.py": "0c5840569468c189411d77a39ee9c832cb3b69b06b341cc940a86ca5a59723b0",
      "scripts/render_spec_report.py": "dd6f4a9c856af315ad4e8bb6fd2170af4f7ac5e87e8435092e23ceda0c94070b",
@@ -60,7 +67,7 @@ index 8d6efc4c..835b20bb 100644
      "scripts/stage5_tools.py": "b4b8c91223befb850748fe4f07f863065f36888620a90b3d7013842aaaeca781",
      "scripts/stage7_build_own.py": "3c6b69885b31ec4c8f1ee12498eb6b27204957fb88d36c7da09cbddc5969fdac",
      "scripts/stage7_emit_evidence.py": "87ae01037039eb67add57ab0544c66ab23f3be8698e784db370ea801023dba5c",
-@@ -87,14 +96,14 @@
+@@ -87,14 +100,14 @@
      "scripts/stage7_record.py": "c3a0f2759d944d2e076fd533052c4a0f1ecb25be8ad865c97343d2e052bb9103",
      "scripts/stage7_trace_processes.py": "a6586468da2486780eebb83a72a20fa89c12aa7fcdf482c588057d43ab7e8b94",
      "spec/provenance/protocol.md": "2784bdd04f0c89871e243df2402bd689546595835e28e7480fff5968e705ed69",

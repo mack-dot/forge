@@ -1,0 +1,25 @@
+# D2: can macOS exec an open file descriptor? (no fexecve on macOS). Scratch program fdexec.rs (std only):
+#   use std::os::unix::io::AsRawFd;
+#   use std::process::Command;
+#   fn main() {
+#       let a: Vec<String> = std::env::args().collect();
+#       let f = std::fs::File::open(&a[1]).unwrap();
+#       let p = format!("/dev/fd/{}", f.as_raw_fd());
+#       let r = Command::new(&p).args(&a[2..]).output();
+#       match r {
+#           Ok(o) => println!("exec {p}: status {:?} out {:?} err {:?}", o.status.code(), String::from_utf8_lossy(&o.stdout).trim(), String::from_utf8_lossy(&o.stderr).trim()),
+#           Err(e) => println!("exec {p}: ERROR {e:?}"),
+#       }
+#   }
+# runs: ./fdexec <file> [args]: a copy of /bin/echo; the Homebrew Node 24.3.0; the CakeML refund binary copy; a /bin/sh script
+exec /dev/fd/3: ERROR Os { code: 13, kind: PermissionDenied, message: "Permission denied" }
+exec /dev/fd/3: ERROR Os { code: 13, kind: PermissionDenied, message: "Permission denied" }
+exec /dev/fd/3: ERROR Os { code: 13, kind: PermissionDenied, message: "Permission denied" }
+exec /dev/fd/3: ERROR Os { code: 13, kind: PermissionDenied, message: "Permission denied" }
+devfs on /dev (devfs, local, nobrowse)
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+# measured SHA-256 time with the engine `sha256` subcommand (load average 37 to 116 at that time; wall time is not a valid measure):
+#   Node 24.3.0 (89,025,440 bytes): real 1.02 / 0.96 / 1.08 s, user 0.49 / 0.49 / 0.50 s
+#   refund binary (238,776 bytes): real 0.00 / 0.00 / 0.01 s

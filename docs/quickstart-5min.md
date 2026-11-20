@@ -53,7 +53,8 @@ bin/forge-airlock init build/quickstart/store --store-id quickstart \
 ```
 
 `--node` makes the store pin the SHA-256 of that Node binary. The engine requires it
-for a store with a cosign key or an inventory policy. Each store gets a random nonce in
+only for a store with an inventory policy (the booking checker runs in Node). A store
+with money, saga and cosign policies needs no Node at all. Each store gets a random nonce in
 its genesis record, so its state hashes differ from those of every other store.
 
 The two policies are a money policy ([refunds.json](../examples/unbreakable_store/policies/refunds.json))
@@ -100,11 +101,14 @@ Expected lines: `open: COMMITTED`, `shipping $80 on a $10 fact: REJECTED_POLICY 
 `read_scoped` serializes each row once, sends those bytes, and after `OK <n>` returns new
 objects parsed from exactly those bytes, never your own objects. It refuses more than
 100000 rows before it sends anything. `with_lease` binds the lease to a request id, a
-tenant and a key. Only a terminal verdict for that id on that tenant and key closes it.
-One lease per request id, ever.
+tenant and a key. Only a commit or a `REJECTED_POLICY` for that id on that tenant and key
+closes it. A `REQUIRE_HUMAN_COSIGN` leaves it open in the state PENDING_COSIGN (the signed
+retry is still expected; the sweep reports it after its deadline). One lease per request id
+and tenant, ever. Keys, request ids and leases are per tenant: a key of another tenant is
+`UNKNOWN_KEY`, like a key that nobody opened.
 
 Typed results: `COMMITTED`, `REJECTED_POLICY`, `REQUIRE_HUMAN_COSIGN`, `STALE_STATE_HASH`,
-`DUPLICATE_REQUEST_ID`, `TENANT_ISOLATION_BREACH`, `DROPPED_OBLIGATION`. Every other outcome
+`DUPLICATE_REQUEST_ID`, `TENANT_ISOLATION_BREACH` (read only), `DROPPED_OBLIGATION`. Every other outcome
 raises an `AirlockError` subclass (for example `EngineRefusal`, `EngineDead`,
 `ProtocolError`). An error is never a commit. After a dead engine, a timeout or a bad
 answer, the client closes itself (fail closed).
@@ -159,7 +163,8 @@ bin/forge-airlock leases build/quickstart/store
 `replay` lists every effect record of the WAL. `leases` lists the open leases
 (`leases --all` also lists the closed ones with the verdict that closed them). The
 command `bin/forge-airlock leases build/quickstart/store --sweep` reports each open
-lease past its deadline as `DROPPED_OBLIGATION` and exits 24 when there is at least one.
+lease past its deadline as `DROPPED_OBLIGATION` and exits 24 when there is at least one. It
+lists a lease in the state PENDING_COSIGN as `PENDING_COSIGN` before its deadline.
 
 ## 6. diff-policy on two policies
 
@@ -194,14 +199,21 @@ all eight disasters and the valid traffic behaved as stated. The fuzz pass alone
 
 Three labels. Each result has one or more of them.
 
-- **PROVED CORE**: only two decisions.
+- **PROVED CORE** (the label that the demo, the tests and the evidence bundle print): three
+  results have a machine-checked part. None of them is a proof of native execution.
   - A refund on a key whose policy has `"profile": "canonical-refund"`: the CakeML ARM64
-    refund binary (SHA-256 `b8ed5ec2…7bb8`) decides. The engine sets the binary's three
-    flags itself, so the flag logic of the binary is not exercised through the engine.
-  - An inventory booking: the Dafny-compiled `BookingDualCert` checker must accept. This
-    is a proved SOURCE. The Dafny compiler and Node are trusted.
-  - The NO_CHOICE verdict of `diff-policy` holds for the GENERATED Dafny model only.
-- **NATIVE CHECK**: the Rust engine (WAL, compare-and-swap, tenant checks, parametric money
+    refund binary (SHA-256 `b8ed5ec2…7bb8`) decides. That binary is compiled by a verified
+    compiler; the HOL4 theorem about it is model-level; the native link (M1-B) is OPEN, and
+    two premises of the theorem are false for real machines as written. After the binary
+    accepts, the engine re-checks the amount and the reason natively. The engine sets the
+    binary's three flags itself, so the flag logic of the binary is not exercised through
+    the engine.
+  - An inventory booking: the Dafny-compiled `BookingDualCert` checker must accept. It is
+    compiled from a Dafny source proof; the compiled JavaScript is not proved. The Dafny
+    compiler and Node are trusted.
+  - The NO_CHOICE verdict of `diff-policy`: a Dafny source proof for the GENERATED Dafny
+    model only.
+- **NATIVE CHECK**: the Rust engine (WAL, compare-and-swap, per-tenant namespaces (the tenant is not authenticated), parametric money
   rules, saga table, read airlock, leases). It is not proved.
 - **FINITE TEST**: the test suites, the fuzz pass and the demo. They try a finite set of
   inputs. They prove nothing.
@@ -220,20 +232,36 @@ engine cannot check this. See section 11 of [the protocol](../src/airlock/PROTOC
 
 The opener of a key is trusted. The `original` amount, the facts (for example
 `shipping_paid`) and the tenant of a key are inputs of whoever opens the key. Nothing
-authenticates the tenant field. The money caps (for example disasters 2 and 3 of the
+authenticates the tenant field: the per-tenant namespaces stop accidents, squatting and
+probes only between callers that something outside the engine holds to their tenant. The money caps (for example disasters 2 and 3 of the
 demo) block only relative to the values given at open.
 
-What pins what: the engine pins the refund binary (compiled-in SHA-256) and the two Node
-helpers (compiled in); the booking helper pins the checker model; the store pins the
-SHA-256 of the Node binary at `init`. A file that is swapped after its check is not
-detected. Nothing in this repository pins the engine binary itself.
+What pins what: the engine pins the refund binary (compiled-in SHA-256) and the Node
+booking helper (compiled in); the booking helper pins the checker model; the store pins the
+SHA-256 of the Node binary at `init` (inventory only). At every run, the engine checks the
+path of the refund binary and of Node (owner root or the engine's own user, no group or
+other write bit up to `/`), hashes the refund binary again, and hashes Node again when its
+file identity changed. The Homebrew Node is under a folder that the `admin` group may
+write, so `bin/forge-airlock` passes a private copy of the Node file. That copy still loads 9
+libraries from `/opt/homebrew/opt`, which the `admin` group may write: those libraries are
+NOT checked (open; PROTOCOL.md section 2). The engine checks
+`/usr/bin/ssh-keygen` before every cosign (owned by root, not writable by group or other,
+no symbolic link on its path) but does not pin it: an OS update must not lock every store.
+`bin/forge-airlock cosign-info` prints its SHA-256 and version so that you can record them.
+The files are still run by path: your own user (or root) can change them between the check
+and the run, so these checks matter only when `serve` runs as another user. Nothing in this
+repository pins the engine binary itself.
 
 ## Cosign: the same-OS-user limit
 
 A refund above the cosign limit commits only with an Ed25519 signature that verifies
-against the public key pinned at `init`. The human signs with
-`bin/forge-airlock cosign-sign <key-file>` (a 0600 key file, opened with `O_NOFOLLOW` and
-checked with `fstat`). The engine holds only the public key.
+against the public key pinned at `init`. The human makes a key with
+`bin/forge-airlock cosign-keygen <new-key-file>` (OpenSSH `ssh-keygen`; it prints the token
+for `init --cosign-pubkey`) and signs the output of `cosign-message` with
+`bin/forge-airlock cosign-sign <key-file>` (a 0600 key file without a passphrase, opened
+with `O_NOFOLLOW` and checked with `fstat`). The tool prints one token: the base64 body of
+the SSHSIG armor without line breaks. The engine holds only the public key and verifies
+with `/usr/bin/ssh-keygen -Y verify`. No Node runs for a cosign.
 
 Limit: if the agent runs as the same OS user as the key owner, it can read a 0600 file.
 "The agent cannot self-cosign" holds only if BOTH conditions hold:
@@ -249,14 +277,15 @@ cosign mechanism, not that separation.
 ## Trusted assumptions
 
 - The Dafny compiler, for the compiled booking checker.
-- Node.js and `node:crypto` (Ed25519 verify for the cosign; the booking checker runs in
-  Node).
+- The system OpenSSH, `/usr/bin/ssh-keygen` with its LibreSSL (Ed25519 verify for the
+  cosign). It is smaller than Node and widely reviewed, but it is not zero.
+- Node.js (the booking checker runs in Node; inventory only).
 - `bignumber.js` from the pinned `node_modules`, used by the Dafny JavaScript runtime.
 - The small JSON-to-Dafny generator of `diff-policy` (owner decision; limited by negative
   controls, not proved).
 - The macOS kernel and the drive for `F_FULLFSYNC` and `flock`.
 - Whoever can write the store folder, the engine binary, the refund binary, Node, the
-  helpers and the checker model.
+  booking helper, the checker model and `/usr/bin/ssh-keygen`.
 
 ## Limits
 
@@ -271,5 +300,5 @@ cosign mechanism, not that separation.
 - The kill tests use SIGKILL. A SIGKILL is not a power loss.
 - Whoever can write the store folder is trusted. FNV-1a-128 is not cryptographic.
 - A helper process runs while the store lock is held (up to 10 s for the binary, 30 s
-  for Node).
+  for Node or ssh-keygen).
 - `end_to_end=false`.

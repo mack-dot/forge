@@ -1,21 +1,102 @@
 # Forge
 
-**LLMs propose, checkers dispose. Humans approve intent (specs), not code.**
+**The aim: LLMs propose, checkers dispose, and humans approve intent
+(specs), not code.** This is an aim, not the present state. Today no
+approval channel exists that an agent cannot forge (link S1 is MISSING),
+and nothing enforces protected-path approval on `main` (`main` is not
+protected; links E2 and E4 are MISSING; blocker 5 "Enforcement does not
+exist"). Sources:
+[TOP_LEVEL_GRAPH.md](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md)
+(S1, E2, E4, blocker 5) and
+[the graph refresh](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119.md)
+(E2, E4).
+
+Forge is a research prototype (the repository is private; no licence is
+selected; nobody outside has a right to use it yet).
+**`end_to_end=false`**: no result here is a proof of a deployed system.
+
+## What Forge is
+
+Forge is an **airlock between AI agents and irreversible actions**
+(refunds, payouts, bookings). An agent asks; the airlock engine checks
+the request against a policy and a compare-and-swap state hash, and
+commits it to a write-ahead log, or refuses it with a typed answer.
+
+- **The engine is a NATIVE CHECK.** `forge-airlock`
+  ([src/airlock](src/airlock/PROTOCOL.md)) is std-only Rust with no
+  `unsafe`. It is NOT proved. Finite tests, a fuzz pass and a demo check
+  it. No CI job builds or tests it.
+- **What is machine-checked is small.** Dafny source proofs of small
+  models: for example the refund decision
+  ([spec/refund/RefundSpec.dfy](spec/refund/RefundSpec.dfy), 64 lines;
+  [impl/Refund.dfy](impl/Refund.dfy), 15 lines), the refund finality
+  core, the ledger and the booking checker. HOL4 theorems about a
+  machine MODEL that holds the ARM64 bytes of the CakeML-compiled refund
+  program; the link from that model to the real process (M1-B) is OPEN,
+  and two premises are false for real machines as written (M1 row below).
+- **Nothing proves** the engine, the SDKs, the dispatcher, the compiled
+  JavaScript, or a deployment.
+
+### Use it from Python
+
+Build the engine and open a store first: steps 1 and 2 of the
+[quickstart](docs/quickstart-5min.md). Then, from the repository root:
+
+```python
+import sys; sys.path.insert(0, 'sdk/py')
+import forge_airlock as fa
+with fa.Store('build/quickstart/store') as st:
+    st.open_money('acme', 'order-1', 'open-1', 'store-refunds', 10000, {'shipping_paid': 1000})
+    h = st.get('acme', 'order-1').state_hash                       # the compare-and-swap token
+    print(st.refund('acme', 'order-1', 'refund-1', h, 'SHIPPING', 8000).code)  # REJECTED_POLICY
+```
+
+The policy `store-refunds` caps `SHIPPING` at the `shipping_paid`
+fact. More: [quickstart](docs/quickstart-5min.md) (Python, TypeScript,
+leases, scoped reads, cosign), [wire protocol](src/airlock/PROTOCOL.md),
+SDKs [sdk/py/forge_airlock.py](sdk/py/forge_airlock.py) and
+[sdk/ts/forge_airlock.ts](sdk/ts/forge_airlock.ts).
+
+### Limits you must know
+
+- **Trust boundary.** In the shipped SDK flow the engine runs as the
+  caller's own OS user. The checks hold against a buggy agent, not
+  against a malicious one that can write the store folder, the engine
+  binary or the helper paths (section 11 of
+  [PROTOCOL.md](src/airlock/PROTOCOL.md)). No isolation mode is shipped.
+- **Tenants are not authenticated.** The tenant field is an input of
+  the caller.
+- **The Slice 1 TypeScript sink is KNOWN DEFECTIVE on `main`**
+  (`ts/refund-finality/sink.ts`; Slice 1 row below). The airlock engine
+  does not use it.
+
+### Platform
+
+- macOS on ARM64 for the `canonical-refund` profile (the CakeML refund
+  binary is Mach-O ARM64).
+- `rustc` 1.92.0; no Cargo, no crate.
+- Node.js 24.x (`bin/forge-airlock` refuses another major; the
+  repository pins 24.3.0); Python 3 (standard library only).
+- Dafny 4.11.0 only to build the booking checker
+  (`bin/forge-airlock build --checker`).
+- Linux and Windows: not tested (no record of a run).
+
+## Research context
 
 North star (the owner's words, 2026-11-19): **Zero implementation
 review. Independently verified guarantees.** That is the aim. It is not
 the present state: see the status line below and the evidence table.
 
-Forge is a public research prototype for **proof-gated software
-changes**. Untrusted code (an agent, an optimizer, a person in a hurry)
-proposes. An established checker decides. Each accepted artifact
-carries evidence that is tied to its exact bytes, its specification,
-the checking method and the assumptions.
+The research behind the airlock is **proof-gated software changes**.
+Untrusted code (an agent, an optimizer, a person in a hurry) proposes.
+An established checker decides. Each accepted artifact carries evidence
+that is tied to its exact bytes, its specification, the checking method
+and the assumptions.
 
 Status on 2026-11-19: no stage is CURRENT (Stage 9 is deferred). M1 is
-open. Stage 12 is unauthorized. **`end_to_end=false`**: no result here
-is a proof of a deployed system. The execution record is
-[ROADMAP.md](ROADMAP.md). The uncertainty log is [unsure.md](unsure.md).
+open. Stage 12 is unauthorized. **`end_to_end=false`**. The execution
+record is [ROADMAP.md](ROADMAP.md). The uncertainty log is
+[unsure.md](unsure.md).
 
 ## The idea in three parts
 
@@ -99,8 +180,8 @@ machine and one hosted runner profile.
 | Stage 8: refund boundary | Claims R1 to R5 of the approved refund spec for `impl/Refund.dfy`: `source_proof`. Wrapper with 9,000 generated cases and 68 fixtures: `unit_tested` | the wrapper, the JSON parser, the executor | [refund record](docs/stage8-refund.md) |
 | Stage 9: provenance | Contract and tools are in the tree. Its six EXIT cases are NOT RUN on `main`'s present bytes: 8 lock entries are stale and the renewal needs a hosted signing run that is not authorized | — | [ROADMAP.md](ROADMAP.md) |
 | Stage 11: incremental verification | An obligation graph decides what a change must check again; a stale dependency is rejected; three EXIT cases exit 0 on recorded evaluations: `floor_controls` and recorded runs | the input declarations of each gate | [ROADMAP.md](ROADMAP.md) |
-| Round 4: the gate guards itself | Eight modules of the pull request gate are frozen; a change to a protected path needs a ratification record on the trusted side; control sets with 0 evasions: `floor_controls`; three independent reviews | four more gate modules stay ratifiable (stated limit) | [checklist](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md) |
-| Slice 1: refund finality | Checker core `impl/RefundFinality.dfy`, claims P1 to P4 (a token only for an authorized transition; every authorized transition gets one; no intent on refusal; token binding): `source_proof`. Issuer, sink and dispatcher: 115 suite rows, 48 rejection attempts with 0 effects: `unit_tested`. 10 of 10 copies with one check removed fail | the compiled JavaScript, the issuer, Ed25519 in Node, SQLite, process isolation. The claim text is not approved intent | [Slice 1 report](proposals/forge2-slice1-refund-finality/REPORT.md) |
+| Round 4: the gate guards itself | Eight modules of the pull request gate are frozen; a change to a protected path needs a ratification record on the trusted side; control sets with 0 evasions: `floor_controls`; three fresh-context reviews by separate workers of the same model family on the same machine (not independent parties) | four more gate modules stay ratifiable (stated limit). Nothing enforces the ratification rule on `main`: `main` has no branch protection ([graph](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH.md) E2 and blocker 5) | [checklist](proposals/forge2-pillar1-print-effects/v3/BOOTSTRAP_CHECKLIST.md) |
+| Slice 1: refund finality | Checker core `impl/RefundFinality.dfy`, claims P1 to P4 (a token only for an authorized transition; every authorized transition gets one; no intent on refusal; token binding): `source_proof`. Issuer, sink and dispatcher: 115 suite rows, 48 rejection attempts with 0 effects: `unit_tested`. 10 of 10 copies with one check removed fail. **The merged `ts/refund-finality/sink.ts` is KNOWN DEFECTIVE on `main`**: under a faulty signer, red-team exploits E1 and E2 give two refunds for one request id (exit 1 on the merged sink; [E1](proposals/night-shift-20261119/orch-C/c3-identity/e1_two_effects_one_reqid.ts), [E2](proposals/night-shift-20261119/orch-C/c3-identity/e2_cross_charge.ts), [logs](proposals/night-shift-20261119/orch-C/c3-identity/logs/e1_two_effects_one_reqid-merged.log); [graph refresh](proposals/m1b-mission-20261119/TOP_LEVEL_GRAPH_REFRESH_20261119.md) row U3). The 115 and 48 counts do not cover that defect. Fix in pull request T19 (pending; branch `feat/t19-hardened-sink`) | the compiled JavaScript, the issuer, Ed25519 in Node, SQLite, process isolation. The claim text is not approved intent | [Slice 1 report](proposals/forge2-slice1-refund-finality/REPORT.md) |
 | Slice 2: spec clearing | `NO_CHOICE` for the three approved specs; `CHOICE` for two planted loose specs; `EQUIVALENT` and `DIVERGES` with examples: each verdict rests on Dafny lemmas (`source_proof` of the lemma; the tool is dispatch only). 11 of 11 copies with one check removed fail | the tool; a person must read the hand-written claim lemmas | [Slice 2 report](proposals/forge2-slice2-spec-clearing/REPORT.md) |
 | Slice 3: runtime certificates | Certificate checker core against a candidate spec (not approved): `source_proof`. Three optimizers (TypeScript, safe Rust, an adversarial Python program) exchanged against one compiled core with 0 Dafny starts for the exchange; 84 allocations committed, each for a token: `runtime_certificate_checked` by an unproved compiled core; 0 tokens for the adversary. 26 of 26 copies fail | the compiled core, issuer, sink, the macOS sandbox tool (trusted, one platform). Sound, not complete | [Slice 3 report](proposals/forge2-slice3-runtime-certificates/REPORT.md) |
 | M1: CakeML to ARM64 (OPEN) | For one refund program, HOL4 theorems show that a machine MODEL that holds the exact ARM64 code bytes, under explicit premises, either halts with output equal to the rendered decision or stops at a resource limit with a prefix of it, possibly empty (verified machine-model behaviour; wording corrected 2026-11-19); 95 theories replay with equal exports on rebuilt tools. Nothing formal links the real process to that model: that link is an informal assumption, and two premises of the theorem are false for real machines as written: the FFI contract (probably) and the processor bits TBI0 and SA0. Verified native execution is NOT established. This is an `in_logic_compiler_proof` chain that is NOT closed: no M1 theorem is claimed | open premises (entry state, loader, foreign code, processor), the HOL half of the link to the approved contract, clean and independent replays; the replay of the 158 recorded cases is not complete (3 cases have no source) | [replay report](proposals/refund-executable-feasibility/m1-chain-replay-20261118/REPORT.md) |
@@ -130,7 +211,12 @@ machine and one hosted runner profile.
   JavaScript program, an issuer or a sink process, a key, a database,
   an operating system, or a deployment.
 
-## Run it
+## Run the proof-gate research stages
+
+To use the airlock, see [What Forge is](#what-forge-is) and the
+[quickstart](docs/quickstart-5min.md). The commands below run the
+research stages of the proof gate (Stages 1 to 11, the slices). They do
+not use the airlock.
 
 First follow the [toolchain setup](toolchain/README.md) and the
 [TypeScript setup](ts/README.md). The pins describe specific tested
@@ -199,5 +285,7 @@ commands and exit codes. Planned work is not a passing result.
 
 ## License
 
-A license has not yet been selected. Public visibility alone does not
-grant an open-source license.
+No licence is selected. The repository is private. Nobody outside has a
+right to use, copy or change this code yet. The options are listed for
+the owner in
+[the decision note](proposals/review-20261120/DECISION_NOTE_LICENCE_PACKAGING.md).

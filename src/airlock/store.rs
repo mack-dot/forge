@@ -103,6 +103,9 @@ pub fn scan(r: &mut impl Read, on: &mut dyn FnMut(u64, &str)) -> Result<(Ledger,
         let mut rec = hdr.to_vec();
         rec.extend_from_slice(&body);
         let payload = &rec[HDR..HDR + len];
+        if index == 0 && payload.starts_with(b"GENESIS 2 ") {
+            return no(Code::CorruptWal, "CORRUPT_WAL STORE_VERSION_2 a store of the Node cosign engine (genesis version 2); this engine reads only version 3");
+        }
         let framed = rec[HDR + len..] == crc32(&rec[..HDR + len]).to_le_bytes()
             && hdr[4..12] == index.to_le_bytes()
             && hdr[12..28] == l.tail.to_le_bytes()
@@ -139,7 +142,7 @@ pub fn open(dir: &str) -> Result<Store, Refusal> {
     wal.lock()?; // exclusive flock, taken before any file of the store is read; the kernel releases it at exit or kill
     let (l, total) = scan(&mut BufReader::new(&wal), &mut |_, _| {})?;
     let mut ratchet = OpenOptions::new().read(true).append(true).open(path(dir, EPOCH))?;
-    let (mut size, mut floor) = (0u64, None::<u64>);
+    let (mut size, mut floor, mut bad) = (0u64, None::<u64>, Vec::<u64>::new());
     {
         let mut rd = BufReader::new(&ratchet);
         let mut e = [0u8; 12];
@@ -150,17 +153,37 @@ pub fn open(dir: &str) -> Result<Store, Refusal> {
             if e[8..] == crc32(&e[..8]).to_le_bytes() {
                 let v = u64::from_le_bytes(e[..8].try_into().expect("8 bytes"));
                 floor = Some(floor.map_or(v, |f| f.max(v)));
+            } else {
+                bad.push(size / 12 - 1); // a full-length entry with a bad CRC (review D7: never skipped silently)
             }
         }
     }
     let Some(floor) = floor else { return no(Code::CorruptWal, "CORRUPT_WAL the ratchet has no valid entry") };
     if l.epoch < floor { return no(Code::EpochRegression, "EPOCH_REGRESSION the WAL is older than its ratchet (a restored file?)") }
-    if size % 12 != 0 || l.len < total || floor < l.epoch {
-        ratchet.set_len(size - size % 12)?; // a torn ratchet entry
+    // Review D7. A commit writes the WAL record, syncs, then appends its ratchet entry and syncs; a recovery appends an
+    // entry only when the ratchet is BELOW the WAL epoch. So the one entry that a crash can leave damaged is the LAST one,
+    // and it was meant to hold the WAL epoch, one above the last good entry. Only that shape is repaired (the entry is cut
+    // and the WAL epoch is pushed again: the floor does not go down). Any other bad entry, in the middle or at the end
+    // with the WAL epoch equal to the last good entry (the shape of a one-record WAL rollback after a one-bit change of
+    // the newest entry), is CORRUPT_WAL: the floor would be lower than the one written.
+    let entries = size / 12;
+    let crash_shape = bad.len() == 1 && bad[0] + 1 == entries && size % 12 == 0 && l.epoch == floor + 1;
+    if !bad.is_empty() && !crash_shape {
+        return no(Code::CorruptWal, format!("CORRUPT_WAL RATCHET_ENTRY_BAD entry {} of {entries} has a bad CRC; the floor cannot be trusted", bad[0]));
+    }
+    let keep = 12 * (entries - bad.len() as u64); // without a torn entry and without the one crash-shaped bad entry
+    if keep < size || l.len < total || floor < l.epoch {
+        if keep < size {
+            ratchet.set_len(keep)?; // a torn ratchet entry
+        }
         let wal_ref = &wal;
         wal_ref.set_len(l.len)?; // a torn record
         wal_ref.sync_all()?;
-        push(&mut ratchet, l.epoch)?;
+        if floor < l.epoch {
+            push(&mut ratchet, l.epoch)?;
+        } else if keep < size {
+            ratchet.sync_all()?; // the ratchet holds the WAL epoch already: no second entry of the same value
+        }
     }
     let mut policies = HashMap::new();
     for pin in &l.pins {
@@ -217,8 +240,10 @@ impl Store {
 pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&str>, node: Option<&str>) -> Result<String, Refusal> {
     if !canonical_id(store_id) { return no(Code::Malformed, "BAD_ID store_id") }
     if let Some(k) = pubkey {
-        if k.len() != 64 || !k.bytes().all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)) { return no(Code::Malformed, "BAD_PUBKEY") }
-        if crate::pin::weak_ed25519(k) { return no(Code::Malformed, "WEAK_PUBKEY a small-order or non-canonical Ed25519 key") }
+        // The middle field of an OpenSSH `.pub` line: strict base64 of the ssh-ed25519 wire encoding, 32 key bytes.
+        let Some(raw) = crate::cosign::parse_key_token(k) else { return no(Code::Malformed, "BAD_PUBKEY the base64 blob of an OpenSSH ssh-ed25519 public key (68 characters)") };
+        let raw: String = raw.iter().map(|b| format!("{b:02x}")).collect();
+        if crate::pin::weak_ed25519(&raw) { return no(Code::Malformed, "WEAK_PUBKEY a small-order or non-canonical Ed25519 key") }
     }
     if policy_paths.len() > MAX_POLICIES { return no(Code::MalformedPolicy, "TOO_MANY_POLICIES") }
     let mut loaded: Vec<(String, &'static str, Vec<u8>)> = Vec::new();
@@ -229,11 +254,12 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
         if loaded.iter().any(|(n, _, _)| n == pol.name()) { return no(Code::MalformedPolicy, "DUPLICATE_POLICY_NAME") }
         loaded.push((pol.name().to_string(), pol.kind(), bytes));
     }
-    // A store whose policies need a Node helper (cosign, inventory) pins the SHA-256 of the Node binary.
-    let needs_node = pubkey.is_some() || loaded.iter().any(|(_, kind, _)| *kind == "inventory");
+    // Only the inventory airlock runs Node (the booking checker): such a store pins the SHA-256 of the Node binary.
+    // A cosign key needs no Node (it is verified by /usr/bin/ssh-keygen).
+    let needs_node = loaded.iter().any(|(_, kind, _)| *kind == "inventory");
     let node_pin = match node {
         Some(n) => crate::pin::file_sha256(n).map_err(|e| Refusal(Code::Malformed, format!("NODE_UNREADABLE {:?}", e.kind())))?,
-        None if needs_node => return no(Code::Malformed, "NODE_REQUIRED --node is required with a cosign key or an inventory policy"),
+        None if needs_node => return no(Code::Malformed, "NODE_REQUIRED --node is required with an inventory policy"),
         None => "-".to_string(),
     };
     // 16 bytes from the kernel's random source: two stores never share a genesis record (and so no state hash).
@@ -254,7 +280,7 @@ pub fn init(dir: &str, store_id: &str, policy_paths: &[String], pubkey: Option<&
             f.sync_all()?;
             pins.push_str(&format!(" {name} {kind} {}", hx(fnv128(bytes))));
         }
-        let genesis = encode(0, 0, &format!("GENESIS 2 {store_id} {nonce} {node_pin} {} {}{pins}", pubkey.unwrap_or("-"), loaded.len()));
+        let genesis = encode(0, 0, &format!("GENESIS 3 {store_id} {nonce} {node_pin} {} {}{pins}", pubkey.unwrap_or("-"), loaded.len()));
         let mut ratchet = OpenOptions::new().append(true).create_new(true).open(path(&tmp, EPOCH))?;
         push(&mut ratchet, 0)?;
         let mut wal = OpenOptions::new().write(true).create_new(true).open(path(&tmp, WAL))?;
