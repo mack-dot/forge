@@ -28,6 +28,25 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Review 2026-11-20, defect D1: design of a shipped isolation mode for the airlock engine (service user, per-tenant sockets, root-owned pins, WAL MAC); NOT started — U894 to U896
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Documents only: `proposals/review-20261120-isolation/`. Branch
+`docs/isolation-mode-design` from `33055a59`; NOT merged by the agent. The
+build is NOT STARTED. No `sudo` step ran; every owner step is text.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `rustc` 1.92.0, probe with `UnixStream::peer_cred` (scratchpad) |1|`E0658`: unstable; std gives no peer uid |
+| `rustc` probe: bind, connect, accept; run |0; 0|std Unix socket works (one user) |
+| the same probe with a 117-byte socket path |101|`SUN_LEN`: socket paths must stay short |
+| `rustc` probe: accepted stream as a child's stdin and stdout, no `unsafe`; run |0; 0|the child answered the client's line |
+| Python `socket.LOCAL_PEERCRED` on a socket pair |0|own uid read back; two users NOT TESTED |
+| engine build of `33055a59` in the scratchpad; `otool -L` |0|links only `libSystem` |
+| `check_frozen_pr_gate.py HEAD` at `86582052` |0| |
+| `check_links.py HEAD` (DESIGN.md, README.md, unsure.md) at `86582052` |0|0 missing targets |
+| the build, the malicious-agent test, every owner setup step |NOT RUN|NOT STARTED |
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
