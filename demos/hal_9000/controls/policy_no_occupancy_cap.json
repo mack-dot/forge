@@ -1,0 +1,6 @@
+{"airlock": "money", "version": 1, "name": "life-support", "profile": "parametric",
+ "rules": [
+  {"reason": "VENT_ATMOSPHERE", "verdict": "COMMIT"},
+  {"reason": "MANUAL_OVERRIDE", "verdict": "REQUIRE_HUMAN_COSIGN"},
+  {"reason": "SOLENOID_PULSE", "max_amount": "1", "verdict": "REQUIRE_HUMAN_COSIGN"}
+ ]}

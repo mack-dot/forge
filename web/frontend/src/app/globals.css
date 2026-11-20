@@ -1,0 +1,381 @@
+@import "tailwindcss";
+
+/* No external font or asset is fetched at run time: system monospace stack only. */
+/* A desktop viewport that is tall enough to hold the console without page scroll. */
+@custom-variant desk (@media (min-width: 1024px) and (min-height: 640px));
+
+@theme {
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Mono", "Roboto Mono", Consolas,
+    "Liberation Mono", "DejaVu Sans Mono", monospace;
+  --color-hal: #ff3b2f;
+  --color-hal-soft: #ff7a6b;
+  --color-ember: #ff8a3d;
+  --color-core: #ffe9a8;
+  --color-ice: #d9f2ff;
+  --color-phosphor: #c9d6ea;
+}
+
+:root {
+  color-scheme: dark;
+  --stage-bg: #020617; /* slate-950 */
+  --panel-bg: rgba(9, 14, 30, 0.72);
+  --panel-line: rgba(148, 163, 184, 0.22);
+  --accent: #ff3b2f;
+}
+
+/* The whole interface scales with the viewport: readable at 360 px, not tiny on a 4K screen. */
+html {
+  font-size: clamp(14px, 9px + 0.5vw, 27px);
+  background: var(--stage-bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--stage-bg);
+  color: #cbd5e1;
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(255, 59, 47, 0.45);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid #fde68a;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ------------------------------------------------------------------ stage */
+
+.stage {
+  position: relative;
+  min-height: 100dvh;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(30, 41, 80, 0.35), transparent 60%),
+    radial-gradient(80% 60% at 50% 110%, rgba(127, 29, 29, 0.18), transparent 70%), var(--stage-bg);
+  transition: background-color 600ms ease;
+}
+
+/* Faint, static star field: two layers of dots, drawn with gradients (no image file). */
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, #cbd5e1 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 9%, #94a3b8 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 64% 71%, #e2e8f0 50%, transparent 51%),
+    radial-gradient(1px 1px at 33% 84%, #64748b 50%, transparent 51%),
+    radial-gradient(1px 1px at 91% 46%, #cbd5e1 50%, transparent 51%),
+    radial-gradient(1px 1px at 5% 57%, #94a3b8 50%, transparent 51%),
+    radial-gradient(1px 1px at 47% 31%, #475569 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 22% 43%, #64748b 50%, transparent 51%),
+    radial-gradient(1px 1px at 84% 88%, #94a3b8 50%, transparent 51%),
+    radial-gradient(1px 1px at 56% 6%, #64748b 50%, transparent 51%);
+}
+
+/* -------------------------------------------------------------- CRT layer */
+/* The layer sits above the page, takes no pointer events and stays faint, so
+   that body text keeps its contrast. */
+
+.crt {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+.crt-scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.16) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
+  mix-blend-mode: multiply;
+}
+.crt-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.42) 100%);
+}
+.crt-flicker {
+  position: absolute;
+  inset: 0;
+  background: rgba(148, 163, 184, 0.022);
+  animation: crt-flicker 5.5s steps(1, end) infinite;
+}
+.crt-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22vh;
+  top: -22vh;
+  background: linear-gradient(to bottom, transparent, rgba(226, 232, 240, 0.028), transparent);
+  animation: crt-sweep 9s linear infinite;
+}
+
+@keyframes crt-flicker {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  7% {
+    opacity: 1;
+  }
+  9% {
+    opacity: 0.2;
+  }
+  43% {
+    opacity: 0.7;
+  }
+  44% {
+    opacity: 0;
+  }
+  81% {
+    opacity: 0.9;
+  }
+  83% {
+    opacity: 0.1;
+  }
+}
+@keyframes crt-sweep {
+  to {
+    transform: translateY(144vh);
+  }
+}
+
+/* ------------------------------------------------------- theatre text looks */
+
+.glow-hal {
+  color: var(--color-hal-soft);
+  text-shadow:
+    0 0 0.5em rgba(255, 59, 47, 0.55),
+    0 0 1.6em rgba(255, 59, 47, 0.22);
+}
+.glow-ice {
+  color: var(--color-ice);
+  text-shadow: 0 0 0.6em rgba(125, 211, 252, 0.35);
+}
+.glow-phosphor {
+  color: var(--color-phosphor);
+  text-shadow: 0 0 0.6em rgba(148, 163, 184, 0.28);
+}
+/* Chromatic fringe: headings only. */
+.fringe {
+  text-shadow:
+    -0.045em 0 rgba(255, 40, 60, 0.6),
+    0.045em 0 rgba(60, 200, 255, 0.45),
+    0 0 1.2em rgba(255, 59, 47, 0.28);
+}
+
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 0.12em;
+  vertical-align: -0.16em;
+  background: currentColor;
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ----------------------------------------------------------------- panels */
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-line);
+  backdrop-filter: blur(6px);
+}
+
+/* Evidence: the plain technical style. No glow, no colour tricks, no animation. */
+.evidence {
+  background: #0b1120;
+  border: 1px solid #475569;
+  border-left: 3px solid #e2e8f0;
+  color: #e2e8f0;
+  text-shadow: none;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid currentColor;
+  opacity: 0.85;
+}
+
+/* A value flashes once when it changes. The number itself is never tweened. */
+.tick {
+  animation: tick 900ms ease-out 1;
+}
+@keyframes tick {
+  0% {
+    background: rgba(253, 230, 138, 0.38);
+    color: #fff;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+/* ------------------------------------------------------- interception snap */
+
+.shake {
+  animation: shake 520ms cubic-bezier(0.36, 0.07, 0.19, 0.97) 1;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  10% {
+    transform: translate3d(-9px, 3px, 0);
+  }
+  22% {
+    transform: translate3d(8px, -4px, 0);
+  }
+  34% {
+    transform: translate3d(-7px, -2px, 0);
+  }
+  46% {
+    transform: translate3d(6px, 3px, 0);
+  }
+  58% {
+    transform: translate3d(-4px, 2px, 0);
+  }
+  72% {
+    transform: translate3d(3px, -1px, 0);
+  }
+  86% {
+    transform: translate3d(-1px, 1px, 0);
+  }
+}
+
+.overlay-window {
+  background: #000;
+  color: #f8fafc;
+  border: 2px solid #f8fafc;
+  box-shadow:
+    0 0 0 6px #000,
+    0 0 0 7px rgba(248, 250, 252, 0.5),
+    0 30px 120px rgba(0, 0, 0, 0.9);
+  animation: snap 140ms steps(3, end) 1;
+}
+@keyframes snap {
+  0% {
+    transform: scale(1.06) skewX(-2deg);
+    filter: invert(1);
+  }
+  60% {
+    transform: scale(0.99);
+    filter: invert(0);
+  }
+  100% {
+    transform: none;
+  }
+}
+.overlay-headline {
+  background: #f8fafc;
+  color: #000;
+}
+.hazard {
+  background: repeating-linear-gradient(-45deg, #f8fafc 0 10px, #000 10px 20px);
+}
+
+/* ------------------------------------------------------------ breach state */
+/* If the store read-back reports a committed vent, or the crew status is LOST,
+   the whole interface changes. It must be impossible to overlook. */
+
+.stage[data-breach="true"] {
+  --stage-bg: #2a0204;
+  --panel-bg: rgba(60, 4, 8, 0.78);
+  --panel-line: rgba(254, 202, 202, 0.55);
+  background:
+    repeating-linear-gradient(-45deg, rgba(254, 202, 202, 0.045) 0 22px, transparent 22px 44px),
+    radial-gradient(120% 90% at 50% 0%, rgba(220, 38, 38, 0.5), transparent 70%), #2a0204;
+}
+.stage[data-breach="true"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 0.4rem #ef4444, inset 0 0 3.5rem rgba(239, 68, 68, 0.4);
+  animation: breach-pulse 1.1s ease-in-out infinite;
+}
+.breach-banner {
+  background: repeating-linear-gradient(-45deg, #fee2e2 0 14px, #b91c1c 14px 28px);
+}
+.breach-banner-inner {
+  background: #7f1d1d;
+  color: #fff;
+}
+@keyframes breach-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ---------------------------------------------------------- reduced motion */
+/* No shake, no flicker, no sweep, no pulsing. Content still appears. */
+
+@media (prefers-reduced-motion: reduce) {
+  .shake,
+  .overlay-window,
+  .crt-flicker,
+  .crt-sweep,
+  .tick,
+  .caret::after,
+  .stage[data-breach="true"]::after {
+    animation: none !important;
+  }
+  .crt-flicker,
+  .crt-sweep {
+    display: none;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Thin scrollbars for the log. */
+.log {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 transparent;
+}
+
+dialog.drawer {
+  margin: 0 0 0 auto;
+  height: 100dvh;
+  max-height: 100dvh;
+  width: min(34rem, 100vw);
+  max-width: 100vw;
+  background: #060b1a;
+  color: #e2e8f0;
+  border: 0;
+  border-left: 1px solid #475569;
+  padding: 0;
+}
+dialog.drawer::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}

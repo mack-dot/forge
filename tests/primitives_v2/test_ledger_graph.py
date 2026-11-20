@@ -126,6 +126,33 @@ def append_forged(store, payload):
 
 
 # ---- processes ----------------------------------------------------------------------------------------------------
+# Every `serve` child goes through spawn(); after each case main() kills and reaps each one still alive, so a case that
+# fails between a Session and its close() leaves no process behind (unsure.md U927, the pattern of test_engine.py).
+CHILDREN = []
+
+
+def spawn(argv, **kw):
+    p = subprocess.Popen([str(a) for a in argv], **kw)
+    CHILDREN.append(p)
+    return p
+
+
+def reap():
+    alive = [p for p in CHILDREN if p.poll() is None]
+    for p in alive:
+        p.kill()
+    for p in CHILDREN:
+        p.wait()
+        for f in (p.stdin, p.stdout, p.stderr):
+            try:
+                if f:
+                    f.close()
+            except OSError:
+                pass
+    CHILDREN.clear()
+    return len(alive)
+
+
 def run(engine, *args, inp=None, timeout=600):
     p = subprocess.run([str(engine)] + [str(a) for a in args], input=inp, capture_output=True, env=ENV, timeout=timeout)
     return p.returncode, p.stdout.decode(errors='replace')
@@ -142,8 +169,8 @@ def one(engine, *args, expect=None):
 
 class Session:
     def __init__(self, engine, store):
-        self.p = subprocess.Popen([str(engine), 'serve', str(store)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                  stderr=subprocess.DEVNULL, env=ENV, bufsize=0)
+        self.p = spawn([engine, 'serve', store], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                       stderr=subprocess.DEVNULL, env=ENV, bufsize=0)
 
     def read(self, timeout=300):
         buf = b''
@@ -1010,7 +1037,7 @@ def case_race_ledger(s):
 
 def case_race_claim(s):
     st, g = s.store('race-claim')
-    procs = [subprocess.Popen([str(s.engine), 'serve', str(st)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=ENV) for _ in range(50)]
+    procs = [spawn([s.engine, 'serve', st], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=ENV) for _ in range(50)]
     for i, p in enumerate(procs):
         p.stdin.write(('DO ledger_graph claim c%d u%d 1 reg:u%d * names %s\n' % (i, i, i, rnd_case('winner', i))).encode())
         p.stdin.flush()
@@ -1122,6 +1149,10 @@ def main():
         except Exception as e:  # noqa: BLE001  (a crash of the suite is a failure, never a pass)
             failed += 1
             print('FAIL %-12s %6.1fs suite error %s: %s' % (name, time.time() - t, type(e).__name__, str(e)[:400]), flush=True)
+        finally:
+            n = reap()
+            if n:
+                print('REAPED after %s: %d child process(es) still alive were killed' % (name, n), flush=True)
     if not args.keep:
         shutil.rmtree(work, ignore_errors=True)
     return 1 if failed else 0
