@@ -20804,6 +20804,210 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label; `end_to_end=false`. Next check: owner decision on the new bundle; a review of the
   repairs.
 
+## U884 — Review fix PR-2: the review finding "no CI covers the engine" is confirmed; a new macOS arm64 workflow builds the airlock engine and runs 121 of 193 airlock and SDK cases; protected path, NOT merged
+
+- Status: 2026-11-20. Refs U720 to U725 (Goal 20 SDK), U840. Record: `proposals/review-20261120-ci/README.md`.
+  Branch `ci/airlock-macos` from `33055a59`; pull request 71. One new file `.github/workflows/airlock-ci.yml`
+  (SHA-256 `d4fe0580d0c8f273fde92745aefbd72ee26d47d1c235b7b4df45eacf53ebf770`). `.github/` is protected by
+  `gate/incremental.py`: the file needs the owner's exact-bytes approval. No test file and no existing workflow changed.
+- Evidence: `grep -n -i -E "airlock|rustc|silicon" .github/workflows/*` on `33055a59` gave exit 1 (no match): the
+  review finding is CONFIRMED. Local dry run of the seven `run:` scripts in a worktree with no build products: all exit
+  0 (`race` also skipped locally: heavy lock held by another team). Hosted run 44692795822 at `0846e403`: success, job
+  1m23s; engine 24 PASS, node helpers 74 PASS, SDK 17 PASS, diff-policy 6 PASS, 0 FAIL. Hosted proof gate run
+  44692795915: failure, `UNAPPROVED_PROTECTED_CHANGE: .github/workflows/airlock-ci.yml`, as expected.
+- Skipped (72): every case that needs the Dafny-compiled `build/airlock/checker/model.cjs` (engine `inventory`, `pin`;
+  63 `booking_*` node-helper cases; SDK `py_saga_inventory`, `ts_typed`) and the diff-policy cases `demo`, `choice`,
+  `fault`, `refused` (start Dafny) and `identical` (without Dafny it passes on two equal empty failure outputs).
+- Uncertainty: the hosted toolchains are not the pins (rustc 1.100.0, not 1.92; Node 24.22.3 from the tool cache, not
+  24.3.0; Python 3.15.2). They float with the image. A pass is a FINITE TEST on that image only. It proves nothing.
+  `end_to_end=false`. M1-B OPEN.
+- Impact: none on any stage label or gate result. The job is not a required check.
+- Next check: the owner's exact-bytes approval and merge; after `apex1/native-cosign` merges, the changes listed in the
+  record (kill-engine path, a `test_cosign.py` step).
+
+## U885 — Review fix PR-2: findings of the review that this work rejects, narrows or defers
+
+- Status: 2026-11-20. Refs U884. Record: `proposals/review-20261120-ci/README.md`.
+- Narrowed: the review says the platform needs "rustc 1.92". `bin/forge-airlock build` enforces no rustc version; the
+  hosted rustc 1.100.0 built the engine and every selected case passed. The repository RECORDS 1.92; it does not pin it
+  in the build. The Node rule is "24.x" (exit 2 otherwise), with a note when it is not 24.3.0.
+- Deferred: a Linux job (review recommendation 2 asks for Linux and macOS). The refund binary is Mach-O arm64, so a
+  Linux job can run only a smaller subset; the engine build on Linux is NOT RUN. Also deferred: `src/silicon_sink` in
+  CI, the Dafny-backed cases, `scripts/exit_goal20_sdk.py`, the demo and the fuzz pass.
+- Finding of this work: `test_diff_policy.py` case `identical` passes without Dafny (0 bytes, exit 1, twice). The test
+  file is not changed here; the workflow skips the case.
+- Uncertainty: none of the deferred items was tried on a hosted runner.
+- Impact: none on any stage label.
+- Next check: the owner's word on a Linux job and on Dafny in CI (an install from the network needs a pinned step that
+  no existing workflow has for macOS).
+
+## U886 — Review fix PR-2: the one fresh review of pull request 71 (0 HIGH, 3 MEDIUM, 8 LOW); 10 repaired, 1 recorded only; new workflow bytes
+
+- Status: 2026-11-20. Refs U884, U885. Record: `proposals/review-20261120-ci/REVIEW.md`. The review read head
+  `b98a06cf`; its text came through the orchestrator and is not stored in the repository.
+- Evidence: each finding checked against the code, `git show e3322303:…` and the hosted logs. Repaired: a count check
+  (PASS names = RUN names; `MIN_RUN_*` 24, 74, 17, 6), `cancel-in-progress` for pull requests only, `timeout-minutes`
+  10, the highest Node 24.x by `sort -V`, the header text, `pull_request` limited to `main`, the README (coverage that
+  the skips lose; the apex1 steps; run 2 versions; saved outputs). Recorded only: the weakness of
+  `booking_model_substituted_always_true` (any exit 2 passes). New SHA-256 of the workflow:
+  `b190ba53a3e97254786fbad1315ef462be0322371c7efe3c2477c25bf9f5e946`. Local dry run of the repaired bytes: seven
+  steps exit 0; six negative controls of the count check and the Node choice exit 1 or pick 24.22.3 over 24.9.0.
+- Finding: the hosted image is not monotonic. Run 44692795822 had image 20261118.0550.1 (rustc 1.100.0, Node 24.22.3);
+  the later run 44693275108 had image 20261104.0514.1 (rustc 1.99.1, Node 24.22.2).
+- Uncertainty: the repairs were not reviewed again. The skips lose non-Dafny coverage (the TypeScript typed verdicts of
+  `ts_typed`, the saga half of `py_saga_inventory`, the first lines of engine `inventory`); splitting them needs a later
+  change to the test files. After `apex1/native-cosign` merges, `MIN_RUN_NODE_HELPERS` must fall to 5 and a
+  `test_cosign.py` step must come in the same change. A finite test only. `end_to_end=false`. M1-B OPEN.
+- Impact: none on any stage label or gate result.
+- Next check: the hosted run of the repaired bytes (in the pull request); the owner's exact-bytes approval.
+
+## U897 — Review fix PR-2: the workflow updated after pull requests 72 and 73 merged; new bytes for approval
+
+- Refers to: U884, U885, U886.
+- Evidence: `main` = `7e5842d0` is merged into the branch (records only). The workflow now uses
+  `build/silicon/test/airlock-engine-kill`, runs `tests/airlock/test_cosign.py`, and skips `pin_window` too.
+  New SHA-256 of `.github/workflows/airlock-ci.yml`: `b10831fe97ca4c546ca74aafc1b0d5ef84ff3aaa24d9e3453cd74a0227aeade8`. The bytes `b190ba53…e946` of U886 are replaced.
+  One local run of each suite file, with no checker model: engine 33 cases (29 PASS, 3 NOT RUN for the model,
+  `race` not run locally), cosign 56 of 56 PASS, node helpers 68 cases (5 PASS, 63 NOT RUN for the model), SDK 21
+  cases (19 PASS, 2 NOT RUN for the model), diff-policy 6 of the 6 selected PASS.
+- Uncertainty: the hosted result of these bytes is not in the tree (see the pull request). The run minimums are
+  30, 56, 5, 19, 6, not the full counts, because the hosted image has no Dafny-built model. `race` and the
+  hosted behaviour of `cosign_faults` (its path probe depends on the runner's folders) have no local result.
+- Impact: none on any stage label or gate result. A finite test only. `end_to_end=false`. M1-B OPEN.
+- Next check: the hosted run; the owner's exact-bytes approval of the new SHA-256.
+
+## U910 — V1.1 universal primitives pack (primitives 6 to 9): what was built, the design decisions, and where the work differs from the directive
+
+- Status: 2026-11-20. Refs U720 to U724 (goal 20, whose engine files this pack reuses read-only), U840.
+- Evidence: branch `feat/universal-primitives-v2` (worktree in the session scratch folder), commits `ca888321`
+  (foundation and primitive 6), `2bf34eb5` (primitives 7 and 8), `774d1e9e` (reserved key prefixes, protocol,
+  Python SDK), `a28f7ca1` (demo), `50cf0293` (primitive 9 and the policy compiler), `c877a760` (EXIT script),
+  `ec2c1b76` (the repair pass of U911). `src/primitives_v2/PROTOCOL.md` is the reference; section 18 lists the
+  departures.
+- Start: the directive's pre-flight ("run only from clean `origin/main` after Goal 20, F1, T19, the demo pull
+  requests and Stage 9 / Paper") was NOT met. The owner authorized the start explicitly on 2026-11-20. The branch
+  starts from `33055a59` (`origin/main` at that time).
+- Built, additive only (no tracked file of `main` changed; nothing under `gate/`, `spec/`, `policy/`,
+  `clearing/`; no `spec.lock`, `package.json`, `package-lock.json`, `tsconfig.json`):
+  - foundation `src/primitives_v2/`: a new Rust engine (std only, `#![forbid(unsafe_code)]`, no crate) with a
+    write-ahead log of chained SHA-256 records, an exclusive `flock` per exchange, `F_FULLFSYNC` before every
+    answer, a trusted clock (`now = max(wall, newest record time, monotonic floor)`), a multi-key
+    compare-and-swap, one-time request ids, tenant binding of keys, reserved key prefixes, a module interface;
+    read-only reuse of `src/airlock/json.rs` and `pin.rs`;
+  - primitive 6 `rate_window` (`rate.rs`): exact sliding window (ops and volume), cooldown after N consecutive
+    rejections (durable refusal records), `RATE_LIMIT_EXCEEDED retry_after_ms=`; cosign TTL (`cosign_ttl.rs`) with
+    the signature check a STUB;
+  - primitive 7 `ledger_graph`: double-entry ledgers (open, transfer, multi-leg post, mint, burn), a GLOBAL
+    uniqueness registry (`DUPLICATE_KEY` names no holder), an acyclic graph guard (`DAG_CYCLE_DETECTED`);
+  - primitive 8 `taint_egress`: a stateless recursive label check of one JSON document per destination, nested
+    JSON in strings expanded to 4 levels, refusals that never echo a value or a key;
+  - primitive 9 `farkas`: a native check of a Farkas infeasibility certificate (integer x only) that mirrors the
+    Dafny predicate `FarkasCert.Accepts`; `policy_to_dfy.py`, a generator of Dafny MODELS from money, rate_window
+    and transfer policies, with four generated models and their vector tables under `domains/compiled_policies/`;
+  - `sdk/py/forge_primitives.py` (Python stdlib); the scripted self-repair demo `examples/universal_self_repair/`
+    (four mistakes, 16 checks, each with a canary); `scripts/exit_universal_primitives.py`.
+- Design decisions (reasons in `PROTOCOL.md`): lock per exchange and replay of the whole WAL per request (no state
+  in memory; many `serve` processes can share a store; cost O(WAL)); a durable refusal record uses its request id
+  up; stateless checks write no record and no receipt; the registry is global, so a name is module state and the
+  record key is the caller's handle `reg:<tenant>`; the reserved prefix table lives in the engine.
+- Departures from the directive (`PROTOCOL.md` section 18): no `source_proof` core runs in the engine (every
+  verdict is Rust: NATIVE CHECK); the tie between the Dafny models and the Rust engines is a FINITE differential
+  test; the TypeScript wrapper is not built; the cosign signature check is a stub; the schedule of mistake 4 is a
+  Python DEMO CHECK; rate_window limits a key, not a caller (U911, M2); no epoch ratchet against a restored WAL.
+- The pre-flight's "all prior bundles byte-identical" holds for this branch by construction: it is additive. The
+  regression that checks it on a scratch clone has NOT run (U912).
+- Commit trailer: `Claude Fable 5.2`, as the launcher asked. The workers' models are in their reports.
+- Uncertainty: whether the owner accepts each departure. Impact: none on any stage label; M1-B OPEN;
+  `end_to_end=false`. Next check: the owner's reading of the pull request (not opened yet).
+
+## U911 — V1.1 pack: the one adversarial review (2 MEDIUM, 5 LOW) and the one repair pass; earlier findings (squatting, G11)
+
+- Refs U910. Evidence: commit `ec2c1b76`; `PROTOCOL.md` sections 4, 9, 11, 12, 15, 16, 18; the reviewer's
+  reproductions in the session scratch folder (not tracked).
+- Found before the review, by the workers' own tests:
+  - squatting: on the engine of `2bf34eb5`, `DO rate_window acquire x1 t2 1 reg:t1 * api 1` committed and bound
+    `reg:t1` to tenant t2; every later registry claim of t1 then got `TENANT_ISOLATION_BREACH` for ever. Repaired
+    in `774d1e9e` with reserved key prefixes (refused in the grammar and at replay); case `reserved`, copies R1 to R4.
+  - G11: the generator's determinism test with 2 hash seeds did not kill copy G11 (unsorted reasons). Repaired in
+    `c877a760`: the test compares 16 hash seeds; G11 killed since.
+- Review findings and what the one repair pass did (each with a test; M1, L1, L2 with changed copies that remove
+  the repair and are killed for their named reason):
+  - M1 (MEDIUM): a `RATE_LIMIT_EXCEEDED` that itself starts the cooldown stated the window wait only; the retry at
+    that time got `COOLDOWN_ACTIVE` (reviewer's repro: max_ops 2, window 3,000 ms, cooldown_after 1, cooldown
+    30,000 ms: `retry_after_ms=2989`, then `COOLDOWN_ACTIVE retry_after_ms=26806`). Repaired in `rate.rs`:
+    `n = max(window wait, cooldown_until - now)` with checked arithmetic. The generated rate MODEL stated the old
+    property, so it was wrong in the same way: `policy_to_dfy.py` now states `CommitsAfter`/`CoolEnd` in `Post`,
+    computes `RetryC`, and proves `RetryCommitsAfterStep`; the two rate models and all four vector files were
+    regenerated (money and transfer models byte-unchanged; their vector files changed only in the key `dafny`;
+    rate-burst vectors unchanged because its cooldown is off). Test: case `cooldown_retry` (cooldown 30,000 ms >
+    window 3,000 ms; the retry at the stated time commits). Copies: C4 (engine) and G14 (generator).
+  - M2 (MEDIUM, a limit not stated): the caller picks the key and the tenant is not authenticated, so a fresh key
+    gets around window and cooldown. Not redesigned. Stated in `PROTOCOL.md` sections 9 and 15 and the demo
+    README; case `rate_key_limit` prints `KNOWN LIMIT` and is not counted as a protection.
+  - L1: a `ProtocolError` from a bad decimal field did not close the SDK client. Repaired (`_num` routes through
+    `_fail`). Test: case `fake_answers` (a fake engine that keeps serving). Copy SDK1.
+  - L2: the SDK returned any `OK verdict=` word. Now `taint_check` returns a document only for `ALLOW` and
+    `farkas_check` only for `INFEASIBILITY_PROVED`; else `ProtocolError`. Test: case `fake_answers`. Copies SDK2, SDK3.
+  - L3: taint: JSON after U+001C..U+001F, U+0000, U+0008 or behind a fullwidth bracket was plain text; keys with
+    NBSP or `ſ` passed. Repaired fail-closed: C0/C1 controls before a JSON opener are skipped like White_Space and
+    a fullwidth opener counts as an opener (then the strict parse refuses: `OPAQUE_JSON`); keys drop every
+    White_Space and fold `ſ` and the Kelvin sign. Still open, pinned as rows E26 to E28 and E36 of case
+    `evasions` and in table 12.7: full case fold (`ß`), ligatures, NFKC forms, JSON after a printable prefix.
+  - L4: engine refusals echoed the request key. `RESERVED_KEY`, `TENANT_ISOLATION_BREACH` and `KEY_KIND` now name
+    `key_index`; SDK, demo canary, tests, the ledger reference model and `PROTOCOL.md` updated. Still naming the
+    caller's own key, stated in section 4: the field names of `STALE_STATE_HASH`, `GET`, the ledger_graph module
+    refusals. Copy K5; K4 re-anchored to the new text and still killed.
+  - L5: section 18 lists the five departures; section 11 states that the in-engine `total == issued - destroyed`
+    does not sum balances and that only the outside sum-of-GETs test covers a balance bug.
+  - Also: the four vector files held absolute scratch paths under `dafny`; the generator now writes the tool
+    version, a relative argv and the exit code, and case `proofs` compares the whole files byte for byte. The slot
+    waits of the generator and two suites no longer count shells that only name `dafny/dafny`.
+- Found during the repair pass: the taint suite's Python reference treated a label carrier whose value is JSON
+  null as no carrier (`cval is None`); the engine was right. The widened random generator found it (1 of 3,709
+  documents). Repaired in the reference; row t93n pins it. Also my own first vectors run with a RELATIVE `--work`
+  made Dafny write its build output to `/Users/mackianni/w-repair` (Dafny runs with the toolchain checkout as
+  working folder); I deleted that folder; nothing was written inside the checkout. The generator now resolves the
+  path.
+- Uncertainty: no second review of the repairs ran (the directive asks for one). Impact: none on any stage label.
+  Next check: the owner may ask for a second review.
+
+## U912 — V1.1 pack: actual EXIT results; the limits; open questions for the owner
+
+- Refs U910, U911. Evidence: `build/universal_primitives/` (git-ignored) on this machine; the bundle hash below.
+- Actual, after the repair commit `ec2c1b76` (clean tree), run one at a time by me:
+  - `--case build` exit 0 (wall 16 s; 0 tracked files of `main` modified, 0 protected paths); `--case demo` exit 0
+    (two runs identical outside `measured`, `82665ba9…b276`; 13 canaries); `--case proofs` exit 0 (FarkasCert 36,
+    money-refunds-p9 21, rate_window-api-p9 37, rate_window-burst-p9 37, transfer-cash-p9 7 verified, 0 errors;
+    audits equal the empty baseline; the vector files equal byte for byte; spec clearing NO_CHOICE and ACCEPTS for
+    all four); `--case mutations` exit 0 (103 of 103 killed: engine 30, ledger_graph 25, taint 20, primitive 9 25,
+    SDK 3; NOT KILLED: none; accepted survivors: none); `--case evidence` exit 0 (twice, bundle
+    `100476fe95a98cb13496eb361b30fd2308b5643c5b29e48f375584a85a58a8dc`, byte-identical, wall 2870 s).
+  - `--case suite` exit 0, run on the same tree just before the commit (81 of 81 cases: test_engine 23,
+    test_ledger_graph 11, test_taint 8, test_farkas 6, test_policy_to_dfy 5, test_sdk_primitives 9, test_demo 19);
+    the evidence run repeats it twice.
+  - Before each Dafny step I waited until no Dafny, Holmake, hol, z3-4.12.1 or `run_regression_copy` process ran for
+    three checks one minute apart (the orchestrator's regression held the slot for about 40 minutes).
+- The bundle is a RECORD, NOT gate evidence. It hashes the subject files (engine, tests, demo, models, SDK, EXIT
+  script), not `ROADMAP.md` or `unsure.md`. Its build part lists the files changed against the merge base; on the
+  records commit that list also names `ROADMAP.md` and `unsure.md`, so a rerun there gives another hash. The
+  recorded hash belongs to `ec2c1b76`; the records commit adds only these two files.
+  (The runs started on commit `c88bb518`; I then amended only its message, because it said "79 of 79 cases"
+  where the suite ran 81; `ec2c1b76` has the same tree, `git diff c88bb518 ec2c1b76` is empty.)
+- Labels: NATIVE CHECK (every engine verdict) and FINITE TEST (suites, demo, changed copies, differential
+  replays). PROVED only for: `FarkasCert.Soundness` (if `Accepts(A, b, y)` then no non-negative INTEGER x satisfies
+  `A x >= b`; nothing about rational x, completeness, solvers or `farkas.rs`), and the lemmas of the four generated
+  MODELS (Decide gives Post; NoChoice; for rate: the window bound for every run, the cooldown lemmas,
+  `RetryCommitsAfterStep`), each verify exit 0 with an empty audit and spec clearing NO_CHOICE and ACCEPTS. They say
+  nothing about the Rust engines. `end_to_end=false`.
+- NOT RUN: the regression of the 28 Stage EXITs, `check_frozen_pr_gate.py` and the prior bundles on a scratch
+  clone; push; pull request; the hosted gate (expected exit 3, UNSUPPORTED); a second review; a power-loss test.
+- Open questions for the owner: (1) is the Dafny-compiled Python (the pinned Dafny's own output, trusted, not
+  proved) acceptable as the oracle of the vector tables? (2) the cosign signature check stays a stub until the
+  native cosign pull request 72 merges; (3) the directive's pre-flight was not met; the owner authorized the start
+  explicitly on 2026-11-20; (4) "all prior bundles byte-identical" holds for this branch because it is additive,
+  but the clone check has not run; (5) whether rate_window should bind keys to an authenticated caller (M2).
+- Impact: none on any stage label; M1-B OPEN. Next check: the scratch-clone regression, then the pull request.
+
 ## U900 — Gate F2a: Stage 9 lock rebind proposed as an exact diff (two protected files); valid only while four open pull requests are not merged; NOT merged; Stage 9 NOT unlocked
 
 - Status: 2026-11-20 12:40Z (system clock). Refs U468, U469, U470 (the earlier lock inspection, the packet of pull

@@ -1,0 +1,61 @@
+# Outputs of the COMMON checks, run on commit c3369535 (the repair commit) on 2026-11-20.
+# The next commit adds only this file; the hand-back gives the result on the final head.
+
+$ python3 -I -B proposals/round4-20261117/check_frozen_pr_gate.py HEAD
+{
+ "all_equal": true,
+ "commit": "c336953570d34f55479d81de7e8615e4342152cc",
+ "modules": {
+  "gate/approval.py": "equal",
+  "gate/common.py": "equal",
+  "gate/coverage.py": "equal",
+  "gate/incremental.py": "equal",
+  "gate/obligations.py": "equal",
+  "gate/post_pr_report.py": "equal",
+  "gate/pr_check.py": "equal",
+  "gate/ratification.py": "equal"
+ },
+ "recorded_at_commit": "26410d46",
+ "revision": "HEAD"
+}
+exit=0
+
+$ python3 -I -B proposals/round4-20261117/check_links.py HEAD proposals/review-20261120-ci/README.md proposals/review-20261120-ci/REVIEW.md ROADMAP.md unsure.md
+{
+ "commit": "c336953570d34f55479d81de7e8615e4342152cc",
+ "files": {
+  "ROADMAP.md": {
+   "missing": [],
+   "relative_links": 84
+  },
+  "proposals/review-20261120-ci/README.md": {
+   "missing": [],
+   "relative_links": 5
+  },
+  "proposals/review-20261120-ci/REVIEW.md": {
+   "missing": [],
+   "relative_links": 2
+  },
+  "unsure.md": {
+   "missing": [],
+   "relative_links": 0
+  }
+ },
+ "revision": "HEAD"
+}
+exit=0
+
+$ git diff --name-only 33055a59..HEAD
+.github/workflows/airlock-ci.yml
+ROADMAP.md
+proposals/review-20261120-ci/README.md
+proposals/review-20261120-ci/REVIEW.md
+proposals/review-20261120-ci/checks.txt
+proposals/review-20261120-ci/local-dry-run.txt
+unsure.md
+
+$ git diff --name-only 33055a59..HEAD | grep -E <protected and frozen paths of COMMON.md>
+exit=1 (1 = no match; .github/workflows/airlock-ci.yml is the one intended protected file)
+
+$ shasum -a 256 .github/workflows/airlock-ci.yml
+b190ba53a3e97254786fbad1315ef462be0322371c7efe3c2477c25bf9f5e946  .github/workflows/airlock-ci.yml

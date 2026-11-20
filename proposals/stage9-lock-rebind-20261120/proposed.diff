@@ -1,5 +1,5 @@
 diff --git a/gate/provenance/implementation.lock b/gate/provenance/implementation.lock
-index 8d6efc4c..f84ed469 100644
+index 8d6efc4c..6314c5c9 100644
 --- a/gate/provenance/implementation.lock
 +++ b/gate/provenance/implementation.lock
 @@ -11,15 +11,15 @@
@@ -31,7 +31,7 @@ index 8d6efc4c..f84ed469 100644
      "gate/refund/Bindings.dfy": "d689b18a64aa2cdc7c705e8d6b953c401e3f866f8311d624238b563e1d7a621d",
      "gate/refund/hostile.ts": "0e15d543f42c32b0b6c2b7aab7eb66962dc7c1facde380c44f00a8710a9c475a",
      "impl/Refund.dfy": "0416882492de095b59f3547a8df788193ec41952cf2d30a65df80b8ecd52a700",
-@@ -60,22 +61,34 @@
+@@ -60,22 +61,35 @@
      "scripts/check_stage_4_local.py": "c71f3811b1fd7291f85ea9d9eaef98fd23f8bdc76779a00a2ccda30e926c9189",
      "scripts/check_stage_6.py": "a718d948b5c1b4d5e1de9db3c6292b69cc94444dec9ba58beb6d10bd17e361c7",
      "scripts/collect_stage9_receipt_reference.py": "74a96dba9df7517cdbbaaa04bf7923d759d6f7e986dbff9af43acfe3de0053e4",
@@ -55,6 +55,7 @@ index 8d6efc4c..f84ed469 100644
      "scripts/exit_stage_7.py": "f4ed261250bddea351177a0aa80ff906ea8b3a8dff645b928eb79a42bc453544",
      "scripts/exit_stage_8.py": "6fbca72b078bf29d816b3e08b1cdb45cecef855635fc58127185e57e2ca2ce2f",
      "scripts/exit_stage_9.py": "d66d598f382e83840aeb5e365a5b18af6a498efbf055264bf93a3fe658fa9611",
++    "scripts/exit_universal_primitives.py": "e4772b7910de430b3c70d9191fd72e92b6ff12b2e197cb5adf24732be72e782a",
      "scripts/export_stage6_usage.py": "deddefa05edfc672a1418ac20042853380fd3dde1ec1e0477c767efa55421444",
      "scripts/generate_claim_docs.py": "fc7b454c88590487105013ff82cb7d255d3eb70667dcc54b077ad62f9e584950",
 +    "scripts/intent_clearing.py": "63ea86b34a57b0f2501a537aae2e1553807ab7515bb36dd42fa35c8b9c7397a3",
@@ -67,7 +68,7 @@ index 8d6efc4c..f84ed469 100644
      "scripts/stage5_tools.py": "b4b8c91223befb850748fe4f07f863065f36888620a90b3d7013842aaaeca781",
      "scripts/stage7_build_own.py": "3c6b69885b31ec4c8f1ee12498eb6b27204957fb88d36c7da09cbddc5969fdac",
      "scripts/stage7_emit_evidence.py": "87ae01037039eb67add57ab0544c66ab23f3be8698e784db370ea801023dba5c",
-@@ -87,14 +100,14 @@
+@@ -87,14 +101,14 @@
      "scripts/stage7_record.py": "c3a0f2759d944d2e076fd533052c4a0f1ecb25be8ad865c97343d2e052bb9103",
      "scripts/stage7_trace_processes.py": "a6586468da2486780eebb83a72a20fa89c12aa7fcdf482c588057d43ab7e8b94",
      "spec/provenance/protocol.md": "2784bdd04f0c89871e243df2402bd689546595835e28e7480fff5968e705ed69",

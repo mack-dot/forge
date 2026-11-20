@@ -1,6 +1,30 @@
 # Gate F2a: Stage 9 lock rebind (exact-diff proposal; NOT APPLIED until the owner merges)
 
-## REGENERATED 2026-11-20 on `main` `7e5842d0` (this section is the valid one)
+## REGENERATED AGAIN 2026-11-20 on `main` `058eabcb` (this section is the valid one)
+
+`origin/main` `058eabcbe722dff1a08f1563cf4103d9fcd21a20` (with pull
+requests 79 and 71) was merged into this branch (a merge, no
+force-push), and both locks were made again with `regen_locks.py` from
+`main`'s own two files.
+
+| File | SHA-256 on `main` `058eabcb` | SHA-256 proposed |
+| --- | --- | --- |
+| `gate/provenance/implementation.lock` | `76b983ac279a80ab42bf15c7446ee997a2bcd9b25a003db829f7e8fb2d4b8cd9` | `7afef10a2f5e5fd372e1a129b25b8f0d87277bbd4cec5bf2c773ea60a71285ea` |
+| `spec/provenance/spec.lock` | `43610d8123ce21fdd1f9dac9469f78ad3efcb3af271a86011a18790099811a33` | `256310d851669cdeab2498b0a58fe6bcd4b7ba1f741396a9f608d644fa72a976` |
+
+[proposed.diff](proposed.diff) now has SHA-256 `9904df04a355997ddc54136089e64adf6943aa2e8575e393d7bfb5ee869c7969`.
+Against the version `fef55690…` of the next section: ONE key added to
+`implementation.lock`, no digest changed, no key removed (114 entries):
+
+| Added path | SHA-256 |
+| --- | --- |
+| `scripts/exit_universal_primitives.py` | `e4772b7910de430b3c70d9191fd72e92b6ff12b2e197cb5adf24732be72e782a` |
+
+`spec.lock` is byte-equal to the earlier versions. The other 13 added
+keys and the 9 changed digests are those of the next section. The
+value `fef55690…` there is NO LONGER the proposed value. Checks: U913.
+
+## Regenerated 2026-11-20 on `main` `7e5842d0` (second version; replaced by the section above)
 
 The merge queue is done (pull requests 68, 69, 70, 72, 73, 74, 75, 77,
 78 are on `main`, by the coordinator session's message and by `git log

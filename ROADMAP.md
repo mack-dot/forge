@@ -57,6 +57,69 @@ other protected path changed. Nothing under `clearing/` changed.
 Finding to keep: pull requests 70, 72, 73 and 74 each add or change a
 code file under `scripts/`. Each of them makes this lock stale if it
 merges after it, and makes this diff stale if it merges before it.
+## V1.1 universal primitives pack: a new additive engine `src/primitives_v2` with rate windows, double-entry ledgers and graph uniqueness, recursive taint egress, Farkas certificate checks and a policy-to-Dafny model generator; a finite test of unproved Rust and Python around Dafny models; one review with repairs — U910 to U912
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Nothing under
+`clearing/` changed. Additive only: no tracked file of `main` changed
+except this file and `unsure.md`. Branch `feat/universal-primitives-v2`
+from `33055a59`; NOT pushed, NOT merged. The directive's pre-flight was
+not met; the owner authorized the start on 2026-11-20 (U910). Every
+engine verdict is NATIVE CHECK (unproved Rust); suites, demo, changed
+copies and differential replays are FINITE TEST on one machine. PROVED
+applies only to `FarkasCert.Soundness` (no non-negative INTEGER x
+solves `A x >= b` when `Accepts` holds; nothing about rational x,
+completeness, solvers or `farkas.rs`) and to the lemmas of the four
+generated Dafny MODELS (nothing about the Rust engines; the tie is a
+finite differential replay). The bundle is a record, NOT gate evidence.
+
+| EXIT command/check | Expected exit | Actual exit/result | Result |
+| --- | --- | --- | --- |
+| `rustc --edition 2021 -D unsafe_code -C opt-level=3 src/primitives_v2/main.rs` and the same with `--cfg test_seams` (both inside `--case build`) | 0; 0 | 0; 0 | std only, no crate, no `unsafe`; each build twice, byte-identical; a copy with one `unsafe` block: exit 1 |
+| `python3 scripts/exit_universal_primitives.py --case build` | 0 | 0 | ADDITIVE: against the merge base `33055a59`, 0 tracked files modified, 0 protected paths; wall 16 s |
+| `--case suite` (run on the tree of `ec2c1b76` before the commit) | 0 | 0 | 81 of 81 cases: test_engine 23, test_ledger_graph 11, test_taint 8, test_farkas 6, test_policy_to_dfy 5, test_sdk_primitives 9, test_demo 19; wall 377 s |
+| `--case proofs` | 0 | 0 | `dafny verify`: FarkasCert 36, money-refunds-p9 21, rate_window-api-p9 37, rate_window-burst-p9 37, transfer-cash-p9 7 verified, 0 errors; each audit equal to the empty baseline; 16 hash seeds give one text per model; the four vector files equal the committed files byte for byte; spec clearing NO_CHOICE and ACCEPTS for all four; `clearing/` unchanged |
+| `--case demo` | 0 | 0 | two runs identical outside `measured` (`82665ba9…b276`); self-test 13 canaries, each fails its named check |
+| `--case mutations` | 0 | 0 | 103 of 103 changed copies killed for their named reason (engine 30, ledger_graph 25, taint 20, primitive 9 25, SDK 3); NOT KILLED: none; accepted survivors: none; wall 861 s |
+| `--case evidence` | 0 | 0 | build, suite, proofs, demo, mutations twice; bundle `100476fe95a98cb13496eb361b30fd2308b5643c5b29e48f375584a85a58a8dc`, byte-identical; wall 2870 s; on the tree of `ec2c1b76` |
+| `--case build` again on the records commit | 0 | NOT RUN at the time of writing | it runs after this records commit; the only modified files may be `ROADMAP.md` and `unsure.md` |
+| the one fresh-context adversarial review | 0 FAIL-OPEN, 0 HIGH | 0 FAIL-OPEN; 0 HIGH; 2 MEDIUM; 5 LOW | M1, L1 to L5 repaired in one pass; M2 stated as a KNOWN LIMIT; NOT reviewed again |
+| regression on a scratch clone: 28 Stage EXIT cases; `check_frozen_pr_gate.py`; the prior bundles | 0 each | NOT RUN | |
+| `git push`; `gh pr create`; hosted `gate/pr_check.py` | 0; 0; 3 (UNSUPPORTED) | NOT RUN | |
+| a second review; a power-loss test; Stages 7, 9, 10; any HOL step | — | NOT RUN | not part of this work |
+
+[Protocol](src/primitives_v2/PROTOCOL.md).
+[Demo](examples/universal_self_repair/README.md).
+rate_window limits a key; the key and tenant must be bound by a trusted
+wrapper outside the engine. The cosign signature check is a stub. No
+TypeScript wrapper. A SIGKILL is not a power loss. M1 and integration
+EXIT NOT_ESTABLISHED.
+## Review fix PR-2, CI for the airlock engine: one new macOS arm64 workflow builds the engine and runs 121 of 193 airlock and SDK cases; a finite test; protected path, needs the owner's exact-bytes approval — U884 to U886
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Branch `ci/airlock-macos` from `33055a59`; pull request 71;
+NOT merged by the agent. One new file `.github/workflows/airlock-ci.yml`
+(SHA-256 `b190ba53…e946` after the review repairs). 72 cases that need
+Dafny are skipped. The image versions float and are not monotonic.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `grep -n -i -E "airlock\|rustc\|silicon" .github/workflows/*` on `33055a59` |1|no match: the review finding is confirmed |
+| local dry run of the seven `run:` scripts, first and repaired bytes (no build products; `race` also skipped) |0 each (7); 0 each (7)|engine 23, node helpers 74, SDK 17, diff-policy 6 PASS; repaired: four count checks pass, six negative controls exit 1 |
+| hosted airlock-ci run 44692795822 at `0846e403` |success|job 1m23s; 121 PASS, 0 FAIL; rustc 1.100.0, Node 24.22.3 |
+| hosted proof gate run 44692795915 at `0846e403` |failure|`UNAPPROVED_PROTECTED_CHANGE`, as expected |
+| hosted airlock-ci run 44693275108 at `b98a06cf` |success|job 1m20s; same counts; older image: rustc 1.99.1, Node 24.22.2 |
+| hosted proof gate run 44693272518 at `b98a06cf` |failure|as expected |
+| one fresh-context review of `b98a06cf` |0 HIGH; 3 MEDIUM; 8 LOW|11 accepted (1 in part); 10 repaired, 1 recorded only; NOT reviewed again |
+| `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` (5 `.md` files) |0; 0|outputs in `checks.txt` of the record |
+| hosted run of the repaired bytes |NOT RUN when this row was written|in the pull request |
+| update after pull requests 72 and 73 merged (`main` `7e5842d0`): one local run of each suite file, no checker model |engine 1 (29 PASS, 3 NOT RUN for the model); cosign 0 (56 PASS); node helpers 1 (5 PASS, 63 NOT RUN for the model); SDK 1 (19 PASS, 2 NOT RUN for the model); diff-policy 0 (6 PASS)|new workflow bytes `b10831fe…`; totals 33, 56, 68, 21, 11; run minimums 30, 56, 5, 19, 6 (U897) |
+| hosted run of the updated bytes |NOT RUN when this row was written|in the pull request |
+| Dafny cases; Linux job; `src/silicon_sink`; full local suites under the heavy lock |NOT RUN|deferred (U885) |
+
+[Record](proposals/review-20261120-ci/README.md).
+[Review](proposals/review-20261120-ci/REVIEW.md).
+
 ## Review of 2026-11-20: README top and claims 1, 2, 4, 5, 8, 11 corrected; documents only — U880 to U882
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
