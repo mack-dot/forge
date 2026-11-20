@@ -16,6 +16,10 @@ mod hash;
 mod jsonw;
 mod ledger;
 mod policy;
+#[cfg(test)]
+mod evidence_tests;
+#[cfg(test)]
+mod policy_tests;
 mod proxy;
 
 use std::path::Path;

@@ -6,8 +6,7 @@ options, and passes the exit code through unchanged. Every write decision is the
 CakeML refund binary's (PROVED CORE, canonical-refund profile only) or the Dafny-compiled booking checker's
 (PROVED CORE source; Dafny compiler and Node trusted).
 
-  forge-airlock build [--checker]            three rustc builds (the third: build/airlock/mcp-proxy) + a private 0700
-                                             copy of the pinned refund binary;
+  forge-airlock build [--checker]            two rustc builds + a private 0700 copy of the pinned refund binary;
                                              --checker ALSO runs src/airlock/node/build_checker.py (starts Dafny)
   forge-airlock init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64] [--node P]
                                              --node is required by the engine with a cosign key or an inventory
@@ -26,10 +25,6 @@ CakeML refund binary's (PROVED CORE, canonical-refund profile only) or the Dafny
   forge-airlock diff-policy <old.json> <new.json> [diff_policy.py options]
   forge-airlock fuzz [fuzz.py options]
   forge-airlock demo [run_demo.py options]
-  forge-airlock mcp [options] -- <server-cmd...>     exec build/airlock/mcp-proxy mcp ...  (MCP stdio airlock)
-  forge-airlock verify-evidence <evidence.wal> [...] exec build/airlock/mcp-proxy verify-evidence ...
-  forge-airlock mcp-state <dir>                      exec build/airlock/mcp-proxy state <dir>
-  (these three pass every argument and the exit code through unchanged; src/mcp_proxy/PROTOCOL.md)
 
 Node: --node P, else $FORGE_AIRLOCK_NODE, else `node` on PATH. It must be Node 24.x (the repository pins 24.3.0);
 another version is refused with exit 2 and a message. Exit 2 is also used for a usage error of the dispatcher.
@@ -54,10 +49,7 @@ MODEL = BUILD / 'checker' / 'model.cjs'  # build-time note only; serve uses <eng
 RUSTC = [['rustc', '--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3', 'src/airlock/main.rs',
           '-o', 'build/airlock/airlock-engine'],
          ['rustc', '--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3', '--cfg', 'kill_points',
-          'src/airlock/main.rs', '-o', 'build/airlock/airlock-engine-kill'],
-         ['rustc', '--edition', '2021', '-D', 'unsafe_code', '-C', 'opt-level=3', 'src/mcp_proxy/main.rs',
-          '-o', 'build/airlock/mcp-proxy']]
-MCP_PROXY = BUILD / 'mcp-proxy'
+          'src/airlock/main.rs', '-o', 'build/airlock/airlock-engine-kill']]
 USAGE = 2
 
 
@@ -251,11 +243,6 @@ def main():
                 return USAGE
             extra += ['--node', node]
         return cmd_python(script, rest, extra)
-    if sub in ('mcp', 'verify-evidence', 'mcp-state'):
-        if not MCP_PROXY.is_file():
-            say('%s is missing: run `forge-airlock build` first' % MCP_PROXY)
-            return USAGE
-        exec_([str(MCP_PROXY), 'state' if sub == 'mcp-state' else sub] + rest)
     return usage('unknown subcommand %r' % sub)
 
 

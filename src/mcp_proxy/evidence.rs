@@ -789,7 +789,7 @@ fn usage() -> i32 {
     2
 }
 
-/// `forge-airlock verify-evidence <evidence.wal> --allowed-signers <file>`: prints a report, returns the exit code
+/// `forge-mcp-proxy verify-evidence <evidence.wal> --allowed-signers <file>`: prints a report, returns the exit code
 /// (0 = every record, chain link and signature holds). `args` are the words after `verify-evidence`; a leading
 /// `verify-evidence` word is skipped.
 pub fn verify_cli(args: &[String]) -> i32 {
