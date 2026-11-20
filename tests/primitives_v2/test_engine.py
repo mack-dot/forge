@@ -893,20 +893,72 @@ def case_cosign_ttl(s):
     return 'TTL inclusive at not_after; max TTL; set-back clock keeps a token expired; signature NOT checked (stub)'
 
 
-def case_stubs(s):
-    d = s.folder('stubs')
-    st, init = s.store(s.engine, d, [])
+def case_unknown(s):
+    # Replaces the old case `stubs` (primitive 9 is no longer a stub; its own suite covers it): an unknown primitive
+    # or op is refused by the grammar, writes nothing, and `serve` goes on.
+    d = s.folder('unknown')
+    pol = s.policy(d, 'api')
+    st, init = s.store(s.engine, d, [pol])
     g = init.f['genesis']
     ses = Session(s.engine, st)
-    # Primitives 7 and 8 are real modules now (their own suites cover them); only farkas may still be a stub.
-    for line in ['DO farkas check s4 t1 0 {}']:
-        a = ses.ask(line, 'NOT_IMPLEMENTED')
-        require(ses.p.poll() is None, 'serve ended after NOT_IMPLEMENTED')
+    for line, why in [('DO nothing check u1 t1 0 {}', 'UNKNOWN_PRIMITIVE'), ('DO Rate_window acquire u1 t1 1 k * api 1', 'UNKNOWN_PRIMITIVE'),
+                      ('DO cas_probe put u1 t1 1 a %s 1' % g, 'UNKNOWN_PRIMITIVE'), ('DO rate_window take u1 t1 1 k * api 1', 'UNKNOWN_OP'),
+                      ('DO farkas acquire u1 t1 0', 'UNKNOWN_OP')]:
+        a = ses.ask(line, 'MALFORMED_REQUEST')
+        require(a.f.get('why') == why, '%r: expected why=%s: %r' % (line, why, a))
+        require(ses.p.poll() is None, 'serve ended after a refused unknown name')
+    ses.ask(acquire('u1', 'k', 1), 'COMMITTED')  # the id stayed fresh
     ses.close()
-    code, _ = s.run(s.engine, 'serve', st, inp=b'DO farkas check s5 t1 0 {}\n')
-    require(code == 27, 'NOT_IMPLEMENTED exit code %d' % code)
-    require(len(parse_wal(wal_of(st))[0]) == 1, 'a stub wrote a record')
-    return 'farkas answers NOT_IMPLEMENTED (exit 27) and writes nothing'
+    code, _ = s.run(s.engine, 'serve', st, inp=b'DO nothing check u2 t1 0 {}\n')
+    require(code == 12, 'unknown primitive: exit %d, expected 12' % code)
+    require(len(parse_wal(wal_of(st))[0]) == 2, 'a refused unknown name wrote a record')
+    return 'unknown primitive/op names (also cas_probe in production) refused with exit 12; no record; id stays fresh'
+
+
+def case_reserved(s):
+    # Reserved key prefixes (PROTOCOL.md section 4.1): `reg:` belongs to ledger_graph (its registry handles).
+    d = s.folder('reserved')
+    pol = s.policy(d, 'api', max_ops_per_window=10)
+    reg = d / 'names.json'
+    reg.write_text('{"primitive": "ledger_graph", "version": 1, "name": "names", "kind": "registry", "case": "exact", "max_name_bytes": "64"}')
+    st, init = s.store(s.engine, d, [pol, reg])
+    g = init.f['genesis']
+    ses = Session(s.engine, st)
+    for line, who in [(acquire('q1', 'reg:t1', 1, tenant='t2'), 'squat of reg:t1 by tenant t2'),
+                      (acquire('q2', 'reg:t1', 1, tenant='t1'), 'squat of its own handle reg:t1 by t1'),
+                      (acquire('q3', 'reg:', 1, tenant='t1'), 'the bare prefix reg:')]:
+        a = ses.ask(line)
+        require(a.code == 'MALFORMED_REQUEST' and a.f.get('why') == 'RESERVED_KEY', '%s: expected MALFORMED_REQUEST why=RESERVED_KEY, got %r' % (who, a.line))
+        require(a.f.get('owner') == 'ledger_graph' and a.f.get('prefix') == 'reg:' and 'now_ms' not in a.f, '%s: repair fields: %r' % (who, a))
+    require(len(parse_wal(wal_of(st))[0]) == 1, 'a refused squat wrote a record')
+    a = ses.ask('DO ledger_graph claim c1 t1 1 reg:t1 * names alice')
+    require(a.code == 'COMMITTED', 'own claim with reg:t1 after the refused squats: expected COMMITTED, got %r' % a.line)
+    for k in ('Reg:t1', 'regt1', 'xreg:t1', 're'):  # exact, case-sensitive prefix: other names stay free
+        ses.ask(acquire('n' + str(len(k)) + k[0], k, 1), 'COMMITTED')
+    ses.close()
+    # a multi-key request of another primitive (test build): one reserved key refuses all keys
+    d2 = s.folder('reserved-mk')
+    clock = Clock(d2, 5000)
+    st2, init2 = s.store(s.seams, d2, [], env=clock.env())
+    g2 = init2.f['genesis']
+    a = once(s.seams, st2, clock.env(), 'DO cas_probe put m1 t1 2 a %s reg:t1 %s 7' % (g2, g2))
+    require(a.code == 'MALFORMED_REQUEST' and a.f.get('key') == 'reg:t1', 'multi-key squat by cas_probe: expected MALFORMED_REQUEST why=RESERVED_KEY, got %r' % a.line)
+    require(len(parse_wal(wal_of(st2))[0]) == 1, 'a refused multi-key squat wrote a record')
+    # replay: a forged record with a valid chain that names a reserved key under another primitive refuses the store
+    good = wal_of(st)
+    recs, _ = parse_wal(good)
+    last = recs[-1]
+    prev = hashlib.sha256(good[last['start']:last['end']]).digest()
+    ok = record(len(recs), last['now'], last['now'], prev, b'E rate_window acquire f1 t2 C 1 k9 | A api 1')
+    (st / WAL).write_bytes(good + ok)
+    s.one(s.engine, 'state', st, expect='STATE')  # control: the suite's writer makes a record the engine accepts
+    bad = record(len(recs), last['now'], last['now'], prev, b'E rate_window acquire f1 t2 C 1 reg:t9 | A api 1')
+    (st / WAL).write_bytes(good + bad)
+    code, out = s.run(s.engine, 'state', st)
+    require(code == 17 and out.startswith('CORRUPT_WAL') and 'RESERVED_KEY' in out, 'forged rate_window record on reg:t9: not refused at replay: %r' % out.strip())
+    (st / WAL).write_bytes(good)
+    s.one(s.engine, 'state', st, expect='STATE')
+    return 'reg: keys refused for rate_window and cas_probe (exit 12, no record); ledger_graph claim works; forged record refused at replay'
 
 
 def build_interposer(s):
@@ -947,7 +999,8 @@ CASES = [('init', case_init), ('flip', case_flip), ('splice', case_splice), ('to
          ('race', case_race), ('multikey', case_multikey), ('lines', case_lines), ('seams', case_seams),
          ('clock_setback', case_clock_setback), ('clock_request', case_clock_request), ('boundary', case_boundary),
          ('volume', case_volume), ('cooldown', case_cooldown), ('restart', case_restart), ('kill9', case_kill9),
-         ('u64', case_u64), ('cosign_ttl', case_cosign_ttl), ('stubs', case_stubs), ('trace', case_trace)]
+         ('u64', case_u64), ('cosign_ttl', case_cosign_ttl), ('unknown', case_unknown), ('reserved', case_reserved),
+         ('trace', case_trace)]
 
 
 def main():

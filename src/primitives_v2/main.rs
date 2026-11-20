@@ -1,13 +1,13 @@
 #![forbid(unsafe_code)]
 #![allow(unexpected_cfgs)] // `test_seams` is the one custom cfg: the test build lives ONLY in build/primitives_v2_test/
-//! forge primitives engine, v2 (the "universal primitives pack" foundation and primitive 6). NATIVE CHECK: Rust,
+//! forge primitives engine, v2 (the "universal primitives pack": engine and primitives 6 to 9). NATIVE CHECK: Rust,
 //! standard library only, no crate, no `unsafe`. NOT PROVED. FINITE TESTS in tests/primitives_v2/.
 //! One store folder, one write-ahead log (SHA-256 chain, CRC-32 per header and per record), an exclusive flock per
 //! exchange, `sync_all` before COMMITTED, strict replay. The engine owns the clock (clock.rs). Primitives are pure
-//! modules behind prim.rs: rate.rs (primitive 6), and the stubs ledger_graph.rs (7), taint.rs (8), farkas.rs (9).
+//! modules behind prim.rs: rate.rs (6), ledger_graph.rs (7), taint.rs (8), farkas.rs (9).
 //! Reused read-only from the Goal 20 engine (never edited): src/airlock/json.rs (strict JSON) and src/airlock/pin.rs
 //! (SHA-256). Trust boundary: every rule holds only for a caller that reaches the store THROUGH this production
-//! binary; whoever can write the store folder or run another build on it is trusted (PROTOCOL.md section 9).
+//! binary; whoever can write the store folder or run another build on it is trusted (PROTOCOL.md section 15).
 //! Build:      rustc --edition 2021 -D unsafe_code -C opt-level=3 src/primitives_v2/main.rs -o build/primitives_v2/primitives-engine
 //! Test build: rustc --edition 2021 -D unsafe_code -C opt-level=3 --cfg test_seams src/primitives_v2/main.rs -o build/primitives_v2_test/primitives-engine-seams
 #[path = "../airlock/json.rs"]

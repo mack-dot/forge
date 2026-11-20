@@ -1,8 +1,10 @@
-# forge primitives engine v2: wire protocol, store, module interface, trusted clock, `rate_window`
+# forge primitives engine v2: wire protocol, store, module interface, trusted clock, primitives 6 to 9
 
-Status: the reference for `src/primitives_v2/*.rs`. Labels: everything here is **NATIVE CHECK** (Rust, not
-proved) with **FINITE TEST** (`tests/primitives_v2/`). Nothing here is a PROVED CORE. `end_to_end=false`.
-Every rule holds only for a caller that reaches the store THROUGH the production binary (section 11).
+Status: the reference for `src/primitives_v2/*.rs` and `sdk/py/forge_primitives.py`. Labels: every rule here is
+**NATIVE CHECK** (Rust, not proved) with **FINITE TEST** (`tests/primitives_v2/`). No Rust file here is a PROVED
+CORE. The one Dafny statement (section 13: `FarkasCert.Soundness`) is about the Dafny predicate only, not about
+`farkas.rs`. `end_to_end=false`. Every rule holds only for a caller that reaches the store THROUGH the production
+binary (section 15).
 
 ## 1. Build
 
@@ -23,8 +25,11 @@ rustc --edition 2021 -D unsafe_code -C opt-level=3 --cfg test_seams src/primitiv
   checks that the production build ignores both variables and has no `cas_probe`.
 - Modules: `main.rs` (CLI, `serve`, answers, exit codes), `store.rs` (records, WAL, lock, replay, `init`, mode and
   owner checks), `clock.rs` (trusted clock), `engine.rs` (grammar, registry, tenants, ids, multi-key CAS),
-  `prim.rs` (module interface), `rate.rs` (primitive 6), `cosign_ttl.rs` (TTL; signature stub), stubs
-  `ledger_graph.rs` (7), `taint.rs` (8), `farkas.rs` (9), `probe.rs` (test build only).
+  `prim.rs` (module interface), `rate.rs` (primitive 6), `cosign_ttl.rs` (TTL implemented; signature STUB),
+  `ledger_graph.rs` (7), `taint.rs` (8), `farkas.rs` (9), `probe.rs` (test build only). The policy-to-Dafny
+  generator of primitive 9 (`src/primitives_v2/py/policy_to_dfy.py`, `domains/compiled_policies/`) is not part of
+  the engine binary; its own files and suite describe it.
+- SDK: `sdk/py/forge_primitives.py` (Python stdlib; section 16). No TypeScript wrapper for this engine exists.
 
 ## 2. Subcommands
 
@@ -122,8 +127,9 @@ change cannot survive even within one process). Cost: every request reads the wh
 - Key: `[A-Za-z0-9_.:@+-]{1,128}`. Hash: 64 lowercase hex, or `*` where the op allows it (`Cas::AnyAllowed`).
   `n`: 0 to 16 and within the op's range. `<args>`: the rest of the line, owned by the module (no leading or
   trailing space).
-- Check order of `DO`: grammar (no file opened: primitive, op, ids, key count, keys strictly ascending
-  (`KEY_ORDER`, `DUPLICATE_KEY`), hashes (`BAD_HASH`, `CAS_REQUIRED`)) -> lock and replay -> trusted Now -> for
+- Check order of `DO`: grammar (no file opened: primitive, op, ids, key count, per key: form (`BAD_KEY`), reserved
+  prefix of another primitive (`RESERVED_KEY`, section 4.1), strictly ascending (`KEY_ORDER`, `DUPLICATE_KEY`),
+  hash (`BAD_HASH`, `CAS_REQUIRED`)) -> lock and replay -> trusted Now -> for
   every key: another tenant's key (`TENANT_ISOLATION_BREACH why=KEY_OF_ANOTHER_TENANT key=<k>`), another
   primitive's key (`MALFORMED_REQUEST why=KEY_KIND`) -> request id used (`DUPLICATE_REQUEST_ID`) -> compare-and-swap
   of EVERY key: one or more stale keys refuse the whole request, `STALE_STATE_HASH stale=<count> hash.<key>=<present>`
@@ -131,6 +137,32 @@ change cannot survive even within one process). Cost: every request reads the wh
 - Request ids are one-time per store (one namespace). A record uses its id up (a commit, and also a durable
   refusal). A refusal without a record and a stateless answer leave the id fresh.
 - A key binds to (tenant, primitive) at the first record that touches it.
+
+### 4.1 Reserved key prefixes
+
+A primitive can own a key-name prefix. The table is in the engine (`engine::RESERVED_PREFIXES`), because key
+binding is an engine rule:
+
+| Prefix | Owner | Why |
+| --- | --- | --- |
+| `reg:` | `ledger_graph` | the registry handles `reg:<tenant>` (section 11.4) |
+
+- A `DO` of any OTHER primitive that names a key that starts with an owned prefix is refused in the grammar step,
+  before the store is opened and before any module code runs: `MALFORMED_REQUEST why=RESERVED_KEY key=<k>
+  prefix=<p> owner=<primitive>` (exit 12; no record; no clock fields; the request id stays fresh). One such key
+  refuses the whole multi-key request. The owner's own ops pass this step; the owner module keeps its own rules
+  (`ledger_graph` refuses `reg:` keys for accounts and graphs and requires exactly `reg:<tenant>` for a claim).
+- Replay: a record of another primitive that names such a key refuses the store: `CORRUPT_WAL why=MODULE
+  record=<seq>`, detail `<primitive>: RESERVED_KEY ...` (the check sits in `engine::fold_module`; store.rs gives
+  every fold error the word `MODULE`). The same fold runs before every write, so such a record is never written
+  (`MODULE_FAULT why=RECORD_NOT_FOLDABLE` would be the second line of defence).
+- Prefixes compare as exact bytes (case-sensitive): `Reg:t1`, `regt1`, `xreg:t1` are ordinary keys.
+- Why (case `reserved`): before this rule, `DO rate_window acquire x1 t2 1 reg:t1 * api 1` committed and bound
+  `reg:t1` to tenant t2, and every later claim of t1 got `TENANT_ISOLATION_BREACH` for ever (squatting; seen on
+  the engine of commit `2bf34eb5`). A tenant could also block its own handle (`KEY_KIND`). A store written by that
+  engine with such a record is now refused at replay (no repair).
+- Limit: a new owned prefix needs a row in this table AND in the owner module; a future module that forgets the
+  row is not protected. Other key names stay first come, first served (section 15).
 
 ## 5. Answer wire form
 
@@ -153,7 +185,7 @@ Every answer is one line (`replay` excepted): `<CODE>( <name>=<value>)*( -- <det
 | --- | --- | --- |
 | 0 | `COMMITTED`, `OK`, `STATE`, `REPLAY`, `INITIALIZED`, `TTL_OPEN` | success |
 | 2 | `USAGE` | bad arguments; `serve` with no line |
-| 10 | any module code not listed here (`RATE_LIMIT_EXCEEDED`, `COOLDOWN_ACTIVE`, `VOLUME_ABOVE_CAP`, `UNKNOWN_POLICY`, `POLICY_MISMATCH`, `COSIGN_EXPIRED`, `COSIGN_TTL_TOO_LONG`, and the codes of primitives 7 to 9) | policy refusal |
+| 10 | any module code not listed here (every code of section 14 with exit 10) | policy refusal |
 | 12 | `MALFORMED_REQUEST` | refusal (engine or module grammar) |
 | 13 | `STALE_STATE_HASH` | refusal |
 | 14 | `DUPLICATE_REQUEST_ID` | refusal |
@@ -164,7 +196,7 @@ Every answer is one line (`replay` excepted): `<CODE>( <name>=<value>)*( -- <det
 | 20 | (none printed) | fault: the answer line could not be written |
 | 25 | `MALFORMED_POLICY` | `init` refused a policy file |
 | 26 | `STORE_BUSY` | refusal (lock not free for 60 s) |
-| 27 | `NOT_IMPLEMENTED` | refusal (a stub primitive, the cosign signature) |
+| 27 | `NOT_IMPLEMENTED` | refusal (the cosign signature stub; no command of this build answers it) |
 | 28 | `UNSAFE_STORE` | fault (mode, owner, link) |
 | 29 | `MODULE_FAULT` | refusal: a module broke the interface; nothing written |
 
@@ -213,9 +245,10 @@ pub trait Primitive {
   another tenant's key before the module runs, but the module's `State` holds every tenant's data: the module must
   not copy any of it into an answer.
 - Arithmetic on request data: `checked_*`, saturating with a stated reason, or u128. No panic on request data.
-- To fill a stub, replace the body of `ledger_graph.rs`, `taint.rs` or `farkas.rs` only. Keep the unit struct name,
-  `NAME`, and the trait signatures. `OPS`, `Policy`, `State` and the bodies are free. The registry in `engine.rs`
-  already names all three; no other file changes. Policy files: `{"primitive": NAME, "version": 1, "name": <id>, ...}`.
+- The registry in `engine.rs` names the four modules (`rate_window`, `ledger_graph`, `taint_egress`, `farkas`; and
+  `cas_probe` in the test build only). A new module needs a registry entry in each `match` of `engine.rs`, and a
+  row in `RESERVED_PREFIXES` if it owns key names. Policy files: `{"primitive": NAME, "version": 1, "name": <id>,
+  ...}`.
 
 ### 7.3 Multi-key effects (primitive 7)
 
@@ -226,7 +259,7 @@ once and returns ONE `Commit(payload)`; the engine writes ONE record naming all 
 every key to that record's hash. Atomicity follows from one record under one lock with one sync: the record is in
 the WAL whole, or not at all (a torn record is cut). The module's `fold` applies all keys of the record together and
 can check an invariant over all its state (for example the sum of all accounts). Tested with the test module
-`cas_probe` (case `multikey`); no ledger rule is tested here.
+`cas_probe` (case `multikey`); the ledger rules are in section 11 and `test_ledger_graph.py`.
 
 ### 7.4 Stateless checks (primitives 8 and 9)
 
@@ -301,41 +334,385 @@ u64; `*` allowed: the engine decides on the present state under the lock).
 
 ## 10. Cosign TTL (`cosign_ttl.rs`)
 
+Status, plainly: the TTL rule is IMPLEMENTED and tested (case `cosign_ttl`). The signature check is a STUB: it
+never accepts (`verify` answers `NOT_IMPLEMENTED`), and no command of this build calls it. It stays a stub until
+the native cosign branch `apex1/native-cosign` is merged; until then NO cosign token is authenticated by this
+engine, and no op of any primitive takes a cosign.
+
 Message (7 LF-terminated lines, at most 4,096 bytes):
 `forge-primitives-cosign-v1\n<store_id>\n<genesis_hash>\n<request_id>\n<pre_state_hash or *>\n<not_after_ms>\n<action>\n`.
 `not_after_ms` is inside the signed bytes. The engine compares it with its trusted Now: `now > not_after` is
 `COSIGN_EXPIRED expired_by_ms=`; `not_after - now > max_ttl_ms` is `COSIGN_TTL_TOO_LONG max_ttl_ms=`. The TTL check
-runs before any signature tool, so an expired token never starts one. The signature check itself is a STUB
-(`verify` answers `NOT_IMPLEMENTED`, never accepts): the owner's method `/usr/bin/ssh-keygen -Y verify` has a
-reviewed design on the unmerged branch `apex1/native-cosign`; it is not copied here (section 13). `cosign-ttl`
-answers `signature=NOT_CHECKED` on purpose. No op of `rate_window` takes a cosign yet.
+runs before any signature tool, so an expired token never starts one. The owner's method for the signature,
+`/usr/bin/ssh-keygen -Y verify`, has a reviewed design on that unmerged branch; it is not copied here (section 18).
+`cosign-ttl` answers `signature=NOT_CHECKED` on purpose. Limits: a clock set back can revive a token that expired
+AFTER the newest record; a clock moved forward expires every token early (section 8).
 
-## 11. Trust boundary, trusted assumptions, not claimed
+## 11. Primitive 7: `ledger_graph` (`ledger_graph.rs`)
+
+Multi-account double-entry ledgers, a global uniqueness registry, an acyclic graph guard. NATIVE CHECK, FINITE TEST
+(`test_ledger_graph.py`, copies `mutants_p7.py`). Pure module; only BTree maps.
+
+### 11.1 Policies (the policy name is the ledger, registry or graph name)
+
+```
+{"primitive": "ledger_graph", "version": 1, "name": "<id>", "kind": "ledger",
+ "issuance": "fixed" | "mint_burn", "max_balance": "1..18446744073709551615", "max_legs": "2..16"}
+{"primitive": "ledger_graph", "version": 1, "name": "<id>", "kind": "registry",
+ "case": "exact" | "ascii_fold", "max_name_bytes": "1..256"}
+{"primitive": "ledger_graph", "version": 1, "name": "<id>", "kind": "graph",
+ "max_nodes": "2..1000000", "max_edges": "1..4000000"}
+```
+Every value is a JSON string; numbers are canonical decimals. The key set is exact.
+
+### 11.2 Ops (`DO ledger_graph <op> <request_id> <tenant> <n> <key hash>... <args>`)
+
+| op | keys | CAS | args | record payload (kind C) |
+| --- | --- | --- | --- | --- |
+| `open` | 1..16 new accounts | required | `<ledger> <balance_1> ... <balance_n>` (key order) | the args |
+| `transfer` | 2 accounts | required | `<ledger> <from> <to> <amount>` | the args |
+| `post` | 2..16 accounts | required | `<ledger> <leg_1> ... <leg_n>`, leg `-<amount>` (debit: leaves) or `+<amount>` (credit: enters), key order | the args |
+| `mint` / `burn` | 1 account | required | `<ledger> <amount>` | the args |
+| `claim` / `release` | 1: `reg:<tenant>` | `*` allowed | `<registry> <name>` | `<registry> <canonical name>` |
+| `add_edge` | 1 graph key | required | `<graph policy> <from> <to>( <from> <to>)*` (a batch, all or nothing) | the args |
+| `remove_edge` | 1 graph key | required | `<graph policy> <from> <to>` | the args |
+
+The module writes only kind-C records (no durable refusal). `fold` parses each payload strictly, requires it to be
+canonical, re-runs the SAME checks as `decide` against the folded state, applies it, and re-checks
+`total == issued - destroyed` for the touched ledger. So a forged record with a valid chain that overdraws, breaks
+conservation, claims a held name, or closes a cycle refuses the store.
+
+### 11.3 Ledger
+
+- A ledger instance is (tenant, ledger policy). An account is a key, bound to one instance by its `open` record
+  (the engine binds it to the tenant). Balances are exact u64, `0 <= balance <= max_balance`.
+- Conserved quantity per instance: `sum(balances) == issued - destroyed`, where `issued` = the sum of the `open`
+  balances and `mint` amounts, `destroyed` = the sum of `burn` amounts (u128). With `issuance = fixed`, `mint` and
+  `burn` are refused (`ISSUANCE_DISABLED`) and only the FIRST `open` of the instance may hold nonzero balances
+  (`SUPPLY_FIXED` after that): then `sum(balances)` is the constant set at that first open, for ever.
+- Check order of `post`: grammar, policy, leg count, zero legs, balance of the legs (`CONSERVATION_BREACH`),
+  accounts, overdraft, limit. The balance of the legs comes before the accounts on purpose: it is a fault of the
+  posting itself and its repair needs no account data.
+- Cross-tenant: the engine refuses another tenant's key first (`TENANT_ISOLATION_BREACH`, exit 16); the module
+  re-checks the tenant (`CROSS_TENANT`) as a second line.
+
+### 11.4 Registry (global across tenants)
+
+- The record key is the caller's own handle `reg:<tenant>` (exactly; else `MALFORMED_REQUEST why=REGISTRY_KEY
+  expected=`). The prefix `reg:` is reserved for `ledger_graph` (section 4.1). The name itself is NOT a key: the
+  engine binds a key to the first tenant that touches it, so a name key would make the namespace per tenant. The
+  global map (registry, canonical name) -> holder lives in the module state, which every request rebuilds under the
+  exclusive lock, so the first claim wins and every later claim by any tenant (the holder too) is `DUPLICATE_KEY
+  registry=`. The refusal never names the holder or echoes the name. `release` by anyone but the holder, or of a
+  free name: `NOT_HOLDER registry=` (one code for both).
+- Name: 1..max_name_bytes bytes, each 0x21..0x7E (printable ASCII, no space). Canonical form: `exact` = the bytes
+  as given; `ascii_fold` = A-Z mapped to a-z, every other byte unchanged. Nothing else: no Unicode normalisation,
+  no confusable detection, no trimming, no `\u` decoding (backslash, `u`, `0430` is six ASCII bytes, not one
+  letter). A name that looks the same in another script, or in another escape form, is a DIFFERENT name here.
+
+### 11.5 Graph guard
+
+- A graph is one key (bound to one graph policy at its first record) and one consistency unit: every edge change
+  names the key with its present state hash (CAS required), and the engine decides under the exclusive lock on the
+  whole folded graph. Two edges that are each fine but close a cycle together cannot both commit: the second
+  decision sees the first edge (lock), and its CAS hash is stale anyway. Cost: changes to one graph are fully
+  serialised; under contention each loser gets `STALE_STATE_HASH`, re-reads (`GET`) and retries, and each try
+  replays the whole WAL (O(WAL)).
+- Node names: `[A-Za-z0-9_.:@+-]{1,64}`. A node exists while it has an edge. `DAG_CYCLE_DETECTED edge=<from>-><to>
+  cycle_len=<k> index=<i>`: the cycle the edge would close has k edges (a self-loop is k = 1); i is the position
+  in the batch.
+- Search (Pearce-Kelly dynamic topological order, rebuilt by the fold at every replay): the graph keeps an order
+  `ord` with ord[a] < ord[b] for every edge. A new `from` node goes before every node, a new `to` node after every
+  node, so an edge with a new end, or with ord[from] < ord[to], needs no search: O(log V). Else a breadth-first
+  search from `to` through nodes with ord <= ord[from] either reaches `from` (refused; the BFS depth gives the exact
+  shortest cycle length) or gives the set to move; a backward search from `from` through ord >= ord[to] gives the
+  other set; both sets are re-ordered into their own old slots. Explicit queues, no recursion: no stack overflow on
+  a 100,000-node chain (case `chain`). Cost per edge: O((|F| + |B|) log V), at most O((V + E) log V); worst case of
+  a whole replay O(E (V + E) log V), bounded by max_nodes and max_edges (an adversarial insertion order can reach
+  it; chains, trees and edges added in any topological order cost O(log V) each). `decide` runs the batch on a COPY
+  of the graph (O(V + E) per add_edge request); `fold` runs it in place.
+
+### 11.6 `GET` fields
+
+Account: `kind=account ledger= balance= ledger_total= ledger_issued= ledger_destroyed= ledger_accounts=` (the
+totals are those of the caller's own instance); `reg:<tenant>`: `kind=registry claims=`; graph: `kind=graph policy=
+nodes= edges=`.
+
+## 12. Primitive 8: `taint_egress` (`taint.rs`)
+
+A stateless egress check of ONE JSON document against field labels (section 7.4: no key, no record, no receipt;
+the request id stays fresh). NATIVE CHECK, FINITE TEST (`test_taint.py`, copies `mutants_p8.py`).
+
+### 12.1 Model
+
+A policy declares LABELS on fields and, per DESTINATION, the labels that may leave to it. Labels: `PII`, `PHI`,
+`SECRET_KEY`, `TENANT:<id>` (`<id>` = `[A-Za-z0-9_-]{1,24}`), and the policy's own words in `labels`
+(`[A-Z][A-Z0-9_]{1,31}`). Labels are SETS. Destinations: `PUBLIC_HTTP`, `LLM_STDOUT`, any `[A-Z][A-Z0-9_]{1,31}`
+the policy names, and `TENANT:<id>` (the policy entry `TENANT:*` holds the labels for every tenant destination).
+
+A node gets labels from three sources, all unioned:
+- (a) NAME RULES of the policy, `{"path": P, "labels": [...]}`. `P` = `$` then `(.name|[])*` (ANCHORED at the
+  root: the whole logical path must match), or `name(.name|[])*` (UNANCHORED: the rule matches the END of the
+  logical path, at any depth). `name` = `[A-Za-z0-9_-]{1,64}`, compared after normalization; `[]` matches any array
+  index. The LOGICAL path of a node is its path of normalized key names and array indices; the `value` step of a
+  label carrier and the step into JSON inside a string are NOT in it (both are transparent).
+- (b) In-document CARRIERS: an object `{"$taint": [<label>...], "value": <any>}` (exactly these two members, names
+  compared after normalization) labels itself with the listed labels; an object with a member whose normalized
+  name is `tenantid` (`tenant_id`, `tenantId`, `TENANT-ID`, ...) and whose value is a canonical id string labels
+  the object `TENANT:<id>`. A carrier with a bad shape: `MALFORMED_CARRIER`; a label word the policy does not know:
+  `UNKNOWN_LABEL` (fail closed, never ignored).
+- INHERITANCE: a node's labels are its own plus every ancestor's, through objects, arrays, carriers and JSON in
+  strings, to any depth. A forbidden label is reported ONCE, at the topmost node that carries it.
+
+Key normalization (name rules, carriers, `AMBIGUOUS_KEY`), on the key AFTER the parser has decoded every `\u`
+escape: fullwidth ASCII U+FF01..U+FF5E becomes ASCII; `_`, `-` and space are dropped; ASCII A-Z becomes a-z.
+Nothing else: no Unicode case fold, no NFC/NFKC, no homoglyph map. Two keys of one object that are equal after
+normalization: `AMBIGUOUS_KEY`. Raw duplicate keys: the strict parser refuses the document (`MALFORMED_REQUEST
+why=BAD_JSON error=DUPLICATE_KEY`).
+
+Decision for destination D: every label of every node must be allowed for D. A tenant label `TENANT:x` is allowed
+for `TENANT:a` only when x == a (the policy cannot allow another tenant's label to a tenant destination;
+`TENANT:*` lists no tenant label). For another destination it is allowed when the destination lists `TENANT:*` or
+`TENANT:x`. Any other label is allowed when the destination lists it.
+
+### 12.2 Modes: what ALLOW says
+
+- `"mode": "detect"` (allow by default). An UNLABELLED field passes with any value. ALLOW says only: "no name rule
+  and no carrier puts a label on this document that the destination forbids". It is a DETECTOR of labelled fields,
+  NOT a guarantee that no secret leaves: a secret under a name that no rule names passes.
+- `"mode": "strict"` (allow-list). Every node must be COVERED by a name rule (the rule matches the node or an
+  ancestor; `"labels": []` declares a public field), except a container whose logical path is empty or is a proper
+  prefix of an ANCHORED rule. An uncovered node: `UNLABELLED_FIELD`, once per uncovered subtree. A carrier adds
+  labels but NEVER covers. ALLOW then says: "every key and leaf of this document sits at a place the policy
+  declared, and no declared or carried label is forbidden for the destination". It still does NOT say that a VALUE
+  at a declared public place holds no secret.
+
+### 12.3 The walk
+
+1. Strict parse (src/airlock/json.rs: duplicate keys, lone surrogates, control bytes, trailing bytes, depth > 64
+   refused): else `MALFORMED_REQUEST why=BAD_JSON error=<word>`.
+2. Expansion: every string VALUE that LOOKS LIKE JSON (after leading Unicode White_Space and default-ignorable code
+   points it starts with `{`, `[` or `"`) is strict-parsed and takes the place of the string, recursively, to
+   MAX_NESTED = 4 levels. A JSON-like string that fails the strict parse is refused (`OPAQUE_JSON error=<word>`).
+   False refusals by design: `"quoted" words`, `[draft] note`. Text that does not START like JSON is plain text.
+3. Bounds over the EXPANDED document, counted before any label is checked, refused whole, never truncated: nodes >
+   MAX_NODES = 16384: `TAINT_LIMIT why=TOO_MANY_NODES`; a node deeper than MAX_DEPTH = 32: `why=TOO_DEEP`; a
+   JSON-like string at level 4: `why=NESTED_TOO_DEEP`. Every loop is iterative.
+4. One pre-order walk in CANONICAL order (object members by raw key bytes, array items by index): the result does
+   not depend on key order (case `order`).
+
+Every object key is checked: `UNSAFE_KEY why=` `TOO_LONG` (> 256 UTF-8 bytes), `CONTROL`, `IGNORABLE`
+(Default_Ignorable_Code_Point: zero-width, bidi controls, variation selectors, tags), `JSON_LIKE`, `CARRIER_NAME`
+(the normalized key CONTAINS `tenantid` or `$taint` but is not equal to it; false refusals by design).
+
+### 12.4 Wire
+
+`DO taint_egress check <request_id> <tenant> 0 <policy> <destination> <json>`. The document is the rest of the line,
+printable ASCII (non-ASCII as `\u` escapes). The engine's `<tenant>` field is not compared with the destination: the
+caller names the destination.
+
+ALLOW: `OK verdict=ALLOW policy= destination= mode=detect|strict sha256=<SHA-256 of the exact document bytes>
+bytes=<length> nodes=<expanded nodes> now_ms= skew_ms=`. Refusals (no record) in this precedence; each reports the
+FIRST finding of its class in canonical order and `more=<count of further findings of the same class>`:
+(1) `UNKNOWN_POLICY`, `UNKNOWN_DESTINATION`, `MALFORMED_REQUEST why=TAINT_ARGS|BAD_JSON`; (2) `TAINT_LIMIT`;
+(3) structure: `UNSAFE_KEY`, `OPAQUE_JSON`, `AMBIGUOUS_KEY`, `UNKNOWN_LABEL`, `MALFORMED_CARRIER`;
+(4) `TAINT_EGRESS_BLOCKED json_path= label= more=`; (5) `UNLABELLED_FIELD json_path= more=` (strict mode only).
+
+`json_path` grammar: `$` (root), then per step `.<name>` | `.~<i>` | `[<i>]` | `@`. `.<name>` is the NORMALIZED key,
+shown only when it is a name of a policy rule path, `value` or `tenantid` and the key is not unsafe. Every other key
+is shown as `.~<i>`: its 0-based rank among the object's keys in raw byte order. A key is never echoed (it may BE the
+secret). `[<i>]` is an array index; `@` steps into the JSON parsed from the string at that place. A `label` is shown
+as written, except a tenant label, shown as `TENANT` (its id is document data). No refusal carries a value, a key, a
+tenant id from the document, or a digest (case `leak`).
+
+### 12.5 Policy file
+
+`{"primitive": "taint_egress", "version": 1, "name": "<id>", "mode": "detect"|"strict", "labels": ["<WORD>"...],
+"fields": [{"path": "<P>", "labels": ["<label>"...]}...], "destinations": {"<DEST>"|"TENANT:*": ["<label>"|"TENANT:*"...]}}`.
+Exact key sets. At most 256 rules, 1 to 64 destinations. Refused (`MALFORMED_POLICY`): an unknown label, a duplicate
+label in one list, a duplicate rule, a bad path, a tenant label or `TENANT:*` in the `TENANT:*` list, `TENANT:*` in a
+rule, a custom word equal to a fixed label or `TENANT`.
+
+### 12.6 "0 bytes leaked" is the CALLER's property
+
+This module only answers ALLOW or a refusal; the engine prints only that answer and never forwards the document. A
+caller gets "0 bytes leaked" only if it (1) emits nothing unless the answer is `OK verdict=ALLOW`, (2) emits EXACTLY
+the bytes it sent for the check (compare SHA-256 and length with `sha256=` and `bytes=`; never re-serialize: the Goal
+20 review, finding 3), (3) emits to the destination it named, and (4) treats any other answer, a missing answer or an
+engine fault as a refusal. Nothing in the engine enforces (1) to (4). The SDK (section 16) does (2) for the check
+answer and returns the exact text sent; emitting it is still the caller's act.
+
+### 12.7 Known limits (each row TRIED: case `evasions` of `test_taint.py` asserts the result)
+
+| Evasion | Result |
+| --- | --- |
+| secret value under an unlabelled, allowed name | detect: ALLOW (passes). strict: `UNLABELLED_FIELD` unless the name is covered; under a covered public name: ALLOW (passes) |
+| encodings of a VALUE: base64, hex, percent, HTML entities, `\x` | values are never read: ALLOW under an unlabelled name; blocked under a labelled name (by the name, not the content) |
+| encodings of a KEY: `ss%6E`, `&#115;sn`, literal `\x73sn` | not decoded: detect ALLOW (passes); strict `UNLABELLED_FIELD`. JSON `ssn` IS decoded by the parser: blocked |
+| compressed (gzip+base64) or split secret across fields | ALLOW under unlabelled names (passes) |
+| numbers as carriers | a number under an unlabelled name: ALLOW (passes); under a labelled name: blocked |
+| homoglyph key (Cyrillic `ѕsn`), Kelvin sign in `api_Key` | not folded: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+| zero-width or bidi code point in a key | `UNSAFE_KEY why=IGNORABLE` (refused in every mode) |
+| fullwidth key `ｓｓｎ` | folded: blocked |
+| keys that differ only by Unicode normalization (NFC and NFD side by side) | no NFC: both kept, not `AMBIGUOUS_KEY`: ALLOW (passes) |
+| array of pairs `[["ssn", "..."]]` | `ssn` is a value, not a key: detect ALLOW (passes); strict `UNLABELLED_FIELD` |
+| very deep (> 32) or very wide (> 16,384 nodes) document | `TAINT_LIMIT` (refused, never truncated) |
+| label carrier omitted by the author (a foreign record with no `tenant_id`) | detect: ALLOW (passes); only name rules apply |
+| label word the policy does not know | `UNKNOWN_LABEL` (refused) |
+| free text that names another tenant | text is never read: detect ALLOW (passes); strict: `UNLABELLED_FIELD` unless the name is covered |
+| ASCII case, `_`, `-`, space and fullwidth variants of a covered key | normalized to the policy name: a covert channel of a few bits per key (not refused) |
+
+This module checks LABELS and NAMES, not the content of values. It trusts the policy author for the rules and the
+document author for the carriers: an omitted carrier is not detected, and a wrong `tenant_id` written by the
+document's author is believed. The translation of the MCP proxy review's nine leaking shapes (rows r1 to r9 of case
+`table`) is in the header of `taint.rs`, section 8.
+
+## 13. Primitive 9: `farkas` (`farkas.rs`)
+
+Merged from the header of `farkas.rs` as it stood at this merge; the primitive 9 worker was still editing that file.
+If the two differ, the file header wins and this section is stale.
+
+The check of a Farkas infeasibility certificate. Stateless (section 7.4). NATIVE CHECK that MIRRORS the Dafny
+predicate `FarkasCert.Accepts` of `src/primitives_v2/dafny/FarkasCert.dfy`. This Rust code is NOT proved and NOT
+compiled from Dafny. The tie between the two is a FINITE differential test (`test_farkas.py`, case `differential`):
+the Dafny predicate compiled by the pinned Dafny's Python back end and this check answer the same on many random
+and edge-case systems. Why not compiled from Dafny: the Dafny 4.11 Rust back end emits code that needs the
+`dafny_runtime` crate (no crate allowed).
+
+What the Dafny lemma `Soundness` says (stated by the P9 worker as PROVED in its Dafny run, about the Dafny predicate
+only): if `Accepts(A, b, y)`, then NO non-negative INTEGER vector x satisfies `A x >= b`. Not stated there:
+rational or real x; completeness (an integer-infeasible system can be rational-feasible, and then no certificate
+exists); anything about any solver or about `farkas.rs`. (This document did not re-run Dafny.)
+
+Wire: `DO farkas check <request_id> <tenant> 0 <json>`. `<json>`: one strict JSON object with exactly the keys `"A"`
+(1..64 rows, each 1..64 integers, all rows of one length n), `"b"` (m integers, m = rows) and `"y"` (m integers).
+An integer is a JSON number `-?(0|[1-9][0-9]*)` in the signed 64-bit range. The system is `A x >= b, x >= 0`; y is
+the certificate of the claim "no x exists". Answers, first match wins:
+
+- `MALFORMED_REQUEST why=FARKAS_JSON|FARKAS_KEYS|FARKAS_NUMBER` (exit 12): not the format above.
+- `SHAPE why=ROWS|COLS|ROW_LEN|B_LEN|Y_LEN|ENTRY_RANGE [row=] [col=]` (exit 10).
+- `CERT_REJECTED claim=INFEASIBILITY_NOT_PROVED reason=Y_NEGATIVE row=<i>` | `reason=YTA_POSITIVE col=<j>` |
+  `reason=YTB_NOT_POSITIVE` (exit 10).
+- `OVERFLOW claim=INFEASIBILITY_NOT_PROVED why=ARITH [col=<j>]` (exit 10): a sum left the i128 range (checked
+  arithmetic; fail closed). The Dafny predicate has no overflow, so OVERFLOW can refuse a certificate that the
+  Dafny predicate accepts. It never accepts because of an overflow.
+- `OK verdict=INFEASIBILITY_PROVED scope=nonneg_integer_x rows=<m> cols=<n> system_sha256=<h> cert_sha256=<h>`.
+
+Every refusal after the parse also carries `system_sha256=`. A refusal is never "feasible": the check never says that
+a solution exists. Digests: `system_sha256` = SHA-256 of the canonical text `{"A":[[a11,...],...],"b":[b1,...]}` (no
+spaces, canonical decimals); `cert_sha256` = SHA-256 of `{"y":[y1,...]}`. Policy files: none (`init` refuses a
+farkas policy: `MALFORMED_POLICY NO_POLICY`). Records: none (`fold` refuses any record of this primitive).
+
+## 14. Refusal codes: one index
+
+Every code once; its exit (section 6) and its repair fields. Engine bookkeeping fields (`now_ms`, `skew_ms`; and on
+a durable refusal `request_id`, `seq`, `hash.<key>`) are not repeated. A code that two primitives use has ONE meaning.
+
+| Code | Exit | From | Repair fields |
+| --- | --- | --- | --- |
+| `USAGE` | 2 | CLI | `why=` (`NOT_AFTER_MS`, `MS`, ...) |
+| `MALFORMED_REQUEST` | 12 | engine, every module | `why=`: engine `NON_ASCII`, `SPACING`, `FIELDS`, `OVERSIZED max_line=`, `NO_LINE_END`, `UNKNOWN_VERB`, `UNKNOWN_PRIMITIVE`, `UNKNOWN_OP`, `BAD_REQUEST_ID`, `BAD_TENANT`, `KEY_COUNT`, `BAD_KEY`, `RESERVED_KEY key= prefix= owner=` (section 4.1), `DUPLICATE_KEY` (a key named twice), `KEY_ORDER`, `BAD_HASH`, `CAS_REQUIRED`, `KEY_KIND`; rate `RATE_ARGS`; ledger_graph `LG_ARGS`, `LEG_KEYS`, `LEG_COUNT`, `RESERVED_KEY` (no fields: a `reg:` key as account or graph), `REGISTRY_KEY expected=`, `NAME [max_name_bytes=]`, `NODE`; taint `TAINT_ARGS`, `BAD_JSON error=`; farkas `FARKAS_JSON`, `FARKAS_KEYS`, `FARKAS_NUMBER` |
+| `STALE_STATE_HASH` | 13 | engine | `stale=<count>`, `hash.<key>=<present hash>` per stale key |
+| `DUPLICATE_REQUEST_ID` | 14 | engine | none: use a new id |
+| `TENANT_ISOLATION_BREACH` | 16 | engine | `why=KEY_OF_ANOTHER_TENANT`, `key=` (a `DO`; `GET` gives no `key=`) |
+| `CORRUPT_WAL` | 17 | store | `why=` (`HEADER`, `CRC`, `CHAIN`, `MODULE`, ...), `record=` (fault: no repair) |
+| `IO_ERROR` | 18 | store | `why=` (fault; nothing committed) |
+| `OUTCOME_UNKNOWN` | 19 | store | `why=` (fault; a record may stay) |
+| `MALFORMED_POLICY` | 25 | init | `why=` (the first fault of the file) |
+| `STORE_BUSY` | 26 | store | `retry_after_ms=1000` |
+| `NOT_IMPLEMENTED` | 27 | cosign stub | `why=COSIGN_SIGNATURE` (unreachable in this build) |
+| `UNSAFE_STORE` | 28 | store | `why=` (fault) |
+| `MODULE_FAULT` | 29 | engine | `why=BAD_REFUSAL`, `BAD_ANSWER`, `WRITE_WITHOUT_KEY`, `BAD_PAYLOAD`, `RECORD_NOT_FOLDABLE`, `RECORD_TOO_LONG`, `SEQ_OVERFLOW` |
+| `RATE_LIMIT_EXCEEDED` | 10 | rate_window | `retry_after_ms=<n or never>`; durable when `cooldown_after > 0` |
+| `COOLDOWN_ACTIVE` | 10 | rate_window | `retry_after_ms=` |
+| `VOLUME_ABOVE_CAP` | 10 | rate_window | `max_volume_per_window=` |
+| `UNKNOWN_POLICY` | 10 | rate_window, ledger_graph, taint_egress | none |
+| `POLICY_MISMATCH` | 10 | rate_window, ledger_graph (graph) | `policy=` (the bound policy) |
+| `COSIGN_EXPIRED` | 10 | cosign-ttl | `expired_by_ms=` |
+| `COSIGN_TTL_TOO_LONG` | 10 | cosign-ttl | `max_ttl_ms=` |
+| `WRONG_POLICY_KIND` | 10 | ledger_graph | `policy_kind=` (`not_ledger`, `not_registry`, `not_graph`) |
+| `ACCOUNT_EXISTS` | 10 | ledger_graph | `key=` |
+| `SUPPLY_FIXED` | 10 | ledger_graph | none: open with balance 0 |
+| `ISSUANCE_DISABLED` | 10 | ledger_graph | none |
+| `UNKNOWN_ACCOUNT` | 10 | ledger_graph | `key=` |
+| `WRONG_KEY_KIND` | 10 | ledger_graph | `key=`, `kind=` |
+| `CROSS_LEDGER` | 10 | ledger_graph | `key=`, `ledger=` |
+| `CROSS_TENANT` | 10 | ledger_graph | `key=` (second line behind the engine) |
+| `ZERO_AMOUNT` | 10 | ledger_graph | `index=` |
+| `SELF_TRANSFER` | 10 | ledger_graph | none |
+| `INSUFFICIENT_FUNDS` | 10 | ledger_graph | `key=`, `balance=`, `needed=` |
+| `BALANCE_LIMIT` | 10 | ledger_graph | `key=`, `max_balance=` |
+| `TOO_MANY_LEGS` | 10 | ledger_graph | `max_legs=` |
+| `CONSERVATION_BREACH` | 10 | ledger_graph | `debit_total=`, `credit_total=` |
+| `DUPLICATE_KEY` | 10 | ledger_graph (registry) | `registry=` (never the holder, never the name) |
+| `NOT_HOLDER` | 10 | ledger_graph (registry) | `registry=` |
+| `DAG_CYCLE_DETECTED` | 10 | ledger_graph (graph) | `edge=<from>-><to>`, `cycle_len=`, `index=` |
+| `EDGE_EXISTS` | 10 | ledger_graph (graph) | `edge=`, `index=` |
+| `GRAPH_FULL` | 10 | ledger_graph (graph) | `limit=max_nodes|max_edges`, `max=` |
+| `NO_SUCH_EDGE` | 10 | ledger_graph (graph) | `edge=` |
+| `UNKNOWN_DESTINATION` | 10 | taint_egress | none |
+| `TAINT_LIMIT` | 10 | taint_egress | `why=TOO_MANY_NODES|TOO_DEEP|NESTED_TOO_DEEP`, `max=` |
+| `UNSAFE_KEY` | 10 | taint_egress | `json_path=`, `why=`, `more=` |
+| `OPAQUE_JSON` | 10 | taint_egress | `json_path=`, `error=`, `more=` |
+| `AMBIGUOUS_KEY` | 10 | taint_egress | `json_path=`, `more=` |
+| `UNKNOWN_LABEL` | 10 | taint_egress | `json_path=`, `more=` |
+| `MALFORMED_CARRIER` | 10 | taint_egress | `json_path=`, `why=SHAPE|LABELS_NOT_ARRAY|LABEL_NOT_STRING|TENANT_ID`, `more=` |
+| `TAINT_EGRESS_BLOCKED` | 10 | taint_egress | `json_path=`, `label=`, `more=` |
+| `UNLABELLED_FIELD` | 10 | taint_egress (strict) | `json_path=`, `more=` |
+| `SHAPE` | 10 | farkas | `why=`, `[row=]`, `[col=]`, `[system_sha256=]` |
+| `CERT_REJECTED` | 10 | farkas | `claim=INFEASIBILITY_NOT_PROVED`, `reason=`, `[row=|col=]`, `system_sha256=` |
+| `OVERFLOW` | 10 | farkas | `claim=INFEASIBILITY_NOT_PROVED`, `why=ARITH`, `[col=]`, `system_sha256=` |
+
+Note: `DUPLICATE_KEY` as a CODE (exit 10) is the registry's "name taken"; `MALFORMED_REQUEST why=DUPLICATE_KEY` (exit
+12) is the engine's "a key named twice in one request"; `MALFORMED_REQUEST why=BAD_JSON error=DUPLICATE_KEY` is the
+JSON parser's duplicate member. Three different faults; a client must read the code first.
+
+## 15. Trust boundary, trusted assumptions, not claimed
 
 - Every rule holds only for a caller that reaches the store through the production binary. A process that can
   write the store folder can write a new valid chain (CRC and SHA-256 authenticate nothing) and can delete or roll
   back the WAL. A process that can start another build (the test-seams build, or a changed copy) can ignore every
   check. Keep the agent out of the store folder (for example `serve` under another OS user that owns it).
 - Trusted: the kernel, the file system and the drive for `F_FULLFSYNC`; `flock`; `/dev/urandom`; the host clock;
-  the engine binary; whoever can write the store folder.
-- Not claimed: no proof of anything here. A SIGKILL is not a power loss. A WAL restored to an older copy is not
-  detected (no epoch ratchet in this engine). A truncation of a whole committed last record looks like a torn
-  record and is cut (only a writer of the folder can do it). The parent folders of the store are not checked.
+  the engine binary; whoever can write the store folder. The `<tenant>` field of a request is NOT authenticated:
+  any caller of `serve` can name any tenant.
+- Not claimed: no proof of anything in the engine or the modules. A SIGKILL is not a power loss. A WAL restored to
+  an older copy is not detected (no epoch ratchet in this engine). A truncation of a whole committed last record
+  looks like a torn record and is cut (only a writer of the folder can do it). The parent folders of the store are
+  not checked.
 - Leaks by design: `GET` of another tenant's key answers `TENANT_ISOLATION_BREACH` (it shows that the key exists);
-  `STATE` shows the store's record count and tail hash to every caller of `serve`. Any tenant can bind an unused key
-  name first.
+  `STATE` shows the store's record count and tail hash to every caller of `serve`; a registry `DUPLICATE_KEY` shows
+  that a name is taken (not by whom). Any tenant can bind an unused key name first, except a name under a prefix
+  reserved by another primitive (section 4.1).
 - Limits: every request replays the whole WAL (O(WAL)); a `serve` waits at most 60 s for the lock. `state`, `get`,
   `replay` need write access.
 
-## 12. Tests and controls
+## 16. SDK (`sdk/py/forge_primitives.py`)
 
-`tests/primitives_v2/test_engine.py <engine> <seams-engine> [--case N]... [--big-gib G]` (20 cases; a case that
-cannot run FAILS with NOT RUN). `tests/primitives_v2/mutants.py`: 24 changed copies, each with one exact-once text
-replacement, both builds, one case that must FAIL with a named text; the unchanged copy first passes every named
-case. The sync copy `S1` is seen only through the read-only test interposer `tests/airlock/interpose.c` (case
-`trace`, F_FULLFSYNC order and an injected sync failure); no test sees a power loss.
+Python stdlib only; not trusted for a write decision; FINITE TEST (`test_sdk_primitives.py`). One long-lived
+`primitives-engine serve <dir>` per client. One method per op: `acquire` (6); `open_accounts`, `transfer`, `post`,
+`mint`, `burn`, `claim`, `release`, `add_edges`, `remove_edge` (7); `taint_check` (8); `farkas_check` (9); and
+`get`, `state`, `read_hashes`. Results: `Committed`, `Verdict` (`OK verdict=`), `Refusal` (`.code`, `.repair` = the
+decoded fields without the engine's bookkeeping, `.detail`, `.durable`, `.hashes`), `KeyState`. Raised, never
+returned: `LocalRefusal` (nothing sent), `EngineFault` (sections 6 and 14 faults, and `MODULE_FAULT`),
+`ProtocolError` (an answer that breaks the grammar or does not match the request: another request id, missing or
+extra key hashes, OK for a keyed op, a digest that is not the digest of the bytes sent), `EngineDead`,
+`EngineTimeout`. The SDK reads state hashes only when the caller passes `pre='read'` (one `GET` per key, not atomic
+with the write) and never retries: a CAS conflict is returned as `STALE_STATE_HASH` with the present hashes. Not
+built: a TypeScript wrapper.
 
-## 13. Departures from the directive and open points
+## 17. Tests and controls
+
+- `tests/primitives_v2/test_engine.py <engine> <seams-engine> [--case N]... [--big-gib G]` (21 cases; a case that
+  cannot run FAILS with NOT RUN). Case `unknown` replaced the old case `stubs` (primitive 9 is no longer a stub);
+  case `reserved` covers section 4.1. `tests/primitives_v2/mutants.py`: 28 changed copies, each with one exact-once
+  text replacement, both builds, one case that must FAIL with a named text; the unchanged copy first passes every
+  named case. The sync copy `S1` is seen only through the read-only test interposer `tests/airlock/interpose.c`
+  (case `trace`); no test sees a power loss.
+- Per primitive: `test_ledger_graph.py` with `mutants_p7.py` (7), `test_taint.py` with `mutants_p8.py` (8),
+  `test_farkas.py`, `test_policy_to_dfy.py` with `mutants_p9.py` (9). SDK: `test_sdk_primitives.py <engine>`.
+
+## 18. Departures from the directive and open points
 
 1. The cosign signature check is a stub (section 10); only the TTL rule is implemented and tested.
 2. Lock per exchange, not per process (section 3).
@@ -344,3 +721,7 @@ case. The sync copy `S1` is seen only through the read-only test interposer `tes
 5. No epoch ratchet: a restored older WAL is not detected (the Goal 20 engine has one).
 6. Stateless checks write no receipt (section 7.4); if the owner wants an audit trail, it needs a separate bounded
    log, not the WAL.
+7. The reserved-prefix table is engine-side, not a trait constant (section 4.1): `ledger_graph.rs` was not this
+   change's file. Its replay fault word is `MODULE` (store.rs maps every fold error to it), not `RESERVED_KEY`.
+8. `taint_egress` checks labels and names, not values (section 12.7). A `farkas` verdict covers only non-negative
+   INTEGER x, and the Rust check is tied to the Dafny predicate only by a finite differential test (section 13).

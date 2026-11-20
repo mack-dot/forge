@@ -1,7 +1,7 @@
 //! The request engine: grammar, module registry, tenant and request-id checks, the multi-key compare-and-swap, the
 //! write of one record per effect. NATIVE CHECK, not proved. The modules decide; this file never decides a policy.
 //!
-//! Order for `DO` (PROTOCOL.md section 4): grammar (no file opened) -> lock and fold -> trusted Now -> tenant of every
+//! Order for `DO` (PROTOCOL.md section 4): grammar, including the reserved key prefixes (no file opened) -> lock and fold -> trusted Now -> tenant of every
 //! key -> key kind -> request id -> compare-and-swap of EVERY key (all hashes checked before anything is written) ->
 //! module decision -> at most one record (all keys of the request in it) -> sync -> lock released -> answer.
 use crate::clock::Clock;
@@ -14,6 +14,22 @@ use crate::store::{self, canonical_id, canonical_key, hx, parse_hash};
 use crate::taint::Taint;
 
 pub const MAX_KEYS: usize = 16;
+
+/// Reserved key-name prefixes: (prefix, the ONE primitive that may name keys under it). A key that starts with a
+/// prefix belongs to its owner: a `DO` of any other primitive that names such a key is refused before any file is
+/// opened and before any module code runs (`MALFORMED_REQUEST why=RESERVED_KEY key= prefix= owner=`), and a record of
+/// another primitive with such a key refuses the store at replay (`fold_module`). Without this rule any tenant can
+/// bind `reg:<victim>` to itself through another primitive first (a `rate_window acquire`), and the victim's
+/// registry handle is then blocked for ever (`TENANT_ISOLATION_BREACH`). The table lives in the engine because the
+/// rule is the engine's (key binding is an engine rule); the owner module keeps its own rules for its own ops
+/// (`ledger_graph` refuses `reg:` keys for accounts and graphs and requires `reg:<tenant>` for a claim).
+/// Prefixes are compared as exact bytes (case-sensitive), like keys.
+pub const RESERVED_PREFIXES: &[(&str, &str)] = &[("reg:", LedgerGraph::NAME)];
+
+/// The (prefix, owner) of a key that `prim` may not name, if any.
+pub fn reserved_for_other(prim: &str, key: &str) -> Option<(&'static str, &'static str)> {
+    RESERVED_PREFIXES.iter().copied().find(|(prefix, owner)| key.starts_with(prefix) && *owner != prim)
+}
 
 /// The folded state of every module.
 #[derive(Default)]
@@ -88,6 +104,11 @@ impl PolicySet {
 }
 
 pub fn fold_module(m: &mut Modules, pol: &PolicySet, prim: &str, rec: &Record) -> Result<(), String> {
+    // The reserved-prefix rule at replay (and in the fold before a write): such a record was never written by this
+    // engine, so the store is refused (store.rs answers `CORRUPT_WAL why=MODULE`, detail `<prim>: RESERVED_KEY ...`).
+    if let Some((prefix, owner)) = rec.keys.iter().find_map(|k| reserved_for_other(prim, k)) {
+        return Err(format!("RESERVED_KEY a key under the prefix {prefix} of {owner} in a record of another primitive"));
+    }
     match prim {
         p if p == RateWindow::NAME => RateWindow::fold(&mut m.rate, rec, &pol.rate),
         p if p == LedgerGraph::NAME => LedgerGraph::fold(&mut m.ledger_graph, rec, &pol.ledger_graph),
@@ -239,6 +260,10 @@ fn do_request(ctx: &mut Ctx, r: &str) -> Result<String, Wire> {
     for i in 0..n {
         let (k, h) = (kh[2 * i], kh[2 * i + 1]);
         if !canonical_key(k) { return Err(malformed("BAD_KEY", "key: [A-Za-z0-9_.:@+-]{1,128}").into()) }
+        if let Some((prefix, owner)) = reserved_for_other(prim, k) {
+            let f = vec![("why", "RESERVED_KEY".into()), ("key", k.to_string()), ("prefix", prefix.to_string()), ("owner", owner.to_string())];
+            return Err(refusal("MALFORMED_REQUEST", f, "the key prefix is reserved by another primitive: choose another key name").into());
+        }
         if let Some((prev, _)) = keys.last() {
             if *prev == k { return Err(malformed("DUPLICATE_KEY", "a key is named twice").into()) }
             if *prev > k { return Err(malformed("KEY_ORDER", "keys must be in strictly ascending byte order").into()) }
