@@ -179,6 +179,36 @@ list. The orchestrator rejected that. Three new fault cases now kill
 them. fsync durability is untested. M1 and integration EXIT
 NOT_ESTABLISHED.
 
+## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750 to U752
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed.
+`src/silicon_sink/sink.rs` is NOT changed (the directive names it; it
+has no signature code; U750). Branch `apex1/native-cosign` from the
+Goal 20 head `4d5e8863`; rebased onto `main` at `b2249ea2` after the
+owner merged Goal 20 as `9a9a8943` (the runs below were on the tree
+before the rebase unless a row says otherwise).
+Nothing is proved. The machine was under load: no time is recorded here.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `git status --short` on the protected paths, `proposals/`, `src/silicon_sink/` |0 lines| |
+| `bin/forge-airlock build` (orchestrator) |0|two rustc builds |
+| `tests/airlock/test_cosign.py <kill build>` (orchestrator) |0|47 of 47 |
+| `tests/airlock/test_engine.py <engine> <kill build>` (orchestrator) |0| |
+| `tests/airlock/test_node_helpers.py <node>` (orchestrator) |0|68 of 68 (inventory helper only) |
+| `tests/airlock/test_sdk.py --engine-dir build/airlock` (orchestrator) |0|includes a store that needs no Node |
+| changed copies through a scratch harness (the worker's run) |0|122 of 122 killed; NOT KILLED: X01, R8, N15 |
+| `disasters`; `fuzz` through the same harness (the worker's runs) |0; 0|8 of 8; 8 of 8 |
+| the one review of `73758bda` (fresh context) |0 FAIL-OPEN through the production engine; 2 FAIL-OPEN inside the stated one-user limit; 1 MEDIUM; 1 LOW; 5 NOTE|one false sentence of PROTOCOL.md corrected; items 1 and 2 open (U751) |
+| after the review repairs (test engine in `build/silicon/test/`; walk includes `/`; `cosign-sign` cross-check): build; cosign; engine; node helpers; SDK suites (orchestrator) |0; 0; 0; 0; 0|56 of 56; 27 of 27; 68 of 68; 21 of 21 (U752) |
+| `scripts/exit_goal20_sdk.py --case evidence`; the Dafny diff cases |NOT RUN|no new bundle; the record `1e75ab47` is of the tree before this change |
+| every HOL and Holmake step |NOT RUN|not part of this work |
+
+[Wire and limits](src/airlock/PROTOCOL.md).
+OpenSSH with LibreSSL replaces Node and V8 in the trusted base for
+cosign: smaller, not zero. M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Goal 20, `forge-airlock` SDK: write, read and lease airlocks over a native WAL engine, with Python and TypeScript SDKs; a finite test of unproved Rust, JavaScript and Python around three proved cores; one review with repairs — U720 to U725
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

@@ -20160,3 +20160,91 @@ curl: (6) Could not resolve host: github.com
   `end_to_end=false`.
 - Impact: none on any stage label. M1 open. Next check: the scratch-clone regression, then the owner's word on
   push and pull request.
+
+
+## U750 — Goal 21, phase 1 (Apex fix 1): the cosign check without Node; `/usr/bin/ssh-keygen -Y verify` in place of `cosign.cjs`; where the directive names the wrong file
+
+- Refs U720 to U723 (Goal 20), U709 (the owner approved `ssh-keygen -Y` for Ed25519), U747 (the review of the HAL
+  demo: a caller-chosen `--node` let a forged signature verify). Evidence: the owner's texts stored at
+  `/tmp/forge_goal21.md` and in the session; the owner's two answers of 2026-11-19 (this session builds it on a
+  stacked branch; the owner runs every sudo step). Branch `apex1/native-cosign` from the Goal 20 head `4d5e8863`
+  (pull request 65, open, not merged).
+- The Goal 21 text says "modify `src/silicon_sink/sink.rs`". That file has no signature code (0 matches) and is
+  pinned by the merged Goal 19 bundle `1f569fcf`. `cosign.cjs` is part of the Goal 20 engine (`src/airlock`).
+  The change is therefore in the engine; `sink.rs` is NOT changed. My reading of the owner's intent.
+- What changed (one worker; details in `src/airlock/PROTOCOL.md` sections 7 and 11): `cosign.cjs` is deleted; the
+  engine checks the SSHSIG blob natively (key equal to the pinned key, namespace, hash name, weak R, S below L)
+  and then runs `/usr/bin/ssh-keygen -Y verify`; only two exact results are accepted (valid; invalid), every
+  other result is `HELPER_FAILED`. Breaking change: genesis record version 3, message version 3, the public key
+  and the signature are base64 tokens; an old store is refused. Node stays ONLY for the inventory checker.
+- My own runs (2026-11-19; load average above 115, so no time is a valid measurement): `bin/forge-airlock build`
+  exit 0; `test_cosign.py` exit 0, 47 of 47; `test_engine.py` exit 0; `test_node_helpers.py` exit 0, 68 of 68;
+  `test_sdk.py` exit 0. A store with money, saga and cosign policies needs no Node (case `py_no_node`, a sentinel
+  `node` on PATH never starts).
+- Worker runs that I did NOT repeat: the changed-copy run through a scratch harness, 122 of 122 killed, NOT
+  KILLED: X01, R8 (as before) and the new N15 (a file swap between two opens of the key: a race, no test); the
+  cases `disasters` and `fuzz`; the measurements (one cosigned commit 575 ms before, 36 ms after; helper resident
+  memory 46.9 MB before, 6.7 MB after; Node 84.9 MiB on disk, `ssh-keygen` 843 KiB).
+- NOT RUN: `scripts/exit_goal20_sdk.py --case evidence` and the diff-policy cases that start Dafny; so NO new
+  Goal 20 bundle exists. The record `1e75ab47` describes the tree before this change.
+- Limits: OpenSSH with LibreSSL is now in the trusted base for cosign in place of Node and V8: smaller, not
+  zero. `ssh-keygen` is not pinned by hash (an owner-0, not group- or other-writable regular file is required);
+  a later OpenSSH with other message text gives `HELPER_FAILED` (fail closed). OpenSSH 10.3 accepts S+L; the
+  engine refuses it first. Nothing is proved.
+- Open owner questions: old stores break with no migration; wrong namespace or hash is `MALFORMED_REQUEST`, not
+  `COSIGN_INVALID`; whether to record the `ssh-keygen` SHA-256 in the genesis record as a warning-only value.
+- Impact: none on any stage label. Next check: the Dafny cases and the `evidence` case in a quiet HOL/Dafny slot;
+  a review of `cosign.rs`; rebase of the HAL demo onto this branch.
+
+## U751 — Goal 21, phase 1: the one review of the native cosign check; no forged cosign flag through the production engine; one sentence of the protocol was false; open items
+
+- Refs U750, U747. Evidence: the reviewer's report and scripts (session scratch folder
+  `w-cosignreview/REVIEW_COSIGN.md`; not in the tree). One fresh-context reviewer, a clone of `73758bda`, real
+  processes. Two adversaries: A holds only the request pipe; B is the same OS user as the store.
+- Result: the reviewer got NO commit with cosign flag 1 without a valid signature of the pinned key through the
+  PRODUCTION engine, as A or as B. Tried and refused: S+L, sha256, trailing bytes, a second signature, sk,
+  certificate and RSA types, namespace tricks, non-canonical base64, weak R, environment variables, replay on
+  another store, tenant, key, amount or state. A finite test by one reviewer, not a proof.
+- A sentence of PROTOCOL.md section 7 was FALSE and is corrected in this commit: "a signature that reaches
+  ssh-keygen is well formed and names the pinned key". As B, a racer replaced both temporary files; ssh-keygen
+  verified B's own files in about 97% of 2 x 20,000 tries. 0 commits followed, because the engine compares the
+  Good line with the fingerprint of the PINNED key. That compare is the one check that holds there.
+- The weak-key rule is load-bearing: the real ssh-keygen accepts a forgery (R = identity, S = 0) for the identity
+  key over a message that nobody signed. The engine refuses that key at `init` and in the fold.
+- Open, NOT repaired (each needs a decision or a larger change):
+  1. As B, a record with cosign flag 1 can be appended to the WAL by hand (CRC and chain recomputed). The record
+     keeps only the flag, not the signature, so no later audit can tell. Repair idea: store the token in the
+     record and verify it again in `replay`. This is inside the stated trust limit (section 11); the separation
+     by user ID removes B.
+  2. `bin/forge-airlock build` puts the test build (`airlock-engine-kill`, with live test seams that accept a
+     stand-in verifier) beside the production engine. As B, running that build on the store commits with flag 1.
+     Repair idea: build it into a test-only folder; never copy it into a vault.
+  3. LOW: the ownership walk of `/usr/bin/ssh-keygen` skips `/`; the text says "every folder".
+  4. NOTES: `cosign-sign` signs a message whose lines 4 and 5 it does not cross-check with the action (such a
+     signature never verifies); a mixed-order public key is accepted at `init`; a signature has no expiry while
+     the state hash stays the same; `DYLD_INSERT_LIBRARIES` runs code inside the engine as B.
+- Not examined by the review: a full disk, signals during a run, the TypeScript SDK, any other OpenSSH version.
+- Impact: none on any stage label. Next check: owner decisions on items 1 and 2; the vault setup copies only
+  `airlock-engine` (to be confirmed by reading `setup_vault.sh` before the owner runs it).
+
+## U752 — Goal 21, phase 1: owner decisions on the review (U751) and the repairs that followed
+
+- Refs U751, U750. Owner decisions (pasted texts of 2026-11-19, in the session): item 1 of U751 (the signature in
+  the WAL record): NO change; it stays a stated limit of the one-user model (PROTOCOL.md section 11 now says it).
+  Item 2: YES, the test engine goes to a test-only folder; the owner named `build/silicon/test/`.
+- Done: `bin/forge-airlock build` writes only the production engine into `build/airlock/` and the
+  `cfg(kill_points)` build into `build/silicon/test/` (the Goal 19 script writes only its own named files in
+  `build/silicon/`; no collision by reading). New suite case `py_build_separation`: no executable in
+  `build/airlock/` accepts the test seams. The ownership walk of `/usr/bin/ssh-keygen` now includes `/`.
+  `cosign-sign` refuses a message whose request-id or state-hash line differs from the action.
+- My own runs (2026-11-19): `bin/forge-airlock build` exit 0; `test_cosign.py` exit 0, 56 of 56; `test_engine.py`
+  exit 0, 27 of 27; `test_node_helpers.py` exit 0, 68 of 68; `test_sdk.py` exit 0, 21 of 21.
+- The worker's runs, not repeated: 19 changed copies through the scratch harness, 18 killed, N15 not killed (as
+  before). The other 112 changed copies were NOT RUN after this change (their text did not change; the worker's
+  anchor check found all 131 anchors once). The `evidence` case and the Dafny cases stay NOT RUN by the owner's
+  decision: no Dafny or HOL is started for this work, and the bundle record `1e75ab47` does not match this tree.
+- The owner's manual test of the separation: a 0600 file owned by `root`, a write by the owner's user, refused
+  (machine state seen: owner uid 0, size 0). An earlier try with user ID 501 (the owner's own ID) had let the
+  write through. This is the general kernel rule for one file. The project's probe (`probe_boundary.py` as
+  `nobody` or against a `forge_vault` user) is NOT RUN; every separation claim of the demo stays NOT TESTED.
+- Impact: none on any stage label. Next check: the hosted `gate/pr_check.py` (expected exit 3).

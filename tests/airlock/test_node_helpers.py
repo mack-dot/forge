@@ -1,4 +1,4 @@
-"""FINITE TEST of the two Node helpers of forge-airlock: booking_check.cjs and cosign.cjs (Goal 20).
+"""FINITE TEST of the Node helper of forge-airlock: booking_check.cjs (Goal 20, inventory airlock only).
 
 Usage: python3 tests/airlock/test_node_helpers.py <node> [--case NAME]... [--model PATH] [--list]
   <node>   the pinned Node 24.3.0 executable.
@@ -6,30 +6,20 @@ Usage: python3 tests/airlock/test_node_helpers.py <node> [--case NAME]... [--mod
 
 One line per case: PASS, FAIL or NOT RUN. Exit 0 only if every selected case passes. A NOT RUN case makes the exit
 code non-zero unless its name is on ALLOW_NOT_RUN (printed at the start, with the reason). Python stdlib only.
-Private keys exist only in a temporary folder made by this run and removed at its end. Nothing is mocked: every
-case runs the real helper as a subprocess, except `sign_other_uid_seam`, which calls the exported check function
-with a stat object whose uid differs (a real file of another uid with mode 0600 cannot be opened by this user).
+Nothing is mocked: every case runs the real helper as a subprocess.
 
-Case to D-1 rule map (KEY_DESIGN.md section 1, U602 regression patterns):
-  O_NOFOLLOW (last part)   sign_key_symlink, sign_key_dangling_symlink, keygen_refuses_symlink_path
-  O_NONBLOCK + S_ISREG     sign_key_fifo_no_hang, sign_key_directory, sign_key_dev_null
-  uid == euid              sign_other_uid_real_file, sign_other_uid_seam
-  (mode & 0o077) == 0      sign_key_mode_<mode> for 0640 0604 0644 0660 0666 0610 0601 0620 0602; 0600 and 0400 pass
-  size and content         sign_key_missing, sign_key_empty, sign_key_damaged, sign_key_too_large,
-                           sign_key_public_pem, sign_key_not_ed25519
-  same descriptor read     not separately testable from outside (a reading of the code); no case claims it
-  no link-count rule       sign_key_hardlink_accepted (D-1 states a hard link passes)
+The Node cosign helper (cosign.cjs) is gone (Apex addendum: the engine verifies a cosign with /usr/bin/ssh-keygen).
+Its cases moved: the human's tools and the key file rules to tests/airlock/test_cosign.py, the verification to
+tests/airlock/test_engine.py (cases cosign, cosign_faults, nonce, weakkey, seams, helper_env).
 """
-import json, os, stat, subprocess, sys, tempfile, time
+import json, os, subprocess, sys, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BOOKING = ROOT / 'src/airlock/node/booking_check.cjs'
-COSIGN = ROOT / 'src/airlock/node/cosign.cjs'
 DEFAULT_MODEL = ROOT / 'build/airlock/checker/model.cjs'
 ALLOW_NOT_RUN = {}  # name -> reason. Empty: every NOT RUN fails the suite.
 ENV = {'PATH': '/usr/bin:/bin', 'LC_ALL': 'C'}
-L = 2 ** 252 + 27742317777372353535851937790883648493  # Ed25519 group order
 
 
 class NotRun(Exception):
@@ -78,8 +68,6 @@ class Ctx:
             model = self.model
         return run([self.node, str(BOOKING), str(model)], data)
 
-    def cosign(self, args, data=b'', timeout=60):
-        return run([self.node, str(COSIGN), *args], data, timeout)
 
 
 def expect_booking(ctx, data, code, model=None):
@@ -261,446 +249,6 @@ B.update({'booking_missing_model_file': b_missing_model, 'booking_model_throws':
           'booking_model_directory_refused': b_model_directory, 'booking_no_args': b_no_args})
 
 
-# ---------------------------------------------------------------- cosign.cjs
-
-def message(store='store-1', rid='req-1', h='0123456789abcdef0123456789abcdef', action='REFUND order-9 7500 GOODWILL',
-            genesis='fedcba9876543210fedcba9876543210'):
-    return ('forge-airlock-cosign-v2\n%s\n%s\n%s\n%s\n%s\n' % (store, genesis, rid, h, action)).encode()
-
-
-class Keys:
-    def __init__(self, ctx):
-        self.ctx = ctx
-        self.cache = {}
-
-    def get(self, name):
-        if name not in self.cache:
-            p = self.ctx.tmp / ('key-' + name)
-            rc, out, err = self.ctx.cosign(['keygen', str(p)])
-            check(rc == 0 and len(out) == 65 and err == b'', 'keygen failed: exit %d %r' % (rc, err))
-            self.cache[name] = (p, out.decode().strip())
-        return self.cache[name]
-
-
-def sign(ctx, key, msg):
-    rc, out, err = ctx.cosign(['sign', str(key)], msg)
-    check(rc == 0 and len(out) == 129 and out.endswith(b'\n'), 'sign failed: exit %d %r' % (rc, err[:200]))
-    return out.decode().strip(), err
-
-
-def expect_verify(ctx, pub, sig, msg, code):
-    rc, out, err = ctx.cosign(['verify', pub, sig], msg)
-    want = {0: b'VALID\n', 1: b'INVALID\n', 2: b''}[code]
-    check(rc == code and out == want, 'exit %d stdout %r stderr %r' % (rc, out, err[:200]))
-    if code in (0, 1):
-        check(err == b'', 'stderr not empty: %r' % err[:200])
-    return 'exit %d %s' % (rc, (out or err[:90]).decode('latin1').strip())
-
-
-C = {}
-
-
-def ccase(fn):
-    C[fn.__name__] = fn
-    return fn
-
-
-def signed(ctx):
-    key, pub = ctx.keys.get('a')
-    msg = message()
-    sig, _ = sign(ctx, key, msg)
-    return pub, sig, msg
-
-
-@ccase
-def keygen_creates_0600(ctx):
-    p = ctx.path('new-key')
-    rc, out, err = ctx.cosign(['keygen', str(p)])
-    st = os.lstat(p)
-    check(rc == 0 and err == b'' and len(out) == 65 and out[:64].decode() == out[:64].decode().lower(), 'exit %d' % rc)
-    check(stat.S_ISREG(st.st_mode) and stat.S_IMODE(st.st_mode) == 0o600 and st.st_uid == os.geteuid(),
-          'mode %o' % st.st_mode)
-    check(p.read_bytes().startswith(b'-----BEGIN PRIVATE KEY-----\n'), 'not PKCS#8 PEM')
-    return 'exit 0, regular file, mode 0600, PKCS#8 PEM'
-
-
-@ccase
-def keygen_refuses_existing(ctx):
-    p = ctx.path('existing')
-    p.write_bytes(b'keep')
-    rc, out, err = ctx.cosign(['keygen', str(p)])
-    check(rc == 2 and out == b'' and p.read_bytes() == b'keep', 'exit %d' % rc)
-    return 'exit 2, file unchanged'
-
-
-@ccase
-def keygen_refuses_existing_0600(ctx):
-    # The same as keygen_refuses_existing with an owner-only file: the mode check of keygen cannot refuse it, so
-    # only O_EXCL keeps the file unchanged.
-    p = ctx.path('existing-0600')
-    fd = os.open(p, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-    os.write(fd, b'keep')
-    os.close(fd)
-    rc, out, err = ctx.cosign(['keygen', str(p)])
-    check(rc == 2 and out == b'' and p.read_bytes() == b'keep', 'an existing 0600 file: exit %d, file now %r' % (rc, p.read_bytes()[:16]))
-    return 'exit 2, file unchanged'
-
-
-@ccase
-def keygen_refuses_symlink_path(ctx):
-    target = ctx.path('target')
-    p = ctx.path('link')
-    p.symlink_to(target)
-    rc, out, err = ctx.cosign(['keygen', str(p)])
-    check(rc == 2 and out == b'' and not target.exists(), 'exit %d target exists %s' % (rc, target.exists()))
-    return 'exit 2, dangling link target not created'
-
-
-@ccase
-def sign_verify_valid(ctx):
-    pub, sig, msg = signed(ctx)
-    return expect_verify(ctx, pub, sig, msg, 0)
-
-
-@ccase
-def sign_stderr_shows_fields(ctx):
-    key, _ = ctx.keys.get('a')
-    _, err = sign(ctx, key, message())
-    for part in (b'store-1', b'req-1', b'0123456789abcdef0123456789abcdef', b'REFUND order-9 7500 GOODWILL'):
-        check(part in err, 'field missing on stderr: %r' % part)
-    check(b'PRIVATE' not in err, 'key text on stderr')
-    return 'store_id, request_id, pre_state_hash, action on stderr'
-
-
-@ccase
-def sign_is_deterministic(ctx):
-    key, _ = ctx.keys.get('a')
-    s1, _ = sign(ctx, key, message())
-    s2, _ = sign(ctx, key, message())
-    check(s1 == s2, 'two signatures differ')
-    return 'same signature twice (Ed25519 is deterministic)'
-
-
-@ccase
-def verify_wrong_key(ctx):
-    _, sig, msg = signed(ctx)
-    _, pub_b = ctx.keys.get('b')
-    return expect_verify(ctx, pub_b, sig, msg, 1)
-
-
-@ccase
-def verify_altered_request_id(ctx):
-    pub, sig, _ = signed(ctx)
-    return expect_verify(ctx, pub, sig, message(rid='req-2'), 1)
-
-
-@ccase
-def verify_altered_pre_state_hash(ctx):
-    pub, sig, _ = signed(ctx)
-    return expect_verify(ctx, pub, sig, message(h='0123456789abcdef0123456789abcdee'), 1)
-
-
-@ccase
-def verify_altered_action(ctx):
-    pub, sig, _ = signed(ctx)
-    return expect_verify(ctx, pub, sig, message(action='REFUND order-9 7501 GOODWILL'), 1)
-
-
-@ccase
-def verify_replay_other_store(ctx):
-    pub, sig, _ = signed(ctx)
-    return expect_verify(ctx, pub, sig, message(store='store-2'), 1)
-
-
-@ccase
-def verify_field_shift_refused_or_invalid(ctx):
-    # Move bytes across a boundary: "req-1" + action prefix. The form check refuses a line end inside a field.
-    pub, sig, _ = signed(ctx)
-    return expect_verify(ctx, pub, sig, message(rid='req-1x', action='EFUND order-9 7500 GOODWILL'), 1)
-
-
-@ccase
-def verify_altered_signature_bit(ctx):
-    pub, sig, msg = signed(ctx)
-    bad = sig[:-1] + ('0' if sig[-1] != '0' else '1')
-    return expect_verify(ctx, pub, bad, msg, 1)
-
-
-def hex_case(name, pub_fn, sig_fn):
-    def fn(ctx):
-        pub, sig, msg = signed(ctx)
-        return expect_verify(ctx, pub_fn(pub), sig_fn(sig), msg, 2)
-    C[name] = fn
-
-
-hex_case('verify_sig_truncated_126', lambda p: p, lambda s: s[:126])
-hex_case('verify_sig_odd_127', lambda p: p, lambda s: s[:127])
-hex_case('verify_sig_long_130', lambda p: p, lambda s: s + '00')
-hex_case('verify_sig_uppercase', lambda p: p, lambda s: s.upper() if s.upper() != s else 'A' + s[1:])
-hex_case('verify_sig_non_hex', lambda p: p, lambda s: 'g' + s[1:])
-hex_case('verify_pub_truncated_62', lambda p: p[:62], lambda s: s)
-hex_case('verify_pub_odd_63', lambda p: p[:63], lambda s: s)
-hex_case('verify_pub_uppercase', lambda p: p.upper() if p.upper() != p else 'A' + p[1:], lambda s: s)
-hex_case('verify_pub_with_0x', lambda p: '0x' + p[2:], lambda s: s)
-
-
-@ccase
-def verify_s_plus_l_malleability(ctx):
-    # Ed25519 S' = S + L. This case records what node:crypto does; it expects "not VALID".
-    pub, sig, msg = signed(ctx)
-    s = int.from_bytes(bytes.fromhex(sig[64:]), 'little') + L
-    if s >= 2 ** 256:
-        raise NotRun('S + L does not fit in 32 bytes for this signature')
-    bad = sig[:64] + s.to_bytes(32, 'little').hex()
-    return expect_verify(ctx, pub, bad, msg, 1) + ' (node:crypto refuses S + L)'
-
-
-def form_case(name, mutate):
-    def fn(ctx):
-        pub, sig, msg = signed(ctx)
-        return expect_verify(ctx, pub, sig, mutate(msg), 2)
-    C[name] = fn
-
-
-form_case('verify_msg_no_final_lf', lambda m: m[:-1])
-form_case('verify_msg_four_lines', lambda m: b'\n'.join(m.split(b'\n')[:4]) + b'\n')
-form_case('verify_msg_six_lines', lambda m: m + b'extra\n')
-form_case('verify_msg_cr', lambda m: m.replace(b'\n', b'\r\n', 1))
-form_case('verify_msg_bad_prefix', lambda m: m.replace(b'cosign-v2', b'cosign-v3'))
-form_case('verify_msg_old_v1_form', lambda m: m.replace(b'cosign-v2', b'cosign-v1').replace(b'fedcba9876543210fedcba9876543210\n', b''))
-form_case('verify_msg_upper_genesis', lambda m: m.replace(b'fedcba', b'FEDCBA', 1))
-form_case('verify_msg_no_genesis_line', lambda m: m.replace(b'fedcba9876543210fedcba9876543210\n', b''))
-form_case('verify_msg_upper_hash', lambda m: m.replace(b'abcdef', b'ABCDEF', 1))
-form_case('verify_msg_long_request_id', lambda m: m.replace(b'req-1', b'r' * 25))
-form_case('verify_msg_empty_action', lambda m: m[:m.rindex(b'\n', 0, len(m) - 1) + 1] + b'\n')
-form_case('verify_msg_nul', lambda m: m.replace(b'GOODWILL', b'GOOD\x00WILL'))
-form_case('verify_msg_oversize', lambda m: m[:-1] + b'x' * 4100 + b'\n')
-
-
-@ccase
-def sign_refuses_wrong_form(ctx):
-    key, _ = ctx.keys.get('a')
-    rc, out, err = ctx.cosign(['sign', str(key)], b'forge-airlock-cosign-v2\nstore-1\nreq-1\n')
-    check(rc == 2 and out == b'', 'exit %d stdout %r' % (rc, out))
-    return 'exit 2, no signature'
-
-
-def key_copy(ctx, mode):
-    src, _ = ctx.keys.get('a')
-    p = ctx.path('key-mode-%o' % mode)
-    p.write_bytes(src.read_bytes())
-    os.chmod(p, mode)
-    return p
-
-
-def expect_sign_refused(ctx, path, reason, timeout=60):
-    rc, out, err = ctx.cosign(['sign', str(path)], message(), timeout)
-    check(rc == 2 and out == b'', 'exit %d stdout %r' % (rc, out))
-    check(reason.encode() in err, 'reason %r not in stderr %r' % (reason, err[:200]))
-    check(b'PRIVATE KEY' not in err, 'key text on stderr')
-    return 'exit 2 (%s)' % reason
-
-
-for _mode in (0o640, 0o604, 0o644, 0o660, 0o666, 0o610, 0o601, 0o620, 0o602):
-    C['sign_key_mode_%04o' % _mode] = (lambda m: lambda ctx: expect_sign_refused(ctx, key_copy(ctx, m), 'group or other'))(_mode)
-
-
-def sign_mode_ok(mode):
-    def fn(ctx):
-        p = key_copy(ctx, mode)
-        _, pub = ctx.keys.get('a')
-        sig, _ = sign(ctx, p, message())
-        return expect_verify(ctx, pub, sig, message(), 0) + ' (mode %04o accepted)' % mode
-    return fn
-
-
-C['sign_key_mode_0600_ok'] = sign_mode_ok(0o600)
-C['sign_key_mode_0400_ok'] = sign_mode_ok(0o400)
-
-
-@ccase
-def sign_key_symlink(ctx):
-    src, _ = ctx.keys.get('a')
-    p = ctx.path('key-link')
-    p.symlink_to(src)
-    return expect_sign_refused(ctx, p, 'ELOOP')
-
-
-@ccase
-def sign_key_dangling_symlink(ctx):
-    p = ctx.path('key-dangling')
-    p.symlink_to(ctx.path('nowhere'))
-    return expect_sign_refused(ctx, p, 'ELOOP')
-
-
-@ccase
-def sign_key_directory(ctx):
-    p = ctx.path('key-dir')
-    p.mkdir(mode=0o700)
-    return expect_sign_refused(ctx, p, 'not a regular file')
-
-
-@ccase
-def sign_key_fifo_no_hang(ctx):
-    p = ctx.path('key-fifo')
-    os.mkfifo(p, 0o600)
-    t = time.monotonic()
-    detail = expect_sign_refused(ctx, p, 'not a regular file', timeout=10)
-    return detail + ' in %.2f s' % (time.monotonic() - t)
-
-
-@ccase
-def sign_key_dev_null(ctx):
-    return expect_sign_refused(ctx, Path('/dev/null'), 'not a regular file')
-
-
-@ccase
-def sign_key_missing(ctx):
-    return expect_sign_refused(ctx, ctx.path('absent'), 'ENOENT')
-
-
-def key_bytes_case(name, data, reason):
-    def fn(ctx):
-        p = ctx.path(name)
-        fd = os.open(p, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        os.write(fd, data(ctx))
-        os.close(fd)
-        return expect_sign_refused(ctx, p, reason)
-    C[name] = fn
-
-
-key_bytes_case('sign_key_empty', lambda c: b'', 'size 0')
-key_bytes_case('sign_key_damaged', lambda c: c.keys.get('a')[0].read_bytes()[:60] + b'!!\n', 'content refused')
-key_bytes_case('sign_key_too_large', lambda c: b'A' * 5000, 'size 5000')
-
-
-@ccase
-def sign_key_public_pem(ctx):
-    rc, out, err = run([ctx.node, '-e', "const c=require('node:crypto');process.stdout.write("
-                        "c.generateKeyPairSync('ed25519').publicKey.export({format:'pem',type:'spki'}))"])
-    check(rc == 0, 'node -e failed')
-    p = ctx.path('key-public')
-    fd = os.open(p, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-    os.write(fd, out)
-    os.close(fd)
-    return expect_sign_refused(ctx, p, 'content refused')
-
-
-@ccase
-def sign_key_not_ed25519(ctx):
-    rc, out, err = run([ctx.node, '-e', "const c=require('node:crypto');process.stdout.write(c.generateKeyPairSync("
-                        "'ec',{namedCurve:'P-256'}).privateKey.export({format:'pem',type:'pkcs8'}))"])
-    check(rc == 0 and out.startswith(b'-----BEGIN PRIVATE KEY-----'), 'node -e failed')
-    p = ctx.path('key-p256')
-    fd = os.open(p, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-    os.write(fd, out)
-    os.close(fd)
-    return expect_sign_refused(ctx, p, 'content refused')
-
-
-@ccase
-def sign_other_uid_real_file(ctx):
-    # A real regular file of another uid that this user can open (mode bits allow read). The uid rule is checked
-    # before the mode rule, so the refusal names the uid.
-    for cand in ('/etc/hosts', '/etc/shells', '/etc/protocols', '/etc/services'):
-        try:
-            st = os.stat(cand)
-        except OSError:
-            continue
-        if stat.S_ISREG(st.st_mode) and st.st_uid != os.geteuid() and os.access(cand, os.R_OK) and \
-                not os.path.islink(cand) and st.st_size <= 4096:
-            return expect_sign_refused(ctx, Path(cand), 'is not the effective uid') + ' on ' + cand
-    raise NotRun('no readable regular file of another uid with size <= 4096 found')
-
-
-@ccase
-def sign_other_uid_seam(ctx):
-    # The exported D-1 check with a stat of uid euid+1 and mode 0600 (the combination a real file cannot give us).
-    js = ("const {checkKeyStat}=require(process.argv[1]);const e=process.geteuid();"
-          "const st={isFile:()=>true,uid:e+1,mode:0o100600,size:119};"
-          "try{checkKeyStat(st,e);process.stdout.write('ACCEPTED')}catch(x){process.stdout.write('REFUSED '+x.message)}")
-    rc, out, err = run([ctx.node, '-e', js, str(COSIGN)])
-    check(rc == 0 and out.startswith(b'REFUSED') and b'effective uid' in out, 'out %r err %r' % (out, err[:200]))
-    return 'SIMULATED stat: refused (%s)' % out.decode()[8:60]
-
-
-@ccase
-def sign_key_hardlink_accepted(ctx):
-    src, pub = ctx.keys.get('a')
-    p = ctx.path('key-hardlink')
-    os.link(src, p)
-    sig, _ = sign(ctx, p, message())
-    return expect_verify(ctx, pub, sig, message(), 0) + ' (D-1 has no link-count rule; stated limit)'
-
-
-@ccase
-def cosign_bad_subcommand(ctx):
-    rc, out, err = ctx.cosign(['sign-anything'])
-    check(rc == 2 and out == b'', 'exit %d' % rc)
-    return 'exit 2'
-
-
-# Review R2: the genesis line binds the store instance (its random nonce), not only the store id.
-@ccase
-def verify_other_genesis_invalid(ctx):
-    pub, sig, msg = signed(ctx)
-    return expect_verify(ctx, pub, sig, message(genesis='fedcba9876543210fedcba9876543211'), 1)
-
-
-@ccase
-def sign_shows_genesis(ctx):
-    key, _ = ctx.keys.get('a')
-    _, err = sign(ctx, key, message())
-    check(b'genesis_hash   fedcba9876543210fedcba9876543210' in err, 'the sign tool must display the genesis line: %r' % err[:300])
-    return 'stderr shows the genesis line'
-
-
-# Review R4: small-order and non-canonical Ed25519 encodings, as a public key and as the R of a signature (exit 2).
-# The 14 strings: 5 libsodium blocklist values (has_small_order, ed25519_ref10.c) with and without bit 255, plus
-# y = p and y = p + 1 with and without bit 255; and further y >= p values.
-WEAK = ['00' * 32, '00' * 31 + '80', '01' + '00' * 31, '01' + '00' * 30 + '80',
-        '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05', '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85',
-        'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a', 'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa',
-        'ec' + 'ff' * 30 + '7f', 'ec' + 'ff' * 31, 'ed' + 'ff' * 30 + '7f', 'ed' + 'ff' * 31, 'ee' + 'ff' * 30 + '7f', 'ee' + 'ff' * 31,
-        'ef' + 'ff' * 30 + '7f', 'ff' * 32]
-
-
-@ccase
-def verify_weak_public_keys_refused(ctx):
-    # The reviewer's key 01 00..00 with the signature that node:crypto accepts for every message under it (R = identity, S = 0)
-    pub, sig, msg = signed(ctx)
-    for k in WEAK:
-        rc, out, err = ctx.cosign(['verify', k, sig], msg)
-        check(rc == 2 and out == b'' and b'small-order or non-canonical' in err, 'weak key %s: exit %d %r %r' % (k, rc, out, err[:120]))
-    reviewer = '01' + '00' * 63
-    rc, out, err = ctx.cosign(['verify', '01' + '00' * 31, reviewer], msg)
-    check(rc == 2 and out == b'', "the reviewer's small-order key and signature: exit %d %r" % (rc, out))
-    return '%d weak public keys refused (exit 2), with the reviewer\'s identity key and signature' % len(WEAK)
-
-
-@ccase
-def verify_weak_signature_r_refused(ctx):
-    pub, sig, msg = signed(ctx)
-    for r in WEAK:
-        rc, out, err = ctx.cosign(['verify', pub, r + sig[64:]], msg)
-        check(rc == 2 and out == b'' and b'signature R' in err, 'weak R %s: exit %d %r' % (r, rc, out))
-    return '%d weak R values refused (exit 2)' % len(WEAK)
-
-
-# Review R1: the engine runs the helpers from source (`node -e <source> -- args`); the same file must work that way.
-@ccase
-def eval_mode_verify(ctx):
-    pub, sig, msg = signed(ctx)
-    src = COSIGN.read_text()
-    rc, out, err = run([ctx.node, '-e', src, '--', 'verify', pub, sig], msg)
-    check(rc == 0 and out == b'VALID\n' and err == b'', 'eval mode VALID: exit %d %r %r' % (rc, out, err[:200]))
-    rc, out, err = run([ctx.node, '-e', src, '--', 'verify', pub, sig], message(rid='req-2'))
-    check(rc == 1 and out == b'INVALID\n' and err == b'', 'eval mode INVALID: exit %d %r' % (rc, out))
-    rc, out, err = run([ctx.node, '-e', src, '--'], b'')
-    check(rc == 2 and out == b'', 'eval mode with no command: exit %d' % rc)
-    return 'node -e <cosign.cjs> -- verify: VALID 0, INVALID 1, usage 2'
-
-
 B['booking_eval_mode'] = lambda ctx: _booking_eval(ctx)
 
 
@@ -715,7 +263,7 @@ def _booking_eval(ctx):
     return 'node -e <booking_check.cjs> -- <model>: ACCEPT 0, REJECT 1'
 
 
-CASES = {**B, **C}
+CASES = dict(B)
 
 
 def main(argv):
@@ -743,7 +291,6 @@ def main(argv):
     bad = False
     with tempfile.TemporaryDirectory(prefix='airlock-node-') as tmp:
         ctx = Ctx(node, model, Path(tmp))
-        ctx.keys = Keys(ctx)
         for name in names or CASES:
             try:
                 status, detail = 'PASS', CASES[name](ctx)

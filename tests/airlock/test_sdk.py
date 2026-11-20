@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """FINITE TEST of the forge-airlock SDKs (sdk/py and sdk/ts), Goal 20. It proves nothing. end_to_end=false.
 
-Usage: python3 tests/airlock/test_sdk.py --engine-dir build/airlock [--node PATH] [--case NAME]... [--keep]
+Usage: python3 tests/airlock/test_sdk.py --engine-dir build/airlock [--kill-engine PATH] [--node PATH] [--case NAME]... [--keep]
+  --kill-engine  the TEST-ONLY kill-points build (default build/silicon/test/airlock-engine-kill; never in build/airlock)
 
 Every typed result is reached for real through the engine (build/airlock/airlock-engine via bin/forge-airlock serve),
 and each case checks the store afterwards with the engine's own `replay` / `leases`. The TypeScript cases run
@@ -12,6 +13,8 @@ A case that cannot run FAILS with NOT RUN; it never passes. Exit 0 only if every
 """
 
 import argparse
+import base64
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -81,6 +84,7 @@ class Suite:
     def __init__(self, a):
         self.node = a.node
         self.engine_dir = Path(a.engine_dir).resolve()
+        self.kill_engine = Path(a.kill_engine).resolve()
         self.work = Path(tempfile.mkdtemp(prefix='airlock-sdk-'))
         self.n = 0
 
@@ -90,10 +94,10 @@ class Suite:
         p.mkdir()
         return p
 
-    def cli(self, args, stdin=b''):
+    def cli(self, args, stdin=b'', env=None):
         if args[0] in ('init', 'replay', 'leases', 'state', 'get', 'cosign-message'):
             args = list(args) + ['--engine-dir', self.engine_dir]
-        p = subprocess.run([sys.executable, str(DISPATCHER)] + [str(x) for x in args], input=stdin, capture_output=True, timeout=300)
+        p = subprocess.run([sys.executable, str(DISPATCHER)] + [str(x) for x in args], input=stdin, capture_output=True, timeout=300, env=env)
         return p.returncode, p.stdout.decode('ascii', 'replace'), p.stderr.decode('utf-8', 'replace')
 
     def store(self, name, pubkey=None, store_id=None):
@@ -112,12 +116,12 @@ class Suite:
 
     def keygen(self, name):
         d = Path(tempfile.mkdtemp(prefix='airlock-key-'))
-        code, out, err = self.cli(['cosign-keygen', d / 'key', '--node', self.node])
+        code, out, err = self.cli(['cosign-keygen', d / 'key'])
         require(code == 0, 'NOT RUN: keygen: %r' % err)
         return d, d / 'key', out.strip()
 
     def sign(self, key, msg):
-        code, out, err = self.cli(['cosign-sign', key, '--node', self.node], stdin=msg)
+        code, out, err = self.cli(['cosign-sign', key], stdin=msg)
         require(code == 0, 'sign: %r' % err)
         return out.strip()
 
@@ -334,7 +338,7 @@ def case_py_kill(s):
     st.close()
     require(len(s.effects(p)) == 1, 'nothing committed')
     # kill DURING a commit: the kill build stops after the record is durable and before the answer (point c)
-    kill = s.engine_dir / 'airlock-engine-kill'
+    kill = s.kill_engine
     require(kill.is_file(), 'NOT RUN: %s is missing' % kill)
     st = fa.Store(p, serve_argv=[str(kill), 'serve', str(p)], env={'PATH': '/usr/bin:/bin', 'AIRLOCK_KILL_AT': 'c'}, timeout=30)
     killer = threading.Timer(1.5, lambda: os.kill(st.pid, signal.SIGKILL))
@@ -645,17 +649,123 @@ def case_ts_garbage(s):
     return 'TS SDK vs STAND-IN engine (protocol robustness only): %d garbage answers -> %s; never COMMITTED' % (len(seen), ','.join(sorted(set(seen))))
 
 
+def case_py_no_node(s):
+    """Apex addendum: a store with money, saga and cosign policies (no inventory policy) initialises, serves and commits
+    a cosigned refund with no Node at all: no --node anywhere, and the only `node` on PATH is a SENTINEL script that
+    records any start. The sentinel must never start, and the genesis record must pin no Node binary."""
+    d = s.folder('no-node')
+    sentinel_dir, marker = d / 'sentinel', d / 'node-started'
+    sentinel_dir.mkdir()
+    (sentinel_dir / 'node').write_text('#!/bin/sh\necho "$@" >> %s\nexit 1\n' % marker)
+    os.chmod(sentinel_dir / 'node', 0o700)
+    env = {'PATH': '%s:/usr/bin:/bin' % sentinel_dir, 'LC_ALL': 'C'}
+    keys = d / 'keys'
+    keys.mkdir(mode=0o700)
+    code, pub, err = s.cli(['cosign-keygen', keys / 'key'], env=env)
+    require(code == 0, 'cosign-keygen without Node: exit %d %r' % (code, err))
+    code, pub2, err = s.cli(['cosign-keygen', keys / 'other'], env=env)
+    require(code == 0, 'cosign-keygen without Node: exit %d %r' % (code, err))
+    store = d / 'store'
+    args = ['init', store, '--store-id', 'no-node', '--cosign-pubkey', pub.strip()]
+    for pol in ('money-parametric', 'money-canonical', 'saga-payout'):
+        args += ['--policy', FIX / (pol + '.json')]
+    code, out, err = s.cli(args, env=env)
+    require(code == 0 and out.startswith('INITIALIZED '), 'init with a cosign key and no --node: exit %d %r %r' % (code, out, err))
+    genesis = (store / 'airlock.wal').read_bytes()
+    fields = genesis[32:32 + int.from_bytes(genesis[28:32], 'little')].decode().split(' ')
+    require(fields[:2] == ['GENESIS', '3'] and fields[4] == '-' and fields[5] == pub.strip(), 'genesis: %r' % fields[:6])
+    with fa.Store(store, node=None, env=env, engine_dir=s.engine_dir) as st:
+        st.open_money('t1', 'o1', 'r0', 'store-refunds', 10000)
+        st.open_saga('t1', 'p1', 'r1', 'payout')
+        h = st.get('t1', 'o1').state_hash
+        expect(st.refund('t1', 'o1', 'g1', h, 'GOODWILL', 7500), 'REQUIRE_HUMAN_COSIGN', 'no signature, no Node')
+        msg = st.cosign_message(fa.refund_action('t1', 'o1', 'g1', h, 'GOODWILL', 7500))
+        code, other, err = s.cli(['cosign-sign', keys / 'other'], stdin=msg, env=env)
+        require(code == 0, 'cosign-sign without Node: %r' % err)
+        r = expect(st.refund('t1', 'o1', 'g1', h, 'GOODWILL', 7500, other.strip()), 'REQUIRE_HUMAN_COSIGN', 'other key, no Node')
+        require(r.detail == 'COSIGN_INVALID', 'other key detail %r' % r.detail)
+        code, sig, err = s.cli(['cosign-sign', keys / 'key'], stdin=msg, env=env)
+        require(code == 0, 'cosign-sign without Node: %r' % err)
+        try:
+            st.refund('t1', 'o1', 'g2', h, 'GOODWILL', 7500, 'ab' * 64)
+            require(False, 'the SDK sent an old hex signature')
+        except fa.LocalRefusal:
+            pass
+        r = expect(st.refund('t1', 'o1', 'g1', h, 'GOODWILL', 7500, sig.strip()), 'COMMITTED', 'pinned key, no Node')
+        require(r.payload.endswith(' 1'), 'cosign flag: %r' % r.payload)
+        h = st.get('t1', 'p1').state_hash
+        expect(st.commit('saga', tenant='t1', key='p1', request_id='s1', pre_state_hash=h, to_state='IN_FLIGHT', processor='stripe', idempotency_key='i1'),
+               'COMMITTED', 'saga, no Node')
+    require(not marker.exists(), 'a node process was started: %r' % (marker.read_text() if marker.exists() else ''))
+    require(s.effects(store)[-2:] == ['REFUND t1 o1 g1 GOODWILL 7500 1', 'SAGA t1 p1 s1 IN_FLIGHT stripe i1'], 'WAL: %r' % s.effects(store))
+    return 'money + saga + cosign store: keygen, init (Node pin "-"), serve, cosigned commit, saga commit; sentinel node never started; old hex signature refused locally'
+
+
+SEAM_FAKE = '#!/bin/sh\ncat > /dev/null\nprintf \'Good "forge-airlock-cosign" signature for forge-airlock-cosigner with ED25519 key %s\\n\'\n'
+
+
+def seam_probe(s, exe, store, line, fake):
+    """Runs one executable as `<exe> serve <store>` with the cosign test seams set (the reviewer's t7_env idea)."""
+    env = {'PATH': '/usr/bin:/bin', 'AIRLOCK_TEST_SSH_KEYGEN': str(fake), 'AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN': '1'}
+    try:
+        p = subprocess.run([str(exe), 'serve', str(store)], input=(line + '\n').encode(), capture_output=True, timeout=60, env=env)
+    except OSError as e:
+        return 'cannot start (%s)' % e.strerror
+    return p.stdout.decode('ascii', 'replace').strip() or 'exit %d, no answer' % p.returncode
+
+
+def case_py_build_separation(s):
+    """Review F2: after `bin/forge-airlock build`, build/airlock/ holds no binary that accepts the test seams. Every
+    executable file there gets a cosigned REFUND with AIRLOCK_TEST_SSH_KEYGEN=<a stand-in that always says Good> and
+    AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN=1: none may answer COMMITTED. Control: the test-only kill build in
+    build/silicon/test/ DOES commit with the same seams (so the probe can see a seam)."""
+    p = subprocess.run([sys.executable, str(DISPATCHER), 'build'], capture_output=True, timeout=900, cwd=ROOT)
+    require(p.returncode == 0, 'NOT RUN: bin/forge-airlock build gave exit %d %r' % (p.returncode, p.stderr[-400:]))
+    built = ROOT / 'build' / 'airlock'
+    test_build = ROOT / 'build' / 'silicon' / 'test' / 'airlock-engine-kill'
+    d, key, pub = s.keygen('seam-probe')
+    try:
+        st = s.folder('seam-probe')
+        fp = 'SHA256:' + base64.b64encode(hashlib.sha256(base64.b64decode(pub)).digest()).decode().rstrip('=')
+        fake = st / 'ssh-keygen'
+        fake.write_text(SEAM_FAKE % fp)
+        os.chmod(fake, 0o700)
+        sti = lambda b: len(b).to_bytes(4, 'big') + b
+        token = base64.b64encode(b'SSHSIG\0\0\0\1' + sti(base64.b64decode(pub)) + sti(b'forge-airlock-cosign') + sti(b'') + sti(b'sha512')
+                                 + sti(sti(b'ssh-ed25519') + sti(bytes(range(1, 33)) + bytes(31) + b'\x01'))).decode()
+        probed, answers = [], {}
+        for exe in sorted(x for x in built.rglob('*') if x.is_file() and os.access(x, os.X_OK)) + [test_build]:
+            store = st / ('store-%d' % len(answers))
+            code, out, err = s.cli(['init', store, '--store-id', 'probe', '--policy', FIX / 'money-parametric.json', '--cosign-pubkey', pub])
+            require(code == 0, 'init: %r %r' % (out, err))
+            with s.open(store) as h:
+                h.open_money('t1', 'o1', 'r0', 'store-refunds', 10000)
+                hs = h.get('t1', 'o1').state_hash
+            answers[exe] = seam_probe(s, exe, store, 'REFUND t1 o1 g1 %s GOODWILL 7500 %s' % (hs, token), fake)
+            if exe != test_build:
+                probed.append(exe.relative_to(ROOT).as_posix())
+        bad = {k.relative_to(ROOT).as_posix(): v for k, v in answers.items() if k != test_build and v.startswith('COMMITTED')}
+        require(not bad, 'a binary in build/airlock/ accepts the test seams (kill build written beside the production engine): %r' % bad)
+        require(not (built / 'airlock-engine-kill').exists(), 'build/airlock/airlock-engine-kill exists')
+        require(answers[test_build].startswith('COMMITTED '), 'control: the test-only kill build did not accept the seams: %r' % answers[test_build])
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+    return 'build/airlock/ after build: %d executables (%s) ignore AIRLOCK_TEST_SSH_KEYGEN; control: build/silicon/test/airlock-engine-kill commits with it' % (
+        len(probed), ', '.join(probed))
+
+
 CASES = [('py_typed', case_py_typed), ('py_cosign', case_py_cosign), ('py_canonical', case_py_canonical),
          ('py_saga_inventory', case_py_saga_inventory), ('py_read', case_py_read), ('py_lease', case_py_lease),
          ('py_kill', case_py_kill), ('py_garbage', case_py_garbage), ('py_protocol', case_py_protocol), ('py_lease_durable', case_py_lease_durable),
          ('ts_typed', case_ts_typed), ('ts_read', case_ts_read), ('ts_lease', case_ts_lease), ('ts_kill', case_ts_kill), ('ts_garbage', case_ts_garbage),
          ('ts_protocol', case_ts_protocol), ('py_read_tricks', case_py_read_tricks), ('py_lease_bound', case_py_lease_bound),
-         ('ts_read_tricks', case_ts_read_tricks)]
+         ('ts_read_tricks', case_ts_read_tricks), ('py_no_node', case_py_no_node), ('py_build_separation', case_py_build_separation)]
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--engine-dir', required=True)
+    ap.add_argument('--kill-engine', default=str(ROOT / 'build' / 'silicon' / 'test' / 'airlock-engine-kill'))
     ap.add_argument('--node', default='/opt/homebrew/bin/node')
     ap.add_argument('--case', action='append', choices=[n for n, _ in CASES])
     ap.add_argument('--keep', action='store_true')

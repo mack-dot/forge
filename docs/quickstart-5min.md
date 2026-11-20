@@ -53,7 +53,8 @@ bin/forge-airlock init build/quickstart/store --store-id quickstart \
 ```
 
 `--node` makes the store pin the SHA-256 of that Node binary. The engine requires it
-for a store with a cosign key or an inventory policy. Each store gets a random nonce in
+only for a store with an inventory policy (the booking checker runs in Node). A store
+with money, saga and cosign policies needs no Node at all. Each store gets a random nonce in
 its genesis record, so its state hashes differ from those of every other store.
 
 The two policies are a money policy ([refunds.json](../examples/unbreakable_store/policies/refunds.json))
@@ -223,17 +224,25 @@ The opener of a key is trusted. The `original` amount, the facts (for example
 authenticates the tenant field. The money caps (for example disasters 2 and 3 of the
 demo) block only relative to the values given at open.
 
-What pins what: the engine pins the refund binary (compiled-in SHA-256) and the two Node
-helpers (compiled in); the booking helper pins the checker model; the store pins the
-SHA-256 of the Node binary at `init`. A file that is swapped after its check is not
-detected. Nothing in this repository pins the engine binary itself.
+What pins what: the engine pins the refund binary (compiled-in SHA-256) and the Node
+booking helper (compiled in); the booking helper pins the checker model; the store pins the
+SHA-256 of the Node binary at `init` (inventory only). The engine checks
+`/usr/bin/ssh-keygen` before its first cosign in a process (owned by root, not writable by
+group or other, no symbolic link on its path) but does not pin it: an OS update must not
+lock every store. `bin/forge-airlock cosign-info` prints its SHA-256 and version so that
+you can record them. A file that is swapped after its check is not detected. Nothing in
+this repository pins the engine binary itself.
 
 ## Cosign: the same-OS-user limit
 
 A refund above the cosign limit commits only with an Ed25519 signature that verifies
-against the public key pinned at `init`. The human signs with
-`bin/forge-airlock cosign-sign <key-file>` (a 0600 key file, opened with `O_NOFOLLOW` and
-checked with `fstat`). The engine holds only the public key.
+against the public key pinned at `init`. The human makes a key with
+`bin/forge-airlock cosign-keygen <new-key-file>` (OpenSSH `ssh-keygen`; it prints the token
+for `init --cosign-pubkey`) and signs the output of `cosign-message` with
+`bin/forge-airlock cosign-sign <key-file>` (a 0600 key file without a passphrase, opened
+with `O_NOFOLLOW` and checked with `fstat`). The tool prints one token: the base64 body of
+the SSHSIG armor without line breaks. The engine holds only the public key and verifies
+with `/usr/bin/ssh-keygen -Y verify`. No Node runs for a cosign.
 
 Limit: if the agent runs as the same OS user as the key owner, it can read a 0600 file.
 "The agent cannot self-cosign" holds only if BOTH conditions hold:
@@ -249,14 +258,15 @@ cosign mechanism, not that separation.
 ## Trusted assumptions
 
 - The Dafny compiler, for the compiled booking checker.
-- Node.js and `node:crypto` (Ed25519 verify for the cosign; the booking checker runs in
-  Node).
+- The system OpenSSH, `/usr/bin/ssh-keygen` with its LibreSSL (Ed25519 verify for the
+  cosign). It is smaller than Node and widely reviewed, but it is not zero.
+- Node.js (the booking checker runs in Node; inventory only).
 - `bignumber.js` from the pinned `node_modules`, used by the Dafny JavaScript runtime.
 - The small JSON-to-Dafny generator of `diff-policy` (owner decision; limited by negative
   controls, not proved).
 - The macOS kernel and the drive for `F_FULLFSYNC` and `flock`.
 - Whoever can write the store folder, the engine binary, the refund binary, Node, the
-  helpers and the checker model.
+  booking helper, the checker model and `/usr/bin/ssh-keygen`.
 
 ## Limits
 
@@ -271,5 +281,5 @@ cosign mechanism, not that separation.
 - The kill tests use SIGKILL. A SIGKILL is not a power loss.
 - Whoever can write the store folder is trusted. FNV-1a-128 is not cryptographic.
 - A helper process runs while the store lock is held (up to 10 s for the binary, 30 s
-  for Node).
+  for Node or ssh-keygen).
 - `end_to_end=false`.

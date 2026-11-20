@@ -26,6 +26,9 @@
 // `original` and facts; the tenant field is not authenticated. "The agent cannot self-cosign" needs BOTH the
 // private key outside the agent's reach AND an agent that cannot write the store folder or run another engine on
 // it (for example `serve` runs under another OS user and the agent holds only its pipe).
+// Cosign: cosignMessage(action) returns the six-line message (`forge-airlock-cosign-v3`); the human signs it with
+// `bin/forge-airlock cosign-sign <key-file>` (OpenSSH ssh-keygen; no Node) and passes the printed token as the
+// `signature` of refund(). The engine verifies it with /usr/bin/ssh-keygen (a trusted assumption).
 // Label: not trusted for a write decision; not proved. FINITE TEST only.
 
 const childProcess = require('node:child_process');
@@ -36,7 +39,9 @@ const DISPATCHER: string = pathMod.join(ROOT, 'bin', 'forge-airlock');
 const MAX_ANSWER = 1 << 17;
 const ID_RE = /^[A-Za-z0-9_-]{1,24}$/;
 const HASH_RE = /^[0-9a-f]{32}$/;
-const SIG_RE = /^[0-9a-f]{128}$/;
+// A cosign signature token: the base64 body of one SSHSIG armor without line breaks (src/airlock/PROTOCOL.md section 7):
+// 256 characters, canonical (the last data character carries no unused bit), ending with "==". The engine checks the rest.
+const SIG_RE = /^[A-Za-z0-9+/]{253}[AQgw]==$/;
 const DIGITS_RE = /^(0|[1-9][0-9]*)$/;
 const MAX_READ_ROWS = 100000;
 const REFUSALS = ['MALFORMED_REQUEST', 'UNKNOWN_KEY', 'HELPER_FAILED', 'BAD_FRAME'];
@@ -208,7 +213,7 @@ function buildLine(op: string, f: Fields): string {
   } else if (op === 'refund') {
     t.push(hash('pre_state_hash', f.pre_state_hash), id('reason', f.reason), amount('amount', f.amount));
     if (f.signature !== undefined && f.signature !== null) {
-      if (typeof f.signature !== 'string' || !SIG_RE.test(f.signature)) throw new LocalRefusal('signature: not 128 lowercase hex digits');
+      if (typeof f.signature !== 'string' || !SIG_RE.test(f.signature)) throw new LocalRefusal('signature: not one SSHSIG token (256 characters of canonical base64; see cosign-sign)');
       t.push(f.signature);
     }
   } else if (op === 'open_saga') {
