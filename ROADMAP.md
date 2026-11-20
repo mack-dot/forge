@@ -28,6 +28,33 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Video cut, a 1-take runner and a storyboard for a 65-second cut over nine domains: every verdict is the answer of a real process; a finite test of the unproved native engine; one review with repairs; NOT merged — U860 to U863
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected or frozen file changed.
+Branch `demo/video-storyboard` from `33055a59`; NOT merged by the
+agent. Nothing is proved by this work: every row is a finite test on one
+machine under load. The engine is a NATIVE CHECK (Rust).
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `python3 bin/forge-airlock build` (first orchestrator) |0|engine, kill-points build, checker model |
+| `run_recording_take.py --check-domain <name>`, eight domains, single runs |0 each|domain 6 needs the heavy lock and ran only in the full takes |
+| the one fresh-context review |4 FAKE; 3 FAIL-OPEN; 6 OVERCLAIM; 5 MISMATCH; 7 LOW|repaired in one pass; the repairs were not reviewed again (U861) |
+| `python3 demos/video_cut/test_video_cut.py`, attempts 1 to 3 |1; 1; 0|a crash in domain 6; a wrong required count left in a file (U860); 39 of 39 checks, with one full `--fast --flood-mb 16` take (68 shots) |
+| `run_recording_take.py --auto --no-model --flood-mb 16`, attempts 1 and 2 |2; 0|race 1 COMMITTED, 49 STALE_STATE_HASH, 0 other, 1 WAL record; 32 allowed, 21 blocked, 0 failed checks |
+| `run_recording_take.py --auto --flood-mb 16` with the live model, attempts 1 and 2 |2; 0|model `claude-haiku-5-5`, status 200; the reply did not hold the injected command; the engine requests are scripted worst cases |
+| live guard sabotage inside each exit-0 take |0 (normal engine); 1 (sabotaged)|the check can fail; the sabotaged engine did not commit the payment (U861) |
+| regression on a scratch clone of `84743e7a`: 28 Stage EXIT cases; `check_frozen_pr_gate.py HEAD`; links of 8 files; six EXIT scripts, each `--case evidence` |0 each (28); 0; 0 each (8); 0 each (6)|six bundles byte-identical to their records; 0 protected paths |
+| `check_links.py HEAD docs/VIDEO_STORYBOARD.md` |0|24 relative links, 0 missing |
+| the 10 GiB flood; a `--step` take; `--sound`; Stages 7, 9, 10; every HOL and Dafny verify step; a second review |NOT RUN|not part of this work |
+
+[Storyboard](docs/VIDEO_STORYBOARD.md).
+Departures from the directive are in U862. "Proved" applies only to the
+Dafny source of the booking checker; the CakeML/HOL4 refund chain has an
+open premise. A SIGKILL is not a power loss. One race is not all
+schedules. M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
