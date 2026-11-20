@@ -19914,3 +19914,24 @@ curl: (6) Could not resolve host: github.com
 - Hosted `gate/pr_check.py`: NOT RUN at the commit that adds this entry. Expected exit 3 (UNSUPPORTED). See U807.
 - NOT RUN: Stages 7, 9, 10; a clean or independent HOL replay; the S3a Dafny run (1,486).
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on the pull request.
+
+## U807 — APEX-2: the regression in a scratch clone, the hosted check, and what the records commits hold
+
+- Refs U806 (its three "NOT RUN at the commit" lines are resolved here), U724 (the same check for goal 20). Evidence:
+  `proposals/apex2-contract-link-20261119/records/regression.json`; `proposals/apex2-contract-link-20261119/run_regression.py`
+  (the goal 20 runner; the tool folders are linked from the owner's checkout because a worktree has none; other link list).
+- Actual: a throwaway clone of commit `6606720f` (merge base with `origin/main`: `9a9a8943`). 28 of 28 Stage EXIT cases
+  exit 0. `check_frozen_pr_gate.py HEAD` exit 0. `check_links.py` exit 0 for `FORGE_MASTER_IDEA.md`, `ROADMAP.md`,
+  `unsure.md`, two earlier reports and the three new documents: 0 dangling links. Six EXIT scripts with `--case evidence`
+  exit 0; bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…` byte-identical to the
+  tracked records. Protected paths changed against the merge base: 0.
+- A "Goal 21 Intent" bundle is named in the owner's hard rule 2. It is not on `main` at `9a9a8943`. It was NOT checked.
+- The regression waited for heavy jobs of two other teams; the machine was shared during the run.
+- Hosted `gate/pr_check.py` on pull request 66, head `6606720f`, run 44661325260: actual exit 3, outcome UNSUPPORTED. That
+  is the expected result for a pull request that changes only proposals and records.
+- My error, recorded: records commit `b8c1e92d` says in its message that it holds this entry. It holds only the regression
+  record and the changed README lines: a script of mine stopped before it wrote `ROADMAP.md` and this file. This entry and
+  the two changed `ROADMAP.md` rows are in the commit after `b8c1e92d`. No result changed.
+- The regression did NOT run on the two records commits (documents only). Their hosted results are in the pull request.
+- NOT RUN: Stage 7, Stage 9, Stage 10; a clean or independent HOL replay.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on pull request 66.

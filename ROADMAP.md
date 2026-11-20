@@ -49,8 +49,8 @@ changed class.
 | `dafny verify HolSlice.dfy` (includes `SliceTheorem.dfy`) |0|"1583 verified, 0 errors"; `FlatContract` ⇔ the printed formula on codes; A6 restated, also on byte inputs only |
 | `controls/eval_controls.py` (32 negative controls) |0|32 of 32 count: 9 HOL statement and 5 export controls exit 1 at the named theorem or pin; 3 printer controls pass HOL (exit 0) and are refused by the pin and by Dafny; 15 Dafny controls refused |
 | the one fresh-context review |1 FAIL-OPEN; 1 HIGH; 7 MEDIUM; 4 LOW; 3 NOTE|the FAIL-OPEN and the HIGH were in `check_link.py`; repaired in one pass; 3 findings stated only; NOT reviewed again |
-| regression on a scratch clone: 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links of 8 files; six EXIT scripts, each `--case evidence` |NOT RUN at this commit|added by the records commit |
-| `gh pr create`; hosted `gate/pr_check.py` |NOT RUN at this commit|expected exit 3 (UNSUPPORTED) |
+| regression on a scratch clone: 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links of 8 files; six EXIT scripts, each `--case evidence` |0 each (28); 0; 0 each (8); 0 each (6)|commit `6606720f`, base `9a9a8943`; bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…` byte-identical to the tracked records; 0 protected paths changed |
+| pull request 66; hosted `gate/pr_check.py` at `6606720f` (run 44661325260) |3|UNSUPPORTED, as expected; later commits are documents only and their hosted result is in the pull request |
 | a clean or independent HOL replay; the Dafny S3a run (1,486); Stages 7, 9, 10; a second review |NOT RUN|not part of this work |
 
 [Package](proposals/apex2-contract-link-20261119/README.md).
