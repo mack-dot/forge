@@ -21066,6 +21066,62 @@ curl: (6) Could not resolve host: github.com
 - No tracked evidence record, no bundle subject and no protected path changes. `README.md` changes in two places.
 - Impact: none on any stage label. `end_to_end=false`. Next check: the owner's review; a fresh third-party notice list.
 
+## U925 — HAL 9000 demo restored on `main` from commit `ff03fac3` (owner's word of 2026-11-20): what was brought, what was adapted, actual results, and what stays NOT TESTED
+
+- Refs U745, U746, U747, U748 (the demo's records on its old branch, not on `main`), U750 (native cosign), U887 to
+  U893 (engine hardening), U920 (release audit: HAL NOT PRESENT). The owner deleted the demo on 2026-11-20 and asked
+  on 2026-11-20 to bring it back onto `main`. Branch `demo/hal-9000` from `origin/main` `b1c98822`.
+- Brought: `demos/hal_9000/**` only (18 files, byte-equal to `ff03fac3` except the text changes below). NOT brought:
+  the old branch's copies of `src/airlock/`, `sdk/`, `bin/forge-airlock`, `scripts/exit_goal20_sdk.py`,
+  `docs/quickstart-5min.md`, `tests/airlock/` (main's versions are newer: pull requests 72 and 73).
+- Adapted: text only. The demo already called `cosign-keygen` and `cosign-sign` without `--node` and used no
+  kill-points build, so the engine of `main` ran it without a code change. Changed: the trust-limit line and the
+  `hal_agent.py` docstring (the Node-swap attack was on the old Goal 20 engine), the Act 2 note (no Node runs), the
+  credits engine label, the request-id limit (per tenant since review D3; every party uses the tenant `crew`, which
+  is not authenticated, so the denial-of-service limit still holds), the README test list (it named cases that the
+  suite does not have), the owner's sudo steps in the README, and the owner's login name in `vault/README.md`.
+- Actual results (2026-11-20, shared machine, load average about 15): `test_hal_demo.py` exit 0, 26 of 26 (twice);
+  the show `--fast --no-color` with the 10 GiB flood exit 0, 32 of 32 checks; with a logging `node` stand-in first in
+  `PATH` the stand-in was never started (exit 0); `--engine-dir /nonexistent/engine` exit 2; `vault/test_vault.py`
+  exit 0, 20 of 20 (one user); `setup_vault.sh --dry-run` exit 0. All with no model key in the environment.
+- The "no Node" statement is a finite observation of one run with a stand-in, plus reading `bin/forge-airlock`
+  (`cosign-keygen`, `cosign-sign` start `cosign_tool.py` with `/usr/bin/ssh-keygen`); it is not a trace of every
+  process (macOS has no unprivileged exec trace).
+- NOT TESTED: OS user separation (vault and nobody modes) until the owner runs the `sudo` steps printed in
+  `demos/hal_9000/README.md`; the interactive mode against a real model service; another machine.
+- Open for the owner: the film characters belong to another party (rights question for a public launch, raised
+  before, still the owner's); the cost of a live model per turn. Labels: NATIVE CHECK (engine), FINITE TEST (demo).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. NOT pushed; NOT merged. Next check: the
+  orchestrator's regression and the owner's review of the pull request.
+
+## U926 — Discovery One web showcase restored on `main` from commit `3731ab8e` (owner's word of 2026-11-20): the header defect, actual results, and what stays NOT RUN
+
+- Refs U749 (the showcase's record on its old branch, not on `main`), U925 (the HAL demo it stacks on), U920 (release
+  audit: web NOT PRESENT). Branch `demo/discovery-one-web` on `demo/hal-9000`.
+- Brought: `web/**` only (44 files). No backend code change was needed: the backend already drove `init` without
+  `--node`, `cosign-keygen` without options, and one `serve` per store through `sdk/py/forge_airlock.py`.
+- Defect found and repaired: the `<h1>` of `Experience.tsx` had the text `DISCOVERY ONE` and then a `<span>` with
+  no space between them (JSX drops the line break). The rendered text was `DISCOVERY ONEFORGE AIRLOCK SHOWCASE`; the
+  `ml-3` margin hid it on wide screens only (the owner saw `COVERY ONEFORGE`). Shown by a server-side render of the
+  component with React's own renderer, before (exit 1) and after (exit 0). The compiled chunk now holds
+  `"DISCOVERY ONE"," "`. Not seen in a browser.
+- Actual results (2026-11-20, no model key in the environment): backend 51 tests exit 0 (twice); typecheck, lint
+  and build exit 0 (twice); live HTTP on 127.0.0.1 against the real backend: every route answered 200, the vent and
+  the 5 presets got the expected refusals, free text got `no_model`, telemetry `ALIVE`; no HTTP 500 in the logs.
+- Positive control: a second process opened a key on the live store through its own engine; telemetry turned to
+  `LOST`, `reconciled` false, 1 unauthorised effect listed; the page component rendered with that real answer shows
+  `data-breach="true"` and the BREACH banner, and with the clean answer none. The red colour is read from the CSS.
+  The seeding of the page state for this render is a scratch method (the state normally comes from a fetch in an
+  effect), so it is not a browser test.
+- NOT RUN: the headless-Chrome scripts (`browser-check.mjs`, 79 checks against a test double; `real-backend-run.mjs`)
+  because of the process limit on the shared machine; a real model; a Linux build; Safari, Firefox, a phone, a screen
+  reader; any deployment.
+- Open for the owner before any public launch: film characters that another party owns (rights; raised before);
+  each model turn spends the owner's API key (the daily budget counter is in memory only); hosting, TLS and a
+  separate OS user for `serve` (none built).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. NOT pushed; NOT merged. Next check: the browser
+  scripts on a quiet machine; the orchestrator's regression; the owner's review.
+
 ## U927 — Test hygiene: the changed copy `S2_shared_lock` left one hung `serve` process per run; the repair and the new teardown check
 
 - Refs U910, U912, U920. Branch `fix/s2-shared-lock-teardown` from `b1c98822`; NOT pushed; NOT merged.
