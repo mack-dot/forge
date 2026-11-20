@@ -85,15 +85,14 @@ impl Ledger {
         self.keys.get_mut(key).filter(|k| k.tenant == tenant)
     }
     fn genesis(&mut self, t: &[&str], hash: u128) -> Option<()> {
-        let ["GENESIS", "2", store_id, nonce, node_pin, pubkey, n, pins @ ..] = t else { return None };
+        // Version 3 (Apex addendum): the cosign key is the base64 blob of an OpenSSH ssh-ed25519 public key.
+        let ["GENESIS", "3", store_id, nonce, node_pin, pubkey, n, pins @ ..] = t else { return None };
         let hexn = |s: &str, n: usize| s.len() == n && s.bytes().all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b));
         if !hexn(nonce, 32) || !(*node_pin == "-" || hexn(node_pin, 64)) { return None }
-        if *pubkey != "-" && crate::pin::weak_ed25519(pubkey) { return None }
+        if *pubkey != "-" && crate::cosign::key_token_refused(pubkey) { return None } // strict token, no weak key
         let count: usize = n.parse().ok().filter(|c: &usize| c.to_string() == *n)?;
         let n = count;
         if !canonical_id(store_id) || pins.len() != 3 * n { return None }
-        let key_ok = *pubkey == "-" || (pubkey.len() == 64 && pubkey.bytes().all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)));
-        if !key_ok { return None }
         for p in pins.chunks(3) {
             let ok = canonical_id(p[0]) && ["money", "saga", "inventory"].contains(&p[1]) && !self.pins.iter().any(|x| x.name == p[0]);
             if !ok { return None }

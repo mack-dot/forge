@@ -13,6 +13,9 @@ decisions have a PROVED CORE part:
 - a `BOOK`: the Dafny-compiled `BookingDualCert` checker (`booking_check.cjs`, run by
   Node) must accept. The Dafny compiler and Node are trusted.
 
+A cosign signature is verified by the system OpenSSH (`/usr/bin/ssh-keygen -Y verify`,
+section 7). No Node runs for a cosign. A store without an inventory policy needs no Node.
+
 Every rule of this file holds only for a caller that reaches the store THROUGH the
 production engine. Read section 11 ("Trust boundary") before you rely on any of them.
 
@@ -20,32 +23,48 @@ production engine. Read section 11 ("Trust boundary") before you rely on any of 
 
 ```sh
 rustc --edition 2021 -D unsafe_code -C opt-level=3 src/airlock/main.rs -o build/airlock/airlock-engine
-rustc --edition 2021 -D unsafe_code -C opt-level=3 --cfg kill_points src/airlock/main.rs -o build/airlock/airlock-engine-kill
+rustc --edition 2021 -D unsafe_code -C opt-level=3 --cfg kill_points src/airlock/main.rs -o build/silicon/test/airlock-engine-kill
 ```
+
+The second line is the TEST-ONLY build (live test seams). It goes to `build/silicon/test/`,
+never beside the production engine in `build/airlock/` (review F2). `build/silicon/` is the
+raw-output folder of `scripts/exit_silicon_sink.py`; that script writes `native_sink`,
+`native_sink_kill`, `interpose.dylib`, `bin/` and `<case>/attempt-*` (case `build`, `suite`,
+`mutations` or `evidence`) there, so `test/` collides with none of them. `bin/forge-airlock
+build` removes an old `build/airlock/airlock-engine-kill`. Case `py_build_separation` of
+`tests/airlock/test_sdk.py` runs every executable in `build/airlock/` with the cosign test
+seams set: none may commit. In the EXIT script the attempt's kill build lies in
+`<attempt>/build/test/`, apart from the engine folder that the SDKs, the demo and the fuzz
+pass use.
 
 Standard library only. No crate, no Cargo. `#![forbid(unsafe_code)]`. Modules:
 `main.rs` (CLI, `serve`, answers, codes), `store.rs` (records, WAL, ratchet, `init`),
 `ledger.rs` (the fold), `policy.rs` (policy files, money rules, native `Accepts`),
-`verbs.rs` (request verbs, read airlock), `helpers.rs` (subprocesses), `json.rs`
-(strict JSON parser), `pin.rs` (std-only SHA-256, weak Ed25519 key check).
+`verbs.rs` (request verbs, read airlock), `helpers.rs` (subprocesses), `cosign.rs`
+(strict base64, the SSHSIG form, the call of `/usr/bin/ssh-keygen`), `json.rs` (strict
+JSON parser), `pin.rs` (std-only SHA-256, weak Ed25519 key check).
 
-The two Node helpers `src/airlock/node/cosign.cjs` and `booking_check.cjs` are compiled
-INTO the engine (`include_str!`). The engine runs them as `<node> -e <source> -- <args>`;
-it reads no helper file at run time. A change of a helper needs a rebuild of the engine.
+The Node helper `src/airlock/node/booking_check.cjs` (inventory only) is compiled INTO the
+engine (`include_str!`). The engine runs it as `<node> -e <source> -- <args>`; it reads no
+helper file at run time. A change of the helper needs a rebuild of the engine. The Node
+cosign helper `cosign.cjs` is deleted (Apex addendum). The human's cosign tools are
+`src/airlock/py/cosign_tool.py` (Python stdlib; it runs `/usr/bin/ssh-keygen`).
 
 Test seams, live ONLY in the `--cfg kill_points` build (in the production build the code
 is present but `cfg!(kill_points)` is false, so the variables are ignored):
 `AIRLOCK_KILL_AT` / `AIRLOCK_KILL_SPLIT` (kill points), `AIRLOCK_TEST_HELPERS=<dir>`
-(run `<dir>/cosign.cjs` or `<dir>/booking_check.cjs` instead of the embedded source),
-`AIRLOCK_TEST_UNPINNED_BINARY=1` (skip the refund binary pin). The stand-in helper and
-stand-in binary cases of `tests/airlock/test_engine.py` run through the kill-points build;
-case `seams` checks that the production build ignores both seams.
+(run `<dir>/booking_check.cjs` instead of the embedded source),
+`AIRLOCK_TEST_UNPINNED_BINARY=1` (skip the refund binary pin), `AIRLOCK_TEST_SSH_KEYGEN=<path>`
+(run another program in place of `/usr/bin/ssh-keygen`; the ownership and link checks still
+apply) and `AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN=1` (skip those checks, for stand-in programs
+owned by the test user). The stand-in cases of `tests/airlock/test_engine.py` run through
+the kill-points build; case `seams` checks that the production build ignores the seams.
 
 ## 2. Subcommands
 
 | Command | Output (one line unless stated) | Exit |
 | --- | --- | --- |
-| `init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64] [--node P]` | `INITIALIZED <store_id> <genesis_hash>` | 0, or a code |
+| `init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey KEY] [--node P]` | `INITIALIZED <store_id> <genesis_hash>` | 0, or a code |
 | `serve <dir> [--refund-binary P] [--node P] [--checker MODEL]` | one answer line per request line | code of the last answer; 2 if no line |
 | `state <dir>` | `STATE <epoch> <tail_hash> <store_id> keys=<n> effects=<n> leases=<n>` | 0 |
 | `get <dir> <tenant> <key>` | as the `GET` verb | 0, 16, 21 |
@@ -55,25 +74,31 @@ case `seams` checks that the production build ignores both seams.
 | `leases <dir> --sweep [--now MS]` | `SWEEP <open> <dropped> now=<MS>`, then one line `DROPPED_OBLIGATION <request_id> <deadline_ms> <tenant> <key>` per open lease with `now > deadline_ms` | 0 none dropped; 24 at least one |
 | `eval <policy.json>` | one answer per stdin line (section 6) | 0; 25 bad policy |
 | `cosign-message <dir> <action>` | the exact message bytes (6 lines, LF-terminated; section 7) | 0, or a code |
+| `cosign-info` | `COSIGN_INFO path=/usr/bin/ssh-keygen sha256=<64 hex> uid=<n> mode=<octal> checks=<OK or the failed check> walked=<the checked parts, : separated, from /> version=<text of ssh -V>` | 0, 22 |
 | `sha256 <file>` | `SHA256 <64 hex>` (the engine's own SHA-256; for its test vectors) | 0, 18 |
+| `base64-decode <token>` | `BASE64 <hex of the bytes>`, or `MALFORMED_REQUEST BAD_BASE64` (the strict decoder of section 7; for its test vectors) | 0, 12 |
 
 - `--store-id` absent: the engine makes `st-` and 21 hex digits from the clock and the
   process id. Not random in a cryptographic sense.
 - `--now` is only valid with `--sweep`; `--sweep` and `--all` together are a usage error.
   Without `--now`, the sweep uses the system clock in milliseconds since the Unix epoch.
+- `init --cosign-pubkey KEY`: KEY is the middle field of an OpenSSH `.pub` line of an
+  Ed25519 key (what `bin/forge-airlock cosign-keygen` prints): exactly 68 characters of
+  canonical base64 that decode to the `ssh-ed25519` wire encoding (string `ssh-ed25519`,
+  string of 32 bytes). Anything else: `MALFORMED_REQUEST BAD_PUBKEY` (the old 64-hex form
+  too). A small-order or non-canonical key: `MALFORMED_REQUEST WEAK_PUBKEY` (section 7).
 - `init --node P`: the engine computes the SHA-256 of the file P and binds it in the
-  genesis record. `--node` is REQUIRED when `--cosign-pubkey` is given or a policy is an
-  inventory policy (`MALFORMED_REQUEST NODE_REQUIRED`); else it is optional. `init`
-  refuses a small-order or non-canonical public key (`MALFORMED_REQUEST WEAK_PUBKEY`,
-  section 7) and fails if `/dev/urandom` cannot be read (`IO_ERROR NO_RANDOM`).
+  genesis record. `--node` is REQUIRED only when a policy is an inventory policy
+  (`MALFORMED_REQUEST NODE_REQUIRED`); else it is optional. A cosign key needs no Node.
+  `init` fails if `/dev/urandom` cannot be read (`IO_ERROR NO_RANDOM`).
 - A sweep is read-only: it writes no record. A dropped lease stays open. The next sweep
   reports it again.
 - Every command except `init` and `eval` takes the store lock and runs recovery first
   (section 4). They need write access to the store.
 - `serve` takes the lock per request, not for its lifetime. Many `serve` processes can
   work on one store at once.
-- `serve --node P`: an absolute path to the Node binary. Before the first helper call of
-  the process, the engine computes the SHA-256 of P and compares it with the store's pin
+- `serve --node P`: an absolute path to the Node binary (only a `BOOK` uses it). Before the
+  first booking helper call of the process, the engine computes the SHA-256 of P and compares it with the store's pin
   (once per process; the result is kept for the process). A difference:
   `HELPER_FAILED PIN_MISMATCH ...`; an unreadable file: `HELPER_FAILED PIN_UNREADABLE ...`;
   a store with no pin: `HELPER_FAILED NO_NODE_PIN ...`. `--refund-binary P`: before its
@@ -98,7 +123,9 @@ case `seams` checks that the production build ignores both seams.
 - Amount (`original`, `amount`, fact value, capacity, `deadline_ms`): `0` or a nonzero
   digit followed by up to 18 digits; at most `9223372036854775807` (MaxMoney).
 - Hash (`pre_state_hash`, `state_hash`): exactly 32 lowercase hex digits.
-- Signature: exactly 128 lowercase hex digits. Public key: exactly 64 lowercase hex.
+- Signature (`REFUND`): one token of exactly 256 characters, the base64 body of one SSHSIG
+  armor (`-----BEGIN SSH SIGNATURE-----`) with its line breaks removed; canonical base64
+  (section 7). Public key (`init`): 68 characters of base64 (section 2).
 
 ## 4. Store and record layout
 
@@ -134,7 +161,7 @@ Payloads:
 
 | Payload | Effect | Written by |
 | --- | --- | --- |
-| `GENESIS 2 <store_id> <nonce 32 hex> <SHA-256 of Node, 64 hex, or -> <pubkey or -> <n> [<policy> <money or saga or inventory> <fnv128 of the file>]×n` | store | `init` |
+| `GENESIS 3 <store_id> <nonce 32 hex> <SHA-256 of Node, 64 hex, or -> <cosign key token (68 base64 characters) or -> <n> [<policy> <money or saga or inventory> <fnv128 of the file>]×n` | store | `init` |
 | `OPEN_MONEY <tenant> <key> <request_id> <policy> <original> [<fact>=<value>]...` (facts sorted by name) | yes | `OPEN_MONEY` |
 | `REFUND <tenant> <key> <request_id> <reason> <amount> <0 or 1>` (1 = cosigned) | yes | `REFUND` |
 | `OPEN_SAGA <tenant> <key> <request_id> <policy> <initial>` | yes | `OPEN_SAGA` |
@@ -165,6 +192,9 @@ ratchet entry -> `sync_all` -> lock released -> answer line. `sync_all` is
   is not valid, anywhere, is `CORRUPT_WAL`. A ratchet maximum above the last epoch is
   `EPOCH_REGRESSION` (an older WAL with the present ratchet).
 - A policy file whose FNV-1a-128 differs from its genesis pin: `CORRUPT_WAL POLICY_CHANGED`.
+- A store of the Node cosign engine (genesis version 2): `CORRUPT_WAL STORE_VERSION_2 ...`
+  for every command. It is never read as version 3. There is no migration: its key is a raw
+  hex key and its signatures are raw Ed25519 signatures of the version-2 message.
 - `init` builds the store in a fresh sibling folder `<dir>.init-<pid>-<ns>`, syncs every
   file and that folder, renames it to `<dir>`, and syncs the parent folder. It refuses
   when `<dir>` exists in any form (`IO_ERROR STORE_EXISTS`). A failure before the rename
@@ -318,9 +348,11 @@ caps are only as good as the opener's values: an opener that writes `original=10
    fact cap; else `REJECTED_POLICY NO_RULE`.
 6. `REQUIRE_HUMAN_COSIGN` becomes a commit only with a valid signature (section 7).
    Without one: `REQUIRE_HUMAN_COSIGN COSIGN_REQUIRED`; no pinned key:
-   `REQUIRE_HUMAN_COSIGN NO_COSIGN_KEY`; helper answer `INVALID`:
-   `REQUIRE_HUMAN_COSIGN COSIGN_INVALID`. A signature on a request whose verdict is
-   `COMMIT` is ignored (the record has cosign flag 0).
+   `REQUIRE_HUMAN_COSIGN NO_COSIGN_KEY`; a signature by another key or one that
+   ssh-keygen answers "incorrect signature": `REQUIRE_HUMAN_COSIGN COSIGN_INVALID`. A
+   signature token that is not the one accepted form is `MALFORMED_REQUEST BAD_SIGNATURE`
+   (grammar, also on a request whose verdict would be `COMMIT`). A well-formed signature on
+   a request whose verdict is `COMMIT` is ignored (the record has cosign flag 0).
 
 `eval <policy.json>`: stdin lines
 `EVAL <reason> <amount> <remaining> <reason_total> [<fact>=<value>]...`; answers
@@ -359,41 +391,135 @@ Policy: `{"airlock": "money", "version": 1, "name": "<name>", "profile": "canoni
 
 ## 7. Cosign
 
-Message (`cosign.cjs` enforces the same form; at most 4,096 bytes; exactly six
-LF-terminated lines):
+Apex addendum (owner decision 2026-11-19): the Node helper `cosign.cjs` is gone. The engine
+verifies a cosign with the system OpenSSH, `/usr/bin/ssh-keygen -Y verify`. No Node and no
+V8 run for a cosign. Measured here: OpenSSH_10.3p1 with LibreSSL 3.3.6 (macOS).
+
+Message (at most 4,096 bytes; exactly six LF-terminated lines; `cosign_tool.py sign`
+refuses any other form):
 
 ```text
-forge-airlock-cosign-v2\n<store_id>\n<genesis_hash>\n<request_id>\n<pre_state_hash>\n<action>\n
+forge-airlock-cosign-v3\n<store_id>\n<genesis_hash>\n<request_id>\n<pre_state_hash>\n<action>\n
 ```
 
-- `store_id` `[A-Za-z0-9_-]{1,24}` (the helper allows up to 64); `genesis_hash` 32
-  lowercase hex: the FNV-1a-128 of this store's genesis record, which holds the random
-  nonce, so a signature for one store never verifies on another store with the same id,
-  policies and key; `request_id` `[A-Za-z0-9_-]{1,24}`; `pre_state_hash` 32 lowercase hex;
-  `action` printable ASCII, at least 1 byte.
+- `store_id` `[A-Za-z0-9_-]{1,24}`; `genesis_hash` 32 lowercase hex: the FNV-1a-128 of this
+  store's genesis record, which holds the random nonce, so a signature for one store never
+  verifies on another store with the same id, policies and key; `request_id`
+  `[A-Za-z0-9_-]{1,24}`; `pre_state_hash` 32 lowercase hex; `action` printable ASCII, at
+  least 1 byte.
 - `action` = the `REFUND` line without the signature field:
   `REFUND <tenant> <key> <request_id> <pre_state_hash> <reason> <amount>`. No field can
   hold a line end, so no field boundary can move.
+- Version 3 (was 2): the signature form changed. A version-2 signature never verifies.
 - `cosign-message <dir> "<action>"` prints these bytes (it refuses an action with a
-  signature field). The human signs them with `node cosign.cjs sign <key-file>`; the tool
-  shows the six fields on stderr first.
+  signature field). The human signs them with `bin/forge-airlock cosign-sign <key-file>`
+  (`src/airlock/py/cosign_tool.py`); the tool shows the six fields on stderr first.
 
-Verification: `<node> -e <embedded cosign.cjs> -- verify <pinned public key> <signature>`,
-message on stdin, cleared environment, the Node binary pinned (section 2), stdout bound
-9 bytes, stderr bound 4,096 bytes, time limit 30 s. `VALID\n` + exit 0 + empty stderr:
-commit (cosign flag 1). `INVALID\n` + exit 1 + empty stderr:
-`REQUIRE_HUMAN_COSIGN COSIGN_INVALID`. Anything else (no node, a pin mismatch, a timeout,
-other bytes, a signal, text on stderr): `HELPER_FAILED`. The engine never reads a private
-key.
+Human tools (`src/airlock/py/cosign_tool.py`, Python stdlib, no Node):
 
-Weak keys: `init` and `cosign.cjs verify` (exit 2) refuse a public key, and `verify`
-refuses a signature whose R, that is a small-order or non-canonical Ed25519 encoding:
-the 5 values of libsodium's blocklist (`has_small_order` in
-`src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c`) compared with bit 255
-cleared, which covers the 8 torsion points and their non-canonical encodings (14 byte
-strings; see Chalkias, Garillot, Nikolaenko, "Taming the many EdDSAs", 2020), and every
-y >= p = 2^255 - 19. The suites check that each listed point has an order that divides
-8 (a computation in the test, not a proof).
+- `cosign-keygen <new-key-file>`: `ssh-keygen -t ed25519 -N '' -q -C ''` into a private
+  0700 folder, checks that the key is a regular 0600 file of the caller, moves it into place
+  with `link(2)` (never overwrites; a symbolic link at the path is not followed), syncs it
+  and its folder, prints the key token for `init --cosign-pubkey` (68 characters).
+- `cosign-sign <key-file>`: the D-1 key rules (`open` with `O_NOFOLLOW | O_NONBLOCK`;
+  `fstat` of the opened descriptor: regular file, owner = effective uid, no group or other
+  bit, size 1 to 4,096; read from that descriptor: an UNENCRYPTED `openssh-key-v1` key
+  with one `ssh-ed25519` key), the message form, then
+  `ssh-keygen -Y sign -n forge-airlock-cosign -P "" -f <key-file>` with stdin a pipe, an
+  empty environment and a new session (no terminal: a key with a passphrase fails at once;
+  it never prompts). ssh-keygen opens the file again by path; the tool binds the two opens:
+  the key inside the signature must be the key read from the checked descriptor. It prints
+  one token (below).
+
+Signature token (the last field of `REFUND`): the base64 body of the SSHSIG armor that
+ssh-keygen writes, with the armor lines and the line breaks removed. Exactly 256
+characters. The engine checks it natively, before any store file is opened, in this order;
+the first failure is `MALFORMED_REQUEST BAD_SIGNATURE <part>`:
+
+| Part | Rule |
+| --- | --- |
+| `LENGTH` | exactly 256 characters |
+| `BASE64` | strict base64 (RFC 4648 section 4): standard alphabet, padding only at the end and exactly as long as needed, the unused low bits of the last symbol zero (one spelling per byte string). The decoder is in `cosign.rs`; `base64-decode` exposes it for test vectors |
+| `MAGIC` / `VERSION` | `SSHSIG`, then version 1 (uint32) |
+| `KEY_TYPE` | the public key: string `ssh-ed25519`, string of 32 bytes, nothing else |
+| `NAMESPACE` | `forge-airlock-cosign` |
+| `RESERVED` | empty |
+| `HASH_ALGORITHM` | `sha512` (what OpenSSH 10.3 writes by default; `sha256` is refused) |
+| `SIGNATURE` / `SIGNATURE_TYPE` / `SIGNATURE_LENGTH` / `TRAILING` | one string: string `ssh-ed25519`, string of 64 bytes; no byte after it or after the blob |
+| `WEAK_R` | R (the first 32 signature bytes) is not a small-order or non-canonical encoding (the weak-key rule below) |
+| `S_NOT_CANONICAL` | S (the last 32 bytes, little-endian) < L = 2^252 + 27742317777372353535851937790883648493. ssh-keygen 10.3 accepts S + L (tested); the engine does not |
+
+Then, under the store lock, for a `REQUIRE_HUMAN_COSIGN` verdict: no pinned key:
+`NO_COSIGN_KEY`; the key inside the signature is not the pinned key: `COSIGN_INVALID` (no
+ssh-keygen runs); else the engine runs ssh-keygen:
+
+- program: `/usr/bin/ssh-keygen`, fixed. Before its first use in a process, the engine
+  checks with std only (`symlink_metadata`): no part of the path is a symbolic link, every
+  folder on it (from the root folder `/`, which is checked too) and the file are owned by uid 0 with no group or other write bit, the file
+  is a regular file (`HELPER_FAILED SSH_KEYGEN_UNTRUSTED <check>` otherwise). Its SHA-256
+  is NOT pinned (an OS update would refuse every store); `cosign-info` prints it and the
+  `ssh -V` text so that an operator can record them. Limit: a file swapped after the check
+  is not detected.
+- files: the engine creates `<store>/cosign.tmp` with mode 0700 (exclusive `mkdir`; a
+  leftover of a crash, also a symbolic link, is removed first, under the store lock),
+  checks it is a folder without group or other bits, writes `allowed_signers`
+  (`forge-airlock-cosigner namespaces="forge-airlock-cosign" ssh-ed25519 <pinned key token>`)
+  and `signature` (the armor rebuilt from the token, 70 characters per line) with
+  exclusive create and mode 0600, and removes the folder after the run (a failed removal
+  is cleaned at the next verification). File names are fixed; no request byte reaches a
+  file name or the argv.
+- run: `ssh-keygen -Y verify -f allowed_signers -I forge-airlock-cosigner -n forge-airlock-cosign -s signature`
+  in that folder (relative names), no shell, cleared environment, the message on stdin,
+  stdout bound to the longer expected answer + 1 byte, stderr bound 4,096 bytes, time
+  limit 30 s (SIGKILL).
+
+How the engine tells an invalid signature from a tool fault. Experiment on this machine
+(OpenSSH_10.3p1, LibreSSL 3.3.6), `ssh-keygen -Y verify` with an empty environment:
+
+| Input | Exit | stdout | stderr |
+| --- | --- | --- | --- |
+| valid signature | 0 | `Good "forge-airlock-cosign" signature for forge-airlock-cosigner with ED25519 key SHA256:<fp>` | empty |
+| changed message (any of the six lines), flipped bit in S | 255 | `Could not verify signature.` | `Signature verification failed: incorrect signature` + CR LF |
+| signature of another key (not in allowed_signers) | 255 | `Could not verify signature.` | empty |
+| wrong namespace (in the blob or in `-n`) | 255 | `Could not verify signature.` | `Couldn't verify signature: namespace does not match` |
+| armor body damaged (blob not SSHSIG) | 255 | `Could not verify signature.` | `Couldn't verify signature: invalid format` |
+| armor body not base64 | 255 | `Could not verify signature.` | `sshsig_dearmor: decode base64: invalid format` + `sig_verify: sshsig_armor: invalid format` |
+| no armor header | 255 | `Could not verify signature.` | `Couldn't parse signature: missing header` + ... |
+| malformed allowed_signers line (bad key) | 255 | `Could not verify signature.` | `<file>:1: invalid key` |
+| allowed_signers line that is not a key line, other identity, empty file | 255 | `Could not verify signature.` | empty |
+| allowed_signers without the namespace | 255 | `Could not verify signature.` | `<file>:1: key is not permitted for use in signature namespace ...` |
+| allowed_signers missing / unreadable | 255 | `Could not verify signature.` | `Unable to open allowed keys file ...: No such file or directory` / `Permission denied` |
+| signature file missing | 255 | `Could not verify signature.` | `Couldn't read signature file: No such file or directory` |
+| missing argument | 1 | empty | usage text |
+| S + L in place of S | 0 | the Good line | empty |
+
+The exit code does not separate an invalid signature from a fault (255 for both). So the
+engine takes only two exact results. The native checks above come first: against a caller
+that holds only the request pipe, a signature that reaches ssh-keygen is well formed and
+names the pinned key. That sentence does NOT hold against a process that can write the
+store folder: it can replace the two files in `cosign.tmp` between the engine's write and
+ssh-keygen's read (one review did it: ssh-keygen then verified the attacker's own files in
+about 97% of 40,000 tries; 0 commits). In that case the ONE check that holds is the exact
+compare of the Good line with the fingerprint of the PINNED key:
+
+| ssh-keygen result | Answer |
+| --- | --- |
+| exit 0, stdout exactly the Good line with the SHA-256 fingerprint of the PINNED key + LF, stderr empty, all of stdin written | commit (cosign flag 1) |
+| exit 255, stdout exactly `Could not verify signature.` + LF, stderr exactly `Signature verification failed: incorrect signature` + CR LF, all of stdin written | `REQUIRE_HUMAN_COSIGN COSIGN_INVALID` (terminal; closes a bound lease) |
+| anything else: another exit code, other bytes, text on stderr with exit 0, a signal, a timeout, no program, a failed check of the program, a failed write of the folder or files | `HELPER_FAILED` (not terminal; never a commit) |
+
+When in doubt the answer is the more restrictive one: an unknown text of a later OpenSSH is
+`HELPER_FAILED` (fail closed), never a commit. The engine never reads a private key.
+
+Weak keys: `init` (and the fold) refuse a public key, and the grammar refuses a signature
+whose R, that is a small-order or non-canonical Ed25519 encoding: the 5 values of
+libsodium's blocklist (`has_small_order` in
+`src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c`) compared with bit 255 cleared,
+which covers the 8 torsion points and their non-canonical encodings (14 byte strings; see
+Chalkias, Garillot, Nikolaenko, "Taming the many EdDSAs", 2020), and every y >= p =
+2^255 - 19. The rule is applied to the 32 raw key bytes inside the key token. The suites
+check that each listed point has an order that divides 8 (a computation in the test, not a
+proof).
 
 Who can cosign. "The agent cannot self-cosign" needs BOTH:
 
@@ -483,17 +609,17 @@ Every other refusal has a detail. A parser must accept both forms for every code
 | 2 | `USAGE` | usage | bad arguments; `serve` with no request |
 | 10 | `REJECTED_POLICY` | terminal refusal | detail: `ZERO_AMOUNT`, `TOTAL_CAP`, `REASON_CAP`, `NO_RULE`, `RULE`, `CAKEML_REJECTED`, `UNKNOWN_STATE`, `PROCESSOR_IN_FLIGHT`, `NO_TRANSITION`, `PAIR_REQUIRED`, `PAIR_NOT_ALLOWED`, `CAPACITY_MISMATCH`, `ALPHA_ABOVE_POLICY`, `NOT_BINARY`, `OVERBOOKED`, `DUAL_INFEASIBLE`, `GAP_TOO_LARGE`, `CHECKER_REJECTED` |
 | 11 | `REQUIRE_HUMAN_COSIGN` | terminal refusal | `COSIGN_REQUIRED`, `NO_COSIGN_KEY`, `COSIGN_INVALID` |
-| 12 | `MALFORMED_REQUEST` | refusal | grammar, ids, amounts, `OVERSIZED`, `NO_LINE_END`, `NON_ASCII`, `UNKNOWN_VERB`, `UNKNOWN_POLICY`, `POLICY_KIND`, `KEY_KIND`, `CERT_*`, `OVERFLOW`, `RECORD_NOT_FOLDABLE`; at `init`: `BAD_PUBKEY`, `WEAK_PUBKEY`, `NODE_REQUIRED`, `NODE_UNREADABLE` |
+| 12 | `MALFORMED_REQUEST` | refusal | grammar, ids, amounts, `OVERSIZED`, `NO_LINE_END`, `NON_ASCII`, `UNKNOWN_VERB`, `UNKNOWN_POLICY`, `POLICY_KIND`, `KEY_KIND`, `CERT_*`, `OVERFLOW`, `RECORD_NOT_FOLDABLE`; `BAD_SIGNATURE <part>` (section 7); at `init`: `BAD_PUBKEY`, `WEAK_PUBKEY`, `NODE_REQUIRED`, `NODE_UNREADABLE`; `base64-decode`: `BAD_BASE64` |
 | 13 | `STALE_STATE_HASH` | refusal | detail = the present state hash |
 | 14 | `DUPLICATE_REQUEST_ID` | refusal | id used up; or `OPEN_LEASE` for an id that had a lease (`LEASE_USED`) |
 | 15 | `EPOCH_REGRESSION` | fault | the WAL is older than its ratchet |
 | 16 | `TENANT_ISOLATION_BREACH` | refusal | key of another tenant; read airlock |
-| 17 | `CORRUPT_WAL` | fault | a record, the ratchet or a pinned policy file is not valid |
+| 17 | `CORRUPT_WAL` | fault | a record, the ratchet or a pinned policy file is not valid; `STORE_VERSION_2` (a store of the Node cosign engine) |
 | 18 | `IO_ERROR` | fault | nothing committed; also `STORE_EXISTS` and `NO_RANDOM` at `init` |
 | 19 | `OUTCOME_UNKNOWN` | fault | a record may stay in the WAL; it was not answered as committed |
 | 20 | `DISPATCH_FAILED` | fault | the answer line could not be written; a commit of that line stays committed |
 | 21 | `UNKNOWN_KEY` | refusal | the key was never opened |
-| 22 | `HELPER_FAILED` | refusal | binary, node, model or flag missing; `PIN_MISMATCH`, `PIN_UNREADABLE`, `NO_NODE_PIN`; timeout; any other helper result |
+| 22 | `HELPER_FAILED` | refusal | binary, node, model or flag missing; `PIN_MISMATCH`, `PIN_UNREADABLE`, `NO_NODE_PIN`; `SSH_KEYGEN_UNTRUSTED <check>`, `TMP_NOT_PRIVATE`, `SPAWN_FAILED`; timeout; any other helper result (`HELPER_RESULT ...`), also every ssh-keygen result that is not one of the two exact answers of section 7 |
 | 23 | `BAD_FRAME` | refusal | the refund binary gave no exact frame |
 | 24 | `DROPPED_OBLIGATION` | report | `leases --sweep` found at least one |
 | 25 | `MALFORMED_POLICY` | refusal | `init` or `eval`: a policy file is not valid |
@@ -513,21 +639,46 @@ keep the agent from writing the store folder and from running another engine on 
 example `serve` runs under another OS user that owns the folder, and the agent holds
 only its pipe. The engine cannot check this.
 
+Cosign limits of the same-user threat model (review F1, F9, F7; owner decision: stated, not
+changed):
+
+- A process of the store's own OS user can append a record with cosign flag 1 by hand. The
+  record holds no signature, so no later audit can tell. The separation by OS user ID
+  removes that attacker.
+- A signature has no expiry. It stays valid for its request while the key's state hash is
+  unchanged: a holder of the request pipe can keep a signature back and use it later, as long
+  as no other write changed the key (and FNV-1a-128 collisions can be computed, so the
+  state hash is a weak freshness value). There is no deadline field in the message.
+- A mixed-order public key (a valid key plus a small-order component) is accepted at `init`.
+  The weak-key rule refuses only the small-order and non-canonical encodings; no check that
+  L times the key is the identity is done. No third-party forgery through such a key is known.
+- The kill-points build accepts the test seams (a stand-in verifier commits a cosign).
+  `bin/forge-airlock build` writes it only to the test-only folder `build/silicon/test/`,
+  never into `build/airlock/` (review F2); a deployment copies only `airlock-engine`.
+
 What is pinned by what:
 
 - the refund binary: by the engine (compiled-in SHA-256, checked once per process);
 - the Node binary: by the store (SHA-256 bound in the genesis record at `init`, checked
-  by `serve` once per process before the first helper call);
-- the two helpers: by the engine build (their sources are compiled in; no helper file
-  is read at run time);
+  by `serve` once per process before the first booking helper call); inventory only;
+- the booking helper: by the engine build (its source is compiled in; no helper file is
+  read at run time);
+- `/usr/bin/ssh-keygen`: NOT pinned. The engine checks its path once per process
+  (section 7: root-owned, no group or other write bit, no symbolic link); `cosign-info`
+  prints its SHA-256 for the operator's record;
 - the checker model: by `booking_check.cjs` (its own SHA-256 pin, `O_NOFOLLOW`);
 - the policies: by the genesis record (FNV-1a-128 of each file; not cryptographic);
 - the engine binary itself: by nothing in this repository; whoever starts it chooses it.
 
 Trusted: the macOS kernel and the drive for `F_FULLFSYNC`; `flock`; `/dev/urandom`;
 whoever can write the store folder or start an engine on it; the engine binary;
-Node 24.3.0 with `node:crypto` for Ed25519 (and `bignumber.js` from `node_modules` for
-the model); the Dafny compiler for `model.cjs`. The opener of a key is trusted for its
+the system OpenSSH is a trusted assumption: `/usr/bin/ssh-keygen` (OpenSSH_10.3p1 with
+LibreSSL 3.3.6 on the measured machine) verifies every cosign signature, and an update of
+the operating system can change it without a change of any store (its native checks of
+section 7 come first; an unknown answer is `HELPER_FAILED`); OpenSSH with LibreSSL is now
+in the trusted base for cosign in place of Node/V8: smaller and widely reviewed, but not
+zero; Node 24.3.0 (and `bignumber.js` from `node_modules`) for the booking checker only;
+the Dafny compiler for `model.cjs`. The opener of a key is trusted for its
 tenant, `original` and facts (section 6). A file swapped between its pin check and a
 later exec is not detected.
 
@@ -542,7 +693,8 @@ FNV-1a-128 collisions can be computed: the state hash is a concurrency control, 
 boundary against an attacker. The read airlock checks only the top-level `tenant_id`.
 
 Known limits: a helper subprocess runs while the store lock is held (at most 10 s for
-the binary, 30 s for Node). A `serve` process that waits for the lock waits without a
+the binary, 30 s for Node or ssh-keygen). The cosign folder `<store>/cosign.tmp` exists
+during a verification; a crash can leave it, and the next verification removes it. A `serve` process that waits for the lock waits without a
 bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `replay` and
 `leases` need write access (they run recovery).
 
@@ -557,9 +709,9 @@ bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `repla
 7. An open of an existing key is `STALE_STATE_HASH` (no explicit "absent" hash token).
 8. Extra saga codes: `UNKNOWN_STATE`, `PAIR_REQUIRED`, `PAIR_NOT_ALLOWED`.
 9. A failed fact cap reports `REASON_CAP`, not `NO_RULE`.
-10. A cosign `INVALID` answer is `REQUIRE_HUMAN_COSIGN COSIGN_INVALID` (terminal; it closes a lease).
+10. An invalid cosign is `REQUIRE_HUMAN_COSIGN COSIGN_INVALID` (terminal; it closes a lease).
 11. `cosign-message <dir> <action>` (subcommand first), not `<store> cosign-message`.
-12. Store ids are at most 24 bytes (the helper allows 64).
+12. Store ids are at most 24 bytes.
 13. `EPOCH_REGRESSION` ends `serve` (in `sink.rs` it did not).
 14. A sweep writes no record.
 15. A rule may have the verdict `REJECTED_POLICY` (detail `RULE`).
@@ -572,6 +724,10 @@ bound. A killed `init` can leave a `<dir>.init-*` folder. `state`, `get`, `repla
     `init` takes `--node` and pins it; DESIGN.md had no Node pin.
 19. Leases are bound to a tenant and a key (`OPEN_LEASE <request_id> <deadline_ms>
     <tenant> <key>`), and one request id can have only one lease, ever.
+20. Apex addendum: DESIGN.md's Node Ed25519 helper is replaced by `/usr/bin/ssh-keygen -Y
+    verify`. The cosign key is an OpenSSH `ssh-ed25519` key token, the signature an SSHSIG
+    token, the message `forge-airlock-cosign-v3`, the genesis record version 3 (no
+    version-2 store is read). Node is needed only for the inventory airlock.
 
 ## 13. Mutation seams
 
@@ -585,6 +741,20 @@ result, the order of the lock, or the `DISPATCH_FAILED` code; the cases `trace`,
 `dispatch` and `lock` see them (the test interposer `tests/airlock/interpose.c` traces
 the system calls and injects failed syncs and writes). Results: see the exit script's
 record, not this file.
+
+Review of the native cosign (F2, F4, F6): new copies `F2_kill_build_beside_engine`
+(bin/forge-airlock; case `py_build_separation`), `F4_root_not_walked` (cosign.rs; case
+`cosign_faults`) and `F6_sign_lines_not_crosschecked` (cosign_tool.py; case
+`sign_action_request_id_differs`).
+
+Apex addendum (cosign through `/usr/bin/ssh-keygen`): in the table below, M09 now reads
+`if !cosign::verify(&ctx.dir, &pk, sig, &msg)? {` (verbs.rs) and M10 reads
+`(Some(0), true, o) if o == good.as_bytes() => Ok(true),` (cosign.rs, case
+`cosign_faults`). R1a moved to case `inventory` (the Node pin is now for the booking
+helper only), R1b to the seam `AIRLOCK_TEST_SSH_KEYGEN`. The Node helper copies N01 to
+N05, X06 and R4c of the exit script were replaced by copies of `cosign_tool.py` and
+`cosign.rs`, and new copies (group C) remove the native checks of section 7. The exit
+script is the reference for the exact texts.
 
 Review repair pass (2026-11-19): three texts of the table below no longer occur in the
 source and must be replaced in the exit script (each new text was applied alone, built
@@ -600,13 +770,13 @@ Proposed new seams for the repairs (each was run alone; the case failed):
 
 | Id | File | Exact text | Replacement | Case | Failure text |
 | --- | --- | --- | --- | --- | --- |
-| R1a_node_pin | helpers.rs | `    pinned(&NODE_CHECKED, node, pin, "Node binary")?;⏎` | (empty) | cosign | `a Node binary other than the pinned one` |
-| R1b_seam_in_production | helpers.rs | `if cfg!(kill_points) { std::env::var(var).ok() } else { None }` | `std::env::var(var).ok()` | seams | `with AIRLOCK_TEST_HELPERS: expected REQUIRE_HUMAN_COSIGN COSIGN_INVALID` |
+| R1a_node_pin | helpers.rs | `    pinned(&NODE_CHECKED, node, pin, "Node binary")?;⏎` | (empty) | inventory | `a Node binary other than the pinned one` |
+| R1b_seam_in_production | helpers.rs | `if cfg!(kill_points) { std::env::var(var).ok() } else { None }` | `std::env::var(var).ok()` | seams | `with AIRLOCK_TEST_SSH_KEYGEN: expected REQUIRE_HUMAN_COSIGN COSIGN_INVALID` |
 | R1c_binary_pin | helpers.rs | `        pinned(&BINARY_CHECKED, b, REFUND_BINARY_SHA256, "refund binary")?;⏎` | (empty) | canonical | `expected HELPER_FAILED (exit 22), got exit 23` |
 | R2a_no_nonce | store.rs | `    let nonce: String = nonce.iter().map(\|b\| format!("{b:02x}")).collect();` | `    let nonce: String = "0".repeat(32);` | nonce | `the two genesis records must differ by their nonce` |
 | R2b_genesis_not_in_message | verbs.rs | `cosign_message(&s.l.store_id, s.l.genesis_hash, req, t[4], &action)` | `cosign_message(&s.l.store_id, 0, req, t[4], &action)` | cosign | `expected COMMITTED (exit 0), got exit 11` |
 | R4a_small_order | pin.rs | `    SMALL_ORDER.contains(&masked.as_str()) \|\| y_ge_p` | `    y_ge_p` | weakkey | `accepted: 0 'INITIALIZED` |
-| R4b_init_weak | store.rs | `        if crate::pin::weak_ed25519(k) {` | `        if false {` | weakkey | `weak key` |
+| R4b_init_weak | store.rs | `        if crate::pin::weak_ed25519(&raw) {` | `        if false {` | weakkey | `weak key` |
 | R5a_lease_reopen | verbs.rs | `    if s.l.leases.contains_key(req) { return no(Code::Duplicate, "LEASE_USED` | `    if false { return no(Code::Duplicate, "LEASE_USED` | lease_binding | `'OPEN_LEASE wh-2 100 t1 order-1': expected DUPLICATE_REQUEST_ID` |
 | R5b_lease_unbound | verbs.rs | `\|(t, k)\| s.l.leases.get(req).map_or(false, \|l\| l.binds(t, k))` | `\|(_, _)\| s.l.leases.get(req).map_or(false, \|l\| l.is_open())` | lease_binding | `a verdict on another key must not name a close` |
 
@@ -620,8 +790,8 @@ Proposed new seams for the repairs (each was run alone; the case failed):
 | M06_total_cap | policy.rs | `if amount > remaining { return Verdict::Reject("TOTAL_CAP") }⏎` | (empty) | money | the total cap |
 | M07_reason_cap | policy.rs | `if !within { capped = true; continue }⏎` | (empty) | money | the fact-bound reason cap (SHIPPING <= shipping_paid) |
 | M08_most_restrictive | policy.rs | `r.verdict.rank() > b.rank()` | `false` | money | the rule that the most restrictive verdict wins |
-| M09_cosign_not_verified | verbs.rs | `if !helpers::cosign_verify(&ctx.node(), &pk, sig, &msg)? {` | `if false {` | cosign | the verification of a cosign signature |
-| M10_cosign_answer_any_bytes | helpers.rs | `(Some(0), true, o) if o == yes => Ok(true),` | `(Some(0), _, _) => Ok(true),` | cosign | the exact VALID line and the empty stderr of the cosign helper |
+| M09_cosign_not_verified | verbs.rs | `if !cosign::verify(&ctx.dir, &pk, sig, &msg)? {` | `if false {` | cosign | the verification of a cosign signature |
+| M10_cosign_answer_any_bytes | cosign.rs | `(Some(0), true, o) if o == good.as_bytes() => Ok(true),` | `(Some(0), _, _) => Ok(true),` | cosign_faults | the exact Good line and the empty stderr of ssh-keygen |
 | M11_refund_frame_unclean | helpers.rs | `let clean = r.code == Some(0) && r.err.is_empty() && r.sent;` | `let clean = true;` | canonical | the clean exit and empty stderr of the refund binary |
 | M12_cakeml_reject_ignored | verbs.rs | `if !helpers::refund_binary(ctx.binary.as_deref(), &wire, &expect)? {` | `if helpers::refund_binary(ctx.binary.as_deref(), &wire, &expect).is_err() {` | canonical | the rejection by the CakeML binary |
 | M13_processor_in_flight | verbs.rs | `} else if cur_in && pair != *held {` | `} else if false {` | saga | the refusal of a second processor while a key is in flight |

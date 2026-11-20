@@ -1,5 +1,5 @@
-//! Pins: a std-only SHA-256 (FIPS 180-4) for the file pins of the Node binary and the refund binary, and the refusal
-//! of weak Ed25519 public key encodings. NATIVE CHECK, not proved. The SHA-256 is checked against known vectors by
+//! Pins: a std-only SHA-256 (FIPS 180-4) for the file pins of the Node binary (inventory only) and the refund binary,
+//! the cosign key fingerprint and `cosign-info`, and the refusal of weak Ed25519 encodings (key and signature R). NATIVE CHECK, not proved. The SHA-256 is checked against known vectors by
 //! tests/airlock/test_engine.py (case `pin`, through the `sha256` subcommand).
 use std::fs::File;
 use std::io::{self, Read};
@@ -62,7 +62,7 @@ impl Sha256 {
         }
         self.buf.extend_from_slice(data);
     }
-    pub fn hex(mut self) -> String {
+    pub fn digest(mut self) -> [u8; 32] {
         let bits = self.len.wrapping_mul(8);
         let mut pad = vec![0x80u8];
         pad.resize(((119 - (self.len % 64) as usize) % 64) + 1, 0);
@@ -70,7 +70,14 @@ impl Sha256 {
         let keep = self.len;
         self.update(&pad);
         self.len = keep;
-        self.h.iter().map(|x| format!("{x:08x}")).collect()
+        let mut out = [0u8; 32];
+        for (i, x) in self.h.iter().enumerate() {
+            out[4 * i..4 * i + 4].copy_from_slice(&x.to_be_bytes());
+        }
+        out
+    }
+    pub fn hex(self) -> String {
+        self.digest().iter().map(|x| format!("{x:02x}")).collect()
     }
 }
 /// SHA-256 of a file, read as a stream (64 KiB at a time).

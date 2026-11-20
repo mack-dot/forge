@@ -1,0 +1,6 @@
+{"intent_queries": 1, "queries": [
+ {"id": "VIP-1", "question": "can a GOODWILL refund above 5000 be committed with no human cosign for a customer who is not a VIP (vip == 0)?",
+  "where": [["reason", "==", "GOODWILL"], ["amount", ">", "5000"], ["fact:vip", "==", "0"]], "verdict": ["COMMIT"]},
+ {"id": "VIP-2", "question": "can a GOODWILL refund be committed or sent to cosign when the vip fact is missing?",
+  "where": [["reason", "==", "GOODWILL"], ["missing", "fact:vip"]], "verdict": ["COMMIT", "REQUIRE_HUMAN_COSIGN"]}
+]}

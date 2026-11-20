@@ -28,6 +28,42 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Gate F1 (Goal 21), intent clearing: branch-boundary tables, weird-but-legal queries and a blind restater over a generated Dafny model; one review with repairs — U780 to U784
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected or frozen path changed.
+Nothing under `clearing/` changed. `scripts/spec_clearing.py` and
+`bin/forge-airlock` not changed. Branch `feat/intent-clearing-v2` from
+`9a9a8943`, with `origin/docs/finish-line-directive` and `origin/main`
+(`b2249ea2`) merged in; NOT merged by the agent. PROVED applies only to
+statements about the Dafny model that the generator wrote. The
+generator is a trusted assumption. Every other row is a FINITE TEST on
+one machine.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| pre-flight: `gh pr list`; `origin/main` |0|pull request 65 (Goal 20) MERGED; `origin/main` = `9a9a8943`, later `b2249ea2` (pull request 66) |
+| `python3 -B tests/intent/test_intent_clearing.py` (before the review; after the repairs) |0; 0|12 of 12 cases each time |
+| `python3 -B tests/intent/test_intent_restate.py` |0|8 of 8 cases |
+| `scripts/exit_goal21_intent.py --case mutations`, first run after the repairs |1|21 of 23 for the named reason; C12 and C15 gave UNDECIDED (exit 5), not the WARNING that the table named; the named reasons were corrected to the observed lines |
+| `--case planted` |0|swapped VIP flag, coarse SHIPPING cap, `<` against `<=`: clean exit 0, planted exit 4 with a Dafny-verified witness; `refunds-v2.json` exit 0 |
+| `--case dispatcher` |0|the UNAPPLIED diff on a copy: exit 0 and exit 4; tracked `bin/forge-airlock` still `bd56d8b6…6891` |
+| `--case evidence --write-record` |0|twice; bundle `9a3ea0ee…c2d8`, byte-identical; 23 of 23 changed copies killed for the named reason (20 of `intent_clearing.py`) |
+| the one fresh-context review |1 FAIL-OPEN; 0 HIGH; 2 MEDIUM; 7 LOW; 3 NOTE|a query on two unnamed reasons got a false "verified" warning; repaired in one pass; F13 and three guards of F6 stated only; NOT reviewed again |
+| regression on a scratch clone of `faa46ae6` (merged tree, base `b2249ea2`): 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links of 17 files; seven EXIT scripts, each `--case evidence` |0 each (28); 0; 0 each (17); 0 each (7)|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…` byte-identical to the tracked records and to the records on `origin/main`; `9a3ea0ee…` (Goal 21) byte-identical to its record; 0 dangling links; 0 protected paths changed |
+| `gh pr create`; hosted `gate/pr_check.py` |NOT RUN at this commit|expected exit 3 (UNSUPPORTED) |
+| `--engine` (the Rust engine against the table rows); every HOL and Holmake step; Stages 7, 9, 10; a second review |NOT RUN|not part of this work |
+
+[Report](proposals/forge2-goal21-intent/REPORT.md).
+[Review](proposals/forge2-goal21-intent/REVIEW.md).
+[Design](proposals/forge2-goal21-intent/DESIGN.md).
+[Directive](proposals/forge2-finish-line/DIRECTIVE.md).
+Departure: the `check-intent` subcommand of `bin/forge-airlock` is an
+UNAPPLIED diff, because the Goal 20 bundle records the digest of that
+file (U781). A CLEAN result says only that the questions that were
+asked have the answer NO. It does not say that a specification is the
+intent. M1 and integration EXIT NOT_ESTABLISHED.
+
 ## T19, the hardened refund sink, minter and dispatcher applied (owner items B-15 and B-16 approved): one pull request; TESTED level only; new Slice 1, Slice 3, M1 conformance and native sink bundles — U760 to U765
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
@@ -116,6 +152,117 @@ kernel: an ASSUMPTION (BETA-PLAIN) with a tested check. T2b, T3 and T4
 are NOT closed. Route A premises (the FFI contract at shape-valid calls,
 the processor bits, the entry state) are assumptions about the real
 machine. M1 and integration EXIT NOT_ESTABLISHED.
+## Archia MCP airlock demo, Phases 1 and 2: an MCP stdio proxy with a ledger compare-and-swap, a scoped-read filter and signed receipts; two real upstream servers; a finite test of unproved Rust; NOT merged — U740 to U742
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Branch
+`demo/archia-mcp-showcase` from the Goal 20 branch at `c02abb74` (owner
+decision; pre-flight rule 1 of the directive is NOT MET, U740). Phases 3
+and 4 are not started. Nothing is proved; no review ran; no changed-copy
+run exists. Not pushed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| pre-flight: `origin/main` after Goal 20 and T19 |NOT MET|`origin/main` = `a5133c01`; stacked on `c02abb74` on the owner's word |
+| `git status --short` on the protected and frozen paths |0 lines|`bin/forge-airlock` changed: it is in the Goal 20 bundle subject list (U740) |
+| `rustc --edition 2021 -D unsafe_code -C opt-level=3 src/mcp_proxy/main.rs` (orchestrator) |0|std only; no `unsafe`; no crate |
+| unit tests of the same root (`rustc --test`) |0|23 passed, 1 ignored (timing) |
+| `python3 tests/mcp_proxy/test_servers.py` (servers with no proxy) |0|14 of 14 |
+| `python3 tests/mcp_proxy/test_proxy_e2e.py` |0|20 of 20: 20-call race gives 1 payout in the server's audit file; cross-clinic read gives 0 foreign bytes; 500 mg refused; `verify-evidence` 0; one flipped byte refused |
+| the PROXY worker's integration suite, run again by the orchestrator |0|0 failed (the worker's count: 54) |
+| 10 GiB line with no newline into the proxy |0|peak resident memory 1,808 KiB (82 samples); next request answered |
+| 40 commits, sync signing; async signing |0; 0|p50 19.20 ms; p50 12.06 ms: "under 15 ms" is NOT a bound (U742) |
+| `verify-evidence` on both stores: first try; second try |1; 0|first: my empty allowed-signers file; then 40 of 40 records, twice |
+| workers' module tests not repeated: POLICY 47 cases; EVIDENCE 30 cases |0; 0 (their reports)|test roots are in scratch folders |
+| `bin/forge-airlock build`; `scripts/exit_goal20_sdk.py`; the 28 Stage EXIT cases; Phases 3 and 4; push; pull request |NOT RUN| |
+| every HOL, Holmake, Dafny and Node step |NOT RUN|not part of this work |
+
+[Wire document](src/mcp_proxy/PROTOCOL.md).
+The filter trusts the server's labels. The sub-cap fact is the airlock's
+own file. The CAS is on the airlock's ledger, not on the server's state.
+M1 and integration EXIT NOT_ESTABLISHED.
+
+### Archia MCP airlock demo, Phase 3 (reviews and repairs) — U743
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+The Phase 1 and 2 text above stays as written. Its lines "Phases 3 and 4
+are not started" and "no review ran" are true only for commit `ab059090`.
+Branch `demo/archia-mcp-showcase` is now rebased on `origin/main`
+`b2249ea2` (Goal 20 merged there as `9a9a8943`). `origin/main` is now
+`33055a59`, one documents-only commit later; NOT rebased again.
+`bin/forge-airlock` stays at its main bytes (SHA-256 `bd56d8b6…6891`,
+owner decision). The launcher of the proxy is `bin/forge-mcp-proxy`.
+The Rust proxy is a NATIVE CHECK. The tests are a FINITE TEST. Nothing
+is proved. No clearing check runs.
+
+| Step | Actual exit/result | Result |
+| --- | --- | --- |
+| two fresh-context reviews (REVIEW-A, REVIEW-B) and the TESTS finding T1 |FAIL-OPEN and HIGH findings|cross-clinic write fail-open; carriage-return smuggling; ledger reset to a double payout; receipt gaps; filter leaks; a second answer to a read passed (U743) |
+| one repair pass, commit `cb61b04f` |done|list in the commit message and in U743; NOT reviewed again |
+| `tests/mcp_proxy/test_review_regressions.py` on the repaired binary |0|17 of 17 (evidence bundle, attempt 3) |
+| R5 (one signature per malformed line), R6 (a stalled upstream stalls the proxy), server notifications not filtered |NOT repaired|stated in `src/mcp_proxy/PROTOCOL.md` section 8 |
+| latency claim "< 15 ms" |NOT claimed|owner decision: latency is a measurement, not an assertion |
+| T19 hardened sink |NOT waited for|owner: superseded |
+
+### Archia MCP airlock demo, Phase 4 (EXIT) — U744
+
+Final pass on `b35617b3` plus the change of `scripts/exit_archia_mcp.py`
+that this records commit holds. The bundle is a RECORD, not gate
+evidence (`gate_accepted: false`, `proved: false`). Raw outputs are in
+`build/archia_mcp/` (ignored by git); sources are named per row.
+
+| EXIT command/check | Expected exit | Actual exit/result | Result |
+| --- | --- | --- | --- |
+| `python3 scripts/exit_archia_mcp.py --case build` |0|0|two builds byte-identical, binary `1877a4fa…77b3`; `unsafe` control does not compile; `bin/forge-airlock` equals main |
+| `--case suite` |0|0|servers 14 of 14; e2e 27 of 27; unit 146 passed, 1 ignored; faults 44 PASS and 1 KNOWN LIMIT (45 cases); regressions 17 of 17; WAL replay byte-identical |
+| `--case showcase` |0|0|32 of 32 checks; peak RSS 2,480 KiB (bound 5.0 MiB); 30 commits p50 17.08 ms, p99 24.11 ms (measured, indicative only) |
+| `--case mutations` (ran before the last script edit) |0|0|44 of 47 killed; NOT KILLED exactly E01, M04, M27 |
+| `--case evidence`, first run (attempt 2) |0|1|two different bundles; which cases fail on killed copies M08 and B05 varies with timing |
+| `--case evidence`, after the repair (attempt 3) |0|0|two runs byte-identical; bundle `13608d7e…20bd`; 44 of 47 killed; wall about 1 h 33 min |
+| orchestrator rerun: `--case build`; `--case showcase` |0; 0|0; 0|same binary `1877a4fa…77b3`; 32 of 32; p50 16.78 ms, p99 29.80 ms |
+| `python3 scripts/exit_archia_mcp.py --case build` after this records change |0|0|run by the records agent |
+
+Not run yet (no exit code exists):
+- the regression in a scratch clone: the 28 Stage EXIT cases and the
+  other EXIT scripts' `--case evidence`;
+- `git push`; `gh pr create`; the hosted `gate/pr_check.py`;
+- a power-loss test or an `F_FULLFSYNC` observer (E01 and M04 stay
+  open); a second review; every HOL, Holmake and Dafny step.
+
+An earlier EXIT attempt put M13, M18 and M26 on the accepted-survivor
+list. The orchestrator rejected that. Three new fault cases now kill
+them. fsync durability is untested. M1 and integration EXIT
+NOT_ESTABLISHED.
+
+## Goal 21, phase 1 (Apex fix 1): the cosign signature check without Node (`/usr/bin/ssh-keygen -Y verify`); `cosign.cjs` deleted; a finite test; NO new bundle; NOT merged — U750 to U752
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed.
+`src/silicon_sink/sink.rs` is NOT changed (the directive names it; it
+has no signature code; U750). Branch `apex1/native-cosign` from the
+Goal 20 head `4d5e8863`; rebased onto `main` at `b2249ea2` after the
+owner merged Goal 20 as `9a9a8943` (the runs below were on the tree
+before the rebase unless a row says otherwise).
+Nothing is proved. The machine was under load: no time is recorded here.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `git status --short` on the protected paths, `proposals/`, `src/silicon_sink/` |0 lines| |
+| `bin/forge-airlock build` (orchestrator) |0|two rustc builds |
+| `tests/airlock/test_cosign.py <kill build>` (orchestrator) |0|47 of 47 |
+| `tests/airlock/test_engine.py <engine> <kill build>` (orchestrator) |0| |
+| `tests/airlock/test_node_helpers.py <node>` (orchestrator) |0|68 of 68 (inventory helper only) |
+| `tests/airlock/test_sdk.py --engine-dir build/airlock` (orchestrator) |0|includes a store that needs no Node |
+| changed copies through a scratch harness (the worker's run) |0|122 of 122 killed; NOT KILLED: X01, R8, N15 |
+| `disasters`; `fuzz` through the same harness (the worker's runs) |0; 0|8 of 8; 8 of 8 |
+| the one review of `73758bda` (fresh context) |0 FAIL-OPEN through the production engine; 2 FAIL-OPEN inside the stated one-user limit; 1 MEDIUM; 1 LOW; 5 NOTE|one false sentence of PROTOCOL.md corrected; items 1 and 2 open (U751) |
+| after the review repairs (test engine in `build/silicon/test/`; walk includes `/`; `cosign-sign` cross-check): build; cosign; engine; node helpers; SDK suites (orchestrator) |0; 0; 0; 0; 0|56 of 56; 27 of 27; 68 of 68; 21 of 21 (U752) |
+| `scripts/exit_goal20_sdk.py --case evidence`; the Dafny diff cases |NOT RUN|no new bundle; the record `1e75ab47` is of the tree before this change |
+| every HOL and Holmake step |NOT RUN|not part of this work |
+
+[Wire and limits](src/airlock/PROTOCOL.md).
+OpenSSH with LibreSSL replaces Node and V8 in the trusted base for
+cosign: smaller, not zero. M1 and integration EXIT NOT_ESTABLISHED.
 
 ## Goal 20, `forge-airlock` SDK: write, read and lease airlocks over a native WAL engine, with Python and TypeScript SDKs; a finite test of unproved Rust, JavaScript and Python around three proved cores; one review with repairs — U720 to U725
 

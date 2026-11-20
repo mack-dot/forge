@@ -1,13 +1,17 @@
-//! Private, bounded subprocesses: the CakeML refund binary and the two Node helpers. NATIVE CHECK, not proved.
+//! Private, bounded subprocesses: the CakeML refund binary, the Node booking helper (inventory only) and, through
+//! cosign.rs, /usr/bin/ssh-keygen. NATIVE CHECK, not proved.
 //! Each run: cleared environment, three anonymous pipes, bounded stdout and stderr, a time limit, SIGKILL at the limit.
-//! A helper result counts only as: the exact expected line, exit code 0, empty stderr, all of stdin written.
+//! A helper result counts only as: the exact expected line, the expected exit code, empty stderr (or the exact
+//! expected stderr of ssh-keygen), all of stdin written.
 //! Anything else (no program, no file, a timeout, other bytes, a signal) is a refusal, never a commit.
-//! Pins (R1 of the review): the two Node helpers are compiled INTO the engine (`include_str!`) and run as
+//! Pins (R1 of the review): the Node booking helper is compiled INTO the engine (`include_str!`) and runs as
 //! `node -e <source> -- <args>`: no helper file is read at run time. The Node binary must have the SHA-256 pinned in
 //! the store's genesis record; the refund binary must have REFUND_BINARY_SHA256. Each file is hashed once per
-//! process, before its first use. Limit: a file swapped between the hash and the exec is not detected.
-//! Test seams exist ONLY in the `--cfg kill_points` build: AIRLOCK_TEST_HELPERS=<dir> runs `<dir>/<script>` files
-//! instead of the embedded sources, and AIRLOCK_TEST_UNPINNED_BINARY=1 skips the refund binary pin.
+//! process, before its first use. Limit: a file swapped between the hash and the exec is not detected. No Node runs
+//! for a cosign (Apex addendum): see cosign.rs.
+//! Test seams exist ONLY in the `--cfg kill_points` build: AIRLOCK_TEST_HELPERS=<dir> runs `<dir>/booking_check.cjs`
+//! instead of the embedded source, AIRLOCK_TEST_UNPINNED_BINARY=1 skips the refund binary pin, and the two seams of
+//! cosign.rs (AIRLOCK_TEST_SSH_KEYGEN, AIRLOCK_TEST_UNTRUSTED_SSH_KEYGEN).
 use crate::{no, Code, Refusal};
 use std::io::{Read, Write};
 use std::process::{Command, Stdio};
@@ -17,7 +21,6 @@ use std::time::{Duration, Instant};
 
 pub const REJECT_FRAME: &[u8] = b"(refund-result-v1 False 0 \"\" \"\" \"\" 0)";
 pub const REFUND_BINARY_SHA256: &str = "b8ed5ec2e34f4124af8368e4e8503e7b18c5476af9195765c55f85ca39007bb8";
-const COSIGN_SOURCE: &str = include_str!("node/cosign.cjs");
 const BOOKING_SOURCE: &str = include_str!("node/booking_check.cjs");
 const BINARY_TIMEOUT: Duration = Duration::from_secs(10);
 const NODE_TIMEOUT: Duration = Duration::from_secs(30);
@@ -28,8 +31,12 @@ pub struct Run {
     pub err: Vec<u8>,
     pub sent: bool,
 }
-pub fn run(prog: &str, args: &[&str], env: &[(&str, &str)], input: Vec<u8>, out_limit: usize, timeout: Duration) -> Result<Run, String> {
-    let mut child = Command::new(prog)
+pub fn run(prog: &str, args: &[&str], env: &[(&str, &str)], cwd: Option<&str>, input: Vec<u8>, out_limit: usize, timeout: Duration) -> Result<Run, String> {
+    let mut command = Command::new(prog);
+    if let Some(dir) = cwd {
+        command.current_dir(dir);
+    }
+    let mut child = command
         .args(args)
         .env_clear()
         .envs(env.iter().copied())
@@ -95,7 +102,7 @@ fn pinned(cell: &OnceLock<Result<(), String>>, path: &str, want: &str, what: &st
     });
     r.clone().map_err(|why| Refusal(Code::HelperFailed, why))
 }
-fn test_seam(var: &str) -> Option<String> {
+pub fn test_seam(var: &str) -> Option<String> {
     if cfg!(kill_points) { std::env::var(var).ok() } else { None }
 }
 /// The CakeML refund binary, as in src/silicon_sink/sink.rs. Ok(true): exactly the accept frame `expect`;
@@ -106,7 +113,7 @@ pub fn refund_binary(binary: Option<&str>, wire: &str, expect: &str) -> Result<b
         pinned(&BINARY_CHECKED, b, REFUND_BINARY_SHA256, "refund binary")?;
     }
     let env = [("CML_HEAP_SIZE", "256"), ("CML_STACK_SIZE", "256")];
-    let r = run(b, &[], &env, wire.as_bytes().to_vec(), expect.len().max(REJECT_FRAME.len()), BINARY_TIMEOUT).map_err(|e| Refusal(Code::HelperFailed, e))?;
+    let r = run(b, &[], &env, None, wire.as_bytes().to_vec(), expect.len().max(REJECT_FRAME.len()), BINARY_TIMEOUT).map_err(|e| Refusal(Code::HelperFailed, e))?;
     let clean = r.code == Some(0) && r.err.is_empty() && r.sent;
     match (clean, r.out.as_slice()) {
         (true, o) if o == expect.as_bytes() => Ok(true),
@@ -127,16 +134,12 @@ fn node_helper(n: &Node, script: &str, source: &str, args: &[&str], input: Vec<u
     let file = test_seam("AIRLOCK_TEST_HELPERS").map(|dir| format!("{dir}/{script}"));
     let mut all: Vec<&str> = match &file { Some(f) => vec![f.as_str()], None => vec!["-e", source, "--"] };
     all.extend_from_slice(args);
-    let r = run(node, &all, &[], input, yes.len().max(no_.len()), NODE_TIMEOUT).map_err(|e| Refusal(Code::HelperFailed, e))?;
+    let r = run(node, &all, &[], None, input, yes.len().max(no_.len()), NODE_TIMEOUT).map_err(|e| Refusal(Code::HelperFailed, e))?;
     match (r.code, r.err.is_empty() && r.sent, r.out.as_slice()) {
         (Some(0), true, o) if o == yes => Ok(true),
         (Some(1), true, o) if o == no_ => Ok(false),
         (code, _, _) => failed(format!("HELPER_RESULT {script} exit {}", code.map_or("signal".to_string(), |c| c.to_string()))),
     }
-}
-/// `cosign.cjs verify <pubkey> <sig>` (embedded) with the message on stdin.
-pub fn cosign_verify(n: &Node, pubkey: &str, sig: &str, message: &str) -> Result<bool, Refusal> {
-    node_helper(n, "cosign.cjs", COSIGN_SOURCE, &["verify", pubkey, sig], message.as_bytes().to_vec(), b"VALID\n", b"INVALID\n")
 }
 /// `booking_check.cjs <model.cjs>` (embedded) with the certificate JSON on stdin. The helper pins the model's SHA-256.
 pub fn booking_check(n: &Node, json: &str) -> Result<bool, Refusal> {

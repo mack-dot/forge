@@ -7,11 +7,14 @@
 //! BookingDualCert checker (run by Node: Node and the Dafny compiler are trusted) must accept a BOOK. Everything
 //! else here (WAL, fold, CAS, parametric money rules, saga table, cosign wiring, read airlock, leases) is a native
 //! check with finite tests. `sync_all` is fcntl(F_FULLFSYNC) on macOS; the kernel and the drive are assumptions.
-//! FNV-1a-128 is not cryptographic. Cosign signatures are verified by Node's `node:crypto` through the embedded
-//! src/airlock/node/cosign.cjs (trusted); the engine never reads a private key. Pins: the refund binary (compiled-in
-//! SHA-256), the Node binary (SHA-256 in the genesis record), the helpers (compiled in). Trust boundary: every rule
+//! FNV-1a-128 is not cryptographic. Cosign signatures are verified by the system OpenSSH, `/usr/bin/ssh-keygen -Y
+//! verify` (a trusted assumption, with its LibreSSL; no Node, no V8), after native checks of the SSHSIG form
+//! (cosign.rs); the engine never reads a private key. Pins: the refund binary (compiled-in SHA-256), the Node binary
+//! of an inventory store (SHA-256 in the genesis record), the booking helper (compiled in); ssh-keygen is checked
+//! (root-owned, not writable by group or other, no symbolic link on its path), not pinned. Trust boundary: every rule
 //! holds only for a caller that goes through this engine; whoever can write the store folder or run another engine
 //! build on it is trusted (PROTOCOL.md section 11). Wire: PROTOCOL.md.
+mod cosign;
 mod helpers;
 mod json;
 mod ledger;
@@ -242,10 +245,10 @@ fn flag_values(rest: &[String], names: &[&str], multi: &str, bools: &[&str]) -> 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let usage = || {
-        eprintln!("usage: airlock-engine init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey HEX64] [--node P]");
+        eprintln!("usage: airlock-engine init <dir> [--store-id ID] [--policy FILE]... [--cosign-pubkey SSH_ED25519_BASE64] [--node P]");
         eprintln!("       airlock-engine serve <dir> [--refund-binary P] [--node P] [--checker MODEL]");
         eprintln!("       airlock-engine state|replay <dir> | get <dir> <tenant> <key> | leases <dir> [--sweep [--now MS] | --all]");
-        eprintln!("       airlock-engine eval <policy.json> | cosign-message <dir> <action> | sha256 <file>");
+        eprintln!("       airlock-engine eval <policy.json> | cosign-message <dir> <action> | cosign-info | sha256 <file> | base64-decode <token>");
         Code::Usage.num()
     };
     let a: Vec<&str> = args.iter().map(String::as_str).collect();
@@ -297,6 +300,9 @@ fn main() {
         },
         ["eval", file] => eval(file),
         ["sha256", file] => answer(pin::file_sha256(file).map(|h| format!("SHA256 {h}")).map_err(Refusal::from)),
+        // test vectors of the strict base64 decoder of cosign.rs (hex of the bytes, or a refusal)
+        ["base64-decode", token] => answer(cosign::b64_decode(token).map(|b| format!("BASE64 {}", b.iter().map(|x| format!("{x:02x}")).collect::<String>())).ok_or(Refusal(Code::Malformed, "BAD_BASE64".into()))),
+        ["cosign-info"] => answer(cosign::info()),
         ["cosign-message", dir, action] => match verbs::cosign_message_cmd(dir, action) {
             Ok(m) => {
                 let mut out = io::stdout().lock();
