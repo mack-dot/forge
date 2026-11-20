@@ -42,7 +42,7 @@ D are targets; none is proved.
 | --- | --- | --- |
 | three read-only investigations (specification, proof, compiler; runtime, durability, receipt; hardware) |done|three annexes |
 | fresh-context review of the first version of the reports |done|34 claims checked: 25 held, 9 wrong or too strong; 20 defects; the first-task recommendation was inverted |
-| revision with each defect re-checked in the repository |done|17 defects confirmed, 4 partly rejected with evidence (dispositions in the README) |
+| revision with each defect re-checked in the repository |done|16 defects confirmed in full, 4 confirmed in part and partly rejected with evidence (dispositions in the README) |
 | link check of the ten documents (`proposals/round4-20261117/check_links.py`) |0|0 missing targets |
 | any proof replay, clean replay or independent replay |NOT RUN|read-only investigation |
 
