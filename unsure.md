@@ -19993,3 +19993,23 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label.
 - Next check: the owner's word on a Linux job and on Dafny in CI (an install from the network needs a pinned step that
   no existing workflow has for macOS).
+
+## U886 — Review fix PR-2: the one fresh review of pull request 71 (0 HIGH, 3 MEDIUM, 8 LOW); 10 repaired, 1 recorded only; new workflow bytes
+
+- Status: 2026-11-20. Refs U884, U885. Record: `proposals/review-20261120-ci/REVIEW.md`. The review read head
+  `b98a06cf`; its text came through the orchestrator and is not stored in the repository.
+- Evidence: each finding checked against the code, `git show e3322303:…` and the hosted logs. Repaired: a count check
+  (PASS names = RUN names; `MIN_RUN_*` 24, 74, 17, 6), `cancel-in-progress` for pull requests only, `timeout-minutes`
+  10, the highest Node 24.x by `sort -V`, the header text, `pull_request` limited to `main`, the README (coverage that
+  the skips lose; the apex1 steps; run 2 versions; saved outputs). Recorded only: the weakness of
+  `booking_model_substituted_always_true` (any exit 2 passes). New SHA-256 of the workflow:
+  `b190ba53a3e97254786fbad1315ef462be0322371c7efe3c2477c25bf9f5e946`. Local dry run of the repaired bytes: seven
+  steps exit 0; six negative controls of the count check and the Node choice exit 1 or pick 24.22.3 over 24.9.0.
+- Finding: the hosted image is not monotonic. Run 44692795822 had image 20261118.0550.1 (rustc 1.100.0, Node 24.22.3);
+  the later run 44693275108 had image 20261104.0514.1 (rustc 1.99.1, Node 24.22.2).
+- Uncertainty: the repairs were not reviewed again. The skips lose non-Dafny coverage (the TypeScript typed verdicts of
+  `ts_typed`, the saga half of `py_saga_inventory`, the first lines of engine `inventory`); splitting them needs a later
+  change to the test files. After `apex1/native-cosign` merges, `MIN_RUN_NODE_HELPERS` must fall to 5 and a
+  `test_cosign.py` step must come in the same change. A finite test only. `end_to_end=false`. M1-B OPEN.
+- Impact: none on any stage label or gate result.
+- Next check: the hosted run of the repaired bytes (in the pull request); the owner's exact-bytes approval.

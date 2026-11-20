@@ -20,16 +20,22 @@
 #     without Dafny compares two equal failure outputs (0 bytes, exit 1) and so passes without checking anything.
 # Skip counts at this commit: engine 2 (inventory, pin), node helpers 63 (every booking case that loads the
 # default model), SDK 2 (py_saga_inventory, ts_typed), diff-policy 5. Names: the SKIP_* values below.
-# The selection step fails if a skip name is not a case of its suite, and it prints every case as RUN or SKIP.
-# A new case that a later change adds RUNS by default.
+#
+# Count check: the selector fails if a skip name is not a case of its suite or if no case is left. It prints every
+# case as RUN or SKIP and writes the RUN names to a file. After each suite, the check fails unless the PASS lines
+# name exactly the RUN set and the RUN count is at least MIN_RUN_* (the counts of this commit). So a suite that
+# passes on fewer cases (for example after cases move to another file) fails the job. A new case RUNS by default.
 #
 # Toolchains come only from the runner image: rustc (no version pin is enforced by the build; the repository
-# records 1.92), python3, /usr/bin/cc (test interposer), /usr/bin/ssh-keygen, and Node 24.x from the image tool
-# cache (the repository pins 24.3.0; the dispatcher accepts any 24.x and prints a note). No Node 24 -> the job fails.
+# records 1.92), python3, /usr/bin/cc (test interposer), and the highest Node 24.x of the image tool cache (the
+# repository pins 24.3.0; the dispatcher accepts any 24.x and prints a note). No Node 24 -> the job fails.
+# The image is not monotonic: two runs on one day used image versions 20261118.0550.1 and 20261104.0514.1.
 #
-# Cost: hosted macOS minutes. Triggers only on a push to main and on a pull_request that touch the paths below
-# (push is limited to main, so a pull request branch runs once per push, not twice). No schedule, no matrix,
-# one job. Permissions: contents read. No secrets. No cache.
+# Cost: hosted macOS minutes. Triggers only on a push to main and on a pull_request to main that touch the paths
+# below. No schedule, no matrix, one job. Permissions: contents read. No secrets. No cache.
+# A pull_request run uses the PR's own copy of this file, so these limits are advisory for a same-repo branch.
+# PR code runs on an ephemeral VM with network access, the checkout, and $GITHUB_ENV of later steps. It has no
+# secret and no persisted token (persist-credentials: false; permissions: contents read).
 
 name: airlock-ci
 
@@ -44,6 +50,8 @@ name: airlock-ci
       - 'tests/airlock/**'
       - '.github/workflows/airlock-ci.yml'
   pull_request:
+    branches:
+      - main
     paths:
       - 'src/airlock/**'
       - 'sdk/**'
@@ -56,12 +64,12 @@ permissions:
 
 concurrency:
   group: airlock-ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   airlock:
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 10
     env:
       PYTHONDONTWRITEBYTECODE: '1'
       SKIP_ENGINE: 'inventory pin'
@@ -87,6 +95,10 @@ jobs:
         booking_model_one_byte_more booking_model_symlink_refused booking_eval_mode
       SKIP_SDK: 'py_saga_inventory ts_typed'
       SKIP_DIFF_POLICY: 'demo choice fault refused identical'
+      MIN_RUN_ENGINE: '24'
+      MIN_RUN_NODE_HELPERS: '74'
+      MIN_RUN_SDK: '17'
+      MIN_RUN_DIFF_POLICY: '6'
     steps:
       - name: Check out
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -102,9 +114,10 @@ jobs:
           python3 --version
           /usr/bin/cc --version | head -1
           node_bin=""
-          for d in "$RUNNER_TOOL_CACHE"/node/24.*/arm64/bin; do
-            if [ -x "$d/node" ]; then node_bin="$d/node"; fi
-          done
+          best="$(ls "$RUNNER_TOOL_CACHE/node" 2>/dev/null | grep '^24\.' | sort -V | tail -1 || true)"
+          if [ -n "$best" ] && [ -x "$RUNNER_TOOL_CACHE/node/$best/arm64/bin/node" ]; then
+            node_bin="$RUNNER_TOOL_CACHE/node/$best/arm64/bin/node"
+          fi
           if [ -z "$node_bin" ] && command -v node >/dev/null && node --version | grep -q '^v24\.'; then
             node_bin="$(command -v node)"
           fi
@@ -116,27 +129,48 @@ jobs:
           dirname "$node_bin" >> "$GITHUB_PATH"
           if [ -e build ]; then echo "build/ exists in a fresh checkout"; exit 1; fi
 
-      - name: Write the case selector
+      - name: Write the case selector and the count check
         run: |
           set -euo pipefail
-          cat > "$RUNNER_TEMP/select_cases.py" <<'EOF'
-          """Print `--case NAME` for every case of a suite except the named skips. Fail on an unknown skip name."""
-          import importlib.util, sys
-          path, skip = sys.argv[1], sys.argv[2].split()
-          spec = importlib.util.spec_from_file_location('suite_under_selection', path)
-          mod = importlib.util.module_from_spec(spec)
-          spec.loader.exec_module(mod)
-          names = list(mod.CASES) if isinstance(mod.CASES, dict) else [n for n, _ in mod.CASES]
-          unknown = [n for n in skip if n not in names]
-          if unknown:
-              sys.exit('skip names that are not cases of %s: %s' % (path, ' '.join(unknown)))
-          for n in names:
-              sys.stderr.write('%s %s\n' % ('SKIP' if n in skip else 'RUN ', n))
-          run = [n for n in names if n not in skip]
-          if not run:
-              sys.exit('no case left to run in %s (an empty --case list would run every case)' % path)
-          sys.stderr.write('%s: %d cases, %d run, %d skipped\n' % (path, len(names), len(run), len(skip)))
-          print(' '.join('--case ' + n for n in run))
+          cat > "$RUNNER_TEMP/cases.py" <<'EOF'
+          # select SUITE SKIP RUNFILE: print `--case NAME` for every case except the skips; write the RUN names.
+          # check FORMAT RUNFILE OUTFILE MIN: the PASS names in OUTFILE must be exactly the RUN names; RUN >= MIN.
+          import importlib.util, re, sys
+          FORMATS = {'engine': r'PASS +(\S+) +[0-9.]+s', 'sdk': r'PASS +(\S+) +[0-9.]+s',
+                     'node': r'PASS +(\S+?): ', 'diff': r'(\S+) +PASS +exits='}
+          if sys.argv[1] == 'select':
+              path, skip, runfile = sys.argv[2], sys.argv[3].split(), sys.argv[4]
+              spec = importlib.util.spec_from_file_location('suite_under_selection', path)
+              mod = importlib.util.module_from_spec(spec)
+              spec.loader.exec_module(mod)
+              names = list(mod.CASES) if isinstance(mod.CASES, dict) else [n for n, _ in mod.CASES]
+              unknown = [n for n in skip if n not in names]
+              if unknown:
+                  sys.exit('skip names that are not cases of %s: %s' % (path, ' '.join(unknown)))
+              for n in names:
+                  sys.stderr.write('%s %s\n' % ('SKIP' if n in skip else 'RUN ', n))
+              run = [n for n in names if n not in skip]
+              if not run:
+                  sys.exit('no case left to run in %s (an empty --case list would run every case)' % path)
+              sys.stderr.write('%s: %d cases, %d run, %d skipped\n' % (path, len(names), len(run), len(skip)))
+              with open(runfile, 'w') as f:
+                  f.write('\n'.join(run) + '\n')
+              print(' '.join('--case ' + n for n in run))
+          elif sys.argv[1] == 'check':
+              fmt, runfile, outfile, minimum = sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5])
+              with open(runfile) as f:
+                  run = f.read().split()
+              with open(outfile) as f:
+                  lines = f.read().splitlines()
+              passed = [m.group(1) for m in (re.match(FORMATS[fmt], ln) for ln in lines) if m]
+              print('count check %s: %d RUN, %d PASS lines, minimum %d' % (fmt, len(run), len(passed), minimum))
+              if sorted(passed) != sorted(run):
+                  sys.exit('PASS lines differ from the RUN list: missing %s, extra %s' % (
+                      sorted(set(run) - set(passed)), sorted(set(passed) - set(run))))
+              if len(run) < minimum:
+                  sys.exit('only %d cases ran; the minimum is %d' % (len(run), minimum))
+          else:
+              sys.exit('usage: select | check')
           EOF
 
       - name: Build the engine (forge-airlock build)
@@ -145,24 +179,28 @@ jobs:
       - name: Engine suite (tests/airlock/test_engine.py)
         run: |
           set -euo pipefail
-          sel="$(python3 -I -B "$RUNNER_TEMP/select_cases.py" tests/airlock/test_engine.py "$SKIP_ENGINE")"
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_engine.py "$SKIP_ENGINE" "$RUNNER_TEMP/engine.run")"
           python3 -I -B tests/airlock/test_engine.py build/airlock/airlock-engine build/airlock/airlock-engine-kill \
-            --node "$FORGE_AIRLOCK_NODE" $sel
+            --node "$FORGE_AIRLOCK_NODE" $sel | tee "$RUNNER_TEMP/engine.out"
+          python3 -I -B "$RUNNER_TEMP/cases.py" check engine "$RUNNER_TEMP/engine.run" "$RUNNER_TEMP/engine.out" "$MIN_RUN_ENGINE"
 
       - name: Node helper suite (tests/airlock/test_node_helpers.py)
         run: |
           set -euo pipefail
-          sel="$(python3 -I -B "$RUNNER_TEMP/select_cases.py" tests/airlock/test_node_helpers.py "$SKIP_NODE_HELPERS")"
-          python3 -I -B tests/airlock/test_node_helpers.py "$FORGE_AIRLOCK_NODE" $sel
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_node_helpers.py "$SKIP_NODE_HELPERS" "$RUNNER_TEMP/node.run")"
+          python3 -I -B tests/airlock/test_node_helpers.py "$FORGE_AIRLOCK_NODE" $sel | tee "$RUNNER_TEMP/node.out"
+          python3 -I -B "$RUNNER_TEMP/cases.py" check node "$RUNNER_TEMP/node.run" "$RUNNER_TEMP/node.out" "$MIN_RUN_NODE_HELPERS"
 
       - name: SDK suite, Python and TypeScript (tests/airlock/test_sdk.py)
         run: |
           set -euo pipefail
-          sel="$(python3 -I -B "$RUNNER_TEMP/select_cases.py" tests/airlock/test_sdk.py "$SKIP_SDK")"
-          python3 -I -B tests/airlock/test_sdk.py --engine-dir build/airlock --node "$FORGE_AIRLOCK_NODE" $sel
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_sdk.py "$SKIP_SDK" "$RUNNER_TEMP/sdk.run")"
+          python3 -I -B tests/airlock/test_sdk.py --engine-dir build/airlock --node "$FORGE_AIRLOCK_NODE" $sel | tee "$RUNNER_TEMP/sdk.out"
+          python3 -I -B "$RUNNER_TEMP/cases.py" check sdk "$RUNNER_TEMP/sdk.run" "$RUNNER_TEMP/sdk.out" "$MIN_RUN_SDK"
 
       - name: diff-policy suite (tests/airlock/test_diff_policy.py)
         run: |
           set -euo pipefail
-          sel="$(python3 -I -B "$RUNNER_TEMP/select_cases.py" tests/airlock/test_diff_policy.py "$SKIP_DIFF_POLICY")"
-          python3 -I -B tests/airlock/test_diff_policy.py --engine build/airlock/airlock-engine $sel
+          sel="$(python3 -I -B "$RUNNER_TEMP/cases.py" select tests/airlock/test_diff_policy.py "$SKIP_DIFF_POLICY" "$RUNNER_TEMP/diff.run")"
+          python3 -I -B tests/airlock/test_diff_policy.py --engine build/airlock/airlock-engine $sel | tee "$RUNNER_TEMP/diff.out"
+          python3 -I -B "$RUNNER_TEMP/cases.py" check diff "$RUNNER_TEMP/diff.run" "$RUNNER_TEMP/diff.out" "$MIN_RUN_DIFF_POLICY"

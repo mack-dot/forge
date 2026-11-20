@@ -1,10 +1,13 @@
 # Review fix PR-2: a CI job for the airlock engine and the SDKs (macOS arm64)
 
-Status: 2026-11-20. Entries U884 and U885 in [`unsure.md`](../../unsure.md). Branch `ci/airlock-macos` from `main`
+Status: 2026-11-20. Entries U884 to U886 in [`unsure.md`](../../unsure.md). Branch `ci/airlock-macos` from `main`
 `33055a59`. Pull request 71. NOT merged by the agent. It waits for the owner's squash-merge.
 
 This is a FINITE TEST in CI. It proves nothing about the engine, the helpers or the SDKs. `end_to_end=false`.
 M1-B stays OPEN. The job is not part of the proof gate and it gives no gate evidence.
+
+The one fresh review of head `b98a06cf` and the repairs: [REVIEW.md](REVIEW.md). Saved outputs:
+[local-dry-run.txt](local-dry-run.txt) and [checks.txt](checks.txt).
 
 ## The review finding
 
@@ -22,23 +25,32 @@ One file: [`.github/workflows/airlock-ci.yml`](../../.github/workflows/airlock-c
 `ubuntu-22.04` and `ubuntu-24.04`.
 
 1. Checkout with `persist-credentials: false` (the pinned `actions/checkout` SHA of the existing workflows, v4.2.2).
-2. A toolchain report. It fails unless the machine is Darwin arm64. It takes Node 24.x from the image tool cache
-   (`$RUNNER_TOOL_CACHE/node/24.*/arm64/bin/node`), else a `node` 24.x on PATH, else it fails. It installs nothing.
-3. A case selector (a short Python file written into `$RUNNER_TEMP`). It loads the `CASES` list of a suite, prints
-   every case as RUN or SKIP, and gives `--case NAME` for every case that is not on the skip list. It fails if a skip
-   name is not a case of the suite, or if no case is left (an empty `--case` list would run every case).
+2. A toolchain report. It fails unless the machine is Darwin arm64. It takes the highest Node 24.x of the image tool
+   cache (`sort -V`), else a `node` 24.x on PATH, else it fails. It installs nothing.
+3. A case selector and a count check (a short Python file written into `$RUNNER_TEMP`). The selector loads the
+   `CASES` list of a suite, prints every case as RUN or SKIP, writes the RUN names, and gives `--case NAME` for every
+   case that is not on the skip list. It fails if a skip name is not a case of the suite, or if no case is left (an
+   empty `--case` list would run every case). After each suite (output through `tee`, under `set -o pipefail`), the
+   check fails unless the PASS lines name exactly the RUN set and the RUN count is at least `MIN_RUN_*` (engine 24,
+   node helpers 74, SDK 17, diff-policy 6: the counts of this commit).
 4. `python3 -I -B bin/forge-airlock build`: two `rustc` builds (production and `kill_points`) and the 0700 copy of the
    TRACKED CakeML refund binary (`proposals/forge2-m1-conformance/artifacts/refund-arm64-macho`, SHA-256 pinned). No
    CakeML toolchain is needed.
 5. `tests/airlock/test_engine.py`, `test_node_helpers.py`, `test_sdk.py` (Python SDK, and the TypeScript SDK through
    the built-in type stripping of Node 24; no npm, no `node_modules`), `test_diff_policy.py`, each with its selection.
 
-Rules kept: `permissions: contents: read`; no secrets; no `pull_request_target`; no cache; `timeout-minutes: 30`;
-`concurrency` with `cancel-in-progress`; no new action (only the `actions/checkout` SHA that the existing workflows already pin); no
+Rules kept: `permissions: contents: read`; no secrets; no `pull_request_target`; no cache; `timeout-minutes: 10`;
+`concurrency` with `cancel-in-progress` for pull requests only (a run on `main` is not cancelled); no new action (only the `actions/checkout` SHA that the existing workflows already pin); no
 test file changed.
 
-Triggers (cost): `pull_request`, and `push` to `main` only, both limited by `paths:` to `src/airlock/**`, `sdk/**`,
-`bin/forge-airlock`, `tests/airlock/**` and the workflow file. No schedule, no matrix, one job.
+Triggers (cost): `pull_request` to `main` and `push` to `main`, both limited by `paths:` to `src/airlock/**`,
+`sdk/**`, `bin/forge-airlock`, `tests/airlock/**` and the workflow file. No schedule, no matrix, one job. A stacked
+pull request to another base (for example one on `apex1/native-cosign`) does not start the job.
+
+Threat model of the job: a `pull_request` run uses the PR's own copy of the workflow, so the cost limits are advisory
+for a branch of this repository. The PR code runs on an ephemeral VM with network access; it can read the checkout
+and write `$GITHUB_ENV` and `$GITHUB_PATH` for later steps. It gets no secret, and the token is not persisted
+(`persist-credentials: false`; `permissions: contents: read`).
 
 ## What is skipped, and why
 
@@ -57,18 +69,29 @@ Total: 72 skipped, 121 run. The 63 node-helper names are the cases that a local 
 `NOT RUN` ("model file missing"; 74 PASS, 0 FAIL, 63 NOT RUN, exit 1). The skip lists come from local runs in a
 worktree with no `build/`, no `.toolchain/` and no `node_modules`.
 
+Coverage that the skips lose (each case checks the model before its other steps, so the whole case is lost):
+- `ts_typed`: the only TypeScript case for 14 expected typed verdicts and one unknown-key refusal. Only its last
+  step `book` needs the model.
+- `py_saga_inventory`: its saga half (a commit `IN_FLIGHT`, a refused failover) needs no model.
+- engine `inventory`: its `OPEN_INVENTORY` lines and the refusals before the first booking need no model.
+To keep those parts in CI, the cases must be split. That is a later change to the test files. It is not done here,
+because the test files collide with `apex1/native-cosign`.
+
+A test weakness seen here, not changed: `booking_model_substituted_always_true` passes on any exit 2 with a
+`booking_check: ` message; it does not need the pin reason.
+
 Also not covered: `src/silicon_sink` (the review names it; this job does not build it), `scripts/exit_goal20_sdk.py`
 (it needs Dafny and runs mutations), the demo and the fuzz pass, and Linux (the review asks for Linux too; the refund
 binary is Mach-O arm64, so a Linux job can run only a smaller subset; deferred).
 
 ## Runs
 
-Local dry run (2026-11-20, this machine, macOS arm64, worktree with no build products): the seven `run:` scripts were
-taken from the workflow with Ruby YAML and run in order. Local difference: `race` was also skipped (a 50-process
-case is a heavy step and the heavy lock was held by another team). Exits: toolchain 0, selector 0, build 0, engine 0
-(23 PASS), node helpers 0 (74 PASS), SDK 0 (17 PASS), diff-policy 0 (6 PASS). Local tools: rustc 1.92.0, Python
-3.10.11, Node v24.3.0. After the dry run only the triggers, the comments and the quoting of the `on` key changed; the
-seven `run:` scripts are byte-identical (`cmp`).
+Local dry runs (2026-11-20, this machine, macOS arm64, worktree with no build products): the seven `run:` scripts
+were taken from the workflow with Ruby YAML and run in order. Local difference: `race` was also skipped (a 50-process
+case is a heavy step and the heavy lock was held by another team), so the local engine minimum was 23. First bytes
+(`d4fe0580…`): all seven exit 0 (engine 23, node helpers 74, SDK 17, diff-policy 6 PASS). Repaired bytes
+(`b190ba53…`): all seven exit 0, the four count checks pass, and six negative controls fail as they must. Output:
+[local-dry-run.txt](local-dry-run.txt). Local tools: rustc 1.92.0, Python 3.10.11, Node v24.3.0.
 
 Hosted runs on pull request 71:
 
@@ -76,19 +99,29 @@ Hosted runs on pull request 71:
 | --- | --- | --- | --- | --- |
 | [44692795822](https://github.com/mack-dot/forge/actions/runs/44692795822) | airlock-ci | `0846e403` | success | job `airlock` 1m23s (07:08:45Z to 07:10:08Z); engine 24 PASS, node helpers 74 PASS, SDK 17 PASS, diff-policy 6 PASS, 0 FAIL |
 | [44692795915](https://github.com/mack-dot/forge/actions/runs/44692795915) | Forge proof gate | `0846e403` | failure | `UNAPPROVED_PROTECTED_CHANGE: .github/workflows/airlock-ci.yml`, as expected |
+| [44693275108](https://github.com/mack-dot/forge/actions/runs/44693275108) | airlock-ci | `b98a06cf` | success | job 1m20s (07:12:40Z to 07:14:00Z); same counts |
+| [44693272518](https://github.com/mack-dot/forge/actions/runs/44693272518) | Forge proof gate | `b98a06cf` | failure | as expected |
 
-The commit that adds these records starts airlock-ci once more (a `pull_request` run checks the paths of the whole
-pull request). Its result is in the pull request, not here.
+The repair push (one commit set) starts both again. Its results are in the pull request and in the hand-back, not
+here.
 
-Hosted tools in run 44692795822: image `macos-15-arm64` version 20261118.0550.1, macOS 15.8.2, rustc 1.100.0,
-Python 3.15.2, Apple clang 17.0.0, tool cache Node 22.23.5 and 24.22.3 (default `node` v22.23.5), selected Node
-v24.22.3. None of these equal the repository pins (rustc 1.92, Node 24.3.0); the job uses what the image has.
+Hosted tools (from the logs; the image is NOT monotonic, run 2 used an older image than run 1):
+
+| Run | Image version | macOS | rustc | Python | Tool cache Node | Selected Node |
+| --- | --- | --- | --- | --- | --- | --- |
+| 44692795822 | 20261118.0550.1 | 15.8.2 | 1.100.0 | 3.15.2 | 22.23.5, 24.22.3 | v24.22.3 |
+| 44693275108 | 20261104.0514.1 | 15.8.2 | 1.99.1 | 3.15.2 | 22.23.4, 24.22.2 | v24.22.2 |
+
+None of these equal the repository pins (rustc 1.92, Node 24.3.0); the job uses what the image has.
 
 ## Exact bytes for approval
 
 ```text
-d4fe0580d0c8f273fde92745aefbd72ee26d47d1c235b7b4df45eacf53ebf770  .github/workflows/airlock-ci.yml
+b190ba53a3e97254786fbad1315ef462be0322371c7efe3c2477c25bf9f5e946  .github/workflows/airlock-ci.yml
 ```
+
+The first bytes (`d4fe0580d0c8f273fde92745aefbd72ee26d47d1c235b7b4df45eacf53ebf770`, commit `0846e403`) are replaced
+by the repair; do not approve them.
 
 ## After `apex1/native-cosign` merges
 
@@ -97,18 +130,27 @@ That branch (local only, head `e3322303`; read with `git show`, not checked out)
 - `bin/forge-airlock build` writes the kill-points engine to `build/silicon/test/airlock-engine-kill`, not
   `build/airlock/`. The second argument of `test_engine.py` in the workflow MUST change to that path, or the engine
   suite stops with exit 2. `test_sdk.py` gets `--kill-engine` with that default, so its line can stay.
-- Add one step: `python3 -I -B tests/airlock/test_cosign.py build/airlock/airlock-engine` (the new suite; it uses
-  `/usr/bin/ssh-keygen`, which is on the image but was not checked by this job).
-- `test_node_helpers.py` then has 68 cases (the cosign cases move out). All 63 skip names are still cases there
-  (checked against `git show e3322303:tests/airlock/test_node_helpers.py`), so 5 cases run. No change needed.
-- New cases `cosign_faults` (engine), `py_no_node` and `py_build_separation` (SDK) run by default. Not run here.
+- Add a `test_cosign.py` step IN THE SAME CHANGE: `python3 -I -B tests/airlock/test_cosign.py
+  build/airlock/airlock-engine`, with its own count check and minimum. Without it the cosign key-file and sign cases
+  have no CI at all (they move out of `test_node_helpers.py`). It uses `/usr/bin/ssh-keygen`; this job did not check
+  that tool on the image.
+- `test_node_helpers.py` then has 68 cases. All 63 skip names are still cases there (checked against
+  `git show e3322303:tests/airlock/test_node_helpers.py`), so 5 cases run: `booking_missing_model_file`,
+  `booking_model_throws`, `booking_model_substituted_always_true`, `booking_model_directory_refused`,
+  `booking_no_args`. All five are exit-2 error paths, so that step is then nearly vacuous. `MIN_RUN_NODE_HELPERS`
+  must change from 74 to 5 in the same change, or the count check fails the job (this is intended).
+- `MIN_RUN_ENGINE` and `MIN_RUN_SDK` can then rise: `cosign_faults` (engine), `py_no_node` and
+  `py_build_separation` (SDK) run by default. `py_build_separation` runs `bin/forge-airlock build` again: two more
+  `rustc` builds in the job. Not run here.
 - The new file `src/airlock/py/cosign_tool.py` is inside `src/airlock/**`; no `paths:` change is needed.
 
 ## Weak points
 
 - The toolchains float with the image. rustc 1.100.0 and Node 24.22.3 are not the pinned versions. A pass here says
   nothing about rustc 1.92 or Node 24.3.0, and a new image can change the result without a repository change.
-- 72 cases do not run. The Dafny-compiled booking checker and the diff-policy clearing have no CI.
+- 72 cases do not run. The Dafny-compiled booking checker and the diff-policy clearing have no CI. The lost
+  non-Dafny parts are listed above.
+- `MIN_RUN_*` are constants of this commit. A change that removes cases must lower them in the same change.
 - The `paths:` filter leaves out files that the suites read: `examples/unbreakable_store/ts_part.ts`,
   `tests/m1-conformance/recorded-m1-cases.json` and the tracked refund binary. A change to those alone does not
   start the job.

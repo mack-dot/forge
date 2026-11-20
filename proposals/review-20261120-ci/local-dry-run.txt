@@ -1,0 +1,38 @@
+# Local dry run of the seven run: scripts of airlock-ci.yml (SHA-256 b190ba53a3e97254786fbad1315ef462be0322371c7efe3c2477c25bf9f5e946),
+# taken with Ruby YAML and run in order by a driver on 2026-11-20, macOS arm64, worktree with no build/, .toolchain/ or node_modules.
+# Local differences: SKIP_ENGINE also holds race (heavy step; heavy lock held by another team) and MIN_RUN_ENGINE=23; RUNNER_TOOL_CACHE empty, so the default node v24.3.0 was used.
+
+step1 exit=0 wall=0s
+step2 exit=0 wall=0s
+step3 exit=0 wall=3s
+step4 exit=0 wall=58s
+step5 exit=0 wall=8s
+step6 exit=0 wall=25s
+step7 exit=0 wall=3s
+
+== step1 (selected lines)
+rustc 1.92.0 (ded5c06cf 2025-12-08)
+Python 3.10.11
+selected Node: /opt/homebrew/bin/node v24.3.0 (the repository pins v24.3.0)
+== step4 (selected lines)
+tests/airlock/test_engine.py: 26 cases, 23 run, 3 skipped
+count check engine: 23 RUN, 23 PASS lines, minimum 23
+== step5 (selected lines)
+tests/airlock/test_node_helpers.py: 137 cases, 74 run, 63 skipped
+total 74: 74 PASS, 0 FAIL, 0 NOT RUN
+count check node: 74 RUN, 74 PASS lines, minimum 74
+== step6 (selected lines)
+tests/airlock/test_sdk.py: 19 cases, 17 run, 2 skipped
+count check sdk: 17 RUN, 17 PASS lines, minimum 17
+== step7 (selected lines)
+tests/airlock/test_diff_policy.py: 11 cases, 6 run, 5 skipped
+RESULT: PASS
+count check diff: 6 RUN, 6 PASS lines, minimum 6
+
+# Negative controls of the count check and the Node choice (same session)
+neg1 a PASS line removed (node helpers): exit 1, missing ['booking_no_args']
+neg2 PASS cas changed to FAIL (engine): exit 1, missing ['cas']
+neg3 minimum 7 for diff-policy (6 run): exit 1, 'only 6 cases ran; the minimum is 7'
+neg4 unknown skip name no_such_case (SDK): exit 1
+neg5 set -euo pipefail; a suite that exits 1 piped into tee: exit 1
+neg6 tool cache 22.23.5, 24.9.0, 24.22.3: sort -V picks 24.22.3 (lexical last: 24.9.0)
