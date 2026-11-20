@@ -91,6 +91,58 @@ The filter trusts the server's labels. The sub-cap fact is the airlock's
 own file. The CAS is on the airlock's ledger, not on the server's state.
 M1 and integration EXIT NOT_ESTABLISHED.
 
+### Archia MCP airlock demo, Phase 3 (reviews and repairs) — U743
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+The Phase 1 and 2 text above stays as written. Its lines "Phases 3 and 4
+are not started" and "no review ran" are true only for commit `ab059090`.
+Branch `demo/archia-mcp-showcase` is now rebased on `origin/main`
+`b2249ea2` (Goal 20 merged there as `9a9a8943`). `origin/main` is now
+`33055a59`, one documents-only commit later; NOT rebased again.
+`bin/forge-airlock` stays at its main bytes (SHA-256 `bd56d8b6…6891`,
+owner decision). The launcher of the proxy is `bin/forge-mcp-proxy`.
+The Rust proxy is a NATIVE CHECK. The tests are a FINITE TEST. Nothing
+is proved. No clearing check runs.
+
+| Step | Actual exit/result | Result |
+| --- | --- | --- |
+| two fresh-context reviews (REVIEW-A, REVIEW-B) and the TESTS finding T1 |FAIL-OPEN and HIGH findings|cross-clinic write fail-open; carriage-return smuggling; ledger reset to a double payout; receipt gaps; filter leaks; a second answer to a read passed (U743) |
+| one repair pass, commit `cb61b04f` |done|list in the commit message and in U743; NOT reviewed again |
+| `tests/mcp_proxy/test_review_regressions.py` on the repaired binary |0|17 of 17 (evidence bundle, attempt 3) |
+| R5 (one signature per malformed line), R6 (a stalled upstream stalls the proxy), server notifications not filtered |NOT repaired|stated in `src/mcp_proxy/PROTOCOL.md` section 8 |
+| latency claim "< 15 ms" |NOT claimed|owner decision: latency is a measurement, not an assertion |
+| T19 hardened sink |NOT waited for|owner: superseded |
+
+### Archia MCP airlock demo, Phase 4 (EXIT) — U744
+
+Final pass on `b35617b3` plus the change of `scripts/exit_archia_mcp.py`
+that this records commit holds. The bundle is a RECORD, not gate
+evidence (`gate_accepted: false`, `proved: false`). Raw outputs are in
+`build/archia_mcp/` (ignored by git); sources are named per row.
+
+| EXIT command/check | Expected exit | Actual exit/result | Result |
+| --- | --- | --- | --- |
+| `python3 scripts/exit_archia_mcp.py --case build` |0|0|two builds byte-identical, binary `1877a4fa…77b3`; `unsafe` control does not compile; `bin/forge-airlock` equals main |
+| `--case suite` |0|0|servers 14 of 14; e2e 27 of 27; unit 146 passed, 1 ignored; faults 44 PASS and 1 KNOWN LIMIT (45 cases); regressions 17 of 17; WAL replay byte-identical |
+| `--case showcase` |0|0|32 of 32 checks; peak RSS 2,480 KiB (bound 5.0 MiB); 30 commits p50 17.08 ms, p99 24.11 ms (measured, indicative only) |
+| `--case mutations` (ran before the last script edit) |0|0|44 of 47 killed; NOT KILLED exactly E01, M04, M27 |
+| `--case evidence`, first run (attempt 2) |0|1|two different bundles; which cases fail on killed copies M08 and B05 varies with timing |
+| `--case evidence`, after the repair (attempt 3) |0|0|two runs byte-identical; bundle `13608d7e…20bd`; 44 of 47 killed; wall about 1 h 33 min |
+| orchestrator rerun: `--case build`; `--case showcase` |0; 0|0; 0|same binary `1877a4fa…77b3`; 32 of 32; p50 16.78 ms, p99 29.80 ms |
+| `python3 scripts/exit_archia_mcp.py --case build` after this records change |0|0|run by the records agent |
+
+Not run yet (no exit code exists):
+- the regression in a scratch clone: the 28 Stage EXIT cases and the
+  other EXIT scripts' `--case evidence`;
+- `git push`; `gh pr create`; the hosted `gate/pr_check.py`;
+- a power-loss test or an `F_FULLFSYNC` observer (E01 and M04 stay
+  open); a second review; every HOL, Holmake and Dafny step.
+
+An earlier EXIT attempt put M13, M18 and M26 on the accepted-survivor
+list. The orchestrator rejected that. Three new fault cases now kill
+them. fsync durability is untested. M1 and integration EXIT
+NOT_ESTABLISHED.
+
 ## Goal 20, `forge-airlock` SDK: write, read and lease airlocks over a native WAL engine, with Python and TypeScript SDKs; a finite test of unproved Rust, JavaScript and Python around three proved cores; one review with repairs — U720 to U725
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

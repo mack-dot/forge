@@ -68,8 +68,15 @@ JUDGE_FILES = {
 }
 # The pre-repair binary that test_review_regressions.py uses only to BUILD one crafted evidence file (its own default).
 OLD_BINARY = '/private/tmp/claude-501/-Users-mackianni-forge/fb0fde47-8987-485d-a625-0e9fdb4facee/scratchpad/orch/mcp-proxy'
-GOAL20 = 'c02abb74'                     # the Goal 20 commit under this branch
-MAY_CHANGE_SINCE_GOAL20 = {'ROADMAP.md', 'unsure.md'}
+# bin/forge-airlock must stay at its bytes on main (Goal 20 merged there as 9a9a8943). SHA-256 of the file on
+# origin/main b2249ea2, checked on 2026-11-19 with `git show origin/main:bin/forge-airlock | shasum -a 256`. The pin
+# makes the check work also in a scratch clone whose `origin/main` is another commit or is missing.
+MAIN_FORGE_AIRLOCK_SHA256 = 'bd56d8b6afcd2d4a8a542c9789ebbb3fe6ef1e00a5c31d14e73957658a586891'
+MAIN_REF = 'origin/main'
+# The main commit this branch was rebased on (origin/main on 2026-11-19). A clone made from another checkout can have
+# an older `origin/main` (that checkout's local main): then this commit, which is in the history of HEAD, is the base.
+MAIN_COMMIT = 'b2249ea261117e562eec7a2cfd7c3aa6bfb964ee'
+MAY_CHANGE_SINCE_MAIN = {'ROADMAP.md', 'unsure.md'}
 RSS_BOUND_MIB = 5.0          # the one bound the owner approved
 MUTANT_FLOOD_GIB = '1'       # the showcase flood for changed copies (its smallest value; an integer option)
 PARALLEL = 2                 # at most 2 copies (compile + judges) at once: the machine is shared
@@ -219,22 +226,12 @@ EXPECTED_NOT_KILLED = {
     'E01_evidence_sync_dropped':
         'The twin of M04 in evidence.rs, with the same reason: the frames are written before the dropped sync_data and the '
         'page cache serves every later reader; no judge cuts power or observes fcntl(F_FULLFSYNC). A FINDING, not a pass.',
-    # The four below are JUDGE GAPS (a missing test), not equivalent changes, except M27. This script may not edit the
-    # test files; each entry names the test that is missing. They are findings for the owner, not passes.
-    'M13_default_deny_removed':
-        'JUDGE GAP: no judge sends a tools/call for a tool that is not in the policy (C15). Missing test: a call of an '
-        'unlisted tool must get BLOCKED_MALFORMED TOOL_NOT_IN_POLICY and 0 bytes upstream (wire log unchanged).',
-    'M18_client_cap_raised_to_1_mib':
-        'JUDGE GAP: no judge sends a client line between 65,537 bytes and 1 MiB. Missing test: a line of exactly 65,536 '
-        'bytes passes the framing and a line of 65,537 bytes gets -32700 LINE_TOO_LONG with 0 bytes upstream.',
-    'M26_request_id_not_validated':
-        'JUDGE GAP: no judge sends a bad forge-airlock/request_id. With the proxy check removed, ledger.commit still '
-        'refuses the id (LEDGER_FAULT instead of BLOCKED_MALFORMED, no receipt). Missing test: a request id with a space '
-        'or of 129 bytes must give BLOCKED_MALFORMED BAD_REQUEST_ID, one BLOCKED_MALFORMED receipt, 0 bytes upstream.',
     'M27_late_response_to_dropped_read_passed':
-        'EQUIVALENT after the T1 repair (our reading, not proved): a dropped read leaves the in-flight set, so a late '
-        'response is discarded by the in-flight rule even without the tombstone. The tombstone is a second layer that no '
-        'black-box test can separate from the first.',
+        'No distinguishing input found; not shown equivalent. Probe (EXIT worker, 2026-11-19): four scripted hostile '
+        'upstream sequences (a dropped read answered late, before and after its id was re-used, by a held new request, '
+        'several late answers, own and foreign clinic) gave byte-identical client output from this copy and the '
+        'unchanged build. The tombstone is removed in both (the `&& false` keeps the remove), and a dropped id has left '
+        'the in-flight set, so the in-flight rule discards the late answer in both.',
 }
 
 
@@ -287,6 +284,21 @@ def compile_in(tree, out_dir):
 
 
 # --------------------------------------------------------------------------------------------------------- build
+def main_base():
+    """The commit of main to compare with: `git merge-base HEAD origin/main` when that is MAIN_COMMIT or newer, else
+    MAIN_COMMIT when it is an ancestor of HEAD. Neither: NOT RUN, which fails the case."""
+    def ancestor(a, b):
+        return run(['git', 'merge-base', '--is-ancestor', a, b]).returncode == 0
+    mb = run(['git', 'merge-base', 'HEAD', MAIN_REF])
+    mb = mb.stdout.strip() if mb.returncode == 0 else ''
+    if re.fullmatch(r'[0-9a-f]{40}', mb) and ancestor(MAIN_COMMIT, mb):
+        return mb
+    if ancestor(MAIN_COMMIT, 'HEAD'):
+        return MAIN_COMMIT
+    raise Failed('MAIN: NOT RUN: neither `git merge-base HEAD %s` (%s) nor the pinned main commit %s is a usable base; '
+                 'the check "no file of main is modified" cannot run' % (MAIN_REF, mb[:8] or 'no such ref', MAIN_COMMIT[:8]))
+
+
 def build(work):
     work.mkdir(parents=True)
     files = sorted((ROOT / SRC_DIR).glob('*.rs'))
@@ -306,14 +318,17 @@ def build(work):
     require('#![forbid(unsafe_code)]' in main_lines, 'SOURCE: main.rs has no #![forbid(unsafe_code)]')
     require(not problems, 'SOURCE: an import is not from std/crate, or an extern crate: %r' % problems)
     require(not list(ROOT.glob('src/mcp_proxy/Cargo.*')) and not (ROOT / 'Cargo.toml').exists(), 'SOURCE: a Cargo file exists')
-    old = subprocess.run(['git', 'show', GOAL20 + ':bin/forge-airlock'], cwd=ROOT, capture_output=True)
-    require(old.returncode == 0 and old.stdout == (ROOT / 'bin/forge-airlock').read_bytes(),
-            'GOAL20: bin/forge-airlock is not byte-identical to %s:bin/forge-airlock (git show exit %d)' % (GOAL20, old.returncode))
-    diff = run(['git', 'diff', '--name-status', GOAL20])
-    require(diff.returncode == 0, 'GOAL20: git diff exit %s' % diff.returncode)
+    require(digest((ROOT / 'bin/forge-airlock').read_bytes()) == MAIN_FORGE_AIRLOCK_SHA256,
+            'MAIN: bin/forge-airlock is not byte-identical to main (SHA-256 pin %s)' % MAIN_FORGE_AIRLOCK_SHA256[:12])
+    base = main_base()
+    at_base = subprocess.run(['git', 'show', base + ':bin/forge-airlock'], cwd=ROOT, capture_output=True)
+    require(at_base.returncode == 0 and digest(at_base.stdout) == MAIN_FORGE_AIRLOCK_SHA256,
+            'MAIN: bin/forge-airlock at the merge base %s is not the pinned main file' % base[:8])
+    diff = run(['git', 'diff', '--name-status', base])
+    require(diff.returncode == 0, 'MAIN: git diff exit %s' % diff.returncode)
     changed = [line.split('\t') for line in diff.stdout.splitlines() if line.strip()]
-    touched = sorted(parts[-1] for parts in changed if parts[0] != 'A' and parts[-1] not in MAY_CHANGE_SINCE_GOAL20)
-    require(not touched, 'GOAL20: files that exist at %s are modified, deleted or renamed: %r' % (GOAL20, touched))
+    touched = sorted(parts[-1] for parts in changed if parts[0] != 'A' and parts[-1] not in MAY_CHANGE_SINCE_MAIN)
+    require(not touched, 'MAIN: files of main (merge base %s) are modified, deleted or renamed: %r' % (base[:8], touched))
     binaries = []
     for k in (1, 2):
         out, done = compile_in(ROOT, work / ('build-%d' % k))
@@ -332,16 +347,17 @@ def build(work):
     final.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(binaries[0], final)
     record = {'compile_command': ['rustc'] + FLAGS + [MAIN, '-o', '<folder>/mcp-proxy'], 'compile_exit': 0, 'compiler_output_bytes': 0,
-              'goal20_bin_forge_airlock_byte_identical': True,
-              'goal20_files_modified': sorted(parts[-1] for parts in changed if parts[0] != 'A'),
-              'goal20_files_added': sum(1 for parts in changed if parts[0] == 'A'),
+              'main_bin_forge_airlock_byte_identical': True, 'main_bin_forge_airlock_sha256': MAIN_FORGE_AIRLOCK_SHA256,
+              'main_files_modified': sorted(parts[-1] for parts in changed if parts[0] != 'A'),
+              'main_files_modified_allowed': sorted(MAY_CHANGE_SINCE_MAIN),
               'forbid_unsafe_code_in_main_rs': True, 'imports_std_or_crate_only': True, 'extern_crate': 0, 'cargo_used': False,
               'rust_files': [p.relative_to(ROOT).as_posix() for p in files] + SHARED_RS,
               'unsafe_control': {'what': 'main.rs plus one function with an unsafe block, same command', 'compile_failed': True},
               'two_builds_byte_identical': reproducible}
     if reproducible:
         record['binary_sha256'] = digest(one)
-    measured = {'binary_sha256_build_1': digest(one), 'binary_sha256_build_2': digest(two), 'binary_bytes': len(one), 'binary': str(final)}
+    measured = {'merge_base_with_' + MAIN_REF.replace('/', '_'): base, 'files_added_since_merge_base': sum(1 for parts in changed if parts[0] == 'A'),
+                'binary_sha256_build_1': digest(one), 'binary_sha256_build_2': digest(two), 'binary_bytes': len(one), 'binary': str(final)}
     return final, record, measured
 
 
@@ -636,17 +652,20 @@ def mutations(work):
             invalid.append(name)
         elif kill is None:
             not_killed.append(name)
+        # The bundle keeps only what repeats: compiled, killed. WHICH cases fail on a killed copy depends on timing for
+        # some copies (observed 2026-11-20: M08 and B05 failed 1 to 2 more secondary cases in one of two runs), so the
+        # judges and their failed cases go to measurements.json, not to the bundle.
         table.append({'name': name, 'file': SRC_DIR + '/' + file, 'removed': removed, 'judge_expected': first,
-                      'compiled': row['compiled'], 'killed': kill is not None,
-                      'killed_by': [{'judge': j['judge'], 'failed_cases': j['failed']} for j in kills],
-                      'expected_judge_killed': any(j['judge'] == first for j in kills),
-                      'judges_run': [{'judge': j['judge'], 'exit_code': j['exit_code'], 'failed_cases': j['failed']} for j in row['judges']]})
-        measured[name] = [{'judge': j['judge'], 'wall_s': j['wall_s']} for j in row['judges']]
+                      'compiled': row['compiled'], 'killed': kill is not None})
+        measured[name] = {'killed_by': [{'judge': j['judge'], 'failed_cases': j['failed']} for j in kills],
+                          'judges_run': [{'judge': j['judge'], 'exit_code': j['exit_code'], 'failed_cases': j['failed'], 'wall_s': j['wall_s']}
+                                         for j in row['judges']]}
     k = sum(r['killed'] for r in table)
     result = {'changed_copies': len(table), 'killed': k, 'not_killed': sorted(not_killed), 'invalid_do_not_compile': sorted(invalid),
               'expected_not_killed': {n: EXPECTED_NOT_KILLED[n] for n in sorted(EXPECTED_NOT_KILLED)},
               'judges_missing_not_run': missing, 'flood_gib_for_copies': MUTANT_FLOOD_GIB, 'faults_args_for_copies': MUTANT_FAULTS_ARGS,
               'unchanged_copy': [{'judge': j['judge'], 'exit_code': j['exit_code']} for j in control['judges']],
+              'kill_table_in': 'measurements.json (key mutations): judges that killed each copy and their failed cases',
               'kill_rule': 'a judge exits 1 (not a setup error, not a timeout) and names at least one failed case; the unchanged copy passed '
                            'the same judges in the same harness; a compile failure is NOT a kill',
               'table': table}
@@ -678,7 +697,7 @@ def bundle_of(work):
         'mutations_case_passed': ok, 'mutations_line': line,
         'reproduce_cmd': 'python3 scripts/exit_archia_mcp.py --case evidence',
     }
-    return bundle, {'build': m_build, 'suite': m_suite, 'showcase': m_show, 'mutations_wall_s': m_mut}, ok, line
+    return bundle, {'build': m_build, 'suite': m_suite, 'showcase': m_show, 'mutations': m_mut}, ok, line
 
 
 def attempt_folder(case):
