@@ -8,7 +8,7 @@
 //           "REJECT\n", exit 1, only when it returns false.
 //   exit 2: malformed input, a wrong model file, or any exception. A message goes to stderr. Nothing goes to stdout.
 //
-// Label: PROVED CORE source (proposals/forge2-pillar3-dual-certificate/BookingDualCert.dfy, method
+// Label: compiled from a Dafny source proof; the compiled JavaScript is NOT proved (proposals/forge2-pillar3-dual-certificate/BookingDualCert.dfy, method
 // VerifyCertifiedBooking, ensures ok == Accepts(A, c, w, x, y, z, alpha_bps)). This file decides NOTHING itself.
 // It parses, converts to Dafny values (BigNumber integers, Dafny sequences) and calls the compiled method.
 // Dimension mismatches, negative duals, non-binary x, alpha_bps > 10000: all go to the compiled method, which

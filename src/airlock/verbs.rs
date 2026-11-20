@@ -166,7 +166,8 @@ fn refund(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
     let Some(policy::Body::Money(m)) = s.policies.get(pol).map(|p| &p.body) else { return no(Code::CorruptWal, "CORRUPT_WAL POLICY_MISSING") };
     let mut cosigned = 0;
     if m.canonical {
-        // PROVED CORE for the decision: the CakeML binary. The three flags are set by the engine, not by the
+        // The decision: the CakeML binary (compiled by a verified compiler (CakeML); a model-level HOL4 theorem; the native link (M1-B) is OPEN, so the binary itself is NOT proved).
+        // The three flags are set by the engine, not by the
         // caller: enabled = the key was opened under this profile; opened = the request id is fresh (checked
         // above); candidate = the request passed the grammar. The engine refuses amount 0 natively first.
         if amount == 0 { return verdict(s, req, Code::RejectedPolicy, "ZERO_AMOUNT") }
@@ -257,7 +258,7 @@ fn book(ctx: &Ctx, line: &str) -> Result<String, Refusal> {
         match policy::accepts(&cert) { Ok(()) => None, Err("OVERFLOW") => return no(Code::Malformed, "OVERFLOW"), Err(e) => Some(e) }
     };
     if let Some(code) = decision { return verdict(s, req, Code::RejectedPolicy, code) }
-    // PROVED CORE source for the check: the Dafny-compiled BookingDualCert checker, run by Node (trusted).
+    // The check: the BookingDualCert checker, compiled from a Dafny source proof (the compiled JavaScript is NOT proved), run by Node (trusted).
     if !helpers::booking_check(&ctx.node(), &policy::cert_json(&cert))? { return verdict(s, req, Code::RejectedPolicy, "CHECKER_REJECTED") }
     let used = policy::usage(&cert).ok_or(Refusal(Code::Malformed, "OVERFLOW".into()))?;
     let after: Option<Vec<u64>> = cert.c.iter().zip(&used).map(|(c, u)| (*c as u128).checked_sub(*u).map(|v| v as u64)).collect();

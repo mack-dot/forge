@@ -3,8 +3,9 @@
 
 It decides nothing. It finds paths, starts the engine (build/airlock/airlock-engine) or a helper with the right
 options, and passes the exit code through unchanged. Every write decision is the engine's (NATIVE CHECK), the
-CakeML refund binary's (PROVED CORE, canonical-refund profile only) or the Dafny-compiled booking checker's
-(PROVED CORE source; Dafny compiler and Node trusted). A cosign is verified by the engine through the system
+CakeML refund binary's (canonical-refund profile only; compiled by a verified compiler, a model-level HOL4 theorem,
+the native link M1-B OPEN: the binary is not proved) or the Dafny-compiled booking checker's (compiled from a Dafny
+source proof; the compiled JavaScript is not proved; Dafny compiler and Node trusted). A cosign is verified by the engine through the system
 OpenSSH (/usr/bin/ssh-keygen; trusted assumption): no Node runs for a store without an inventory policy.
 
   forge-airlock build [--checker]            the production engine build/airlock/airlock-engine, the TEST-ONLY

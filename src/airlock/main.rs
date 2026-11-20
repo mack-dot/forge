@@ -3,8 +3,10 @@
 //! forge-airlock engine (Goal 20). NATIVE CHECK: Rust, standard library only, no crate, no `unsafe`. NOT PROVED.
 //! Generalizes src/silicon_sink/sink.rs (unchanged) to many keys with a tenant field and three write airlocks:
 //! money, saga, inventory; plus a read airlock (READ) and durable obligation leases.
-//! PROVED CORE only where stated: the CakeML refund binary decides a `canonical-refund` REFUND; the Dafny-compiled
-//! BookingDualCert checker (run by Node: Node and the Dafny compiler are trusted) must accept a BOOK. Everything
+//! Two decisions use code with a machine-checked SOURCE or MODEL, not a proved binary: the CakeML refund binary decides a
+//! `canonical-refund` REFUND (compiled by a verified compiler (CakeML); a model-level HOL4 theorem; the native link (M1-B) is OPEN, so the binary itself is NOT proved); the
+//! BookingDualCert checker must accept a BOOK (compiled from a Dafny source proof; the compiled JavaScript is NOT proved;
+//! Node and the Dafny compiler are trusted). Everything
 //! else here (WAL, fold, CAS, parametric money rules, saga table, cosign wiring, read airlock, leases) is a native
 //! check with finite tests. `sync_all` is fcntl(F_FULLFSYNC) on macOS; the kernel and the drive are assumptions.
 //! FNV-1a-128 is not cryptographic. Cosign signatures are verified by the system OpenSSH, `/usr/bin/ssh-keygen -Y
