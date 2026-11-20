@@ -61,6 +61,35 @@ kernel: an ASSUMPTION (BETA-PLAIN) with a tested check. T2b, T3 and T4
 are NOT closed. Route A premises (the FFI contract at shape-valid calls,
 the processor bits, the entry state) are assumptions about the real
 machine. M1 and integration EXIT NOT_ESTABLISHED.
+## Archia MCP airlock demo, Phases 1 and 2: an MCP stdio proxy with a ledger compare-and-swap, a scoped-read filter and signed receipts; two real upstream servers; a finite test of unproved Rust; NOT merged — U740 to U742
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected file changed. Branch
+`demo/archia-mcp-showcase` from the Goal 20 branch at `c02abb74` (owner
+decision; pre-flight rule 1 of the directive is NOT MET, U740). Phases 3
+and 4 are not started. Nothing is proved; no review ran; no changed-copy
+run exists. Not pushed.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| pre-flight: `origin/main` after Goal 20 and T19 |NOT MET|`origin/main` = `a5133c01`; stacked on `c02abb74` on the owner's word |
+| `git status --short` on the protected and frozen paths |0 lines|`bin/forge-airlock` changed: it is in the Goal 20 bundle subject list (U740) |
+| `rustc --edition 2021 -D unsafe_code -C opt-level=3 src/mcp_proxy/main.rs` (orchestrator) |0|std only; no `unsafe`; no crate |
+| unit tests of the same root (`rustc --test`) |0|23 passed, 1 ignored (timing) |
+| `python3 tests/mcp_proxy/test_servers.py` (servers with no proxy) |0|14 of 14 |
+| `python3 tests/mcp_proxy/test_proxy_e2e.py` |0|20 of 20: 20-call race gives 1 payout in the server's audit file; cross-clinic read gives 0 foreign bytes; 500 mg refused; `verify-evidence` 0; one flipped byte refused |
+| the PROXY worker's integration suite, run again by the orchestrator |0|0 failed (the worker's count: 54) |
+| 10 GiB line with no newline into the proxy |0|peak resident memory 1,808 KiB (82 samples); next request answered |
+| 40 commits, sync signing; async signing |0; 0|p50 19.20 ms; p50 12.06 ms: "under 15 ms" is NOT a bound (U742) |
+| `verify-evidence` on both stores: first try; second try |1; 0|first: my empty allowed-signers file; then 40 of 40 records, twice |
+| workers' module tests not repeated: POLICY 47 cases; EVIDENCE 30 cases |0; 0 (their reports)|test roots are in scratch folders |
+| `bin/forge-airlock build`; `scripts/exit_goal20_sdk.py`; the 28 Stage EXIT cases; Phases 3 and 4; push; pull request |NOT RUN| |
+| every HOL, Holmake, Dafny and Node step |NOT RUN|not part of this work |
+
+[Wire document](src/mcp_proxy/PROTOCOL.md).
+The filter trusts the server's labels. The sub-cap fact is the airlock's
+own file. The CAS is on the airlock's ledger, not on the server's state.
+M1 and integration EXIT NOT_ESTABLISHED.
 
 ## Goal 20, `forge-airlock` SDK: write, read and lease airlocks over a native WAL engine, with Python and TypeScript SDKs; a finite test of unproved Rust, JavaScript and Python around three proved cores; one review with repairs — U720 to U725
 

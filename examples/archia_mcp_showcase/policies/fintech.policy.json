@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "tools": {
+    "issue_payout": {"kind": "mutating", "rules": [{"arg": "amount", "max": "500.00"}]},
+    "get_balance": {"kind": "passthrough"},
+    "list_invoices": {"kind": "sensitive_read", "scope": ["org_id"]}
+  }
+}

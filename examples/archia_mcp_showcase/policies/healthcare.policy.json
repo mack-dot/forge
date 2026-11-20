@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "tools": {
+    "update_dosage": {"kind": "mutating", "subcaps": [{"arg": "mg", "max_fact": "max_mg/{patient_id}/{medication}"}]},
+    "get_patient_chart": {"kind": "sensitive_read", "scope": ["clinic_id"]}
+  }
+}

@@ -19935,3 +19935,58 @@ curl: (6) Could not resolve host: github.com
 - The regression did NOT run on the two records commits (documents only). Their hosted results are in the pull request.
 - NOT RUN: Stage 7, Stage 9, Stage 10; a clean or independent HOL replay.
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on pull request 66.
+## U740 — Archia MCP airlock demo: start; the base is not the base that the directive names; the launcher is in the Goal 20 bundle
+
+- Refs U720 to U723 (Goal 20), U709. Evidence: the owner's directive, stored verbatim at `/tmp/forge_archia_demo.md`
+  (pasted text; the owner asked for Phases 1 and 2 only); `git log`; `gh pr list` of 2026-11-19.
+- Pre-flight rule 1 asks for a branch from clean `origin/main` after Goal 20 and T19. NOT MET: `origin/main` was
+  `a5133c01`; Goal 20 (`feat/zero-babysitting-sdk`, `c02abb74`) had no pull request; T19
+  (`feat/t19-hardened-sink`, `ddcdbd09`) was not on `origin`. `bin/forge-airlock` exists only on the Goal 20 branch.
+- Owner decision (asked once, answered in the session): stack `demo/archia-mcp-showcase` on `c02abb74`, in a
+  separate worktree. The T19 content is absent from this branch.
+- `bin/forge-airlock` is in the subject list of `scripts/exit_goal20_sdk.py`. The wiring of `mcp`,
+  `verify-evidence` and `mcp-state` changed it (15 lines added, 2 deleted; SHA-256 `bd56d8b6…` to `94d55f22…`,
+  the worker's numbers). The Goal 20 bundle record `1e75ab47` therefore does not describe this tree.
+- Uncertainty: `scripts/exit_goal20_sdk.py` was NOT RUN on this branch. I do not know its result here.
+- Impact: Phase 4 asks for "prior bundles unchanged"; that cannot hold for the Goal 20 bundle as the tree is.
+  No stage label changes. Next check: after the owner merges Goal 20 and T19, rebase, then run the Goal 20 EXIT
+  script and decide with the owner how the launcher change is recorded.
+
+## U741 — Archia MCP airlock demo, Phases 1 and 2: what was built and what my own runs show
+
+- Refs U740. One orchestrator, five workers (PROXY, LEDGER, POLICY, EVIDENCE, SERVERS), one file set each.
+  Files: `src/mcp_proxy/` (7 Rust files and `PROTOCOL.md`), `examples/archia_mcp_showcase/servers/` and
+  `policies/`, `tests/mcp_proxy/`, `bin/forge-airlock`. Rust `std` only, `#![forbid(unsafe_code)]`; Python stdlib.
+- My own runs (worktree, 2026-11-19; binary in a scratch folder, not `build/`): the build command of
+  `PROTOCOL.md` exit 0; unit tests of the binary 23 passed, 1 ignored (the timing case); `test_servers.py` exit 0,
+  14 of 14; `test_proxy_e2e.py` exit 0, 20 of 20; the PROXY worker's suite exit 0, 0 failed; a 10 GiB line with no
+  newline: peak resident memory of the proxy 1,808 KiB over 82 samples of `ps`, next request answered.
+- Worker runs that I did NOT repeat: POLICY's 47 cases and EVIDENCE's 30 cases (their test roots are in scratch
+  folders, not in the tree); LEDGER's timing (median 4.0 to 5.0 ms for one commit).
+- A failed step of mine, kept: the first `verify-evidence` of my latency script ended with `FAILED at=1`. Cause:
+  my script wrote an EMPTY allowed-signers file before the key existed. With the right file both stores gave
+  `VERIFIED records=40 signatures=40 chain=OK`.
+- Nothing is proved. Every row is a NATIVE CHECK or a FINITE TEST on one machine. No review ran. No changed-copy
+  (mutation) run exists yet: a passing suite does not show that the suite can fail.
+- Impact: none on any stage label. `end_to_end=false`. M1 open. Next check: Phase 4 (changed copies), a review.
+
+## U742 — Archia MCP airlock demo: numbers of the directive that the measurements do not support, and stated limits
+
+- Refs U741, U703 (the same finding for Goal 19: "commit under 2 ms" not reached).
+- "The next valid call commits in < 15 ms" (Beat 3): NOT SUPPORTED as a bound. My 40 sequential commits through
+  the real fintech server: sync signing min 13.95, p50 19.20, p90 26.15, max 121.92 ms; async signing min 6.97,
+  p50 12.06, p90 17.80, max 20.41 ms. Cost: one `sync_all` (F_FULLFSYNC on macOS) per ledger record and one
+  `/usr/bin/ssh-keygen` process per receipt. Phase 3 must print the measured value, not the directive's number.
+- "Hardware write barrier", "proved finality", "HIPAA": the proxy is unproved Rust in front of an unmodified
+  server. It gives no proof and no compliance statement. The scoped-read filter checks labels (`clinic_id`,
+  `org_id`) that the upstream server writes; it does not know the truth of the data. Foreign data in free text
+  with no scope key name passes (stated in `policy.rs`).
+- The sub-cap fact (`max_mg/<patient>/<medication>`) comes from the airlock's own facts file, a trusted input.
+  The proxy does not read the server's stored record. "Checked against stored EHR" is true only for that file.
+- The CAS is on the airlock's own ledger head, not on the server's balance. A call that reaches the server by
+  another path is outside every check. A crash between the ledger sync and the forward consumes the epoch.
+- Removal of whole trailing records of `evidence.wal` or `ledger.wal` is NOT detected without an outside anchor
+  (`verify-evidence` prints `final_chain` for that purpose). A 0600 key does not stop a process of the same user.
+- The MCP protocol version string of the servers (`2025-06-18`) was written from memory, not checked against
+  the published specification. Uncertainty: conformance to the MCP specification is NOT ESTABLISHED.
+- Impact: wording of Phase 3 output and of any pull request. Next check: owner review of these limits.
