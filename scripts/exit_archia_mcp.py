@@ -28,6 +28,10 @@ Convention for copies that no judge kills (the Goal 20 convention, scripts/exit_
 listed in EXPECTED_NOT_KILLED with the reason. They run like every other copy. They never count as killed. The case
 `mutations` exits 0 only when the set of NOT KILLED copies EQUALS that recorded list: a new survivor fails the case,
 and an expected survivor that is now killed also fails the case (the list must then be updated by a person).
+
+Pre-merge checks (the forge-airlock SHA-256 pin and "no file of main is modified") were conditions of the pull request
+and are false on main after the squash merge MERGED_AS; when MERGED_AS is an ancestor of HEAD they print "pre-merge check
+not applicable" and the record says NOT APPLICABLE (never passed), else they run as before (NOT RUN if git cannot say).
 """
 
 import argparse
@@ -77,6 +81,8 @@ MAIN_REF = 'origin/main'
 # an older `origin/main` (that checkout's local main): then this commit, which is in the history of HEAD, is the base.
 MAIN_COMMIT = 'b2249ea261117e562eec7a2cfd7c3aa6bfb964ee'
 MAY_CHANGE_SINCE_MAIN = {'ROADMAP.md', 'unsure.md'}
+# The squash commit of this work on main (pull request "Archia MCP airlock demo"). The checks above are pre-merge only.
+MERGED_AS = 'a2ef7c0a90ae46f5054356e6c6764074f57ccd73'
 RSS_BOUND_MIB = 5.0          # the one bound the owner approved
 MUTANT_FLOOD_GIB = '1'       # the showcase flood for changed copies (its smallest value; an integer option)
 PARALLEL = 2                 # at most 2 copies (compile + judges) at once: the machine is shared
@@ -284,6 +290,22 @@ def compile_in(tree, out_dir):
 
 
 # --------------------------------------------------------------------------------------------------------- build
+def merged():
+    """True when MERGED_AS is an ancestor of HEAD, False when it is not (the pre-merge checks run). Git cannot answer (no
+    repository, or a shallow clone without the commit): NOT RUN, which fails the case."""
+    p = run(['git', 'merge-base', '--is-ancestor', MERGED_AS, 'HEAD'])
+    if p.returncode == 0:
+        return True
+    if p.returncode == 1:
+        return False
+    known = run(['git', 'cat-file', '-e', MERGED_AS + '^{commit}']).returncode == 0
+    shallow = run(['git', 'rev-parse', '--is-shallow-repository'])
+    if not known and shallow.returncode == 0 and shallow.stdout.strip() == 'false':
+        return False    # a full history without the commit: it is not an ancestor
+    raise Failed('MAIN: NOT RUN: git cannot say whether %s is an ancestor of HEAD (exit %s: %s); the pre-merge checks '
+                 'cannot run' % (MERGED_AS[:8], p.returncode, (p.stderr or '').strip()[:200]))
+
+
 def main_base():
     """The commit of main to compare with: `git merge-base HEAD origin/main` when that is MAIN_COMMIT or newer, else
     MAIN_COMMIT when it is an ancestor of HEAD. Neither: NOT RUN, which fails the case."""
@@ -318,17 +340,24 @@ def build(work):
     require('#![forbid(unsafe_code)]' in main_lines, 'SOURCE: main.rs has no #![forbid(unsafe_code)]')
     require(not problems, 'SOURCE: an import is not from std/crate, or an extern crate: %r' % problems)
     require(not list(ROOT.glob('src/mcp_proxy/Cargo.*')) and not (ROOT / 'Cargo.toml').exists(), 'SOURCE: a Cargo file exists')
-    require(digest((ROOT / 'bin/forge-airlock').read_bytes()) == MAIN_FORGE_AIRLOCK_SHA256,
-            'MAIN: bin/forge-airlock is not byte-identical to main (SHA-256 pin %s)' % MAIN_FORGE_AIRLOCK_SHA256[:12])
-    base = main_base()
-    at_base = subprocess.run(['git', 'show', base + ':bin/forge-airlock'], cwd=ROOT, capture_output=True)
-    require(at_base.returncode == 0 and digest(at_base.stdout) == MAIN_FORGE_AIRLOCK_SHA256,
-            'MAIN: bin/forge-airlock at the merge base %s is not the pinned main file' % base[:8])
-    diff = run(['git', 'diff', '--name-status', base])
-    require(diff.returncode == 0, 'MAIN: git diff exit %s' % diff.returncode)
-    changed = [line.split('\t') for line in diff.stdout.splitlines() if line.strip()]
-    touched = sorted(parts[-1] for parts in changed if parts[0] != 'A' and parts[-1] not in MAY_CHANGE_SINCE_MAIN)
-    require(not touched, 'MAIN: files of main (merge base %s) are modified, deleted or renamed: %r' % (base[:8], touched))
+    require((ROOT / 'bin/forge-mcp-proxy').is_file(), 'SOURCE: the launcher bin/forge-mcp-proxy is missing')
+    is_merged = merged()
+    if is_merged:
+        for check in ('bin/forge-airlock SHA-256 pin', 'no file of main is modified'):
+            print('  pre-merge check not applicable: %s (merged as %s)' % (check, MERGED_AS[:8]), flush=True)
+        base, changed = None, []
+    else:
+        require(digest((ROOT / 'bin/forge-airlock').read_bytes()) == MAIN_FORGE_AIRLOCK_SHA256,
+                'MAIN: bin/forge-airlock is not byte-identical to main (SHA-256 pin %s)' % MAIN_FORGE_AIRLOCK_SHA256[:12])
+        base = main_base()
+        at_base = subprocess.run(['git', 'show', base + ':bin/forge-airlock'], cwd=ROOT, capture_output=True)
+        require(at_base.returncode == 0 and digest(at_base.stdout) == MAIN_FORGE_AIRLOCK_SHA256,
+                'MAIN: bin/forge-airlock at the merge base %s is not the pinned main file' % base[:8])
+        diff = run(['git', 'diff', '--name-status', base])
+        require(diff.returncode == 0, 'MAIN: git diff exit %s' % diff.returncode)
+        changed = [line.split('\t') for line in diff.stdout.splitlines() if line.strip()]
+        touched = sorted(parts[-1] for parts in changed if parts[0] != 'A' and parts[-1] not in MAY_CHANGE_SINCE_MAIN)
+        require(not touched, 'MAIN: files of main (merge base %s) are modified, deleted or renamed: %r' % (base[:8], touched))
     binaries = []
     for k in (1, 2):
         out, done = compile_in(ROOT, work / ('build-%d' % k))
@@ -346,17 +375,20 @@ def build(work):
     final = ROOT / BUILD / 'mcp-proxy'
     final.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(binaries[0], final)
+    na = 'NOT APPLICABLE: pre-merge check; merged as ' + MERGED_AS
     record = {'compile_command': ['rustc'] + FLAGS + [MAIN, '-o', '<folder>/mcp-proxy'], 'compile_exit': 0, 'compiler_output_bytes': 0,
-              'main_bin_forge_airlock_byte_identical': True, 'main_bin_forge_airlock_sha256': MAIN_FORGE_AIRLOCK_SHA256,
-              'main_files_modified': sorted(parts[-1] for parts in changed if parts[0] != 'A'),
-              'main_files_modified_allowed': sorted(MAY_CHANGE_SINCE_MAIN),
+              'main_bin_forge_airlock_byte_identical': na if is_merged else True, 'main_bin_forge_airlock_sha256': MAIN_FORGE_AIRLOCK_SHA256,
+              'main_files_modified': na if is_merged else sorted(parts[-1] for parts in changed if parts[0] != 'A'),
+              'main_files_modified_allowed': sorted(MAY_CHANGE_SINCE_MAIN), 'launcher_bin_forge_mcp_proxy_exists': True,
               'forbid_unsafe_code_in_main_rs': True, 'imports_std_or_crate_only': True, 'extern_crate': 0, 'cargo_used': False,
               'rust_files': [p.relative_to(ROOT).as_posix() for p in files] + SHARED_RS,
               'unsafe_control': {'what': 'main.rs plus one function with an unsafe block, same command', 'compile_failed': True},
               'two_builds_byte_identical': reproducible}
     if reproducible:
         record['binary_sha256'] = digest(one)
-    measured = {'merge_base_with_' + MAIN_REF.replace('/', '_'): base, 'files_added_since_merge_base': sum(1 for parts in changed if parts[0] == 'A'),
+    measured = {'merge_base_with_' + MAIN_REF.replace('/', '_'): base if base else na,
+                'files_added_since_merge_base': na if is_merged else sum(1 for parts in changed if parts[0] == 'A'),
+                'pre_merge_checks': na if is_merged else 'RUN (%s is not an ancestor of HEAD)' % MERGED_AS[:8],
                 'binary_sha256_build_1': digest(one), 'binary_sha256_build_2': digest(two), 'binary_bytes': len(one), 'binary': str(final)}
     return final, record, measured
 

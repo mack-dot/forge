@@ -28,6 +28,53 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Release audit 2026-11-20: merge state
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Documents only. The sections below were written on their
+branches BEFORE these merges. Their words "NOT merged", "NOT merged by
+the agent", "draft pull request" and "branch ... from" are the record of
+that time and are not changed. The merge state on `main` = `058eabcb`
+(read with `gh pr list --state merged` and `git log --oneline
+origin/main`; both exit 0):
+
+| Pull request | Squash commit on `main` | Section below |
+| --- | --- | --- |
+| 65 | `9a9a8943` | Goal 20, `forge-airlock` SDK |
+| 66 | `b2249ea2` | Gate APEX-2 |
+| 67 | `33055a59` | none (Formal Ceiling v2, design only; `unsure.md` U840) |
+| 68 | `be9c1cc2` | Review of 2026-11-20: README top and claims |
+| 69 | `0a84902a` | Review 2026-11-20, defect D1: isolation-mode design |
+| 70 | `116f675f` | Gate F1 (Goal 21), intent clearing |
+| 71 | `c1490f92` | Review fix PR-2, CI for the airlock engine |
+| 72 | `cad68a5f` | Goal 21, phase 1: cosign check without Node |
+| 73 | `7e5842d0` | Review 2026-11-20, engine hardening (PR-3) |
+| 74 | `f1d87032` | T19, the hardened refund sink, minter and dispatcher |
+| 75 | `ccdd8e5f` | Video cut |
+| 77 | `a2ef7c0a` | Archia MCP airlock demo, Phases 1 to 4 |
+| 78 | `e9e30a64` | none (ROADMAP repair) |
+| 79 | `058eabcb` | V1.1 universal primitives pack |
+
+Still OPEN: pull request 76 (Gate F2a, Stage 9 lock rebind; protected
+files; no section here). Stage 9 stays deferred.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `gh pr list --state merged`; `git log --oneline origin/main` |0; 0|the table above |
+| `gh run list --workflow airlock-ci.yml --branch main` |0|hosted runs 44756122944 (`c1490f92`) and 44767657892 (`058eabcb`): success |
+| link check of the five changed documents (a working-tree variant of `proposals/round4-20261117/check_links.py`) |0|0 missing targets |
+| any test suite, EXIT script or bundle run |NOT RUN|documents only |
+
+Findings, the number ledger and the proposed code-comment changes:
+[AUDIT3_DOCUMENTS.md](proposals/release-audit-20261120/AUDIT3_DOCUMENTS.md).
+Two record facts that the sections below do not show: (1) the tracked
+Goal 20 bundle record (`1e75ab47…`) does not reproduce on `main`: 20 of
+its 64 subject files changed in pull requests 68, 72 and 73, and no
+newer bundle is tracked; (2) `scripts/exit_archia_mcp.py` pins the
+pre-merge `bin/forge-airlock` (`bd56d8b6…`), but `main` has `8d9296ac…`,
+so its `--case build` cannot pass on `main` as written (NOT RUN; read
+from the script).
+
 ## V1.1 universal primitives pack: a new additive engine `src/primitives_v2` with rate windows, double-entry ledgers and graph uniqueness, recursive taint egress, Farkas certificate checks and a policy-to-Dafny model generator; a finite test of unproved Rust and Python around Dafny models; one review with repairs — U910 to U912
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

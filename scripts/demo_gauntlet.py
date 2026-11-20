@@ -580,6 +580,8 @@ def main():
     require((platform.system(), platform.machine()) == ('Darwin', 'arm64'), 'this demo runs on macOS arm64 only (sandbox tool, recorded toolchain)')
     from scripts.javascript_env import check as check_javascript
     check_javascript()
+    if not os.path.isfile(dafny.DAFNY):  # a missing tool is exit 2, not a result of the demonstration (exit 1)
+        raise RuntimeError('DAFNY_TOOLCHAIN: %s is missing (toolchain/README.md); this script installs nothing' % dafny.DAFNY)
     run = Run(attempt_folder())
     started = time.monotonic()
     say('SKEPTIC GAUNTLET  real components, real processes; a finite demonstration, not a proof; end_to_end=false')
