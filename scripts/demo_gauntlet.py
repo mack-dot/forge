@@ -60,8 +60,12 @@ ACT1 = [
     ('refund-cap', 'DIVERGES', 'a variant with a cap allows another result: one concrete before/after example'),
     ('refund-loose', 'CHOICE', 'a planted loose spec: two verified implementations differ at one input'),
 ]
-REFUND_CORE = 'impl/RefundFinality.dfy'
-REFUND_FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
+# The Slice 1 compiled module: IssueAuth (rule 2: the memory rule with the authoritative stored state around
+# IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as scripts/exit_slice1.py builds it, with the same
+# footer bytes. The Slice 1 evidence record pins THIS module (compiled_core.module_sha256); act 2 requires byte equality.
+# The issuer process is started with it. The sink tools of act 2 take no compiled module.
+ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
+ISSUER_FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
 SLICE1_RECORD = 'proposals/forge2-slice1-refund-finality/records/evidence.json'
 ISSUER = 'ts/refund-finality/minter.ts'
 SPEC_LOCK = 'spec/refund/spec.lock'
@@ -174,12 +178,24 @@ def canon(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'))
 
 
+def issuer_test_key(work):
+    """OWNER DECISION D-1 (h-key): the issuer reads its key ONLY from a key file. A NEW throwaway Ed25519 TEST key,
+    written with mode 0600 (O_EXCL) under this run's work directory. No real key is read."""
+    path = Path(work) / 'issuer-test-key.pem'
+    made = subprocess.run(['node', '-e', "process.stdout.write(require('node:crypto').generateKeyPairSync('ed25519')"
+                           ".privateKey.export({type: 'pkcs8', format: 'pem'}))"], capture_output=True, check=True)
+    fd = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, 'wb') as out:
+        out.write(made.stdout)
+    return str(path)
+
+
 class Issuer:
     """The real Slice 1 token issuer as its own process. Raw bytes in, lines out."""
 
     def __init__(self, run, module):
         self.errors = open(run.work / 'issuer.stderr', 'wb')
-        self.process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off'], cwd=ROOT,
+        self.process = subprocess.Popen(['node', '--import', 'tsx', ISSUER, rel(module), SPEC_LOCK, 'off', issuer_test_key(run.work)], cwd=ROOT,
                                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=self.errors, bufsize=0)
         self.next, self.attempts = 0, 0
         self.ready = self.line()
@@ -241,8 +257,8 @@ def transition(pre, request_id, amount, reason='returned_item', post_remaining=N
 
 def act2(run, flood_mib):
     say('ACT 2  Proof-Carrying Finality: attacks on the real Slice 1 issuer process and SQLite sink')
-    module, module_sha = compile_core(run, REFUND_CORE, REFUND_FOOTER, 'refund-core', SLICE1_RECORD)
-    say('  checker core compiled by the pinned Dafny; module %s... equal to the Slice 1 record' % module_sha[:12])
+    module, module_sha = compile_core(run, ISSUER_CORE, ISSUER_FOOTER, 'issuer-core', SLICE1_RECORD)
+    say('  issuer core (IssueAuth) compiled by the pinned Dafny; module %s... equal to the Slice 1 record' % module_sha[:12])
     work = run.work / 'act2'
     work.mkdir()
     issuer = Issuer(run, module)
@@ -254,14 +270,26 @@ def act2(run, flood_mib):
 
 def act2_attacks(run, work, issuer, module_sha, flood_mib):
     config, database = work / 'sink-config.json', work / 'charge.sqlite'
-    config.write_text(json.dumps({key: issuer.ready[key] for key in ('publicKeyPem', 'specLockSha256', 'checkerSha256')}))
+    pre = {'chargeId': 'ch_demo', 'original': '1000', 'remaining': '600', 'refundEnabled': True}
+    # The hardened sink (h1) needs the initial charge (THE ANCHOR) in its config; sink_tool.ts never takes it from the
+    # command line (C-HOST-06). commit_cli.ts reads the same config.
+    config.write_text(json.dumps(dict({key: issuer.ready[key] for key in ('publicKeyPem', 'specLockSha256', 'checkerSha256')}, initialState=pre)))
     counter = [0]
 
     def node(script, *arguments):
         counter[0] += 1
         child = run.execute(['node', '--import', 'tsx', script, *arguments], 'act2-%03d-%s' % (counter[0], Path(script).stem))
-        require(child.returncode == 0, 'act 2: %s ended with exit %d' % (script, child.returncode))
-        return json.loads(child.stdout)
+        if script != COMMIT:
+            require(child.returncode == 0, 'act 2: %s ended with exit %d' % (script, child.returncode))
+            return json.loads(child.stdout)
+        # commit_cli.ts (h-dispatch, C-HOST-07): the exit code is the outcome: 0 committed or replayed, 1 rejected.
+        # Any other code, or a code that does not fit the written answer, is a failure.
+        require(child.returncode in (0, 1), 'act 2: %s ended with exit %d' % (script, child.returncode))
+        answer = json.loads(child.stdout)
+        require((child.returncode == 0) == (answer.get('status') in ('committed', 'replayed'))
+                and (child.returncode == 0 or answer.get('status') == 'rejected'),
+                'act 2: %s exit %d does not fit its answer %s' % (script, child.returncode, answer.get('status')))
+        return answer
 
     def sink_report():
         return node(SINK_TOOL, 'report', rel(database), rel(config))
@@ -279,7 +307,6 @@ def act2_attacks(run, work, issuer, module_sha, flood_mib):
         require(all(answer['onTime'] for answer in answers), 'act 2: a process of the %s group was late for the common start' % label)
         return answers
 
-    pre = {'chargeId': 'ch_demo', 'original': '1000', 'remaining': '600', 'refundEnabled': True}
     first = node(SINK_TOOL, 'init', rel(database), rel(config), json.dumps(pre))
     require(first['state'] == pre and first['outbox'] == [] and first['audit'] == [], 'act 2: the sink did not store the first state')
     say('  stored charge: original 1000, remaining 600, refunds enabled')
@@ -303,7 +330,9 @@ def act2_attacks(run, work, issuer, module_sha, flood_mib):
                    'preStateSha256': hashlib.sha256(canon(pre).encode()).hexdigest(), 'requestId': 'rq_forged',
                    'post': dict(pre, remaining='0'),
                    'intent': {'chargeId': 'ch_demo', 'requestId': 'rq_forged', 'amount': '600', 'reason': 'returned_item'}}
-    forged = canon({'body': forged_body, 'signature': base64.b64encode(bytes(64)).decode()})
+    # D-1 (h-key): a token of the right shape names the issuer key (keyId). The forged token names the PINNED key of
+    # this issuer, so only the signature is wrong.
+    forged = canon({'body': forged_body, 'keyId': issuer.ready['keyId'], 'signature': base64.b64encode(bytes(64)).decode()})
     attempts = commit_together([forged, '{}', ''], 'forged')
     attempts_without_commit += len(attempts)
     for name, answer in zip(('forged token (right shape, right hashes, signature of zero bytes)', 'the text {}', 'an empty text'), attempts):

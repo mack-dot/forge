@@ -468,7 +468,15 @@ module IssueAuth {
     requires 2 * |rq| <= SM.MAX_TEXT && forall i | 0 <= i < |rq| :: rq[i] as int != 0
     ensures SM.WfBody(IB.BodyFor(SM.ZERO64, SM.ZERO64, h, IB.T(pre, rq, amount)))
   {
-    SM.TextSmall(rq); IB.Tx1(); IB.Tx3(); IB.HexWitness();
+    // T19 (2026-11-20): the premises of WfOfT are stated one by one. Same statement; resource use of this lemma
+    // 317,241 in place of 757,787 (limit 1,000,000). One build in about ten had ended "out of resource" here.
+    assert pre.chargeId == "ch_1";
+    IB.Tx1(); IB.Tx3(); IB.HexWitness();
+    SM.TextSmall(rq);
+    assert SM.Text(pre.chargeId);
+    assert SM.Text(rq);
+    assert SM.Hex64(SM.ZERO64);
+    assert pre.original < SM.MONEY_BOUND && pre.remaining < SM.MONEY_BOUND;
     IB.WfOfT(pre, rq, amount, SM.ZERO64, SM.ZERO64, h);
   }
   lemma IssuableAt(pre: F.Charge, rq: string, amount: int, h: string)

@@ -20248,3 +20248,216 @@ curl: (6) Could not resolve host: github.com
   write through. This is the general kernel rule for one file. The project's probe (`probe_boundary.py` as
   `nobody` or against a `forge_vault` user) is NOT RUN; every separation claim of the demo stays NOT TESTED.
 - Impact: none on any stage label. Next check: the hosted `gate/pr_check.py` (expected exit 3).
+
+## U760 — T19 (the hardened sink, minter and dispatcher on `main`): authority, the apply, and what the apply did not give
+
+- Status: 2026-11-19. Refs U660 to U666 (the unapplied diffs), U567 to
+  U575 and U620 to U631 (B's hardening), U580 to U602 (red team).
+  Record: `proposals/t19-hardened-sink-20261119/REPORT.md`.
+- Authority: the launcher of this session gave me the owner's text
+  "T19: Apply the hardened sink (B-15 and B-16 approved) to main as
+  the immediate priority." Evidence class: a relayed text. I did not
+  see the owner type it.
+- Evidence (my runs): `git apply --check` of the two diffs on a new
+  worktree of `main` at `a5133c01`: exit 0. `git apply`: exit 0. No
+  hunk failed. After the apply, `ts`, `tests` and `scripts` differ
+  from `nightshift/B-trust@12d634f6` in one line (the replaced user
+  name in `heavy_spec.sh`). No protected path is in the diff.
+- Finding: `scripts/exit_slice1.py --case evidence` on the applied
+  tree gave exit 1. Cause: `tsc --noEmit` exit 2, 7 type errors in 6
+  regression test files. B's record "126 rows, exit 0" is a run of
+  the suite alone, without the type check of the EXIT script.
+- Repair: two type-only edits (`p3_lib.ts`, one parameter type;
+  `kf_unknown_keyid_refused.ts`, one annotation). Then
+  `tsc --noEmit`: exit 0; `exit_slice1.py --case evidence`: exit 0,
+  126 rows, 0 failed, two runs byte-identical.
+- Uncertainty: the two edits change no run-time behaviour by my
+  reading; no test shows that.
+- Impact: none on any stage label. M1-B OPEN. `end_to_end=false`.
+- Next check: the owner reads the pull request and merges, or not.
+
+## U761 — T19: bundle digests; which ones changed and why
+
+- Status: 2026-11-19. Refs U760.
+- Evidence (my runs on the branch tree, each `--case evidence`,
+  exit 0, two runs byte-identical):
+  Slice 1 `c7f2f41c…33f1` to `756babc5…00ef`;
+  Slice 2 `2721a293…854e`, unchanged;
+  Slice 3 `3cdfebfc…ddb4` to `6b21a487…cc5a`;
+  M1 conformance `f55391da…1da9` to `91b49423…b1ce`;
+  Goal 19 native sink `1f569fcf…932c` to `f8b85b97…faae`;
+  Goal 20 SDK `1e75ab47…`, unchanged (scratch clone).
+  Bundles of the tree before the `WfAt` edit (U764), replaced:
+  Slice 1 `b8a30595…9cac`, M1 conformance `0325b191…97d7`.
+- Why Slice 3 changed: `ts/refund-finality/encoding.ts` is one of
+  its reused inputs. A field-by-field comparison of the old and new
+  bundle shows only: that file's digest, the checker id computed
+  from it (two places), and 19 report digests.
+- Why M1 conformance changed: its inputs `minter.ts`, `encoding.ts`, the Slice 1
+  record and the script itself changed; five inputs are new; the
+  compiled module is now the Slice 1 IssueAuth module. All 13
+  differences are digests, the build source and the artifact text.
+  Every count field is equal to the old record.
+- Why the native sink bundle changed: `exit_silicon_sink.py` pins
+  the SHA-256 of the M1 conformance record as a linked record. I
+  did not know this at first: my first native sink run (exit 0,
+  bundle unchanged) ran while the old M1 record was in place. The
+  first scratch-clone regression showed it (exit 1, LINKED_RECORD).
+  The pin follows the new record. Two fields of the bundle differ:
+  the linked digest and the digest of the script.
+- The old records are kept under the names
+  `evidence-before-t19-<first 8 digits>.json` beside the new ones.
+- The Slice 1 compiled module is now the IssueAuth module
+  `fa855506…44e6`; it is equal to the module that the red team
+  recorded. The old module was `e6d5f5e5…06ce`.
+- Uncertainty: none on the digests. They are the bytes of files.
+- Impact: every earlier record that names `c7f2f41c…`, `3cdfebfc…`,
+  `f55391da…` or `1f569fcf…` describes the tree before T19. I did not edit
+  those records.
+- Next check: the scratch-clone regression (U764).
+
+## U762 — T19: tests and controls on the hardened tree; which controls are valid; which red-team scripts do not run
+
+- Status: 2026-11-19. Refs U760. A worker's runs unless marked; I
+  read the logs of the regression runner, its control, the 69-row
+  test and the 15 runs that are not valid.
+- Evidence: regression runner on the hardened tree: exit 0, 29 of 29
+  PASS. Control: the same `run.ts` in its form before decision D-1
+  (`219bf0ca`) against the merged sink and dispatcher: exit 1,
+  exactly the 8 known ids fail; with `--expect-fail` for the 8:
+  exit 0. Key-file tests: 13, exit 0 each. Minter tests: 15, exit 0
+  each. Provider tests with the new adapter: 7, exit 0 each; with
+  the old adapter: 5, exit 1 each (control). Dispatcher and sink
+  tests: 27, exit 0 each. Real kill, 12 rounds: exit 0. Red team
+  `c25`, `c28`, `c19` scripts: exit 0 each, and `c25` with the old
+  adapter exit 1 each.
+- Exit 1 on the hardened tree, each a stated limit:
+  `m3_zero_squat_limit`; `p3_rollback_rebind first none` (B-20); the
+  red team's `a7_full_restore nofloor`; provider-matrix rows with no
+  anchor or with the non-idempotent control provider.
+- NOT valid and NOT counted: (1) the runner of the hardened tree
+  against the merged sink (the merged sink refuses the honest
+  tokens too; this agrees with U663); (2) `db_safeguards.ts` of the
+  repository: it predates D-1 and stops while it builds tokens;
+  B's later version `db_safeguards_hkey.ts` gave exit 0, 69 rows,
+  but that file is only in the owner's untracked `results/`;
+  (3) the red team's `c21-sink2` (12 runs, exit 1) and `c24-minter2`
+  (3 runs, exit 3) scripts: they predate D-1 (no key id in their
+  tokens; no key file for the minter); (4) five control tries on
+  `main` for tests that need the new interface.
+- Uncertainty: for the classes of (3), only B's own regression
+  files ran on the final tree. The red team's last word on them is
+  for commits before D-1 (`88ae6cbf`, `f67c5c16`, `219bf0ca`).
+- Impact: T19 closes at the TESTED level only. No proof.
+- Next check: a red-team script set that fits the D-1 token format.
+  Not planned by me.
+
+## U763 — T19: the one fresh-context review; what was fixed and what was left
+
+- Status: 2026-11-19. Refs U760. The reviewer got the diff and the
+  design rules, not my conclusions. It read; it ran no code.
+- Result: no fail-open path found by reading. Seven findings (F1 to
+  F7): 2 MEDIUM, 5 LOW. Table: section 7 of the report.
+- Fixed: F4 (`demo_gauntlet.py` named a record-equal module digest
+  for an issuer that ran another module; now one module, required
+  equal to the Slice 1 record). F3 in part (`mintmemory.ts` is now
+  a Slice 1 bundle input).
+- Left: F1 (two minter processes on one mint memory file can each
+  sign a valid token for one request id; no lock; the sink commits
+  at most one). I checked by `grep` that no lock exists. I did not
+  run two processes. It is a new known limit. Also left: F2, the
+  rest of F3 (the checker id of the minter does not cover
+  `keyfile.ts` and `mintmemory.ts`), F5 (suite rows that pass on
+  any database error), F6, F7.
+- Why left: a change to `minter.ts`, `mintmemory.ts` or `suite.ts`
+  is a change to the approved hardening text. The owner approved
+  the diffs as they are.
+- Uncertainty: the review did not read the inside of
+  `sinkcore-v6.cjs`, `spec-conformance/` and most regression files.
+- Impact: the rule "at most one valid token per request id" (D-2)
+  holds only for ONE minter process per memory file.
+- Next check: an owner decision on a lock for the mint memory file.
+
+## U764 — T19: the M1 conformance script and the demo script after the module change
+
+- Status: 2026-11-19. Refs U458 to U461 (M1 conformance), U760,
+  U761, owner item B-15 (last line).
+- Finding: the night shift did not make the change that owner item
+  B-15 names in its last line. With the new Slice 1 record, the two
+  scripts as applied could not pass: both required the old
+  RefundFinality-only module to equal the Slice 1 record, and
+  `exit_m1_conformance.py` started the minter with no key file.
+- Repair (a worker's edits; I read the diff): both scripts build
+  the IssueAuth module as `exit_slice1.py` does and require byte
+  equality with the Slice 1 record. A throwaway 0600 key file per
+  run (D-1). No expectation changed. The demo script reads the new
+  exit code of `commit_cli.ts` and builds its forged token in the
+  D-1 shape.
+- Evidence (worker's runs; I read the logs and compared the
+  bundles): `exit_m1_conformance.py --case conformance`: exit 0.
+  `--case evidence`: exit 0, two runs byte-identical, bundle
+  `0325b191…97d7`; every count equal to the old record. After
+  the `WfAt` edit, my run: exit 0, bundle `91b49423…b1ce`.
+  `demo_gauntlet.py --flood-mb 16`: exit 1 (script not yet
+  repaired), exit 1 (Dafny exit 4, below), exit 3 (REDUCED: every
+  check held; the flood memory bound is not checked at 16 MiB).
+  Exit 3 is NOT a pass of the demo. The full demo is NOT RUN.
+- Finding: `impl/finality-core/IssueAuth.dfy` is near the resource
+  limit of the gate options (1,000,000). One build of 10 in this
+  session gave exit 4: "193 verified, 0 errors, 1 out of resource"
+  (`IssueAuth.WfAt`). It came directly after four parallel Dafny
+  processes. Cause NOT known. I did not change the file or the
+  limit.
+- Uncertainty: the count "9 of 10" is the worker's; I saw the one
+  failing output and four passing logs.
+- Impact: `exit_slice1.py`, `exit_m1_conformance.py` and the demo
+  can fail on a run for this reason. It happened again in the
+  first scratch-clone regression (M1 conformance evidence: exit
+  1). A failed run is a failed run; no script hides it by a retry.
+- Measured (my runs): the resource use of `WfAt` is 757,787 or
+  757,788 in ten of ten runs. So the rare failure is not a small
+  drift over the limit; its cause stays NOT known.
+- Repair attempt: the body of the ghost lemma `WfAt` states the
+  premises of `WfOfT` one by one; the statement is the same.
+  Measured use: 317,241. The compiled module is byte-identical
+  (`fa855506…44e6`). New bundles: U761.
+- NOT shown: that the rare failure is gone. `IssueAuth.Issue`
+  (about 820,900) and `SerModel.Tail1` (814,549) are also above
+  80 % of the limit; I did not change them.
+- Next check: count the out-of-resource runs in later evidence
+  runs. An owner decision if they stay.
+
+## U765 — T19: the scratch-clone regression of the pushed branch, the pull request and the hosted result
+
+- Status: 2026-11-20. Refs U760 to U764.
+- Evidence (my runs; records
+  `proposals/t19-hardened-sink-20261119/regression-b70900e4.json`
+  and `regression-64a16246.json`):
+  first clone, head `b70900e4`: 28 of 28 Stage EXIT cases exit 0;
+  frozen-gate check 0; links 0; evidence of Slice 1, 2, 3 and
+  Goal 20 exit 0 and byte-identical; M1 conformance evidence exit
+  1 (U764); native sink evidence exit 1 (U761).
+  Second clone, head `64a16246` (final code; `main` at `b2249ea2`
+  merged in): 28 of 28 exit 0; frozen-gate check 0; 8 link checks
+  0; six evidence runs exit 0, each bundle byte-identical to its
+  tracked record; 0 protected paths changed; 0 files under
+  `proposals/apex2-contract-link-20261119/` changed, and its 8
+  pinned files have the digests of its `PINS.json`.
+- After the second clone the branch got documents only: this
+  entry, U760 to U764, the ROADMAP section, the report, the new
+  graph file, and a merge of `main` at `33055a59` (one design
+  document and U840). No bundle input is among them.
+- Secret scan of the diff against `main` before each push: one
+  hit, the placeholder `/Users/USER/` in `heavy_spec.sh` (it is in
+  the unapplied diff on `main` already). No key, no token.
+- Resource note: the shared heavy lock made my runs wait up to 2
+  hours each; the times are in the logs, not in any claim.
+- The pull request and the hosted `gate/pr_check.py` result are in
+  the pull request itself; expected exit 3 (UNSUPPORTED). A later
+  entry records the actual value if this branch gets one more
+  commit.
+- NOT RUN: Stage 7, 9, 10; any HOL or Holmake case; the full demo.
+- Impact: none on any stage label. M1-B OPEN. `end_to_end=false`.
+  T19 is APPLIED on the branch at the TESTED level; on `main` only
+  after the owner's merge. I do not merge.
+- Next check: the owner's review of the pull request.
