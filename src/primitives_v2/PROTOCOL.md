@@ -569,39 +569,58 @@ document's author is believed. The translation of the MCP proxy review's nine le
 
 ## 13. Primitive 9: `farkas` (`farkas.rs`)
 
-Merged from the header of `farkas.rs` as it stood at this merge; the primitive 9 worker was still editing that file.
-If the two differ, the file header wins and this section is stale.
+Re-synced with the final header of `farkas.rs` (lines 1 to 37 at commit 50cf0293). The header text is reproduced
+below, then the answer details that the header does not name, read from the code of the same commit. If this section
+and the file differ, the file wins.
 
-The check of a Farkas infeasibility certificate. Stateless (section 7.4). NATIVE CHECK that MIRRORS the Dafny
-predicate `FarkasCert.Accepts` of `src/primitives_v2/dafny/FarkasCert.dfy`. This Rust code is NOT proved and NOT
-compiled from Dafny. The tie between the two is a FINITE differential test (`test_farkas.py`, case `differential`):
-the Dafny predicate compiled by the pinned Dafny's Python back end and this check answer the same on many random
-and edge-case systems. Why not compiled from Dafny: the Dafny 4.11 Rust back end emits code that needs the
-`dafny_runtime` crate (no crate allowed).
+The check of a Farkas infeasibility certificate. Stateless (section 7.4: no key, no record, no receipt; the request id
+stays fresh). NATIVE CHECK that MIRRORS the Dafny predicate `FarkasCert.Accepts` of
+`src/primitives_v2/dafny/FarkasCert.dfy`. This Rust code is NOT proved and NOT compiled from Dafny. The tie between
+the two is a FINITE differential test (`tests/primitives_v2/test_farkas.py`, case `differential`): the Dafny
+predicate, compiled by the pinned Dafny's Python back end, and this check answer the same on thousands of random and
+edge-case systems. Why not compiled from Dafny: the Dafny 4.11 Rust back end emits code that needs the
+`dafny_runtime` crate (rustc with no crate: exit 1, E0432; see the P9 report).
 
-What the Dafny lemma `Soundness` says (stated by the P9 worker as PROVED in its Dafny run, about the Dafny predicate
-only): if `Accepts(A, b, y)`, then NO non-negative INTEGER vector x satisfies `A x >= b`. Not stated there:
-rational or real x; completeness (an integer-infeasible system can be rational-feasible, and then no certificate
-exists); anything about any solver or about `farkas.rs`. (This document did not re-run Dafny.)
+What the Dafny lemma `Soundness` says (PROVED in a Dafny run, about the Dafny predicate only): if `Accepts(A, b, y)`,
+then NO non-negative INTEGER vector x satisfies `A x >= b`. Not stated there: rational or real x; completeness (an
+integer-infeasible system can be rational-feasible, and then no certificate exists); anything about any solver or
+about `farkas.rs`. The EXIT script `scripts/exit_universal_primitives.py` (case `proofs`) re-runs `dafny verify` and
+`dafny audit` on `FarkasCert.dfy` and records the actual exit codes; this document runs nothing.
 
 Wire: `DO farkas check <request_id> <tenant> 0 <json>`. `<json>`: one strict JSON object with exactly the keys `"A"`
-(1..64 rows, each 1..64 integers, all rows of one length n), `"b"` (m integers, m = rows) and `"y"` (m integers).
-An integer is a JSON number `-?(0|[1-9][0-9]*)` in the signed 64-bit range. The system is `A x >= b, x >= 0`; y is
-the certificate of the claim "no x exists". Answers, first match wins:
+(array of 1..64 rows, each an array of 1..64 integers, all rows of one length n), `"b"` (array of m integers, m =
+number of rows) and `"y"` (array of m integers). An integer is a JSON number `-?(0|[1-9][0-9]*)` (no fraction, no
+exponent, no `-0`) in the signed 64-bit range. The system is `A x >= b, x >= 0`; y is the certificate of the claim
+"no x exists". Answers, first match wins:
 
 - `MALFORMED_REQUEST why=FARKAS_JSON|FARKAS_KEYS|FARKAS_NUMBER` (exit 12): not the format above.
-- `SHAPE why=ROWS|COLS|ROW_LEN|B_LEN|Y_LEN|ENTRY_RANGE [row=] [col=]` (exit 10).
-- `CERT_REJECTED claim=INFEASIBILITY_NOT_PROVED reason=Y_NEGATIVE row=<i>` | `reason=YTA_POSITIVE col=<j>` |
-  `reason=YTB_NOT_POSITIVE` (exit 10).
+- `SHAPE why=ROWS|COLS|ROW_LEN|B_LEN|Y_LEN|ENTRY_RANGE [row=] [col=]` (exit 10): sizes, shapes or an entry outside
+  the signed 64-bit range (`FarkasCert.Shape` is false).
+- `CERT_REJECTED claim=INFEASIBILITY_NOT_PROVED reason=Y_NEGATIVE row=<i>` (exit 10): y[i] < 0 (first i).
+- `CERT_REJECTED claim=INFEASIBILITY_NOT_PROVED reason=YTA_POSITIVE col=<j>` (exit 10): (y^T A)[j] > 0 (first j).
+- `CERT_REJECTED claim=INFEASIBILITY_NOT_PROVED reason=YTB_NOT_POSITIVE` (exit 10): y^T b <= 0.
 - `OVERFLOW claim=INFEASIBILITY_NOT_PROVED why=ARITH [col=<j>]` (exit 10): a sum left the i128 range (checked
-  arithmetic; fail closed). The Dafny predicate has no overflow, so OVERFLOW can refuse a certificate that the
-  Dafny predicate accepts. It never accepts because of an overflow.
-- `OK verdict=INFEASIBILITY_PROVED scope=nonneg_integer_x rows=<m> cols=<n> system_sha256=<h> cert_sha256=<h>`.
+  arithmetic; fail closed: never a proof). The Dafny predicate has no overflow (mathematical integers), so OVERFLOW
+  can stand for an input that the Dafny predicate accepts: then the check refuses a valid certificate. It never
+  accepts because of an overflow.
+- `OK verdict=INFEASIBILITY_PROVED scope=nonneg_integer_x rows=<m> cols=<n> system_sha256=<h> cert_sha256=<h>`
+  (exit 0): every clause of Accepts holds.
 
 Every refusal after the parse also carries `system_sha256=`. A refusal is never "feasible": the check never says that
 a solution exists. Digests: `system_sha256` = SHA-256 of the canonical text `{"A":[[a11,...],...],"b":[b1,...]}` (no
-spaces, canonical decimals); `cert_sha256` = SHA-256 of `{"y":[y1,...]}`. Policy files: none (`init` refuses a
-farkas policy: `MALFORMED_POLICY NO_POLICY`). Records: none (`fold` refuses any record of this primitive).
+spaces, canonical decimals); `cert_sha256` = SHA-256 of `{"y":[y1,...]}`. They bind the verdict to the exact system
+and certificate. Policy files: none (`init` refuses a farkas policy: `MALFORMED_POLICY NO_POLICY`). Records: none
+(`fold` refuses any record of this primitive).
+
+Read from the code (not named in the header):
+
+- `system_sha256=` comes only with `CERT_REJECTED`, `OVERFLOW` and `OK` ("after the parse" above means after the
+  parse AND the shape check). `MALFORMED_REQUEST` and `SHAPE` carry no digest.
+- `SHAPE why=ENTRY_RANGE` also carries `in=A|b|y`: for `in=A`, `row=` and `col=` name the entry; for `in=b` and
+  `in=y`, `row=` is the index.
+- `MALFORMED_REQUEST why=FARKAS_OP`: the module's own refusal of an op other than `check` or of a request with keys.
+  The engine refuses both earlier (`UNKNOWN_OP`, `KEY_COUNT`: the op table is `check` with 0 keys), so this is a
+  second line behind the engine.
 
 ## 14. Refusal codes: one index
 
@@ -611,7 +630,7 @@ a durable refusal `request_id`, `seq`, `hash.<key>`) are not repeated. A code th
 | Code | Exit | From | Repair fields |
 | --- | --- | --- | --- |
 | `USAGE` | 2 | CLI | `why=` (`NOT_AFTER_MS`, `MS`, ...) |
-| `MALFORMED_REQUEST` | 12 | engine, every module | `why=`: engine `NON_ASCII`, `SPACING`, `FIELDS`, `OVERSIZED max_line=`, `NO_LINE_END`, `UNKNOWN_VERB`, `UNKNOWN_PRIMITIVE`, `UNKNOWN_OP`, `BAD_REQUEST_ID`, `BAD_TENANT`, `KEY_COUNT`, `BAD_KEY`, `RESERVED_KEY key= prefix= owner=` (section 4.1), `DUPLICATE_KEY` (a key named twice), `KEY_ORDER`, `BAD_HASH`, `CAS_REQUIRED`, `KEY_KIND`; rate `RATE_ARGS`; ledger_graph `LG_ARGS`, `LEG_KEYS`, `LEG_COUNT`, `RESERVED_KEY` (no fields: a `reg:` key as account or graph), `REGISTRY_KEY expected=`, `NAME [max_name_bytes=]`, `NODE`; taint `TAINT_ARGS`, `BAD_JSON error=`; farkas `FARKAS_JSON`, `FARKAS_KEYS`, `FARKAS_NUMBER` |
+| `MALFORMED_REQUEST` | 12 | engine, every module | `why=`: engine `NON_ASCII`, `SPACING`, `FIELDS`, `OVERSIZED max_line=`, `NO_LINE_END`, `UNKNOWN_VERB`, `UNKNOWN_PRIMITIVE`, `UNKNOWN_OP`, `BAD_REQUEST_ID`, `BAD_TENANT`, `KEY_COUNT`, `BAD_KEY`, `RESERVED_KEY key= prefix= owner=` (section 4.1), `DUPLICATE_KEY` (a key named twice), `KEY_ORDER`, `BAD_HASH`, `CAS_REQUIRED`, `KEY_KIND`; rate `RATE_ARGS`; ledger_graph `LG_ARGS`, `LEG_KEYS`, `LEG_COUNT`, `RESERVED_KEY` (no fields: a `reg:` key as account or graph), `REGISTRY_KEY expected=`, `NAME [max_name_bytes=]`, `NODE`; taint `TAINT_ARGS`, `BAD_JSON error=`; farkas `FARKAS_JSON`, `FARKAS_KEYS`, `FARKAS_NUMBER`, `FARKAS_OP` (behind the engine) |
 | `STALE_STATE_HASH` | 13 | engine | `stale=<count>`, `hash.<key>=<present hash>` per stale key |
 | `DUPLICATE_REQUEST_ID` | 14 | engine | none: use a new id |
 | `TENANT_ISOLATION_BREACH` | 16 | engine | `why=KEY_OF_ANOTHER_TENANT`, `key=` (a `DO`; `GET` gives no `key=`) |
@@ -659,7 +678,7 @@ a durable refusal `request_id`, `seq`, `hash.<key>`) are not repeated. A code th
 | `MALFORMED_CARRIER` | 10 | taint_egress | `json_path=`, `why=SHAPE|LABELS_NOT_ARRAY|LABEL_NOT_STRING|TENANT_ID`, `more=` |
 | `TAINT_EGRESS_BLOCKED` | 10 | taint_egress | `json_path=`, `label=`, `more=` |
 | `UNLABELLED_FIELD` | 10 | taint_egress (strict) | `json_path=`, `more=` |
-| `SHAPE` | 10 | farkas | `why=`, `[row=]`, `[col=]`, `[system_sha256=]` |
+| `SHAPE` | 10 | farkas | `why=`, `[in=]`, `[row=]`, `[col=]` (no digest) |
 | `CERT_REJECTED` | 10 | farkas | `claim=INFEASIBILITY_NOT_PROVED`, `reason=`, `[row=|col=]`, `system_sha256=` |
 | `OVERFLOW` | 10 | farkas | `claim=INFEASIBILITY_NOT_PROVED`, `why=ARITH`, `[col=]`, `system_sha256=` |
 

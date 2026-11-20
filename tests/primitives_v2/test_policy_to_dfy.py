@@ -6,7 +6,7 @@ Usage: python3 tests/primitives_v2/test_policy_to_dfy.py --seams-engine PATH --a
            [--ledger-engine PATH] [--generator PATH] [--case NAME]... [--work DIR] [--policy FILE]...
 
 Cases:
-  determinism   `gen` twice in two fresh processes (different hash seeds): byte-identical; equal to the file in
+  determinism   `gen` in 16 fresh processes (PYTHONHASHSEED 0 to 15): byte-identical; equal to the file in
                 domains/compiled_policies/ when the default generator runs.
   injectivity   for each example policy, every one-field change (a bound, a cap, a verdict, a reason, a fact, the
                 name, a rate constant) gives a different module text and different policies never share a file name.
@@ -98,16 +98,22 @@ def generate(s, folder, policy, seed='0'):
 
 
 # ---- cases ---------------------------------------------------------------------------------------------------------
+DET_SEEDS = [str(k) for k in range(16)]   # seeds 1 and 2 alone gave one set order for money-refunds (G11 survived)
+
+
 def case_determinism(s):
     n = 0
     for policy in policies(s):
-        a, ta = generate(s, s.fresh('det-a'), policy, '1')
-        b, tb = generate(s, s.fresh('det-b'), policy, '2')
-        require(a.name == b.name and ta.encode() == tb.encode(), '%s: two runs differ (not byte-identical)' % policy.name)
+        a, ta = generate(s, s.fresh('det-a'), policy, DET_SEEDS[0])
+        for seed in DET_SEEDS[1:]:
+            b, tb = generate(s, s.fresh('det-b'), policy, seed)
+            require(a.name == b.name and ta.encode() == tb.encode(),
+                    '%s: two runs differ (not byte-identical; PYTHONHASHSEED %s and %s)' % (policy.name, DET_SEEDS[0], seed))
         if s.generator == GENERATOR and not s.args.policy:
             require((COMMITTED / a.name).read_text() == ta, '%s: differs from domains/compiled_policies/%s' % (policy.name, a.name))
         n += 1
-    return '%d policies: byte-identical twice (two processes, two hash seeds)%s' % (n, '; equal to the committed files' if s.generator == GENERATOR else '')
+    return '%d policies: byte-identical in %d processes (hash seeds %s to %s)%s' % (
+        n, len(DET_SEEDS), DET_SEEDS[0], DET_SEEDS[-1], '; equal to the committed files' if s.generator == GENERATOR and not s.args.policy else '')
 
 
 def variants(kind, obj):
