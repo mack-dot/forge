@@ -28,6 +28,42 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Gate F1 (Goal 21), intent clearing: branch-boundary tables, weird-but-legal queries and a blind restater over a generated Dafny model; one review with repairs — U780 to U784
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Stage 9 deferred. No protected or frozen path changed.
+Nothing under `clearing/` changed. `scripts/spec_clearing.py` and
+`bin/forge-airlock` not changed. Branch `feat/intent-clearing-v2` from
+`9a9a8943`, with `origin/docs/finish-line-directive` and `origin/main`
+(`b2249ea2`) merged in; NOT merged by the agent. PROVED applies only to
+statements about the Dafny model that the generator wrote. The
+generator is a trusted assumption. Every other row is a FINITE TEST on
+one machine.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| pre-flight: `gh pr list`; `origin/main` |0|pull request 65 (Goal 20) MERGED; `origin/main` = `9a9a8943`, later `b2249ea2` (pull request 66) |
+| `python3 -B tests/intent/test_intent_clearing.py` (before the review; after the repairs) |0; 0|12 of 12 cases each time |
+| `python3 -B tests/intent/test_intent_restate.py` |0|8 of 8 cases |
+| `scripts/exit_goal21_intent.py --case mutations`, first run after the repairs |1|21 of 23 for the named reason; C12 and C15 gave UNDECIDED (exit 5), not the WARNING that the table named; the named reasons were corrected to the observed lines |
+| `--case planted` |0|swapped VIP flag, coarse SHIPPING cap, `<` against `<=`: clean exit 0, planted exit 4 with a Dafny-verified witness; `refunds-v2.json` exit 0 |
+| `--case dispatcher` |0|the UNAPPLIED diff on a copy: exit 0 and exit 4; tracked `bin/forge-airlock` still `bd56d8b6…6891` |
+| `--case evidence --write-record` |0|twice; bundle `9a3ea0ee…c2d8`, byte-identical; 23 of 23 changed copies killed for the named reason (20 of `intent_clearing.py`) |
+| the one fresh-context review |1 FAIL-OPEN; 0 HIGH; 2 MEDIUM; 7 LOW; 3 NOTE|a query on two unnamed reasons got a false "verified" warning; repaired in one pass; F13 and three guards of F6 stated only; NOT reviewed again |
+| regression on a scratch clone of `faa46ae6` (merged tree, base `b2249ea2`): 28 Stage EXIT cases; `check_frozen_pr_gate.py`; links of 17 files; seven EXIT scripts, each `--case evidence` |0 each (28); 0; 0 each (17); 0 each (7)|bundles `c7f2f41c…`, `2721a293…`, `3cdfebfc…`, `f55391da…`, `1f569fcf…`, `1e75ab47…` byte-identical to the tracked records and to the records on `origin/main`; `9a3ea0ee…` (Goal 21) byte-identical to its record; 0 dangling links; 0 protected paths changed |
+| `gh pr create`; hosted `gate/pr_check.py` |NOT RUN at this commit|expected exit 3 (UNSUPPORTED) |
+| `--engine` (the Rust engine against the table rows); every HOL and Holmake step; Stages 7, 9, 10; a second review |NOT RUN|not part of this work |
+
+[Report](proposals/forge2-goal21-intent/REPORT.md).
+[Review](proposals/forge2-goal21-intent/REVIEW.md).
+[Design](proposals/forge2-goal21-intent/DESIGN.md).
+[Directive](proposals/forge2-finish-line/DIRECTIVE.md).
+Departure: the `check-intent` subcommand of `bin/forge-airlock` is an
+UNAPPLIED diff, because the Goal 20 bundle records the digest of that
+file (U781). A CLEAN result says only that the questions that were
+asked have the answer NO. It does not say that a specification is the
+intent. M1 and integration EXIT NOT_ESTABLISHED.
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
