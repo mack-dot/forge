@@ -20876,13 +20876,13 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label or gate result. A finite test only. `end_to_end=false`. M1-B OPEN.
 - Next check: the hosted run; the owner's exact-bytes approval of the new SHA-256.
 
-## U760 — V1.1 universal primitives pack (primitives 6 to 9): what was built, the design decisions, and where the work differs from the directive
+## U910 — V1.1 universal primitives pack (primitives 6 to 9): what was built, the design decisions, and where the work differs from the directive
 
 - Status: 2026-11-20. Refs U720 to U724 (goal 20, whose engine files this pack reuses read-only), U840.
 - Evidence: branch `feat/universal-primitives-v2` (worktree in the session scratch folder), commits `ca888321`
   (foundation and primitive 6), `2bf34eb5` (primitives 7 and 8), `774d1e9e` (reserved key prefixes, protocol,
   Python SDK), `a28f7ca1` (demo), `50cf0293` (primitive 9 and the policy compiler), `c877a760` (EXIT script),
-  `ec2c1b76` (the repair pass of U761). `src/primitives_v2/PROTOCOL.md` is the reference; section 18 lists the
+  `ec2c1b76` (the repair pass of U911). `src/primitives_v2/PROTOCOL.md` is the reference; section 18 lists the
   departures.
 - Start: the directive's pre-flight ("run only from clean `origin/main` after Goal 20, F1, T19, the demo pull
   requests and Stage 9 / Paper") was NOT met. The owner authorized the start explicitly on 2026-11-20. The branch
@@ -20913,16 +20913,16 @@ curl: (6) Could not resolve host: github.com
 - Departures from the directive (`PROTOCOL.md` section 18): no `source_proof` core runs in the engine (every
   verdict is Rust: NATIVE CHECK); the tie between the Dafny models and the Rust engines is a FINITE differential
   test; the TypeScript wrapper is not built; the cosign signature check is a stub; the schedule of mistake 4 is a
-  Python DEMO CHECK; rate_window limits a key, not a caller (U761, M2); no epoch ratchet against a restored WAL.
+  Python DEMO CHECK; rate_window limits a key, not a caller (U911, M2); no epoch ratchet against a restored WAL.
 - The pre-flight's "all prior bundles byte-identical" holds for this branch by construction: it is additive. The
-  regression that checks it on a scratch clone has NOT run (U762).
+  regression that checks it on a scratch clone has NOT run (U912).
 - Commit trailer: `Claude Fable 5.2`, as the launcher asked. The workers' models are in their reports.
 - Uncertainty: whether the owner accepts each departure. Impact: none on any stage label; M1-B OPEN;
   `end_to_end=false`. Next check: the owner's reading of the pull request (not opened yet).
 
-## U761 — V1.1 pack: the one adversarial review (2 MEDIUM, 5 LOW) and the one repair pass; earlier findings (squatting, G11)
+## U911 — V1.1 pack: the one adversarial review (2 MEDIUM, 5 LOW) and the one repair pass; earlier findings (squatting, G11)
 
-- Refs U760. Evidence: commit `ec2c1b76`; `PROTOCOL.md` sections 4, 9, 11, 12, 15, 16, 18; the reviewer's
+- Refs U910. Evidence: commit `ec2c1b76`; `PROTOCOL.md` sections 4, 9, 11, 12, 15, 16, 18; the reviewer's
   reproductions in the session scratch folder (not tracked).
 - Found before the review, by the workers' own tests:
   - squatting: on the engine of `2bf34eb5`, `DO rate_window acquire x1 t2 1 reg:t1 * api 1` committed and bound
@@ -20971,9 +20971,9 @@ curl: (6) Could not resolve host: github.com
 - Uncertainty: no second review of the repairs ran (the directive asks for one). Impact: none on any stage label.
   Next check: the owner may ask for a second review.
 
-## U762 — V1.1 pack: actual EXIT results; the limits; open questions for the owner
+## U912 — V1.1 pack: actual EXIT results; the limits; open questions for the owner
 
-- Refs U760, U761. Evidence: `build/universal_primitives/` (git-ignored) on this machine; the bundle hash below.
+- Refs U910, U911. Evidence: `build/universal_primitives/` (git-ignored) on this machine; the bundle hash below.
 - Actual, after the repair commit `ec2c1b76` (clean tree), run one at a time by me:
   - `--case build` exit 0 (wall 16 s; 0 tracked files of `main` modified, 0 protected paths); `--case demo` exit 0
     (two runs identical outside `measured`, `82665ba9…b276`; 13 canaries); `--case proofs` exit 0 (FarkasCert 36,

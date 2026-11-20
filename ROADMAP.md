@@ -28,14 +28,14 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
-## V1.1 universal primitives pack: a new additive engine `src/primitives_v2` with rate windows, double-entry ledgers and graph uniqueness, recursive taint egress, Farkas certificate checks and a policy-to-Dafny model generator; a finite test of unproved Rust and Python around Dafny models; one review with repairs — U760 to U762
+## V1.1 universal primitives pack: a new additive engine `src/primitives_v2` with rate windows, double-entry ledgers and graph uniqueness, recursive taint egress, Farkas certificate checks and a policy-to-Dafny model generator; a finite test of unproved Rust and Python around Dafny models; one review with repairs — U910 to U912
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 deferred. No protected file changed. Nothing under
 `clearing/` changed. Additive only: no tracked file of `main` changed
 except this file and `unsure.md`. Branch `feat/universal-primitives-v2`
 from `33055a59`; NOT pushed, NOT merged. The directive's pre-flight was
-not met; the owner authorized the start on 2026-11-20 (U760). Every
+not met; the owner authorized the start on 2026-11-20 (U910). Every
 engine verdict is NATIVE CHECK (unproved Rust); suites, demo, changed
 copies and differential replays are FINITE TEST on one machine. PROVED
 applies only to `FarkasCert.Soundness` (no non-negative INTEGER x
