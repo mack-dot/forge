@@ -21052,3 +21052,16 @@ curl: (6) Could not resolve host: github.com
   `main`); Stage 7, Stage 9, Stage 10; any HOL process; the Goal 21 intent bundle. The video take was NOT RUN again
   after the last label correction.
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's review of the pull request.
+
+## U922 — LICENSE: Apache-2.0 added on the owner's decision; third-party notices not re-checked
+
+- Refs U097, U882. Evidence: `LICENSE` is the unchanged Apache License 2.0 text (SHA-256 `cfc7749b96f63bd3…`, the same
+  bytes as in pull request 14); `NOTICE` names mack-dot and Forge contributors. The owner chose Apache-2.0 on
+  2026-10-28 (`proposals/license.md` in pull request 14) and repeated the decision on 2026-11-20 in a pasted
+  decision text ("LICENSE: Add `Apache-2.0` (or dual `MIT OR Apache-2.0`)"); the agent took the first option, which
+  matches the earlier decision. The dual option was NOT taken.
+- Uncertain: `THIRD_PARTY_NOTICES.md` of pull request 14 dates from 2026-10-28 and was not re-checked against the
+  present tree, so it is NOT added and `NOTICE` does not refer to it. No per-file licence header is added. The
+  earlier advice to the owner to check the employment agreement (pull request 14) is not resolved by this entry.
+- No tracked evidence record, no bundle subject and no protected path changes. `README.md` changes in two places.
+- Impact: none on any stage label. `end_to_end=false`. Next check: the owner's review; a fresh third-party notice list.
