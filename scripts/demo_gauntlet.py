@@ -60,12 +60,10 @@ ACT1 = [
     ('refund-cap', 'DIVERGES', 'a variant with a cap allows another result: one concrete before/after example'),
     ('refund-loose', 'CHOICE', 'a planted loose spec: two verified implementations differ at one input'),
 ]
-REFUND_CORE = 'impl/RefundFinality.dfy'
-REFUND_FOOTER = b'\nmodule.exports = { RefundFinality, Refund, runtime: _dafny };\n'
-# The issuer (ts/refund-finality/minter.ts on nightshift/B-trust) needs a module that contains IssueAuth (rule 2: the
-# memory rule with the authoritative stored state around IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as
-# scripts/exit_slice1.py builds it. The Slice 1 evidence record pins only the RefundFinality module above; this module
-# is compiled from the same RefundFinality source and is NOT in that record (its SHA-256 is reported).
+# The Slice 1 compiled module: IssueAuth (rule 2: the memory rule with the authoritative stored state around
+# IssueBytes2.IssueTokenBytes, which calls RefundFinality.Check). Built as scripts/exit_slice1.py builds it, with the same
+# footer bytes. The Slice 1 evidence record pins THIS module (compiled_core.module_sha256); act 2 requires byte equality.
+# The issuer process is started with it. The sink tools of act 2 take no compiled module.
 ISSUER_CORE = 'impl/finality-core/IssueAuth.dfy'
 ISSUER_FOOTER = b'\nmodule.exports = { IssueAuth, IssueBytes2, RefundFinality, Refund, SerModel, runtime: _dafny };\n'
 SLICE1_RECORD = 'proposals/forge2-slice1-refund-finality/records/evidence.json'
@@ -138,18 +136,6 @@ def compile_core(run, source, footer, name, record_path):
     recorded = read_json(ROOT / record_path)['compiled_core']['module_sha256']
     require(digest(module.read_bytes()) == recorded, name + ': CORE_MODULE: the compiled core is not the module of the evidence record')
     return module, recorded
-
-
-def compile_issuer_core(run):
-    """Compiles the issuer's module (IssueAuth) with the pinned Dafny. No record pins it: the result carries its SHA-256."""
-    out = run.work / 'issuer-core'
-    out.mkdir()
-    built = run.execute([dafny.DAFNY, 'build', ISSUER_CORE, '--target', 'js', '--output', rel(out / 'model'), *dafny.OPTIONS],
-                        'compile-issuer-core')
-    require(built.returncode == 0, 'issuer-core: the pinned Dafny did not verify and compile IssueAuth (exit %d)' % built.returncode)
-    module = out / 'model.cjs'
-    module.write_bytes((out / 'model.js').read_bytes() + ISSUER_FOOTER)
-    return module, digest(module.read_bytes())
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -271,15 +257,13 @@ def transition(pre, request_id, amount, reason='returned_item', post_remaining=N
 
 def act2(run, flood_mib):
     say('ACT 2  Proof-Carrying Finality: attacks on the real Slice 1 issuer process and SQLite sink')
-    module, module_sha = compile_core(run, REFUND_CORE, REFUND_FOOTER, 'refund-core', SLICE1_RECORD)
-    say('  checker core compiled by the pinned Dafny; module %s... equal to the Slice 1 record' % module_sha[:12])
-    issuer_module, issuer_sha = compile_issuer_core(run)
-    say('  issuer module (IssueAuth, same RefundFinality source) compiled by the pinned Dafny; module %s... (not in the Slice 1 record)' % issuer_sha[:12])
+    module, module_sha = compile_core(run, ISSUER_CORE, ISSUER_FOOTER, 'issuer-core', SLICE1_RECORD)
+    say('  issuer core (IssueAuth) compiled by the pinned Dafny; module %s... equal to the Slice 1 record' % module_sha[:12])
     work = run.work / 'act2'
     work.mkdir()
-    issuer = Issuer(run, issuer_module)
+    issuer = Issuer(run, module)
     try:
-        return dict(act2_attacks(run, work, issuer, module_sha, flood_mib), issuer_module_sha256=issuer_sha)
+        return act2_attacks(run, work, issuer, module_sha, flood_mib)
     finally:
         issuer.kill()
 
@@ -295,8 +279,17 @@ def act2_attacks(run, work, issuer, module_sha, flood_mib):
     def node(script, *arguments):
         counter[0] += 1
         child = run.execute(['node', '--import', 'tsx', script, *arguments], 'act2-%03d-%s' % (counter[0], Path(script).stem))
-        require(child.returncode == 0, 'act 2: %s ended with exit %d' % (script, child.returncode))
-        return json.loads(child.stdout)
+        if script != COMMIT:
+            require(child.returncode == 0, 'act 2: %s ended with exit %d' % (script, child.returncode))
+            return json.loads(child.stdout)
+        # commit_cli.ts (h-dispatch, C-HOST-07): the exit code is the outcome: 0 committed or replayed, 1 rejected.
+        # Any other code, or a code that does not fit the written answer, is a failure.
+        require(child.returncode in (0, 1), 'act 2: %s ended with exit %d' % (script, child.returncode))
+        answer = json.loads(child.stdout)
+        require((child.returncode == 0) == (answer.get('status') in ('committed', 'replayed'))
+                and (child.returncode == 0 or answer.get('status') == 'rejected'),
+                'act 2: %s exit %d does not fit its answer %s' % (script, child.returncode, answer.get('status')))
+        return answer
 
     def sink_report():
         return node(SINK_TOOL, 'report', rel(database), rel(config))
@@ -337,7 +330,9 @@ def act2_attacks(run, work, issuer, module_sha, flood_mib):
                    'preStateSha256': hashlib.sha256(canon(pre).encode()).hexdigest(), 'requestId': 'rq_forged',
                    'post': dict(pre, remaining='0'),
                    'intent': {'chargeId': 'ch_demo', 'requestId': 'rq_forged', 'amount': '600', 'reason': 'returned_item'}}
-    forged = canon({'body': forged_body, 'signature': base64.b64encode(bytes(64)).decode()})
+    # D-1 (h-key): a token of the right shape names the issuer key (keyId). The forged token names the PINNED key of
+    # this issuer, so only the signature is wrong.
+    forged = canon({'body': forged_body, 'keyId': issuer.ready['keyId'], 'signature': base64.b64encode(bytes(64)).decode()})
     attempts = commit_together([forged, '{}', ''], 'forged')
     attempts_without_commit += len(attempts)
     for name, answer in zip(('forged token (right shape, right hashes, signature of zero bytes)', 'the text {}', 'an empty text'), attempts):
