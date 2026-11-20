@@ -1,0 +1,59 @@
+{
+ "acceptance": "ACCEPTS",
+ "claim": {
+  "audit_exit": 0,
+  "checker_exit": 0,
+  "failed": [],
+  "members": 42,
+  "refused": null
+ },
+ "commands": [
+  {
+   "exit_code": 0,
+   "name": "check-001-audit"
+  },
+  {
+   "exit_code": 0,
+   "name": "check-001-verify"
+  },
+  {
+   "exit_code": 0,
+   "name": "check-002-audit"
+  },
+  {
+   "exit_code": 0,
+   "name": "check-002-verify"
+  },
+  {
+   "exit_code": 3,
+   "name": "probe-003"
+  },
+  {
+   "exit_code": 0,
+   "name": "check-004-audit"
+  },
+  {
+   "exit_code": 0,
+   "name": "check-004-verify"
+  }
+ ],
+ "proof_members": 45,
+ "proof_passed": true,
+ "slot_waits_seconds": [
+  120,
+  120,
+  120,
+  120,
+  120,
+  120,
+  120
+ ],
+ "source": "scripts/spec_clearing.py clear_spec (imported, unchanged); subject built by clear_log_spec.py",
+ "spec_clearing_sha256": "99f1000eae2340aa344b0d9f8d0dac1895c52c4c29c4843f4c03c2972d29ffc5",
+ "spec_probe_passed": true,
+ "spec_probe_without_body": [
+  "ClearingSpecProbeOf_RefundLogSpec.Decide"
+ ],
+ "subject": "refund-log-proposal",
+ "verdict": "NO_CHOICE"
+}

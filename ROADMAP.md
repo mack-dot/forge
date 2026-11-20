@@ -28,6 +28,32 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Stateful refund-log specification: a proposal with an exact, unapplied ratification diff (specification only; nothing about the engine) — U924
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. The first half of the owner's decision of 2026-11-20
+("Stateful Spec + Task V1: Approved!"). Task V1 is NOT started. Branch
+`proposal/refund-log-stateful-spec` from `origin/main` `b1c98822`;
+NOT pushed, NOT merged, NOT ratified. No protected path changed: the
+change of `spec/refund/` is the unapplied `ratification.diff` (two new
+files). The lemmas are statements about the specification text only.
+
+| EXIT command/check | Expected exit | Actual exit/result | Result |
+| --- | --- | --- | --- |
+| `dafny verify` of the three proposal files (gate options), attempt 1 | 0 | 4 | 43 verified, 2 errors (two concrete witnesses); repaired in the lemmas file only |
+| the same, attempt 2 | 0 | 0 | 45 verified, 0 errors |
+| `dafny audit` against `gate/expected-audit.md` | 0 | 0 | empty |
+| spec clearing (`clear_spec` of `scripts/spec_clearing.py`, imported unchanged) | 0 | 0 | NO_CHOICE; ACCEPTS; spec probe: only `Decide` has no body |
+| `git apply --check ratification.diff` on a clone of `b1c98822` | 0 | 0 | adds `spec/refund/RefundLogSpec.dfy` (`1a8c7c2a…`) and `spec/refund/RefundLogSpec.lock` (`44eb5be6…`) |
+| after the apply: `check_frozen_pr_gate.py`; gate probe (`approval.authorize`) | 0; 0 | 0; 0 | authorize gives `UNAPPROVED_PROTECTED_CHANGE` as expected: no machine path approves `spec/refund/`; the owner's merge is the ratification |
+| bootstrap `76b983ac…` before and after the apply | 1; 1 | 1; 1 | same rejection on both (state of `main`) |
+| Task V1; engine runs; hosted gate; push | — | NOT RUN | |
+
+Owner decisions: D1 `refundEnabled` (proposed: a stored bit fixed at
+genesis), D2 zero amounts (proposed: allowed, as approved), D3 file
+names and lock. [Proposal](proposals/refund-log-spec-20261120/README.md).
+[Correspondence](proposals/refund-log-spec-20261120/CORRESPONDENCE.md).
+[Ratification diff](proposals/refund-log-spec-20261120/RATIFICATION_DIFF.md).
 ## Goal 20 record refreshed on 2026-11-20: a fresh `--case evidence` run on `main` `e4901ffc` (after pull requests 68, 72 and 73) replaces the tracked Goal 20 bundle; a finite test and native check record, not a proof — U923
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

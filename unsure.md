@@ -21188,3 +21188,30 @@ curl: (6) Could not resolve host: github.com
   name `1e75ab47…` are records of their own commits and are not changed.
 - Impact: none on any stage label. Next check: the owner's decision on this records branch; a scratch-clone regression
   on its commit.
+
+## U924 — Stateful refund-log specification proposal: results, owner decisions, and what stays unverified
+
+- Refs U921 (assurance-chain investigation, Reports D and F), U470 and U913 (pull request 76). Evidence:
+  `proposals/refund-log-spec-20261120/` (README, `RefundLogSpec.dfy`, lemmas, instance, `CORRESPONDENCE.md`,
+  `RATIFICATION_DIFF.md`, `ratification.diff`, `records/`). Base `origin/main` `b1c98822`.
+- Results (actual exits): `dafny verify` 4 (attempt 1: 43 verified, 2 errors in two concrete witnesses), then 0
+  (45 verified); `dafny audit` 0 (empty); spec clearing exit 0, NO_CHOICE and ACCEPTS; `git apply --check` 0;
+  after the apply on a scratch clone: frozen PR gate 0, gate probe 0 (authorize = UNAPPROVED_PROTECTED_CHANGE),
+  bootstrap 1 before and after (the same rejection). The first Dafny run waited 2462 s for the proof slot.
+- Owner decisions needed: D1 `refundEnabled` (options A to E; proposed B: a stored bit fixed at genesis; for silicon
+  logs V1 then needs D1b, because the silicon genesis record has no bit); D2 zero amounts (proposed: allowed, as
+  the approved Eligible and protocol say; the task brief listed zero as a refusal cause, which the default does not
+  give); D3 file names and lock name (`spec/refund/RefundLogSpec.lock`, so that `gate/coverage.py:125` does not
+  read it as a `spec.lock`).
+- Gaps between the spec and `src/silicon_sink/sink.rs` (by reading only): the flag bits the binary receives are
+  caller-chosen (`sink.rs:133`); there is no stored refund flag; the binary is asked before the lock is taken
+  (`:192` before `:166`); `scan` stops at a failing record and `open_ledger` cuts or refuses (`:95`, `:118-121`)
+  instead of reporting a violation. The native checks at `:163-171` restore every conjunct of Eligible except
+  the two flag bits.
+- Uncertainty: the meaning of the third flag of the sink's wire request is not re-checked; no machine path in
+  the PR gate approves files under `spec/refund/` (read in `gate/approval.py`), so ratification rests on the
+  owner's merge only; nothing re-verifies the new spec in the gate after ratification; the lock goes stale if
+  `RefundSpec.dfy`, its lock or `toolchain/pins.json` change before the apply. Pull request 76's proposed
+  `implementation.lock` differs from `main` `b1c98822` in three script digests (read, not regenerated).
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's review; then, after
+  ratification, Task V1.

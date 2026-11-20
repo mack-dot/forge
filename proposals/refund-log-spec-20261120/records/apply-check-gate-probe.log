@@ -1,0 +1,26 @@
+$ /Library/Frameworks/Python.framework/Versions/3.10/bin/python3 -I -B <scratch>/probe.py <scratch>/clone-A <scratch>/clone-B
+{
+ "authorize": "Rejected: UNAPPROVED_PROTECTED_CHANGE: spec/refund/RefundLogSpec.dfy, spec/refund/RefundLogSpec.lock; approval of exact spec text or a Tier-0 ratification of exact gate bytes in the trusted base is required; PR labels and candidate files do not authorize it",
+ "lock_dependents_A": [
+  [
+   "spec/refund/spec.lock",
+   "toolchain/pins.json"
+  ]
+ ],
+ "lock_dependents_B": [
+  [
+   "spec/refund/spec.lock",
+   "toolchain/pins.json"
+  ]
+ ],
+ "new_lock_deps_match": true,
+ "new_lock_spec_match": true,
+ "protected_changed": [
+  "spec/refund/RefundLogSpec.dfy",
+  "spec/refund/RefundLogSpec.lock"
+ ],
+ "refund_APPROVED_match_B": true,
+ "refund_lock_deps_match_B": true
+}
+
+EXIT 0
