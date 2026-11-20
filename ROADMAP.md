@@ -42,8 +42,12 @@ module changes. NOT merged by the agent.
 | `git apply --check`, then `git apply` of `ratification.diff` (`9b52151f…`) |0; 0|two files added |
 | `cmp` of the applied specification with the proposal file |0|byte-equal (`1a8c7c2a…`) |
 | lock re-check: canonical form, three dependency digests, specification digest |all true| |
-| `dafny verify` of the specification at its new path; scratch-clone regression of the 28 Stage EXIT cases |see the rows added below this table when they have run| |
-| hosted gate on the pull request |expected: rejection (no approval rule for these files); NOT observed yet| |
+| `dafny verify spec/refund/RefundLogSpec.dfy` (gate options) |0|9 verified, 0 errors (the specification and the included approved `RefundSpec`) |
+| the same command with the proposal's lemmas file added |2|a fault of the command, not of the texts: the lemmas file includes its own copy of the specification, so the module name occurs twice. The lemmas were verified against the byte-equal proposal copy (pull request 87: 45 verified, 0 errors) |
+| scratch-clone regression on `0a57133d`: 28 Stage EXIT cases; frozen PR-gate check; links |28 of 28 exit 0; 0; 0|the runner lists the two added files as protected paths changed, as intended |
+| bundles rebuilt in the clone: Slice 1, 2, 3, M1 conformance, native silicon sink |0 each|byte-identical to the tracked records |
+| Goal 20 bundle step; Stage 7, 9, 10; any HOL process |NOT RUN| |
+| hosted gate on the pull request |expected: not accepted (no approval rule for these files); NOT observed yet| |
 
 ## Stateful refund-log specification: a proposal with an exact, unapplied ratification diff (specification only; nothing about the engine) — U924
 
