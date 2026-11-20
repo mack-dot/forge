@@ -19935,3 +19935,67 @@ curl: (6) Could not resolve host: github.com
 - The regression did NOT run on the two records commits (documents only). Their hosted results are in the pull request.
 - NOT RUN: Stage 7, Stage 9, Stage 10; a clean or independent HOL replay.
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's decision on pull request 66.
+
+## U780 — goal 21 (Gate F1, intent clearing): start; what was merged in; counterexample text is not ordered
+
+- Refs U720 (goal 20), the directive `proposals/forge2-finish-line/DIRECTIVE.md` (Gate F1).
+- Actual: pre-flight passed (`gh pr list`: pull request 65 MERGED; `origin/main` = `9a9a8943`). Branch
+  `feat/intent-clearing-v2` from that commit. `origin/docs/finish-line-directive` (`45c21aa1`) merged in on the
+  launcher's relay of the owner's word; later `origin/main` = `b2249ea2` (pull request 66) merged in, also on the
+  launcher's relay. I did not see the owner's words myself.
+- Observation (one run, Dafny 4.11.0 with the gate options and `--extract-counterexample`): for a lemma parameter
+  of a datatype type, the counterexample text printed `MoneyInput(5000, 9223372036854774571, 1, true, true, R1,
+  7719, 38)`: the arguments are not in the order of the declaration. With scalar parameters the text named each
+  value (`5000 == amount && ...`). Two runs gave the same bytes.
+- Consequence in the design: every probe lemma takes scalar parameters; a value from that text is a candidate
+  only; a row or a witness is shown only after Dafny verified a lemma about the concrete value.
+- Uncertainty: the order was seen in one run of one file; no claim about other Dafny versions.
+- Impact: none on any stage label. `end_to_end=false`. Next check: U782.
+
+## U781 — goal 21: the directive asks for two things that cannot both hold (`bin/forge-airlock` and the goal 20 bundle)
+
+- Evidence: `scripts/exit_goal20_sdk.py` (`PYTHON_FILES` holds `bin/forge-airlock`; the bundle's `subject` holds its
+  SHA-256 `bd56d8b6…6891`); the directive: "CLI subcommand in `bin/forge-airlock check-intent`" and "Preserve ALL 6
+  prior evidence bundles byte-identical".
+- Inference: a change of `bin/forge-airlock` changes the goal 20 bundle digest.
+- What I did: kept the file and the bundle. The subcommand is the exact diff
+  `proposals/forge2-goal21-intent/forge-airlock-check-intent.diff` (3 lines added). It is NOT applied. The EXIT case
+  `dispatcher` applies it to a copy and runs it (actual: exit 0 clean, exit 4 planted, exit 2 for the unpatched copy).
+- Open question for the owner: apply the diff and accept a new goal 20 digest, or keep the command as
+  `python3 scripts/intent_clearing.py check-intent`.
+- Impact: a departure from the directive's text. Next check: the owner's decision.
+
+## U782 — goal 21: actual results of the EXIT script; what failed on the way
+
+- Evidence: `proposals/forge2-goal21-intent/records/evidence.json` (SHA-256 `9a3ea0ee…c2d8`), `REPORT.md` there.
+- Actual: engine suite exit 0 twice (12 of 12; before the review and after the repairs); restater suite exit 0
+  (8 of 8). `--case mutations`, first run after the repairs: exit 1. C12 (the `has` guard removed) and C15 (the
+  verdict filter of a query removed) did not give the WARNING that the table named; both gave UNDECIDED, exit 5.
+  The tool failed safe; the table's expectation was wrong. I corrected the two named reasons, and those of C04
+  and C06, to the observed lines. `--case planted` exit 0. `--case dispatcher` exit 0. `--case evidence
+  --write-record` exit 0: two bundles byte-identical; 23 of 23 changed copies killed for the named reason, 20 of
+  them copies of `intent_clearing.py`.
+- The three planted specifications (swapped VIP flag; SHIPPING with a coarse 10000 cap and no `shipping_paid` cap;
+  `<=` in place of `<` at 5000) gave exit 4 with a Dafny-verified witness for the named query; the clean twins
+  gave exit 0.
+- Failures on the way: restater suite exit 1 twice after my wording repair (two test strings); a waiting job of
+  mine was stopped once (exit 144) because its log name was the name of an old file of another session in the
+  shared scratch folder; the first worker runs waited more than an hour for the machine lock.
+- NOT RUN: `--engine` (no engine binary built here); any HOL step; Stages 7, 9, 10.
+- Uncertainty: "caught" depends on the query file. Without the right question a wrong specification is visible
+  only in the table and the bullets, to a person.
+- Impact: none on any stage label. Next check: U784 (regression).
+
+## U783 — goal 21: the one review: 1 FAIL-OPEN, 0 HIGH, 2 MEDIUM, 7 LOW, 3 NOTE; repairs in one pass
+
+- Evidence: `proposals/forge2-goal21-intent/REVIEW.md`.
+- FAIL-OPEN (F1): a query that named two reason ids that the specification does not name got a WARNING with a
+  witness "verified by Dafny". Dafny had verified a rewritten condition, in which both ids were the one class of
+  unnamed reasons. It could not give exit 0; it showed a false warning as verified.
+- Statement of the tool that was false before the repair: "witness ... verified by Dafny" for such a query.
+- Repaired in one pass: F1 to F5, F7 to F12; F6 in part (two more changed copies, both killed). Stated only: F13
+  (no time bound) and three guards of F6 with no changed copy.
+- I re-ran the reviewer's F1 input after the repair: both answers `NO`. The other "did not break" items are the
+  reviewer's report; I did not check them again.
+- Uncertainty: no second review of the repairs ran (the directive asks for one review).
+- Impact: none on any stage label. Next check: the owner may ask for a second review.
