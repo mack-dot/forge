@@ -28,6 +28,24 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Review fix PR-2, CI for the airlock engine: one new macOS arm64 workflow builds the engine and runs 121 of 193 airlock and SDK cases; a finite test; protected path, needs the owner's exact-bytes approval — U884 to U885
+
+CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Branch `ci/airlock-macos` from `33055a59`; pull request 71;
+NOT merged by the agent. One new file `.github/workflows/airlock-ci.yml`
+(SHA-256 `d4fe0580…f770`). 72 cases that need Dafny are skipped.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `grep -n -i -E "airlock\|rustc\|silicon" .github/workflows/*` on `33055a59` |1|no match: the review finding is confirmed |
+| local dry run of the seven `run:` scripts (no build products; `race` also skipped) |0 each (7)|engine 23, node helpers 74, SDK 17, diff-policy 6 PASS |
+| hosted airlock-ci run 44692795822 at `0846e403` |success|job 1m23s; 121 PASS, 0 FAIL; rustc 1.100.0, Node 24.22.3 |
+| hosted proof gate run 44692795915 at `0846e403` |failure|`UNAPPROVED_PROTECTED_CHANGE`, as expected |
+| `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` (3 files) |0; 0|see the record |
+| Dafny cases; Linux job; `src/silicon_sink`; full local suites under the heavy lock |NOT RUN|deferred (U885) |
+
+[Record](proposals/review-20261120-ci/README.md).
+
 ## Gate APEX-2, the Dafny <-> HOL4 contract link for the refund slice: `refund_fields` is exactly the flat 6-field contract as one plain formula (Holmake exit 0); the translation to Dafny is a pinned, tested check and NOT machine-checked; T3 narrowed, T2b and T4 off the path, none closed — U800 to U806
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.

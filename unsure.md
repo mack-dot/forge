@@ -19956,3 +19956,40 @@ curl: (6) Could not resolve host: github.com
   pull request).
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Nothing started.
 - Next check: the owner's budget word and the answers to Q-1 to Q-8 of the record.
+
+## U884 — Review fix PR-2: the review finding "no CI covers the engine" is confirmed; a new macOS arm64 workflow builds the airlock engine and runs 121 of 193 airlock and SDK cases; protected path, NOT merged
+
+- Status: 2026-11-20. Refs U720 to U725 (Goal 20 SDK), U840. Record: `proposals/review-20261120-ci/README.md`.
+  Branch `ci/airlock-macos` from `33055a59`; pull request 71. One new file `.github/workflows/airlock-ci.yml`
+  (SHA-256 `d4fe0580d0c8f273fde92745aefbd72ee26d47d1c235b7b4df45eacf53ebf770`). `.github/` is protected by
+  `gate/incremental.py`: the file needs the owner's exact-bytes approval. No test file and no existing workflow changed.
+- Evidence: `grep -n -i -E "airlock|rustc|silicon" .github/workflows/*` on `33055a59` gave exit 1 (no match): the
+  review finding is CONFIRMED. Local dry run of the seven `run:` scripts in a worktree with no build products: all exit
+  0 (`race` also skipped locally: heavy lock held by another team). Hosted run 44692795822 at `0846e403`: success, job
+  1m23s; engine 24 PASS, node helpers 74 PASS, SDK 17 PASS, diff-policy 6 PASS, 0 FAIL. Hosted proof gate run
+  44692795915: failure, `UNAPPROVED_PROTECTED_CHANGE: .github/workflows/airlock-ci.yml`, as expected.
+- Skipped (72): every case that needs the Dafny-compiled `build/airlock/checker/model.cjs` (engine `inventory`, `pin`;
+  63 `booking_*` node-helper cases; SDK `py_saga_inventory`, `ts_typed`) and the diff-policy cases `demo`, `choice`,
+  `fault`, `refused` (start Dafny) and `identical` (without Dafny it passes on two equal empty failure outputs).
+- Uncertainty: the hosted toolchains are not the pins (rustc 1.100.0, not 1.92; Node 24.22.3 from the tool cache, not
+  24.3.0; Python 3.15.2). They float with the image. A pass is a FINITE TEST on that image only. It proves nothing.
+  `end_to_end=false`. M1-B OPEN.
+- Impact: none on any stage label or gate result. The job is not a required check.
+- Next check: the owner's exact-bytes approval and merge; after `apex1/native-cosign` merges, the changes listed in the
+  record (kill-engine path, a `test_cosign.py` step).
+
+## U885 — Review fix PR-2: findings of the review that this work rejects, narrows or defers
+
+- Status: 2026-11-20. Refs U884. Record: `proposals/review-20261120-ci/README.md`.
+- Narrowed: the review says the platform needs "rustc 1.92". `bin/forge-airlock build` enforces no rustc version; the
+  hosted rustc 1.100.0 built the engine and every selected case passed. The repository RECORDS 1.92; it does not pin it
+  in the build. The Node rule is "24.x" (exit 2 otherwise), with a note when it is not 24.3.0.
+- Deferred: a Linux job (review recommendation 2 asks for Linux and macOS). The refund binary is Mach-O arm64, so a
+  Linux job can run only a smaller subset; the engine build on Linux is NOT RUN. Also deferred: `src/silicon_sink` in
+  CI, the Dafny-backed cases, `scripts/exit_goal20_sdk.py`, the demo and the fuzz pass.
+- Finding of this work: `test_diff_policy.py` case `identical` passes without Dafny (0 bytes, exit 1, twice). The test
+  file is not changed here; the workflow skips the case.
+- Uncertainty: none of the deferred items was tried on a hosted runner.
+- Impact: none on any stage label.
+- Next check: the owner's word on a Linux job and on Dafny in CI (an install from the network needs a pinned step that
+  no existing workflow has for macOS).
