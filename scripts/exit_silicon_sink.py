@@ -55,7 +55,8 @@ SUITE_CASES = ['basic', 'conformance', 'frames', 'ids', 'recovery', 'rollback', 
 SUBJECT = [SOURCE, SUITE, INTERPOSER, 'scripts/exit_silicon_sink.py', ARTIFACT, RECORDED]
 # The one link from this binary to the approved refund spec: a finite test (Wave Gate 1). It is pinned here, not run again.
 CONFORMANCE_RECORD = 'proposals/forge2-m1-conformance/records/evidence.json'
-CONFORMANCE_SHA256 = 'f55391dad17a0a4ea707806c59dbac2419df51c692161704af71f0cfe0a11da9'
+# T19 (2026-11-20): the record changed with the hardened minter (bundle f55391da... before; every count equal).
+CONFORMANCE_SHA256 = '91b49423d5377612a99751912e2fd916c0e662e6a088ebeda89dbdfbe2d9b1ce'
 
 # Changed copies of sink.rs. (name, a part of the failure message that must appear, text to find exactly once, replacement,
 # the suite case that must fail, what is removed)
