@@ -90,9 +90,8 @@ TIMEOUT = 3600
 #           AND that text is in its stdout+stderr (if given) AND the outcome differs from the unchanged control. The
 #           unchanged control must NOT already show the named reason (else the entry is an ERROR of the table).
 # Each copy uses the SMALLEST check that kills it (one suite case or one check-intent run): each Dafny start costs ~2 s.
-# The named reasons below were observed one copy at a time against scripts/intent_clearing.py of 2026-11-19 (see the
-# report of worker F1); a later change of the engine can move a text. TODO-ORCHESTRATOR: re-run the table on the final
-# engine and repair any entry whose text is no longer found exactly once.
+# The named reasons below were observed on the final engine (run of 2026-11-20, after the review repairs). A later
+# change of the engine can move a text: the case then fails (text not found exactly once, or WRONG_REASON).
 B_CLEAN = ('intent', SPECS + 'boundary-clean.json', QUERIES + 'boundary.json')
 B_PLANTED = ('intent', SPECS + 'boundary-planted-inclusive.json', QUERIES + 'boundary.json')
 S_CLEAN = ('intent', SPECS + 'shipping-clean.json', QUERIES + 'shipping.json')
@@ -106,13 +105,13 @@ MUTANTS = [
      '            if True:', B_PLANTED, (0, 'EDGE-1: NO |'), 'a query answer NO only after Dafny proved both probe lemmas'),
     ('C03_warning_not_flagged', CLEARING, "    if any(w.split(':')[0] in ('DEAD RULE', 'AMBIGUOUS', 'WARNING') for w in warnings):",
      '    if False:', B_PLANTED, (0, 'RESULT: CLEAN (exit 0)'), 'a verified WARNING makes the result WARNINGS (exit 4)'),
-    ('C04_body_assume', CLEARING, "if fault == 'bodiless-lemma' else '{}'", "if fault == 'bodiless-lemma' else '{ assume false; }'", B_CLEAN, (6, 'LINK_BROKEN: Probe.dfy: refused='),
-     'the lemma bodies are empty; a refused word in a Dafny input is LINK_BROKEN'),
+    ('C04_body_assume', CLEARING, "if fault == 'bodiless-lemma' else '{}'", "if fault == 'bodiless-lemma' else '{ assume false; }'", B_CLEAN, (6, 'LINK_BROKEN: Probe.dfy: refused=None audit_exit=2 '),
+     'the lemma bodies are empty; an `assume` in a Dafny input fails the audit (exit 2): LINK_BROKEN'),
     # the generator (TRUSTED ASSUMPTION): a changed generated model must become visible
     ('C05_model_zero_amount', CLEARING, "'    if i.amount < 1 then v == RejectedZeroAmount',", "'    if i.amount < 0 then v == RejectedZeroAmount',",
      B_CLEAN, (5, 'UNDECIDED cell: ZERO_AMOUNT'), 'the ZERO_AMOUNT branch of the generated Allowed'),
     ('C06_model_total_cap', CLEARING, "'    else if i.amount > i.remaining then v == RejectedTotalCap',",
-     "'    else if i.amount >= i.remaining then v == RejectedTotalCap',", B_CLEAN, (5, 'UNDECIDED cell: '),
+     "'    else if i.amount >= i.remaining then v == RejectedTotalCap',", B_CLEAN, (5, 'UNDECIDED cell: amount=remaining\n'),
      'the TOTAL_CAP branch of the generated Allowed'),
     ('C07_model_no_rule', CLEARING, "'    else v == RejectedNoRule', '  }', '',", "'    else v == RejectedReasonCap', '  }', '',",
      B_CLEAN, (5, 'UNDECIDED cell: reason OTHER'), 'the NO_RULE branch of the generated Allowed'),
@@ -126,7 +125,8 @@ MUTANTS = [
      "cap = ('cmp', ('total_after', 0), '<', ('fact:' + r['cap_fact'], 0)) if r['cap_fact'] else None", S_CLEAN,
      (8, 'GENERATOR_MISMATCH'), 'the cap atom total_after <= fact (cross-check with policy_model.py)'),
     ('C12_fact_guard', CLEARING, "            guards = ['%s.has%d' % (var, self.fx[f]) for f in atom_facts(atom)]\n", '            guards = []\n',
-     S_CLEAN, (None, 'BUILTIN-CAP-1-MISSING: WARNING |'), 'fail closed: a missing fact never satisfies an atom (has guard)'),
+     S_CLEAN, (5, 'BUILTIN-CAP-1-MISSING: UNDECIDED |'),
+     'fail closed: a missing fact never satisfies an atom (has guard); the honest evaluator gives no witness, so the answer is UNDECIDED'),
     # the seal
     ('C13_same_ignores_reason', CLEARING, "'    else !(j.amount < 1) && !(j.amount > j.remaining) && i.reason == j.reason' +",
      "'    else !(j.amount < 1) && !(j.amount > j.remaining)' +", B_CLEAN, (5, 'seal: SameCell NOT PROVED'),
@@ -136,7 +136,8 @@ MUTANTS = [
      (5, 'seal: Coverage UNDECIDED'), 'the Coverage lemma names every representative row'),
     # the queries
     ('C15_query_verdict_ignored', CLEARING, "    return '(%s)' % ' || '.join('%s == %s' % (var, CONSTRUCTOR[v]) for v in q['verdicts'])",
-     "    return 'true'", B_CLEAN, (4, 'EDGE-1: WARNING |'), 'the verdict list of a query'),
+     "    return 'true'", B_CLEAN, (5, 'EDGE-1: UNDECIDED |'),
+     'the verdict list of a query (the witness lemma still names the verdict, so no witness verifies: UNDECIDED)'),
     ('C16_query_where_ignored', CLEARING,
      "                        ['requires %s ValidInput(i) && %s && %s' % (bind, allowed, m.cond_text(atoms)), 'ensures false'],",
      "                        ['requires %s ValidInput(i) && %s && %s' % (bind, allowed, m.cond_text([])), 'ensures false'],", B_CLEAN,
