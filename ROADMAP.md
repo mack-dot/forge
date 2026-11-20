@@ -50,6 +50,7 @@ The Goal 20 bundle subject digests of `docs/quickstart-5min.md` and
 
 [Disposition](proposals/review-20261120/README.md).
 [Decision note](proposals/review-20261120/DECISION_NOTE_LICENCE_PACKAGING.md).
+
 ## Review 2026-11-20, defect D1: design of a shipped isolation mode for the airlock engine (service user, per-tenant sockets, root-owned pins, WAL MAC); NOT started — U894 to U896
 
 CURRENT none; M1 open; Stage12 unauthorized; end_to_end=false.
@@ -68,6 +69,7 @@ build is NOT STARTED. No `sudo` step ran; every owner step is text.
 | `check_frozen_pr_gate.py HEAD` at `86582052` |0| |
 | `check_links.py HEAD` (DESIGN.md, README.md, unsure.md) at `86582052` |0|0 missing targets |
 | the build, the malicious-agent test, every owner setup step |NOT RUN|NOT STARTED |
+
 ## Gate F1 (Goal 21), intent clearing: branch-boundary tables, weird-but-legal queries and a blind restater over a generated Dafny model; one review with repairs — U780 to U784
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
