@@ -33,7 +33,7 @@ the present gate bytes.
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
 Not a stage. Stage 9 stays deferred until the owner merges the lock.
 Branch `proposal/stage9-lock-rebind-f2a` from `main` `33055a59`; NOT
-merged by the agent; no administrator rights. Protected files changed:
+merged by the agent; no administrator rights; pull request 76. Protected files changed:
 `gate/provenance/implementation.lock` (`76b983ac…` to `08ae51d0…f6cb`)
 and `spec/provenance/spec.lock` (`43610d81…` to `256310d8…a976`). No
 other protected path changed. Nothing under `clearing/` changed.
@@ -45,8 +45,9 @@ other protected path changed. Nothing under `clearing/` changed.
 | the same with the old value `76b983ac…` on the new bytes |1|`BOOTSTRAP_REJECTED: IMPLEMENTATION_LOCK` |
 | `main`'s own two files with the old value |1|`BOOTSTRAP_REJECTED: UNLOCKED_EXECUTABLE:scripts/demo_gauntlet.py` |
 | every entry of both proposed locks against the file |109 of 109; 47 of 47 equal|after the change |
-| `check_frozen_pr_gate.py`; `check_links.py` for the proposal |see the pull request|recorded in U900 |
-| hosted `gate/pr_check.py` for the pull request |see the pull request|expected exit 1 (REJECTED): `gate/provenance/` is protected and not ratifiable |
+| `check_frozen_pr_gate.py HEAD`; `check_links.py HEAD` for the proposal, `ROADMAP.md`, `unsure.md` (commit `40847aec`) |0; 0|the eight PR-gate modules unchanged; no missing link target |
+| `git push origin proposal/stage9-lock-rebind-f2a:refs/heads/proposal/stage9-lock-rebind-f2a`; `gh pr create` (pull request 76) |0; 0|no administrator rights; the agent did not merge |
+| hosted `gate/pr_check.py`, pull request 76, head `40847aec`, run 44737627885 |1|REJECTED, as expected: `UNAPPROVED_PROTECTED_CHANGE: gate/provenance/implementation.lock, spec/provenance/spec.lock`. Not an approval; the later records commit changes no protected byte |
 | `scripts/exit_stage_9.py` (six cases); the hosted signing run; the benchmark |NOT RUN|after the owner's merge; the benchmark after the owner's batch word |
 
 [Lock rebind proposal](proposals/stage9-lock-rebind-20261120/PROPOSAL.md).

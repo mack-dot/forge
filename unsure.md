@@ -19984,3 +19984,21 @@ curl: (6) Could not resolve host: github.com
 - Impact: none on any stage label until the owner merges. CURRENT none. `end_to_end=false`. M1-B OPEN.
 - Next check: the hosted gate result of the pull request (expected exit 1, REJECTED); the owner's decision on the merge
   order and on the two points not in this diff (the workflow pin, the baseline record).
+
+## U901 — Gate F2a: pull request 76 opened; hosted gate result exit 1 (REJECTED), as expected for a protected change; the agent did not merge
+
+- Status: 2026-11-20 12:45Z (system clock and GitHub). Refs U900, U469 (the same result for pull request 53).
+- Actual: commit `40847aec8c9f53af3151f5cc70228a4221164aec` pushed with an explicit refspec (exit 0). `gh pr create`
+  exit 0: pull request 76, base `main`, no administrator rights. At that commit: `bootstrap.py --check` with
+  `08ae51d0…f6cb` exit 0 (`BOOTSTRAP_VERIFIED`); `check_frozen_pr_gate.py HEAD` exit 0; `check_links.py HEAD` for the
+  proposal, `ROADMAP.md` and `unsure.md` exit 0.
+- Hosted `gate/pr_check.py`, run 44737627885, base `33055a59`, head `40847aec`: exit code 1, outcome REJECTED, line
+  `UNAPPROVED_PROTECTED_CHANGE: gate/provenance/implementation.lock, spec/provenance/spec.lock`. This is the expected
+  result: `gate/provenance/` is protected and not ratifiable, so the PR gate cannot approve a lock change. It is not an
+  approval and it says nothing about the diff being right.
+- This entry and the changed `ROADMAP.md` rows are in a later records commit. That commit changes no protected byte:
+  the two lock files keep `08ae51d0…f6cb` and `256310d8…a976`. Its hosted result is in the pull request; I expect the
+  same exit 1 and did not wait for it when I wrote this.
+- NOT RUN: `scripts/exit_stage_9.py`; the hosted signing run; any benchmark trial.
+- Impact: none on any stage label. CURRENT none. Stage 9 deferred. `end_to_end=false`. M1-B OPEN.
+- Next check: the owner's review of the exact bytes and the merge-order decision of U900.
