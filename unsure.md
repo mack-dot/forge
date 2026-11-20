@@ -21215,3 +21215,25 @@ curl: (6) Could not resolve host: github.com
   `implementation.lock` differs from `main` `b1c98822` in three script digests (read, not regenerated).
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's review; then, after
   ratification, Task V1.
+
+## U928 — Ratification of the stateful refund-log specification: the owner's decisions D1 to D3 and the applied exact diff
+
+- Refs U924, U921. Evidence: the owner's text of 2026-11-20, verbatim: "D1 (refundEnabled): Approved as proposed. For
+  Task V1, the verifier interprets the genesis record as initializing `refundEnabled = true`." "D2 (Zero amounts):
+  Approved as proposed (permitting 0 to maintain exact refinement of approved RefundSpec)." "D3 (Lock file): Approved
+  (`spec/refund/RefundLogSpec.lock`)." And: "Apply `ratification.diff` on a new branch `ratify/refund-log-spec` … open
+  the ratification PR for my manual review and merge (hosted gate exit 1 is expected)."
+- Done on that word: `proposals/refund-log-spec-20261120/ratification.diff` (SHA-256 `9b52151f…ff09`) applied with
+  `git apply` to `origin/main` `1dc0437e`. It adds two files and changes none: `spec/refund/RefundLogSpec.dfy`
+  (SHA-256 `1a8c7c2a…bc5a`, byte-equal to the proposal file) and `spec/refund/RefundLogSpec.lock`. The lock was
+  re-checked against the tree: canonical JSON form; the three dependency digests (`RefundSpec.dfy`, `spec.lock`,
+  `toolchain/pins.json`) and the specification digest match. These are the first files an agent adds under a
+  protected path in this work; the owner's merge of this pull request is the ratification, not this commit.
+- Stated limits: the PR gate has no approval rule for `spec/refund/RefundLogSpec.*`, so the hosted gate is expected to
+  reject the pull request (the owner expects exit 1). No gate module, approval record or provenance lock changes. No
+  gate check re-verifies the new specification after this merge; a later change to `RefundSpec.dfy` makes the new lock
+  stale without any automatic refusal. The lemmas are statements about the specification text only.
+- D1 consequence for Task V1: the silicon-sink genesis record has no flag bit; the verifier takes `refundEnabled =
+  true` at genesis by the owner's decision. This is an interpretation of the log, stated in the verifier's contract.
+- Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's manual review and merge;
+  then Task V1.

@@ -28,6 +28,23 @@ request 40 its files are in `results/stage6-epoch1` and
 there. The files under `results/stage6` are the run of 2026-11-18 for
 the present gate bytes.
 
+## Ratification proposal applied: stateful refund-log specification under `spec/refund/` (owner decisions D1 to D3 of 2026-11-20; the owner's merge is the ratification) — U928
+
+CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
+Not a stage. Branch `ratify/refund-log-spec` from `1dc0437e`. The
+exact diff of the merged proposal (pull request 87) is applied on the
+owner's word. It adds `spec/refund/RefundLogSpec.dfy` and
+`spec/refund/RefundLogSpec.lock` and changes no existing file. No gate
+module changes. NOT merged by the agent.
+
+| EXIT command/check | Actual exit/result | Result |
+| --- | --- | --- |
+| `git apply --check`, then `git apply` of `ratification.diff` (`9b52151f…`) |0; 0|two files added |
+| `cmp` of the applied specification with the proposal file |0|byte-equal (`1a8c7c2a…`) |
+| lock re-check: canonical form, three dependency digests, specification digest |all true| |
+| `dafny verify` of the specification at its new path; scratch-clone regression of the 28 Stage EXIT cases |see the rows added below this table when they have run| |
+| hosted gate on the pull request |expected: rejection (no approval rule for these files); NOT observed yet| |
+
 ## Stateful refund-log specification: a proposal with an exact, unapplied ratification diff (specification only; nothing about the engine) — U924
 
 CURRENT none; M1-B open; Stage12 unauthorized; end_to_end=false.
