@@ -917,6 +917,149 @@ def _sp_close():
     return 'payouts %d, epoch %d' % (paid(audit), e)
 
 
+# ---------------------------------------------------------------- 8. seams that the changed-copy run found unguarded
+# Each case asserts on the SERVER's wire log and on the receipts (counted by verdict with the independent verifier
+# `verify_independent.py`), not only on the proxy's answer. Changed copies M13, M18 and M26 of scripts/exit_archia_mcp.py.
+VIND = HERE / 'verify_independent.py'
+
+
+def receipt_counts(store):
+    """Receipts in `store/evidence.wal` by verdict (independent verifier; it must verify, exit 0). A file with only
+    the magic has no receipt yet: {} (the verifier refuses such a file on purpose, so it is not called then)."""
+    if (store / 'evidence.wal').read_bytes() == b'forge-airlock-evidence-wal-v1\n':
+        return {}
+    p = subprocess.run([PY, '-I', str(VIND), str(store / 'evidence.wal'), '--allowed-signers', T['signers'], '--quiet'],
+                       capture_output=True, timeout=600)
+    out = p.stdout.decode('utf-8', 'replace')
+    check(p.returncode == 0, 'verify_independent.py exit %d: %s' % (p.returncode, out[-300:]))
+    return json.loads([x for x in out.splitlines() if x.startswith('counts=')][-1][len('counts='):])
+
+
+def seam_session(name, policy=None):
+    d = new_dir(name)
+    store = new_store(d)
+    server, audit, wire = fintech(d)
+    c = start(d, store, server, policy)
+    c.initialize()
+    barrier(c)
+    return c, d, store, audit, wire
+
+
+def one_malformed(c, store, wire, line, rid, want_code, want_verdict, want_detail, want_id_null=False):
+    """Send one raw line. Check: one answer with the code, verdict and detail; wire +0; epoch +0; exactly one more
+    BLOCKED_MALFORMED receipt and no other receipt. -> the answer."""
+    barrier(c)
+    e0, h0 = head(c)
+    w0 = len(lines_of(wire))
+    r0 = receipt_counts(store)
+    n0 = len(c.lines)
+    c.send_raw(line)
+    T['seam_bar'] = T.get('seam_bar', 0) + 1
+    bar = 'seam-barrier-%d' % T['seam_bar']
+    check(c.request('ping', {}, req_id=bar, timeout=30).get('result') == {}, 'barrier ping not answered')
+    new = [json.loads(x) for x in c.lines[n0:] if bar.encode() not in x]
+    check(len(new) == 1 and 'error' in new[0], 'answers %r, want one refusal' % ([json.dumps(x)[:160] for x in new],))
+    e = new[0]['error']
+    check(e.get('code') == want_code, 'code %r, want %d: %s' % (e.get('code'), want_code, json.dumps(new[0])[:200]))
+    check(e.get('data', {}).get('verdict') == want_verdict, 'verdict %r, want %s' % (e.get('data', {}).get('verdict'), want_verdict))
+    check(e.get('data', {}).get('detail') == want_detail, 'detail %r, want %s' % (e.get('data', {}).get('detail'), want_detail))
+    if want_id_null:
+        check('id' in new[0] and new[0]['id'] is None, 'id %r, want null' % (new[0].get('id'),))
+    else:
+        check(new[0].get('id') == rid, 'id %r, want %r' % (new[0].get('id'), rid))
+    check(len(lines_of(wire)) == w0 + 1, 'the server wire log grew by %d line(s) besides the barrier' % (len(lines_of(wire)) - w0 - 1))
+    check(head(c) == (e0, h0), 'the head moved')
+    r1 = receipt_counts(store)
+    delta = {k: r1.get(k, 0) - r0.get(k, 0) for k in set(r0) | set(r1) if r1.get(k, 0) != r0.get(k, 0)}
+    check(delta == {'BLOCKED_MALFORMED': 1}, 'receipts added %r, want exactly one BLOCKED_MALFORMED' % (delta,))
+    return new[0]
+
+
+@case('default_deny_tool_not_in_policy', needs=S0)
+def _default_deny():
+    # PROTOCOL.md C15: a tools/call of a tool that the policy does not list: -32001, BLOCKED_MALFORMED,
+    # TOOL_NOT_IN_POLICY, 0 bytes upstream. (Changed copy M13 forwards it instead.)
+    # Every tool of fintech_server.py is in the shipped fintech policy, so the second probe uses a test policy
+    # with `get_balance` removed: a tool that the SERVER has must still not reach the server.
+    pol = json.loads(FIN_POLICY.read_text())
+    del pol['tools']['get_balance']
+    pp = TMP / 'fintech-without-get_balance.policy.json'
+    pp.write_text(json.dumps(pol))
+    c, d, store, audit, wire = seam_session('default-deny', pp)
+    try:
+        for i, tool in enumerate(('delete_everything', 'get_balance')):
+            rid = 'dd-%d' % i
+            line = enc({'jsonrpc': '2.0', 'id': rid, 'method': 'tools/call', 'params': {'name': tool, 'arguments': {}}}) + b'\n'
+            one_malformed(c, store, wire, line, rid, -32001, 'BLOCKED_MALFORMED', 'TOOL_NOT_IN_POLICY')
+        check(not any(b'get_balance' in x or b'delete_everything' in x for x in lines_of(wire)), 'a tool not in the policy reached the server')
+    finally:
+        code = c.close()
+    check(code == 0, 'exit %d' % code)
+    return 'delete_everything and get_balance (a server tool not in the policy): refused, wire +0, epoch +0, +1 BLOCKED_MALFORMED each'
+
+
+@case('client_line_cap_exactly_65536_bytes', needs=S0)
+def _client_cap():
+    # PROTOCOL.md section 2 and C1: client line cap 65,536 bytes (newline excluded). (Changed copy M18 raises it to 1 MiB.)
+    def ping(rid, total):
+        base = enc({'jsonrpc': '2.0', 'id': rid, 'method': 'ping', 'params': {'pad': ''}})
+        b = base.replace(b'"pad":""', b'"pad":"' + b'x' * (total - len(base)) + b'"')
+        check(len(b) == total, 'built %d bytes, want %d' % (len(b), total))
+        return b
+    c, d, store, audit, wire = seam_session('client-cap')
+    out = []
+    try:
+        barrier(c)
+        w0, r0 = len(lines_of(wire)), receipt_counts(store)
+        r = c.request('ping', {'pad': 'x' * (65536 - len(enc({'jsonrpc': '2.0', 'id': 'cap-ok', 'method': 'ping', 'params': {'pad': ''}})))},
+                      req_id='cap-ok', timeout=30)
+        check(r.get('result') == {}, '65,536-byte ping not answered: %r' % (r,))
+        check(len(lines_of(wire)) == w0 + 1 and len(lines_of(wire)[-1]) == 65536, 'the 65,536-byte ping did not reach the server whole')
+        check(receipt_counts(store) == r0, 'a receipt was written for the forwarded ping')
+        c.send_raw(ping('cap-ok2', 65536) + b'\n')  # also through the raw path (same bytes as a client writes them)
+        check(c.wait('cap-ok2', 30).get('result') == {}, 'raw 65,536-byte ping not answered')
+        out.append('65,536 forwarded and answered')
+        for total in (65537, 200000, 1000000):
+            one_malformed(c, store, wire, ping('cap-%d' % total, total) + b'\n', None, -32700, 'BLOCKED_MALFORMED', 'LINE_TOO_LONG',
+                          want_id_null=True)
+            out.append('%d LINE_TOO_LONG' % total)
+        _, h = head(c)
+        nxt = c.request('tools/call', payout_msg('cap-after', h, 'cap-after')['params'], req_id='cap-after', timeout=30)
+        check('result' in nxt and nxt['result'].get('isError') is False and paid(audit) == 1, 'the next normal request failed: %r' % (nxt,))
+    finally:
+        code = c.close()
+    check(code == 0, 'exit %d' % code)
+    return '; '.join(out) + '; next payout commits'
+
+
+@case('request_id_checked_at_the_proxy', needs=S0)
+def _request_id():
+    # PROTOCOL.md 3.2: forge-airlock/request_id is 1 to 128 bytes of [A-Za-z0-9._:-]; else BLOCKED_MALFORMED
+    # BAD_REQUEST_ID with a receipt (changed copy M26 lets the ledger refuse it as LEDGER_FAULT, with no receipt).
+    c, d, store, audit, wire = seam_session('request-id')
+    out = []
+    try:
+        for label, bad in (('empty', ''), ('space', 'a b'), ('129 chars', 'r' * 129), ('non-ASCII', 'réf')):
+            _, h = head(c)
+            rid = 'rq-%d' % len(out)
+            line = enc(payout_msg(bad, h, rid)) + b'\n'
+            one_malformed(c, store, wire, line, rid, -32001, 'BLOCKED_MALFORMED', 'BAD_REQUEST_ID')
+            out.append(label)
+        check(paid(audit) == 0, 'payouts %d' % paid(audit))
+        # Not in a fault state: a valid payout commits now.
+        e0, h = head(c)
+        r0 = receipt_counts(store)
+        ok = c.request('tools/call', payout_msg('r' * 128, h, 'rq-ok')['params'], req_id='rq-ok', timeout=30)
+        check('result' in ok and ok['result'].get('isError') is False, 'the valid payout after the refusals: %r' % (ok,))
+        check(head(c)[0] == e0 + 1 and paid(audit) == 1, 'the valid payout did not commit')
+        r1 = receipt_counts(store)
+        check(r1.get('COMMITTED', 0) == r0.get('COMMITTED', 0) + 1, 'no COMMITTED receipt for the valid payout')
+    finally:
+        code = c.close()
+    check(code == 0, 'exit %d (a fault state gives 1)' % code)
+    return '%s: BAD_REQUEST_ID, wire +0, +1 BLOCKED_MALFORMED each; then a 128-char id commits; exit 0' % ', '.join(out)
+
+
 def main():
     counts = {}
     for _, st in RESULTS:

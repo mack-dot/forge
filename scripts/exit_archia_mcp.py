@@ -64,13 +64,19 @@ JUDGE_FILES = {
     'e2e': 'tests/mcp_proxy/test_proxy_e2e.py',
     'unit': 'tests/mcp_proxy/run_unit.py',
     'faults': 'tests/mcp_proxy/test_faults.py',
+    'regress': 'tests/mcp_proxy/test_review_regressions.py',
 }
+# The pre-repair binary that test_review_regressions.py uses only to BUILD one crafted evidence file (its own default).
+OLD_BINARY = '/private/tmp/claude-501/-Users-mackianni-forge/fb0fde47-8987-485d-a625-0e9fdb4facee/scratchpad/orch/mcp-proxy'
+GOAL20 = 'c02abb74'                     # the Goal 20 commit under this branch
+MAY_CHANGE_SINCE_GOAL20 = {'ROADMAP.md', 'unsure.md'}
 RSS_BOUND_MIB = 5.0          # the one bound the owner approved
 MUTANT_FLOOD_GIB = '1'       # the showcase flood for changed copies (its smallest value; an integer option)
-PARALLEL = 3                 # at most 3 compiles or judges at once
-TIMEOUT = {'servers': 300, 'e2e': 600, 'unit': 1200, 'faults': 1200, 'showcase': 1800}
-JUDGE_ORDER = ['e2e', 'unit', 'faults', 'showcase']
+PARALLEL = 2                 # at most 2 copies (compile + judges) at once: the machine is shared
+TIMEOUT = {'servers': 300, 'e2e': 900, 'unit': 1800, 'faults': 1800, 'regress': 1800, 'showcase': 1800}
+JUDGE_ORDER = ['e2e', 'unit', 'faults', 'regress', 'showcase']
 FAULTS_ARGS = ['--seed', '20261119', '--rounds', '10']  # a fixed seed: its default is the wall clock
+MUTANT_FAULTS_ARGS = ['--seed', '20261119', '--rounds', '1']  # changed copies: 1 kill round (10 rounds take about 300 s)
 
 
 def subject_files():
@@ -86,6 +92,13 @@ def subject_files():
 
 # ------------------------------------------------------------------------------------------------------- mutants
 # (name, file in src/mcp_proxy, exact text (found exactly once), replacement, judge expected first, what is removed)
+CONTINUITY_OLD = (    '        } else if v == V_COMMITTED && Some(epoch) != ce.checked_add(1) {\n'
+    '            why = Some(format!("commit continuity: COMMITTED epoch {epoch}, expected {} (the commits must have the epochs 1, 2, 3, ...)", ce as u128 + 1));\n'
+    '        } else if v == V_COMMITTED && pre != cp {\n'
+    '            why = Some(format!("commit continuity: COMMITTED pre is not the post of the previous commit (or the ledger genesis) {}", hash::hex(&cp)));\n'
+    '        } else if v != V_COMMITTED && epoch != ce {\n'
+    '            why = Some(format!("commit continuity: epoch {epoch} of a non-commit record, expected {ce} (the epoch of the latest commit)"));\n'
+    '        } else if v != V_COMMITTED && (pre != cp || post != cp) {')
 MUTANTS = [
     # the directive's list
     ('M01_cas_bypass', 'ledger.rs',
@@ -95,31 +108,31 @@ MUTANTS = [
      '        if let Some(&first_epoch) = self.ids.get(&rid) {\n            return Ok(Cas::Duplicate { first_epoch, epoch: self.epoch, current: self.head });\n        }\n',
      '', 'e2e', 'the duplicate request id check'),
     ('M03_scoped_read_skipped', 'proxy.rs',
-     '        (Some(r), None) => match sh.policy.check_read_result(&p.tool, r) {\n            Ok(()) => Ok(()),\n            Err(d) => Err(d.code.to_string()),\n        },',
-     '        (Some(_), None) => Ok(()),', 'e2e', 'the scoped-read filter on a sensitive read response'),
+     'Some(r) => sh.policy.check_read_result(&p.tool, r).map_err(|d| {',
+     'Some(r) => { let _ = r; Ok::<(), crate::policy::Deny>(()) }.map_err(|d| {', 'e2e', 'the scoped-read filter on a sensitive read response'),
     ('M04_ledger_sync_all_dropped', 'ledger.rs', '        if let Err(e) = self.file.sync_all() {\n            let m = format!("{}: sync: {e}", self.path.display());',
      '        if let Err(e) = Ok::<(), std::io::Error>(()) {\n            let m = format!("{}: sync: {e}", self.path.display());', 'faults',
      'the sync_all (F_FULLFSYNC) of a ledger record before Committed'),
-    ('M05_signature_faked', 'evidence.rs', '        let msg = hash::hex(chain);\n', '        let msg = hash::hex(&[0u8; 32]);\n', 'e2e',
+    ('M05_signature_faked', 'evidence.rs', 'self.sign_msg(NAMESPACE, hash::hex(chain).as_bytes())', 'self.sign_msg(NAMESPACE, hash::hex(&[0u8; 32]).as_bytes())', 'e2e',
      'the signed message: the signer signs a fixed text instead of the chain hash'),
-    ('M06_signature_skipped', 'evidence.rs', '                bytes.extend_from_slice(&sig_frame(idx, &armor));\n', '                let _ = &armor;\n', 'e2e',
-     'the SIGNATURE frame of a receipt in sync mode'),
+    ('M06_signature_skipped', 'evidence.rs', '            bytes.extend_from_slice(&sig_frame(idx, &armor));\n', '            let _ = &armor;\n', 'e2e',
+     'the SIGNATURE frame of an inline receipt (sync mode, and every Committed)'),
     ('M07_verify_always_exit_0', 'evidence.rs', '    println!("FAILED at={at} records_ok={ok} reason={why}");\n    1\n}',
      '    println!("FAILED at={at} records_ok={ok} reason={why}");\n    0\n}', 'e2e', 'the non-zero exit code of a failed verification'),
-    ('M08_forward_before_commit', 'proxy.rs', '        let mut c = lock(&self.sh.core);\n        let res = self.ledger.commit(rid, tool, line, &pre);',
-     '        let _ = self.forward(line);\n        let mut c = lock(&self.sh.core);\n        let res = self.ledger.commit(rid, tool, line, &pre);', 'e2e',
+    ('M08_forward_before_commit', 'proxy.rs', '        let mut c = lock(&self.sh.core);\n        if c.fault.is_some() {',
+     '        let _ = self.forward(line);\n        let mut c = lock(&self.sh.core);\n        if c.fault.is_some() {', 'e2e',
      'the order: ledger commit and receipt BEFORE the forward (the copy forwards first; a committed call goes out twice)'),
     ('M09_forward_of_policy_blocked_call', 'proxy.rs', '        if let Err(d) = self.sh.policy.check_mutation(tool, args) {\n',
      '        if let Err(d) = self.sh.policy.check_mutation(tool, args) {\n            let _ = self.forward(line);\n', 'e2e',
      'zero bytes upstream for a call that the policy blocks'),
-    ('M10_commit_receipt_verdict_changed', 'proxy.rs', 'if let Err(e) = c.receipt(epoch, tool, &pre, &post, Verdict::Committed) {',
-     'if let Err(e) = c.receipt(epoch, tool, &pre, &post, Verdict::ReadAllowed) {', 'showcase', 'the verdict COMMITTED in the receipt of a commit'),
+    ('M10_commit_receipt_verdict_changed', 'proxy.rs', 'if c.receipt(epoch, tool, &pre, &post, Verdict::Committed).is_err() {',
+     'if c.receipt(epoch, tool, &pre, &post, Verdict::ReadAllowed).is_err() {', 'e2e', 'the verdict COMMITTED in the receipt of a commit'),
     ('M11_client_line_cap_removed', 'proxy.rs', '                if line.len() + part.len() > cap {', '                if false {', 'showcase',
      'the line cap of the framing (memory witness: the line buffer grows with the flood)'),
     ('M12_subcap_comparison_flipped', 'policy.rs', '            if d.cmp(cap) == Ordering::Greater {', '            if d.cmp(cap) == Ordering::Less {', 'e2e',
      'the direction of the fact-bound sub-cap comparison'),
     ('M13_default_deny_removed', 'proxy.rs', '            None => return malformed(self, tool, "TOOL_NOT_IN_POLICY"),',
-     '            None => return self.forward_request(line, key, idt),', 'faults', 'default deny of a tool that is not in the policy'),
+     '            None => return self.forward_request(line, key, idt, None, true),', 'faults', 'default deny of a tool that is not in the policy'),
     ('M14_key_mode_check_removed', 'evidence.rs',
      '    if md.mode() & 0o077 != 0 {\n        return Err(format!("{what}: mode {:o} gives access to group or others (need mode & 0o077 == 0)", md.mode() & 0o7777));\n    }\n',
      '', 'faults', 'the key file mode check (mode & 0o077 == 0)'),
@@ -127,7 +140,7 @@ MUTANTS = [
      '        if false {\n            why = Some("chain link mismatch".into());', 'unit', 'the chain link check in verify-evidence'),
     ('M16_epoch_not_advanced', 'ledger.rs', '        self.epoch = epoch;\n        self.head = post;\n        self.ids.insert(rid, epoch);',
      '        self.head = post;\n        self.ids.insert(rid, epoch);', 'e2e', 'the epoch advance of a commit'),
-    ('M17_dropped_read_passed_through', 'proxy.rs', '            emit(jsonw::dropped_read(&p.id, &code).as_bytes());', '            emit(line);', 'e2e',
+    ('M17_dropped_read_passed_through', 'proxy.rs', '        Err(code) => c.answer_dropped(&p, code),', '        Err(_) => emit(line),', 'e2e',
      'the replacement of a denied read response by the empty dropped-read answer'),
     # more seams
     ('M18_client_cap_raised_to_1_mib', 'proxy.rs', 'pub const CLIENT_CAP: usize = 65_536;', 'pub const CLIENT_CAP: usize = 1 << 20;', 'faults',
@@ -142,8 +155,8 @@ MUTANTS = [
      '                            J::Str(_) => {}', 'e2e', 'the comparison of a scope label with the session value'),
     ('M22_state_hash_ignores_args', 'ledger.rs', '    h16(&[&framed(&[TAG_STATE, pre, &epoch.to_be_bytes(), rid, tool, args])])',
      '    let _ = args;\n    h16(&[&framed(&[TAG_STATE, pre, &epoch.to_be_bytes(), rid, tool])])', 'unit', 'the argument digest in the state hash'),
-    ('M23_commit_receipt_skipped', 'proxy.rs', 'if let Err(e) = c.receipt(epoch, tool, &pre, &post, Verdict::Committed) {',
-     'if let Err(e) = Ok::<(), String>(()) {', 'showcase', 'the signed receipt of a commit'),
+    ('M23_commit_receipt_skipped', 'proxy.rs', 'if c.receipt(epoch, tool, &pre, &post, Verdict::Committed).is_err() {',
+     'if Ok::<(), String>(()).is_err() {', 'showcase', 'the signed receipt of a commit'),
     ('M24_verifier_accepts_any_signature', 'evidence.rs', '                            if let Err(err) = ssh_verify(allowed, ident, &sp, &e.chain) {',
      '                            if let Err(err) = Ok::<(), String>(()) {', 'unit', 'the ssh-keygen -Y verify call in verify-evidence'),
     ('M25_ledger_lock_removed', 'ledger.rs', '        match file.try_lock() {', '        match Ok::<(), fs::TryLockError>(()) {', 'unit',
@@ -154,10 +167,46 @@ MUTANTS = [
      'faults', 'the tombstone of a dropped read (a late upstream response is discarded)'),
     ('M28_refusal_receipt_skipped', 'proxy.rs', '        if let Some(v) = receipt {', '        if let Some(v) = receipt.filter(|_| false) {', 'showcase',
      'the receipt of a refused call'),
-    ('M29_unparseable_upstream_line_passed', 'proxy.rs', '        return bad_upstream_line(sh, "UPSTREAM_LINE_NOT_A_JSON_OBJECT");',
-     '        return emit(line);', 'faults', 'the discard of an upstream line that is not a JSON object'),
+    ('M29_unparseable_upstream_line_passed', 'proxy.rs', '        _ => return bad_upstream_line(sh, "UPSTREAM_LINE_NOT_A_JSON_OBJECT"),',
+     '        _ => return emit(line),', 'faults', 'the discard of an upstream line that is not a JSON object'),
     ('M30_torn_tail_not_cut', 'ledger.rs', '            file.set_len(st.good_len).map_err(|e| format!("{}: cut torn tail: {e}", path.display()))?;\n', '',
      'unit', 'the cut of a torn last ledger record at open'),
+    # one changed copy per repaired finding of the round-3 repair pass (CONTRACT3); each must be KILLED
+    ('R01_client_control_byte_check_removed', 'proxy.rs', '        if has_control(line) {\n            return self.frame_error(-32700, "Parse error", "CONTROL_BYTE");',
+     '        if false {\n            return self.frame_error(-32700, "Parse error", "CONTROL_BYTE");', 'regress', 'R1: refusal of a client line with a raw control byte'),
+    ('R03_jsonrpc_version_check_removed', 'proxy.rs', '        if v.get("jsonrpc") != Some(&J::Str("2.0".into())) {\n            let idt',
+     '        if false {\n            let idt', 'regress', 'R3: refusal of a message whose jsonrpc member is not "2.0"'),
+    ('R03b_number_length_cap_removed', 'proxy.rs', '        if long_number(&v) {', '        if false {', 'regress', 'R3: refusal of a number token over 64 bytes'),
+    ('T1_unknown_id_response_passed', 'proxy.rs', '    if c.inflight.remove(&key).is_none() {', '    if c.inflight.remove(&key).is_none() && false {', 'faults',
+     'T1: discard of an upstream response whose id is not in flight (second answer, unasked answer)'),
+    ('D1_method_and_result_line_passed', 'proxy.rs', '    if has_method && is_response {', '    if has_method && is_response && false {', 'regress',
+     'D1: discard of an upstream line with both method and result/error'),
+    ('D1b_exact_result_shape_skipped', 'proxy.rs', '    let verdict: Result<(), &str> = if !exact_result_shape(&v) {', '    let verdict: Result<(), &str> = if false {', 'regress',
+     'D1: the exact {jsonrpc, id, result} shape of a filtered response'),
+    ('R02_startup_reconciliation_skipped', 'main.rs', '    if let Err(e) = proxy::reconcile(&ledger, &mut ev) {', '    if let Err(e) = Ok::<(), String>(()) {', 'regress',
+     'R2: the start-up reconciliation of ledger.wal and evidence.wal'),
+    ('B8_verifier_commit_continuity_skipped', 'evidence.rs', CONTINUITY_OLD, CONTINUITY_OLD.replace('} else if v ', '} else if false && v '), 'regress',
+     'B8: commit continuity in verify-evidence'),
+    ('R04_sticky_evidence_fault_not_set', 'proxy.rs', '            self.fault = Some(e.clone());', '            let _ = e;', 'regress',
+     'R4: the sticky receipt fault (later tools/call refused, exit 1)'),
+    ('B06_test_signature_at_open_skipped', 'evidence.rs', '        key.sign_msg(TEST_NAMESPACE, TEST_MESSAGE)\n',
+     '        Ok::<Vec<u8>, String>(Vec::new())\n', 'regress', 'B6: the test signature at start (a key that cannot sign refuses the start)'),
+    ('B04_unsigned_records_signed_in_sync_mode', 'evidence.rs', '            if o.sync_sign {\n                return Err(format!(\n                    "evidence.wal refused: records',
+     '            if false {\n                return Err(format!(\n                    "evidence.wal refused: records', 'regress',
+     'B4: refusal at open (sync mode) of records that have no signature'),
+    ('B05_async_commit_not_signed_inline', 'evidence.rs', '        let inline = self.tx.is_none() || verdict == Verdict::Committed;',
+     '        let inline = self.tx.is_none();', 'regress', 'B5: a Committed receipt is signed and synced before append returns, also in async mode'),
+    ('B01_bind_check_skipped', 'policy.rs', '        for b in &t.binds {', '        for b in t.binds.iter().take(0) {', 'regress',
+     'B1: the scope bind of a mutating call (trusted fact == session value)'),
+    ('B02_text_scope_check_off', 'policy.rs', '                if n.contains(nk.as_str()) {', '                if false && n.contains(nk.as_str()) {', 'regress',
+     'B2: the scope key name check in plain text and in object keys'),
+    ('B03_deny_detail_sent_to_client', 'proxy.rs', '            return self.refuse(&idt, tool, Some(v), w, d.code);',
+     '            return self.refuse(&idt, tool, Some(v), w, &format!("{}: {}", d.code, d.detail));', 'regress',
+     'B3: only Deny.code goes to the client (the detail can name a foreign fact)'),
+    ('L01_store_folder_mode_check_removed', 'ledger.rs', '    if m.mode() & 0o022 != 0 {', '    if false {', 'faults',
+     'the store folder mode check (mode & 0o022 == 0)'),
+    ('E01_evidence_sync_dropped', 'evidence.rs', '        f.sync_data().map_err(|e| format!("evidence.wal sync: {e}"))', '        let _ = &f;\n        Ok(())', 'faults',
+     'the evidence-side twin of M04: sync_data (F_FULLFSYNC) of evidence.wal after each frame write'),
 ]
 
 # Copies that no judge is expected to kill, with the reason. See the convention at the top of this file.
@@ -167,6 +216,25 @@ EXPECTED_NOT_KILLED = {
         'it for every reader and for a SIGKILL of the proxy. Only a power loss or a system-call observer (an interposer '
         'that counts fcntl(F_FULLFSYNC), as tests/silicon_sink/interpose.c does for Goal 19) can see it. This work may '
         'not add C code or edit the Rust files, so no honest judge exists here. A FINDING, not a pass.',
+    'E01_evidence_sync_dropped':
+        'The twin of M04 in evidence.rs, with the same reason: the frames are written before the dropped sync_data and the '
+        'page cache serves every later reader; no judge cuts power or observes fcntl(F_FULLFSYNC). A FINDING, not a pass.',
+    # The four below are JUDGE GAPS (a missing test), not equivalent changes, except M27. This script may not edit the
+    # test files; each entry names the test that is missing. They are findings for the owner, not passes.
+    'M13_default_deny_removed':
+        'JUDGE GAP: no judge sends a tools/call for a tool that is not in the policy (C15). Missing test: a call of an '
+        'unlisted tool must get BLOCKED_MALFORMED TOOL_NOT_IN_POLICY and 0 bytes upstream (wire log unchanged).',
+    'M18_client_cap_raised_to_1_mib':
+        'JUDGE GAP: no judge sends a client line between 65,537 bytes and 1 MiB. Missing test: a line of exactly 65,536 '
+        'bytes passes the framing and a line of 65,537 bytes gets -32700 LINE_TOO_LONG with 0 bytes upstream.',
+    'M26_request_id_not_validated':
+        'JUDGE GAP: no judge sends a bad forge-airlock/request_id. With the proxy check removed, ledger.commit still '
+        'refuses the id (LEDGER_FAULT instead of BLOCKED_MALFORMED, no receipt). Missing test: a request id with a space '
+        'or of 129 bytes must give BLOCKED_MALFORMED BAD_REQUEST_ID, one BLOCKED_MALFORMED receipt, 0 bytes upstream.',
+    'M27_late_response_to_dropped_read_passed':
+        'EQUIVALENT after the T1 repair (our reading, not proved): a dropped read leaves the in-flight set, so a late '
+        'response is discarded by the in-flight rule even without the tombstone. The tombstone is a second layer that no '
+        'black-box test can separate from the first.',
 }
 
 
@@ -229,7 +297,8 @@ def build(work):
             if re.match(r'(pub(\([a-z]+\))? )?use ', s):
                 imports.append(s)
                 path = re.sub(r'^(pub(\([a-z]+\))? )?use ', '', s)
-                if not re.match(r'(std|crate|super|self)::', path):
+                # std, the crate itself, or a local enum/type in scope (a capitalized root such as `Verdict::*`)
+                if not re.match(r'(std|crate|super|self|[A-Z][A-Za-z0-9_]*)::', path):
                     problems.append('%s:%d %s' % (p.name, n, s))
             if re.search(r'\bextern\s+crate\b', s) and not s.startswith('//'):
                 problems.append('%s:%d %s' % (p.name, n, s))
@@ -237,6 +306,14 @@ def build(work):
     require('#![forbid(unsafe_code)]' in main_lines, 'SOURCE: main.rs has no #![forbid(unsafe_code)]')
     require(not problems, 'SOURCE: an import is not from std/crate, or an extern crate: %r' % problems)
     require(not list(ROOT.glob('src/mcp_proxy/Cargo.*')) and not (ROOT / 'Cargo.toml').exists(), 'SOURCE: a Cargo file exists')
+    old = subprocess.run(['git', 'show', GOAL20 + ':bin/forge-airlock'], cwd=ROOT, capture_output=True)
+    require(old.returncode == 0 and old.stdout == (ROOT / 'bin/forge-airlock').read_bytes(),
+            'GOAL20: bin/forge-airlock is not byte-identical to %s:bin/forge-airlock (git show exit %d)' % (GOAL20, old.returncode))
+    diff = run(['git', 'diff', '--name-status', GOAL20])
+    require(diff.returncode == 0, 'GOAL20: git diff exit %s' % diff.returncode)
+    changed = [line.split('\t') for line in diff.stdout.splitlines() if line.strip()]
+    touched = sorted(parts[-1] for parts in changed if parts[0] != 'A' and parts[-1] not in MAY_CHANGE_SINCE_GOAL20)
+    require(not touched, 'GOAL20: files that exist at %s are modified, deleted or renamed: %r' % (GOAL20, touched))
     binaries = []
     for k in (1, 2):
         out, done = compile_in(ROOT, work / ('build-%d' % k))
@@ -255,6 +332,9 @@ def build(work):
     final.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(binaries[0], final)
     record = {'compile_command': ['rustc'] + FLAGS + [MAIN, '-o', '<folder>/mcp-proxy'], 'compile_exit': 0, 'compiler_output_bytes': 0,
+              'goal20_bin_forge_airlock_byte_identical': True,
+              'goal20_files_modified': sorted(parts[-1] for parts in changed if parts[0] != 'A'),
+              'goal20_files_added': sum(1 for parts in changed if parts[0] == 'A'),
               'forbid_unsafe_code_in_main_rs': True, 'imports_std_or_crate_only': True, 'extern_crate': 0, 'cargo_used': False,
               'rust_files': [p.relative_to(ROOT).as_posix() for p in files] + SHARED_RS,
               'unsafe_control': {'what': 'main.rs plus one function with an unsafe block, same command', 'compile_failed': True},
@@ -284,7 +364,7 @@ def parse_cases(text):
     return out
 
 
-def judge(kind, tree, binary, work, flood=None):
+def judge(kind, tree, binary, work, flood=None, copy=False):
     """Run one judge from `tree`. Returns a dict: exit, cases, failed (sorted case names), text."""
     script = tree / (SHOWCASE if kind == 'showcase' else JUDGE_FILES[kind])
     work.mkdir(parents=True, exist_ok=True)
@@ -298,7 +378,9 @@ def judge(kind, tree, binary, work, flood=None):
     if kind in ('e2e', 'faults'):
         argv += ['--binary', binary]
     if kind == 'faults':
-        argv += FAULTS_ARGS
+        argv += MUTANT_FAULTS_ARGS if copy else FAULTS_ARGS
+    if kind == 'regress':
+        argv += ['--binary', binary] + (['--old-binary', OLD_BINARY] if os.path.isfile(OLD_BINARY) else [])
     if kind == 'unit':
         argv += ['--source', tree / SRC_DIR, '--out', work / 'unit-bin']
     if kind == 'showcase':
@@ -446,9 +528,10 @@ def wal_replay(work, binary):
 def suite(work, binary):
     work.mkdir(parents=True)
     out, measured, missing, failed = {}, {}, [], []
-    for kind in ('servers', 'e2e', 'unit', 'faults'):
+    for kind in ('servers', 'e2e', 'unit', 'faults', 'regress'):
         r = judge(kind, ROOT, binary, work / kind)
-        out[kind] = {'argv': ['python3', '-B', JUDGE_FILES[kind]] + (['--binary', '<binary>'] if kind in ('e2e', 'faults') else [])
+        out[kind] = {'argv': ['python3', '-B', JUDGE_FILES[kind]] + (['--binary', '<binary>'] if kind in ('e2e', 'faults', 'regress') else [])
+                     + (['--old-binary', '<pre-repair binary>'] if kind == 'regress' else [])
                      + (FAULTS_ARGS if kind == 'faults' else [])
                      + (['--source', SRC_DIR, '--out', '<folder>'] if kind == 'unit' else []),
                      'exit_code': r['exit'], 'cases': r['cases'], 'failed': r['failed']}
@@ -510,7 +593,7 @@ def run_copy(work, name, replace, judges):
         row['compile_error'] = done.stderr[-1500:]
         return row
     for kind in judges:
-        r = judge(kind, tree, binary, folder / kind, MUTANT_FLOOD_GIB if kind == 'showcase' else None)
+        r = judge(kind, tree, binary, folder / kind, MUTANT_FLOOD_GIB if kind == 'showcase' else None, copy=True)
         row['judges'].append({'judge': kind, 'exit_code': r['exit'], 'failed': r['failed'], 'killed': killed(r), 'wall_s': r.get('wall_s'),
                               'cases_seen': len(r['cases'])})
     return row
@@ -522,7 +605,7 @@ def mutations(work):
     require(len(set(names)) == len(names), 'MUTANTS: a name is used twice')
     require(set(EXPECTED_NOT_KILLED) <= set(names), 'MUTANTS: an expected survivor is not in the list')
     texts = {m[0]: (m[1], mutant_text(*m[:4])) for m in MUTANTS}  # every text must be found exactly once before anything runs
-    missing = [JUDGE_FILES[k] for k in ('e2e', 'unit', 'faults') if not (ROOT / JUDGE_FILES[k]).is_file()]
+    missing = [JUDGE_FILES[k] for k in ('e2e', 'unit', 'faults', 'regress') if not (ROOT / JUDGE_FILES[k]).is_file()]
     missing += [SHOWCASE] if not (ROOT / SHOWCASE).is_file() else []
     for name in missing:
         print('  judge NOT RUN: %s is missing' % name, flush=True)
@@ -562,7 +645,7 @@ def mutations(work):
     k = sum(r['killed'] for r in table)
     result = {'changed_copies': len(table), 'killed': k, 'not_killed': sorted(not_killed), 'invalid_do_not_compile': sorted(invalid),
               'expected_not_killed': {n: EXPECTED_NOT_KILLED[n] for n in sorted(EXPECTED_NOT_KILLED)},
-              'judges_missing_not_run': missing, 'flood_gib_for_copies': MUTANT_FLOOD_GIB,
+              'judges_missing_not_run': missing, 'flood_gib_for_copies': MUTANT_FLOOD_GIB, 'faults_args_for_copies': MUTANT_FAULTS_ARGS,
               'unchanged_copy': [{'judge': j['judge'], 'exit_code': j['exit_code']} for j in control['judges']],
               'kill_rule': 'a judge exits 1 (not a setup error, not a timeout) and names at least one failed case; the unchanged copy passed '
                            'the same judges in the same harness; a compile failure is NOT a kill',
