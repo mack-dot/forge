@@ -21237,3 +21237,33 @@ curl: (6) Could not resolve host: github.com
   true` at genesis by the owner's decision. This is an interpretation of the log, stated in the verifier's contract.
 - Impact: none on any stage label. `end_to_end=false`. M1-B OPEN. Next check: the owner's manual review and merge;
   then Task V1.
+
+## U930 — Front door: README order flipped to plain terms first; two planning notes moved to `docs/roadmap/`; what stays at the root and why
+
+- Refs U880, U921, U923, U925, U926, U928. Owner's "go" of 2026-11-20 for the front-door step (README order and the
+  repository root; documents and file moves only). Branch `docs/front-door` from `origin/main` `236198b2`.
+- README: the first screen now gives one plain sentence (airlock between AI agents and irreversible actions; refunds,
+  payout steps, bookings; macOS on Apple silicon only; tested, not proved), a quickstart with output lines from a real
+  run, a "what this is not" box, the four labels in plain terms with the Rust engine named as NATIVE CHECK, the proof
+  work (Dafny source proofs; HOL4 model-level theorems; M1 open; same-machine replay only), the demos on `main`, and
+  the records. Internal names (S1, E2, E4, M1-B, gate, goal and stage names, U numbers) moved to a section for
+  contributors and reviewers with a glossary. Nothing was deleted.
+- Not supported, so not written: the word "deterministic" (no record shows it for the engine; each store has a random
+  genesis nonce); any claim for Linux or Windows; the refund-log verifier as available (one "in progress, NOT on
+  `main`" line only).
+- Corrected in README: the Goal 20 row said "no newer bundle is tracked"; U923 (pull request 86) replaced the record
+  with `4a66ddc8…`. The row now gives the counts of that record (`counts` key). The status line names `236198b2`.
+  `docs/STATUS.md` is NOT changed; its "Known record gaps" bullet on the Goal 20 bundle is stale since U923 (open).
+- Root: 43 items before, 41 after. Moved with `git mv`: `FORGE_ROUND2_PLAN.md`, `FORGE_ROUND3_PLAN.md` (records name
+  them only in plain text or in generated link lists; 0 Markdown links from records). Only their relative link targets
+  changed; line numbers are equal (Annex 1 of the assurance chain cites `FORGE_ROUND2_PLAN.md:109`). No stub left:
+  the record count is small and the file names are unique. Two links in `FORGE_MASTER_IDEA.md` follow the move.
+- Kept at the root: `FORGE_MASTER_IDEA.md` (8 regression runners under `proposals/*/run_regression.py` link-check it
+  by path; many records name it); `VISION.md` (two ROADMAP record sections link it; `results/stage9/v33-controls-0003/
+  evidence-manifest.json` lists its SHA-256); every other item is a rule file, a protected or frozen path, or a path
+  that code, a workflow or a record names.
+- Checks: listed with actual exit codes in the ROADMAP section of this entry. Link check: 2 missing targets before and
+  after (the two older ones). `check_stage_4_local.py` (it reads `README.md`) NOT RUN: it starts Dafny.
+- Uncertainty: the plain-text record mentions of the two moved files point at the old root path; a reader finds the
+  files by name or through `docs/roadmap/README.md`. Impact: none on any stage label. `end_to_end=false`. M1-B OPEN.
+  Next check: the owner's review of the new first screen.
