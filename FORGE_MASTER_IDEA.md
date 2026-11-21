@@ -280,3 +280,45 @@ on `main` since 2026-11-18 (row F1.2, `d026e109`); item 3 describes
 3. Commit and push: done once on your word of 2026-11-17 ("push what we
    have", U412), on the backup branch only. Later commits need your word
    again. `main` is untouched; no pull request.
+
+## Current-state update — 2026-11-21
+
+A snapshot of where Forge is, written honestly. `end_to_end=false`. M1 OPEN.
+
+**On `main` today.** The refund airlock engine (`src/airlock/`, Rust, NATIVE
+CHECK — tested, not proved), the native silicon sink, the Goal 20 SDK, the MCP
+proxy (Archia), the V1.1 universal primitives (rate windows, double-entry,
+taint, Farkas), native cosign via `ssh-keygen -Y` (no Node), T19's hardened
+sink, Apache-2.0 licensing, and the demos listed in `README.md`. The Dafny and
+HOL4/CakeML proof work is model-level; the M1 machine-code theorem is OPEN and
+has no independent replay. No Rust engine is proved; each is a NATIVE CHECK.
+
+**In progress, NOT on `main` (do not read as shipped).**
+- The refund-log **verifier** (Task V1): a Dafny-PROVED program that folds the
+  silicon sink's real write-ahead log and rechecks every committed refund
+  against the ratified stateful spec `spec/refund/RefundLogSpec.dfy`. It
+  detects an unauthorized history from the bytes alone — the first piece of
+  independent *detection* of an unproved engine's effect. Built and reviewed;
+  finishing its evidence pass; not yet merged.
+- **Section 3** (unforgeable approval): the gate today has live holes (an
+  approval needs no signature; `main`'s ruleset has an admin bypass). A
+  proposal with exact unapplied diffs and a human-only checklist is staged.
+  Until it lands, an agent's merge is an admin bypass; the owner merges by hand.
+
+**A lesson worth keeping (2026-11-20).** A fully Dafny-*verified* source
+produced a *wrong* JavaScript program — the Dafny 4.11.0 JS backend miscompiles
+32-bit bitwise ops (upstream dafny#6584; our owner also filed #6647). The
+verifier was sound; the compiled code was not. Cross-compiling the same proved
+source to two independent backends (Python and Node) and comparing byte-for-byte
+caught it. This is why Forge labels compiled code NATIVE CHECK, never PROVED,
+and why V2 pairs a Dafny-proved verifier with an independent, clean-room Rust
+verifier written by a different person — agreement of two independent
+implementations is an N-version check, still not a proof.
+
+**V2 direction (design drafts only, nothing built).** One isolated daemon
+holding real credentials the agent cannot read; one 128-byte SHA-256 envelope
+shared across refunds, escrow and proof-gated deploys; a live 2-of-2 verifier
+quorum that halts on divergence; hardware-backed (Touch ID / `ssh-keygen -Y`)
+approval. A P2P zero-trust escrow demo is designed but not implemented; its real
+settlement rail (e.g. a Bitcoin testnet 2-of-2) is a later, testnet-first,
+owner-authorized integration — never mainnet funds without explicit scope.
